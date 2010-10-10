@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.builds.internal.core.operations;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -20,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
@@ -28,27 +32,48 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.osgi.util.NLS;
 
 /**
+ * The refresh operation refreshes elements of the model with the latest state from the server.
+ * 
  * @author Steffen Pingel
  */
 public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
+	private final class RefreshData {
+
+		private IBuildServer server;
+
+		private List<IBuildElement> elements;
+
+	}
+
+	/**
+	 * Executes the actual refresh for a specific server.
+	 */
 	private final class RefreshJob extends BuildJob {
 
-		private final IBuildServer server;
+		private final RefreshData data;
 
-		private RefreshJob(IBuildServer server) {
-			super(NLS.bind("Refreshing Builds ({0})", server.getLabel()));
-			this.server = server;
+		private RefreshJob(RefreshData data) {
+			super(NLS.bind("Refreshing Builds ({0})", data.server.getLabel()));
+			this.data = data;
 		}
 
 		@Override
 		protected IStatus doExecute(IOperationMonitor progress) {
 			try {
 				RefreshRequest request = new RefreshRequest(model);
-				((BuildServer) server).getRefreshSession().refresh(request, progress.newChild(1));
+				for (IBuildElement element : data.elements) {
+					if (element instanceof IBuildPlan) {
+						if (request.stalePlans == null) {
+							request.stalePlans = new ArrayList<IBuildPlan>();
+						}
+						request.stalePlans.add((IBuildPlan) element);
+					}
+				}
+				((BuildServer) data.server).getRefreshSession().refresh(request, progress.newChild(1));
 			} catch (CoreException e) {
 				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(
-						"Refresh of server ''{0}'' failed", server.getLabel()), e));
+						"Refresh of server ''{0}'' failed", data.server.getLabel()), e));
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			}
@@ -57,14 +82,16 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
 		@Override
 		public IBuildServer getElement() {
-			return server;
+			return data.server;
 		}
 
 	}
 
 	private final BuildModel model;
 
-	private final List<IBuildServer> servers;
+	//private final List<IBuildServer> servers;
+
+	private final Map<IBuildServer, RefreshData> dataByServer;
 
 	public RefreshOperation(IOperationService service, BuildModel model) {
 		this(service, model, null);
@@ -75,25 +102,46 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		Assert.isNotNull(model);
 		this.model = model;
 		if (elements != null) {
-			this.servers = new ArrayList<IBuildServer>();
+			this.dataByServer = new LinkedHashMap<IBuildServer, RefreshOperation.RefreshData>();
 			for (IBuildElement element : elements) {
-				this.servers.add(element.getServer());
+				RefreshData data = dataByServer.get(element.getServer());
+				if (data == null) {
+					data = new RefreshData();
+					data.server = element.getServer();
+					data.elements = new ArrayList<IBuildElement>();
+					dataByServer.put(element.getServer(), data);
+				}
+				// add specific elements to refresh
+				if (!(element instanceof IBuildServer)) {
+					data.elements.add(element);
+				}
 			}
 		} else {
-			this.servers = null;
+			this.dataByServer = null;
 		}
 	}
 
 	@Override
 	protected BuildJob doCreateJob(IBuildServer server) {
-		return new RefreshJob(server);
+		if (dataByServer != null) {
+			RefreshData data = dataByServer.get(server);
+			return new RefreshJob(data);
+		} else {
+			RefreshData data = new RefreshData();
+			data.server = server;
+			data.elements = Collections.emptyList();
+			return new RefreshJob(data);
+		}
 	}
 
 	@Override
 	protected List<IBuildServer> doInitInput() {
-		if (servers != null) {
-			register(servers);
-			return servers;
+		if (dataByServer != null) {
+			for (Map.Entry<IBuildServer, RefreshData> data : dataByServer.entrySet()) {
+				register(Collections.singletonList(data.getKey()));
+				register(data.getValue().elements);
+			}
+			return new ArrayList<IBuildServer>(dataByServer.keySet());
 		} else {
 			return super.doInitInput();
 		}
@@ -116,12 +164,19 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		super.handleResult(job);
 		final IStatus status = job.getStatus();
 		if (status != Status.CANCEL_STATUS) {
-			getService().getRealm().syncExec(new Runnable() {
+			getService().getRealm().exec(new Runnable() {
 				public void run() {
 					job.getElement().setElementStatus(status);
 				}
 			});
 		}
+		if (dataByServer != null) {
+			final RefreshData data = ((RefreshJob) job).data;
+			getService().getRealm().exec(new Runnable() {
+				public void run() {
+					unregister(data.elements);
+				}
+			});
+		}
 	}
-
 }

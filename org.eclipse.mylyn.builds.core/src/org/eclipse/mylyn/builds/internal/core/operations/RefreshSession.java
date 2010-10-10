@@ -71,8 +71,10 @@ public class RefreshSession {
 	}
 
 	public void refresh(RefreshRequest request, IOperationMonitor monitor) throws CoreException {
-		request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
-		refreshPlans(request, monitor);
+		if (request.stalePlans == null) {
+			request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
+			refreshPlans(request, monitor);
+		}
 		for (IBuildPlan plan : request.stalePlans) {
 			GetBuildsRequest buildRequest = new GetBuildsRequest(plan, Kind.LAST);
 			refreshBuilds(request, buildRequest, monitor);

@@ -42,9 +42,9 @@ public abstract class AbstractElementOperation<T extends IBuildElement> extends 
 		final AtomicReference<List<T>> input = new AtomicReference<List<T>>();
 		getService().getRealm().syncExec(new Runnable() {
 			public void run() {
-				List<T> servers = doSyncInitInput();
-				register(servers);
-				input.set(servers);
+				List<T> elements = doSyncInitInput();
+				register(elements);
+				input.set(elements);
 			}
 
 		});
