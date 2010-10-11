@@ -84,6 +84,8 @@
         eType="#//ParameterDefinition" containment="true" eOpposite="#//ParameterDefinition/containingBuildPlan"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="healthReports" upperBound="-1"
         eType="#//HealthReport" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="flags" ordered="false"
+        upperBound="-1" eType="#//BuildState"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HealthReport">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="health" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

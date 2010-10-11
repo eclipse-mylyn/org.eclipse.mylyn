@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPackage.java,v 1.10 2010/09/26 03:34:34 spingel Exp $
+ * $Id: BuildPackage.java,v 1.11 2010/10/11 23:51:44 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -900,6 +900,16 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__HEALTH_REPORTS = BUILD_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Flags</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__FLAGS = BUILD_ELEMENT_FEATURE_COUNT + 14;
+
+	/**
 	 * The number of structural features of the '<em>Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -907,7 +917,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_PLAN_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 14;
+	public static final int BUILD_PLAN_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport <em>Health Report</em>}'
@@ -2925,6 +2935,21 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getFlags
+	 * <em>Flags</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute list '<em>Flags</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getFlags()
+	 * @see #getBuildPlan()
+	 * @generated
+	 */
+	public EAttribute getBuildPlan_Flags() {
+		return (EAttribute) buildPlanEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IHealthReport <em>Health Report</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4502,6 +4527,7 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(buildPlanEClass, BUILD_PLAN__LAST_BUILD);
 		createEReference(buildPlanEClass, BUILD_PLAN__PARAMETER_DEFINITIONS);
 		createEReference(buildPlanEClass, BUILD_PLAN__HEALTH_REPORTS);
+		createEAttribute(buildPlanEClass, BUILD_PLAN__FLAGS);
 
 		healthReportEClass = createEClass(HEALTH_REPORT);
 		createEAttribute(healthReportEClass, HEALTH_REPORT__HEALTH);
@@ -4862,6 +4888,10 @@ public class BuildPackage extends EPackageImpl {
 				this.getHealthReport(),
 				null,
 				"healthReports", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getBuildPlan_Flags(),
+				this.getBuildState(),
+				"flags", null, 0, -1, IBuildPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(healthReportEClass, IHealthReport.class,
 				"HealthReport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -5618,6 +5648,15 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference BUILD_PLAN__HEALTH_REPORTS = eINSTANCE.getBuildPlan_HealthReports();
+
+		/**
+		 * The meta object literal for the '<em><b>Flags</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute BUILD_PLAN__FLAGS = eINSTANCE.getBuildPlan_Flags();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport

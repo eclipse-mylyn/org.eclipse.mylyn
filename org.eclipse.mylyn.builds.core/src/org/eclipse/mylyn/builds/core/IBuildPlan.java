@@ -33,6 +33,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild <em>Last Build</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealthReports <em>Health Reports</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getFlags <em>Flags</em>}</li>
  * </ul>
  * </p>
  * 
@@ -392,5 +393,20 @@ public interface IBuildPlan extends IBuildElement {
 	 * @generated
 	 */
 	List<IHealthReport> getHealthReports();
+
+	/**
+	 * Returns the value of the '<em><b>Flags</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.BuildState}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Flags</em>' attribute list isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Flags</em>' attribute list.
+	 * @generated
+	 */
+	List<BuildState> getFlags();
 
 } // IBuildPlan

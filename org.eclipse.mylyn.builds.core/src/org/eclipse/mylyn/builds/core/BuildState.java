@@ -16,6 +16,6 @@ package org.eclipse.mylyn.builds.core;
  */
 public enum BuildState {
 
-	RUNNING, STOPPED;
+	QUEUED, RUNNING, STOPPED, BUILDABLE;
 
 }

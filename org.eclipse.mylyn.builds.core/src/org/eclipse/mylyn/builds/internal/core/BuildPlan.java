@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: BuildPlan.java,v 1.5 2010/09/08 00:31:12 spingel Exp $
+ * $Id: BuildPlan.java,v 1.6 2010/10/11 23:51:44 spingel Exp $
  */
 package org.eclipse.mylyn.builds.internal.core;
 
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
@@ -54,6 +55,7 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getLastBuild <em>Last Build</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getParameterDefinitions <em>Parameter Definitions</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getHealthReports <em>Health Reports</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getFlags <em>Flags</em>}</li>
  * </ul>
  * </p>
  * 
@@ -302,6 +304,17 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * @ordered
 	 */
 	protected EList<IHealthReport> healthReports;
+
+	/**
+	 * The cached value of the '{@link #getFlags() <em>Flags</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getFlags()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<BuildState> flags;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -766,6 +779,19 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * 
 	 * @generated
 	 */
+	public List<BuildState> getFlags() {
+		if (flags == null) {
+			flags = new EDataTypeUniqueEList<BuildState>(BuildState.class, this, BuildPackage.BUILD_PLAN__FLAGS);
+		}
+		return flags;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -848,6 +874,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			return getParameterDefinitions();
 		case BuildPackage.BUILD_PLAN__HEALTH_REPORTS:
 			return getHealthReports();
+		case BuildPackage.BUILD_PLAN__FLAGS:
+			return getFlags();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -907,6 +935,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			getHealthReports().clear();
 			getHealthReports().addAll((Collection<? extends IHealthReport>) newValue);
 			return;
+		case BuildPackage.BUILD_PLAN__FLAGS:
+			getFlags().clear();
+			getFlags().addAll((Collection<? extends BuildState>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -962,6 +994,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		case BuildPackage.BUILD_PLAN__HEALTH_REPORTS:
 			getHealthReports().clear();
 			return;
+		case BuildPackage.BUILD_PLAN__FLAGS:
+			getFlags().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1003,6 +1038,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			return parameterDefinitions != null && !parameterDefinitions.isEmpty();
 		case BuildPackage.BUILD_PLAN__HEALTH_REPORTS:
 			return healthReports != null && !healthReports.isEmpty();
+		case BuildPackage.BUILD_PLAN__FLAGS:
+			return flags != null && !flags.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1035,6 +1072,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		result.append(status);
 		result.append(", description: "); //$NON-NLS-1$
 		result.append(description);
+		result.append(", flags: "); //$NON-NLS-1$
+		result.append(flags);
 		result.append(')');
 		return result.toString();
 	}
