@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -819,6 +820,18 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			plan.setStatus(null);
 			plan.setState(null);
 		}
+
+		EnumSet<BuildState> flags = EnumSet.noneOf(BuildState.class);
+		if (plan.getState() != null) {
+			flags.add(plan.getState());
+		}
+		if (job.isInQueue()) {
+			flags.add(BuildState.QUEUED);
+		}
+		if (job.isBuildable()) {
+			flags.add(BuildState.BUILDABLE);
+		}
+		plan.getFlags().addAll(flags);
 	}
 
 	@Override
