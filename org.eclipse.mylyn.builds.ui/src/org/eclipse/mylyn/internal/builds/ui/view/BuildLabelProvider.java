@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
@@ -71,6 +73,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		ImageDescriptor descriptor = null;
 		ImageDescriptor bottomLeftDecoration = null;
 		ImageDescriptor bottomRightDecoration = null;
+		ImageDescriptor topRightDecoration = null;
 
 		// bottom left decoration
 		if (element instanceof IBuildElement) {
@@ -87,6 +90,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		} else if (element instanceof IBuildPlan) {
 			descriptor = getImageDescriptor(((IBuildPlan) element).getStatus());
 			bottomRightDecoration = getBottomRightDecoration(((IBuildPlan) element).getState());
+			topRightDecoration = getTopRightDecoration(((IBuildPlan) element).getFlags());
 		} else if (element instanceof IBuild) {
 			descriptor = BuildLabelProvider.getImageDescriptor(((IBuild) element).getStatus());
 			bottomRightDecoration = getBottomRightDecoration(((IBuild) element).getState());
@@ -95,7 +99,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		if (descriptor != null) {
 			if (bottomRightDecoration != null || bottomLeftDecoration != null) {
 				descriptor = new DecorationOverlayIcon(CommonImages.getImage(descriptor), new ImageDescriptor[] { null,
-						null, bottomLeftDecoration, bottomRightDecoration });
+						topRightDecoration, bottomLeftDecoration, bottomRightDecoration });
 			}
 			return CommonImages.getImage(descriptor);
 		}
@@ -125,6 +129,13 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 	private ImageDescriptor getBottomRightDecoration(BuildState state) {
 		if (state == BuildState.RUNNING) {
 			return BuildImages.DECORATION_RUNNING;
+		}
+		return null;
+	}
+
+	private ImageDescriptor getTopRightDecoration(List<BuildState> flags) {
+		if (flags.contains(BuildState.QUEUED)) {
+			return CommonImages.OVERLAY_DATE_DUE;
 		}
 		return null;
 	}
