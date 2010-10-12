@@ -122,7 +122,6 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 				remove = true;
 				for (IRepositoryElement element : TasksUiPlugin.getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
-						list.add(adaptable);
 						remove = false;
 						break;
 					}
