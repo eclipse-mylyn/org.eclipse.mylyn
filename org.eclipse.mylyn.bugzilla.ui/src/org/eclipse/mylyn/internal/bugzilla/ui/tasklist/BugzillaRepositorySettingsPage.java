@@ -383,7 +383,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					usestatuswhiteboard.setSelection(false);
 					usebugaliases.setSelection(true);
 					use_see_also.setSelection(true);
-					useXMLRPCstatusTransitions.setSelection(true);
+					useXMLRPCstatusTransitions.setSelection(false);
 				}
 			} else {
 				// we use the repository values
