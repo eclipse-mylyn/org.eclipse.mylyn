@@ -63,7 +63,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 	public static void removeUninterestingActionSets(IPageLayout layout) {
 		try {
 			Class<?> clazz = Class.forName("org.eclipse.ui.internal.PageLayout"); //$NON-NLS-1$
-			if (clazz != null && clazz.isInstance(clazz)) {
+			if (clazz != null && clazz.isInstance(layout)) {
 				Method method = clazz.getDeclaredMethod("getActionSets", null);
 				ArrayList<?> actionSets = (ArrayList<?>) method.invoke(layout);
 				actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
