@@ -68,7 +68,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
-import org.eclipse.ui.internal.EditorAreaHelper;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
@@ -363,7 +362,9 @@ public class EditorUtil {
 		Composite layoutAdvisor = page.getEditorComposite();
 		do {
 			layoutAdvisor = layoutAdvisor.getParent();
-		} while (!(layoutAdvisor instanceof CTabFolder));
+		} while (!(layoutAdvisor instanceof CTabFolder || layoutAdvisor.getClass()
+				.getName()
+				.equals("org.eclipse.e4.ui.widgets.CTabFolder")));
 		return layoutAdvisor.getParent();
 	}
 
@@ -488,9 +489,14 @@ public class EditorUtil {
 		}
 		if (widthHint <= 0 && page.getEditor().getEditorSite() != null
 				&& page.getEditor().getEditorSite().getPage() != null) {
-			EditorAreaHelper editorManager = ((WorkbenchPage) page.getEditor().getEditorSite().getPage()).getEditorPresentation();
-			if (editorManager != null && editorManager.getLayoutPart() != null) {
-				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
+//			EditorAreaHelper editorManager = ((WorkbenchPage) page.getEditor().getEditorSite().getPage()).getEditorPresentation();
+//			if (editorManager != null && editorManager.getLayoutPart() != null) {
+//				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
+//			}
+			// XXX e4.0 this does not work, the composite is always null
+			Composite composite = ((WorkbenchPage) page.getEditor().getEditorSite().getPage()).getClientComposite();
+			if (composite != null) {
+				widthHint = composite.getBounds().width - 90;
 			}
 		}
 		if (widthHint <= 0) {
