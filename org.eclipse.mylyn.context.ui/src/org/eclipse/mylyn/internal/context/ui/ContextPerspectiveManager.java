@@ -23,9 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Perspective;
-import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 /**
  * @author Mik Kersten
@@ -74,8 +71,9 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 	public void taskDeactivated(ITask task) {
 		try {
 			if (PlatformUI.isWorkbenchRunning()
-					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
+					&& ContextUiPlugin.getDefault()
+							.getPreferenceStore()
+							.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
 				IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 				if (launchingWindow != null) {
 					IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
@@ -93,8 +91,9 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 	private void showPerspective(String perspectiveId) {
 		if (perspectiveId != null
 				&& perspectiveId.length() > 0
-				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
+				&& ContextUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 			try {
 				if (launchingWindow != null) {
@@ -154,17 +153,8 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 
 	private void cleanActionSets(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
 		if (managedPerspectiveIds.contains(perspectiveDescriptor.getId())) {
-			if (page instanceof WorkbenchPage) {
-				Perspective perspective = ((WorkbenchPage) page).getActivePerspective();
-
-				Set<IActionSetDescriptor> toRemove = new HashSet<IActionSetDescriptor>();
-				IActionSetDescriptor[] actionSetDescriptors = ((WorkbenchPage) page).getActionSets();
-				for (IActionSetDescriptor actionSetDescriptor : actionSetDescriptors) {
-					if (actionSetsToSuppress.contains(actionSetDescriptor.getId())) {
-						toRemove.add(actionSetDescriptor);
-					}
-				}
-				perspective.turnOffActionSets(toRemove.toArray(new IActionSetDescriptor[toRemove.size()]));
+			for (String actionSetId : actionSetsToSuppress) {
+				page.hideActionSet(actionSetId);
 			}
 		}
 	}
@@ -200,8 +190,9 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 	 */
 	private void setPerspectiveIdFor(ITask task, String perspectiveId) {
 		if (task != null) {
-			preferenceStore.setValue(IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE
-					+ task.getHandleIdentifier(), perspectiveId);
+			preferenceStore.setValue(
+					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
+					perspectiveId);
 		} else {
 			preferenceStore.setValue(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
 		}
