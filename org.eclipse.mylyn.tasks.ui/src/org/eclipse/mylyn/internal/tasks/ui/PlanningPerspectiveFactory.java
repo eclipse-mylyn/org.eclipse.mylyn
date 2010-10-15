@@ -11,13 +11,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.PageLayout;
 
 /**
  * @author Mik Kersten
@@ -59,10 +59,19 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
 	}
 
+	// XXX e4.0 hiding action sets is no longer supported
 	public static void removeUninterestingActionSets(IPageLayout layout) {
-		ArrayList<?> actionSets = ((PageLayout) layout).getActionSets();
-		actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
-		actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
-		actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$
+		try {
+			Class<?> clazz = Class.forName("org.eclipse.ui.internal.PageLayout"); //$NON-NLS-1$
+			if (clazz != null && clazz.isInstance(clazz)) {
+				Method method = clazz.getDeclaredMethod("getActionSets", null);
+				ArrayList<?> actionSets = (ArrayList<?>) method.invoke(layout);
+				actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
+				actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
+				actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$
+			}
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 }
