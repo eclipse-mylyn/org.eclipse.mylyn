@@ -425,7 +425,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 					returnTypeStr = ASTTypeUtil.getType(returnType, false);
 				}
 			}
-		} catch (DOMException e) {
+		} catch (Exception e) {
 		}
 
 		String dispargString = dispargs.toString();
@@ -476,7 +476,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 			if (varType != null) {
 				returnTypeStr = ASTTypeUtil.getType(varType, false);
 			}
-		} catch (DOMException e) {
+		} catch (Exception e) {
 		}
 
 		StringBuilder dispStringBuff = new StringBuilder(repStringBuff.toString());
