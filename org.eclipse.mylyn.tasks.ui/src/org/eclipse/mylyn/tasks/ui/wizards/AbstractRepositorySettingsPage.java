@@ -35,7 +35,9 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -252,8 +254,39 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		compositeContainer.setLayout(layout);
 
 		createSettingControls(compositeContainer);
+		createValidationControls(compositeContainer);
 
+		Dialog.applyDialogFont(compositeContainer);
 		setControl(compositeContainer);
+	}
+
+	/**
+	 * @since 3.5
+	 */
+	protected void createValidationControls(Composite parent) {
+		if (!needsValidation() || getContainer() instanceof ValidatableWizardDialog
+				|| getContainer() instanceof TaskRepositoryWizardDialog) {
+			return;
+		}
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 10;
+		layout.marginWidth = 0;
+		layout.horizontalSpacing = 10;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 3, 1));
+
+		// show validation control on page since it's not provided by container
+		Button validateButton = new Button(composite, SWT.PUSH);
+		validateButton.setImage(CommonImages.getImage(CommonImages.VALIDATE));
+		validateButton.setText("Validate Settings");
+		validateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				validateSettings();
+			}
+		});
 	}
 
 	/**
@@ -545,8 +578,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		GridLayout layout = new GridLayout(3, false);
 		compositeContainer.setLayout(layout);
-
-		Dialog.applyDialogFont(compositeContainer);
 	}
 
 	private void createAdvancedSection() {
