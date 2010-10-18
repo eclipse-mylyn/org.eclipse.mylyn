@@ -153,6 +153,8 @@ public final class TaskRepository extends PlatformObject {
 	// HACK: private credentials for headless operation
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
+	private static String CREATED_FROM_TEMPLATE = "org.eclipse.mylyn.tasklist.repositories.template"; //$NON-NLS-1$
+
 	static {
 		URL url = null;
 		try {
@@ -292,7 +294,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -676,7 +678,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	/**
-	 * Use platform proxy settings
+	 * Returns true, if platform proxy settings should be used.
 	 */
 	public boolean isDefaultProxyEnabled() {
 		return "true".equals(getProperty(PROXY_USEDEFAULT)); //$NON-NLS-1$
@@ -907,6 +909,26 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public void setDefaultProxyEnabled(boolean useDefaultProxy) {
 		setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(useDefaultProxy));
+	}
+
+	/**
+	 * If this repository was automatically created from a template <code>value</code> should be set to true.
+	 * 
+	 * @since 3.5
+	 * @see #isCreatedFromTemplate()
+	 */
+	public void setCreatedFromTemplate(boolean value) {
+		setProperty(TaskRepository.CREATED_FROM_TEMPLATE, String.valueOf(value));
+	}
+
+	/**
+	 * Returns true, if this repository was automatically created from a template.
+	 * 
+	 * @since 3.5
+	 * @see #setCreatedFromTemplate(boolean)
+	 */
+	public boolean isCreatedFromTemplate() {
+		return "true".equals(getProperty(CREATED_FROM_TEMPLATE)); //$NON-NLS-1$
 	}
 
 }
