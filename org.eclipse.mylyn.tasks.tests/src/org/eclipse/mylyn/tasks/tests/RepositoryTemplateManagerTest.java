@@ -44,4 +44,10 @@ public class RepositoryTemplateManagerTest extends TestCase {
 		}
 	}
 
+	public void testStripSlashes() {
+		RepositoryTemplate template = new RepositoryTemplate("Mock", MockRepositoryConnector.REPOSITORY_URL + "///",
+				"", "", "", "", "", "", false, true);
+		assertEquals(MockRepositoryConnector.REPOSITORY_URL, template.repositoryUrl);
+	}
+
 }

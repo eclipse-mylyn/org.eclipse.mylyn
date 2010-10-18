@@ -15,6 +15,8 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+
 /**
  * Specifies attributes for a task repository.
  * 
@@ -50,7 +52,7 @@ public final class RepositoryTemplate {
 			String newTaskUrl, String taskPrefix, String taskQuery, String newAccountUrl, boolean anonymous,
 			boolean addAutomatically) {
 		this.label = label;
-		this.repositoryUrl = repositoryUrl;
+		this.repositoryUrl = TaskRepositoryManager.stripSlashes(repositoryUrl);
 		this.newTaskUrl = newTaskUrl;
 		this.taskPrefixUrl = taskPrefix;
 		this.taskQueryUrl = taskQuery;
