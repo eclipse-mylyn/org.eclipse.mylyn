@@ -30,6 +30,7 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -1196,7 +1197,7 @@ public class TasksUiInternal {
 				if (command != null) {
 					try {
 						if (object != null) {
-							EvaluationContext context = new EvaluationContext(service.getCurrentState(), object);
+							IEvaluationContext context = service.createContextSnapshot(false);
 							context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, new StructuredSelection(object));
 							service.executeCommandInContext(new ParameterizedCommand(command, null), event, context);
 						} else {
