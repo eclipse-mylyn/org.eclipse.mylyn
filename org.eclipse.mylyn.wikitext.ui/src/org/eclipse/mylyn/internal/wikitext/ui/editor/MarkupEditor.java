@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -76,8 +76,8 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
@@ -85,6 +85,7 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
@@ -234,7 +235,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			tabFolder.setSelection(sourceTab);
 		}
 
-		{
+		try {
 			previewTab = new CTabItem(tabFolder, SWT.NONE);
 			previewTab.setText(Messages.MarkupEditor_preview);
 			previewTab.setToolTipText(Messages.MarkupEditor_preview_tooltip);
@@ -272,6 +273,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 			});
 			previewTab.setControl(browser);
+		} catch (SWTError e) {
+			// disable preview, the exception is probably due to the internal browser not being available
+			if (previewTab != null) {
+				previewTab.dispose();
+				previewTab = null;
+			}
 		}
 
 		tabFolder.addSelectionListener(new SelectionListener() {
@@ -880,8 +887,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						}
 					}
 				}
-				projectionAnnotationModel.modifyAnnotations(toDelete.isEmpty() ? null
-						: toDelete.toArray(new Annotation[toDelete.size()]), annotationToPosition, null);
+				projectionAnnotationModel.modifyAnnotations(
+						toDelete.isEmpty() ? null : toDelete.toArray(new Annotation[toDelete.size()]),
+						annotationToPosition, null);
 			} else {
 				projectionAnnotationModel.modifyAnnotations(null, annotationToPosition, null);
 				for (HeadingProjectionAnnotation annotation : annotationToPosition.keySet()) {
@@ -1232,6 +1240,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private boolean isShowingPreview() {
-		return tabFolder.getSelection() == previewTab;
+		return previewTab != null && tabFolder.getSelection() == previewTab;
 	}
 }
