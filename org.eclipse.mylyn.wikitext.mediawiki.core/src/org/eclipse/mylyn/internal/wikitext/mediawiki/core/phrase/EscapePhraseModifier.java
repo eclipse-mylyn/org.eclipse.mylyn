@@ -15,15 +15,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class EscapePhraseModifier extends PatternBasedElement {
 
 	@Override
-	protected String getPattern(int groupOffset) {
-		return "<nowiki>" + "(\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ //$NON-NLS-2$
+	public String getPattern(int groupOffset) {
+		return "<nowiki>" + "((?:(?!</nowiki>).)*)" + // content //$NON-NLS-1$ //$NON-NLS-2$
 				"</nowiki>"; //$NON-NLS-1$
 	}
 

@@ -62,6 +62,14 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("<body><p><b>no &lt;!-- markup here</b></p></body>").matcher(html).find());
 	}
 
+	public void testNoWiki_325022() {
+		// bug 325022: nowiki is not correctly detected
+		String html = parser.parseToHtml("//<nowiki>[</nowiki>username<nowiki>[</nowiki>:password]@]host<nowiki>[</nowiki>:port]");
+		//[username[:password]@]host[:port]
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>//[username[:password]@]host[:port]</p>"));
+	}
+
 	public void testBoldItalic() {
 		String html = parser.parseToHtml("normal '''''bold italic text''''' normal");
 		TestUtil.println(html);
