@@ -48,9 +48,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesViewSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesContentProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -190,8 +190,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 							IHandlerService.class);
 					try {
-						discoveryWizardCommand.executeWithChecks(SelectRepositoryConnectorPage.createExecutionEvent(
-								discoveryWizardCommand, handlerService));
+						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {
 						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,

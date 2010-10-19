@@ -12,11 +12,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
@@ -130,8 +128,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 							IHandlerService.class);
 					try {
-						discoveryWizardCommand.executeWithChecks(createExecutionEvent(discoveryWizardCommand,
-								handlerService));
+						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {
 						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
@@ -145,11 +142,6 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 
 		Dialog.applyDialogFont(container);
 		setControl(container);
-	}
-
-	static ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
-		return new ExecutionEvent(command, Collections.emptyMap(), null,
-				TasksUiInternal.createDiscoveryWizardEvaluationContext(handlerService));
 	}
 
 	public AbstractRepositoryConnector getConnector() {
