@@ -228,7 +228,7 @@
              style="push"
              tooltip="%command.tooltip.3">
           <visibleWhen>
-          	`<with variable="activeContexts">
+          	<with variable="activeContexts">
 	            <iterate operator="or">
 	               <equals
 	                     value="org.eclipse.mylyn.internal.wikitext.ui.editor.basicMarkupSourceContext"/>
