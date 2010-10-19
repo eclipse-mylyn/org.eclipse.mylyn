@@ -136,7 +136,7 @@ public abstract class MarkupLanguage implements Cloneable {
 
 					state.setLineNumber(reader.getLineNumber() + 1);
 					state.setLineOffset(reader.getLineOffset());
-					state.setLineCharacterOffset(0);
+					state.setLineCharacterOffset(lineOffset);
 					state.setLineSegmentEndOffset(0);
 					state.setLineLength(line.length());
 
@@ -159,6 +159,7 @@ public abstract class MarkupLanguage implements Cloneable {
 									}
 									currentBlock = nestedBlocks.pop();
 									lineOffset = closeOffset;
+									state.setLineCharacterOffset(lineOffset);
 								}
 							}
 						}

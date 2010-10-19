@@ -148,6 +148,22 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		assertPartitioningAsExpected(expected, partitioning);
 	}
 
+	public void testConfluenceColor3() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new ConfluenceLanguage());
+
+		document.set("views to help SOA  development. These includes [SOA Services Explorer](in green) for the list of all available SOA services,\n[Types Explorer](in {color:#0000ff}blue{color}) for searching and browsing all available ");
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+
+		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
+		for (ITypedRegion region : partitioning) {
+			TestUtil.println(region);
+		}
+	}
+
 	/**
 	 * bug 314131
 	 */
@@ -175,10 +191,13 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		assertEquals(expected.length, partitioning.length);
 		for (int x = 0; x < expected.length; ++x) {
 			ITypedRegion region = partitioning[x];
-			assertEquals(String.format("partition %s offset expected %s but got %s", x, expected[x][0],
-					region.getOffset()), expected[x][0], region.getOffset());
-			assertEquals(String.format("partition %s length expected %s but got %s", x, expected[x][1],
-					region.getLength()), expected[x][1], region.getLength());
+			assertEquals(
+					String.format("partition %s offset expected %s but got %s", x, expected[x][0], region.getOffset()),
+					expected[x][0], region.getOffset());
+			assertEquals(
+					String.format("partition %s length expected %s but got %s", x, expected[x][1], region.getLength()),
+					expected[x][1], region.getLength());
 		}
 	}
+
 }

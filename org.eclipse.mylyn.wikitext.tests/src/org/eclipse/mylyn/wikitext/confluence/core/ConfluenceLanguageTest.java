@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -787,6 +788,29 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("text {color:red}more text{color} text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>text </p><div style=\"color: red;\"><p>more text</p></div><p> text</p></body>"));
+	}
+
+	public void testColorLexicalOffsets() {
+		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		parser.setBuilder(builder);
+		final String content = "views to help SOA  development. These includes [SOA Services Explorer](in green) for the list of all available SOA services,\n[Types Explorer](in {color:#0000ff}blue{color}) for searching and browsing all available ";
+		TestUtil.println(content);
+		parser.parse(content);
+		TestUtil.println("Events: \n" + builder);
+
+		int previousDocumentOffset = -1;
+		for (RecordingDocumentBuilder.Event event : builder.getEvents()) {
+			assertTrue(previousDocumentOffset <= event.locator.getDocumentOffset());
+			previousDocumentOffset = event.locator.getDocumentOffset();
+			if (event.text != null) {
+				int start = event.locator.getDocumentOffset();
+				int end = event.locator.getLineSegmentEndOffset() + event.locator.getLineDocumentOffset();
+				assertEquals(event.text.length(), end - start);
+				assertTrue(end >= start);
+				assertEquals(content.substring(start, end), event.text);
+			}
+		}
+
 	}
 
 	/**
