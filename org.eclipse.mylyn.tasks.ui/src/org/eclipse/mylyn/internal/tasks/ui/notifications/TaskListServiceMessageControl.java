@@ -144,8 +144,7 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 							IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 									IHandlerService.class);
 							try {
-								discoveryWizardCommand.executeWithChecks(TaskListServiceMessageControl.createExecutionEvent(
-										discoveryWizardCommand, handlerService));
+								handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 							} catch (Exception e1) {
 								IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 										Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
@@ -159,4 +158,5 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 			}
 		};
 	}
+
 }
