@@ -83,7 +83,25 @@ public class JUnitResultGenerator {
 			attributes.addAttribute(null, null, TIME, null, Double.toString(testsuite.getDuration() / 1000.0d));
 			handler.startElement(null, null, TESTSUITE, attributes);
 
+			// group tests by class name
+			String childSuite = null;
 			for (ITestCase test : testsuite.getCases()) {
+				// only use group if tests are not already grouped
+				if (test.getClassName() != null && !test.getClassName().equals(testsuite.getLabel())) {
+					if (childSuite == null) {
+						attributes.clear();
+						attributes.addAttribute(null, null, NAME, null, test.getClassName());
+						handler.startElement(null, null, TESTSUITE, attributes);
+					} else if (!childSuite.equals(test.getClassName())) {
+						handler.endElement(null, null, TESTSUITE);
+
+						attributes.clear();
+						attributes.addAttribute(null, null, NAME, null, test.getClassName());
+						handler.startElement(null, null, TESTSUITE, attributes);
+					}
+					childSuite = test.getClassName();
+				}
+
 				attributes.clear();
 				attributes.addAttribute(null, null, NAME, null, test.getLabel());
 				attributes.addAttribute(null, null, CLASS_NAME, null, test.getClassName());
@@ -109,6 +127,10 @@ public class JUnitResultGenerator {
 				handler.endElement(null, null, TESTCASE);
 			}
 
+			if (childSuite != null) {
+				handler.endElement(null, null, TESTSUITE);
+			}
+
 			handler.endElement(null, null, TESTSUITE);
 		}
 
@@ -116,5 +138,4 @@ public class JUnitResultGenerator {
 
 		handler.endDocument();
 	}
-
 }
