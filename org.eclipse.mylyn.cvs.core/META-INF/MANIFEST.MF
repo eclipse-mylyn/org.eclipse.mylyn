@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.eclipse.mylyn.scm.cvs;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylyn.scm.core,
+ org.eclipse.team.core,
+ org.eclipse.core.resources,
+ org.eclipse.team.cvs.core,
+ org.eclipse.core.filesystem
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.mylyn.internal.scm.cvs.core;x-internal:=true

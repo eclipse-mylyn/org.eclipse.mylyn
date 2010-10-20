@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.scm.core.connectors">
+      <connector
+            core="org.eclipse.mylyn.internal.scm.cvs.core.CvsConnector"
+            id="org.eclipse.team.cvs.core.cvsnature">
+      </connector>
+   </extension>
+
+</plugin>
