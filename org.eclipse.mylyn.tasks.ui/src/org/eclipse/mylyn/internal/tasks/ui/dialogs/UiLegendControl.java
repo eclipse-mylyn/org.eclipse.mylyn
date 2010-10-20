@@ -73,7 +73,11 @@ public class UiLegendControl extends Composite {
 		this.toolkit = toolkit;
 		toolkit.adapt(this);
 
-		addListeners();
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				doDispose();
+			}
+		});
 
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.leftMargin = 0;
@@ -93,14 +97,6 @@ public class UiLegendControl extends Composite {
 		setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB));
 	}
 
-	private void addListeners() {
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				doDispose();
-			}
-		});
-	}
-
 	private void doDispose() {
 		for (LegendElement element : legendElements) {
 			element.dispose();
@@ -108,7 +104,6 @@ public class UiLegendControl extends Composite {
 		if (labelProvider != null) {
 			labelProvider.dispose();
 		}
-		dispose();
 	}
 
 	public void setWindow(Window window) {
@@ -290,14 +285,16 @@ public class UiLegendControl extends Composite {
 		Label imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Scheduled_for_today);
-		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_SCHEDULED_TODAY));
+		labelToday.setForeground(themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_SCHEDULED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelOverdue = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_scheduled_date);
-		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_SCHEDULED_PAST));
+		labelOverdue.setForeground(themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_SCHEDULED_PAST));
 
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
@@ -319,8 +316,9 @@ public class UiLegendControl extends Composite {
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompletedToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Completed_today);
 		labelCompletedToday.setFont(CommonFonts.STRIKETHROUGH);
-		labelCompletedToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_COMPLETED_TODAY));
+		labelCompletedToday.setForeground(themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_COMPLETED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE));
@@ -333,7 +331,8 @@ public class UiLegendControl extends Composite {
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
-		Hyperlink adjust = toolkit.createHyperlink(activityClient, Messages.UiLegendControl_Adjust_Colors_and_Fonts_, SWT.WRAP);
+		Hyperlink adjust = toolkit.createHyperlink(activityClient, Messages.UiLegendControl_Adjust_Colors_and_Fonts_,
+				SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()

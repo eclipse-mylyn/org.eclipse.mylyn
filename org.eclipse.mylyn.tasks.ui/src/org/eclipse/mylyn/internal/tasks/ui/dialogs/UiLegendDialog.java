@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -54,26 +55,16 @@ public class UiLegendDialog extends PopupDialog {
 
 	@Override
 	public boolean close() {
-		if (form != null && !form.isDisposed()) {
-			form.dispose();
-		}
-
 		if (toolkit != null) {
-			if (toolkit.getColors() != null) {
-				toolkit.dispose();
-			}
+			toolkit.dispose();
 		}
-
-		if (content != null && !content.isDisposed()) {
-			content.dispose();
-		}
-
 		return super.close();
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		toolkit = new FormToolkit(parent.getDisplay());
+		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+
 		form = toolkit.createScrolledForm(parent);
 		form.setText(Messages.UiLegendControl_Tasks_UI_Legend);
 		form.getToolBarManager().add(new CloseDialogAction());
