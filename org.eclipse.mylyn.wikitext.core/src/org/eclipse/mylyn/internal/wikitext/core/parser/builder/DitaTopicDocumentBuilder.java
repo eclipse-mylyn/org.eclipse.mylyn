@@ -488,9 +488,22 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void image(Attributes attributes, String url) {
 		ensureOpenTopic();
+
+		boolean emitAsFigure = attributes.getTitle() != null;
+		if (emitAsFigure) {
+			writer.writeStartElement("fig"); //$NON-NLS-1$
+			writer.writeStartElement("title");//$NON-NLS-1$
+			writer.writeCharacters(attributes.getTitle());
+			writer.writeEndElement();
+		}
+
 		writer.writeEmptyElement("image"); //$NON-NLS-1$
 		writer.writeAttribute("href", url); //$NON-NLS-1$
 		applyImageAttributes(attributes);
+
+		if (emitAsFigure) {
+			writer.writeEndElement();
+		}
 	}
 
 	@Override

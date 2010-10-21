@@ -17,11 +17,12 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
@@ -61,7 +62,9 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		TestUtil.println("DITA: \n" + dita);
 
 		assertTrue(Pattern.compile(".*?<topic>\\s*<title></title>\\s*<body>\\s*<p>foo</p>\\s*<p>bar</p>\\s*</body>.*",
-				Pattern.DOTALL).matcher(dita).matches());
+				Pattern.DOTALL)
+				.matcher(dita)
+				.matches());
 	}
 
 	public void testNoFormatting() {
@@ -103,5 +106,20 @@ public class DitaTopicDocumentBuilderTest extends TestCase {
 		TestUtil.println("DITA: \n" + dita);
 
 		assertTrue(Pattern.compile("<xref href=\"#test1234\">\\s*<i>link text</i>\\s*</xref>").matcher(dita).find());
+	}
+
+	public void testImageWithCaption() {
+		parser.setMarkupLanguage(new MediaWikiLanguage());
+
+		parser.parse("[[Image:images/editor-assist-proposals.png|alt=Alternative text|Caption text.]]");
+
+		String dita = out.toString();
+		TestUtil.println("DITA: \n" + dita);
+
+		assertTrue(Pattern.compile(
+				"<fig>\\s*<title>Caption text.</title>\\s*<image href=\"images/editor-assist-proposals.png\" alt=\"Alternative text\"/>\\s*</fig>",
+				Pattern.DOTALL)
+				.matcher(dita)
+				.find());
 	}
 }
