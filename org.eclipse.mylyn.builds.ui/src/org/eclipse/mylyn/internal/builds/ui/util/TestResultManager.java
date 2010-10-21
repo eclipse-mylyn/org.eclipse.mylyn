@@ -116,7 +116,6 @@ public class TestResultManager {
 
 	static JUnitModel getJUnitModel() {
 		if (junitModel == null) {
-			Exception cause = null;
 			try {
 				// Eclipse 3.6 or later
 				Class<?> clazz;
@@ -131,7 +130,7 @@ public class TestResultManager {
 				junitModel = (JUnitModel) method.invoke(null);
 			} catch (Exception e) {
 				NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel");
-				error.initCause(cause);
+				error.initCause(e);
 				throw error;
 			}
 		}
