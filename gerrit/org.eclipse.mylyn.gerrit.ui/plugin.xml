@@ -2,37 +2,33 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="org.eclipse.mylyn.gerrit"
-         name="Gerrit"
          point="org.eclipse.mylyn.tasks.ui.repositories">
 
       <connectorCore
-            id="org.eclipse.mylyn.gerrit.core"
-            class="org.eclipse.mylyn.gerrit.core.GerritConnector"
-            name="Gerrit Connector"/>
+            id="org.eclipse.mylyn.gerrit"
+            class="org.eclipse.mylyn.internal.gerrit.core.GerritConnector"
+            name="Gerrit"/>
 	  <connectorUi
          brandingIcon="icons/gerrit.png"
-         class="org.eclipse.mylyn.gerrit.ui.GerritConnectorUi"
-         name="Gerrit ConnectorUi"
+         class="org.eclipse.mylyn.internal.gerrit.ui.GerritConnectorUi"
+         id="org.eclipse.mylyn.gerrit"
+         name="Gerrit"
          overlayIcon="icons/gerrit-overlay.png"/>
-	  <taskListMigrator
-         class="org.eclipse.mylyn.gerrit.ui.GerritTaskListMigrator">
-   	  </taskListMigrator>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
       <repository
             addAutomatically="false"
             anonymous="false"
-            label="Android source code review"
-            repositoryKind="gerrit"
-            urlRepository="http://review.source.android.com">
+            label="Eclipse EGit"
+            repositoryKind="org.eclipse.mylyn.gerrit"
+            urlRepository="http://egit.eclipse.org/r">
       </repository>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
          <pageFactory
-            class="org.eclipse.mylyn.gerrit.ui.editor.GerritTaskEditorPageFactory"
+            class="org.eclipse.mylyn.internal.gerrit.ui.editor.GerritTaskEditorPageFactory"
             id="org.eclipse.mylyn.gerrit.ui.pageFactory">
       </pageFactory>   
    </extension>

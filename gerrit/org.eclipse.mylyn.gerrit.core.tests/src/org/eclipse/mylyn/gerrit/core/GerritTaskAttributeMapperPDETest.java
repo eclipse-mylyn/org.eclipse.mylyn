@@ -10,9 +10,9 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import org.eclipse.mylyn.gerrit.core.GerritAttribute;
-import org.eclipse.mylyn.gerrit.core.GerritTaskAttributeMapper;
-import org.eclipse.mylyn.gerrit.core.GerritTaskDataHandler;
+import org.eclipse.mylyn.internal.gerrit.core.GerritAttribute;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskAttributeMapper;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;

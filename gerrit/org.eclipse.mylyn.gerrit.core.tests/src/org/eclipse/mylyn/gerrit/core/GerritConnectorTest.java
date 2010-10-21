@@ -10,7 +10,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import org.eclipse.mylyn.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 
 import junit.framework.TestCase;
 

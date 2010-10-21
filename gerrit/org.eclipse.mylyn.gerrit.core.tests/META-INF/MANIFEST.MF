@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MylynGerrit connector tests
-Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests
+Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: Sony Ericsson Mobile Communications
 Fragment-Host: org.eclipse.mylyn.gerrit.core

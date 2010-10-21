@@ -10,7 +10,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import org.eclipse.mylyn.gerrit.core.GerritTask;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTask;
 
 import java.util.Date;
 
