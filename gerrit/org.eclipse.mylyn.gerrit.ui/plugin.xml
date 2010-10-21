@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.eclipse.mylyn.gerrit"
+         name="Gerrit"
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+
+      <connectorCore
+            id="org.eclipse.mylyn.gerrit.core"
+            class="org.eclipse.mylyn.gerrit.core.GerritConnector"
+            name="Gerrit Connector"/>
+	  <connectorUi
+         brandingIcon="icons/gerrit.png"
+         class="org.eclipse.mylyn.gerrit.ui.GerritConnectorUi"
+         name="Gerrit ConnectorUi"
+         overlayIcon="icons/gerrit-overlay.png"/>
+	  <taskListMigrator
+         class="org.eclipse.mylyn.gerrit.ui.GerritTaskListMigrator">
+   	  </taskListMigrator>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="false"
+            anonymous="false"
+            label="Android source code review"
+            repositoryKind="gerrit"
+            urlRepository="http://review.source.android.com">
+      </repository>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+         <pageFactory
+            class="org.eclipse.mylyn.gerrit.ui.editor.GerritTaskEditorPageFactory"
+            id="org.eclipse.mylyn.gerrit.ui.pageFactory">
+      </pageFactory>   
+   </extension>
+
+</plugin>
