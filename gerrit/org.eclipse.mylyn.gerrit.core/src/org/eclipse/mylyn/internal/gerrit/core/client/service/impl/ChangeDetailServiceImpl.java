@@ -30,77 +30,71 @@ import org.eclipse.mylyn.internal.gerrit.core.client.service.AbstractGerritServi
 
 public class ChangeDetailServiceImpl extends AbstractGerritService implements ChangeDetailService {
 
-  public ChangeDetailServiceImpl(GerritHttpClient client) {
-    super(client);
-    // TODO Auto-generated constructor stub
-  }
+	public ChangeDetailServiceImpl(GerritHttpClient client) {
+		super(client);
+		// TODO Auto-generated constructor stub
+	}
 
-  
-  public String getServiceUri() {
-    return "/gerrit/rpc/ChangeDetailService";
-  }
+	public String getServiceUri() {
+		return "/gerrit/rpc/ChangeDetailService";
+	}
 
-  
-  public void changeDetail(Id id, AsyncCallback<ChangeDetail> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void changeDetail(Id id, AsyncCallback<ChangeDetail> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(id));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<ChangeDetail>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<ChangeDetail> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((ChangeDetail)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(id));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<ChangeDetail>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<ChangeDetail> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((ChangeDetail) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void patchSetDetail(com.google.gerrit.reviewdb.PatchSet.Id key,
-    AsyncCallback<PatchSetDetail> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(key));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<PatchSetDetail>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<PatchSetDetail> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((PatchSetDetail)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+	public void patchSetDetail(com.google.gerrit.reviewdb.PatchSet.Id key, AsyncCallback<PatchSetDetail> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(key));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<PatchSetDetail>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<PatchSetDetail> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((PatchSetDetail) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void patchSetPublishDetail(com.google.gerrit.reviewdb.PatchSet.Id key,
-    AsyncCallback<PatchSetPublishDetail> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(key));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<PatchSetPublishDetail>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<PatchSetPublishDetail> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((PatchSetPublishDetail)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+	public void patchSetPublishDetail(com.google.gerrit.reviewdb.PatchSet.Id key,
+			AsyncCallback<PatchSetPublishDetail> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(key));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<PatchSetPublishDetail>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<PatchSetPublishDetail> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((PatchSetPublishDetail) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
+	public void includedInDetail(Id id, AsyncCallback<IncludedInDetail> callback) {
+		// TODO Auto-generated method stub
 
-public void includedInDetail(Id id, AsyncCallback<IncludedInDetail> callback) {
-	// TODO Auto-generated method stub
-	
-}
+	}
 
 }

@@ -25,63 +25,62 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
-
 /**
  * Handler for task data from gerrit.
+ * 
  * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson -
- *         thomas.westling@sonyericsson.com
+ * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
  */
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
-    private GerritClient gerritClient = null;
+	private GerritClient gerritClient = null;
 
-	
 	/**
 	 * Constructor.
+	 * 
 	 * @param connector
 	 */
 	public GerritTaskDataHandler() { //GerritConnector connector
 		//this.connector = connector;
-//	    gerritClient = new GerritClient();
+		//	    gerritClient = new GerritClient();
 	}
 
-	
 	/**
 	 * Get task data for the given task id from the given repository.
-	 * @param repository 
+	 * 
+	 * @param repository
 	 * @param taskId
 	 * @param monitor
 	 * @return
 	 * @throws CoreException
 	 */
-	public TaskData getTaskData(TaskRepository repository, String taskId,
-			IProgressMonitor monitor) throws CoreException {
-	    gerritClient = GerritClient.getGerritClient(repository);
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		gerritClient = GerritClient.getGerritClient(repository);
 		GerritTask gerritTask = gerritClient.getTaskData(repository, taskId, monitor);
 		return createTaskDataFromGerritTask(repository, taskId, gerritTask, monitor);
 	}
 
-
-	private TaskData createTaskDataFromGerritTask(TaskRepository repository, String taskId,
-			GerritTask gerritTask, IProgressMonitor monitor) throws CoreException {
+	private TaskData createTaskDataFromGerritTask(TaskRepository repository, String taskId, GerritTask gerritTask,
+			IProgressMonitor monitor) throws CoreException {
 		TaskData taskData = createTaskData(repository, taskId, monitor);
 		updateTaskData(taskData, gerritTask);
 		return taskData;
 	}
 
-
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getAttributeMapper(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getAttributeMapper(org.eclipse.mylyn.tasks.core.
+	 * TaskRepository) */
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
 		return new GerritTaskAttributeMapper(repository);
 	}
-	
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, org.eclipse.mylyn.tasks.core.data.TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.
+	 * TaskRepository, org.eclipse.mylyn.tasks.core.data.TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping,
+	 * org.eclipse.core.runtime.IProgressMonitor) */
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData taskData, ITaskMapping initializationData,
 			IProgressMonitor monitor) throws CoreException {
@@ -90,17 +89,19 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public RepositoryResponse postTaskData(TaskRepository arg0, TaskData arg1,
-			Set<TaskAttribute> arg2, IProgressMonitor arg3)
-			throws CoreException {
+	public RepositoryResponse postTaskData(TaskRepository arg0, TaskData arg1, Set<TaskAttribute> arg2,
+			IProgressMonitor arg3) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	/**
 	 * Update taskdata with the given gerrit-task.
-	 * @param data taskdata to update
-	 * @param gerritTask gerrit task containing the data
+	 * 
+	 * @param data
+	 *            taskdata to update
+	 * @param gerritTask
+	 *            gerrit task containing the data
 	 */
 	public void updateTaskData(TaskData data, GerritTask gerritTask) {
 		setAttributeValue(data, GerritAttribute.ID, gerritTask.getId());
@@ -114,9 +115,9 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, GerritAttribute.DESCRIPTION, gerritTask.getDescription());
 	}
 
-
 	/**
 	 * Create TaskAttribute for the given taskdata and GerritAttribute.
+	 * 
 	 * @param data
 	 * @param gerritAttribute
 	 * @return
@@ -130,9 +131,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		metaData.setReadOnly(gerritAttribute.isReadOnly());
 		return attr;
 	}
-	
+
 	/**
 	 * Create all default attributes for the given taskdata.
+	 * 
 	 * @param data
 	 */
 	public static void createDefaultAttributes(TaskData data) {
@@ -146,24 +148,30 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, GerritAttribute.UPLOADED);
 		createAttribute(data, GerritAttribute.DESCRIPTION);
 	}
-	
+
 	/**
 	 * Create task data.
-	 * @param repository current repository
-	 * @param taskId task id
-	 * @param monitor progress monitor.
+	 * 
+	 * @param repository
+	 *            current repository
+	 * @param taskId
+	 *            task id
+	 * @param monitor
+	 *            progress monitor.
 	 * @return initialized taskdata
 	 * @throws CoreException
 	 */
-	public TaskData createTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
-		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
-				repository.getRepositoryUrl(), taskId);
+	public TaskData createTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND, repository
+				.getRepositoryUrl(), taskId);
 		initializeTaskData(repository, data, new TaskMapper(data), monitor);
 		return data;
 	}
-	
+
 	/**
 	 * Convenience method to set the value of a given Attribute in the given taskdata.
+	 * 
 	 * @param data
 	 * @param gerritAttribut
 	 * @param value
@@ -179,7 +187,9 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Helper method.
-	 * @param date date to convert to String
+	 * 
+	 * @param date
+	 *            date to convert to String
 	 * @return
 	 */
 	public static String dateToString(Date date) {

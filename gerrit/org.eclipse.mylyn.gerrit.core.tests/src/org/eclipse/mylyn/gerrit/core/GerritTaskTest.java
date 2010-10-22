@@ -18,8 +18,8 @@ import junit.framework.TestCase;
 
 /**
  * Testclass for GerritTask.
+ * 
  * @author Mikael Kober, Sony Ericsson
- *
  */
 public class GerritTaskTest extends TestCase {
 
@@ -35,8 +35,10 @@ public class GerritTaskTest extends TestCase {
 			e.printStackTrace();
 		}
 		Date then = new Date();
-		
-		GerritTask task = new GerritTask("14147", "Ia0702e33", "Added the com.stericsson.gerrit.core project, first draft", "Test Owner", "semctools/eclipse/stericsson", "master", now, then, "Merged");
+
+		GerritTask task = new GerritTask("14147", "Ia0702e33",
+				"Added the com.stericsson.gerrit.core project, first draft", "Test Owner",
+				"semctools/eclipse/stericsson", "master", now, then, "Merged");
 		assertEquals("wrong id", "14147", task.getId());
 		assertEquals("wrong owner", "Test Owner", task.getOwner());
 		assertEquals("wrong title", "Added the com.stericsson.gerrit.core project, first draft", task.getTitle());

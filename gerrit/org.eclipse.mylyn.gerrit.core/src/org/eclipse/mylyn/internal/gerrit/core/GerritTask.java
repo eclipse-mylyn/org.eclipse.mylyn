@@ -14,27 +14,37 @@ import java.util.Date;
 
 /**
  * GerritTask. Represents a change issue in Gerrit.
+ * 
  * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson -
- *         thomas.westling@sonyericsson.com
- *
+ * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
  */
 public class GerritTask {
-	
+
 	private final String id;
+
 	private String title;
+
 	private String changeId;
+
 	private String owner;
+
 	private String project;
+
 	private String branch;
+
 	private Date uploaded;
+
 	private Date updated;
+
 	private String url;
+
 	private String status;
-    private String description;
-	
+
+	private String description;
+
 	/**
 	 * Constructor.
+	 * 
 	 * @param id
 	 * @param changeId
 	 * @param title
@@ -45,8 +55,8 @@ public class GerritTask {
 	 * @param updated
 	 * @param status
 	 */
-	public GerritTask(String id, String changeId, String title, String owner,
-			String project, String branch, Date uploaded, Date updated, String status) {
+	public GerritTask(String id, String changeId, String title, String owner, String project, String branch,
+			Date uploaded, Date updated, String status) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -61,6 +71,7 @@ public class GerritTask {
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param id
 	 * @param title
 	 */
@@ -68,7 +79,7 @@ public class GerritTask {
 		this.id = id;
 		this.title = title;
 	}
-	
+
 	public String getChangeId() {
 		return changeId;
 	}
@@ -136,18 +147,17 @@ public class GerritTask {
 	public String getId() {
 		return id;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
 
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description){
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-	
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }

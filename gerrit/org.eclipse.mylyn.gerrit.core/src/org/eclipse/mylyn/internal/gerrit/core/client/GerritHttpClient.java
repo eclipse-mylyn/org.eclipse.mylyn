@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
@@ -39,7 +38,7 @@ public class GerritHttpClient {
 
 	private int id = 1;
 
-	private String password;
+	private final String password;
 
 	private final String path;
 
@@ -47,7 +46,7 @@ public class GerritHttpClient {
 
 	private String schema; // http, https
 
-	private String user;
+	private final String user;
 
 	private Cookie xsrfKey;
 
@@ -62,8 +61,7 @@ public class GerritHttpClient {
 	 * @param port
 	 *            The port that the communication should be relayed over
 	 */
-	public GerritHttpClient(String schema, String host, String path,
-			int port, String user, String password) {
+	public GerritHttpClient(String schema, String host, String path, int port, String user, String password) {
 		this.schema = schema;
 		this.host = host;
 		this.path = path;
@@ -83,21 +81,16 @@ public class GerritHttpClient {
 	public HttpClient getHttpClient() throws GerritException {
 		if (httpClient == null) {
 			httpClient = new HttpClient();
-			PostMethod method = new PostMethod(getURL()
-					+ "/gerrit/rpc/UserPassAuthService");
-			method.setRequestBody("{\"jsonrpc\":\"2.0\",\"method\":\"authenticate\",\"params\":[\""
-					+ user + "\",\"" + password + "\"],\"id\":3}");
-			method.addRequestHeader("content-type",
-					"	application/json; charset=utf-8");
-			method.setRequestHeader("Accept",
-					"application/json,application/json,application/jsonrequest");
+			PostMethod method = new PostMethod(getURL() + "/gerrit/rpc/UserPassAuthService");
+			method.setRequestBody("{\"jsonrpc\":\"2.0\",\"method\":\"authenticate\",\"params\":[\"" + user + "\",\""
+					+ password + "\"],\"id\":3}");
+			method.addRequestHeader("content-type", "	application/json; charset=utf-8");
+			method.setRequestHeader("Accept", "application/json,application/json,application/jsonrequest");
 			try {
 				HttpClientParams params = new HttpClientParams();
 				params.setCookiePolicy(org.apache.commons.httpclient.cookie.CookiePolicy.BROWSER_COMPATIBILITY);
 				httpClient.setParams(params);
-				int status = httpClient.executeMethod(method);
-				Header cookies = method.getResponseHeader("Set-Cookie");
-
+				httpClient.executeMethod(method);
 				httpClient.setParams(params);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
@@ -142,26 +135,22 @@ public class GerritHttpClient {
 	 * @return The JSON response
 	 * @throws GerritException
 	 */
-	public String postJsonRequest(String serviceUri, String message)
-			throws GerritException {
+	public String postJsonRequest(String serviceUri, String message) throws GerritException {
 
 		// Create a method instance
 		PostMethod postMethod = new PostMethod(getURL() + serviceUri);
-		postMethod.setRequestHeader("Content-Type",
-				"application/json; charset=utf-8");
+		postMethod.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 		postMethod.setRequestHeader("Accept", "application/json");
 
 		try {
-			RequestEntity requestEntity = new StringRequestEntity(
-					message.toString(), "application/json", null);
+			RequestEntity requestEntity = new StringRequestEntity(message.toString(), "application/json", null);
 			postMethod.setRequestEntity(requestEntity);
 
 			// Execute the method.
 			int statusCode = getHttpClient().executeMethod(postMethod);
 
 			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: "
-						+ postMethod.getStatusLine() + "\n"
+				System.err.println("Method failed: " + postMethod.getStatusLine() + "\n"
 						+ postMethod.getResponseBodyAsString());
 				throw new GerritException();
 			}
@@ -199,12 +188,10 @@ public class GerritHttpClient {
 	}
 
 	/**
-	 * Updates the Xsrf key which is needed in all methods where login to the
-	 * Gerrit server is needed.
+	 * Updates the Xsrf key which is needed in all methods where login to the Gerrit server is needed.
 	 * 
 	 * @throws GerritException
-	 *             if either the connection fails or an error message from the
-	 *             server is received.
+	 *             if either the connection fails or an error message from the server is received.
 	 */
 	private void updateXsrfKey() throws GerritException {
 		HttpClient client = getHttpClient();
@@ -229,8 +216,7 @@ public class GerritHttpClient {
 				}
 			}
 			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: "
-						+ getMethod.getStatusLine() + "\n"
+				System.err.println("Method failed: " + getMethod.getStatusLine() + "\n"
 						+ getMethod.getResponseBodyAsString());
 				throw new GerritException();
 			}

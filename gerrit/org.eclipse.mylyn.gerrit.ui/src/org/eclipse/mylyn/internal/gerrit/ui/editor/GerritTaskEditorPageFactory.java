@@ -18,19 +18,16 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
-
-
 /**
  * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson -
- *         thomas.westling@sonyericsson.com
+ * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
  */
 public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		return  (input.getTask().getConnectorKind().equals(GerritConnector.CONNECTOR_KIND)) || 
-			(TasksUiUtil.isOutgoingNewTask(input.getTask(), GerritConnector.CONNECTOR_KIND));
+		return (input.getTask().getConnectorKind().equals(GerritConnector.CONNECTOR_KIND))
+				|| (TasksUiUtil.isOutgoingNewTask(input.getTask(), GerritConnector.CONNECTOR_KIND));
 	}
 
 	@Override
@@ -42,7 +39,7 @@ public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	public int getPriority() {
 		return PRIORITY_TASK;
 	}
-	
+
 	@Override
 	public Image getPageImage() {
 		// TODO Auto-generated method stub
@@ -53,6 +50,5 @@ public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	public String getPageText() {
 		return "Gerrit";
 	}
-
 
 }

@@ -16,8 +16,8 @@ import junit.framework.TestCase;
 
 /**
  * Testclass for GerritConnector.
+ * 
  * @author Mikael Kober, Sony Ericsson
- *
  */
 public class GerritConnectorTest extends TestCase {
 
@@ -54,7 +54,7 @@ public class GerritConnectorTest extends TestCase {
 		assertNull("should be null", connector.getRepositoryUrlFromTaskUrl(""));
 		assertNull("should be null", connector.getRepositoryUrlFromTaskUrl("invalid repository url"));
 		assertNull("should be null", connector.getRepositoryUrlFromTaskUrl("http://invalid.repository.url"));
-		
+
 		//assertEquals("wrong url", "http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#change,13492"));
 	}
 
@@ -68,7 +68,8 @@ public class GerritConnectorTest extends TestCase {
 		assertNull("should be null", connector.getTaskIdFromTaskUrl(""));
 		assertNull("should be null", connector.getTaskIdFromTaskUrl("invalid repository url"));
 		assertNull("should be null", connector.getTaskIdFromTaskUrl("http://invalid.repository.url"));
-		assertEquals("wrong id", "13492", connector.getTaskIdFromTaskUrl("http://review.source.android.com/#change,13492"));
+		assertEquals("wrong id", "13492", connector
+				.getTaskIdFromTaskUrl("http://review.source.android.com/#change,13492"));
 	}
 
 	/**
@@ -79,7 +80,8 @@ public class GerritConnectorTest extends TestCase {
 		assertNull("should be null", connector.getTaskUrl(null, null));
 		assertNull("should be null", connector.getTaskUrl("http://review.source.android.com", null));
 		assertNull("should be null", connector.getTaskUrl(null, "13492"));
-		assertEquals("wrong url", "http://review.source.android.com/#change,13492", connector.getTaskUrl("http://review.source.android.com", "13492"));
+		assertEquals("wrong url", "http://review.source.android.com/#change,13492", connector.getTaskUrl(
+				"http://review.source.android.com", "13492"));
 	}
 
 }

@@ -18,8 +18,8 @@ import junit.framework.TestCase;
 
 /**
  * Testclass for GerritAttribute.
+ * 
  * @author Mikael Kober, Sony Ericsson
- *
  */
 public class GerritAttributeTest extends TestCase {
 
@@ -28,7 +28,7 @@ public class GerritAttributeTest extends TestCase {
 	 */
 	public void testGetters() {
 		final GerritAttribute id = GerritAttribute.ID;
-		assertTrue("should be read only",id.isReadOnly());
+		assertTrue("should be read only", id.isReadOnly());
 		assertEquals("wrong gerrit key", GerritConstants.ATTRIBUTE_ID, id.getGerritKey());
 		assertEquals("wrong kind", TaskAttribute.KIND_DEFAULT, id.getKind());
 		assertEquals("wrong task key", TaskAttribute.TASK_KEY, id.getTaskKey());

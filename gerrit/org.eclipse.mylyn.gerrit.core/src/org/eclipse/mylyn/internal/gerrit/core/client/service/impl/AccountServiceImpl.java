@@ -35,165 +35,151 @@ import org.eclipse.mylyn.internal.gerrit.core.client.service.AbstractGerritServi
 
 public class AccountServiceImpl extends AbstractGerritService implements AccountService {
 
-  public AccountServiceImpl(GerritHttpClient client) {
-    super(client);
-    // TODO Auto-generated constructor stub
-  }
+	public AccountServiceImpl(GerritHttpClient client) {
+		super(client);
+		// TODO Auto-generated constructor stub
+	}
 
-  
-  public String getServiceUri() {
-    return "/gerrit/rpc/AccountService";
-  }
+	public String getServiceUri() {
+		return "/gerrit/rpc/AccountService";
+	}
 
-  
-  public void addProjectWatch(String projectName, AsyncCallback<AccountProjectWatchInfo> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void addProjectWatch(String projectName, AsyncCallback<AccountProjectWatchInfo> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(projectName));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<AccountProjectWatchInfo>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<AccountProjectWatchInfo> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((AccountProjectWatchInfo)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(projectName));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<AccountProjectWatchInfo>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<AccountProjectWatchInfo> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((AccountProjectWatchInfo) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void changePreferences(AccountGeneralPreferences pref,
-    AsyncCallback<VoidResult> gerritCallback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void changePreferences(AccountGeneralPreferences pref, AsyncCallback<VoidResult> gerritCallback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(pref));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<VoidResult>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
-      gerritCallback.onSuccess((VoidResult)result.getResult());
-    } catch (GerritException e) {
-      gerritCallback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(pref));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<VoidResult>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
+			gerritCallback.onSuccess((VoidResult) result.getResult());
+		} catch (GerritException e) {
+			gerritCallback.onFailure(e);
+		}
+	}
 
-  
-  public void deleteProjectWatches(Set<Key> keys, AsyncCallback<VoidResult> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void deleteProjectWatches(Set<Key> keys, AsyncCallback<VoidResult> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(keys));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<VoidResult>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((VoidResult)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(keys));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<VoidResult>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((VoidResult) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void myAccount(AsyncCallback<Account> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void myAccount(AsyncCallback<Account> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<Account>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<Account> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((Account)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<Account>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<Account> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((Account) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void myAgreements(AsyncCallback<AgreementInfo> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void myAgreements(AsyncCallback<AgreementInfo> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<AgreementInfo>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<AgreementInfo> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((AgreementInfo)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<AgreementInfo>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<AgreementInfo> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((AgreementInfo) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void myProjectWatch(AsyncCallback<List<AccountProjectWatchInfo>> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void myProjectWatch(AsyncCallback<List<AccountProjectWatchInfo>> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<List<AccountProjectWatchInfo>>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<List<AccountProjectWatchInfo>> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((List<AccountProjectWatchInfo>)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<List<AccountProjectWatchInfo>>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<List<AccountProjectWatchInfo>> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((List<AccountProjectWatchInfo>) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
-  
-  public void updateProjectWatch(AccountProjectWatch watch, AsyncCallback<VoidResult> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public void updateProjectWatch(AccountProjectWatch watch, AsyncCallback<VoidResult> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(watch));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<VoidResult>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((VoidResult)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(watch));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<VoidResult>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<VoidResult> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((VoidResult) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
+	public void myDiffPreferences(AsyncCallback<AccountDiffPreference> callback) {
+		// TODO Auto-generated method stub
 
-public void myDiffPreferences(AsyncCallback<AccountDiffPreference> callback) {
-	// TODO Auto-generated method stub
-	
-}
+	}
 
+	public void changeDiffPreferences(AccountDiffPreference diffPref, AsyncCallback<VoidResult> callback) {
+		// TODO Auto-generated method stub
 
-public void changeDiffPreferences(AccountDiffPreference diffPref,
-		AsyncCallback<VoidResult> callback) {
-	// TODO Auto-generated method stub
-	
-}
+	}
 
+	public void addProjectWatch(String projectName, String filter, AsyncCallback<AccountProjectWatchInfo> callback) {
+		// TODO Auto-generated method stub
 
-public void addProjectWatch(String projectName, String filter,
-		AsyncCallback<AccountProjectWatchInfo> callback) {
-	// TODO Auto-generated method stub
-	
-}
+	}
 
 }

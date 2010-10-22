@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MylynGerrit connector Core
-Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core
+Bundle-Name: Mylyn Gerrit Connector
+Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.core.Activator
 Require-Bundle: org.eclipse.core.runtime,
@@ -20,4 +20,4 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client.service;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client.service.impl;x-internal:=true
-Bundle-Vendor: Sony Ericsson Mobile Communications
+Bundle-Vendor: Eclipse Mylyn

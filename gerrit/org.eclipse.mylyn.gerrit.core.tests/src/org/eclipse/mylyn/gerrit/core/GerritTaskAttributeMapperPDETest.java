@@ -21,14 +21,16 @@ import junit.framework.TestCase;
 
 /**
  * @author Mikael Kober, Sony Ericsson
- *
  */
 public class GerritTaskAttributeMapperPDETest extends TestCase {
 
 	public void testMapToRepositoryKeyTaskAttributeString() {
-		GerritTaskAttributeMapper mapper = new GerritTaskAttributeMapper(new TaskRepository("gerrit", "http://some.url"));
-		TaskAttribute parent = GerritTaskDataHandler.createAttribute(new TaskData(mapper, "gerrit", "http://some.url", "12345"), GerritAttribute.ID);
-		assertEquals("wrong mapping", GerritAttribute.SUMMARY.getGerritKey(), mapper.mapToRepositoryKey(parent, TaskAttribute.SUMMARY));
+		GerritTaskAttributeMapper mapper = new GerritTaskAttributeMapper(
+				new TaskRepository("gerrit", "http://some.url"));
+		TaskAttribute parent = GerritTaskDataHandler.createAttribute(new TaskData(mapper, "gerrit", "http://some.url",
+				"12345"), GerritAttribute.ID);
+		assertEquals("wrong mapping", GerritAttribute.SUMMARY.getGerritKey(), mapper.mapToRepositoryKey(parent,
+				TaskAttribute.SUMMARY));
 	}
 
 }

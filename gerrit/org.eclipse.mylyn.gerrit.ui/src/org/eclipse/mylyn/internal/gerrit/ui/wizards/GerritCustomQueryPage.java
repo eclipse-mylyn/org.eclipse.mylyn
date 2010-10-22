@@ -24,11 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-
 /**
  * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson -
- *         thomas.westling@sonyericsson.com
+ * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
  */
 public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
@@ -37,25 +35,27 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 	private final IRepositoryQuery query;
 
 	private Button radio1 = null;
+
 	private Button radio2 = null;
+
 	private Text titleText = null;
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param repository
 	 * @param pageName
 	 * @param query
 	 */
-	public GerritCustomQueryPage(TaskRepository repository, String pageName,
-			IRepositoryQuery query) {
+	public GerritCustomQueryPage(TaskRepository repository, String pageName, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.query = query;
 		setDescription("Enter title and type of the query.");
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
+	 * 
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite) */
 	public void createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
@@ -67,8 +67,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		titleLabel.setText(TITLE_QUERY_TITLE);
 
 		titleText = new Text(control, SWT.BORDER);
-		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		gd2.horizontalSpan = 2;
 		titleText.setLayoutData(gd2);
 		titleText.addKeyListener(new KeyListener() {
@@ -92,11 +91,10 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		if (query != null) {
 			titleText.setText(query.getSummary());
-			if(GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))){
-			    radio1.setSelection(true);
-			}
-			else{
-			    radio2.setSelection(true);
+			if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
+				radio1.setSelection(true);
+			} else {
+				radio2.setSelection(true);
 			}
 		}
 
@@ -104,32 +102,33 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-	 */
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage() */
 	@Override
 	public boolean canFlipToNextPage() {
 		return false;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete()
-	 */
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete() */
 	@Override
 	public boolean isPageComplete() {
 		return (titleText != null && titleText.getText().length() > 0);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
-	 */
+	 * 
+	 * @see
+	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery
+	 * ) */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
 		// TODO: set URL ????
 		// query.setUrl(getQueryUrl());
 		query.setSummary(getTitleText());
-		query.setAttribute(GerritQuery.TYPE,
-				radio1.getSelection() ? GerritQuery.MY_OPEN_CHANGES
-						: GerritQuery.ALL_OPEN_CHANGES);
+		query.setAttribute(GerritQuery.TYPE, radio1.getSelection() ? GerritQuery.MY_OPEN_CHANGES
+				: GerritQuery.ALL_OPEN_CHANGES);
 	}
 
 	private String getTitleText() {
@@ -137,12 +136,11 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle()
-	 */
+	 * 
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle() */
 	@Override
 	public String getQueryTitle() {
 		return "Gerrit Query";
 	}
-	
-	
+
 }

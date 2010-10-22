@@ -26,33 +26,31 @@ import org.eclipse.mylyn.internal.gerrit.core.client.service.AbstractGerritServi
 
 public class UserPassAuthServiceImpl extends AbstractGerritService implements UserPassAuthService {
 
-  public UserPassAuthServiceImpl(GerritHttpClient client) {
-    super(client);
-    // TODO Auto-generated constructor stub
-  }
+	public UserPassAuthServiceImpl(GerritHttpClient client) {
+		super(client);
+		// TODO Auto-generated constructor stub
+	}
 
-  
-  public String getServiceUri() {
-    return "/gerrit/rpc/UserPassAuthService";
-  }
+	public String getServiceUri() {
+		return "/gerrit/rpc/UserPassAuthService";
+	}
 
-  
-  public void authenticate(String username, String password, AsyncCallback<LoginResult> callback) {
-    String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-    LinkedList<JsonParam> a = new LinkedList<JsonParam>();
-    a.add(new JsonParam(username));
-    a.add(new JsonParam(password));
-    try {
-      String jsonString = createJsonString(a, methodName);
-      String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
-      Type resultType = new TypeToken<JsonResult<LoginResult>>() {
-      }.getType();
-      Gson gson = JsonServlet.defaultGsonBuilder().create();
-      JsonResult<LoginResult> result = gson.fromJson(responseMessage, resultType);
-      callback.onSuccess((LoginResult)result.getResult());
-    } catch (GerritException e) {
-      callback.onFailure(e);
-    }
-  }
+	public void authenticate(String username, String password, AsyncCallback<LoginResult> callback) {
+		String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
+		a.add(new JsonParam(username));
+		a.add(new JsonParam(password));
+		try {
+			String jsonString = createJsonString(a, methodName);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			Type resultType = new TypeToken<JsonResult<LoginResult>>() {
+			}.getType();
+			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			JsonResult<LoginResult> result = gson.fromJson(responseMessage, resultType);
+			callback.onSuccess((LoginResult) result.getResult());
+		} catch (GerritException e) {
+			callback.onFailure(e);
+		}
+	}
 
 }

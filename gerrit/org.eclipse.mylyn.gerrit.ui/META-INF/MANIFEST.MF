@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MylynGerrit connector UI
+Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.Activator
@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms;bundle-version="3.4.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: Sony Ericsson Mobile Communications
+Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true

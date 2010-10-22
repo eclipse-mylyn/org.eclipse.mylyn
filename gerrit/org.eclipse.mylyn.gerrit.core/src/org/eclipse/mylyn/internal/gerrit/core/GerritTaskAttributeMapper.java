@@ -16,25 +16,25 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
 /**
  * TaskAttributeMapper for Gerrit.
+ * 
  * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson -
- *         thomas.westling@sonyericsson.com
- *
+ * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
  */
 public class GerritTaskAttributeMapper extends TaskAttributeMapper {
-	
+
 	/**
 	 * Constructor.
+	 * 
 	 * @param taskRepository
 	 */
 	public GerritTaskAttributeMapper(TaskRepository taskRepository) {
 		super(taskRepository);
 	}
-	
-	
+
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper#mapToRepositoryKey(org.eclipse.mylyn.tasks.core.data.TaskAttribute, java.lang.String)
-	 */
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper#mapToRepositoryKey(org.eclipse.mylyn.tasks.core.data.
+	 * TaskAttribute, java.lang.String) */
 	@Override
 	public String mapToRepositoryKey(TaskAttribute parent, String key) {
 		for (GerritAttribute attr : GerritAttribute.values()) {
@@ -45,7 +45,5 @@ public class GerritTaskAttributeMapper extends TaskAttributeMapper {
 		}
 		return key;
 	}
-
-
 
 }

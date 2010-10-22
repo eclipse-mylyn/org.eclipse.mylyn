@@ -21,42 +21,49 @@ import org.eclipse.mylyn.internal.gerrit.core.client.service.impl.ChangeListServ
 
 /**
  * Factory class that produces the implemented services.
+ * 
  * @author Daniel Olsson, ST Ericsson
  * @author Ingemar Olsén, Sony Ericsson
  */
 public class GerritServiceFactory {
 
-  GerritHttpClient gerritHttpClient;
+	GerritHttpClient gerritHttpClient;
 
-  /**
-   * Constructor.
-   * @param gerritHttpClient
-   *          An instance of AbstractGerritHttpClient that handles the
-   *          communication to Gerrit
-   */
-  public GerritServiceFactory(GerritHttpClient gerritHttpClient) {
-    this.gerritHttpClient = gerritHttpClient;
-  }
-  /**
-   * Gets the ChangeListService for the AbstractGerritHttpClient.
-   * @return The ChangeListService for the AbstractGerritHttpClient.
-   */
-  public ChangeListService getChangeListService() {
-    return new ChangeListServiceImpl(gerritHttpClient);
-  }
-  /**
-   * Gets the ChangeDetailService for the AbstractGerritHttpClient.
-   * @return The ChangeDetailService for the AbstractGerritHttpClient.
-   */
-  public ChangeDetailService getChangeDetailService() {
-    return new ChangeDetailServiceImpl(gerritHttpClient);
-  }
-  /**
-   * Gets the AccountService for the AbstractGerritHttpClient.
-   * @return The AccountService for the AbstractGerritHttpClient.
-   */
-  public AccountService getAccountService() {
-    return new AccountServiceImpl(gerritHttpClient);
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param gerritHttpClient
+	 *            An instance of AbstractGerritHttpClient that handles the communication to Gerrit
+	 */
+	public GerritServiceFactory(GerritHttpClient gerritHttpClient) {
+		this.gerritHttpClient = gerritHttpClient;
+	}
+
+	/**
+	 * Gets the ChangeListService for the AbstractGerritHttpClient.
+	 * 
+	 * @return The ChangeListService for the AbstractGerritHttpClient.
+	 */
+	public ChangeListService getChangeListService() {
+		return new ChangeListServiceImpl(gerritHttpClient);
+	}
+
+	/**
+	 * Gets the ChangeDetailService for the AbstractGerritHttpClient.
+	 * 
+	 * @return The ChangeDetailService for the AbstractGerritHttpClient.
+	 */
+	public ChangeDetailService getChangeDetailService() {
+		return new ChangeDetailServiceImpl(gerritHttpClient);
+	}
+
+	/**
+	 * Gets the AccountService for the AbstractGerritHttpClient.
+	 * 
+	 * @return The AccountService for the AbstractGerritHttpClient.
+	 */
+	public AccountService getAccountService() {
+		return new AccountServiceImpl(gerritHttpClient);
+	}
 
 }
