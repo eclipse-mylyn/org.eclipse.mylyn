@@ -36,11 +36,11 @@ public class DefaultTaskSchema {
 
 		private final String type;
 
-		Field(String key, String label, String type) {
+		protected Field(String key, String label, String type) {
 			this(key, label, type, null);
 		}
 
-		Field(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
+		protected Field(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
 			Assert.isNotNull(key);
 			Assert.isNotNull(label);
 			Assert.isNotNull(type);
@@ -237,11 +237,11 @@ public class DefaultTaskSchema {
 	public static final Field TASK_URL = createField(TaskAttribute.TASK_URL, Messages.DefaultTaskSchema_URL_Label,
 			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
-	private static Field createField(String key, String label, String type) {
+	protected static Field createField(String key, String label, String type) {
 		return createField(key, label, type, null);
 	}
 
-	private static Field createField(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
+	protected static Field createField(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
 		Field field = new Field(key, label, type, firstFlag, moreFlags);
 		fieldByKey.put(key, field);
 		return field;
