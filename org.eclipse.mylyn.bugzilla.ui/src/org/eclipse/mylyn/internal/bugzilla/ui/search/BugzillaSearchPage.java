@@ -116,21 +116,27 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static ArrayList<BugzillaSearchData> previousKeywords = new ArrayList<BugzillaSearchData>(20);
 
+	private static ArrayList<BugzillaSearchData> previousWhiteboardPatterns = new ArrayList<BugzillaSearchData>(20);
+
 	private boolean firstTime = true;
 
 	private IDialogSettings fDialogSettings;
 
-	private static final String[] patternOperationText = { Messages.BugzillaSearchPage_all_words,
-			Messages.BugzillaSearchPage_any_word, Messages.BugzillaSearchPage_regexp,
-			Messages.BugzillaSearchPage_notregexp };
+	private static final String[] patternOperationText = { Messages.BugzillaSearchPage_OperationText_allwordssubstr,
+			Messages.BugzillaSearchPage_OperationText_anywordssubstr,
+			Messages.BugzillaSearchPage_OperationText_substring,
+			Messages.BugzillaSearchPage_OperationText_casesubstring,
+			Messages.BugzillaSearchPage_OperationText_allwords, Messages.BugzillaSearchPage_OperationText_anywords,
+			Messages.BugzillaSearchPage_OperationText_regexp, Messages.BugzillaSearchPage_OperationText_notregexp };
 
-	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] patternOperationValues = {
+			"allwordssubstr", "anywordssubstr", "substring", "casesubstring", "allwords", "anywords", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 
-	private static final String[] emailOperationText = { Messages.BugzillaSearchPage_substring,
-			Messages.BugzillaSearchPage_exact, Messages.BugzillaSearchPage_regexp,
-			Messages.BugzillaSearchPage_notregexp };
+	private static final String[] emailOperationText = { Messages.BugzillaSearchPage_EmailOperation_substring,
+			Messages.BugzillaSearchPage_EmailOperation_exact, Messages.BugzillaSearchPage_EmailOperation_notequals,
+			Messages.BugzillaSearchPage_EmailOperation_regexp, Messages.BugzillaSearchPage_EmailOperation_notregexp };
 
-	private static final String[] emailOperationValues = { "substring", "exact", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] emailOperationValues = { "substring", "exact", "notequals", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	private static final String[] keywordOperationText = { Messages.BugzillaSearchPage_all,
 			Messages.BugzillaSearchPage_any, Messages.BugzillaSearchPage_none };
@@ -204,6 +210,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private Combo keywordsOperation;
 
+	protected Combo whiteboardPattern;
+
+	private Combo whiteboardOperation;
+
 	protected Text daysText;
 
 	// /** File containing saved queries */
@@ -269,6 +279,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS"; //$NON-NLS-1$
 
 	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH"; //$NON-NLS-1$
+
+	private static final String STORE_WHITEBOARD_ID = PAGE_NAME + ".WHITEBOARD"; //$NON-NLS-1$
+
+	private static final String STORE_WHITEBOARDMATCH_ID = PAGE_NAME + ".WHITEBOARDMATCH"; //$NON-NLS-1$
 
 	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
 
@@ -387,6 +401,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				emailPattern2.setText(""); //$NON-NLS-1$
 				keywords.setText(""); //$NON-NLS-1$
 				keywordsOperation.select(0);
+				whiteboardPattern.setText(""); //$NON-NLS-1$
+				whiteboardOperation.select(0);
 				daysText.setText(""); //$NON-NLS-1$
 			}
 		});
@@ -505,6 +521,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		});
 
 		summaryOperation = new Combo(basicComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		summaryOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		summaryOperation.setItems(patternOperationText);
 		summaryOperation.setText(patternOperationText[0]);
 		summaryOperation.select(0);
@@ -534,6 +551,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// operation combo
 		emailOperation = new Combo(basicComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		emailOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		emailOperation.setItems(emailOperationText);
 		emailOperation.setText(emailOperationText[0]);
 		emailOperation.select(0);
@@ -691,6 +709,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		});
 
 		commentOperation = new Combo(advancedComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		commentOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		commentOperation.setItems(patternOperationText);
 		commentOperation.setText(patternOperationText[0]);
 		commentOperation.select(0);
@@ -721,6 +740,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// operation combo
 		emailOperation2 = new Combo(advancedComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		emailOperation2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		emailOperation2.setItems(emailOperationText);
 		emailOperation2.setText(emailOperationText[0]);
 		emailOperation2.select(0);
@@ -751,7 +771,28 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		e2button4.setText(Messages.BugzillaSearchPage_qacontact);
 
 		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3, e2button4 };
+
 		new Label(advancedComposite, SWT.NONE);
+		Label whiteboardLabel = new Label(advancedComposite, SWT.NONE);
+		whiteboardLabel.setText(Messages.BugzillaSearchPage_Whiteboard);
+
+		// whiteboard pattern combo
+		whiteboardPattern = new Combo(advancedComposite, SWT.SINGLE | SWT.BORDER);
+		whiteboardPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		whiteboardPattern.addModifyListener(new ModifyListenerImplementation());
+		whiteboardPattern.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleWidgetSelected(whiteboardPattern, whiteboardOperation, previousWhiteboardPatterns);
+			}
+		});
+
+		whiteboardOperation = new Combo(advancedComposite, SWT.READ_ONLY);
+		whiteboardOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		whiteboardOperation.setItems(patternOperationText);
+		whiteboardOperation.setText(patternOperationText[0]);
+		whiteboardOperation.select(0);
+
 		Label keywordsLabel = new Label(advancedComposite, SWT.NONE);
 		keywordsLabel.setText(Messages.BugzillaSearchPage_Keywords);
 
@@ -1065,6 +1106,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getPatternData(emailPattern, emailOperation, previousEmailPatterns);
 		getPatternData(emailPattern2, emailOperation2, previousEmailPatterns2);
 		getPatternData(keywords, keywordsOperation, previousKeywords);
+		getPatternData(whiteboardPattern, whiteboardOperation, previousWhiteboardPatterns);
 
 		String summaryText = summaryPattern.getText();
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
@@ -1421,6 +1463,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append(keywordOperationValues[keywordsOperation.getSelectionIndex()]);
 			appendToBuffer(sb, "&keywords=", keywords.getText().replace(',', ' ')); //$NON-NLS-1$
 		}
+		sb.append("&status_whiteboard_type="); //$NON-NLS-1$
+		sb.append(patternOperationValues[whiteboardOperation.getSelectionIndex()]);
+		appendToBuffer(sb, "&status_whiteboard=", whiteboardPattern.getText()); //$NON-NLS-1$
 
 		return sb;
 	}
@@ -1834,10 +1879,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				keywords.setText(settings.get(STORE_KEYWORDS_ID + repoId));
 				keywordsOperation.select(settings.getInt(STORE_KEYWORDSMATCH_ID + repoId));
 			}
+			if (settings.get(STORE_WHITEBOARD_ID + repoId) != null) {
+				whiteboardPattern.setText(settings.get(STORE_WHITEBOARD_ID + repoId));
+				whiteboardOperation.select(settings.getInt(STORE_WHITEBOARDMATCH_ID + repoId));
+			}
 
 			if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
 					(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
 					(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
+					(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
 					priority.getSelection().length > 0 || resolution.getSelection().length > 0
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
@@ -1880,6 +1930,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		settings.put(STORE_KEYWORDS_ID + repoId, keywords.getText());
 		settings.put(STORE_KEYWORDSMATCH_ID + repoId, keywordsOperation.getSelectionIndex());
+		settings.put(STORE_WHITEBOARD_ID + repoId, whiteboardPattern.getText());
+		settings.put(STORE_WHITEBOARDMATCH_ID + repoId, whiteboardOperation.getSelectionIndex());
 		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
 	}
 

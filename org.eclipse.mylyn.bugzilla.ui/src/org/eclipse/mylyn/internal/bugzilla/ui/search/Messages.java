@@ -51,6 +51,16 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Email_2;
 
+	public static String BugzillaSearchPage_EmailOperation_exact;
+
+	public static String BugzillaSearchPage_EmailOperation_notequals;
+
+	public static String BugzillaSearchPage_EmailOperation_notregexp;
+
+	public static String BugzillaSearchPage_EmailOperation_regexp;
+
+	public static String BugzillaSearchPage_EmailOperation_substring;
+
 	public static String BugzillaSearchPage_Enter_search_option;
 
 	public static String BugzillaSearchPage_Error_updating_search_options;
@@ -74,6 +84,22 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
 
 	public static String BugzillaSearchPage_Operating_System;
+
+	public static String BugzillaSearchPage_OperationText_allwords;
+
+	public static String BugzillaSearchPage_OperationText_allwordssubstr;
+
+	public static String BugzillaSearchPage_OperationText_anywords;
+
+	public static String BugzillaSearchPage_OperationText_anywordssubstr;
+
+	public static String BugzillaSearchPage_OperationText_casesubstring;
+
+	public static String BugzillaSearchPage_OperationText_notregexp;
+
+	public static String BugzillaSearchPage_OperationText_regexp;
+
+	public static String BugzillaSearchPage_OperationText_substring;
 
 	public static String BugzillaSearchPage_owner;
 
@@ -112,4 +138,6 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_ClearFields;
 
 	public static String BugzillaSearchPage_More_Options;
+
+	public static String BugzillaSearchPage_Whiteboard;
 }
