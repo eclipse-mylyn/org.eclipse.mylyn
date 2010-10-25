@@ -1447,24 +1447,22 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private void saveSelection() {
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
-		if (!selection.isEmpty()) {
-			if (selection.getFirstElement() instanceof ITaskContainer) {
-				// make sure the new selection is inserted at the end of the
-				// list
-				String handle = ((IRepositoryElement) selection.getFirstElement()).getHandleIdentifier();
-				lastSelectionByTaskHandle.remove(handle);
-				lastSelectionByTaskHandle.put(handle, selection);
+		if (selection.size() == 1 && selection.getFirstElement() instanceof ITask) {
+			// make sure the new selection is inserted at the end of the
+			// list
+			String handle = ((IRepositoryElement) selection.getFirstElement()).getHandleIdentifier();
+			lastSelectionByTaskHandle.remove(handle);
+			lastSelectionByTaskHandle.put(handle, selection);
 
-				if (lastSelectionByTaskHandle.size() > SIZE_MAX_SELECTION_HISTORY) {
-					Iterator<String> it = lastSelectionByTaskHandle.keySet().iterator();
-					it.next();
-					it.remove();
-				}
+			if (lastSelectionByTaskHandle.size() > SIZE_MAX_SELECTION_HISTORY) {
+				Iterator<String> it = lastSelectionByTaskHandle.keySet().iterator();
+				it.next();
+				it.remove();
 			}
 		}
 	}
 
-	private IStructuredSelection restoreSelection(IRepositoryElement task) {
+	private IStructuredSelection restoreSelection(ITask task) {
 		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
 		if (selection != null) {
 			return selection;
