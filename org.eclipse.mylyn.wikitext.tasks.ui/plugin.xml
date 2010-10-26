@@ -224,4 +224,87 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       	</key>
 	</extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineToBeginningHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line.to.beginning">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineToBeginningHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line.to.beginning">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineToEndHandler"
+          commandId="org.eclipse.ui.edit.text.delete.line.to.end">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+    
+    <handler
+          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineToEndHandler"
+          commandId="org.eclipse.ui.edit.text.cut.line.to.end">
+         <activeWhen>
+         	<with variable="activeContexts">
+	            <iterate operator="or" ifEmpty="false">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+	            </iterate>
+         	</with>
+		</activeWhen>
+    </handler>
+    
+ </extension>
 </plugin>
