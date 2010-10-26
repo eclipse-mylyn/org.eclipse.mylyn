@@ -12,7 +12,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -34,6 +35,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
@@ -43,6 +45,7 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
@@ -432,28 +435,33 @@ public class UiLegendControl extends Composite {
 		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Conflicting_changes);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void createConnectorsSection(Composite parent) {
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 3;
 		layout.makeColumnsEqualWidth = true;
 		layout.leftMargin = 0;
 		layout.rightMargin = 0;
 		layout.topMargin = 0;
 		layout.bottomMargin = 0;
 
-		Composite composite = toolkit.createComposite(parent);
-		composite.setLayout(layout);
-		composite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		ScrolledForm composite = toolkit.createScrolledForm(parent);
+		composite.getBody().setLayout(layout);
+		TableWrapData data = new TableWrapData(TableWrapData.FILL);
+		composite.setLayoutData(data);
 
-		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
+		List<AbstractRepositoryConnector> connectors = new ArrayList<AbstractRepositoryConnector>(
+				TasksUi.getRepositoryManager().getRepositoryConnectors());
+		Collections.sort(connectors, new Comparator<AbstractRepositoryConnector>() {
+			public int compare(AbstractRepositoryConnector o1, AbstractRepositoryConnector o2) {
+				return o1.getLabel().compareToIgnoreCase(o2.getLabel());
+			}
+		});
 		for (AbstractRepositoryConnector connector : connectors) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
 				List<LegendElement> elements = connectorUi.getLegendElements();
 				if (elements != null && elements.size() > 0) {
 					legendElements.addAll(elements);
-					addLegendElements(composite, connector, elements);
+					addLegendElements(composite.getBody(), connector, elements);
 				} else {
 					List<ITask> items = connectorUi.getLegendItems();
 					if (items != null && !items.isEmpty()) {
@@ -462,6 +470,12 @@ public class UiLegendControl extends Composite {
 				}
 			}
 		}
+
+		layout.numColumns = Math.max(composite.getBody().getChildren().length, 1);
+
+		// show 3 columns by default
+		Point w = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		data.maxWidth = (w.x / layout.numColumns) * 3;
 	}
 
 	private void addLegendElements(Composite composite, AbstractRepositoryConnector connector,
