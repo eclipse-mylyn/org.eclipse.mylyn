@@ -1445,6 +1445,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
+	/**
+	 * Persists the path of a selection.
+	 */
 	private void saveSelection() {
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (selection.size() == 1 && selection.getFirstElement() instanceof ITask) {
@@ -1462,6 +1465,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
+	/**
+	 * If <code>task</code> was previously selected, a tree selection is returned that references the same path that was
+	 * previously selected.
+	 */
 	private IStructuredSelection restoreSelection(ITask task) {
 		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
 		if (selection != null) {
