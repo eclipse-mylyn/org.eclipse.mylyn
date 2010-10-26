@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="mylyn-e3.6">
+<locations>
+<location includeAllPlatforms="false" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.0.595-dev-e36"/>
+<unit id="org.eclipse.swtbot.feature.group" version="2.0.0.595-dev-e36"/>
+<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+</location>
+<location includeAllPlatforms="false" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.cdt.platform.feature.group" version="7.0.1.201009141542"/>
+<unit id="org.eclipse.ecf.core.feature.group" version="3.3.1.v20100913-1814"/>
+<unit id="org.eclipse.sdk.ide" version="3.6.1.M20100909-0800"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.6.1.v20100914-1218"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20100914-1218"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201003050614"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/repository"/>
+</location>
+</locations>
+</target>
