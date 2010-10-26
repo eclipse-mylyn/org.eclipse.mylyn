@@ -24,6 +24,7 @@
 			
 	<target name="lib/wikitext-ant.jar" description= "Creates the lib/wikitext-ant.jar" depends="init">
 		<property name="destdir" value="${temp.folder}/lib/wikitext-ant.bin"/>
+		<property name="target.platform.path" value="${eclipse.home}" />
 		<delete dir="${destdir}"/>
 		<mkdir dir="${destdir}"/>
 		<mkdir dir="${build.result.folder}/lib"/>
@@ -34,12 +35,12 @@
 					<include name="org.eclipse.core.runtime/bin"/>
 					<include name="org.eclipse.equinox.common/bin"/>
 					<include name="org.eclipse.osgi/bin"/>
-					<include name="com.ibm.icu/bin"/>
-					<include name="org.eclipse.mylyn.wikitext.core/bin"/>
 					<include name="org.eclipse.jdt.core/bin"/>
 					<include name="org.eclipse.core.resources/bin"/>
+					<include name="com.ibm.icu/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.core/bin"/>
 				</dirset>
-				<fileset dir="${eclipse.home}">
+				<fileset dir="${target.platform.path}">
 					<include name="plugins/org.eclipse.core.runtime*.jar"/>
 					<include name="plugins/org.eclipse.equinox.common*.jar"/>
 					<include name="plugins/org.eclipse.osgi*.jar"/>

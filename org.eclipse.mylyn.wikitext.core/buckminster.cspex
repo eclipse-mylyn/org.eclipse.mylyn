@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cs:cspecExtension xmlns:com="http://www.eclipse.org/buckminster/Common-1.0" xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0">
+	<cs:groups>
+		<cs:private name="jar.contents">
+			<cs:attribute name="bin.includes" />
+			<cs:attribute name="eclipse.build.output.bin" />
+		</cs:private>
+	</cs:groups>
+
+	<cs:alterArtifacts>
+		<cs:private name="bin.includes">
+			<cs:path path="lib/" />
+		</cs:private>
+	</cs:alterArtifacts>
+
+	<cs:alterGroups>
+		<cs:remove name="jar.contents" />
+	</cs:alterGroups>
+</cs:cspecExtension>

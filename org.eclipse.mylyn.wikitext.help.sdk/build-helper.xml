@@ -51,6 +51,7 @@
 	</target>
 
 	<target name="generateJavadoc">
+		<property name="target.platform.path" value="${eclipse.home}" />
 		<mkdir dir="reference/api"/>
 		<javadoc destdir="reference/api"
 	           author="true"
@@ -63,6 +64,35 @@
 				<exclude name="org.eclipse.mylyn.wikitext*.tests/**"/>
 				<exclude name="**/internal/**"/>
 		    </fileset>
+			<classpath>
+				<dirset dir=".." defaultexcludes="yes">
+					<include name="org.eclipse.mylyn.tasks.core/bin"/>
+					<include name="org.eclipse.mylyn.tasks.ui/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.core/bin_ant"/>
+					<include name="org.eclipse.mylyn.wikitext.confluence.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.textile.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.tracwiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.twiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.ui/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.tasks.ui/bin"/>
+				</dirset>
+				<fileset dir="${target.platform.path}">
+					<include name="plugins/org.eclipse.osgi*.jar"/>
+					<include name="plugins/org.eclipse.equinox.common*.jar"/>
+					<include name="plugins/org.eclipse.equinox.registry*.jar"/>
+					<include name="plugins/org.eclipse.core.runtime*.jar"/>
+					<include name="plugins/org.eclipse.core.resources*.jar"/>
+					<include name="plugins/org.eclipse.core.commands*.jar"/>
+					<include name="plugins/org.eclipse.core.jobs*.jar"/>
+					<include name="plugins/org.eclipse.ui*.jar"/>
+					<include name="plugins/org.eclipse.text*.jar"/>
+					<include name="plugins/org.eclipse.jface*.jar"/>
+					<include name="plugins/org.eclipse.swt.${osgi.ws}.${osgi.os}.${osgi.arch}*.jar"/>
+					<include name="plugins/org.apache.ant*/lib/ant.jar"/>
+				</fileset>
+			</classpath>
 			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
 			<header><![CDATA[Mylyn WikiText]]></header>
 			<bottom><![CDATA[<i>Copyright &#169; 2007, 2009 David Green and others.<br/>

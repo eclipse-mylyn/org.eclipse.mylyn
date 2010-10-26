@@ -3,6 +3,16 @@
 	<name>org.eclipse.mylyn.wikitext.help.sdk</name>
 	<comment></comment>
 	<projects>
+		<project>org.eclipse.mylyn.tasks.core</project>
+		<project>org.eclipse.mylyn.tasks.ui</project>
+		<project>org.eclipse.mylyn.wikitext.confluence.core</project>
+		<project>org.eclipse.mylyn.wikitext.core</project>
+		<project>org.eclipse.mylyn.wikitext.mediawiki.core</project>
+		<project>org.eclipse.mylyn.wikitext.tasks.ui</project>
+		<project>org.eclipse.mylyn.wikitext.textile.core</project>
+		<project>org.eclipse.mylyn.wikitext.tracwiki.core</project>
+		<project>org.eclipse.mylyn.wikitext.twiki.core</project>
+		<project>org.eclipse.mylyn.wikitext.ui</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

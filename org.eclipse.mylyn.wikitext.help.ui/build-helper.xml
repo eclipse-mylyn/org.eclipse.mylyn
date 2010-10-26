@@ -16,6 +16,7 @@
 	<path id="wikitext.ant.classpath">
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
 		<pathelement location="${wikitext.ui.textile.bin}"/>
 	</path>
 			
