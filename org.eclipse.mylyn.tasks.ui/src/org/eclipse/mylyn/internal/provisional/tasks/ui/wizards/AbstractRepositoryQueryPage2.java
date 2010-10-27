@@ -86,6 +86,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 		if (needsRepositoryConfiguration) {
 			createUpdateButton(composite);
+		} else {
+			setDescription(Messages.AbstractRepositoryQueryPage2_Create_a_Query_Page_Description);
 		}
 
 		if (getQuery() != null) {
