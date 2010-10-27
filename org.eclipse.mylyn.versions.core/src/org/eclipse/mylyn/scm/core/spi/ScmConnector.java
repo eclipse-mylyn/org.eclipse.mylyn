@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.scm.core.Artifact;
-import org.eclipse.mylyn.scm.core.ArtifactInfo;
+import org.eclipse.mylyn.scm.core.ScmArtifact;
+import org.eclipse.mylyn.scm.core.ScmArtifactInfo;
 import org.eclipse.mylyn.scm.core.ChangeSet;
 import org.eclipse.mylyn.scm.core.ScmRepository;
 import org.eclipse.team.core.history.IFileRevision;
@@ -30,12 +30,12 @@ public abstract class ScmConnector {
 	/**
 	 * Lookup a remote or local resource.
 	 */
-	public abstract Artifact getArtifact(ArtifactInfo resource, IProgressMonitor monitor) throws CoreException;
+	public abstract ScmArtifact getArtifact(ScmArtifactInfo resource, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Lookup a local resource.
 	 */
-	public abstract Artifact getArtifact(IResource resource);
+	public abstract ScmArtifact getArtifact(IResource resource);
 
 	public abstract ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException;

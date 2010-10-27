@@ -12,18 +12,33 @@
 package org.eclipse.mylyn.scm.core;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Steffen Pingel
+ */
 public class ChangeSet {
 
-	List<Change> changes = new ArrayList<Change>();
+	List<ScmArtifact> artifacts = new ArrayList<ScmArtifact>();
+
+	ScmUser author;
+
+	Date date;
+
+	/**
+	 * SHA1 hash or revision.
+	 */
+	String id;
 
 	String kind;
 
+	String message;
+
 	ScmRepository repository;
 
-	public List<Change> getChanges() {
-		return changes;
+	public List<ScmArtifact> getArtifacts() {
+		return artifacts;
 	}
 
 	public String getKind() {

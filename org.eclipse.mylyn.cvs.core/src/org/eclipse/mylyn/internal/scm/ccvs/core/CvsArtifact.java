@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.scm.cvs.core;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.scm.core.Artifact;
+import org.eclipse.mylyn.scm.core.ScmArtifact;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
 import org.eclipse.team.core.history.IFileHistoryProvider;
@@ -22,7 +22,7 @@ import org.eclipse.team.core.history.IFileRevision;
 /**
  * @author Steffen Pingel
  */
-public class CvsArtifact extends Artifact {
+public class CvsArtifact extends ScmArtifact {
 
 	private final IResource resource;
 

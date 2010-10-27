@@ -17,8 +17,8 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.scm.core.Artifact;
-import org.eclipse.mylyn.scm.core.ArtifactInfo;
+import org.eclipse.mylyn.scm.core.ScmArtifact;
+import org.eclipse.mylyn.scm.core.ScmArtifactInfo;
 import org.eclipse.mylyn.scm.core.ChangeSet;
 import org.eclipse.mylyn.scm.core.ScmRepository;
 import org.eclipse.mylyn.scm.core.spi.ScmConnector;
@@ -34,12 +34,12 @@ import org.eclipse.team.internal.ccvs.core.ICVSRepositoryLocation;
 public class CvsConnector extends ScmConnector {
 
 	@Override
-	public Artifact getArtifact(ArtifactInfo resource, IProgressMonitor monitor) throws CoreException {
+	public ScmArtifact getArtifact(ScmArtifactInfo resource, IProgressMonitor monitor) throws CoreException {
 		return null;
 	}
 
 	@Override
-	public Artifact getArtifact(IResource resource) {
+	public ScmArtifact getArtifact(IResource resource) {
 		return new CvsArtifact(this, resource);
 	}
 

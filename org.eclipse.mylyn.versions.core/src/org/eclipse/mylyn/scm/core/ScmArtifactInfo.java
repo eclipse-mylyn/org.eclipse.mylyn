@@ -11,31 +11,39 @@
 
 package org.eclipse.mylyn.scm.core;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.team.core.history.IFileRevision;
+/**
+ * @author Steffen Pingel
+ */
+public class ScmArtifactInfo {
 
-public abstract class Artifact {
+	private String path;
 
-	ChangeType changeType;
+	private ScmRepository repository;
 
-	String path;
-
-	public ChangeType getChangeType() {
-		return changeType;
-	}
-
-	public abstract IFileRevision getFileRevision(String id, IProgressMonitor monitor);
+	private String revision;
 
 	public String getPath() {
 		return path;
 	}
 
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public ScmRepository getRepository() {
+		return repository;
+	}
+
+	public String getRevision() {
+		return revision;
 	}
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public void setRepository(ScmRepository repository) {
+		this.repository = repository;
+	}
+
+	public void setRevision(String revision) {
+		this.revision = revision;
 	}
 
 }

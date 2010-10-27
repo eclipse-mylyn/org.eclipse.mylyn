@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.scm.core;
 
+/**
+ * @author Steffen Pingel
+ */
 public class ScmRepository {
 
 	String name;

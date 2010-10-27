@@ -11,29 +11,34 @@
 
 package org.eclipse.mylyn.scm.core;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.team.core.history.IFileRevision;
 
-public class Change {
+/**
+ * @author Steffen Pingel
+ */
+public abstract class ScmArtifact {
 
-	ScmUser author;
+	ChangeType changeType;
 
-	Date date;
+	String path;
 
-	String revision;
+	public ChangeType getChangeType() {
+		return changeType;
+	}
 
-	String message;
+	public abstract IFileRevision getFileRevision(String id, IProgressMonitor monitor);
 
-	/**
-	 * SHA1 hash.
-	 */
-	String id;
+	public String getPath() {
+		return path;
+	}
 
-	List<Artifact> artifacts = new ArrayList<Artifact>();
+	public void setChangeType(ChangeType changeType) {
+		this.changeType = changeType;
+	}
 
-	public List<Artifact> getArtifacts() {
-		return artifacts;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }
