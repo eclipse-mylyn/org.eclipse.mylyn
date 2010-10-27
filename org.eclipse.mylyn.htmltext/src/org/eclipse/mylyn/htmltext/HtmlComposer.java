@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.GCData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -674,25 +673,6 @@ public class HtmlComposer {
 			execute(command);
 		}
 		pendingCommands.clear();
-	}
-
-	/**
-	 * @param hDC
-	 * @param data
-	 * @see org.eclipse.swt.widgets.Control#internal_dispose_GC(int,
-	 *      org.eclipse.swt.graphics.GCData)
-	 */
-	public void internal_dispose_GC(final int hDC, final GCData data) {
-		browser.internal_dispose_GC(hDC, data);
-	}
-
-	/**
-	 * @param data
-	 * @return
-	 * @see org.eclipse.swt.widgets.Control#internal_new_GC(org.eclipse.swt.graphics.GCData)
-	 */
-	public int internal_new_GC(final GCData data) {
-		return browser.internal_new_GC(data);
 	}
 
 	/**
