@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -151,7 +152,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
 					if (container instanceof Unscheduled) {
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
-					} else {
+					} else if (isValidTarget(container)) {
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
 								container.getDateRange());
 					}
@@ -165,6 +166,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			getViewer().setSelection(new StructuredSelection(tasksToMove.get(0)));
 		}
 		return true;
+	}
+
+	private boolean isValidTarget(ScheduledTaskContainer container) {
+		// ignore incoming, outgoing, completed
+		return container instanceof Unscheduled || !(container instanceof StateTaskContainer);
 	}
 
 	private void moveTask(ITask task, AbstractTaskContainer container) {
@@ -252,14 +258,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		} else if (LocalSelectionTransfer.getTransfer().isSupportedType(transferType)) {
 			localTransfer = true;
-			if (getCurrentTarget() instanceof UncategorizedTaskContainer || getCurrentTarget() instanceof TaskCategory
-					|| getCurrentTarget() instanceof UnmatchedTaskContainer
-					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
+			Object target = getCurrentTarget();
+			if (target instanceof UncategorizedTaskContainer || target instanceof TaskCategory
+					|| target instanceof UnmatchedTaskContainer
+					|| (target instanceof ScheduledTaskContainer && isValidTarget((ScheduledTaskContainer) target))) {
 				return true;
-			} else if (getCurrentTarget() instanceof ITaskContainer
+			} else if (target instanceof ITaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
-			} else if (getCurrentTarget() instanceof LocalTask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON) {
+			} else if (target instanceof LocalTask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON) {
 				return true;
 			} else {
 				return false;
@@ -270,5 +277,4 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
-
 }
