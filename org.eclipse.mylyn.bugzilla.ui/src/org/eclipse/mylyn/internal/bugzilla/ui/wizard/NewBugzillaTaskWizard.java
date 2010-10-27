@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.wizard;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
@@ -67,33 +67,39 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 				}
 			}
 		}
+
+		final AtomicReference<String> product = new AtomicReference<String>();
+		final AtomicReference<String> component = new AtomicReference<String>();
+
 		if (selection == null || selection.isEmpty()) {
-			final String lastProductSelection = getTaskRepository().getProperty(
-					IBugzillaConstants.LAST_PRODUCT_SELECTION);
-			final String lastComponentSelection = getTaskRepository().getProperty(
-					IBugzillaConstants.LAST_COMPONENT_SELECTION);
+			product.set(getTaskRepository().getProperty(IBugzillaConstants.LAST_PRODUCT_SELECTION));
+			component.set(getTaskRepository().getProperty(IBugzillaConstants.LAST_COMPONENT_SELECTION));
+		} else {
+			Object element = selection.getFirstElement();
+			extractMapping(element, product, component);
+		}
+
+		if (product.get() != null) {
 			return new TaskMapping() {
 				@Override
 				public String getProduct() {
-					return lastProductSelection;
+					return product.get();
 				}
 
 				@Override
 				public String getComponent() {
-					return lastComponentSelection;
+					return component.get();
 				}
 			};
-
 		}
 
-		final ArrayList<String> products = new ArrayList<String>();
+		return null;
+	}
 
-		Object element = (selection).getFirstElement();
+	private void extractMapping(Object element, AtomicReference<String> product, AtomicReference<String> component) {
 		if (element instanceof ITask) {
-			ITask bugzillaTask = (ITask) element;
-			if (bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()) != null) {
-				products.add(bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
-			}
+			ITask task = (ITask) element;
+			product.set(task.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 		} else {
 			IRepositoryQuery query = null;
 			if (element instanceof IRepositoryQuery) {
@@ -109,13 +115,17 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 					int index = option.indexOf("="); //$NON-NLS-1$
 					if (index != -1) {
 						String key = option.substring(0, index);
-						if ("product".equals(key)) { //$NON-NLS-1$
+						if ("product".equals(key) && product.get() == null) { //$NON-NLS-1$
 							try {
-								products.add(URLDecoder.decode(option.substring(index + 1),
+								product.set(URLDecoder.decode(option.substring(index + 1),
 										getTaskRepository().getCharacterEncoding()));
-								// TODO: list box only accepts a single selection so
-								// we break on first found
-								break;
+							} catch (UnsupportedEncodingException ex) {
+								// ignore
+							}
+						} else if ("component".equals(key) && component.get() == null) { //$NON-NLS-1$
+							try {
+								component.set(URLDecoder.decode(option.substring(index + 1),
+										getTaskRepository().getCharacterEncoding()));
 							} catch (UnsupportedEncodingException ex) {
 								// ignore
 							}
@@ -127,24 +137,11 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 					IAdaptable adaptable = (IAdaptable) element;
 					ITask task = (ITask) adaptable.getAdapter(ITask.class);
 					if (task != null) {
-						ITask bugzillaTask = (ITask) element;
-						if (bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()) != null) {
-							products.add(bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
-						}
+						product.set(task.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 					}
 				}
 			}
 		}
-
-		if (products.size() > 0) {
-			return new TaskMapping() {
-				@Override
-				public String getProduct() {
-					return products.get(0);
-				}
-			};
-		}
-		return null;
 	}
 
 }
