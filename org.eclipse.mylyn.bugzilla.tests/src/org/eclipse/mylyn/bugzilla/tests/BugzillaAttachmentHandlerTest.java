@@ -73,6 +73,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
 		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+		attachmentMapper.setComment("test Update AttachmentFlags");
+
 		/* Test uploading a proper file */
 		String fileName = "test-attach-1.txt";
 		File attachFile = new File(fileName);
@@ -443,24 +445,25 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	 * Ensure obsoletes and patches are marked as such by the parser.
 	 */
 	public void testAttachmentAttributes() throws Exception {
-		String taskNumber = "19";
+		String taskNumber = "3";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
-
-		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false, false };
-		boolean isObsolete[] = { false, true, false, true, false, false, false, false, false, false, false };
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		boolean isPatch[] = { false, false, true, true };
+		boolean isObsolete[] = { false, true, false, true };
 
 		int index = 0;
 		for (TaskAttribute attribute : taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_ATTACHMENT)) {
-			assertTrue(validateAttachmentAttributes(taskData, attribute, isPatch[index], isObsolete[index]));
+			assertTrue(validateAttachmentAttributes(taskData, attribute, isPatch[index], isObsolete[index], task));
 			index++;
 		}
+		assertEquals(4, index);
 	}
 
 	private boolean validateAttachmentAttributes(TaskData data, TaskAttribute taskAttribute, boolean isPatch,
-			boolean isObsolete) {
-		TaskAttachment taskAttachment = new TaskAttachment(BugzillaFixture.current().repository(), null, taskAttribute);
+			boolean isObsolete, ITask task) {
+		TaskAttachment taskAttachment = new TaskAttachment(BugzillaFixture.current().repository(), task, taskAttribute);
 		data.getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
 		return (taskAttachment.isPatch() == isPatch) && (taskAttachment.isDeprecated() == isObsolete);
 	}
