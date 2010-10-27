@@ -20,6 +20,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskAttachmentViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskAttachmentViewerManager;
@@ -42,7 +43,11 @@ public class OpenTaskAttachmentHandler extends AbstractHandler implements IHandl
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
 				List<ITaskAttachment> attachments = AttachmentUtil.getSelectedAttachments(event);
-				openAttachments(page, attachments);
+				try {
+					openAttachments(page, attachments);
+				} catch (OperationCanceledException e) {
+					// canceled
+				}
 			}
 		}
 		return null;

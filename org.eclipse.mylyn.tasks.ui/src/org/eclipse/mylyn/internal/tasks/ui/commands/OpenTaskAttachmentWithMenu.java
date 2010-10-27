@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskAttachmentViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskAttachmentViewerManager;
@@ -116,8 +117,8 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 		}
 
 		@Override
-		public void widgetSelected(SelectionEvent e) {
-			if (!((MenuItem) e.widget).getSelection()) {
+		public void widgetSelected(SelectionEvent event) {
+			if (!((MenuItem) event.widget).getSelection()) {
 				// if the default viewer changes ignore the event for the unselected menu item
 				return;
 			}
@@ -127,14 +128,18 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					// this event is fired also for item which gets unselected (i.e. previous 'preferred' viewer)
-					for (ITaskAttachment attachment : attachments) {
-						manager.savePreferredViewerID(attachment, viewer.getId());
-						try {
-							viewer.openAttachment(page, attachment);
-						} catch (CoreException ex) {
-							TasksUiInternal.logAndDisplayStatus(Messages.OpenTaskAttachmentHandler_failedToOpenViewer,
-									ex.getStatus());
+					try {
+						for (ITaskAttachment attachment : attachments) {
+							manager.savePreferredViewerID(attachment, viewer.getId());
+							try {
+								viewer.openAttachment(page, attachment);
+							} catch (CoreException e) {
+								TasksUiInternal.logAndDisplayStatus(
+										Messages.OpenTaskAttachmentHandler_failedToOpenViewer, e.getStatus());
+							}
 						}
+					} catch (OperationCanceledException e) {
+						// canceled
 					}
 				}
 			}

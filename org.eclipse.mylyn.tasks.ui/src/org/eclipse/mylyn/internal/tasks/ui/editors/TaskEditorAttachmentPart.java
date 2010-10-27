@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -125,8 +126,11 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
-				attachmentsTable);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, false)
+				.hint(500, SWT.DEFAULT)
+				.applyTo(attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
@@ -305,7 +309,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		}
 
 		IWorkbenchPage page = getTaskEditorPage().getSite().getWorkbenchWindow().getActivePage();
-
-		OpenTaskAttachmentHandler.openAttachments(page, attachments);
+		try {
+			OpenTaskAttachmentHandler.openAttachments(page, attachments);
+		} catch (OperationCanceledException e) {
+			// canceled
+		}
 	}
 }
