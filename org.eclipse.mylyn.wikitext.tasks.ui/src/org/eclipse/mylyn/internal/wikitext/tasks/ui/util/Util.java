@@ -14,14 +14,15 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.util;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaGeneratedCommentBlock;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaQuoteBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.EclipseErrorDetailsBlock;
+import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 
 /**
- * 
  * @author David Green
  */
 public class Util {
+	private static final String TASKTOP_ALM = "com.tasktop.alm.tasks"; //$NON-NLS-1$
+
 	private static final String BUGZILLA = "bugzilla"; //$NON-NLS-1$
 
 	public static MarkupLanguageConfiguration create(String repositoryKind) {
@@ -40,6 +41,6 @@ public class Util {
 	}
 
 	private static boolean isBugzillaOrDerivative(String repositoryKind) {
-		return BUGZILLA.equals(repositoryKind);
+		return BUGZILLA.equals(repositoryKind) || TASKTOP_ALM.equals(repositoryKind);
 	}
 }
