@@ -204,7 +204,7 @@ public class DefaultTaskSchema {
 	public static final Field PRIORITY = createField(TaskAttribute.PRIORITY, Messages.DefaultTaskSchema_Priority_Label,
 			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field PRODUCT = createField(TaskAttribute.PRIORITY, Messages.DefaultTaskSchema_Product_Label,
+	public static final Field PRODUCT = createField(TaskAttribute.PRODUCT, Messages.DefaultTaskSchema_Product_Label,
 			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
 	public static final Field RANK = createField(TaskAttribute.RANK, Messages.DefaultTaskSchema_Rank_Label,
