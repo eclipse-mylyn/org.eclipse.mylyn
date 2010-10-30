@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
@@ -649,10 +648,10 @@ public class RepositoryConfiguration implements Serializable {
 				//Special case: the CLOSED status needs a Resolution input. 
 				//This happens automatically if current status is RESOLVED, else we need to supply one
 				if (b.toString().equals(BugzillaOperation.close.toString())) {
-					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) {
+					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
 						//Do not add close with resolution operation if status is RESOLVED
 						continue;
-					} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) {
+					} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
 						//Do not add normal 'close' operation if status is not currently RESOLVED
 						continue;
 					}
@@ -660,11 +659,23 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, b);
 			}
 		} else {
+//			Eclipse Bugzilla State transitions
+//			UNCONFIRMED	
+//			NEW				ASSIGNED RESOLVED# CLOSED#
+//			ASSIGNED		NEW RESOLVED# CLOSED#
+//			REOPENED		NEW ASSIGNED RESOLVED# CLOSED#
+//			RESOLVED		REOPENED VERIFIED# CLOSED#
+//			VERIFIED		REOPENED RESOLVED# CLOSED#
+//			CLOSED			REOPENED RESOLVED#
+
 			switch (status) {
 			case NEW:
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+					addOperation(bugReport, BugzillaOperation.close_with_resolution);
+				}
 				addOperation(bugReport, BugzillaOperation.duplicate);
 				break;
 			case UNCONFIRMED:
@@ -672,6 +683,9 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+					addOperation(bugReport, BugzillaOperation.close_with_resolution);
+				}
 				addOperation(bugReport, BugzillaOperation.duplicate);
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.markNew);
@@ -680,6 +694,9 @@ public class RepositoryConfiguration implements Serializable {
 			case ASSIGNED:
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
+					addOperation(bugReport, BugzillaOperation.close_with_resolution);
+				}
 				addOperation(bugReport, BugzillaOperation.duplicate);
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.markNew);
@@ -774,7 +791,7 @@ public class RepositoryConfiguration implements Serializable {
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
-				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
@@ -789,7 +806,7 @@ public class RepositoryConfiguration implements Serializable {
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
-				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
