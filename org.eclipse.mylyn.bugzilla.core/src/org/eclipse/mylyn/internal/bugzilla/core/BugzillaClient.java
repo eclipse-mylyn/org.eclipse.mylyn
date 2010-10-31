@@ -1781,9 +1781,22 @@ public class BugzillaClient {
 							String value = string.toLowerCase(Locale.ENGLISH);
 							found = title.indexOf(value) != -1;
 							if (found) {
+								for (Token tokenError = tokenizer.nextToken(); tokenError.getType() != Token.EOF; tokenError = tokenizer.nextToken()) {
+									body += tokenError.toString();
+									if (tokenError.getType() == Token.COMMENT) {
+										if (tokenError.getValue().toString().startsWith("reason=")) { //$NON-NLS-1$
+											String reason = tokenError.getValue().toString().substring(7);
+											throw new CoreException(new BugzillaStatus(IStatus.ERROR,
+													BugzillaCorePlugin.ID_PLUGIN,
+													IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION,
+													repositoryUrl.toString(), "Reason = " + reason)); //$NON-NLS-1$
+										}
+									}
+								}
+
 								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 										IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION,
-										repositoryUrl.toString()));
+										repositoryUrl.toString(), "unknown reason because Bugzilla < 4.0 was used"));
 							}
 						}
 
