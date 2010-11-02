@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -37,20 +38,20 @@ public class DefaultTaskSchema {
 		private final String type;
 
 		protected Field(String key, String label, String type) {
-			this(key, label, type, null);
+			this(key, label, type, (Flag[]) null);
 		}
 
-		protected Field(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
+		protected Field(String key, String label, String type, Flag... flags) {
 			Assert.isNotNull(key);
 			Assert.isNotNull(label);
 			Assert.isNotNull(type);
 			this.key = key;
 			this.label = label;
 			this.type = type;
-			if (firstFlag == null) {
+			if (flags == null) {
 				this.flags = NO_FLAGS;
 			} else {
-				this.flags = EnumSet.of(firstFlag, moreFlags);
+				this.flags = EnumSet.copyOf(Arrays.asList(flags));
 			}
 		}
 
@@ -238,11 +239,11 @@ public class DefaultTaskSchema {
 			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
 	protected static Field createField(String key, String label, String type) {
-		return createField(key, label, type, null);
+		return createField(key, label, type, (Flag[]) null);
 	}
 
-	protected static Field createField(String key, String label, String type, Flag firstFlag, Flag... moreFlags) {
-		Field field = new Field(key, label, type, firstFlag, moreFlags);
+	protected static Field createField(String key, String label, String type, Flag... flags) {
+		Field field = new Field(key, label, type, flags);
 		fieldByKey.put(key, field);
 		return field;
 	}
