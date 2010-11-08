@@ -47,7 +47,7 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 			"close"); //$NON-NLS-1$
 
 	public static final BugzillaOperation close_with_resolution = new BugzillaOperation(
-			Messages.BugzillaOperation_Mark_as_CLOSED, "resolution", TaskAttribute.TYPE_SINGLE_SELECT, "close"); //$NON-NLS-1$ //$NON-NLS-2$
+			Messages.BugzillaOperation_Mark_as_CLOSED, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "close"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final BugzillaOperation markNew = new BugzillaOperation(Messages.BugzillaOperation_Mark_as_NEW,
 			"markNew"); //$NON-NLS-1$

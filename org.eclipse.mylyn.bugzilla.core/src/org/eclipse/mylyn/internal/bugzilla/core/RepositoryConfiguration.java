@@ -673,6 +673,7 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				// This is not the standard workflow add with bug 326216 to support eclipse.org				
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
@@ -683,6 +684,7 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				// This is not the standard workflow add with bug 326216 to support eclipse.org				
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
@@ -694,6 +696,7 @@ public class RepositoryConfiguration implements Serializable {
 			case ASSIGNED:
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.resolve);
+				// This is not the standard workflow add with bug 326216 to support eclipse.org				
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
