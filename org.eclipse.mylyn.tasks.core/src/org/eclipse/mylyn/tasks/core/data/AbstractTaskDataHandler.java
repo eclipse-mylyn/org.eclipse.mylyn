@@ -32,10 +32,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public abstract class AbstractTaskDataHandler {
 
 	/**
-	 * Download task data for each id provided
-	 * 
-	 * Override getMultiTaskData() to return true and implement this method if connector supports download of multiple
-	 * task data in one request.
+	 * Download task data for each id provided Override {@link #canGetMultiTaskData(TaskRepository)} to return true and
+	 * implement this method if connector supports download of multiple task data in one request.
 	 * 
 	 * @since 3.0
 	 */
@@ -46,19 +44,25 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
+	 * 
+	 * @since 3.0
 	 */
 	public abstract RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initialize a new task data object with default attributes and values
+	 * 
+	 * @since 3.0
 	 */
 	public abstract boolean initializeTaskData(TaskRepository repository, TaskData data,
 			ITaskMapping initializationData, IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * @since 2.2
+	 * Initializes <code>taskData</code> with default attributes for a subtask of <code>parentTaskData</code>.
+	 * 
 	 * @return false if this operation is not supported by the connector, true if initialized
+	 * @since 3.0
 	 */
 	public boolean initializeSubTaskData(TaskRepository repository, TaskData taskData, TaskData parentTaskData,
 			IProgressMonitor monitor) throws CoreException {
@@ -66,31 +70,47 @@ public abstract class AbstractTaskDataHandler {
 	}
 
 	/**
-	 * @param taskRepository
+	 * @param repository
 	 *            TODO
 	 * @param task
 	 *            the parent task, may be null
 	 * @param task
 	 *            the parent task data, may be null
-	 * @since 2.2
+	 * @since 3.0
 	 */
-	public boolean canInitializeSubTaskData(TaskRepository taskRepository, ITask task) {
+	public boolean canInitializeSubTaskData(TaskRepository repository, ITask task) {
 		return false;
 	}
-
-	public abstract TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository);
 
 	/**
-	 * @param taskRepository
-	 *            TODO
-	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
-	 *         override and implement getMultiTaskData
+	 * Returns a {@link TaskAttributeMapper} for <code>repository</code>.
+	 * 
+	 * @see TaskAttributeMapper
+	 * @since 3.0
 	 */
-	public boolean canGetMultiTaskData(TaskRepository taskRepository) {
+	public abstract TaskAttributeMapper getAttributeMapper(TaskRepository repository);
+
+	/**
+	 * Returns true if connector support downloading multiple task data in single request, false otherwise. If true,
+	 * override and implement {@link #getMultiTaskData(TaskRepository, Set, TaskDataCollector, IProgressMonitor)}.
+	 * 
+	 * @param repository
+	 *            the repository for which multi task data download is supported
+	 * @since 3.0
+	 */
+	public boolean canGetMultiTaskData(TaskRepository repository) {
 		return false;
 	}
 
-	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
+	/**
+	 * Invoked each time task data is loaded.
+	 * <p>
+	 * Sub classes may override to migrate attributes on <code>taskData</code>.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 */
+	public void migrateTaskData(TaskRepository repository, TaskData taskData) {
 	}
 
 }
