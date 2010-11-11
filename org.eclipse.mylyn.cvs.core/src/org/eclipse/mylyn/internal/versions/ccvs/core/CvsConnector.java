@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.scm.cvs.core;
+package org.eclipse.mylyn.internal.versions.cvs.core;
 
 import java.util.ArrayList;
 import java.util.List;
