@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.scm.core;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.versions.core;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %Bundle-Vendor
@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.mylyn.commons.core;bundle-version="3.5.0"
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.scm.core;x-internal:=true,
- org.eclipse.mylyn.scm.core.spi;x-internal:=true
+Export-Package: org.eclipse.mylyn.versions.core;x-internal:=true,
+ org.eclipse.mylyn.versions.core.spi;x-internal:=true

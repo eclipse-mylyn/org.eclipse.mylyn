@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.scm.ui;
+package org.eclipse.mylyn.versions.ui;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.ITypedElement;

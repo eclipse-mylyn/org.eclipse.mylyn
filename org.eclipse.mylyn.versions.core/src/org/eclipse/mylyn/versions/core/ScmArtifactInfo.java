@@ -9,41 +9,41 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.scm.core;
+package org.eclipse.mylyn.versions.core;
 
 /**
  * @author Steffen Pingel
  */
-public class ScmUser {
+public class ScmArtifactInfo {
 
-	String email;
+	private String path;
 
-	String id;
+	private ScmRepository repository;
 
-	String name;
+	private String revision;
 
-	public String getEmail() {
-		return email;
+	public String getPath() {
+		return path;
 	}
 
-	public String getId() {
-		return id;
+	public ScmRepository getRepository() {
+		return repository;
 	}
 
-	public String getName() {
-		return name;
+	public String getRevision() {
+		return revision;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setRepository(ScmRepository repository) {
+		this.repository = repository;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRevision(String revision) {
+		this.revision = revision;
 	}
 
 }

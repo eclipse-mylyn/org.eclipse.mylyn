@@ -9,36 +9,41 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.scm.core;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.team.core.history.IFileRevision;
+package org.eclipse.mylyn.versions.core;
 
 /**
  * @author Steffen Pingel
  */
-public abstract class ScmArtifact {
+public class ScmUser {
 
-	ChangeType changeType;
+	String email;
 
-	String path;
+	String id;
 
-	public ChangeType getChangeType() {
-		return changeType;
+	String name;
+
+	public String getEmail() {
+		return email;
 	}
 
-	public abstract IFileRevision getFileRevision(String id, IProgressMonitor monitor);
-
-	public String getPath() {
-		return path;
+	public String getId() {
+		return id;
 	}
 
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public String getName() {
+		return name;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

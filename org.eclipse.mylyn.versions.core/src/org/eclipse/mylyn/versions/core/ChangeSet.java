@@ -9,41 +9,52 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.scm.core;
+package org.eclipse.mylyn.versions.core;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Steffen Pingel
  */
-public class ScmArtifactInfo {
+public class ChangeSet {
 
-	private String path;
+	List<ScmArtifact> artifacts = new ArrayList<ScmArtifact>();
 
-	private ScmRepository repository;
+	ScmUser author;
 
-	private String revision;
+	Date date;
 
-	public String getPath() {
-		return path;
+	/**
+	 * SHA1 hash or revision.
+	 */
+	String id;
+
+	String kind;
+
+	String message;
+
+	ScmRepository repository;
+
+	public List<ScmArtifact> getArtifacts() {
+		return artifacts;
+	}
+
+	public String getKind() {
+		return kind;
 	}
 
 	public ScmRepository getRepository() {
 		return repository;
 	}
 
-	public String getRevision() {
-		return revision;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 	public void setRepository(ScmRepository repository) {
 		this.repository = repository;
-	}
-
-	public void setRevision(String revision) {
-		this.revision = revision;
 	}
 
 }

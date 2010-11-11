@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.scm.ui;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.versions.ui;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.ui,
- org.eclipse.mylyn.scm.core,
+ org.eclipse.mylyn.versions.core,
  org.eclipse.compare,
  org.eclipse.mylyn.team.ui,
  org.eclipse.team.core,
@@ -16,4 +16,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
-Export-Package: org.eclipse.mylyn.scm.ui;x-internal:=true
+Export-Package: org.eclipse.mylyn.versions.ui;x-internal:=true

@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.scm.core;
+package org.eclipse.mylyn.versions.core;
 
 public enum ChangeType {
 
