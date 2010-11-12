@@ -23,7 +23,10 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 
@@ -42,7 +45,9 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
 	 * multiple times while you move the mouse over a task hyperlink (bug#209409)
 	 */
-	private ITask currentTaskHyperlink;
+	private ITask currentTask;
+
+	private TaskHyperlink currentTaskHyperlink;
 
 	private ITextViewer textViewer;
 
@@ -78,7 +83,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	public void applyTextPresentation(TextPresentation textPresentation) {
 		super.applyTextPresentation(textPresentation);
 		// decorate hyperlink as strike-through if task is completed, this is now also handled by TaskHyperlinkTextPresentationManager
-		if (activeRegion != null && currentTaskHyperlink != null && currentTaskHyperlink.isCompleted()) {
+		if (activeRegion != null && currentTask != null && currentTask.isCompleted()) {
 			Iterator<StyleRange> styleRangeIterator = textPresentation.getAllStyleRangeIterator();
 			while (styleRangeIterator.hasNext()) {
 				StyleRange styleRange = styleRangeIterator.next();
@@ -107,12 +112,19 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 					task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
 				}
 
-				if (task != null && task != currentTaskHyperlink) {
-					currentTaskHyperlink = task;
+				if (!hyperlinks[0].equals(currentTaskHyperlink)) {
+					currentTaskHyperlink = (TaskHyperlink) hyperlinks[0];
+					currentTask = task;
 					activeRegion = hyperlink.getHyperlinkRegion();
 					if (textViewer != null && textViewer.getTextWidget() != null
 							&& !textViewer.getTextWidget().isDisposed()) {
-						if (task.getTaskKey() == null) {
+						if (task == null) {
+							String taskLabel = TasksUiInternal.getTaskPrefix(hyperlink.getRepository()
+									.getConnectorKind());
+							taskLabel += currentTaskHyperlink.getTaskId();
+							textViewer.getTextWidget().setToolTipText(
+									NLS.bind(Messages.TaskHyperlinkPresenter_Not_In_Task_List, taskLabel));
+						} else if (task.getTaskKey() == null) {
 							textViewer.getTextWidget().setToolTipText(task.getSummary());
 						} else {
 							textViewer.getTextWidget().setToolTipText(task.getTaskKey() + ": " + task.getSummary()); //$NON-NLS-1$
@@ -131,6 +143,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 				textViewer.getTextWidget().setToolTipText(null);
 			}
 			currentTaskHyperlink = null;
+			currentTask = null;
 		}
 		super.hideHyperlinks();
 	}
