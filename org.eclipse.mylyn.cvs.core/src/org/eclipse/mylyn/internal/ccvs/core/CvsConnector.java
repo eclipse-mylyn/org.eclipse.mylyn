@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.versions.cvs.core;
+package org.eclipse.mylyn.internal.cvs.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.scm.core.ScmArtifact;
-import org.eclipse.mylyn.scm.core.ScmArtifactInfo;
-import org.eclipse.mylyn.scm.core.ChangeSet;
-import org.eclipse.mylyn.scm.core.ScmRepository;
-import org.eclipse.mylyn.scm.core.spi.ScmConnector;
+import org.eclipse.mylyn.versions.core.ChangeSet;
+import org.eclipse.mylyn.versions.core.ScmArtifact;
+import org.eclipse.mylyn.versions.core.ScmArtifactInfo;
+import org.eclipse.mylyn.versions.core.ScmRepository;
+import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.internal.ccvs.core.CVSProviderPlugin;

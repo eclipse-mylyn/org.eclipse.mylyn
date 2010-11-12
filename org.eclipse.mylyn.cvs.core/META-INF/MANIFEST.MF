@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.versions.cvs;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.cvs.core;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %Bundle-Vendor
@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.cvs.core,
  org.eclipse.core.filesystem
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.internal.versions.cvs.core;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.cvs.core;x-internal:=true

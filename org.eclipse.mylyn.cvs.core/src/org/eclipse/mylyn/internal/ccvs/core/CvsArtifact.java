@@ -9,11 +9,11 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.versions.cvs.core;
+package org.eclipse.mylyn.internal.cvs.core;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.scm.core.ScmArtifact;
+import org.eclipse.mylyn.versions.core.ScmArtifact;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
 import org.eclipse.team.core.history.IFileHistoryProvider;

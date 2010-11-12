@@ -9,9 +9,9 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.versions.cvs.core;
+package org.eclipse.mylyn.internal.cvs.core;
 
-import org.eclipse.mylyn.scm.core.ScmRepository;
+import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.team.internal.ccvs.core.ICVSRepositoryLocation;
 
 /**
