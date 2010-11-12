@@ -8,10 +8,12 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - Refactored into commons
+ *     Itema AS - Added configure button, bug #329897
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -46,6 +49,8 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * @author Torkild Ulvøy Resheim
  */
 public abstract class ServiceMessageControl {
+
+	private static final String NOTIFICATIONS_PREF_PAGE = "org.eclipse.mylyn.commons.notifications.preferencePages.Notifications";
 
 	protected static Font setHeaderFontSizeAndStyle(Control text) {
 		float sizeFactor = 1.2f;
@@ -79,6 +84,8 @@ public abstract class ServiceMessageControl {
 
 	private ImageHyperlink closeLink;
 
+	private ImageHyperlink configureLink;
+
 	private Link descriptionLabel;
 
 	private GradientCanvas head;
@@ -90,6 +97,8 @@ public abstract class ServiceMessageControl {
 	private final Composite parent;
 
 	private Label titleLabel;
+
+	private String eventId;
 
 	public ServiceMessageControl(Composite parent) {
 		this.parent = parent;
@@ -201,6 +210,31 @@ public abstract class ServiceMessageControl {
 		//				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
 		//			}
 		//		});
+		configureLink = new ImageHyperlink(buttonsComp, SWT.NONE);
+		configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
+		configureLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkEntered(HyperlinkEvent e) {
+				configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE_HOVER));
+			}
+
+			@Override
+			public void linkExited(HyperlinkEvent e) {
+				configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
+			}
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(getShell(), NOTIFICATIONS_PREF_PAGE,
+						new String[0], eventId);
+				// Only close the message if the did not cancel the operation 
+				if (pd != null) {
+					pd.open();
+				}
+			}
+		});
+		// Initially invisible, must have eventId for this to be of any use.
+		configureLink.setVisible(eventId != null);
 
 		closeLink = new ImageHyperlink(buttonsComp, SWT.NONE);
 		closeLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
@@ -260,6 +294,19 @@ public abstract class ServiceMessageControl {
 	protected void setTitle(String title) {
 		titleLabel.setText(title);
 		head.layout(true);
+	}
+
+	/**
+	 * Sets the eventId of the message being displayed. How to handle certain kind of messages can be configured in
+	 * preference settings if this property is set to a legal value. The event identifiers are declared using the
+	 * <i>org.eclipse.mylyn.commons.notifications.notifications</i> extension point.
+	 * 
+	 * @param eventId
+	 *            the event identifier for the displayed message
+	 */
+	protected void setEventId(String eventId) {
+		this.eventId = eventId;
+		configureLink.setVisible(eventId != null);
 	}
 
 	/**

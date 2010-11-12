@@ -261,6 +261,11 @@ public class CommonImages {
 
 	public static final ImageDescriptor VALIDATE = create(T_OBJ, "resource_obj.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor NOTIFICATION_CONFIGURE = create(T_TOOL, "notification-configure.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor NOTIFICATION_CONFIGURE_HOVER = create(T_TOOL,
+			"notification-configure-active.gif"); //$NON-NLS-1$;
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

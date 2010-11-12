@@ -7,8 +7,12 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Select event type on open if available. Bug #329897
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.ui.notifications;
+
+import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -19,6 +23,7 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,8 +53,32 @@ import org.eclipse.ui.dialogs.FilteredTree;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild Ulvøy Resheim
  */
 public class NotificationsPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	/**
+	 * We need this in order to make sure that the correct element is selected in the {@link TreeViewer} when the
+	 * selection is set.
+	 * 
+	 * @author Torkild Ulvøy Resheim
+	 */
+	public class NotificationEventComparer implements IElementComparer {
+
+		public boolean equals(Object a, Object b) {
+			if (a instanceof NotificationEvent && b instanceof NotificationEvent) {
+				String idA = ((NotificationEvent) a).getId();
+				String idB = ((NotificationEvent) b).getId();
+				return (idA.equals(idB));
+			}
+			return a.equals(b);
+		}
+
+		public int hashCode(Object element) {
+			return element.hashCode();
+		}
+
+	}
 
 	private static final Object[] EMPTY = new Object[0];
 
@@ -198,6 +227,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true);
 		eventsViewer = tree.getViewer();
 		GridDataFactory.fillDefaults().span(1, 2).grab(false, true).applyTo(tree);
+		eventsViewer.setComparer(new NotificationEventComparer());
 		eventsViewer.setContentProvider(new EventContentProvider());
 		eventsViewer.setLabelProvider(new NotificationLabelProvider());
 		eventsViewer.setInput(model.getCategories().toArray());
@@ -267,6 +297,30 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		reset();
 		Dialog.applyDialogFont(composite);
 		return composite;
+	}
+
+	@Override
+	public void applyData(Object data) {
+		// We may or may not have a NotificationEvent supplied when this 
+		// preference dialog is opened. If we do have this data we want to 
+		// highlight the appropriate instance.
+		if (data instanceof String) {
+			String selectedEventId = (String) data;
+			Collection<NotificationCategory> items = model.getCategories();
+			NotificationEvent selectedEvent = null;
+			for (NotificationCategory notificationCategory : items) {
+				List<NotificationEvent> event = notificationCategory.getEvents();
+				for (NotificationEvent notificationEvent : event) {
+					if (notificationEvent.getId().equals(selectedEventId)) {
+						selectedEvent = notificationEvent;
+						break;
+					}
+				}
+			}
+			if (selectedEvent != null) {
+				eventsViewer.setSelection(new StructuredSelection(selectedEvent), true);
+			}
+		}
 	}
 
 	private void updateEnablement() {
