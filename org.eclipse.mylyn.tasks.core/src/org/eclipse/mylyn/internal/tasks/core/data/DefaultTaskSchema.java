@@ -86,6 +86,8 @@ public class DefaultTaskSchema {
 				return TaskAttribute.KIND_DEFAULT;
 			} else if (flags.contains(Flag.PEOPLE)) {
 				return TaskAttribute.KIND_PEOPLE;
+			} else if (flags.contains(Flag.OPERATION)) {
+				return TaskAttribute.KIND_OPERATION;
 			}
 			return null;
 		}
@@ -110,7 +112,7 @@ public class DefaultTaskSchema {
 	};
 
 	public enum Flag {
-		ATTRIBUTE, PEOPLE, READ_ONLY
+		ATTRIBUTE, PEOPLE, READ_ONLY, OPERATION
 	}
 
 	private static Map<String, Field> fieldByKey = new HashMap<String, Field>();
