@@ -24,8 +24,18 @@ public class TaskOperation {
 	 * @since 3.0
 	 */
 	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label) {
+		applyTo(taskAttribute, operationId, label, null);
+	}
+
+	/**
+	 * @since 3.5
+	 */
+	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label, String toolTip) {
 		TaskData taskData = taskAttribute.getTaskData();
 		taskData.getAttributeMapper().setValue(taskAttribute, operationId);
+		if (toolTip != null) {
+			taskAttribute.getMetaData().defaults().putValue(TaskAttribute.META_TOOL_TIP, toolTip);
+		}
 		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label);
 	}
 
@@ -39,6 +49,7 @@ public class TaskOperation {
 				taskData.getTaskId(), taskAttribute.getValue());
 		operation.setLabel(taskAttribute.getMetaData().getLabel());
 		operation.setTaskAttribute(taskAttribute);
+		operation.setTooltip(taskAttribute.getMetaData().getValue(TaskAttribute.META_TOOL_TIP));
 		return operation;
 	}
 
@@ -53,6 +64,8 @@ public class TaskOperation {
 	private TaskAttribute taskAttribute;
 
 	private final String taskId;
+
+	private String tooltip;
 
 	/**
 	 * @since 3.0
@@ -157,6 +170,14 @@ public class TaskOperation {
 	 */
 	public void setTaskAttribute(TaskAttribute taskAttribute) {
 		this.taskAttribute = taskAttribute;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 }

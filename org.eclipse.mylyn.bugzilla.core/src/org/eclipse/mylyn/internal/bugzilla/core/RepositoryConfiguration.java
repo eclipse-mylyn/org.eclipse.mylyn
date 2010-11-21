@@ -25,6 +25,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -261,6 +262,15 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
+	public void addUnconfirmedAllowed(String product, Boolean unconfirmedAllowed) {
+		ProductEntry entry = products.get(product);
+		if (entry == null) {
+			entry = new ProductEntry(product);
+			products.put(product, entry);
+		}
+		entry.setUnconfirmedAllowed(unconfirmedAllowed);
+	}
+
 	/**
 	 * Container for product information: name, components.
 	 */
@@ -278,6 +288,8 @@ public class RepositoryConfiguration implements Serializable {
 		List<String> milestones = new ArrayList<String>();
 
 		String defaultMilestone = null;
+
+		Boolean unconfirmedAllowed = false;
 
 		ProductEntry(String name) {
 			this.productName = name;
@@ -317,6 +329,14 @@ public class RepositoryConfiguration implements Serializable {
 
 		public void setDefaultMilestone(String defaultMilestone) {
 			this.defaultMilestone = defaultMilestone;
+		}
+
+		public Boolean getUnconfirmedAllowed() {
+			return unconfirmedAllowed;
+		}
+
+		public void setUnconfirmedAllowed(Boolean unconfirmedAllowed) {
+			this.unconfirmedAllowed = unconfirmedAllowed;
 		}
 	}
 
@@ -374,7 +394,9 @@ public class RepositoryConfiguration implements Serializable {
 				validTransitions = new CustomTransitionManager();
 			}
 			if (xmlClient == null) {
-				validTransitions.parse(fileName);
+				if (!validTransitions.parse(fileName)) {
+					validTransitions = null;
+				}
 			} else {
 				validTransitions.parse(monitor, xmlClient);
 			}
@@ -626,6 +648,104 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void addValidOperations(TaskData bugReport) {
+		BugzillaVersion bugzillaVersion = getInstallVersion();
+		if (bugzillaVersion == null) {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
+		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+			addValidOperationsBefore4(bugReport);
+		} else {
+			addValidOperationsAfter4(bugReport);
+		}
+	}
+
+	public void addValidOperationsAfter4(TaskData bugReport) {
+		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		BUGZILLA_REPORT_STATUS_4_0 status = BUGZILLA_REPORT_STATUS_4_0.UNCONFIRMED;
+		if (attributeStatus != null) {
+			try {
+				status = BUGZILLA_REPORT_STATUS_4_0.valueOf(attributeStatus.getValue());
+			} catch (RuntimeException e) {
+				status = BUGZILLA_REPORT_STATUS_4_0.UNCONFIRMED;
+			}
+		}
+		if (validTransitions != null && attributeStatus != null && validTransitions.isValid()) {
+			//Handle custom operations. Currently only tuned for transitions based on default status names
+			addOperation(bugReport, BugzillaOperation.none);
+			for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
+				//Special case: the CLOSED status needs a Resolution input. 
+				//This happens automatically if current status is RESOLVED, else we need to supply one
+				if (b.toString().equals(BugzillaOperation.close.toString())) {
+					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
+						//Do not add close with resolution operation if status is RESOLVED
+						continue;
+					} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
+						//Do not add normal 'close' operation if status is not currently RESOLVED
+						continue;
+					}
+				}
+				addOperation(bugReport, b);
+			}
+		} else {
+			TaskAttribute everConfirmed = bugReport.getRoot().getAttribute(BugzillaAttribute.EVERCONFIRMED.getKey());
+			TaskAttribute product = bugReport.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
+			Boolean unconfirmedAllowed = products.get(product.getValue()).getUnconfirmedAllowed();
+
+			switch (status) {
+			case START:
+				addOperation(bugReport, BugzillaOperation.new_default);
+				addOperation(bugReport, BugzillaOperation.unconfirmed);
+				addOperation(bugReport, BugzillaOperation.confirmed);
+				addOperation(bugReport, BugzillaOperation.in_progress);
+				TaskAttribute unconfirmedAttribute = bugReport.getRoot().getAttribute(
+						TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+				unconfirmedAttribute.getMetaData().putValue(TaskAttribute.META_UNCONFIRMED_ALLOWED,
+						unconfirmedAllowed.toString());
+				TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
+				TaskOperation.applyTo(operationAttribute, BugzillaOperation.new_default.toString(),
+						IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
+				break;
+			case UNCONFIRMED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.confirmed);
+				addOperation(bugReport, BugzillaOperation.in_progress);
+				addOperation(bugReport, BugzillaOperation.resolve);
+				break;
+			case CONFIRMED:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.in_progress);
+				addOperation(bugReport, BugzillaOperation.resolve);
+				break;
+			case IN_PROGRESS:
+				addOperation(bugReport, BugzillaOperation.none);
+				addOperation(bugReport, BugzillaOperation.confirmed);
+				addOperation(bugReport, BugzillaOperation.resolve);
+				break;
+			case RESOLVED:
+				addOperation(bugReport, BugzillaOperation.none);
+				if (everConfirmed == null && unconfirmedAllowed) {
+					addOperation(bugReport, BugzillaOperation.unconfirmed);
+				} else {
+					addOperation(bugReport, BugzillaOperation.confirmed);
+				}
+				addOperation(bugReport, BugzillaOperation.verify_with_resolution);
+				break;
+			case VERIFIED:
+				addOperation(bugReport, BugzillaOperation.none);
+				if (everConfirmed == null && unconfirmedAllowed) {
+					addOperation(bugReport, BugzillaOperation.unconfirmed);
+				} else {
+					addOperation(bugReport, BugzillaOperation.confirmed);
+				}
+				addOperation(bugReport, BugzillaOperation.resolve);
+				break;
+			}
+			addOperation(bugReport, BugzillaOperation.duplicate);
+		}
+
+	}
+
+	public void addValidOperationsBefore4(TaskData bugReport) {
 		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.NEW;
 
@@ -816,6 +936,23 @@ public class RepositoryConfiguration implements Serializable {
 			if (getResolutions().size() > 0) {
 				attrResolvedInput.setValue(getResolutions().get(0));
 			}
+		} else if (op.toString().equals(BugzillaOperation.verify_with_resolution.toString()) && op.getInputId() != null) {
+			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+			String oldResolutionValue = attributeResolution.getValue();
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
+			attrResolvedInput.getMetaData().setType(op.getInputType());
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
+			for (String resolution : getResolutions()) {
+				// DUPLICATE and MOVED have special meanings so do not show as resolution
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
+					attrResolvedInput.putOption(resolution, resolution);
+				}
+			}
+			if (getResolutions().size() > 0) {
+				attrResolvedInput.setValue(oldResolutionValue);
+			}
 		} else if (op.toString() == BugzillaOperation.duplicate.toString()) {
 
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
@@ -828,9 +965,17 @@ public class RepositoryConfiguration implements Serializable {
 				attrInput.getMetaData().defaults().setReadOnly(false).setType(op.getInputType());
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
 			}
+		} else if (op.toString() == BugzillaOperation.new_default.toString()) {
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
+			TaskOperation.applyTo(attribute, op.toString(), op.getLabel(), "Let Bugzilla set the Status"); //$NON-NLS-1$
 		} else {
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
-			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
+			if (bugReport.isNew()) {
+				TaskOperation.applyTo(attribute, op.toString(), op.getLabel(),
+						"if you are not shure if you allowed to set this state\nplease use the default for submitting new tasks!"); //$NON-NLS-1$
+			} else {
+				TaskOperation.applyTo(attribute, op.toString(), op.getLabel(), ""); //$NON-NLS-1$
+			}
 			if (op.getInputId() != null) {
 				TaskAttribute attrInput = bugReport.getRoot().createAttribute(op.getInputId());
 				attrInput.getMetaData().defaults().setReadOnly(false).setType(op.getInputType());
@@ -970,17 +1115,30 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public String getDuplicateStatus() {
-		return validTransitions.getDuplicateStatus();
+		return validTransitions == null ? "RESOLVED" : validTransitions.getDuplicateStatus(); //$NON-NLS-1$
 	}
 
 	public String getStartStatus() {
-		return (validTransitions == null) ? "NEW" : validTransitions.getStartStatus(); //$NON-NLS-1$
+		if (validTransitions == null) {
+			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0 ? "NEW" : "CONFIRMED"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			return validTransitions.getStartStatus();
+		}
 	}
 
 	public String getDefaultMilestones(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getDefaultMilestone();
+		} else {
+			return null;
+		}
+	}
+
+	public Boolean getUnconfirmedAllowed(String product) {
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getUnconfirmedAllowed();
 		} else {
 			return null;
 		}

@@ -218,13 +218,14 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		String priority = "P1";
 		String severity = "trivial";
 		String email = "tests%40mylyn.eclipse.org";
-		String queryUrlString = repository.getRepositoryUrl()
-				+ "/buglist.cgi?priority="
-				+ priority
+		String bug_status = BugzillaFixture.current()
+				.getBugzillaVersion()
+				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0 ? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
+				: "&bug_status=UNCONFIRMED&bug_status=CONFIRMED";
+		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?priority=" + priority
 				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="
-				+ severity
-				+ "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&type0-0-1=equals&value0-0-1=tests%40mylyn.eclipse.org&email1="
-				+ email + "&type0-0-0=notequals&field0-0-1=reporter&value0-0-0=UNCONFIRMED&emailtype1=exact";
+				+ severity + bug_status + "&type0-0-1=equals&value0-0-1=tests%40mylyn.eclipse.org&email1=" + email
+				+ "&type0-0-0=notequals&field0-0-1=reporter&value0-0-0=UNCONFIRMED&emailtype1=exact";
 
 		// make sure initial task is not P1/trivial
 		assertFalse(taskData.getRoot()
