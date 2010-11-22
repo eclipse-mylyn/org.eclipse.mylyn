@@ -91,6 +91,7 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 				setTitle(message.getLabel());
 				setDescription(message.getDescription());
 				setTitleImage(message.getNotificationKindImage());
+				setEventId(message.getEventId());
 			}
 		}
 	}
