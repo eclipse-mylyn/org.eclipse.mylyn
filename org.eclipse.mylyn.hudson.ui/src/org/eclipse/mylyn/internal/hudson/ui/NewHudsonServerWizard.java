@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Minor adjustments and string externalisation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.ui;
@@ -19,21 +20,28 @@ import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class NewHudsonServerWizard extends BuildServerWizard {
 
+	/**
+	 * Creates a new instance using the supplied build server model. It is assumed that this describes a Hudson server.
+	 */
 	public NewHudsonServerWizard(IBuildServer model) {
 		super(model);
 	}
 
+	/**
+	 * Creates a new instance using the Hudson server connector.
+	 */
 	public NewHudsonServerWizard() {
 		super(BuildsUi.createServer(HudsonCorePlugin.CONNECTOR_KIND));
 	}
 
 	@Override
 	protected void initPage(BuildServerWizardPage page) {
-		page.setTitle("Hudson Server Properties");
-		page.setMessage("Supports Hudson 1.367 or later.");
+		page.setTitle(Messages.NewHudsonServerWizard_Title);
+		page.setMessage(Messages.NewHudsonServerWizard_Message);
 	}
 
 }
