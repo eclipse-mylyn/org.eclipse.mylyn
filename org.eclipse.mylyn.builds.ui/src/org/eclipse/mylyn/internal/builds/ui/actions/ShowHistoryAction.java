@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Minor enhancements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
@@ -21,6 +22,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class ShowHistoryAction extends BaseSelectionListenerAction {
 
@@ -42,10 +44,8 @@ public class ShowHistoryAction extends BaseSelectionListenerAction {
 	public void run() {
 		Object selection = getStructuredSelection().getFirstElement();
 		if (selection instanceof IBuildPlan) {
-			IBuildPlan plan = (IBuildPlan) selection;
 			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection, null);
 		} else if (selection instanceof IBuild) {
-			IBuild build = (IBuild) selection;
 			TeamUI.showHistoryFor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), selection, null);
 		}
 	}

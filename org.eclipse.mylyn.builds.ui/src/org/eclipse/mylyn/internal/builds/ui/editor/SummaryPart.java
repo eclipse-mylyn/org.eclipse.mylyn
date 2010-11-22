@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Minor enhancements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -28,6 +29,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class SummaryPart extends AbstractBuildEditorPart {
 
@@ -78,7 +80,7 @@ public class SummaryPart extends AbstractBuildEditorPart {
 				sb.append(".");
 			}
 
-			label = createLabel(composite, toolkit, "Cause: ");
+			createLabel(composite, toolkit, "Cause: ");
 //			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, "", SWT.WRAP);
 //			GridDataFactory.fillDefaults().indent(0, 0).span(5, 1).align(SWT.BEGINNING, SWT.TOP).applyTo(text);
