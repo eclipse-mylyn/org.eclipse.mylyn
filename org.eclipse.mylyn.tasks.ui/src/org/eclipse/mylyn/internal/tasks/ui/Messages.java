@@ -70,7 +70,9 @@ public class Messages extends NLS {
 	public static String ScheduleTaskMenuContributor_Schedule_for;
 
 	public static String TaskActivationExternalizationParticipant_Task_Activation_History;
+
 	public static String TaskAttachmentEditorViewer_openingAttachment;
+
 	public static String TaskAttachmentEditorViewer_ErrorDownloadingAttachment;
 
 	public static String TaskAttachmentViewerBrowser_browser;
@@ -78,8 +80,6 @@ public class Messages extends NLS {
 	public static String TaskHistoryDropDown_Activate_Task_;
 
 	public static String TaskHistoryDropDown_Deactivate_Task;
-
-	public static String TaskJobFactory_Receiving_configuration;
 
 	public static String TaskJobFactory_Refreshing_repository_configuration;
 
@@ -122,7 +122,7 @@ public class Messages extends NLS {
 	public static String TasksReminderDialog_Reminders;
 
 	public static String TasksUiPlugin_Activate_Task;
-	
+
 	public static String TasksUiPlugin_Initializing_Task_List;
 
 	public static String TasksUiPlugin_Task_Repositories;
