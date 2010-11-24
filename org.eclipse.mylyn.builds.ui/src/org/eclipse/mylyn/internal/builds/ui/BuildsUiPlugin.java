@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Itema AS - Added support for build service messages
+ *     Itema AS - Added support for build service messages 
+ *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -98,6 +99,17 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 			UiStartupExtensionPointReader.runStartupExtensions();
 			startupExtensionsInitialized = true;
 		}
+	}
+
+	/**
+	 * Performs a one-shot refresh of build server data regardless of the
+	 * automatic refresh preference setting. This method should be called when
+	 * build service settings has been changed in a way that require update
+	 * of the data. For instance when a new repository has been added.
+	 */
+	public void refreshBuilds() {
+		initializeRefresh();
+		refresher.refresh();
 	}
 
 	static class UiStartupExtensionPointReader {

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Itema AS - bug 325079 added support for build service messages
+ *     Itema AS - Added support for build service messages; bug 325079
+ *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui.spi;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -112,10 +114,9 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		if (isNew()) {
 			BuildsUiInternal.getModel().getServers().add(original);
 		}
-
 		updateSubscription(BuildsUiInternal.getModel());
-
 		BuildsView.openInActivePerspective();
+		BuildsUiPlugin.getDefault().refreshBuilds();
 
 		return true;
 	}

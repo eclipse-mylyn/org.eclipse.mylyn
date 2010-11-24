@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Automatic refresh when a new repo has been added; bug 330910
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildRefresher implements IPropertyChangeListener {
 
@@ -65,6 +67,18 @@ public class BuildRefresher implements IPropertyChangeListener {
 
 	public void start() {
 		reschedule(STARTUP_DELAY);
+	}
+
+	/**
+	 * Performs an immediate one-shot refresh of build server data regardless of
+	 * the automatic refresh preference setting.
+	 */
+	void refresh() {
+		if (refreshJob == null) {
+			refreshJob = new RefreshJob();
+			refreshJob.setSystem(true);
+		}
+		BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, 0);
 	}
 
 	private synchronized void reschedule(long delay) {
