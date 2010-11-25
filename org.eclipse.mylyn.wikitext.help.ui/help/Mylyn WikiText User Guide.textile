@@ -403,7 +403,13 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 {url}</pageAppendum>
     	</mediawiki-to-eclipse-help>
     	
-p. The following describes the Ant task and its configurable options:
+p. To use this Ant task you'll need to add a @<taskdef>@ to your Ant script as follows:
+
+bc. 
+	<taskdef classpathref="wikitext.tasks.classpath" 
+		resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
+
+The following describes the Ant task and its configurable options:
 
 
 |_. Option |_. Usage |
@@ -709,6 +715,7 @@ Also see these articles:
 * "Getting started with WikiText":http://www.peterfriese.de/getting-started-with-wikitext/  by Peter Friese
 * "Advanced WikiText":http://www.peterfriese.de/advanced-wikitext/ by Peter Friese
 * "Mylyn WikiText Produces PDF":http://greensopinion.blogspot.com/2009/04/mylyn-wikitext-produces-pdf.html  by David Green
+* "DocumentationGuidelines/CrowdSourcingExample":http://wiki.eclipse.org/DocumentationGuidelines/CrowdSourcingExample (eclipse.org)
 
 h2. Feedback
 
