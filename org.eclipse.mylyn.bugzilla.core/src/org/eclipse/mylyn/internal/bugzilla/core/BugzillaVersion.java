@@ -38,9 +38,7 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 
 	public final static BugzillaVersion BUGZILLA_3_6 = new BugzillaVersion("3.6"); //$NON-NLS-1$
 
-	public final static BugzillaVersion BUGZILLA_4_0 = new BugzillaVersion("4.0"); //$NON-NLS-1$
-
-	public final static BugzillaVersion MAX_VERSION = BUGZILLA_4_0;
+	public final static BugzillaVersion MAX_VERSION = new BugzillaVersion("3.6"); //$NON-NLS-1$
 
 	private final int major;
 
@@ -59,7 +57,6 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 			rc = false;
 			plus = false;
 		} else {
-			version = version.toUpperCase();
 			rc = version.contains("RC"); //$NON-NLS-1$
 			plus = version.contains("+"); //$NON-NLS-1$
 			if (plus) {

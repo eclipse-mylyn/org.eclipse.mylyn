@@ -27,7 +27,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
@@ -59,24 +58,15 @@ public class BugzillaClientTest extends TestCase {
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(BugzillaFixture.current().getVersion(), config.getInstallVersion().toString());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			assertEquals(7, config.getStatusValues().size());
-		} else {
-			assertEquals(5, config.getStatusValues().size());
-		}
+		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(8, config.getPlatforms().size());
 		assertEquals(36, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(3, config.getProducts().size());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			assertEquals(4, config.getOpenStatusValues().size());
-			assertEquals(3, config.getClosedStatusValues().size());
-		} else {
-			assertEquals(3, config.getOpenStatusValues().size());
-			assertEquals(2, config.getClosedStatusValues().size());
-		}
+		assertEquals(4, config.getOpenStatusValues().size());
+		assertEquals(3, config.getClosedStatusValues().size());
 		assertEquals(2, config.getKeywords().size());
 		assertEquals(2, config.getComponents("ManualTest").size());
 		assertEquals(4, config.getVersions("ManualTest").size());
@@ -180,11 +170,7 @@ public class BugzillaClientTest extends TestCase {
 		String bugid = response.getTaskId();
 		RepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "123");
 		query.setRepositoryUrl(BugzillaFixture.current().getRepositoryUrl());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=NEW&");
-		} else {
-			query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=CONFIRMED&");
-		}
+		query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=NEW&");
 
 		final Set<TaskData> returnedData = new HashSet<TaskData>();
 

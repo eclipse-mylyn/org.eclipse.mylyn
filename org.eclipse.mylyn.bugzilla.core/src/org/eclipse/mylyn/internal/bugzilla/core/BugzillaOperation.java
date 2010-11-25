@@ -55,18 +55,6 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 	public static final BugzillaOperation reassignbycomponent = new BugzillaOperation(
 			Messages.BugzillaOperation_Reassign_to_default_assignee, "reassignbycomponent"); //$NON-NLS-1$
 
-	// Bugzilla 4.0
-	public static final BugzillaOperation unconfirmed = new BugzillaOperation("unconfirm", "unconfirmed"); //$NON-NLS-1$
-
-	public static final BugzillaOperation confirmed = new BugzillaOperation("confirm", "confirmed"); //$NON-NLS-1$
-
-	public static final BugzillaOperation in_progress = new BugzillaOperation("in progress", "in_progress"); //$NON-NLS-1$
-
-	public static final BugzillaOperation verify_with_resolution = new BugzillaOperation(
-			"verify", "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "verify"); //$NON-NLS-1$ //$NON-NLS-2$
-
-	public static final BugzillaOperation new_default = new BugzillaOperation("default", "{Start}"); //$NON-NLS-1$
-
 	private final String value;
 
 	BugzillaOperation(String label) {

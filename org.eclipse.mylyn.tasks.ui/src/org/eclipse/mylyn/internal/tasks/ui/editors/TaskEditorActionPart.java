@@ -246,10 +246,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		GridDataFactory.fillDefaults()
-				.hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT)
-				.span(3, SWT.DEFAULT)
-				.applyTo(categoryChooser);
+		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(
+				categoryChooser);
 	}
 
 	public AbstractTaskCategory getCategory() {
@@ -380,16 +378,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
 				button.setFont(TEXT_FONT);
 				button.setData(KEY_OPERATION, operation);
-				String unconfirmedAllowed = operation.getTaskAttribute()
-						.getMetaData()
-						.getValue(TaskAttribute.META_UNCONFIRMED_ALLOWED);
-				if (unconfirmedAllowed != null) {
-					button.setEnabled(unconfirmedAllowed.compareTo("true") == 0); //$NON-NLS-1$
-				} else {
-					button.setEnabled(true);
-				}
-				button.setToolTipText(operation.getTooltip());
-
 				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 						operation);
@@ -465,17 +453,4 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	public void refreshOperations(boolean show) {
-		for (Button button : operationButtons) {
-			TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
-			String unconfirmedAllowed = taskOperation.getTaskAttribute()
-					.getMetaData()
-					.getValue(TaskAttribute.META_UNCONFIRMED_ALLOWED);
-			if (unconfirmedAllowed != null) {
-				button.setEnabled(unconfirmedAllowed.compareTo("true") == 0); //$NON-NLS-1$
-			} else {
-				button.setEnabled(true);
-			}
-		}
-	}
 }

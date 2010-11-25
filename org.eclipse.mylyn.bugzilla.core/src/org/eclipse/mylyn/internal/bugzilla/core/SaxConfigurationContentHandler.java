@@ -103,8 +103,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_MULTIPLICABLE = "multiplicable"; //$NON-NLS-1$
 
-	private static final String ELEMENT_ALLOWS_UNCONFIRMED = "allows_unconfirmed"; //$NON-NLS-1$
-
 	private static final int EXPECTING_ROOT = 0;
 
 	private static final int IN_INSTALL_VERSION = 1 << 1;
@@ -443,10 +441,6 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentSpecifically_requestable = characters.toString();
 		} else if (localName.equals(ELEMENT_MULTIPLICABLE)) {
 			currentMultiplicable = characters.toString();
-		} else if (localName.equals(ELEMENT_ALLOWS_UNCONFIRMED)) {
-			String value = characters.toString();
-			Boolean boolValue = value.equals("0") ? false : true; //$NON-NLS-1$
-			configuration.addUnconfirmedAllowed(currentProduct, boolValue);
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
 			state = state & ~IN_FLAG_TYPES;
 		} else if (localName.equals(ELEMENT_FLAG_TYPE)) {
@@ -524,6 +518,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 						flagComponentList.put(currentComponent, flagsForComponent);
 					}
 					flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id=")); //$NON-NLS-1$ //$NON-NLS-2$
+					int i = 0;
+					i++;
 				}
 			}
 			break;

@@ -125,10 +125,6 @@ public final class TaskAttribute {
 
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
-	public static final String META_UNCONFIRMED_ALLOWED = "task.meta.unconfirmedAllowed"; //$NON-NLS-1$
-
-	public static final String META_TOOL_TIP = "task.meta.toolTip"; //$NON-NLS-1$
-
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment"; //$NON-NLS-1$
 
 	// XXX merge with USER_CC

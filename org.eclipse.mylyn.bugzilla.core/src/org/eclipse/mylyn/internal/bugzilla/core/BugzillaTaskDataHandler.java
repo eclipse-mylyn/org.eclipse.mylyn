@@ -474,16 +474,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeStatus.putOption(option, option);
 		}
 
-		BugzillaVersion bugzillaVersion = repositoryConfiguration.getInstallVersion();
-		if (bugzillaVersion == null) {
-			bugzillaVersion = BugzillaVersion.MIN_VERSION;
-		}
-		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
-		} else {
-			attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
-			repositoryConfiguration.addValidOperations(taskData);
-		}
+		attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 
