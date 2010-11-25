@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 325079 added support for build service messages
+ *     Itema AS - bug 331008 automatic resize of view columns
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -65,16 +66,22 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
@@ -288,6 +295,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		viewer.setSorter(new BuildTreeSorter());
 		viewer.expandAll();
 
+		installAutomaticResize(viewer.getTree());
+
 		getSite().setSelectionProvider(viewer);
 		getSite().getSelectionProvider().addSelectionChangedListener(propertiesAction);
 		propertiesAction.selectionChanged((IStructuredSelection) getSite().getSelectionProvider().getSelection());
@@ -297,6 +306,34 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		new TreeViewerSupport(viewer, getStateFile());
 		// Make sure we get notifications
 		NotificationSinkProxy.setControl(serviceMessageControl);
+	}
+
+	/**
+	 * Initialises automatic resize of the tree control columns. The size of these will be adjusted when a node is
+	 * expanded or collapsed and when the tree changes size.
+	 * 
+	 * @param tree
+	 *            the tree to resize
+	 */
+	private void installAutomaticResize(final Tree tree) {
+		Listener listener = new Listener() {
+			public void handleEvent(Event e) {
+				tree.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						doResize(tree);
+					}
+				});
+			}
+		};
+		// Automatically resize columns when we expand tree nodes.
+		tree.addListener(SWT.Collapse, listener);
+		tree.addListener(SWT.Expand, listener);
+		// Automatically resize columns when tree size changes
+		tree.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				doResize(tree);
+			}
+		});
 	}
 
 	private File getStateFile() {
@@ -595,8 +632,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
@@ -612,5 +648,28 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			};
 		}
 		return super.getAdapter(adapter);
+	}
+
+	/**
+	 * Packs all columns so that they are able to display all content. If there
+	 * is any space left, the second column (summary) will be resized so that the
+	 * entire width of the control is used.
+	 * 
+	 * @param tree
+	 *            the tree to resize
+	 */
+	private void doResize(final Tree tree) {
+		Rectangle area = tree.getClientArea();
+		ScrollBar vBar = tree.getVerticalBar();
+		int ac = 0;
+		for (TreeColumn tc : tree.getColumns()) {
+			tc.pack();
+			ac += tc.getWidth();
+		}
+		int width = area.width - tree.computeTrim(0, 0, 0, 0).width + vBar.getSize().x;
+		if (width > ac) {
+			int nw = tree.getColumn(1).getWidth() + width - ac;
+			tree.getColumn(1).setWidth(nw);
+		}
 	}
 }
