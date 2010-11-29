@@ -331,25 +331,258 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		submit(task, taskData, null);
 //	}
 
-	/*
-	 * Test for the following State transformation
-	 * NEW -> ASSIGNED -> RESOLVED DUPLICATE -> VERIFIED -> CLOSED -> REOPENED -> RESOLVED FIXED
-	 * 
-	 */
-
 	// FIXME
 //	public void testStdWorkflow222() throws Exception {
 //		init222();
 //		doStdWorkflow("101");
 //	}
 //
-	public void testStdWorkflow32() throws Exception {
-		if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF) {
-			doStdWorkflow("3");
+	public void testStdWorkflow() throws Exception {
+		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF) {
+				doStdWorkflow32("3");
+			}
+		} else {
+			doStdWorkflow40_1("3");
+			doStdWorkflow40_2("3");
 		}
 	}
 
-	private void doStdWorkflow(String DupBugID) throws Exception {
+	private void doStdWorkflow40_1(String dupBugID) throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test the std workflow";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the std workflow task";
+			}
+
+		};
+
+		final TaskData[] taskDataNew = new TaskData[1];
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		// change Status from CONFIRMED -> IN_PROGRESS
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("CONFIRMED", statusAttribute.getValue());
+		TaskAttribute selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.in_progress.toString(),
+				BugzillaOperation.in_progress.getLabel());
+		model.attributeChanged(selectedOperationAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+
+		// change Status from IN_PROGRESS -> RESOLVED DUPLICATE
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("IN_PROGRESS", statusAttribute.getValue());
+		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.duplicate.toString(),
+				BugzillaOperation.duplicate.getLabel());
+		TaskAttribute duplicateAttribute = taskData.getRoot().getAttribute("dup_id");
+		duplicateAttribute.setValue(dupBugID);
+		model.attributeChanged(selectedOperationAttribute);
+		model.attributeChanged(duplicateAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		changed.add(duplicateAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+
+		// change Status from RESOLVED DUPLICATE -> VERIFIED
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("RESOLVED", statusAttribute.getValue());
+		TaskAttribute resolution = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+		assertEquals("DUPLICATE", resolution.getValue());
+		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.verify.toString(),
+				BugzillaOperation.verify.getLabel());
+		model.attributeChanged(selectedOperationAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+
+		// change Status from VERIFIED -> CONFIRMED
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("VERIFIED", statusAttribute.getValue());
+		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.confirmed.toString(),
+				BugzillaOperation.confirmed.getLabel());
+		model.attributeChanged(selectedOperationAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+
+		// change Status from CONFIRMED -> RESOLVED FIXED
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("CONFIRMED", statusAttribute.getValue());
+		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.resolve.toString(),
+				BugzillaOperation.resolve.getLabel());
+		resolution = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+		resolution.setValue("FIXED");
+		model.attributeChanged(selectedOperationAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("RESOLVED", statusAttribute.getValue());
+		resolution = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+		assertEquals("FIXED", resolution.getValue());
+	}
+
+	private void doStdWorkflow40_2(String dupBugID) throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "Scratch";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "Component 1";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test the std workflow for Scratch";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the std workflow task";
+			}
+
+		};
+
+		final TaskData[] taskDataNew = new TaskData[1];
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		TaskAttribute selectedOperationAttribute = taskDataNew[0].getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.unconfirmed.toString(),
+				BugzillaOperation.unconfirmed.getLabel());
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(selectedOperationAttribute);
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		// change Status from UNCONFIRMED -> RESOLVED DUPLICATE
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		assertEquals("UNCONFIRMED", statusAttribute.getValue());
+		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.duplicate.toString(),
+				BugzillaOperation.duplicate.getLabel());
+		TaskAttribute duplicateAttribute = taskData.getRoot().getAttribute("dup_id");
+		duplicateAttribute.setValue(dupBugID);
+		model.attributeChanged(selectedOperationAttribute);
+		model.attributeChanged(duplicateAttribute);
+		changed.clear();
+		changed.add(selectedOperationAttribute);
+		changed.add(duplicateAttribute);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_UPDATED.toString(), response.getReposonseKind().toString());
+	}
+
+	/*
+	 * Test for the following State transformation
+	 * NEW -> ASSIGNED -> RESOLVED DUPLICATE -> VERIFIED -> CLOSED -> REOPENED -> RESOLVED FIXED
+	 * 
+	 */
+	private void doStdWorkflow32(String dupBugID) throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 
 			@Override
@@ -431,7 +664,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.duplicate.toString(),
 				BugzillaOperation.duplicate.getLabel());
 		TaskAttribute duplicateAttribute = taskData.getRoot().getAttribute("dup_id");
-		duplicateAttribute.setValue(DupBugID);
+		duplicateAttribute.setValue(dupBugID);
 		model.attributeChanged(selectedOperationAttribute);
 		model.attributeChanged(duplicateAttribute);
 		changed.clear();

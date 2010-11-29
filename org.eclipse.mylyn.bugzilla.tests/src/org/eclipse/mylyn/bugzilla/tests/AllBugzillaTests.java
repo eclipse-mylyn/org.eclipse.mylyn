@@ -87,8 +87,8 @@ public class AllBugzillaTests {
 		// Only run these tests on > 3.2 repositories
 		if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
 			if (fixture != BugzillaFixture.BUGS_HEAD) {
-				fixture.add(BugzillaRepositoryConnectorTest.class);
 			}
+			fixture.add(BugzillaRepositoryConnectorTest.class);
 			fixture.add(BugzillaAttachmentHandlerTest.class);
 		}
 

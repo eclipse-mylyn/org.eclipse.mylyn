@@ -25,9 +25,11 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -398,7 +400,20 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						attributeDefaultAssignee.setValue("1"); //$NON-NLS-1$
 						refresh(attributeDefaultAssignee);
 					}
-
+					if (taskAttribute.getTaskData().isNew()) {
+						BugzillaVersion bugzillaVersion = repositoryConfiguration.getInstallVersion();
+						if (bugzillaVersion == null) {
+							bugzillaVersion = BugzillaVersion.MIN_VERSION;
+						}
+						if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) >= 0) {
+							AbstractTaskEditorPart part = getPart(ID_PART_ACTIONS);
+							Boolean unconfirmedAllowed = repositoryConfiguration.getUnconfirmedAllowed(taskAttribute.getValue());
+							TaskAttribute unconfirmedAttribute = taskAttribute.getTaskData()
+									.getRoot()
+									.getAttribute(
+											TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+						}
+					}
 /*
  * 					add confirm_product_change to avoid verification page on submit
  */

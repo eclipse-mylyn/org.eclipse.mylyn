@@ -226,7 +226,7 @@ public class BugzillaClient {
 		CustomTransitionManager validTransitions = new CustomTransitionManager();
 
 		String transitionsFileName = configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
-		if (transitionsFileName != null && !transitionsFileName.equals("")) {
+		if (transitionsFileName != null && !transitionsFileName.equals("")) { //$NON-NLS-1$
 			if (!validTransitions.parse(transitionsFileName)) {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						"Invalide Transition File Content")); //$NON-NLS-1$
@@ -452,10 +452,8 @@ public class BugzillaClient {
 				try {
 					BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
 					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-					String body = ""; //$NON-NLS-1$
 					try {
 						for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-							body += token.toString();
 							if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
 									&& !((HtmlTag) (token.getValue())).isEndTag()) {
 								HtmlTag ta = ((HtmlTag) token.getValue());
@@ -612,7 +610,6 @@ public class BugzillaClient {
 		for (BugzillaAttribute element : reportElements1) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
-		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
 		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.TARGET_MILESTONE,
 				IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, taskRepository, existingReport, true);
 		for (BugzillaAttribute element : reportElements2) {
@@ -1191,6 +1188,12 @@ public class BugzillaClient {
 
 	private NameValuePair[] getPairsForNew(TaskData taskData) {
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+		BugzillaVersion bugzillaVersion = null;
+		if (repositoryConfiguration != null) {
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
+		} else {
+			bugzillaVersion = BugzillaVersion.MIN_VERSION;
+		}
 
 		// go through all of the attributes and add them to
 		// the bug post
@@ -1205,6 +1208,16 @@ public class BugzillaClient {
 					continue;
 				}
 				String id = a.getId();
+				if (id.equals(BugzillaAttribute.BUG_STATUS.getKey())
+						&& bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) >= 0) {
+					TaskAttribute attributeOperation = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+					value = attributeOperation.getValue().toUpperCase();
+					if (!BugzillaOperation.new_default.toString().toUpperCase().equals(value)) {
+						fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
+					} else {
+						continue;
+					}
+				}
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
 					b.getMetaData()
@@ -1239,12 +1252,6 @@ public class BugzillaClient {
 
 		TaskAttribute descAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (descAttribute != null && !descAttribute.getValue().equals("")) { //$NON-NLS-1$
-			BugzillaVersion bugzillaVersion = null;
-			if (repositoryConfiguration != null) {
-				bugzillaVersion = repositoryConfiguration.getInstallVersion();
-			} else {
-				bugzillaVersion = BugzillaVersion.MIN_VERSION;
-			}
 
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_2_18) == 0) {
 				fields.put(KEY_COMMENT,
@@ -1458,65 +1465,60 @@ public class BugzillaClient {
 				} else {
 					String inputAttributeId = originalOperation.getMetaData().getValue(
 							TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
-					if (originalOperation == null) {
-						fields.put(fieldName, new NameValuePair(fieldName, attributeStatus.getValue()));
-					} else {
-						String selOp = attributeOperation.getValue().toUpperCase();
-						if (selOp.equals("NONE")) { //$NON-NLS-1$
-							selOp = attributeStatus.getValue();
-						}
-						if (selOp.equals("ACCEPT")) { //$NON-NLS-1$
-							selOp = "ASSIGNED"; //$NON-NLS-1$
-						}
-						if (selOp.equals("RESOLVE")) { //$NON-NLS-1$
+					String selOp = attributeOperation.getValue().toUpperCase();
+					if (selOp.equals("NONE")) { //$NON-NLS-1$
+						selOp = attributeStatus.getValue();
+					}
+					if (selOp.equals("ACCEPT")) { //$NON-NLS-1$
+						selOp = "ASSIGNED"; //$NON-NLS-1$
+					}
+					if (selOp.equals("RESOLVE")) { //$NON-NLS-1$
+						selOp = "RESOLVED"; //$NON-NLS-1$
+					}
+					if (selOp.equals("VERIFY")) { //$NON-NLS-1$
+						selOp = "VERIFIED"; //$NON-NLS-1$
+					}
+					if (selOp.equals("CLOSE")) { //$NON-NLS-1$
+						selOp = "CLOSED"; //$NON-NLS-1$
+					}
+					if (selOp.equals("REOPEN")) { //$NON-NLS-1$
+						selOp = "REOPENED"; //$NON-NLS-1$
+					}
+					if (selOp.equals("MARKNEW")) { //$NON-NLS-1$
+						selOp = "NEW"; //$NON-NLS-1$
+					}
+					if (selOp.equals("DUPLICATE")) { //$NON-NLS-1$
+						if (repositoryConfiguration != null) {
+							selOp = repositoryConfiguration.getDuplicateStatus();
+						} else {
 							selOp = "RESOLVED"; //$NON-NLS-1$
 						}
-						if (selOp.equals("VERIFY")) { //$NON-NLS-1$
-							selOp = "VERIFIED"; //$NON-NLS-1$
-						}
-						if (selOp.equals("CLOSE")) { //$NON-NLS-1$
-							selOp = "CLOSED"; //$NON-NLS-1$
-						}
-						if (selOp.equals("REOPEN")) { //$NON-NLS-1$
-							selOp = "REOPENED"; //$NON-NLS-1$
-						}
-						if (selOp.equals("MARKNEW")) { //$NON-NLS-1$
-							selOp = "NEW"; //$NON-NLS-1$
-						}
-						if (selOp.equals("DUPLICATE")) { //$NON-NLS-1$
-							if (repositoryConfiguration != null) {
-								selOp = repositoryConfiguration.getDuplicateStatus();
-							} else {
-								selOp = "RESOLVED"; //$NON-NLS-1$
-							}
-							String knob = BugzillaAttribute.RESOLUTION.getKey();
-							fields.put(knob, new NameValuePair(knob, "DUPLICATE")); //$NON-NLS-1$
-						}
-
-						fields.put(fieldName, new NameValuePair(fieldName, selOp));
-						if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
-							TaskAttribute inputAttribute = attributeOperation.getTaskData()
-									.getRoot()
-									.getAttribute(inputAttributeId);
-							if (inputAttribute != null) {
-								if (inputAttribute.getOptions().size() > 0) {
-									String sel = inputAttribute.getValue();
-									String knob = inputAttribute.getId();
-									if (knob.equals(BugzillaOperation.resolve.getInputId())) {
-										knob = BugzillaAttribute.RESOLUTION.getKey();
-									}
-									fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
-								} else {
-									String sel = inputAttribute.getValue();
-									String knob = attributeOperation.getValue();
-									if (knob.equals(BugzillaOperation.duplicate.toString())) {
-										knob = inputAttributeId;
-									}
-									if (knob.equals(BugzillaOperation.reassign.toString())) {
-										knob = BugzillaAttribute.ASSIGNED_TO.getKey();
-									}
-									fields.put(knob, new NameValuePair(knob, sel));
+						String knob = BugzillaAttribute.RESOLUTION.getKey();
+						fields.put(knob, new NameValuePair(knob, "DUPLICATE")); //$NON-NLS-1$
+					}
+					fields.put(fieldName, new NameValuePair(fieldName, selOp));
+					if (inputAttributeId != null && !inputAttributeId.equals("")) { //$NON-NLS-1$
+						TaskAttribute inputAttribute = attributeOperation.getTaskData()
+								.getRoot()
+								.getAttribute(inputAttributeId);
+						if (inputAttribute != null) {
+							if (inputAttribute.getOptions().size() > 0) {
+								String sel = inputAttribute.getValue();
+								String knob = inputAttribute.getId();
+								if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+									knob = BugzillaAttribute.RESOLUTION.getKey();
 								}
+								fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
+							} else {
+								String sel = inputAttribute.getValue();
+								String knob = attributeOperation.getValue();
+								if (knob.equals(BugzillaOperation.duplicate.toString())) {
+									knob = inputAttributeId;
+								}
+								if (knob.equals(BugzillaOperation.reassign.toString())) {
+									knob = BugzillaAttribute.ASSIGNED_TO.getKey();
+								}
+								fields.put(knob, new NameValuePair(knob, sel));
 							}
 						}
 					}
@@ -1796,7 +1798,7 @@ public class BugzillaClient {
 
 								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 										IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION,
-										repositoryUrl.toString(), "unknown reason because Bugzilla < 4.0 was used"));
+										repositoryUrl.toString(), "unknown reason because Bugzilla < 4.0 was used")); //$NON-NLS-1$
 							}
 						}
 
@@ -1829,8 +1831,8 @@ public class BugzillaClient {
 
 			String result = title.trim();
 			if (result.length() == 0) {
-				if (body.contains("Bugzilla/Bug.pm line")) {
-					result = "Bugzilla/Bug.pm line";
+				if (body.contains("Bugzilla/Bug.pm line")) { //$NON-NLS-1$
+					result = "Bugzilla/Bug.pm line"; //$NON-NLS-1$
 				}
 			}
 

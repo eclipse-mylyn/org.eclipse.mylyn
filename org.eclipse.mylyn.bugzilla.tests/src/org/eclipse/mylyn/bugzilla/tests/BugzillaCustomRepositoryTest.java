@@ -75,20 +75,12 @@ public class BugzillaCustomRepositoryTest extends AbstractBugzillaTest {
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
 		workingCopy.save(changed, null);
 
-		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
-		//new NullProgressMonitor());
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);
 		((AbstractTask) taskNew).setSubmitting(true);
 
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
 		String taskId = response.getTaskId();
-
-//		RepositoryConfiguration rc = BugzillaFixture.current().connector().getRepositoryConfiguration(
-//				BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status");
-//		if (rc != null) {
-//			rc.setValidTransitions(BugzillaFixture.getFile(
-//					"testdata/descriptor/" + BugzillaFixture.current().getInfo() + "Transition.txt").getCanonicalPath());
-//		}
 
 		// change Status from NEW -> ASSIGNED
 		ITask task = generateLocalTaskAndDownload(taskId);

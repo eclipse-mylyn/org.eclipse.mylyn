@@ -21,7 +21,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class BugzillaOperation extends AbstractBugzillaOperation {
 
-	private static final long serialVersionUID = 1920016855179988829L;
+//	old: private static final long serialVersionUID = 1920016855179988829L;
+
+	private static final long serialVersionUID = 5940437048263423786L;
 
 	public static final BugzillaOperation none = new BugzillaOperation(Messages.BugzillaOperation_Leave_as_X_X, "none"); //$NON-NLS-1$
 
@@ -54,6 +56,22 @@ public class BugzillaOperation extends AbstractBugzillaOperation {
 
 	public static final BugzillaOperation reassignbycomponent = new BugzillaOperation(
 			Messages.BugzillaOperation_Reassign_to_default_assignee, "reassignbycomponent"); //$NON-NLS-1$
+
+	// Bugzilla 4.0
+	public static final BugzillaOperation unconfirmed = new BugzillaOperation(Messages.BugzillaOperation_unconfirmed,
+			"unconfirmed"); //$NON-NLS-1$
+
+	public static final BugzillaOperation confirmed = new BugzillaOperation(Messages.BugzillaOperation_confirmed,
+			"confirmed"); //$NON-NLS-1$
+
+	public static final BugzillaOperation in_progress = new BugzillaOperation(Messages.BugzillaOperation_in_progress,
+			"in_progress"); //$NON-NLS-1$
+
+	public static final BugzillaOperation verify_with_resolution = new BugzillaOperation(
+			Messages.BugzillaOperation_verified, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT, "verify"); //$NON-NLS-1$//$NON-NLS-2$ 
+
+	public static final BugzillaOperation new_default = new BugzillaOperation(Messages.BugzillaOperation_default,
+			"{Start}"); //$NON-NLS-1$
 
 	private final String value;
 

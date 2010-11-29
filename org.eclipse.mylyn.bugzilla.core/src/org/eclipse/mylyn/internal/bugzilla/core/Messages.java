@@ -211,7 +211,13 @@ public class Messages extends NLS {
 
 	public static String BugzillaOperation_Accept_to_ASSIGNED;
 
+	public static String BugzillaOperation_confirmed;
+
+	public static String BugzillaOperation_default;
+
 	public static String BugzillaOperation_Duplicate_of;
+
+	public static String BugzillaOperation_in_progress;
 
 	public static String BugzillaOperation_Leave_as_X_X;
 
@@ -228,6 +234,10 @@ public class Messages extends NLS {
 	public static String BugzillaOperation_Resolve_as;
 
 	public static String BugzillaOperation_Reassign_to_default_assignee;
+
+	public static String BugzillaOperation_unconfirmed;
+
+	public static String BugzillaOperation_verified;
 
 	public static String BugzillaRepositoryConnector_BUGZILLA_CONNECTOR_LABEL;
 
@@ -290,5 +300,9 @@ public class Messages extends NLS {
 	public static String CustomTransitionManager_InvalidBugzillaTransition;
 
 	public static String CustomTransitionManager_UnexpectedResponse;
+
+	public static String RepositoryConfiguration_new_default;
+
+	public static String RepositoryConfiguration_new_not_shure;
 
 }
