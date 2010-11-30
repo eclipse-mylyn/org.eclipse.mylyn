@@ -178,9 +178,7 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 
 	public void notify(NotificationSinkEvent event) {
 		for (final AbstractNotification message : event.getNotifications()) {
-			if (message instanceof BuildsServiceNotification) {
-				messages.add(message);
-			}
+			messages.add(message);
 		}
 		// Show the top message in the stack.
 		if (!messages.isEmpty()) {
