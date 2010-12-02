@@ -40,7 +40,7 @@
 	
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-			<menu label="%menu.label.0" tooltip="%menu.tooltip.0">
+			<menu label="%menu.label.0" tooltip="%menu.tooltip.0" id="org.eclipse.mylyn.wikitext.ui.contextmenu">
 				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToDocbookCommand"
 					label="%command.label.0" tooltip="%command.tooltip.0" helpContextId="org.eclipse.mylyn.wikitext.help.ui.markupConversion">
 				</command>
