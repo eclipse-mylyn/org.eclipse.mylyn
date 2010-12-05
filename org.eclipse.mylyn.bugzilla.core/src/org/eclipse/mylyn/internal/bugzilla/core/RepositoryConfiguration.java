@@ -349,6 +349,12 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public List<String> getClosedStatusValues() {
+		if (validTransitions != null) {
+			ArrayList<String> closedStatus = validTransitions.getClosedStatuses();
+			if (closedStatus != null && !closedStatus.isEmpty()) {
+				return closedStatus;
+			}
+		}
 		return closedStatusValues;
 	}
 

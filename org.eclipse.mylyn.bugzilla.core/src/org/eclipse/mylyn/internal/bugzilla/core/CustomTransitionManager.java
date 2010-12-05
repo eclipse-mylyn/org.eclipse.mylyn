@@ -390,4 +390,8 @@ public class CustomTransitionManager implements Serializable {
 		operationMapByEndStatus.put(status, list);
 	}
 
+	public ArrayList<String> getClosedStatuses() {
+		return closedStatuses;
+	}
+
 }
