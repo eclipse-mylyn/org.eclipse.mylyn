@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -451,29 +452,14 @@ public class BugzillaClient {
 				InputStream inputStream = getResponseStream(postMethod, monitor);
 				try {
 					BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
-					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+
 					try {
-						for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-							if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-									&& !((HtmlTag) (token.getValue())).isEndTag()) {
-								HtmlTag ta = ((HtmlTag) token.getValue());
-								String st = ta.getAttribute("id"); //$NON-NLS-1$
-								if (st != null && st.equals("error_msg")) { //$NON-NLS-1$
-									loggedIn = false;
-									String mes = ""; //$NON-NLS-1$
-									for (token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-										if (token.getType() == Token.TAG
-												&& ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
-												&& ((HtmlTag) (token.getValue())).isEndTag()) {
-											break;
-										}
-										mes += token.toString();
-									}
-									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
-											BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
-											repositoryUrl.toString(), mes));
-								}
-							}
+						String errorMessage = extractErrorMessage(in);
+
+						if (errorMessage != null) {
+							loggedIn = false;
+							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), errorMessage));
 						}
 					} finally {
 						inputStream.close();
@@ -512,6 +498,51 @@ public class BugzillaClient {
 			}
 			httpClient.getParams().setAuthenticationPreemptive(false);
 		}
+	}
+
+	private String extractErrorMessage(Reader responseContent) throws IOException, ParseException {
+		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseContent, null);
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (isErrorMessageToken(token)) {
+				return computeErrorMessage(tokenizer, token);
+			}
+		}
+		return null;
+	}
+
+	private static String computeErrorMessage(HtmlStreamTokenizer tokenizer, Token token) throws IOException,
+			ParseException {
+		int tagDepth = 0;
+		String errorMessage = ""; //$NON-NLS-1$
+		for (token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG) {
+				HtmlTag htmlTag = (HtmlTag) token.getValue();
+				if (htmlTag.isEndTag()) {
+					--tagDepth;
+					if (tagDepth < 0) {
+						break;
+					}
+				} else {
+					++tagDepth;
+				}
+			} else {
+				errorMessage += token.toString();
+			}
+		}
+		errorMessage = errorMessage.replaceAll("\\s+", " "); //$NON-NLS-1$//$NON-NLS-2$
+		return errorMessage;
+	}
+
+	private boolean isErrorMessageToken(Token token) {
+		if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TD
+				&& !((HtmlTag) (token.getValue())).isEndTag()) {
+			HtmlTag ta = ((HtmlTag) token.getValue());
+			String st = ta.getAttribute("id"); //$NON-NLS-1$
+			if (st != null && st.equals("error_msg")) { //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
@@ -1678,7 +1709,7 @@ public class BugzillaClient {
 		boolean isTitle = false;
 		String title = ""; //$NON-NLS-1$
 		String body = ""; //$NON-NLS-1$
-
+		String errorMessage = null;
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				body += token.toString();
@@ -1815,6 +1846,11 @@ public class BugzillaClient {
 
 						isTitle = false;
 					}
+				} else {
+					if (isErrorMessageToken(token)) {
+						errorMessage = computeErrorMessage(tokenizer, token);
+						break;
+					}
 				}
 			}
 
@@ -1830,6 +1866,15 @@ public class BugzillaClient {
 			}
 
 			String result = title.trim();
+			if (errorMessage != null) {
+				if (result.length() > 0) {
+					result = result + ": " + errorMessage; //$NON-NLS-1$
+				} else {
+					result = errorMessage;
+				}
+				throw new CoreException(RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.ERROR,
+						BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, result, body));
+			}
 			if (result.length() == 0) {
 				if (body.contains("Bugzilla/Bug.pm line")) { //$NON-NLS-1$
 					result = "Bugzilla/Bug.pm line"; //$NON-NLS-1$
