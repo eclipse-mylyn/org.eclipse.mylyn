@@ -255,9 +255,10 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public AbstractRepositoryConnector getConnectorForRepositoryTaskUrl(String url) {
 		Assert.isNotNull(url);
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
-			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
+			String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
+			if (repositoryUrl != null) {
 				for (TaskRepository repository : getRepositories(connector.getConnectorKind())) {
-					if (url.startsWith(repository.getRepositoryUrl())) {
+					if (repositoryUrl.startsWith(repository.getRepositoryUrl())) {
 						return connector;
 					}
 				}
