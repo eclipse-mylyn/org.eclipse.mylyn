@@ -43,6 +43,8 @@ public class Messages extends NLS {
 
 	public static String MoveToCategoryMenuContributor_Move_to;
 
+	public static String MoveToCategoryMenuContributor_Set_Category_Menu_Item;
+
 	public static String OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X;
 
 	public static String OpenRepositoryTaskJob_Opening_Remote_Task;
