@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.mylyn.commons.notifications" id="notifications" name="Notifications"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         Provides support for event categories, types and sinks.
       </documentation>
    </annotation>
 
@@ -50,6 +50,11 @@
    </element>
 
    <element name="event">
+      <annotation>
+         <documentation>
+            Event types has an unique identifier, a label and optionally an icon and a category. Whenever a notification is triggered the identifier is used to determine how to present the notification to the user.
+         </documentation>
+      </annotation>
       <complexType>
          <choice minOccurs="0" maxOccurs="1">
             <element ref="description"/>
@@ -57,14 +62,14 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a unique event identifier.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="icon" type="string">
             <annotation>
                <documentation>
-                  A 16x16 icon.
+                  a 16x16 icon.
                </documentation>
                <appinfo>
                   <meta.attribute kind="resource"/>
@@ -74,7 +79,7 @@
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a label describing the event type.
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -84,7 +89,7 @@
          <attribute name="categoryId" type="string">
             <annotation>
                <documentation>
-                  
+                  parent category identifier.
                </documentation>
                <appinfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/category/@id"/>
@@ -94,7 +99,7 @@
          <attribute name="selected" type="boolean">
             <annotation>
                <documentation>
-                  
+                  whether or not events of this type are notified per default.
                </documentation>
             </annotation>
          </attribute>
@@ -102,18 +107,23 @@
    </element>
 
    <element name="category">
+      <annotation>
+         <documentation>
+            Events can (and should) be organised into categories making them easy to locate in the user interface.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a unique event category identifier.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="icon" type="string">
             <annotation>
                <documentation>
-                  A 16x16 icon.
+                  a 16x16 icon.
                </documentation>
                <appinfo>
                   <meta.attribute kind="resource"/>
@@ -123,7 +133,7 @@
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a label describing the category.
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -134,18 +144,23 @@
    </element>
 
    <element name="sink">
+      <annotation>
+         <documentation>
+            Notification sinks are used to handle events.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a unique event sink identifier.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  the event sink implementation.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.commons.notifications.NotificationSink:"/>
@@ -155,7 +170,7 @@
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a label describing the event sink.
                </documentation>
             </annotation>
          </attribute>
@@ -167,6 +182,9 @@
          <appinfo>
             <meta.element translatable="true"/>
          </appinfo>
+         <documentation>
+            A description of the event type.
+         </documentation>
       </annotation>
    </element>
 
@@ -175,7 +193,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         3.5
       </documentation>
    </annotation>
 
@@ -184,7 +202,30 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         Following is an example of use:
+&lt;pre&gt;
+ &lt;extension
+       point=&quot;org.eclipse.mylyn.commons.notifications.notifications&quot;&gt;
+    &lt;event
+          categoryId=&quot;org.eclipse.mylyn.builds.ui.category.Builds&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.events.BuildServiceChanged&quot;
+          label=&quot;Build Service Changed&quot;&gt;
+       &lt;description&gt;
+          This event is triggered when the status of a build service is changed. For instance a new server is discovered or is no longer available.
+       &lt;/description&gt;
+    &lt;/event&gt;
+    &lt;category
+          icon=&quot;icons/eview16/build-view.png&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.category.Builds&quot;
+          label=&quot;Builds&quot;&gt;
+    &lt;/category&gt;
+    &lt;sink
+          class=&quot;org.eclipse.mylyn.internal.builds.ui.view.NotificationSinkProxy&quot;
+          id=&quot;org.eclipse.mylyn.builds.ui.sink.View&quot;
+          label=&quot;Builds View&quot;&gt;
+    &lt;/sink&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
@@ -193,7 +234,8 @@
          <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
-         [Enter API information here.]
+         The value of the class attribute in sink must represent a class 
+that implements &lt;samp&gt;org.eclipse.mylyn.commons.notifications.NotificationSink&lt;/samp&gt;.
       </documentation>
    </annotation>
 
@@ -202,9 +244,21 @@
          <meta.section type="implementation"/>
       </appinfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Mylyn Builds comes with two event types and two different sinks for handling these notifications.
       </documentation>
    </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2010 Tasktop Technologies and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
 
 </schema>
