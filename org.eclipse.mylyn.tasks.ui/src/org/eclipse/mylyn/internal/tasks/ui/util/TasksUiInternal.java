@@ -1283,6 +1283,8 @@ public class TasksUiInternal {
 	}
 
 	public static String getAuthenticatedUrl(TaskRepository repository, IRepositoryElement element) {
+		Assert.isNotNull(repository);
+		Assert.isNotNull(element);
 		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
 		if (connector != null) {
@@ -1297,5 +1299,18 @@ public class TasksUiInternal {
 			}
 		}
 		return null;
+	}
+
+	public static TaskRepository getRepository(IRepositoryElement element) {
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		TaskRepository repository = null;
+		if (element instanceof ITask) {
+			repository = repositoryManager.getRepository(((ITask) element).getConnectorKind(),
+					((ITask) element).getRepositoryUrl());
+		} else if (element instanceof IRepositoryQuery) {
+			repository = repositoryManager.getRepository(((IRepositoryQuery) element).getConnectorKind(),
+					((IRepositoryQuery) element).getRepositoryUrl());
+		}
+		return repository;
 	}
 }

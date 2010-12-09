@@ -25,7 +25,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.GroupMarker;
@@ -57,6 +56,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.editor.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -183,7 +183,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private TaskEditorScheduleAction scheduleAction;
 
-	Action openWithBrowserAction;
+	OpenWithBrowserAction openWithBrowserAction;
 
 	private static boolean toolBarFailureLogged;
 
@@ -928,14 +928,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		toolBarManager.add(new GroupMarker("open")); //$NON-NLS-1$
 		toolBarManager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		final String taskUrl = TasksUiInternal.getAuthenticatedUrl(taskRepository, task);
-		if (taskUrl != null && taskUrl.length() > 0) {
-			openWithBrowserAction = new Action() {
-				@Override
-				public void run() {
-					TasksUiUtil.openWithBrowser(taskRepository, task);
-				}
-			};
+		openWithBrowserAction = new OpenWithBrowserAction();
+		openWithBrowserAction.selectionChanged(new StructuredSelection(task));
+		if (openWithBrowserAction.isEnabled()) {
 //			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(taskRepository.getConnectorKind());
 //			ImageDescriptor compositeDescriptor = new TaskListImageDescriptor(TasksUiImages.REPOSITORY_SMALL_TOP,
 //					overlay, false, true);
@@ -943,6 +938,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			//openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 			openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
 			toolBarManager.appendToGroup("open", openWithBrowserAction); //$NON-NLS-1$
+		} else {
+			openWithBrowserAction = null;
 		}
 
 		if (activateAction == null) {

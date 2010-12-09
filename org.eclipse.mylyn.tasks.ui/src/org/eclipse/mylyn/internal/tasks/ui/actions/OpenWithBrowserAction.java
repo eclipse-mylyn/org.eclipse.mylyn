@@ -16,13 +16,14 @@ import java.util.Iterator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
@@ -44,7 +45,6 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 	}
 
 	private void runWithSelection(Object selectedObject) {
-		String urlString = null;
 		if (selectedObject instanceof IRepositoryElement) {
 			TasksUiUtil.openWithBrowser((IRepositoryElement) selectedObject);
 		}
@@ -54,14 +54,13 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (!selection.isEmpty()) {
 			for (Object element : selection.toList()) {
-				if (element instanceof ITask) {
-					if (TasksUiInternal.isValidUrl(((ITask) element).getUrl())) {
-						return true;
-					}
-				}
 				if (element instanceof IRepositoryElement) {
-					if (((IRepositoryElement) element).getUrl() != null) {
-						return true;
+					TaskRepository repository = TasksUiInternal.getRepository((IRepositoryElement) element);
+					if (repository != null) {
+						String url = TasksUiInternal.getAuthenticatedUrl(repository, (IRepositoryElement) element);
+						if (TasksUiInternal.isValidUrl(url)) {
+							return true;
+						}
 					}
 				}
 			}
