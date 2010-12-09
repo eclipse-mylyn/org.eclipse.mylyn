@@ -143,6 +143,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -402,6 +403,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private CustomTaskListDecorationDrawer customDrawer;
 
 	private TaskListServiceMessageControl serviceMessageControl;
+
+	private long lastExpansionTime;
 
 	private final IPageListener PAGE_LISTENER = new IPageListener() {
 		public void pageActivated(IWorkbenchPage page) {
@@ -831,9 +834,20 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 
-		getViewer().getTree().addMouseListener(new MouseListener() {
+		Listener expandListener = new Listener() {
+			public void handleEvent(Event event) {
+				lastExpansionTime = System.currentTimeMillis();
+			}
+		};
+		getViewer().getTree().addListener(SWT.Expand, expandListener);
+		getViewer().getTree().addListener(SWT.Collapse, expandListener);
 
+		getViewer().getTree().addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
+				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion 
+				if (System.currentTimeMillis() - lastExpansionTime < 150) {
+					return;
+				}
 				// NOTE: need e.x offset for Linux/GTK, which does not see
 				// left-aligned items in tree
 				Object selectedNode = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
