@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -65,6 +66,13 @@ public class ClipboardCopier {
 	}
 
 	public void copy(String text) {
+		Assert.isNotNull(text);
+
+		// Gtk does support copying empty strings to the clipboard
+		if (text.length() == 0) {
+			return;
+		}
+
 		if (clipboard == null) {
 			Display display = PlatformUI.getWorkbench().getDisplay();
 			clipboard = new Clipboard(display);
