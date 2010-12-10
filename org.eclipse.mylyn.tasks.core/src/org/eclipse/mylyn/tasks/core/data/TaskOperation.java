@@ -26,7 +26,7 @@ public class TaskOperation {
 	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label) {
 		TaskData taskData = taskAttribute.getTaskData();
 		taskData.getAttributeMapper().setValue(taskAttribute, operationId);
-		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label);
+		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label).setReadOnly(false);
 	}
 
 	/**

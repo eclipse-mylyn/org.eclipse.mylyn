@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -412,6 +413,13 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 									.getRoot()
 									.getAttribute(
 											TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+							if (unconfirmedAttribute != null && unconfirmedAllowed != null) {
+								unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed.booleanValue());
+							}
+							if (part != null) {
+								TaskEditorActionPart actionPart = (TaskEditorActionPart) part;
+								actionPart.refreshOperations();
+							}
 						}
 					}
 /*

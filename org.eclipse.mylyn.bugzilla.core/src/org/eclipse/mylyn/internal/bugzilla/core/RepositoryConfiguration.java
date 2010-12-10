@@ -701,6 +701,11 @@ public class RepositoryConfiguration implements Serializable {
 			case START:
 				addOperation(bugReport, BugzillaOperation.new_default);
 				addOperation(bugReport, BugzillaOperation.unconfirmed);
+				TaskAttribute unconfirmedAttribute = bugReport.getRoot().getAttribute(
+						TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+				if (unconfirmedAttribute != null && unconfirmedAllowed != null) {
+					unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed.booleanValue());
+				}
 				addOperation(bugReport, BugzillaOperation.confirmed);
 				addOperation(bugReport, BugzillaOperation.in_progress);
 				TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);

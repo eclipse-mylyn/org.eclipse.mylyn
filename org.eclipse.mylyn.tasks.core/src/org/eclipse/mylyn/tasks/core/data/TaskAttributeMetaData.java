@@ -40,6 +40,8 @@ public class TaskAttributeMetaData {
 		setKind(null);
 		setReadOnly(true);
 		setType(TaskAttribute.TYPE_SHORT_TEXT);
+		// only for test
+		putValue(TaskAttribute.META_DESCRIPTION, "Tooltip Defaul Text"); //$NON-NLS-1$
 		return this;
 	}
 
