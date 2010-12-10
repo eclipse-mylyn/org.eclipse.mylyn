@@ -54,10 +54,12 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getTextValue());
+			text.setToolTipText(getDescription());
 			setControl(text);
 		} else {
 			datePicker = new DatePicker(composite, SWT.FLAT, getTextValue(), showTime, 0);
 			datePicker.setFont(EditorUtil.TEXT_FONT);
+			datePicker.setToolTipText(getDescription());
 			if (!showTime) {
 				datePicker.setDateFormat(EditorUtil.getDateFormat());
 			} else {

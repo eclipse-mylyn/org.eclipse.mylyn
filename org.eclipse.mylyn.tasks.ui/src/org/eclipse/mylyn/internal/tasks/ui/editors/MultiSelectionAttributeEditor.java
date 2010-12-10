@@ -60,6 +60,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			select(getValues(), getValuesLabels());
+			text.setToolTipText(getDescription());
 			setControl(text);
 		} else {
 
@@ -67,6 +68,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(list, false, false);
 			list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			list.setFont(EditorUtil.TEXT_FONT);
+			list.setToolTipText(getDescription());
 
 			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
 			if (labelByValue != null) {

@@ -98,7 +98,11 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 
 	private void updateEditor() {
 		editor.select(getValue(), mapping.getPriorityLevel());
-		editor.setToolTipText(getValueLabel());
+		String toolTip = getValueLabel();
+		if (toolTip != null && !toolTip.equals("")) {
+			toolTip = getDescription();
+		}
+		editor.setToolTipText(toolTip);
 	}
 
 }

@@ -46,6 +46,7 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 				}
 			}
 		});
+		button.setToolTipText(getDescription());
 		refresh();
 		setControl(button);
 	}

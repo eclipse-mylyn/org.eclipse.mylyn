@@ -74,6 +74,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		editor.createControl(parent, toolkit);
+		editor.getViewer().getTextWidget().setToolTipText(getDescription());
+
 		setControl(editor.getControl());
 	}
 

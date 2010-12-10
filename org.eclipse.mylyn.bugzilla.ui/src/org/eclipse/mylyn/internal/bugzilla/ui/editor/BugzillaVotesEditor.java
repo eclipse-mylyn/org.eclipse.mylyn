@@ -54,7 +54,12 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 		((GridData) getLabelControl().getLayoutData()).exclude = true;
 		showVotes = toolkit.createHyperlink(parent, getTaskAttribute().getValue(), SWT.NONE);
 		showVotes.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		showVotes.setToolTipText(Messages.BugzillaVotesEditor_Show_votes);
+		String tooltip = getDescription();
+		if (tooltip != null && !tooltip.equals("")) { //$NON-NLS-1$
+			showVotes.setToolTipText(tooltip);
+		} else {
+			showVotes.setToolTipText(Messages.BugzillaVotesEditor_Show_votes);
+		}
 		showVotes.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {

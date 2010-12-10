@@ -49,6 +49,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		list.setFont(JFaceResources.getDefaultFont());
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(list);
+		list.setToolTipText(getDescription());
 
 		TaskAttribute attrUserCC = getTaskAttribute();
 		if (attrUserCC != null) {

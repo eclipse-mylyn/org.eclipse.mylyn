@@ -43,6 +43,8 @@ public abstract class AbstractAttributeEditor {
 
 	private boolean readOnly;
 
+	private String description;
+
 	/**
 	 * @since 3.0
 	 */
@@ -53,6 +55,7 @@ public abstract class AbstractAttributeEditor {
 		this.taskAttribute = taskAttribute;
 		setDecorationEnabled(true);
 		setReadOnly(taskAttribute.getMetaData().isReadOnly());
+		setDescription(taskAttribute.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 	}
 
 	/**
@@ -227,6 +230,17 @@ public abstract class AbstractAttributeEditor {
 	 */
 	public void refresh() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.5
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	private void setDescription(String description) {
+		this.description = description;
 	}
 
 }

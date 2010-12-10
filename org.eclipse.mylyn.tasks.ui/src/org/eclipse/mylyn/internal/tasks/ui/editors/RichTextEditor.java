@@ -216,7 +216,6 @@ public class RichTextEditor {
 			toolkit.adapt(viewer.getControl(), false, false);
 		}
 		EditorUtil.addScrollListener(viewer.getTextWidget());
-
 		return viewer;
 	}
 

@@ -69,6 +69,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 			valueText.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(valueText, false, false);
 			valueText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			valueText.setToolTipText(getDescription());
 			updateText();
 			setControl(valueText);
 		} else {
@@ -89,6 +90,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(valueText);
 			valueText.setFont(EditorUtil.TEXT_FONT);
 			valueText.setEditable(false);
+			valueText.setToolTipText(getDescription());
 
 			button = toolkit.createButton(composite, "", SWT.ARROW | SWT.DOWN); //$NON-NLS-1$
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(button);

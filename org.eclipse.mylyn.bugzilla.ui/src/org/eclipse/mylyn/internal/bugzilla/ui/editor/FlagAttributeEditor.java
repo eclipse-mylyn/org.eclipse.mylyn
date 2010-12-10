@@ -88,6 +88,9 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			text.setBackground(parent.getBackground());
 			text.setEditable(false);
 			String tooltip = getTaskAttribute().getMetaData().getLabel();
+			if (tooltip == null) {
+				tooltip = getDescription();
+			}
 			if (tooltip != null) {
 				text.setToolTipText(tooltip);
 			}
@@ -99,12 +102,16 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				text.setText(requestee.getValue());
 				text.setBackground(parent.getBackground());
 				text.setEditable(false);
+				text.setToolTipText(requestee.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 			}
 		} else {
 			combo = new CCombo(flagComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(combo, false, false);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			String tooltip = getTaskAttribute().getMetaData().getLabel();
+			if (tooltip == null) {
+				tooltip = getDescription();
+			}
 			if (tooltip != null) {
 				combo.setToolTipText(tooltip);
 			}
@@ -152,6 +159,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				requesteeText = toolkit.createText(requesteeComposite, requestee.getValue());
 				boolean enabled = "?".equals(getValueLabel()); //$NON-NLS-1$
 				requesteeText.setEnabled(enabled);
+				requesteeText.setToolTipText(requestee.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 				IContentProposalProvider contentProposalProvider = new PersonProposalProvider(null,
 						requestee.getTaskData());
 				ILabelProvider labelPropsalProvider = new PersonProposalLabelProvider();

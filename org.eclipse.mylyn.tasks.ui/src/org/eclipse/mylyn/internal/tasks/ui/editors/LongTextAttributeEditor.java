@@ -51,6 +51,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		viewer.configure(configuration);
 		viewer.setDocument(new Document(getValue()));
 		final StyledText text = viewer.getTextWidget();
+		text.setToolTipText(getDescription());
 		toolkit.adapt(text, false, false);
 
 		// enable cut/copy/paste

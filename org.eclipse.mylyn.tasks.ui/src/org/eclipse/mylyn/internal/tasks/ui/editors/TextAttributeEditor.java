@@ -47,11 +47,13 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			text.setToolTipText(getDescription());
 			text.setText(getValue());
 		} else {
 			text = toolkit.createText(parent, getValue(), SWT.FLAT);
 			text.setFont(EditorUtil.TEXT_FONT);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+			text.setToolTipText(getDescription());
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());

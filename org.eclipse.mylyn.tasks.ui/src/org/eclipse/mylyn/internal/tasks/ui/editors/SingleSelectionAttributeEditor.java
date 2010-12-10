@@ -62,6 +62,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			text.setToolTipText(getDescription());
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
@@ -69,6 +70,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(combo, false, false);
 			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+			combo.setToolTipText(getDescription());
 			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {

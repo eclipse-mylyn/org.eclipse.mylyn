@@ -47,6 +47,7 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 		toolkit.adapt(list, true, true);
 		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		list.setFont(JFaceResources.getDefaultFont());
+		list.setToolTipText(getDescription());
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(list);
 
 		TaskAttribute attrUserCC = getTaskAttribute();
