@@ -436,7 +436,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		layout.marginRight = 5;
 		basicComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
-		g.widthHint = 500;
+		g.widthHint = 400;
 		basicComposite.setLayoutData(g);
 		Dialog.applyDialogFont(basicComposite);
 
@@ -460,7 +460,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		moreOptionsExpandComposite.setBackground(null);
 		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
 		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
-		g = new GridData(GridData.FILL, GridData.FILL, true, true);
+		g = new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_BEGINNING, true, false);
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
 		moreOptionsExpandComposite.setLayoutData(g);
