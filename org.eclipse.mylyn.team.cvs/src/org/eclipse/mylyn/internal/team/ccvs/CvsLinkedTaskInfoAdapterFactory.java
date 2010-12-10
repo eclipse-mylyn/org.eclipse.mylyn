@@ -24,6 +24,7 @@ import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.core.ICVSResource;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ccvs.core.filehistory.CVSFileRevision;
+import org.eclipse.team.internal.ccvs.core.mapping.CVSCheckedInChangeSet;
 import org.eclipse.team.internal.ccvs.core.resources.CVSWorkspaceRoot;
 import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
@@ -80,6 +81,8 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 			return ((LogEntry) element).getComment();
 		} else if (element instanceof IFileRevision) {
 			return ((IFileRevision) element).getComment();
+		} else if (element instanceof CVSCheckedInChangeSet) {
+			return ((CVSCheckedInChangeSet) element).getComment();
 		}
 		return null;
 	}
