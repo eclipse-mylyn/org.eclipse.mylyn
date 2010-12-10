@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -29,9 +31,12 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent.EventKind;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -226,6 +231,47 @@ public class AttributeEditorToolkit {
 
 	public void setRenderingEngine(AbstractRenderingEngine renderingEngine) {
 		this.renderingEngine = renderingEngine;
+	}
+
+	/**
+	 * Adds input validation to an attribute editor and a controlDecoration if invalid
+	 * 
+	 * @since 3.5
+	 */
+	public static void createValidator(final AbstractAttributeEditor attributeEditor, Control control,
+			final IInputValidator validator) {
+		Assert.isNotNull(validator);
+		Assert.isNotNull(control);
+		Assert.isNotNull(attributeEditor);
+		final ControlDecoration decoration = new ControlDecoration(control, SWT.BOTTOM | SWT.LEFT);
+		decoration.setMarginWidth(2);
+		FieldDecoration errorDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
+				FieldDecorationRegistry.DEC_ERROR);
+		decoration.setImage(errorDecoration.getImage());
+		decoration.hide();
+		final TaskDataModelListener validationListener = new TaskDataModelListener() {
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				if (event.getTaskAttribute().equals(attributeEditor.getTaskAttribute())) {
+					String validationMessage = validator.isValid(attributeEditor.getTaskAttribute().getValue());
+					if (validationMessage == null) {
+						decoration.hide();
+					} else {
+						decoration.setDescriptionText(validationMessage);
+						decoration.show();
+					}
+				}
+			}
+		};
+		attributeEditor.getModel().addModelListener(validationListener);
+		control.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				decoration.dispose();
+				attributeEditor.getModel().removeModelListener(validationListener);
+			}
+		});
+		validationListener.attributeChanged(new TaskDataModelEvent(attributeEditor.getModel(), EventKind.CHANGED,
+				attributeEditor.getTaskAttribute()));
 	}
 
 }
