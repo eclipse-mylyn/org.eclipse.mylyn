@@ -125,6 +125,11 @@ public final class TaskAttribute {
 
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.5
+	 */
+	public static final String META_DESCRIPTION = "task.meta.ToolTip"; //$NON-NLS-1$
+
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment"; //$NON-NLS-1$
 
 	// XXX merge with USER_CC

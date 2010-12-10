@@ -246,8 +246,10 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(
-				categoryChooser);
+		GridDataFactory.fillDefaults()
+				.hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT)
+				.span(3, SWT.DEFAULT)
+				.applyTo(categoryChooser);
 	}
 
 	public AbstractTaskCategory getCategory() {
@@ -378,6 +380,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
 				button.setFont(TEXT_FONT);
 				button.setData(KEY_OPERATION, operation);
+				button.setEnabled(!operation.getTaskAttribute().getMetaData().isReadOnly());
+				button.setToolTipText(operation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
+
 				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 						operation);
@@ -453,4 +458,14 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
+	/**
+	 * @since 3.5
+	 */
+	public void refreshOperations() {
+		for (Button button : operationButtons) {
+			TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
+			button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isReadOnly());
+			button.setToolTipText(taskOperation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
+		}
+	}
 }
