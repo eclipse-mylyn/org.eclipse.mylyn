@@ -14,14 +14,15 @@ package org.eclipse.mylyn.tasks.ui.editors;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.DoubleAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LongTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TextAttributeEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -137,6 +138,10 @@ public class AttributeEditorFactory {
 					SWT.SINGLE);
 			editor.setMode(Mode.URL);
 			return editor;
+		} else if (TaskAttribute.TYPE_DOUBLE.equals(type)) {
+			return new DoubleAttributeEditor(model, taskAttribute);
+		} else if (TaskAttribute.TYPE_INTEGER.equals(type)) {
+			return new DoubleAttributeEditor(model, taskAttribute);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\""); //$NON-NLS-1$ //$NON-NLS-2$

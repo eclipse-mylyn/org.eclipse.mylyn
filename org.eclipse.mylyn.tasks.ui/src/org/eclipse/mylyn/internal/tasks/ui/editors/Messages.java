@@ -257,6 +257,10 @@ public class Messages extends NLS {
 
 	public static String AttributePart_Category_;
 
+	public static String DoubleAttributeEditor_this_field_requires_double_value;
+
+	public static String IntegerAttributeEditor_this_field_requires_integer_value;
+
 	public static String SummaryPart_Section_Title;
 
 	public static String TaskEditor_Edit_Task_Repository_ToolTip;
