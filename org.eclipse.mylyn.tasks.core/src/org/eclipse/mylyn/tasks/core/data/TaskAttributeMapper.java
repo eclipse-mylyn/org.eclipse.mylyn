@@ -112,6 +112,21 @@ public class TaskAttributeMapper {
 		return taskAttribute.getMetaData().getDefaultOption();
 	}
 
+	/**
+	 * @since 3.5
+	 */
+	public Double getDoubleValue(TaskAttribute attribute) {
+		String doubleString = attribute.getValue();
+		try {
+			if (doubleString != null) {
+				return Double.parseDouble(doubleString);
+			}
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return null;
+	}
+
 	public Integer getIntegerValue(TaskAttribute attribute) {
 		String integerString = attribute.getValue();
 		try {
@@ -229,6 +244,17 @@ public class TaskAttributeMapper {
 	public void setDateValue(TaskAttribute attribute, Date date) {
 		if (date != null) {
 			attribute.setValue(Long.toString(date.getTime()));
+		} else {
+			attribute.clearValues();
+		}
+	}
+
+	/**
+	 * @since 3.5
+	 */
+	public void setDoubleValue(TaskAttribute attribute, Double value) {
+		if (value != null) {
+			attribute.setValue(value.toString());
 		} else {
 			attribute.clearValues();
 		}

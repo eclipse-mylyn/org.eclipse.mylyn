@@ -251,6 +251,11 @@ public final class TaskAttribute {
 
 	public static final String TYPE_URL = "url"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.5
+	 */
+	public static final String TYPE_DOUBLE = "double"; //$NON-NLS-1$
+
 	public static final String USER_ASSIGNED = "task.common.user.assigned"; //$NON-NLS-1$
 
 	@Deprecated
