@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-e3.6" sequenceNumber="1">
+<target name="mylyn-e3.7" sequenceNumber="1">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="7.0.1.201009141542"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="3.3.1.v20100913-1814"/>
-<unit id="org.eclipse.sdk.ide" version="3.6.1.M20100909-0800"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.6.1.v20100914-1218"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20100914-1218"/>
-<repository location="http://download.eclipse.org/releases/helios"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201011050851"/>
+<unit id="org.eclipse.ecf.core.feature.group" version="3.3.0.v20100615-1452"/>
+<unit id="org.eclipse.sdk.ide" version="3.7.0.I20101028-1441"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20101108-0959"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101108-0959"/>
+<repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
