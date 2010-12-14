@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>mylyn-parent</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn.releng</relativePath>
+  </parent>
+  <groupId>org.eclipse.mylyn.tasks</groupId>
+  <artifactId>mylyn-tasks-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>org.eclipse.mylyn-feature</module>
+    <module>org.eclipse.mylyn.bugzilla-feature</module>
+    <module>org.eclipse.mylyn.bugzilla.core</module>
+    <module>org.eclipse.mylyn.bugzilla.tests</module>
+    <module>org.eclipse.mylyn.bugzilla.ui</module>
+    <module>org.eclipse.mylyn.oslc.core</module>
+    <module>org.eclipse.mylyn.oslc.tests</module>
+    <module>org.eclipse.mylyn.oslc.ui</module>
+    <module>org.eclipse.mylyn.tasks.bugs</module>
+    <module>org.eclipse.mylyn.tasks.core</module>
+    <module>org.eclipse.mylyn.tasks.search</module>
+    <module>org.eclipse.mylyn.tasks.tests</module>
+    <module>org.eclipse.mylyn.tasks.ui</module>
+    <module>org.eclipse.mylyn.tests.util</module>
+    <module>org.eclipse.mylyn.trac-feature</module>
+    <module>org.eclipse.mylyn.trac.core</module>
+    <module>org.eclipse.mylyn.trac.tests</module>
+    <module>org.eclipse.mylyn.trac.ui</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>0.10.0</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
