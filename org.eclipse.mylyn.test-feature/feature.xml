@@ -110,6 +110,7 @@
          install-size="0"
          version="0.0.0"/>
 
+<!--
    <plugin
          id="org.eclipse.test.performance"
          download-size="0"
@@ -117,13 +118,20 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.tests"
+         id="org.eclipse.test.performance.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+         
+   <plugin
+         id="org.eclipse.mylyn.tests.performance"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+-->
 
    <plugin
-         id="org.eclipse.test.performance.ui"
+         id="org.eclipse.mylyn.commons.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -161,12 +169,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.tests.performance"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.oslc.core"
