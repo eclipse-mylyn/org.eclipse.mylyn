@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>mylyn-parent</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn.releng</relativePath>
+  </parent>
+  <groupId>org.eclipse.mylyn.docs</groupId>
+  <artifactId>mylyn-docs-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>org.eclipse.mylyn.htmltext</module>
+    <module>org.eclipse.mylyn.wikitext-feature</module>
+    <module>org.eclipse.mylyn.wikitext.confluence.core</module>
+    <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
+    <module>org.eclipse.mylyn.wikitext.core</module>
+    <module>org.eclipse.mylyn.wikitext.help.sdk</module>
+    <module>org.eclipse.mylyn.wikitext.help.ui</module>
+    <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
+    <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
+    <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
+    <module>org.eclipse.mylyn.wikitext.tasks.ui</module>
+    <module>org.eclipse.mylyn.wikitext.tests</module>
+    <module>org.eclipse.mylyn.wikitext.textile.core</module>
+    <module>org.eclipse.mylyn.wikitext.textile.ui</module>
+    <module>org.eclipse.mylyn.wikitext.tracwiki.core</module>
+    <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
+    <module>org.eclipse.mylyn.wikitext.twiki.core</module>
+    <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
+    <module>org.eclipse.mylyn.wikitext.ui</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>0.10.0</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
