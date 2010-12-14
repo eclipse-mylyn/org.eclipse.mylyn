@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2009, Igor Fedorenko <igor@ifedorenko.com>
+   Copyright (C) 2010, Chris Aniszczyk <caniszczyk@gmail.com>
+   Copyright (C) 2010, Steffen Pingel <steffen.pingel@tasktop.com>
+
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <groupId>org.eclipse.mylyn</groupId>
+  <artifactId>mylyn-parent</artifactId>
+  <version>3.5.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <mailingLists>
+    <mailingList>
+      <name>mylyn-dev Mailing List</name>
+      <post>mylyn-dev@eclipse.org</post>
+      <subscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</subscribe>
+      <unsubscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-dev</unsubscribe>
+      <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-dev</archive>
+    </mailingList>
+  </mailingLists>
+
+  <issueManagement>
+    <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn</url>
+    <system>Bugzilla</system>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <comments>
+       All rights reserved.
+
+       This program and the accompanying materials are made
+       available under the terms of the Eclipse Public License v1.0
+       which accompanies this distribution, and is available at
+       http://www.eclipse.org/legal/epl-v10.htm
+      </comments>
+    </license>
+  </licenses>
+
+  <properties>
+    <mylyn-version>3.5.0-SNAPSHOT</mylyn-version>
+    <tycho-version>0.10.0</tycho-version>
+    <platform-version-name>indigo</platform-version-name>
+    <target-platform>mylyn-e3.7</target-platform>
+    <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+    <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
+    <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/repository</orbit-site>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>platform-ganymede</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>ganymede</value>
+        </property>
+      </activation>
+      <properties>
+        <platform-version>[3.4,3.5)</platform-version>
+        <target-platform>mylyn-e3.4</target-platform>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-galileo</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>galileo</value>
+        </property>
+      </activation>
+      <properties>
+        <platform-version>[3.5,3.6)</platform-version>
+        <target-platform>mylyn-e3.5</target-platform>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-helios</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>helios</value>
+        </property>
+      </activation>
+      <properties>
+        <platform-version>[3.6,3.7)</platform-version>
+        <target-platform>mylyn-e3.6</target-platform>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-indigo</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>indigo</value>
+        </property>
+      </activation>
+      <properties>
+        <platform-version>[3.7,3.8)</platform-version>
+        <target-platform>mylyn-e3.7</target-platform>
+      </properties>
+    </profile>
+  </profiles>
+
+  <modules>
+    <module>target-definition</module>
+    <module>../../org.eclipse.mylyn</module>
+    <module>../../org.eclipse.mylyn.commons</module>
+    <module>../../org.eclipse.mylyn.versions</module>
+    <module>../../org.eclipse.mylyn.tasks</module>
+    <module>../../org.eclipse.mylyn.contexts</module>
+    <module>../../org.eclipse.mylyn.builds</module>
+    <module>../../org.eclipse.mylyn.docs</module>
+    <module>../../org.eclipse.mylyn.incubator</module>
+    <module>main-site</module>
+    <module>incubator-site</module>
+   </modules>
+
+<!--
+  <repositories>
+    <repository>
+      <id>eclipse</id>
+      <layout>p2</layout>
+      <url>${eclipse-site}</url>
+    </repository>
+    <repository>
+      <id>orbit</id>
+      <layout>p2</layout>
+      <url>${orbit-site}</url>
+    </repository>
+    <repository>
+      <id>swtbot</id>
+      <layout>p2</layout>
+      <url>${swtbot-site}</url>
+    </repository>
+    <repository>
+      <id>wikitext</id>
+      <layout>p2</layout>
+      <url>${wikitext-site}</url>
+    </repository>
+  </repositories>
+-->
+
+  <pluginRepositories>
+    <pluginRepository>
+      <!-- need maven-findbugs-2.3.2-SNAPSHOT, see
+           http://jira.codehaus.org/browse/MFINDBUGS-122
+           remove this when this version is released -->
+      <id>codehaus.snapshots</id>
+      <url>http://snapshots.repository.codehaus.org/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <resolver>p2</resolver>
+          <target>
+            <artifact>
+              <groupId>org.eclipse.mylyn</groupId>
+              <artifactId>target-definition</artifactId>
+              <version>3.5.0-SNAPSHOT</version>
+              <classifier>${target-platform}</classifier>
+            </artifact>
+          </target>
+          <ignoreTychoRepositories>true</ignoreTychoRepositories>
+          <environments>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+      <!--
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+      -->
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.sonatype.tycho</groupId>
+          <artifactId>maven-osgi-compiler-plugin</artifactId>
+          <version>${tycho-version}</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+        <plugin>
+          <!-- TODO remove workaround when
+             https://issues.sonatype.org/browse/TYCHO-473
+             is fixed -->
+          <groupId>org.sonatype.tycho</groupId>
+          <artifactId>maven-osgi-source-plugin</artifactId>
+          <version>${tycho-version}</version>
+          <executions>
+            <execution>
+              <id>attach-source</id>
+              <phase>process-classes</phase>
+              <goals>
+                <goal>plugin-source</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+	<plugin>
+          <groupId>org.sonatype.tycho</groupId>
+          <artifactId>maven-osgi-packaging-plugin</artifactId>
+          <version>${tycho-version}</version>
+          <configuration>
+            <format>'I'yyyyMMdd-HHmm</format>
+            <archiveSite>true</archiveSite>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4.1</version>
+          <configuration>
+            <encoding>ISO-8859-1</encoding>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.3.2-SNAPSHOT</version>
+          <configuration>
+            <findbugsXmlOutput>true</findbugsXmlOutput>
+            <failOnError>false</failOnError>
+	    <skip>true</skip>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <sourceEncoding>utf-8</sourceEncoding>
+            <minimumTokens>100</minimumTokens>
+            <targetJdk>1.5</targetJdk>
+            <format>xml</format>
+            <failOnViolation>false</failOnViolation>
+	    <skip>true</skip>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>cpd-check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+

@@ -1,3 +1,5 @@
 bin
 auth
 test-log.xml
+target
+mylyn-tests.jar
