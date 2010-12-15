@@ -380,8 +380,10 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
 				button.setFont(TEXT_FONT);
 				button.setData(KEY_OPERATION, operation);
-				button.setEnabled(!operation.getTaskAttribute().getMetaData().isReadOnly());
-				button.setToolTipText(operation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
+				//button.setEnabled(!operation.getTaskAttribute().getMetaData().isReadOnly());
+				button.setToolTipText(operation.getTaskAttribute()
+						.getMetaData()
+						.getValue(TaskAttribute.META_DESCRIPTION));
 
 				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
@@ -464,8 +466,10 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	public void refreshOperations() {
 		for (Button button : operationButtons) {
 			TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
-			button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isReadOnly());
-			button.setToolTipText(taskOperation.getTaskAttribute().getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
+			//button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isReadOnly());
+			button.setToolTipText(taskOperation.getTaskAttribute()
+					.getMetaData()
+					.getValue(TaskAttribute.META_DESCRIPTION));
 		}
 	}
 }
