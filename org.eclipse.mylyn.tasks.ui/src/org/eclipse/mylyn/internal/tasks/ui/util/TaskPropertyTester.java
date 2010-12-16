@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskPropertyTester extends PropertyTester {
 
-	private static final String PROPERTY_CAN_GET_ATTACHEMNT = "canGetAttachment"; //$NON-NLS-1$
+	private static final String PROPERTY_CAN_GET_ATTACHMENT = "canGetAttachment"; //$NON-NLS-1$
 
 	private static final String PROPERTY_CAN_POST_ATTACHMENT = "canPostAttachment"; //$NON-NLS-1$
 
@@ -52,9 +52,9 @@ public class TaskPropertyTester extends PropertyTester {
 			if (PROPERTY_CONNECTOR_KIND.equals(property)) {
 				return task.getConnectorKind().equals(expectedValue);
 			} else if (PROPERTY_CAN_POST_ATTACHMENT.equals(property)) {
-				return equals(AttachmentUtil.canDownloadAttachment(task), expectedValue);
-			} else if (PROPERTY_CAN_GET_ATTACHEMNT.equals(property)) {
 				return equals(AttachmentUtil.canUploadAttachment(task), expectedValue);
+			} else if (PROPERTY_CAN_GET_ATTACHMENT.equals(property)) {
+				return equals(AttachmentUtil.canDownloadAttachment(task), expectedValue);
 			} else if (PROPERTY_HAS_ACTIVE_TIME.equals(property)) {
 				return equals(TasksUiInternal.getActiveTime(task) > 0, expectedValue);
 			} else if (PROPERTY_HAS_EDITS.equals(property)) {
