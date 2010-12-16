@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.mylyn.versions.core.connectors">
       <connector
-            core="org.eclipse.mylyn.internal.cvs.core.CvsConnector"
+            core="org.eclipse.mylyn.internal.ccvs.core.CvsConnector"
             id="org.eclipse.team.cvs.core.cvsnature">
       </connector>
    </extension>
