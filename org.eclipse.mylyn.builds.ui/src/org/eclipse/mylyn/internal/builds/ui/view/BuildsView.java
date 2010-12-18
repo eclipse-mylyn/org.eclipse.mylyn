@@ -207,6 +207,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private BuildsServiceMessageControl serviceMessageControl;
 
+	private TreeViewerSupport treeViewerSupport;
+
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
 	}
@@ -303,7 +305,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		updateContents(Status.OK_STATUS);
 
-		new TreeViewerSupport(viewer, getStateFile());
+		treeViewerSupport = new TreeViewerSupport(viewer, getStateFile());
 		// Make sure we get notifications
 		NotificationSinkProxy.setControl(serviceMessageControl);
 	}
@@ -663,13 +665,24 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		ScrollBar vBar = tree.getVerticalBar();
 		int ac = 0;
 		for (TreeColumn tc : tree.getColumns()) {
-			tc.pack();
-			ac += tc.getWidth();
+			if (tc.getResizable()) {
+				tc.pack();
+				ac += tc.getWidth();
+			} else {
+				ac += 1; // TODO: Determine the exact width of the column separator
+			}
 		}
 		int width = area.width - tree.computeTrim(0, 0, 0, 0).width + vBar.getSize().x;
 		if (width > ac) {
-			int nw = tree.getColumn(1).getWidth() + width - ac;
-			tree.getColumn(1).setWidth(nw);
+			// Adjust the width of the "Summary" column unless it's not resizeable 
+			// which case we adjust the width of the "Build" column instead.
+			if (tree.getColumn(1).getResizable()) {
+				int nw = tree.getColumn(1).getWidth() + width - ac;
+				tree.getColumn(1).setWidth(nw);
+			} else {
+				int nw = tree.getColumn(0).getWidth() + width - ac;
+				tree.getColumn(0).setWidth(nw);
+			}
 		}
 	}
 }
