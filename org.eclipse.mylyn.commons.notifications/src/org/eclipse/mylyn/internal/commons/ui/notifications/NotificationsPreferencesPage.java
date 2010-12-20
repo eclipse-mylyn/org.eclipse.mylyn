@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Itema AS - Select event type on open if available. Bug #329897
+ *     Itema AS - bug 329897 select event type on open if available
+ *     Itema AS - bug 330064 notification filtering and model persistence
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.ui.notifications;
 
@@ -33,8 +34,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,6 +50,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -223,7 +228,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		label = new Label(composite, SWT.NONE);
 		label.setText("Notifiers:");
-
+		// Create the tree showing all the various notification types
 		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true);
 		eventsViewer = tree.getViewer();
 		GridDataFactory.fillDefaults().span(1, 2).grab(false, true).applyTo(tree);
@@ -236,13 +241,14 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object input = getDetailsInput((IStructuredSelection) event.getSelection());
 				notifiersViewer.setInput(input);
-				notifiersViewer.getControl().setEnabled(false); // FIXME input != null);
 
 				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
 				if (item instanceof NotificationEvent) {
 					descriptionText.setText(((NotificationEvent) item).getDescription());
+					notifiersViewer.getControl().setEnabled(true);
 				} else {
-					descriptionText.setText(" ");
+					descriptionText.setText(" "); //$NON-NLS-1$
+					notifiersViewer.getControl().setEnabled(false);
 				}
 			}
 
@@ -254,7 +260,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 				return null;
 			}
 		});
-
+		// Create the table listing all notification sinks available for the selected event type.
 		notifiersViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(notifiersViewer.getControl());
 		notifiersViewer.setContentProvider(new NotifiersContentProvider());
@@ -263,6 +269,9 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				NotificationAction action = (NotificationAction) event.getElement();
 				action.setSelected(event.getChecked());
+				model.updateStates();
+				model.setDirty(true);
+				eventsViewer.refresh();
 			}
 		});
 		notifiersViewer.setCheckStateProvider(new ICheckStateProvider() {
@@ -294,9 +303,73 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		descriptionText = new Text(group, SWT.WRAP);
 		descriptionText.setBackground(group.getBackground());
 
+//		Button testButton = new Button(composite, SWT.NONE);
+//		testButton.setText("Test");
+//		testButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				ISelection selection = eventsViewer.getSelection();
+//				if (selection instanceof IStructuredSelection) {
+//					Object object = ((IStructuredSelection) selection).getFirstElement();
+//					if (object instanceof NotificationEvent) {
+//						final NotificationEvent event = (NotificationEvent) object;
+//						getControl().getDisplay().asyncExec(new Runnable() {
+//							public void run() {
+//								Notifications.getService().notify(
+//										Collections.singletonList(new TestNotification(event)));
+//							}
+//						});
+//					}
+//				}
+//			}
+//
+//		});
+
 		reset();
 		Dialog.applyDialogFont(composite);
 		return composite;
+	}
+
+	class TestNotification extends AbstractNotification {
+		private final NotificationEvent event;
+
+		public TestNotification(NotificationEvent event) {
+			super(event.getId());
+			this.event = event;
+		}
+
+		public int compareTo(AbstractNotification arg0) {
+			return -1;
+		}
+
+		public Object getAdapter(Class adapter) {
+			return null;
+		}
+
+		@Override
+		public void open() {
+		}
+
+		@Override
+		public String getDescription() {
+			return event.getDescription();
+		}
+
+		@Override
+		public String getLabel() {
+			return NLS.bind("Testing {0}", event.getLabel());
+		}
+
+		@Override
+		public Image getNotificationImage() {
+			return null;
+		}
+
+		@Override
+		public Image getNotificationKindImage() {
+			return Dialog.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+		}
+
 	}
 
 	@Override
@@ -326,10 +399,20 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	private void updateEnablement() {
 		boolean enabled = enableNotificationsButton.getSelection();
 		eventsViewer.getControl().setEnabled(enabled);
-		notifiersViewer.getControl().setEnabled(false);// FIXME enabled && notifiersViewer.getInput() != null);
+		notifiersViewer.getControl().setEnabled(enabled);// FIXME enabled && notifiersViewer.getInput() != null);
 		descriptionText.setEnabled(enabled);
 		if (!enabled) {
 			eventsViewer.setSelection(StructuredSelection.EMPTY);
+		}
+		// Update the tree from the model
+		Tree tree = eventsViewer.getTree();
+		TreeItem[] categories = tree.getItems();
+		for (TreeItem category : categories) {
+			TreeItem[] events = category.getItems();
+			for (TreeItem event : events) {
+				NotificationEvent tEvent = (NotificationEvent) event.getData();
+				event.setChecked(tEvent.isSelected());
+			}
 		}
 	}
 
@@ -347,6 +430,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	public boolean performOk() {
 		getPreferenceStore().setValue(NotificationsPlugin.PREF_NOTICATIONS_ENABLED,
 				enableNotificationsButton.getSelection());
+		NotificationsPlugin.getDefault().saveModel();
 		return super.performOk();
 	}
 

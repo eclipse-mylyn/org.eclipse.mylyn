@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 330064 notification filtering and model persistence
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui.notifications;
@@ -29,6 +30,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class NotificationsExtensionReader {
 
@@ -36,7 +38,20 @@ public class NotificationsExtensionReader {
 
 	static List<NotificationSinkDescriptor> sinks;
 
+	private static Collection<NotificationCategory> categories;
+
+	/**
+	 * Returns a list of notification categories, each containing their belonging notification events. Once initialised
+	 * the same list will be returned upon subsequent calls of this method.
+	 * 
+	 * @return a list of notification categories.
+	 * @see NotificationModel#save(org.eclipse.ui.IMemento)
+	 * @see NotificationModel#load(org.eclipse.ui.IMemento)
+	 */
 	public static Collection<NotificationCategory> getCategories() {
+		if (categories != null) {
+			return categories;
+		}
 		HashMap<String, NotificationCategory> categoryById = new HashMap<String, NotificationCategory>();
 
 		MultiStatus result = new MultiStatus(NotificationsPlugin.ID_PLUGIN, 0,
@@ -86,7 +101,8 @@ public class NotificationsExtensionReader {
 			errorLogged = true;
 		}
 
-		return categoryById.values();
+		categories = categoryById.values();
+		return categories;
 	}
 
 	public static List<NotificationSinkDescriptor> getSinks() {
