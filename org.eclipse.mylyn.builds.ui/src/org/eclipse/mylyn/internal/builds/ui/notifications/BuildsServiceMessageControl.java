@@ -72,21 +72,17 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 		messages = new CopyOnWriteArrayList<AbstractNotification>();
 	}
 
-	private int currentMessage;
-
 	protected void closeMessage() {
 		if (messages.isEmpty()) {
 			close();
 		} else {
-			messages.remove(currentMessage);
 			nextMessage();
 		}
 	}
 
 	private void nextMessage() {
 		if (!messages.isEmpty()) {
-			currentMessage = messages.size() - 1;
-			AbstractNotification message = messages.get(currentMessage);
+			AbstractNotification message = messages.remove(0);
 			if (ensureControl()) {
 				setTitle(message.getLabel());
 				setDescription(message.getDescription());
@@ -176,17 +172,18 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 		};
 	}
 
-	public void notify(NotificationSinkEvent event) {
+	public void notify(final NotificationSinkEvent event) {
 		for (final AbstractNotification message : event.getNotifications()) {
 			messages.add(message);
 		}
-		// Show the top message in the stack.
-		if (!messages.isEmpty()) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+		// Show the next message but only if we're currently not
+		// showing any messages.
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (isClosed()) {
 					nextMessage();
 				}
-			});
-		}
+			}
+		});
 	}
 }
