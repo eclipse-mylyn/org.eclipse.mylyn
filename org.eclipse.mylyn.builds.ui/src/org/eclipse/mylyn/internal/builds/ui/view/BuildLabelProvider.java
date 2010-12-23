@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 330908 removed build server URL from label
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.view;
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.TextStyle;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildLabelProvider extends LabelProvider implements IStyledLabelProvider, IFontProvider {
 
@@ -144,10 +145,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		String text = getText(element);
 		if (text != null) {
 			StyledString styledString = new StyledString(text);
-			if (element instanceof IBuildServer) {
-				styledString.append(" [" + ((BuildServer) element).getLocation().getUrl() + "]",
-						StyledString.DECORATIONS_STYLER);
-			}
+			// Append styled text here
 			return styledString;
 		}
 		return new StyledString();
