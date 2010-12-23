@@ -79,7 +79,33 @@ public class BuildToolTip extends RichToolTip {
 		parent.setLayout(new GridLayout(2, false));
 
 		BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(data.getServer());
-		addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
+		if (data instanceof IBuildPlan) {
+			StringBuilder sb = new StringBuilder(data.getLabel());
+			sb.append(" (");
+			switch (((IBuildPlan) data).getStatus()) {
+			case SUCCESS:
+				sb.append(NLS.bind("success", null));
+				break;
+			case FAILED:
+				sb.append(NLS.bind("failed", null));
+				break;
+			case UNSTABLE:
+				sb.append(NLS.bind("unstable", null));
+				break;
+			case ABORTED:
+				sb.append(NLS.bind("aborted", null));
+				break;
+			case DISABLED:
+				sb.append(NLS.bind("disabled", null));
+				break;
+			default:
+				break;
+			}
+			sb.append(')');
+			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), sb.toString(), true);
+		} else {
+			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
+		}
 
 		Date refreshDate = data.getRefreshDate();
 		if (refreshDate != null) {
