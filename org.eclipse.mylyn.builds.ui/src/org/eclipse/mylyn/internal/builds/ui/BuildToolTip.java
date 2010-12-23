@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 33148 server tooltip show a summary of build plans
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -19,7 +21,9 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IHealthReport;
+import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.DateUtil;
@@ -40,6 +44,7 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildToolTip extends RichToolTip {
 
@@ -95,6 +100,48 @@ public class BuildToolTip extends RichToolTip {
 				addIconAndLabel(parent, CommonImages.getImage(CommonImages.WARNING), data.getElementStatus()
 						.getMessage());
 			}
+		}
+		if (data instanceof IBuildServer) {
+			int passed = 0;
+			int failed = 0;
+			int unstable = 0;
+			int aborted = 0;
+			int disabled = 0;
+			List<IBuildPlan> plans = BuildsUiInternal.getModel().getPlans((BuildServer) data);
+			for (IBuildPlan iBuildPlan : plans) {
+				if (iBuildPlan.isSelected()) {
+					switch (iBuildPlan.getStatus()) {
+					case SUCCESS:
+						passed++;
+						break;
+					case FAILED:
+						failed++;
+						break;
+					case UNSTABLE:
+						unstable++;
+						break;
+					case ABORTED:
+						aborted++;
+						break;
+					case DISABLED:
+						disabled++;
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED), NLS.bind(
+					"{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
+			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED), NLS.bind("{0} failed builds",
+					new Object[] { failed }));
+			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE), NLS.bind("{0} unstable builds",
+					new Object[] { unstable }));
+			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind("{0} disabled builds",
+					new Object[] { disabled }));
+			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind("{0} aborted builds",
+					new Object[] { unstable }));
+
 		}
 
 		return parent;
