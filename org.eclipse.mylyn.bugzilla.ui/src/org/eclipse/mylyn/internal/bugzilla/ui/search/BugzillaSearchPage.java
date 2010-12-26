@@ -1421,10 +1421,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
-				sb.append("&emailtype1="); //$NON-NLS-1$
-				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
-				appendToBuffer(sb, "&email1=", emailPattern.getText()); //$NON-NLS-1$
 			}
+			sb.append("&emailtype1="); //$NON-NLS-1$
+			sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
+			appendToBuffer(sb, "&email1=", emailPattern.getText()); //$NON-NLS-1$
 		}
 
 		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) { //$NON-NLS-1$
@@ -1443,10 +1443,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
-				sb.append("&emailtype2="); //$NON-NLS-1$
-				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
-				appendToBuffer(sb, "&email2=", emailPattern2.getText()); //$NON-NLS-1$
 			}
+			sb.append("&emailtype2="); //$NON-NLS-1$
+			sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
+			appendToBuffer(sb, "&email2=", emailPattern2.getText()); //$NON-NLS-1$
 		}
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) { //$NON-NLS-1$
@@ -1744,11 +1744,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 			} else if (key.equals("emailtype1")) { //$NON-NLS-1$
 				int index = 0;
-				for (String item : emailOperation.getItems()) {
+				for (; index < emailOperationValues.length; index++) {
+					String item = emailOperationValues[index];
 					if (item.compareTo(value) == 0) {
 						break;
 					}
-					index++;
 				}
 				if (index < emailOperation.getItemCount()) {
 					emailOperation.select(index);
@@ -1802,11 +1802,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 			} else if (key.equals("emailtype2")) { //$NON-NLS-1$
 				int index = 0;
-				for (String item : emailOperation2.getItems()) {
+				for (; index < emailOperationValues.length; index++) {
+					String item = emailOperationValues[index];
 					if (item.compareTo(value) == 0) {
 						break;
 					}
-					index++;
 				}
 				if (index < emailOperation2.getItemCount()) {
 					emailOperation2.select(index);
