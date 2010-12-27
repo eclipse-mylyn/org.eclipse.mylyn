@@ -151,7 +151,7 @@ public class BuildsUiInternal {
 		}
 	};
 
-	private static BuildConsoleManager consoleManager;
+	private static volatile BuildConsoleManager consoleManager;
 
 	/**
 	 * Refresh every 15 minutes by default.
@@ -164,7 +164,7 @@ public class BuildsUiInternal {
 
 	private static OperationServiceUi operationService;
 
-	private static OperationFactory operationFactory;
+	private static volatile OperationFactory operationFactory;
 
 	public static final int MIN_REFRESH_INTERVAL = 1 * 60 * 1000;
 

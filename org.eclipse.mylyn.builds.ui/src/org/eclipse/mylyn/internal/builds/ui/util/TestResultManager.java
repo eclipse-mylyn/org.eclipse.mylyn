@@ -90,7 +90,7 @@ public class TestResultManager {
 		}
 	}
 
-	private static JUnitModel junitModel;
+	private static volatile JUnitModel junitModel;
 
 	/**
 	 * @see {@link org.eclipse.jdt.internal.junit.ui.OpenTestAction}
