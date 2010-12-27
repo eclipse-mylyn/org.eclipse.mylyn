@@ -20,6 +20,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -92,6 +93,12 @@ public class BuildToolTip extends RichToolTip {
 				}
 			});
 			StringBuilder sb = new StringBuilder(" ["); //$NON-NLS-1$
+			if (((IBuildPlan) data).getState() == BuildState.RUNNING) {
+				sb.append(NLS.bind("running, ", null));
+			}
+			if (((IBuildPlan) data).getFlags().contains(BuildState.QUEUED)) {
+				sb.append(NLS.bind("queued, ", null));
+			}
 			switch (((IBuildPlan) data).getStatus()) {
 			case SUCCESS:
 				sb.append(NLS.bind("success", null));
