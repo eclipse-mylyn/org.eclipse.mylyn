@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Typo fix, corrected lazy initialisation of field
  *******************************************************************************/
 
 package org.eclipse.mylyn.builds.ui;
@@ -36,10 +37,11 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildsUi {
 
-	private static HashMap<String, BuildConnectorDescriptor> desctiptorByKind;
+	private static HashMap<String, BuildConnectorDescriptor> descriptorByKind;
 
 	public synchronized static BuildConnector getConnector(String connectorKind) {
 		BuildConnectorDescriptor descriptor = getConnectorDescriptorByKind().get(connectorKind);
@@ -55,12 +57,12 @@ public class BuildsUi {
 		return BuildsUiInternal.getModel();
 	}
 
-	private static HashMap<String, BuildConnectorDescriptor> getConnectorDescriptorByKind() {
-		if (desctiptorByKind != null) {
-			return desctiptorByKind;
+	private synchronized static HashMap<String, BuildConnectorDescriptor> getConnectorDescriptorByKind() {
+		if (descriptorByKind != null) {
+			return descriptorByKind;
 		}
 
-		desctiptorByKind = new HashMap<String, BuildConnectorDescriptor>();
+		descriptorByKind = new HashMap<String, BuildConnectorDescriptor>();
 
 		MultiStatus result = new MultiStatus(BuildsUiPlugin.ID_PLUGIN, 0, "Build connectors failed to load.", null); //$NON-NLS-1$
 
@@ -73,7 +75,7 @@ public class BuildsUi {
 				BuildConnectorDescriptor descriptor = new BuildConnectorDescriptor(element);
 				IStatus status = descriptor.validate();
 				if (status.isOK()) {
-					desctiptorByKind.put(descriptor.getConnectorKind(), descriptor);
+					descriptorByKind.put(descriptor.getConnectorKind(), descriptor);
 				} else {
 					result.add(status);
 				}
@@ -84,7 +86,7 @@ public class BuildsUi {
 			StatusManager.getManager().handle(result);
 		}
 
-		return desctiptorByKind;
+		return descriptorByKind;
 	}
 
 	public static IBuildServer createServer(String connectorKind) {
