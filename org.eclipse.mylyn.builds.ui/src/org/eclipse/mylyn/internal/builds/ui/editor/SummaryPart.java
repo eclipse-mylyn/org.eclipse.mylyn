@@ -21,7 +21,6 @@ import org.eclipse.mylyn.builds.internal.core.BuildPackage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -54,10 +53,9 @@ public class SummaryPart extends AbstractBuildEditorPart {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		Label label;
 		Text text;
 
-		label = createLabel(composite, toolkit, "Completed on: ");
+		createLabel(composite, toolkit, "Completed on: ");
 //		GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 		text = createTextReadOnly(composite, toolkit, "");
 //		GridDataFactory.fillDefaults().span(5, 1).applyTo(text);
