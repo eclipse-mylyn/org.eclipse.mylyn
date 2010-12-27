@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
@@ -34,7 +36,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.RichToolTip;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -79,7 +83,40 @@ public class BuildToolTip extends RichToolTip {
 		parent.setLayout(new GridLayout(2, false));
 
 		BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(data.getServer());
-		addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
+		if (data instanceof IBuildPlan) {
+			StyledString ss = new StyledString();
+			ss.append(data.getLabel(), new Styler() {
+				public void applyStyles(TextStyle textStyle) {
+					textStyle.font = CommonFonts.BOLD;
+					textStyle.foreground = getTitleColor();
+				}
+			});
+			StringBuilder sb = new StringBuilder(" ["); //$NON-NLS-1$
+			switch (((IBuildPlan) data).getStatus()) {
+			case SUCCESS:
+				sb.append(NLS.bind("success", null));
+				break;
+			case FAILED:
+				sb.append(NLS.bind("failed", null));
+				break;
+			case UNSTABLE:
+				sb.append(NLS.bind("unstable", null));
+				break;
+			case ABORTED:
+				sb.append(NLS.bind("aborted", null));
+				break;
+			case DISABLED:
+				sb.append(NLS.bind("disabled", null));
+				break;
+			default:
+				break;
+			}
+			sb.append(']');
+			ss.append(sb.toString(), StyledString.DECORATIONS_STYLER);
+			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), ss);
+		} else {
+			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
+		}
 
 		Date refreshDate = data.getRefreshDate();
 		if (refreshDate != null) {
@@ -192,6 +229,25 @@ public class BuildToolTip extends RichToolTip {
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 
 		textLabel.setText(CommonUiUtil.toLabel(text));
+		int width = Math.min(textLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
+	}
+
+	protected void addIconAndLabel(Composite parent, Image image, StyledString text) {
+		Label imageLabel = new Label(parent, SWT.NONE);
+		imageLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		imageLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		imageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		imageLabel.setImage(image);
+
+		StyledText textLabel = new StyledText(parent, 0);
+		textLabel.setText(text.getString());
+		textLabel.setStyleRanges(text.getStyleRanges());
+//		textLabel.setForeground(getTitleColor());
+		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
+
+		//textLabel.setText("");
 		int width = Math.min(textLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
 	}
