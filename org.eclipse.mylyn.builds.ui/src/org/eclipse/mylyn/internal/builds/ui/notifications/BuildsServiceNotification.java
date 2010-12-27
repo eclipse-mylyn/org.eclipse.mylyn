@@ -16,6 +16,8 @@ import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * Note: this class has a natural ordering that is inconsistent with equals.
+ * 
  * @author Torkild U. Resheim
  */
 public class BuildsServiceNotification extends AbstractNotification {
@@ -39,6 +41,9 @@ public class BuildsServiceNotification extends AbstractNotification {
 	}
 
 	public int compareTo(AbstractNotification o) {
+		if (o != null && o.getLabel() != null) {
+			return o.getLabel().compareTo(label);
+		}
 		return 0;
 	}
 
@@ -71,5 +76,4 @@ public class BuildsServiceNotification extends AbstractNotification {
 		// ignore
 		return null;
 	}
-
 }
