@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Corrected lazy initialisation of fields
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.util;
@@ -52,6 +53,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class TestResultManager {
 

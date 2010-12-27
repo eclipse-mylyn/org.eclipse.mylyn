@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - Corrected lazy initialisation of fields
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui;
@@ -46,6 +47,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class BuildsUiInternal {
 
