@@ -117,6 +117,15 @@ public abstract class ServiceMessageControl {
 	}
 
 	/**
+	 * Returns <code>true</code> if the control has closed and is currently not showing any messages.
+	 * 
+	 * @return <code>true</code> if the control is closed
+	 */
+	protected boolean isClosed() {
+		return (head == null || head.isDisposed());
+	}
+
+	/**
 	 * Implement to handle the message control closing.
 	 */
 	protected abstract void closeMessage();
@@ -324,11 +333,14 @@ public abstract class ServiceMessageControl {
 	 * Creates the control unless the parent has been disposed.
 	 */
 	protected boolean ensureControl() {
-		if (!parent.isDisposed() && (head == null || head.isDisposed())) {
-			createControl(parent);
-			return true;
+		if (parent.isDisposed()) {
+			return false;
 		}
-		return false;
+
+		if (head == null || head.isDisposed()) {
+			createControl(parent);
+		}
+		return true;
 	}
 
 }
