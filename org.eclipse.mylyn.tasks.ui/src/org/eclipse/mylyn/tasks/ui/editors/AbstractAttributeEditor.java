@@ -239,7 +239,10 @@ public abstract class AbstractAttributeEditor {
 		return description;
 	}
 
-	private void setDescription(String description) {
+	/**
+	 * @since 3.5
+	 */
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
