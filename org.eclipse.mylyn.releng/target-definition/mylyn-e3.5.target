@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.5"?>
+<?pde version="3.6"?>
 
-<target name="mylyn-e3.5">
+<target name="mylyn-e3.5" sequenceNumber="7">
 <locations>
-<location includeAllPlatforms="false" includeMode="slicer" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="6.0.0.200909110608"/>
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.0.1.v20090916-2238"/>
 <unit id="org.eclipse.sdk.ide" version="3.5.2.M20100211-1343"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="2.5.0.v200906151043"/>
@@ -13,7 +13,7 @@
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.1.0.v200906151043"/>
 <repository location="http://download.eclipse.org/releases/galileo"/>
 </location>
-<location includeAllPlatforms="false" includeMode="slicer" type="InstallableUnit">
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201004141950"/>
 <unit id="javax.activation" version="1.1.0.v201005080500"/>
@@ -38,7 +38,7 @@
 <unit id="org.json" version="1.0.0.v201003050614"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/repository"/>
 </location>
-<location includeAllPlatforms="false" includeMode="slicer" type="InstallableUnit">
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.1.20101106_1831-73ca7af-dev-e35"/>
 <repository location="http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site"/>
 </location>
