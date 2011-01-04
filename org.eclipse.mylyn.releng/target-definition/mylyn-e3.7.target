@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-e3.7" sequenceNumber="1">
+<target name="mylyn-e3.7" sequenceNumber="5">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201011050851"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201012131338"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.3.0.v20100615-1452"/>
-<unit id="org.eclipse.sdk.ide" version="3.7.0.I20101028-1441"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20101108-0959"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20101108-0959"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.7.0.v20101108-0959"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101108-0959"/>
+<unit id="org.eclipse.sdk.ide" version="3.7.0.I20101208-1300"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20101215-0917"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20101215-0940"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.6.0.v20101215-0917"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101215-0940"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
