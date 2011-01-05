@@ -92,34 +92,37 @@ public class BuildToolTip extends RichToolTip {
 					textStyle.foreground = getTitleColor();
 				}
 			});
-			StringBuilder sb = new StringBuilder(" ["); //$NON-NLS-1$
-			if (((IBuildPlan) data).getState() == BuildState.RUNNING) {
-				sb.append(NLS.bind("running, ", null));
+			IBuildPlan plan = (IBuildPlan) data;
+			if (plan.getStatus() != null) {
+				StringBuilder sb = new StringBuilder(" ["); //$NON-NLS-1$
+				if (plan.getState() == BuildState.RUNNING) {
+					sb.append(NLS.bind("running, ", null));
+				}
+				if (plan.getFlags().contains(BuildState.QUEUED)) {
+					sb.append(NLS.bind("queued, ", null));
+				}
+				switch (plan.getStatus()) {
+				case SUCCESS:
+					sb.append(NLS.bind("success", null));
+					break;
+				case FAILED:
+					sb.append(NLS.bind("failed", null));
+					break;
+				case UNSTABLE:
+					sb.append(NLS.bind("unstable", null));
+					break;
+				case ABORTED:
+					sb.append(NLS.bind("aborted", null));
+					break;
+				case DISABLED:
+					sb.append(NLS.bind("disabled", null));
+					break;
+				default:
+					break;
+				}
+				sb.append(']');
+				ss.append(sb.toString(), StyledString.DECORATIONS_STYLER);
 			}
-			if (((IBuildPlan) data).getFlags().contains(BuildState.QUEUED)) {
-				sb.append(NLS.bind("queued, ", null));
-			}
-			switch (((IBuildPlan) data).getStatus()) {
-			case SUCCESS:
-				sb.append(NLS.bind("success", null));
-				break;
-			case FAILED:
-				sb.append(NLS.bind("failed", null));
-				break;
-			case UNSTABLE:
-				sb.append(NLS.bind("unstable", null));
-				break;
-			case ABORTED:
-				sb.append(NLS.bind("aborted", null));
-				break;
-			case DISABLED:
-				sb.append(NLS.bind("disabled", null));
-				break;
-			default:
-				break;
-			}
-			sb.append(']');
-			ss.append(sb.toString(), StyledString.DECORATIONS_STYLER);
 			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), ss);
 		} else {
 			addIconAndLabel(parent, CommonImages.getImage(connectorUi.getImageDescriptor()), data.getLabel(), true);
@@ -153,7 +156,7 @@ public class BuildToolTip extends RichToolTip {
 			int disabled = 0;
 			List<IBuildPlan> plans = BuildsUiInternal.getModel().getPlans((BuildServer) data);
 			for (IBuildPlan iBuildPlan : plans) {
-				if (iBuildPlan.isSelected()) {
+				if (iBuildPlan.isSelected() && iBuildPlan.getStatus() != null) {
 					switch (iBuildPlan.getStatus()) {
 					case SUCCESS:
 						passed++;
@@ -175,16 +178,26 @@ public class BuildToolTip extends RichToolTip {
 					}
 				}
 			}
-			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED), NLS.bind(
-					"{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
-			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED), NLS.bind("{0} failed builds",
-					new Object[] { failed }));
-			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE), NLS.bind("{0} unstable builds",
-					new Object[] { unstable }));
-			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind("{0} disabled builds",
-					new Object[] { disabled }));
-			addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind("{0} aborted builds",
-					new Object[] { unstable }));
+			if (passed > 0) {
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED), NLS.bind(
+						"{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
+			}
+			if (failed > 0) {
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED), NLS.bind("{0} failed builds",
+						new Object[] { failed }));
+			}
+			if (unstable > 0) {
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE), NLS.bind(
+						"{0} unstable builds", new Object[] { unstable }));
+			}
+			if (disabled > 0) {
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind(
+						"{0} disabled builds", new Object[] { disabled }));
+			}
+			if (unstable > 0) {
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind(
+						"{0} aborted builds", new Object[] { unstable }));
+			}
 
 		}
 
