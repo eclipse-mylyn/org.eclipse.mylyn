@@ -9,6 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 329897 select event type on open if available
  *     Itema AS - bug 330064 notification filtering and model persistence
+ *     Itema AS - bug 331424 handle default event-sink action associations
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.ui.notifications;
 
@@ -438,6 +439,20 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	protected void performDefaults() {
 		enableNotificationsButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				NotificationsPlugin.PREF_NOTICATIONS_ENABLED));
+		for (NotificationCategory category : model.getCategories()) {
+			for (NotificationEvent event : category.getEvents()) {
+				NotificationHandler handler = model.getOrCreateNotificationHandler(event);
+				for (NotificationAction action : handler.getActions()) {
+					action.setSelected(event.defaultHandledBySink(action.getSinkDescriptor().getId()));
+				}
+			}
+		}
+		// Assume that the model has become dirty
+		model.updateStates();
+		model.setDirty(true);
+		// Update from the model
+		eventsViewer.refresh();
+		notifiersViewer.refresh();
 		updateEnablement();
 	}
 

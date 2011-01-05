@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Schema file written by PDE -->
+<!--
+    Copyright (c) 2010 Tasktop Technologies and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+         Itema AS - bug 331424 handle default event-sink action associations
+ -->
 <schema targetNamespace="org.eclipse.mylyn.commons.notifications" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
@@ -21,6 +31,7 @@
             <element ref="category"/>
             <element ref="event"/>
             <element ref="sink"/>
+            <element ref="eventMapping"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -56,9 +67,10 @@
          </documentation>
       </annotation>
       <complexType>
-         <choice minOccurs="0" maxOccurs="1">
+         <sequence minOccurs="0" maxOccurs="1">
             <element ref="description"/>
-         </choice>
+            <element ref="defaultHandler" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -188,6 +200,57 @@
       </annotation>
    </element>
 
+   <element name="defaultHandler">
+      <annotation>
+         <documentation>
+            One or more &lt;i&gt;defaultHandler&lt;/i&gt; elements may be added to an event for specifying which sink should handle the event. If none are specified all sinks will be used. Note that this element specifies a default setting that may be changed in user preferences.
+
+A similar effect is achieved by the &lt;i&gt;eventMapping&lt;/i&gt; extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="sinkId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Identifier of the sink that should handle the event.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/sink/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="eventMapping">
+      <annotation>
+         <documentation>
+            Event mappings are used to map one ore more events to a sink. Note that this element specifies a default setting that may be changed in user preferences.
+
+Also see the &lt;i&gt;defaultHandler&lt;/i&gt; element of &lt;i&gt;event&lt;/i&gt; declarations.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="sinkId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Identifier of the sink that should handle the event.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/sink/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="eventIds" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a comma separated list of event identifiers that will be mapped to the notification sink. The &quot;*&quot; wildcard can be used so that multiple events can be mapped to one sink.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
       <appinfo>
          <meta.section type="since"/>
@@ -213,6 +276,9 @@
        &lt;description&gt;
           This event is triggered when the status of a build service is changed. For instance a new server is discovered or is no longer available.
        &lt;/description&gt;
+       &lt;defaultHandler
+          sinkId=&quot;org.eclipse.mylyn.internal.builds.ui.view.NotificationSinkProxy&quot;/&gt;
+    &lt;/category&gt;
     &lt;/event&gt;
     &lt;category
           icon=&quot;icons/eview16/build-view.png&quot;
@@ -224,8 +290,14 @@
           id=&quot;org.eclipse.mylyn.builds.ui.sink.View&quot;
           label=&quot;Builds View&quot;&gt;
     &lt;/sink&gt;
+    &lt;eventMapping
+          eventIds=&quot;org.eclipse.mylyn.builds.ui.events.*&quot;
+          sinkId=&quot;org.eclipse.mylyn.commons.notifications.sink.Popup&quot;&gt;
+    &lt;/eventMapping&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
+
+This example will declare a new event and assign it to the builds view notification sink. The category for the event is also declared in addition to the builds view notification sink. The last configuration element declares a mapping between all build event types and the popup notification sink.
       </documentation>
    </annotation>
 

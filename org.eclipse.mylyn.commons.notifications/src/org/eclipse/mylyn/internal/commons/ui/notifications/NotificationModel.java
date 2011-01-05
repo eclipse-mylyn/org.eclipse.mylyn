@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - bug 330064 notification filtering and model persistence
+ *     Itema AS - bug 331424 handle default event-sink action associations
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui.notifications;
@@ -34,6 +35,12 @@ public class NotificationModel {
 
 	public NotificationModel(IMemento memento) {
 		this.handlerByEventId = new HashMap<String, NotificationHandler>();
+		// We need the handlerByEventId map to be populated early
+		for (NotificationCategory category : getCategories()) {
+			for (NotificationEvent event : category.getEvents()) {
+				getOrCreateNotificationHandler(event);
+			}
+		}
 		if (memento != null) {
 			load(memento);
 		}
@@ -61,7 +68,9 @@ public class NotificationModel {
 		List<NotificationAction> actions = new ArrayList<NotificationAction>(descriptors.size());
 		for (NotificationSinkDescriptor descriptor : descriptors) {
 			NotificationAction action = new NotificationAction(descriptor);
-			action.setSelected(event.isSelected());
+			if (event.defaultHandledBySink(descriptor.getId())) {
+				action.setSelected(true);
+			}
 			actions.add(action);
 		}
 		return actions;
@@ -113,18 +122,16 @@ public class NotificationModel {
 							for (IMemento mAction : mActions) {
 								if (notificationAction.getSinkDescriptor().getId().equals(mAction.getString("sink"))) { //$NON-NLS-1$
 									notificationAction.setSelected(mAction.getBoolean("selected")); //$NON-NLS-1$
-									if (notificationAction.isSelected()) {
-										event.setSelected(true);
-									}
 								}
 							}
-
+							if (notificationAction.isSelected()) {
+								event.setSelected(true);
+							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 	public void setDirty(boolean dirty) {

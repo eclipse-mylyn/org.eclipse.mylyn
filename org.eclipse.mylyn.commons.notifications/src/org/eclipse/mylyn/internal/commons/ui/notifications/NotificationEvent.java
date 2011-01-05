@@ -7,25 +7,88 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Itema AS - bug 331424 handle default event-sink action associations
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui.notifications;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Steffen Pingel
+ * @author Torkild U. Resheim
  */
 public class NotificationEvent extends NotificationElement {
+
+	private static final String EXTENSION_POINT_ID = "org.eclipse.mylyn.commons.notifications.notifications"; //$NON-NLS-1$
 
 	private NotificationCategory category;
 
 	private boolean selected;
 
+	private final ArrayList<String> defaultSinks;
+
+	/**
+	 * Tests whether or not the event should per default be handled by the sink with the specified identifier.
+	 * 
+	 * @param sinkId
+	 *            the sink identifier
+	 * @return <code>true</code> if the
+	 */
+	public boolean defaultHandledBySink(String sinkId) {
+		if (defaultSinks.isEmpty() || defaultSinks.contains(sinkId)) {
+			return true;
+		}
+		return false;
+	}
+
 	public NotificationEvent(IConfigurationElement element) {
 		super(element);
-		String selectedValue = element.getAttribute("selected");
+		String selectedValue = element.getAttribute("selected"); //$NON-NLS-1$
 		setSelected(selectedValue == null || Boolean.parseBoolean(selectedValue));
+		defaultSinks = new ArrayList<String>();
+		IConfigurationElement[] matches = element.getChildren("defaultHandler"); //$NON-NLS-1$
+		for (IConfigurationElement match : matches) {
+			defaultSinks.add(match.getAttribute("sinkId")); //$NON-NLS-1$
+		}
+		doEventMappings();
+	}
+
+	private void doEventMappings() {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
+		if (point != null) {
+			IConfigurationElement[] elements = point.getConfigurationElements();
+			for (IConfigurationElement mapping : elements) {
+				if (mapping.getName().equals("eventMapping")) { //$NON-NLS-1$
+					String eventIds = mapping.getAttribute("eventIds"); //$NON-NLS-1$
+					String[] list = eventIds.split(","); //$NON-NLS-1$
+					for (String item : list) {
+						if (wildCardMatch(getId(), item)) {
+							defaultSinks.add(mapping.getAttribute("sinkId")); //$NON-NLS-1$
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean wildCardMatch(String text, String pattern) {
+		String[] cards = pattern.split("\\*"); //$NON-NLS-1$
+		for (String card : cards) {
+			int idx = text.indexOf(card);
+			if (idx == -1) {
+				return false;
+			}
+			text = text.substring(idx + card.length());
+		}
+
+		return true;
 	}
 
 	public NotificationCategory getCategory() {
