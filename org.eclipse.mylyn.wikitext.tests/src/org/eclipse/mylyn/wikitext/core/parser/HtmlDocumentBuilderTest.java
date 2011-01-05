@@ -22,8 +22,6 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class HtmlDocumentBuilderTest extends TestCase {
@@ -60,10 +58,12 @@ public class HtmlDocumentBuilderTest extends TestCase {
 	}
 
 	public void testRelativeUrlWithFileBase() throws URISyntaxException {
-		builder.setBase(new File("/base/2/with space/").toURI());
+		URI uri = new File("/base/2/with space/").toURI();
+		builder.setBase(uri);
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>"));
+		TestUtil.println("HTML: \n" + html + "\nURI:" + uri);
+		String expected = "<a href=\"" + uri.toString() + "/foo/bar.html\">An URL</a>";
+		assertTrue("Expected " + expected, html.contains(expected));
 	}
 }

@@ -48,31 +48,31 @@ public class BugzillaTextileLanguageTest extends TestCase {
 	public void testQuotedBlock() {
 		String html = parser.parseToHtml("One\n\n> Two\n\nThree");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>One</p><blockquote><p>> Two</p></blockquote><p>Three</p></body>"));
+		assertTrue(html.contains("<body><p>One</p><blockquote><p>&gt; Two</p></blockquote><p>Three</p></body>"));
 	}
 
 	public void testQuotedBlock2() {
 		String html = parser.parseToHtml("One\n\n> Two\nThree");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>One</p><blockquote><p>> Two</p></blockquote><p>Three</p></body>"));
+		assertTrue(html.contains("<body><p>One</p><blockquote><p>&gt; Two</p></blockquote><p>Three</p></body>"));
 	}
 
 	public void testQuotedBlock3() {
 		String html = parser.parseToHtml("One\n> Two\n\nThree");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>One</p><blockquote><p>> Two</p></blockquote><p>Three</p></body>"));
+		assertTrue(html.contains("<body><p>One</p><blockquote><p>&gt; Two</p></blockquote><p>Three</p></body>"));
 	}
 
 	public void testQuotedBlock4() {
 		String html = parser.parseToHtml("One\n(In reply to comment #123)\n> Two\n\nThree");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>One</p><blockquote><p>(In reply to comment #123)<br/>> Two</p></blockquote><p>Three</p></body>"));
+		assertTrue(html.contains("<body><p>One</p><blockquote><p>(In reply to comment #123)<br/>&gt; Two</p></blockquote><p>Three</p></body>"));
 	}
 
 	public void testQuotedBlock5() {
 		String html = parser.parseToHtml("One\n > Two\n > Three\nFour");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>One</p><blockquote><p> > Two<br/> > Three</p></blockquote><p>Four</p></body>"));
+		assertTrue(html.contains("<body><p>One</p><blockquote><p> &gt; Two<br/> &gt; Three</p></blockquote><p>Four</p></body>"));
 	}
 
 	public void testThisBugHasBeen() {
@@ -116,13 +116,13 @@ public class BugzillaTextileLanguageTest extends TestCase {
 	public void testXmlEscaping() {
 		String html = parser.parseToHtml("some <start>mark</start> up");
 		TestUtil.println(html);
-		assertTrue(html.contains("<p>some &lt;start>mark&lt;/start> up</p>"));
+		assertTrue(html.contains("<p>some &lt;start&gt;mark&lt;/start&gt; up</p>"));
 	}
 
 	public void testHtmlEscaping() {
 		String html = parser.parseToHtml("some <span class=\"s\">mark</span> up");
 		TestUtil.println(html);
-		assertTrue(html.contains("<p>some &lt;span class=\"s\">mark&lt;/span> up</p>"));
+		assertTrue(html.contains("<p>some &lt;span class=\"s\"&gt;mark&lt;/span&gt; up</p>"));
 	}
 
 	public void testJavaStackTraceDetection() {
@@ -163,7 +163,7 @@ public class BugzillaTextileLanguageTest extends TestCase {
 
 		TestUtil.println(html);
 
-		assertTrue(html.contains("<pre class=\"javaStackTrace\">java.io.EOFException\nat java.io.DataInputStream.readInt(Unknown Source)\nat org.eclipse.jdt.internal.core.JavaModelManager.loadNonChainingJarsCache(JavaModelManager.java:2843)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;init>(JavaModelManager.java:1477)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;clinit>(JavaModelManager.java:1012)\nat org.eclipse.jdt.core.JavaCore.start(JavaCore.java:4965)\nat org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:783)\nat java.security.AccessController.doPrivileged(Native Method)\n</pre>"));
+		assertTrue(html.contains("<pre class=\"javaStackTrace\">java.io.EOFException\nat java.io.DataInputStream.readInt(Unknown Source)\nat org.eclipse.jdt.internal.core.JavaModelManager.loadNonChainingJarsCache(JavaModelManager.java:2843)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;init&gt;(JavaModelManager.java:1477)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;clinit&gt;(JavaModelManager.java:1012)\nat org.eclipse.jdt.core.JavaCore.start(JavaCore.java:4965)\nat org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:783)\nat java.security.AccessController.doPrivileged(Native Method)\n</pre>"));
 	}
 
 	public void testEclipseErrorDetailsBlock() {
