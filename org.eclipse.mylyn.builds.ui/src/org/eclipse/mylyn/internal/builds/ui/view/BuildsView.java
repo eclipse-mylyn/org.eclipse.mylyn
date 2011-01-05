@@ -267,6 +267,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		toolTip = new BuildToolTip(getViewer().getControl());
 		toolTip.setViewer(viewer);
+		// bug#160897: set to empty string to disable native tooltips (windows only?)
+		viewer.getTree().setToolTipText(""); //$NON-NLS-1$
 
 		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);
@@ -634,7 +636,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
