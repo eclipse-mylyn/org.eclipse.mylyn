@@ -21,6 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
  * @author David Green
  */
 public class Util {
+	private static final String TASKTOP_TASKZILLA = "taskzilla"; //$NON-NLS-1$
+
 	private static final String TASKTOP_ALM = "com.tasktop.alm.tasks"; //$NON-NLS-1$
 
 	private static final String BUGZILLA = "bugzilla"; //$NON-NLS-1$
@@ -41,6 +43,7 @@ public class Util {
 	}
 
 	private static boolean isBugzillaOrDerivative(String repositoryKind) {
-		return BUGZILLA.equals(repositoryKind) || TASKTOP_ALM.equals(repositoryKind);
+		return BUGZILLA.equals(repositoryKind) || TASKTOP_ALM.equals(repositoryKind)
+				|| TASKTOP_TASKZILLA.equals(repositoryKind);
 	}
 }
