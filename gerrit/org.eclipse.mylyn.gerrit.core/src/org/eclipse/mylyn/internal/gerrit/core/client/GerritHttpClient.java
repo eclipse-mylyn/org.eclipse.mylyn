@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
@@ -23,6 +24,11 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
  * Abstract class that handles the http communications with the Gerrit server.
@@ -90,7 +96,10 @@ public class GerritHttpClient {
 				HttpClientParams params = new HttpClientParams();
 				params.setCookiePolicy(org.apache.commons.httpclient.cookie.CookiePolicy.BROWSER_COMPATIBILITY);
 				httpClient.setParams(params);
-				httpClient.executeMethod(method);
+				
+				HostConfiguration hostConfiguration = getHostConfiguration();
+				WebUtil.execute(httpClient, hostConfiguration, method, new NullProgressMonitor());
+				
 				httpClient.setParams(params);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
@@ -147,7 +156,8 @@ public class GerritHttpClient {
 			postMethod.setRequestEntity(requestEntity);
 
 			// Execute the method.
-			int statusCode = getHttpClient().executeMethod(postMethod);
+			HostConfiguration hostConfiguration = getHostConfiguration();
+			int statusCode = WebUtil.execute(httpClient, hostConfiguration, postMethod, new NullProgressMonitor());
 
 			if (statusCode != HttpStatus.SC_OK) {
 				System.err.println("Method failed: " + postMethod.getStatusLine() + "\n"
@@ -203,11 +213,13 @@ public class GerritHttpClient {
 			// is needed for the connection to our internal Gerrit server
 			// and will probably not work
 			// towards review.source.android.com.
-			int statusCode = client.executeMethod(getMethod);
+			
+			HostConfiguration hostConfiguration = getHostConfiguration();
+			int statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
 			getMethod.releaseConnection();
+			
 			getMethod = new GetMethod(getURL() + "/login/mine");
-
-			statusCode = client.executeMethod(getMethod);
+			statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
 			Cookie[] cookies = client.getState().getCookies();
 			for (Cookie c : cookies) {
 				if (c.getName().equals("GerritAccount")) {
@@ -236,6 +248,13 @@ public class GerritHttpClient {
 			// Release the connection.
 			getMethod.releaseConnection();
 		}
+	}
+
+	private HostConfiguration getHostConfiguration() {
+		WebLocation location = new WebLocation(getURL());
+		location.setCredentials(AuthenticationType.HTTP, user, password);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, new NullProgressMonitor());
+		return hostConfiguration;
 	}
 
 }

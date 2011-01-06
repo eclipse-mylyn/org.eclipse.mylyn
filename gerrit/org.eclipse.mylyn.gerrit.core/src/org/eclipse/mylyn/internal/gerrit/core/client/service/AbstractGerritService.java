@@ -12,19 +12,17 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.service;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.google.gwtjsonrpc.server.JsonServlet;
 
 /**
  * @author Daniel Olsson, ST Ericsson
@@ -56,9 +54,7 @@ public abstract class AbstractGerritService {
 		this.client = client;
 	}
 
-	static protected class JsonParam extends JsonElement {
-
-		static Gson gson = JsonServlet.defaultGsonBuilder().create();
+	static protected class JsonParam {
 
 		Object param;
 
@@ -71,10 +67,15 @@ public abstract class AbstractGerritService {
 			param = o;
 		}
 
-		@Override
-		protected void toString(Appendable sb) throws IOException {
-			sb.append(gson.toJson(param, param.getClass()));
+		public Object getElement() {
+			return param;
 		}
+
+//		@Override
+//		protected void toString(Appendable sb, Escaper escaper)
+//				throws IOException {
+//			sb.append(gson.toJson(param, param.getClass()));
+//		}
 
 	}
 
@@ -96,7 +97,7 @@ public abstract class AbstractGerritService {
 			String responseMessage = client.postJsonRequest(getServiceUri(), message.toString());
 			System.err.println("Received: " + responseMessage);
 
-			Gson gson = JsonServlet.defaultGsonBuilder().create();
+			Gson gson = new Gson();//.defaultGsonBuilder().create();
 			result = gson.fromJson(responseMessage, resultType);
 			// result = gson.fromJson(responseMessage, resultType);
 			return result;
@@ -107,29 +108,54 @@ public abstract class AbstractGerritService {
 		}
 	}
 
+	private static class Message {
+		
+		private String jsonrpc = "2.0";
+		
+		private String method;
+		
+		private List<Object> params = new ArrayList<Object>();
+		
+		private int id;
+		
+		private String xsrfKey;
+	}
+	
 	protected String createJsonString(Collection<JsonParam> args, String methodName) throws GerritException {
-		// This creates a ugly dependency to GWT, but we don't want to
-		// duplicate
-		// that code...
-		JsonObject message = new JsonObject();
-		message.addProperty("jsonrpc", "2.0");
-		message.addProperty("method", methodName);
-		JsonArray array = new JsonArray();
+		Message msg = new Message();
+		msg.method = methodName;
 		if (args != null) {
 			for (JsonParam jp : args) {
-				array.add(jp);
+				msg.params.add(jp.getElement());
 			}
 		}
-		message.add("params", array);
-		message.addProperty("id", client.getId());
-		//TODO Without the line below, method which require login to the Gerrit server cannot be run.
-		//Without it, the allOpenNext method can still be run.
-		//While implementing this, we worked towards an SonyEricsson internal Gerrit server where we are single signed on.
-		//Once logging on to the Gerrit server is taken care of, please use the below functionality to be able to
-		//use the forAccount method, which is used to get the user's reviews.
-
-		message.addProperty("xsrfKey", client.getXsrfKey());
-		return message.toString();
+		msg.id = client.getId();
+		msg.xsrfKey = client.getXsrfKey();
+		return new Gson().toJson(msg, msg.getClass());
 	}
+	
+//		// This creates a ugly dependency to GWT, but we don't want to
+//		// duplicate
+//		// that code...
+//		JsonObject message = new JsonObject();
+//		message.addProperty("jsonrpc", "2.0");
+//		message.addProperty("method", methodName);
+//		JsonArray array = new JsonArray();
+//		array.add(new JsonObject());
+//		if (args != null) {
+//			for (JsonParam jp : args) {
+//				array.add(jp.getElement());
+//			}
+//		}
+//		message.add("params", array);
+//		message.addProperty("id", client.getId());
+//		//TODO Without the line below, method which require login to the Gerrit server cannot be run.
+//		//Without it, the allOpenNext method can still be run.
+//		//While implementing this, we worked towards an SonyEricsson internal Gerrit server where we are single signed on.
+//		//Once logging on to the Gerrit server is taken care of, please use the below functionality to be able to
+//		//use the forAccount method, which is used to get the user's reviews.
+//
+//		message.addProperty("xsrfKey", client.getXsrfKey());
+//		return message.toString();
 
 }
