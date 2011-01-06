@@ -13,12 +13,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -80,14 +78,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		if (localTransfer) {
 			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
-			if (selection instanceof IStructuredSelection) {
-				for (Iterator<?> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
-					Object item = it.next();
-					if (item instanceof ITask) {
-						tasksToMove.add((ITask) item);
-					}
-				}
-			}
+			List<ITask> tasks = TasksUiInternal.getTasksFromSelection(selection);
+			tasksToMove.addAll(tasks);
 		} else if (fileTransfer) {
 			// TODO implement dropping of files
 		} else if (data instanceof String) {

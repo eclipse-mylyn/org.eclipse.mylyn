@@ -1313,4 +1313,31 @@ public class TasksUiInternal {
 		}
 		return repository;
 	}
+
+	/**
+	 * Returns all the tasks in the given selection, or an empty list if the selection contains no tasks.
+	 */
+	public static List<ITask> getTasksFromSelection(ISelection selection) {
+		Assert.isNotNull(selection);
+		if (selection.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		List<ITask> tasks = new ArrayList<ITask>();
+		if (selection instanceof IStructuredSelection) {
+			for (Object element : ((IStructuredSelection) selection).toList()) {
+				ITask task = null;
+				if (element instanceof ITask) {
+					task = (ITask) element;
+				} else if (element instanceof IAdaptable) {
+					IAdaptable adaptable = (IAdaptable) element;
+					task = (ITask) adaptable.getAdapter(ITask.class);
+				}
+				if (task != null) {
+					tasks.add(task);
+				}
+			}
+		}
+		return tasks;
+	}
 }
