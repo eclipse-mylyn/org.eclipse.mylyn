@@ -134,11 +134,15 @@ public class TaskEditorOutlineNode {
 					ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskRelation.getTaskId());
 					String label;
 					if (task != null) {
-						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
-								taskRelation.getTaskId(), task.getSummary() });
+						if (task.getTaskKey() != null) {
+							label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
+									new Object[] { task.getTaskKey(), task.getSummary() });
+						} else {
+							label = task.getSummary();
+						}
 					} else {
-						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label, new Object[] {
-								taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
+								new Object[] { taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
 					}
 					TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
 
