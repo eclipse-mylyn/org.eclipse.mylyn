@@ -6,25 +6,10 @@
     <artifactId>mylyn-reviews-gerrit-parent</artifactId>
     <groupId>org.eclipse.mylyn.reviews</groupId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.reviews</groupId>
-  <artifactId>com.google.gwtjsonrpc</artifactId>
-  <version>1.2.2-SNAPSHOT</version>
+  <artifactId>com.google.gerrit.common.source</artifactId>
+  <version>2.1.5-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.eclipse.mylyn.reviews</groupId>
+    <artifactId>mylyn-reviews-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>org.eclipse.mylyn.reviews</groupId>
+  <artifactId>mylyn-reviews-gerrit-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>com.google.gerrit.common 2.1.5</module>
+    <module>com.google.gerrit.common 2.1.5/source-bundle</module>
+    <module>com.google.gerrit.reviewdb 2.1.5</module>
+    <module>com.google.gwtjsonrpc 1.2.2</module>
+    <module>com.google.gwtorm 1.1.4</module>
+    <module>com.google.gson 1.6</module>
+    <module>org.eclipse.mylyn.gerrit.core</module>
+    <module>org.eclipse.mylyn.gerrit.ui</module>
+    <module>org.eclipse.mylyn.gerrit-feature</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>0.10.0</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

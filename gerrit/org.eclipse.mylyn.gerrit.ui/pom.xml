@@ -8,8 +8,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.reviews</groupId>
-  <artifactId>com.google.gwtorm</artifactId>
-  <version>1.1.4-SNAPSHOT</version>
+  <artifactId>org.eclipse.mylyn.gerrit.ui</artifactId>
+  <version>0.7.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
