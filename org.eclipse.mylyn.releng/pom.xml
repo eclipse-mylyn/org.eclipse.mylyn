@@ -61,7 +61,7 @@
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/repository</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20101204061544/repository</orbit-site>
   </properties>
 
   <profiles>
@@ -129,6 +129,7 @@
     <module>../../org.eclipse.mylyn.builds</module>
     <module>../../org.eclipse.mylyn.docs</module>
     <module>../../org.eclipse.mylyn.incubator</module>
+    <module>../../org.eclipse.mylyn.reviews</module>
     <module>main-site</module>
     <module>incubator-site</module>
    </modules>

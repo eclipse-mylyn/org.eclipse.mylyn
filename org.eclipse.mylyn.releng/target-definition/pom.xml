@@ -33,17 +33,17 @@
                 <artifact>
                   <file>mylyn-e3.5.target</file>
                   <type>target</type>
-                  <classifier>galileo</classifier>
+                  <classifier>mylyn-e3.5</classifier>
                 </artifact>
                 <artifact>
                   <file>mylyn-e3.6.target</file>
                   <type>target</type>
-                  <classifier>helios</classifier>
+                  <classifier>mylyn-e3.6</classifier>
                 </artifact>
                 <artifact>
                   <file>mylyn-e3.7.target</file>
                   <type>target</type>
-                  <classifier>indigo</classifier>
+                  <classifier>mylyn-e3.7</classifier>
                 </artifact>
               </artifacts>
             </configuration>
