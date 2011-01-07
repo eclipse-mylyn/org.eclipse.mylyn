@@ -594,7 +594,7 @@ public class TasksUiInternal {
 		StatusHandler.log(status);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null && !workbench.getDisplay().isDisposed()) {
-			displayStatus(WorkbenchUtil.getShell(), title, status, true);
+			displayStatus(WorkbenchUtil.getShell(), title, status, false);
 		}
 	}
 
