@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %bundleName
+Bundle-SymbolicName: com.google.gerrit.common
+Bundle-Version: 2.1.5.qualifier
+Bundle-Vendor: %bundleProvider
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: com.google.gerrit.common;version="2.1.5",
+ com.google.gerrit.common.auth;version="2.1.5",
+ com.google.gerrit.common.auth.openid;version="2.1.5",
+ com.google.gerrit.common.auth.userpass;version="2.1.5",
+ com.google.gerrit.common.data;version="2.1.5",
+ com.google.gerrit.common.errors;version="2.1.5"
+Import-Package: com.google.gwtjsonrpc.client,
+ com.google.gwtorm.client
+Require-Bundle: com.google.gerrit.reviewdb;bundle-version="2.1.5"
+Bundle-Localization: plugin

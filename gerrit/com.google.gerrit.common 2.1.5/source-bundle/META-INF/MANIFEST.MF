@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %bundleName
+Bundle-SymbolicName: com.google.gerrit.common.source
+Bundle-Version: 2.1.5.qualifier
+Bundle-Localization: plugin
+Bundle-Vendor: %bundleProvider
+Eclipse-SourceBundle: com.google.gerrit.common;version="2.1.5.qualifier"
