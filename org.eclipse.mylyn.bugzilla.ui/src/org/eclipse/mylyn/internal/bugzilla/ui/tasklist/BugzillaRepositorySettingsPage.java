@@ -24,9 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -35,9 +39,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -88,8 +95,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected Combo defaultOSCombo;
 
 	protected Text descriptorFile;
-
-	private String oldDescriptorFile;
 
 	private Button cleanQAContact;
 
@@ -319,7 +324,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				String file = repository.getProperty((IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
 				if (file != null) {
 					descriptorFile.setText(file);
-					oldDescriptorFile = file;
 				}
 			}
 		}
@@ -452,7 +456,27 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@SuppressWarnings({ "restriction" })
 	@Override
-	public void applyTo(TaskRepository repository) {
+	public void applyTo(final TaskRepository repository) {
+		AuthenticationCredentials repositoryAuth = repository.getCredentials(AuthenticationType.REPOSITORY);
+		AuthenticationCredentials httpAuth = repository.getCredentials(AuthenticationType.HTTP);
+		AuthenticationCredentials proxyAuth = repository.getCredentials(AuthenticationType.PROXY);
+		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding()
+				|| repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword()
+				|| !repositoryAuth.getUserName().equals(getUserName())
+				|| !repositoryAuth.getPassword().equals(getPassword())
+				|| !repository.getProperty(TaskRepository.PROXY_HOSTNAME).equals(getProxyHostname())
+				|| !repository.getProperty(TaskRepository.PROXY_PORT).equals(getProxyPort())
+				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection()
+				|| !repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE)
+						.equals(descriptorFile.getText());
+		if (httpAuth != null) {
+			changed = changed || !httpAuth.getUserName().equals(getHttpAuthUserId())
+					|| !httpAuth.getPassword().equals(getHttpAuthPassword());
+		}
+		if (proxyAuth != null) {
+			changed = changed || !proxyAuth.getUserName().equals(getProxyUserName())
+					|| !proxyAuth.getPassword().equals(getProxyPassword());
+		}
 		super.applyTo(repository);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
@@ -482,6 +506,43 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				Boolean.toString(!usebugaliases.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
 				Boolean.toString(!use_see_also.getSelection()));
+		if (changed) {
+			final String jobName = MessageFormat.format(
+					Messages.BugzillaRepositorySettingsPage_Updating_repository_configuration_for_X,
+					repository.getRepositoryUrl());
+			Job updateJob = new Job(jobName) {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
+					try {
+						performUpdate(repository, connector, monitor);
+					} finally {
+						monitor.done();
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			// show the progress in the system task bar if this is a user job (i.e. forced)
+			updateJob.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+			updateJob.setUser(true);
+			updateJob.schedule();
+
+		}
+	}
+
+	public void performUpdate(final TaskRepository repository, final AbstractRepositoryConnector connector,
+			IProgressMonitor monitor) {
+		try {
+			connector.updateRepositoryConfiguration(repository, monitor);
+		} catch (final CoreException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					TasksUiInternal.displayStatus(
+							Messages.BugzillaRepositorySettingsPage_Error_updating_repository_configuration,
+							e.getStatus());
+				}
+			});
+		}
 	}
 
 	@Override

@@ -81,6 +81,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_DescriptorFileNotExists;
 
+	public static String BugzillaRepositorySettingsPage_Error_updating_repository_configuration;
+
 	public static String BugzillaRepositorySettingsPage_local_users_enabled;
 
 	public static String BugzillaRepositorySettingsPage_override_auto_detection_of_platform;
@@ -106,6 +108,8 @@ public class Messages extends NLS {
 	public static String BugzillaRepositorySettingsPage_usestatuswhiteboard;
 
 	public static String BugzillaRepositorySettingsPage_usetargetmilestone;
+
+	public static String BugzillaRepositorySettingsPage_Updating_repository_configuration_for_X;
 
 	public static String BugzillaRepositorySettingsPage_UseXmlRpc;
 
