@@ -464,14 +464,13 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				|| repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword()
 				|| !repositoryAuth.getUserName().equals(getUserName())
 				|| !repositoryAuth.getPassword().equals(getPassword())
-				|| !repository.getProperty(TaskRepository.PROXY_HOSTNAME).equals(getProxyHostname())
-				|| !repository.getProperty(TaskRepository.PROXY_PORT).equals(getProxyPort())
 				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection()
-				|| !repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE)
-						.equals(descriptorFile.getText());
+				|| descriptorFile.getText().equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
 		if (httpAuth != null) {
 			changed = changed || !httpAuth.getUserName().equals(getHttpAuthUserId())
-					|| !httpAuth.getPassword().equals(getHttpAuthPassword());
+					|| !httpAuth.getPassword().equals(getHttpAuthPassword())
+					|| !repository.getProperty(TaskRepository.PROXY_HOSTNAME).equals(getProxyHostname())
+					|| !repository.getProperty(TaskRepository.PROXY_PORT).equals(getProxyPort());
 		}
 		if (proxyAuth != null) {
 			changed = changed || !proxyAuth.getUserName().equals(getProxyUserName())
