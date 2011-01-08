@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -295,7 +294,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			monitor.beginTask(Messages.BugzillaTaskDataHandler_Receiving_tasks, taskIds.size());
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			final CoreException[] collectionException = new CoreException[1];
-			final Boolean[] updateConfig = new Boolean[1];
 
 			class CollectorWrapper extends TaskDataCollector {
 
@@ -318,12 +316,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					try {
 						initializeTaskData(repository, taskData, null, new SubProgressMonitor(monitor2, 1));
 					} catch (CoreException e) {
-						// this info CoreException is only used internal
-						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
-							if (updateConfig[0] == null) {
-								updateConfig[0] = new Boolean(true);
-							}
-						} else if (collectionException[0] == null) {
+						if (collectionException[0] == null) {
 							collectionException[0] = e;
 						}
 					}
@@ -338,11 +331,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 			if (collectionException[0] != null) {
 				throw collectionException[0];
-			}
-			if (updateConfig[0] != null) {
-				SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
-				client.getRepositoryConfiguration(subMonitor, null);
-				subMonitor.done();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
@@ -457,25 +445,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 				repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
 			}
-			boolean updateConfig = false;
-			for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
-				Map<String, String> opt = taskAttribute.getOptions();
-				if (opt != null && !opt.isEmpty()) {
-					List<String> values = taskAttribute.getValues();
-					for (String value : values) {
-						if (!opt.containsKey(value)) {
-							taskAttribute.putOption(value, value);
-							updateConfig = true;
-						}
-					}
-				}
-			}
-			if (!updateConfig) {
-				// this info CoreException is only used internal
-				throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
-						repository.getRepositoryUrl(), "Update Config")); //$NON-NLS-1$
-			}
-
 		} finally {
 			monitor.done();
 		}
