@@ -11,28 +11,27 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import org.apache.commons.httpclient.auth.AuthScheme;
+
 /**
- * Indicates an error during repository access.
- * 
  * @author Steffen Pingel
  */
-public class GerritException extends Exception {
+public class GerritHttpException extends GerritException {
 
-	private static final long serialVersionUID = 1929614326467463462L;
+	private static final long serialVersionUID = 9032521978140685830L;
 
-	public GerritException() {
+	private AuthScheme authScheme;
+
+	public GerritHttpException(int responseCode) {
+		super("HTTP Error " + responseCode); //$NON-NLS-1$
 	}
 
-	public GerritException(String message) {
-		super(message);
+	public AuthScheme getAuthScheme() {
+		return authScheme;
 	}
 
-	public GerritException(Throwable cause) {
-		super(cause.getMessage(), cause);
-	}
-
-	public GerritException(String message, Throwable cause) {
-		super(message, cause);
+	public void setAuthScheme(AuthScheme authScheme) {
+		this.authScheme = authScheme;
 	}
 
 }

@@ -10,6 +10,8 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -31,6 +33,10 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		GerritCorePlugin.getDefault()
+				.getConnector()
+				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationUiFactory());
 	}
 
 	@Override

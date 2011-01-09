@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Steffen Pingel and others.
+ * Copyright (c) 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,27 +12,29 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 /**
- * Indicates an error during repository access.
+ * Indicates an authentication error during login.
  * 
  * @author Steffen Pingel
  */
-public class GerritException extends Exception {
+public class GerritLoginException extends GerritException {
 
-	private static final long serialVersionUID = 1929614326467463462L;
+	private static final long serialVersionUID = -6128773690643367414L;
 
-	public GerritException() {
+	private boolean ntlmAuthRequested;
+
+	public GerritLoginException() {
 	}
 
-	public GerritException(String message) {
+	public GerritLoginException(String message) {
 		super(message);
 	}
 
-	public GerritException(Throwable cause) {
-		super(cause.getMessage(), cause);
+	public boolean isNtlmAuthRequested() {
+		return ntlmAuthRequested;
 	}
 
-	public GerritException(String message, Throwable cause) {
-		super(message, cause);
+	void setNtlmAuthRequested(boolean ntlmAuthRequested) {
+		this.ntlmAuthRequested = ntlmAuthRequested;
 	}
 
 }

@@ -7,26 +7,30 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Tasktop Technologies - improvements
  *********************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpClientParams;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
@@ -34,109 +38,41 @@ import org.eclipse.mylyn.commons.net.WebUtil;
  * 
  * @author Daniel Olsson, ST Ericsson
  * @author Thomas Westling
+ * @author Steffen Pingel
  */
 public class GerritHttpClient {
 
-	private String host; // server adress
+	public static abstract class JsonEntity {
 
-	private HttpClient httpClient;
+		public abstract String getContent();
+
+	}
+
+	private static final Object LOGIN_COOKIE_NAME = "GerritAccount"; //$NON-NLS-1$
+
+	private static final String LOGIN_URL = "/login/mine"; //$NON-NLS-1$
+
+	private HostConfiguration hostConfiguration;
+
+	private final HttpClient httpClient;
 
 	private int id = 1;
 
-	private final String password;
+	private final AbstractWebLocation location;
 
-	private final String path;
+	private volatile Cookie xsrfCookie;
 
-	private int port;
-
-	private String schema; // http, https
-
-	private final String user;
-
-	private Cookie xsrfKey;
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param schema
-	 *            The schema to use i.e http or https
-	 * @param host
-	 *            The server address to the Gerrit host
-	 * @param path
-	 * @param port
-	 *            The port that the communication should be relayed over
-	 */
-	public GerritHttpClient(String schema, String host, String path, int port, String user, String password) {
-		this.schema = schema;
-		this.host = host;
-		this.path = path;
-		this.port = port;
-		this.user = user;
-		this.password = password;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * @throws GerritException
-	 *             if something goes wrong with the connection.
-	 */
-	public HttpClient getHttpClient() throws GerritException {
-		if (httpClient == null) {
-			httpClient = new HttpClient();
-			PostMethod method = new PostMethod(getURL() + "/gerrit/rpc/UserPassAuthService");
-			method.setRequestBody("{\"jsonrpc\":\"2.0\",\"method\":\"authenticate\",\"params\":[\"" + user + "\",\""
-					+ password + "\"],\"id\":3}");
-			method.addRequestHeader("content-type", "	application/json; charset=utf-8");
-			method.setRequestHeader("Accept", "application/json,application/json,application/jsonrequest");
-			try {
-				HttpClientParams params = new HttpClientParams();
-				params.setCookiePolicy(org.apache.commons.httpclient.cookie.CookiePolicy.BROWSER_COMPATIBILITY);
-				httpClient.setParams(params);
-
-				HostConfiguration hostConfiguration = getHostConfiguration();
-				WebUtil.execute(httpClient, hostConfiguration, method, new NullProgressMonitor());
-
-				httpClient.setParams(params);
-			} catch (Exception ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-
-		return httpClient;
+	public GerritHttpClient(AbstractWebLocation location) {
+		this.location = location;
+		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
 	}
 
 	public int getId() {
 		return id++;
 	}
 
-	public int getPort() {
-		return port;
-	}
-
-	public String getSchema() {
-		return schema;
-	}
-
-	public String getURL() {
-		return schema + "://" + host + ":" + port + path;
-	}
-
-	/**
-	 * Fetch the xsrfKey which is a required parameter for most requests.
-	 * 
-	 * @return the XsrfKey
-	 * @throws GerritException
-	 */
-	public synchronized String getXsrfKey() throws GerritException {
-		if (user == null || password == null)
-			return null;
-		if (xsrfKey == null || xsrfKey.isExpired()) {
-			updateXsrfKey();
-		}
-		return xsrfKey.getValue();
+	public synchronized String getXsrfKey() {
+		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
 	}
 
 	/**
@@ -145,119 +81,133 @@ public class GerritHttpClient {
 	 * @return The JSON response
 	 * @throws GerritException
 	 */
-	public String postJsonRequest(String serviceUri, String message) throws GerritException {
+	public String postJsonRequest(String serviceUri, JsonEntity entity, IProgressMonitor monitor) throws IOException,
+			GerritException {
+		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
-		// Create a method instance
-		PostMethod postMethod = new PostMethod(getURL() + serviceUri);
-		postMethod.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-		postMethod.setRequestHeader("Accept", "application/json");
-
-		try {
-			RequestEntity requestEntity = new StringRequestEntity(message.toString(), "application/json", null);
-			postMethod.setRequestEntity(requestEntity);
-
-			// Execute the method.
-			HostConfiguration hostConfiguration = getHostConfiguration();
-			int statusCode = WebUtil.execute(httpClient, hostConfiguration, postMethod, new NullProgressMonitor());
-
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: " + postMethod.getStatusLine() + "\n"
-						+ postMethod.getResponseBodyAsString());
-				throw new GerritException();
-			}
-
-			// Release the connection.
-			String retString = postMethod.getResponseBodyAsString();
-			return retString;
-
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			throw new GerritException();
-		} catch (HttpException e) {
-			System.err.println("Fatal protocol violation: " + e.getMessage());
-			e.printStackTrace();
-			throw new GerritException();
-		} catch (IOException e) {
-			System.err.println("Fatal transport error: " + e.getMessage());
-			e.printStackTrace();
-			throw new GerritException();
-		} finally {
-			postMethod.releaseConnection();
-		}
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
-
-	/**
-	 * Updates the Xsrf key which is needed in all methods where login to the Gerrit server is needed.
-	 * 
-	 * @throws GerritException
-	 *             if either the connection fails or an error message from the server is received.
-	 */
-	private void updateXsrfKey() throws GerritException {
-		HttpClient client = getHttpClient();
-		GetMethod getMethod = new GetMethod(getURL() + "/#mine");
-		try {
-			// Execute the method.
-			// The code below where we first connect to /#mine, release it
-			// and then connect to /login/mine
-			// is needed for the connection to our internal Gerrit server
-			// and will probably not work
-			// towards review.source.android.com.
-
-			HostConfiguration hostConfiguration = getHostConfiguration();
-			int statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
-			getMethod.releaseConnection();
-
-			getMethod = new GetMethod(getURL() + "/login/mine");
-			statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
-			Cookie[] cookies = client.getState().getCookies();
-			for (Cookie c : cookies) {
-				if (c.getName().equals("GerritAccount")) {
-					xsrfKey = c;
-					break;
+		for (int attempt = 0; attempt < 2; attempt++) {
+			// force authentication
+			if (needsAuthentication()) {
+				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+				if (credentials != null) {
+					authenticate(monitor);
 				}
 			}
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: " + getMethod.getStatusLine() + "\n"
-						+ getMethod.getResponseBodyAsString());
-				throw new GerritException();
+
+			PostMethod method = new PostMethod(location.getUrl() + serviceUri);
+			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+
+			int code;
+			try {
+				RequestEntity requestEntity = new StringRequestEntity(entity.getContent(),
+						"application/json", null); //$NON-NLS-1$
+				method.setRequestEntity(requestEntity);
+
+				// Execute the method.
+				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			} catch (IOException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
+			} catch (RuntimeException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
 			}
 
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			throw new GerritException();
-		} catch (HttpException e) {
-			System.err.println("Fatal protocol violation: " + e.getMessage());
-			e.printStackTrace();
-			throw new GerritException();
-		} catch (IOException e) {
-			System.err.println("Fatal transport error: " + e.getMessage());
-			e.printStackTrace();
-			throw new GerritException();
-		} finally {
-			// Release the connection.
-			getMethod.releaseConnection();
+			if (code == HttpURLConnection.HTTP_OK) {
+				return method.getResponseBodyAsString();
+			} else {
+				WebUtil.releaseConnection(method, monitor);
+				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+					// login or re-authenticate due to an expired session
+					authenticate(monitor);
+				} else {
+					System.err.println("Method failed: " + method.getStatusLine() + "\n"
+							+ method.getResponseBodyAsString());
+					throw new GerritHttpException(code);
+				}
+			}
+		}
+
+		throw new GerritLoginException();
+	}
+
+	private void authenticate(IProgressMonitor monitor) throws GerritLoginException, IOException {
+		while (true) {
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials == null) {
+				throw new GerritLoginException();
+			}
+
+			// try standard basic/digest/ntlm authentication first
+			String repositoryUrl = location.getUrl();
+			AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
+					AuthScope.ANY_SCHEME);
+			Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
+			httpClient.getState().setCredentials(authScope, httpCredentials);
+//			if (CoreUtil.TEST_MODE) {
+//				System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+//			}
+
+			GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+			method.setFollowRedirects(false);
+			int code;
+			try {
+				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				if (needsReauthentication(code, monitor)) {
+					continue;
+				}
+			} finally {
+				WebUtil.releaseConnection(method, monitor);
+			}
+
+			validateAuthenticationState(httpClient);
+
+			// success since no exception was thrown
+			break;
 		}
 	}
 
-	private HostConfiguration getHostConfiguration() throws GerritException {
-		WebLocation location = new WebLocation(getURL());
-		if (user != null && password != null)
-			location.setCredentials(AuthenticationType.HTTP, user, password);
-		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(getHttpClient(), location,
-				new NullProgressMonitor());
-		return hostConfiguration;
+	private synchronized boolean needsAuthentication() {
+		return (xsrfCookie == null || xsrfCookie.isExpired());
+	}
+
+	private boolean needsReauthentication(int code, IProgressMonitor monitor) throws IOException, GerritLoginException {
+		final AuthenticationType authenticationType;
+		if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
+			authenticationType = AuthenticationType.REPOSITORY;
+		} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+			authenticationType = AuthenticationType.PROXY;
+		} else {
+			return false;
+		}
+
+		try {
+			location.requestCredentials(authenticationType, null, monitor);
+		} catch (UnsupportedRequestException e) {
+			throw new GerritLoginException();
+		}
+
+		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
+		return true;
+	}
+
+	protected void validateAuthenticationState(HttpClient httpClient) throws GerritLoginException {
+		Cookie[] cookies = httpClient.getState().getCookies();
+		for (Cookie cookie : cookies) {
+			if (LOGIN_COOKIE_NAME.equals(cookie.getName())) {
+				synchronized (this) {
+					xsrfCookie = cookie;
+				}
+				return;
+			}
+		}
+
+		if (CoreUtil.TEST_MODE) {
+			System.err.println(" Authentication failed: " + httpClient.getState()); //$NON-NLS-1$
+		}
+
+		throw new GerritLoginException();
 	}
 
 }

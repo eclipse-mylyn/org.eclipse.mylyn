@@ -24,6 +24,8 @@ public class GerritCorePlugin extends Plugin {
 
 	private static GerritCorePlugin plugin;
 
+	private GerritConnector connector;
+
 	public GerritCorePlugin() {
 	}
 
@@ -44,6 +46,14 @@ public class GerritCorePlugin extends Plugin {
 	 */
 	public static GerritCorePlugin getDefault() {
 		return plugin;
+	}
+
+	void setConnector(GerritConnector connector) {
+		this.connector = connector;
+	}
+
+	public GerritConnector getConnector() {
+		return connector;
 	}
 
 }
