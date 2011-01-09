@@ -10,16 +10,16 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritTask;
-
 import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.gerrit.core.GerritTask;
+
 /**
  * Testclass for GerritTask.
  * 
- * @author Mikael Kober, Sony Ericsson
+ * @author Mikael Kober
  */
 public class GerritTaskTest extends TestCase {
 

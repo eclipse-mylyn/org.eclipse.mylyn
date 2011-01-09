@@ -25,20 +25,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
-	private static final String TITLE_QUERY_TITLE = "Query Title :";
-
 	private final IRepositoryQuery query;
 
-	private Button radio1 = null;
+	private Button myOpenChangesButton;
 
-	private Button radio2 = null;
+	private Button allOpenChangesButton;
 
-	private Text titleText = null;
+	private Text titleText;
 
 	/**
 	 * Constructor.
@@ -53,9 +51,6 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		setDescription("Enter title and type of the query.");
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite) */
 	public void createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
@@ -64,7 +59,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		control.setLayout(layout);
 
 		Label titleLabel = new Label(control, SWT.NONE);
-		titleLabel.setText(TITLE_QUERY_TITLE);
+		titleLabel.setText("Query Title :");
 
 		titleText = new Text(control, SWT.BORDER);
 		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
@@ -83,51 +78,35 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		Label typeLabel = new Label(control, SWT.NONE);
 		typeLabel.setText("Query type :");
 		// radio button to select query type
-		radio1 = new Button(control, SWT.RADIO);
-		radio1.setText("My open changes");
+		myOpenChangesButton = new Button(control, SWT.RADIO);
+		myOpenChangesButton.setText("My open changes");
 
-		radio2 = new Button(control, SWT.RADIO);
-		radio2.setText("All open changes");
+		allOpenChangesButton = new Button(control, SWT.RADIO);
+		allOpenChangesButton.setText("All open changes");
 
 		if (query != null) {
 			titleText.setText(query.getSummary());
 			if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
-				radio1.setSelection(true);
+				myOpenChangesButton.setSelection(true);
 			} else {
-				radio2.setSelection(true);
+				allOpenChangesButton.setSelection(true);
 			}
 		}
 
 		setControl(control);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage() */
-	@Override
-	public boolean canFlipToNextPage() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete() */
 	@Override
 	public boolean isPageComplete() {
 		return (titleText != null && titleText.getText().length() > 0);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery
-	 * ) */
 	@Override
 	public void applyTo(IRepositoryQuery query) {
 		// TODO: set URL ????
 		// query.setUrl(getQueryUrl());
 		query.setSummary(getTitleText());
-		query.setAttribute(GerritQuery.TYPE, radio1.getSelection() ? GerritQuery.MY_OPEN_CHANGES
+		query.setAttribute(GerritQuery.TYPE, myOpenChangesButton.getSelection() ? GerritQuery.MY_OPEN_CHANGES
 				: GerritQuery.ALL_OPEN_CHANGES);
 	}
 
@@ -135,9 +114,6 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		return (titleText != null) ? titleText.getText() : "<search>";
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle() */
 	@Override
 	public String getQueryTitle() {
 		return "Gerrit Query";

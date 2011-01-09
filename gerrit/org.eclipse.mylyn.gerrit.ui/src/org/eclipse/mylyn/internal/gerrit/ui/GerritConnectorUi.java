@@ -24,54 +24,33 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 /**
  * Connector specific UI for Gerrit.
  * 
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getConnectorKind() */
 	@Override
 	public String getConnectorKind() {
 		return GerritConnector.CONNECTOR_KIND;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getNewTaskWizard(org.eclipse.mylyn.tasks.core.TaskRepository
-	 * , org.eclipse.mylyn.tasks.core.ITaskMapping) */
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping taskSelection) {
 		return new NewTaskWizard(taskRepository, taskSelection);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getQueryWizard(org.eclipse.mylyn.tasks.core.TaskRepository
-	 * , org.eclipse.mylyn.tasks.core.IRepositoryQuery) */
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
-		wizard.addPage(new GerritCustomQueryPage(repository, "Gerrit query", query));
+		wizard.addPage(new GerritCustomQueryPage(repository, "GerritQueryPage", query)); //$NON-NLS-1$
 		return wizard;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSettingsPage(org.eclipse.mylyn.tasks.core.TaskRepository
-	 * ) */
 	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
 		return new GerritRepositorySettingsPage(taskRepository);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#hasSearchPage() */
 	@Override
 	public boolean hasSearchPage() {
 		return false;

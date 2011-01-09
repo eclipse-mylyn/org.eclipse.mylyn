@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,8 +29,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 /**
  * Handler for task data from gerrit.
  * 
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	private GerritClient gerritClient = null;
@@ -163,8 +164,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData createTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND, repository
-				.getRepositoryUrl(), taskId);
+		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
+				repository.getRepositoryUrl(), taskId);
 		initializeTaskData(repository, data, new TaskMapper(data), monitor);
 		return data;
 	}

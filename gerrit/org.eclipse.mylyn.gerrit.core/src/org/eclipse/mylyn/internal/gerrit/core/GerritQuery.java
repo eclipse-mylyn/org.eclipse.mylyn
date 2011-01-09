@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.gerrit.core;
 /**
  * Constants for the query type. Currently two supported query types: all open changes and all my open changes
  * 
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritQuery {
 

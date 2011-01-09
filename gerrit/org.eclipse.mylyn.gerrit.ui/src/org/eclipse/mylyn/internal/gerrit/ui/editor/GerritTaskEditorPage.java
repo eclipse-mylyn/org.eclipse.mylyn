@@ -15,8 +15,8 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 
 /**
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 

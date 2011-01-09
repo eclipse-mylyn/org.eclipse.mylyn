@@ -14,46 +14,37 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
  * 
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Thomas Westling
  */
-public class Activator extends AbstractUIPlugin {
+public class GerritUiPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.stericsson.eclipse.mylyn.gerrit.ui";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.gerrit.ui"; //$NON-NLS-1$
 
-	// The shared instance
-	private static Activator plugin;
+	private static GerritUiPlugin plugin;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	public GerritUiPlugin() {
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext) */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext) */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the shared instance.
 	 * 
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static GerritUiPlugin getDefault() {
 		return plugin;
 	}
 

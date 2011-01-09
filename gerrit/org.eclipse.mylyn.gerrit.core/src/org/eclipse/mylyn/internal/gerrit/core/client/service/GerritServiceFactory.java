@@ -39,7 +39,7 @@ public class GerritServiceFactory {
 	public GerritServiceFactory(GerritHttpClient gerritHttpClient) {
 		this.gerritHttpClient = gerritHttpClient;
 	}
-	
+
 	/**
 	 * Gets the ChangeListService for the AbstractGerritHttpClient.
 	 * 
@@ -47,7 +47,8 @@ public class GerritServiceFactory {
 	 */
 	public ChangeListService getChangeListService() {
 		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeListService");
-		return (ChangeListService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeListService.class }, handler );
+		return (ChangeListService) Proxy.newProxyInstance(getClass().getClassLoader(),
+				new Class<?>[] { ChangeListService.class }, handler);
 		//return new ChangeListServiceImpl(gerritHttpClient);
 	}
 
@@ -58,7 +59,8 @@ public class GerritServiceFactory {
 	 */
 	public ChangeDetailService getChangeDetailService() {
 		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeDetailService");
-		return (ChangeDetailService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeDetailService.class }, handler );
+		return (ChangeDetailService) Proxy.newProxyInstance(getClass().getClassLoader(),
+				new Class<?>[] { ChangeDetailService.class }, handler);
 	}
 
 	/**
@@ -68,12 +70,14 @@ public class GerritServiceFactory {
 	 */
 	public AccountService getAccountService() {
 		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/AccountService");
-		return (AccountService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { AccountService.class }, handler );
+		return (AccountService) Proxy.newProxyInstance(getClass().getClassLoader(),
+				new Class<?>[] { AccountService.class }, handler);
 	}
 
 	public ChangeManageService getChangeManageService() {
 		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeManageService");
-		return (ChangeManageService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeManageService.class }, handler );
+		return (ChangeManageService) Proxy.newProxyInstance(getClass().getClassLoader(),
+				new Class<?>[] { ChangeManageService.class }, handler);
 	}
-	
+
 }

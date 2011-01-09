@@ -19,14 +19,12 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -35,7 +33,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
  * Abstract class that handles the http communications with the Gerrit server.
  * 
  * @author Daniel Olsson, ST Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Thomas Westling
  */
 public class GerritHttpClient {
 
@@ -97,10 +95,10 @@ public class GerritHttpClient {
 				HttpClientParams params = new HttpClientParams();
 				params.setCookiePolicy(org.apache.commons.httpclient.cookie.CookiePolicy.BROWSER_COMPATIBILITY);
 				httpClient.setParams(params);
-				
+
 				HostConfiguration hostConfiguration = getHostConfiguration();
 				WebUtil.execute(httpClient, hostConfiguration, method, new NullProgressMonitor());
-				
+
 				httpClient.setParams(params);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
@@ -133,7 +131,7 @@ public class GerritHttpClient {
 	 * @throws GerritException
 	 */
 	public synchronized String getXsrfKey() throws GerritException {
-		if (user == null || password == null) 
+		if (user == null || password == null)
 			return null;
 		if (xsrfKey == null || xsrfKey.isExpired()) {
 			updateXsrfKey();
@@ -216,11 +214,11 @@ public class GerritHttpClient {
 			// is needed for the connection to our internal Gerrit server
 			// and will probably not work
 			// towards review.source.android.com.
-			
+
 			HostConfiguration hostConfiguration = getHostConfiguration();
 			int statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
 			getMethod.releaseConnection();
-			
+
 			getMethod = new GetMethod(getURL() + "/login/mine");
 			statusCode = WebUtil.execute(httpClient, hostConfiguration, getMethod, new NullProgressMonitor());
 			Cookie[] cookies = client.getState().getCookies();
@@ -257,7 +255,8 @@ public class GerritHttpClient {
 		WebLocation location = new WebLocation(getURL());
 		if (user != null && password != null)
 			location.setCredentials(AuthenticationType.HTTP, user, password);
-		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(getHttpClient(), location, new NullProgressMonitor());
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(getHttpClient(), location,
+				new NullProgressMonitor());
 		return hostConfiguration;
 	}
 

@@ -15,8 +15,8 @@ import java.util.Date;
 /**
  * GerritTask. Represents a change issue in Gerrit.
  * 
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritTask {
 

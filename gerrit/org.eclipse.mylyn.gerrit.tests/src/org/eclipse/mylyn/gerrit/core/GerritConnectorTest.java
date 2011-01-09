@@ -10,14 +10,14 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
-
 import junit.framework.TestCase;
+
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 
 /**
  * Testclass for GerritConnector.
  * 
- * @author Mikael Kober, Sony Ericsson
+ * @author Mikael Kober
  */
 public class GerritConnectorTest extends TestCase {
 
@@ -68,8 +68,8 @@ public class GerritConnectorTest extends TestCase {
 		assertNull("should be null", connector.getTaskIdFromTaskUrl(""));
 		assertNull("should be null", connector.getTaskIdFromTaskUrl("invalid repository url"));
 		assertNull("should be null", connector.getTaskIdFromTaskUrl("http://invalid.repository.url"));
-		assertEquals("wrong id", "13492", connector
-				.getTaskIdFromTaskUrl("http://review.source.android.com/#change,13492"));
+		assertEquals("wrong id", "13492",
+				connector.getTaskIdFromTaskUrl("http://review.source.android.com/#change,13492"));
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class GerritConnectorTest extends TestCase {
 		assertNull("should be null", connector.getTaskUrl(null, null));
 		assertNull("should be null", connector.getTaskUrl("http://review.source.android.com", null));
 		assertNull("should be null", connector.getTaskUrl(null, "13492"));
-		assertEquals("wrong url", "http://review.source.android.com/#change,13492", connector.getTaskUrl(
-				"http://review.source.android.com", "13492"));
+		assertEquals("wrong url", "http://review.source.android.com/#change,13492",
+				connector.getTaskUrl("http://review.source.android.com", "13492"));
 	}
 
 }

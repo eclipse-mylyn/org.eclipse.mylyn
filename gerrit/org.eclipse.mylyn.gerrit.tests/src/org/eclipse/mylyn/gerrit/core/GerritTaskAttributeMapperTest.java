@@ -10,6 +10,8 @@
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.internal.gerrit.core.GerritAttribute;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskAttributeMapper;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskDataHandler;
@@ -17,20 +19,18 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-import junit.framework.TestCase;
-
 /**
- * @author Mikael Kober, Sony Ericsson
+ * @author Mikael Kober
  */
-public class GerritTaskAttributeMapperPDETest extends TestCase {
+public class GerritTaskAttributeMapperTest extends TestCase {
 
 	public void testMapToRepositoryKeyTaskAttributeString() {
 		GerritTaskAttributeMapper mapper = new GerritTaskAttributeMapper(
 				new TaskRepository("gerrit", "http://some.url"));
 		TaskAttribute parent = GerritTaskDataHandler.createAttribute(new TaskData(mapper, "gerrit", "http://some.url",
 				"12345"), GerritAttribute.ID);
-		assertEquals("wrong mapping", GerritAttribute.SUMMARY.getGerritKey(), mapper.mapToRepositoryKey(parent,
-				TaskAttribute.SUMMARY));
+		assertEquals("wrong mapping", GerritAttribute.SUMMARY.getGerritKey(),
+				mapper.mapToRepositoryKey(parent, TaskAttribute.SUMMARY));
 	}
 
 }

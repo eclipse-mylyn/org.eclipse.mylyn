@@ -10,7 +10,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(GerritAttributeTest.class);
 		suite.addTestSuite(GerritConnectorTest.class);
-		suite.addTestSuite(GerritTaskAttributeMapperPDETest.class);
+		suite.addTestSuite(GerritTaskAttributeMapperTest.class);
 		suite.addTestSuite(GerritTaskTest.class);
 		//$JUnit-END$
 		return suite;

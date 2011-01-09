@@ -15,27 +15,20 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.service.GerritService.JSonResponse;
 
-import com.google.gerrit.common.data.AccountProjectWatchInfo;
-import com.google.gerrit.common.data.ParamertizedString;
 import com.google.gson.Gson;
-import com.google.gson.InstanceCreator;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.server.JsonServlet;
 
@@ -58,6 +51,7 @@ public class GerritService implements InvocationHandler {
 	}
 
 	protected GerritHttpClient client;
+
 	private final String uri;
 
 	public GerritService(GerritHttpClient client, String uri) {
@@ -90,19 +84,18 @@ public class GerritService implements InvocationHandler {
 
 	private static class Message {
 
-		private String jsonrpc = "2.0";
+		private final String jsonrpc = "2.0";
 
 		private String method;
 
-		private List<Object> params = new ArrayList<Object>();
+		private final List<Object> params = new ArrayList<Object>();
 
 		private int id;
 
 		private String xsrfKey;
 	}
 
-	protected String createJsonString(Collection<JsonParam> args,
-			String methodName) throws GerritException {
+	protected String createJsonString(Collection<JsonParam> args, String methodName) throws GerritException {
 		Message msg = new Message();
 		msg.method = methodName;
 		if (args != null) {
@@ -117,9 +110,8 @@ public class GerritService implements InvocationHandler {
 
 	// parse the response
 	class JSonResponseDeserializer implements JsonDeserializer<JSonResponse> {
-		@Override
-		public JSonResponse deserialize(JsonElement json, Type typeOfT,
-				JsonDeserializationContext context) throws JsonParseException {
+		public JSonResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
 			JsonObject object = json.getAsJsonObject();
 			JSonResponse response = new JSonResponse();
 			response.result = object.get("result");
@@ -127,29 +119,24 @@ public class GerritService implements InvocationHandler {
 		}
 	};
 
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		LinkedList<JsonParam> a = new LinkedList<JsonParam>();
 		for (int i = 0; i < args.length - 1; i++) {
 			a.add(new JsonParam(args[i]));
 		}
 		AsyncCallback<Object> callback = (AsyncCallback<Object>) args[args.length - 1];
 		try {
-			Gson gson = JsonServlet
-					.defaultGsonBuilder()
-					.registerTypeAdapter(JSonResponse.class,
-							new JSonResponseDeserializer()).create();
+			Gson gson = JsonServlet.defaultGsonBuilder()
+					.registerTypeAdapter(JSonResponse.class, new JSonResponseDeserializer())
+					.create();
 			String jsonString = createJsonString(a, method.getName());
-			String responseMessage = client.postJsonRequest(getServiceUri(),
-					jsonString);
-			JSonResponse response = gson.fromJson(responseMessage,
-					JSonResponse.class);
+			String responseMessage = client.postJsonRequest(getServiceUri(), jsonString);
+			JSonResponse response = gson.fromJson(responseMessage, JSonResponse.class);
 
 			// the last parameter is a parameterized callback that defines the
 			// return type
 			Type[] types = method.getGenericParameterTypes();
-			final Type resultType = ((ParameterizedType) types[types.length - 1])
-					.getActualTypeArguments()[0];
+			final Type resultType = ((ParameterizedType) types[types.length - 1]).getActualTypeArguments()[0];
 			Object result = gson.fromJson(response.result, resultType);
 			callback.onSuccess(result);
 		} catch (GerritException e) {

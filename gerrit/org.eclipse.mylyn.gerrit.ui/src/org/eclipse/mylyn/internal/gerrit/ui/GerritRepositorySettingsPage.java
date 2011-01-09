@@ -26,22 +26,14 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Wizard page to specify URL to Gerrit server, authentication type, and more.
  * 
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-	private static final String TITLE = "Gerrit Repository Settings";
-
-	private static final String DESCRIPTION_LABEL = "Web based code review and project management for Git based projects.";
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param taskRepository
-	 */
 	public GerritRepositorySettingsPage(TaskRepository taskRepository) {
-		super(TITLE, DESCRIPTION_LABEL, taskRepository);
+		super("Gerrit Repository Settings", "Web based code review and project management for Git based projects.",
+				taskRepository);
 		setNeedsAnonymousLogin(true);
 		setNeedsHttpAuth(false);
 		setNeedsProxy(false);
@@ -51,43 +43,21 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		setNeedsValidation(false); // ??
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#createControl(org.eclipse.swt.widgets.Composite
-	 * ) */
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		addRepositoryTemplatesToServerUrlCombo();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository
-	 * ) */
 	@Override
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);
-		//repository.setRepositoryLabel(selected);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#createAdditionalControls(org.eclipse.swt.widgets
-	 * .Composite) */
 	@Override
 	protected void createAdditionalControls(Composite parent) {
-		// not called now: setNeedsAdvanced(true) when needed.
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#repositoryTemplateSelected(org.eclipse.mylyn
-	 * .tasks.core.RepositoryTemplate) */
 	@Override
 	protected void repositoryTemplateSelected(RepositoryTemplate template) {
 		repositoryLabelEditor.setStringValue(template.label);
@@ -95,27 +65,16 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		getContainer().updateButtons();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getConnectorKind() */
 	@Override
 	public String getConnectorKind() {
 		return GerritConnector.CONNECTOR_KIND;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getValidator(org.eclipse.mylyn.tasks.core.
-	 * TaskRepository) */
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
 		return new GerritValidator(repository);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isValidUrl(java.lang.String) */
 	@Override
 	protected boolean isValidUrl(String url) {
 		if (url.startsWith(URL_PREFIX_HTTPS) || url.startsWith(URL_PREFIX_HTTP)) {
@@ -162,7 +121,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 			try {
 				new URL(repository.getRepositoryUrl());
 			} catch (MalformedURLException ex) {
-				throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK,
+				throw new CoreException(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, IStatus.OK,
 						"Invalid repository URL", null));
 			}
 

@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -19,8 +21,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
- * @author Mikael Kober, Sony Ericsson
- * @author Tomas Westling, Sony Ericsson - thomas.westling@sonyericsson.com
+ * @author Mikael Kober
+ * @author Thomas Westling
  */
 public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
@@ -42,8 +44,7 @@ public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public Image getPageImage() {
-		// TODO Auto-generated method stub
-		return null;
+		return CommonImages.getImage(TasksUiImages.REPOSITORY_SMALL);
 	}
 
 	@Override
