@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.service.GerritServiceFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -26,10 +29,12 @@ import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeDetailService;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
+import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Change.Id;
+import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -61,6 +66,33 @@ public class GerritClient {
 
 	private boolean gotId = false;
 
+	private abstract class GerritOperation<T> implements AsyncCallback<T> {
+		
+		private T result;
+		private Throwable exception;
+		
+		public T getResult() {
+			return result;
+		}
+		
+		public abstract void execute(IProgressMonitor monitor) throws GerritException;
+		
+		protected void setResult(T result) {
+			this.result = result;
+		}
+		
+		public void onSuccess(T result) {
+			setResult(result);
+		}
+		
+		public void onFailure(Throwable exception) {
+			this.exception = exception;
+		}
+		public Throwable getException() {
+			return exception;
+		}
+	}
+	
 	public static GerritClient getGerritClient(TaskRepository repository) {
 		if (gerritClient != null) {
 			return gerritClient;
@@ -79,7 +111,8 @@ public class GerritClient {
 			URL url = new URL(repository.getRepositoryUrl());
 			String host = url.getHost();
 			String schema = url.getProtocol();
-			String password = repository.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+			AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+			String password = (credentials != null) ? credentials.getPassword() : null;
 			client = new GerritHttpClient(schema, host, url.getPath(), url.getPort() == -1 ? url.getDefaultPort() : url
 					.getPort(), repository.getUserName(), password);
 
@@ -92,6 +125,16 @@ public class GerritClient {
 		}
 	}
 
+	protected <T> T execute(IProgressMonitor monitor, GerritOperation<T> operation) throws GerritException {
+		operation.execute(monitor);
+		if (operation.getException() != null) {
+			GerritException e = new GerritException();
+			e.initCause(operation.getException());
+			throw e;
+		}
+		return operation.getResult();
+	}
+	
 	/**
 	 * Gets the task data for a specific task id.
 	 * 
@@ -146,34 +189,48 @@ public class GerritClient {
 	 *            The TaskRepository associated with the query
 	 * @param monitor
 	 *            The progress monitor
+	 * @throws GerritException 
 	 */
-	public void allQuery(final TaskRepository repository, final IProgressMonitor monitor) {
-
-		AsyncCallback<SingleListChangeInfo> a = new AsyncCallback<SingleListChangeInfo>() {
-			public void onSuccess(SingleListChangeInfo sl) {
-				List<GerritTask> result = new ArrayList<GerritTask>();
-				List<ChangeInfo> changes = sl.getChanges();
-				for (ChangeInfo changeInfo : changes) {
-					GerritTask task = new GerritTask(changeInfo.getId().toString(), changeInfo.getSubject());
-					task.setBranch(changeInfo.getBranch());
-					task.setProject(changeInfo.getProject().getName());
-					task.setOwner(changeInfo.getOwner().toString());
-					task.setStatus(changeInfo.getStatus().toString());
-					task.setUpdated(changeInfo.getLastUpdatedOn());
-					task.setChangeId(changeInfo.getKey().get());
-					result.add(task);
-				}
-				updateListener.updateTaskRepositoryAsync(repository, result, monitor);
+	public void allQuery(final TaskRepository repository, final IProgressMonitor monitor) throws GerritException {
+		SingleListChangeInfo sl = execute(monitor, new GerritOperation<SingleListChangeInfo>() {
+			@Override
+			public void execute(IProgressMonitor monitor)
+					throws GerritException {
+				changeListService.allQueryNext("status:open", "z", 25, this);
 			}
+		});
 
-			public void onFailure(Throwable caught) {
-				System.out.println("Failure");
-				caught.printStackTrace();
-			}
-		};
 		queryResult = new ArrayList<GerritTask>();
-		//changeListService.allOpenNext("z", 25, a);
-		changeListService.allQueryNext("status:open", "z", 25, a);
+		List<GerritTask> result = new ArrayList<GerritTask>();
+		List<ChangeInfo> changes = sl.getChanges();
+		for (final ChangeInfo changeInfo : changes) {
+			GerritTask task = new GerritTask(changeInfo.getId().toString(), changeInfo.getSubject());
+			task.setBranch(changeInfo.getBranch());
+			task.setProject(changeInfo.getProject().getName());
+			task.setOwner(changeInfo.getOwner().toString());
+			task.setStatus(changeInfo.getStatus().toString());
+			task.setUpdated(changeInfo.getLastUpdatedOn());
+			task.setChangeId(changeInfo.getKey().get());
+			result.add(task);
+
+			final ChangeDetail detail = execute(monitor, new GerritOperation<ChangeDetail >() {
+				@Override
+				public void execute(IProgressMonitor monitor)
+						throws GerritException {
+					changeDetailService.changeDetail(changeInfo.getId(), this);
+				}
+			});
+			PatchSetDetail patchSet = execute(monitor, new GerritOperation<PatchSetDetail>() {
+				@Override
+				public void execute(IProgressMonitor monitor)
+						throws GerritException {
+					changeDetailService.patchSetDetail(detail.getPatchSets().iterator().next().getId(), this);
+				}
+			});
+			System.err.println(CoreUtil.toString(detail));
+			System.err.println(CoreUtil.toString(patchSet));
+		}
+		updateListener.updateTaskRepositoryAsync(repository, result, monitor);
 	}
 
 	/**

@@ -10,14 +10,15 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.service;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
+
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetailService;
 import com.google.gerrit.common.data.ChangeListService;
-
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.service.impl.AccountServiceImpl;
-import org.eclipse.mylyn.internal.gerrit.core.client.service.impl.ChangeDetailServiceImpl;
-import org.eclipse.mylyn.internal.gerrit.core.client.service.impl.ChangeListServiceImpl;
+import com.google.gerrit.common.data.ChangeManageService;
 
 /**
  * Factory class that produces the implemented services.
@@ -38,14 +39,16 @@ public class GerritServiceFactory {
 	public GerritServiceFactory(GerritHttpClient gerritHttpClient) {
 		this.gerritHttpClient = gerritHttpClient;
 	}
-
+	
 	/**
 	 * Gets the ChangeListService for the AbstractGerritHttpClient.
 	 * 
 	 * @return The ChangeListService for the AbstractGerritHttpClient.
 	 */
 	public ChangeListService getChangeListService() {
-		return new ChangeListServiceImpl(gerritHttpClient);
+		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeListService");
+		return (ChangeListService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeListService.class }, handler );
+		//return new ChangeListServiceImpl(gerritHttpClient);
 	}
 
 	/**
@@ -54,7 +57,8 @@ public class GerritServiceFactory {
 	 * @return The ChangeDetailService for the AbstractGerritHttpClient.
 	 */
 	public ChangeDetailService getChangeDetailService() {
-		return new ChangeDetailServiceImpl(gerritHttpClient);
+		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeDetailService");
+		return (ChangeDetailService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeDetailService.class }, handler );
 	}
 
 	/**
@@ -63,7 +67,13 @@ public class GerritServiceFactory {
 	 * @return The AccountService for the AbstractGerritHttpClient.
 	 */
 	public AccountService getAccountService() {
-		return new AccountServiceImpl(gerritHttpClient);
+		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/AccountService");
+		return (AccountService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { AccountService.class }, handler );
 	}
 
+	public ChangeManageService getChangeManageService() {
+		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/ChangeManageService");
+		return (ChangeManageService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { ChangeManageService.class }, handler );
+	}
+	
 }

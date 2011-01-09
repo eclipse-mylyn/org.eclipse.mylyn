@@ -19,6 +19,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -132,6 +133,8 @@ public class GerritHttpClient {
 	 * @throws GerritException
 	 */
 	public synchronized String getXsrfKey() throws GerritException {
+		if (user == null || password == null) 
+			return null;
 		if (xsrfKey == null || xsrfKey.isExpired()) {
 			updateXsrfKey();
 		}
@@ -250,10 +253,11 @@ public class GerritHttpClient {
 		}
 	}
 
-	private HostConfiguration getHostConfiguration() {
+	private HostConfiguration getHostConfiguration() throws GerritException {
 		WebLocation location = new WebLocation(getURL());
-		location.setCredentials(AuthenticationType.HTTP, user, password);
-		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, new NullProgressMonitor());
+		if (user != null && password != null)
+			location.setCredentials(AuthenticationType.HTTP, user, password);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(getHttpClient(), location, new NullProgressMonitor());
 		return hostConfiguration;
 	}
 
