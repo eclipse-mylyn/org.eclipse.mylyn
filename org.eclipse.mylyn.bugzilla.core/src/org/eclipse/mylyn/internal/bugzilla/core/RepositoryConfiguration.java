@@ -404,7 +404,11 @@ public class RepositoryConfiguration implements Serializable {
 					validTransitions = null;
 				}
 			} else {
-				validTransitions.parse(monitor, xmlClient);
+				if (!version.isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
+					validTransitions.parse(monitor, xmlClient);
+				} else {
+					validTransitions = null;
+				}
 			}
 		} catch (CoreException e) {
 			validTransitions = null;

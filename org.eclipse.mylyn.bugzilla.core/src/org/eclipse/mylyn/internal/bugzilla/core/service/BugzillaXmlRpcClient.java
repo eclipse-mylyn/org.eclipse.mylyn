@@ -399,4 +399,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}
 
 	}
+
+	public int getUserID() {
+		return userID;
+	}
+
 }

@@ -460,51 +460,26 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		AuthenticationCredentials repositoryAuth = repository.getCredentials(AuthenticationType.REPOSITORY);
 		AuthenticationCredentials httpAuth = repository.getCredentials(AuthenticationType.HTTP);
 		AuthenticationCredentials proxyAuth = repository.getCredentials(AuthenticationType.PROXY);
-		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding()
-				|| repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword()
-				|| !repositoryAuth.getUserName().equals(getUserName())
-				|| !repositoryAuth.getPassword().equals(getPassword())
-				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection()
-				|| descriptorFile.getText().equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
+		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding();
+		changed = changed || repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword();
+		changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
+		changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
+		changed = changed
+				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
+		changed = changed
+				|| descriptorFile.getText().compareTo(
+						repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE)) != 0;
 		if (httpAuth != null) {
-			changed = changed || !httpAuth.getUserName().equals(getHttpAuthUserId())
-					|| !httpAuth.getPassword().equals(getHttpAuthPassword())
-					|| !repository.getProperty(TaskRepository.PROXY_HOSTNAME).equals(getProxyHostname())
-					|| !repository.getProperty(TaskRepository.PROXY_PORT).equals(getProxyPort());
+			changed = changed || httpAuth.getUserName().compareTo(getHttpAuthUserId()) != 0
+					|| httpAuth.getPassword().compareTo(getHttpAuthPassword()) != 0
+					|| repository.getProperty(TaskRepository.PROXY_HOSTNAME).compareTo(getProxyHostname()) != 0
+					|| repository.getProperty(TaskRepository.PROXY_PORT).compareTo(getProxyPort()) != 0;
 		}
 		if (proxyAuth != null) {
-			changed = changed || !proxyAuth.getUserName().equals(getProxyUserName())
-					|| !proxyAuth.getPassword().equals(getProxyPassword());
+			changed = changed || proxyAuth.getUserName().compareTo(getProxyUserName()) != 0
+					|| proxyAuth.getPassword().compareTo(getProxyPassword()) != 0;
 		}
-		super.applyTo(repository);
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
-		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
-				String.valueOf(cleanQAContact.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
-		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
-				Boolean.toString(useXMLRPCstatusTransitions.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
-		if (!autodetectPlatformOS.getSelection()) {
-			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
-					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));
-			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_OS,
-					String.valueOf(defaultOSCombo.getItem(defaultOSCombo.getSelectionIndex())));
-		} else {
-			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
-			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
-		}
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION,
-				Boolean.toString(!useclassification.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE,
-				Boolean.toString(!usetargetmilestone.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT,
-				Boolean.toString(!useqacontact.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD,
-				Boolean.toString(!usestatuswhiteboard.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES,
-				Boolean.toString(!usebugaliases.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
-				Boolean.toString(!use_see_also.getSelection()));
+		applyToInternal(repository);
 		if (changed) {
 			final String jobName = MessageFormat.format(
 					Messages.BugzillaRepositorySettingsPage_Updating_repository_configuration_for_X,
@@ -634,6 +609,45 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			}
 		}
 		return super.isPageComplete();
+	}
+
+	private void applyToInternal(final TaskRepository repository) {
+		super.applyTo(repository);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
+		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
+				String.valueOf(cleanQAContact.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
+		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
+				Boolean.toString(useXMLRPCstatusTransitions.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
+		if (!autodetectPlatformOS.getSelection()) {
+			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
+					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));
+			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_OS,
+					String.valueOf(defaultOSCombo.getItem(defaultOSCombo.getSelectionIndex())));
+		} else {
+			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+		}
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION,
+				Boolean.toString(!useclassification.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE,
+				Boolean.toString(!usetargetmilestone.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT,
+				Boolean.toString(!useqacontact.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD,
+				Boolean.toString(!usestatuswhiteboard.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES,
+				Boolean.toString(!usebugaliases.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
+				Boolean.toString(!use_see_also.getSelection()));
+	}
+
+	@Override
+	public TaskRepository createTaskRepository() {
+		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
+		applyToInternal(repository);
+		return repository;
 	}
 
 }

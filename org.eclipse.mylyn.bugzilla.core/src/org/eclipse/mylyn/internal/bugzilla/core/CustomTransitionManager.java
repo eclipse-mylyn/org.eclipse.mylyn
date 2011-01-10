@@ -325,6 +325,9 @@ public class CustomTransitionManager implements Serializable {
 		customNames = true;
 
 		try {
+			if (xmlClient.getUserID() == -1) {
+				xmlClient.login(monitor);
+			}
 			String[] fields = new String[1];
 			fields[0] = "bug_status"; //$NON-NLS-1$
 			for (Object raw : xmlClient.getFieldsWithNames(monitor, fields)) {

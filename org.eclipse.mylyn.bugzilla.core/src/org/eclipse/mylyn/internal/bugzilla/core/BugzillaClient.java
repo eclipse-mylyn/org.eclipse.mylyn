@@ -60,6 +60,7 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.util.DateParseException;
 import org.apache.commons.httpclient.util.DateUtil;
+import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -232,6 +233,24 @@ public class BugzillaClient {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						"Invalide Transition File Content")); //$NON-NLS-1$
 			}
+		}
+
+		if (Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC))) {
+			getXmlRpcClient();
+			int uID = -1;
+			try {
+				uID = xmlRpcClient.login(monitor);
+				if (uID == -1) {
+					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+							"XMLRPC user could not login")); //$NON-NLS-1$					
+				}
+				int i = 9;
+				i++;
+			} catch (XmlRpcException e) {
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+						"XMLRPC is not installed")); //$NON-NLS-1$
+			}
+
 		}
 
 	}
@@ -729,12 +748,7 @@ public class BugzillaClient {
 								}
 
 								if (repositoryConfiguration != null) {
-									boolean useXMLRPC = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
-									if (useXMLRPC && xmlRpcClient == null) {
-										WebLocation webLocation = new WebLocation(this.repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
-										xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
-
-									}
+									getXmlRpcClient();
 									if (xmlRpcClient != null) {
 										xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
@@ -2289,4 +2303,16 @@ public class BugzillaClient {
 		configParameters.put(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, canonicalPath);
 	}
 
+	private BugzillaXmlRpcClient getXmlRpcClient() {
+		boolean useXMLRPC = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+		if (useXMLRPC && xmlRpcClient == null) {
+			WebLocation webLocation = new WebLocation(this.repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
+			webLocation.setCredentials(AuthenticationType.REPOSITORY,
+					location.getCredentials(AuthenticationType.REPOSITORY).getUserName(),
+					location.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+			xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
+			xmlRpcClient.setContentTypeCheckingEnabled(true);
+		}
+		return xmlRpcClient;
+	}
 }
