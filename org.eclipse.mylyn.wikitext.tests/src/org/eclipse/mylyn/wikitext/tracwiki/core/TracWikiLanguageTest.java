@@ -39,6 +39,84 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
 	}
 
+	/**
+	 * If a macro is not recognized, nothing should be substituted.
+	 */
+	public void testMacroNotRecognised() throws IOException {
+		String html = parser.parseToHtml("there is [[NoSuchMacro]] a macro [[NoSuchMacro()]] in the [[NoSuchMacro(params, go=here)]] page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p>there is  a macro  in the  page</p></body>").matcher(html).find());
+	}
+
+	/**
+	 * If a we give the image macro an incorrect number of parameters, nothing should be substituted.
+	 */
+	public void testImageMacroIncorrectParams() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image]] in the [[Image()]] page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p>there is a macro  in the  page</p></body>").matcher(html).find());
+	}
+
+	/**
+	 * Simplest possible use of the image macro.
+	 */
+	public void testImageMacroBasic() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image(local_attachment.png)]] in the [[Image(http://www.example.com/external.png)]] page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the <img border=\"0\" src=\"http://www.example.com/external.png\"/> page</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	/**
+	 * Image macro with various options set.
+	 */
+	public void testImageMacroOptions() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image(local_attachment.png, alt=Alt Text, title=Title Text, border=5)]] in the page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img alt=\"Alt Text\" title=\"Title Text\" border=\"5\" src=\"local_attachment.png\"/> in the page</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	/**
+	 * Image macro with implicitly set width and height. Width may be specified without the "width=".
+	 */
+	public void testImageMacroSizes() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image(local_attachment.png, 100px, height=10%)]] in the page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img height=\"10%\" width=\"100\" border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	/**
+	 * Image macro with floating alignment, may be specified with or without the preceding "align=".
+	 */
+	public void testImageMacroFloatAlign() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image(local_attachment.png, right)]] in the [[Image(local_attachment.png, align=left)]] page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img style=\"float:right;\" border=\"0\" src=\"local_attachment.png\"/> in the <img style=\"float:left;\" border=\"0\" src=\"local_attachment.png\"/> page</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	/**
+	 * Image macro ignores incorrectly formatted or unrecognized options.
+	 */
+	public void testImageMacroInvalidOptions() throws IOException {
+		String html = parser.parseToHtml("there is a macro [[Image(local_attachment.png, beans, align=beans, border=b, width=10ee)]] in the page");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><p>there is a macro <img border=\"0\" src=\"local_attachment.png\"/> in the page</p></body>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testParagraphs() throws IOException {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		TestUtil.println(html);
@@ -149,7 +227,9 @@ public class TracWikiLanguageTest extends TestCase {
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
 							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 
 			html = parser.parseToHtml(delimiter + "heading text" + delimiter + " #with-id-" + x
 					+ "\nfirst para\nfirst para line2\n\nsecond para\n\nthird para");
@@ -157,7 +237,9 @@ public class TracWikiLanguageTest extends TestCase {
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"with-id-" + x + "\">heading text</h" + x
 							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 
 			html = parser.parseToHtml(delimiter + "heading text" + delimiter + "    \n"
 					+ "first para\nfirst para line2\n\nsecond para\n\nthird para");
@@ -165,7 +247,9 @@ public class TracWikiLanguageTest extends TestCase {
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
 							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-					Pattern.MULTILINE).matcher(html).find());
+					Pattern.MULTILINE)
+					.matcher(html)
+					.find());
 		}
 	}
 
@@ -304,7 +388,9 @@ public class TracWikiLanguageTest extends TestCase {
 		TestUtil.println(html);
 		assertTrue(Pattern.compile(
 				"<body><p>normal para</p><blockquote><p>quoted</p></blockquote><p>new para</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testQuoteBlockWithSpaces() throws IOException {
@@ -324,7 +410,9 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(
 				"<body>" + "<p>normal para</p>" + "<table>" + "<tr>" + "<td>a table</td>" + "<td>row with three</td>"
 						+ "<td>columns</td>" + "</tr>" + "<tr>" + "<td>another</td>" + "<td>row</td>" + "<td></td>"
-						+ "</tr>" + "</table>" + "<p>new para</p></body>", Pattern.MULTILINE).matcher(html).find());
+						+ "</tr>" + "</table>" + "<p>new para</p></body>", Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testHyperlink() {
@@ -342,7 +430,9 @@ public class TracWikiLanguageTest extends TestCase {
 		TestUtil.println(html);
 		assertTrue(Pattern.compile(
 				"<body><p>a normal para <a href=\"http://www.example.com\">Example</a> with a hyperlink</p></body>",
-				Pattern.MULTILINE).matcher(html).find());
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testHyperlinkWithoutTitle() {

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.BangEscapeToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.ChangesetLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.LineBreakToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.MacroReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.MilestoneLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.ReportLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.RevisionLogReplacementToken;
@@ -236,7 +237,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
-		// TODO: images, macros, processors
+		// TODO: processors
 
 		ListBlock listBlock = new ListBlock();
 		blocks.add(listBlock);
@@ -279,6 +280,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
 		tokenSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]-])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' and '-' //$NON-NLS-1$
+		tokenSyntax.add(new MacroReplacementToken());
 		tokenSyntax.add(new RevisionLogReplacementToken());
 		tokenSyntax.add(new ChangesetLinkReplacementToken());
 		tokenSyntax.add(new HyperlinkReplacementToken());

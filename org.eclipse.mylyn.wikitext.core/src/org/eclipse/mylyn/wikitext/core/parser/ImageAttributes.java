@@ -24,7 +24,11 @@ public class ImageAttributes extends Attributes {
 
 	private int width = -1;
 
+	private boolean widthPercentage = false;
+
 	private int height = -1;
+
+	private boolean heightPercentage = false;
 
 	private int border = 0;
 
@@ -70,5 +74,51 @@ public class ImageAttributes extends Attributes {
 
 	public void setAlign(Align align) {
 		this.align = align;
+	}
+
+	/**
+	 * Sets whether the value passed into {@link #setWidth(int)} should be treated as a percentage or as a number of
+	 * pixels. The default is false (pixels) to maintain backwards compatibility.
+	 * 
+	 * @param widthPercentage
+	 *            pass true if the width is specified as a percentage, false if the width is specified in pixels
+	 * @since 1.4
+	 */
+	public void setWidthPercentage(boolean widthPercentage) {
+		this.widthPercentage = widthPercentage;
+	}
+
+	/**
+	 * Tells you whether the value returned from {@link #getWidth()} is the width as a percentage or in pixels.
+	 * 
+	 * @return true if the width should be treated as a percentage, false if the width should be treated as an amount of
+	 *         pixels
+	 * @since 1.4
+	 */
+	public boolean isWidthPercentage() {
+		return widthPercentage;
+	}
+
+	/**
+	 * Sets whether the value passed into {@link #setHeight(int)} should be treated as a percentage or as a number of
+	 * pixels. The default is false (pixels) to maintain backwards compatibility.
+	 * 
+	 * @param heightPercentage
+	 *            pass true if the height is specified as a percentage, false if the height is specified in pixels
+	 * @since 1.4
+	 */
+	public void setHeightPercentage(boolean heightPercentage) {
+		this.heightPercentage = heightPercentage;
+	}
+
+	/**
+	 * Tells you whether the value returned from {@link #getHeight()} is the height as a percentage or in pixels.
+	 * 
+	 * @return true if the height should be treated as a percentage, false if the height should be treated as an amount
+	 *         of pixels
+	 * @since 1.4
+	 */
+	public boolean isHeightPercentage() {
+		return heightPercentage;
 	}
 }
