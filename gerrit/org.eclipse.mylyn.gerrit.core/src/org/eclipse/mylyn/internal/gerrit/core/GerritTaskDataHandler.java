@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -91,7 +92,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			ChangeDetail changeDetail = connector.getClient(repository).getReview(taskId, monitor);
+			GerritClient client = connector.getClient(repository);
+			ChangeDetail changeDetail = client.getChangeDetail(client.id(taskId), monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
 			updateTaskData(taskData, changeDetail);
 			return taskData;

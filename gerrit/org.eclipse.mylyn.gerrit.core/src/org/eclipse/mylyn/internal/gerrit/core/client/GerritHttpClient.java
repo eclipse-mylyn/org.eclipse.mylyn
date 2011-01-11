@@ -100,8 +100,7 @@ public class GerritHttpClient {
 
 			int code;
 			try {
-				RequestEntity requestEntity = new StringRequestEntity(entity.getContent(),
-						"application/json", null); //$NON-NLS-1$
+				RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
 				method.setRequestEntity(requestEntity);
 
 				// Execute the method.
@@ -132,7 +131,7 @@ public class GerritHttpClient {
 		throw new GerritLoginException();
 	}
 
-	private void authenticate(IProgressMonitor monitor) throws GerritLoginException, IOException {
+	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
 		while (true) {
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			if (credentials == null) {
@@ -156,6 +155,10 @@ public class GerritHttpClient {
 				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 				if (needsReauthentication(code, monitor)) {
 					continue;
+				}
+
+				if (code != HttpStatus.SC_MOVED_TEMPORARILY) {
+					throw new GerritHttpException(code);
 				}
 			} finally {
 				WebUtil.releaseConnection(method, monitor);

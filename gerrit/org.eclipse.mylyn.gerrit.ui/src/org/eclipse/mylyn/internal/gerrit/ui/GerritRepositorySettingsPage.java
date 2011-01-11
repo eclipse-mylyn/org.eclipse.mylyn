@@ -7,6 +7,7 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Tasktop Technologies - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -15,32 +16,37 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
- * Wizard page to specify URL to Gerrit server, authentication type, and more.
+ * Wizard page to specify Gerrit connection details.
  * 
  * @author Mikael Kober
  * @author Thomas Westling
+ * @author Steffen Pingel
  */
 public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage {
+
+	private Label statusLabel;
 
 	public GerritRepositorySettingsPage(TaskRepository taskRepository) {
 		super("Gerrit Repository Settings", "Web based code review and project management for Git based projects.",
 				taskRepository);
 		setNeedsAnonymousLogin(true);
 		setNeedsHttpAuth(false);
-		setNeedsProxy(false);
-		setNeedsAdvanced(false); // might need additional controls later on
+		setNeedsAdvanced(false);
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);
-		setNeedsValidation(false); // ??
+		setNeedsValidation(true);
 	}
 
 	@Override
@@ -50,12 +56,28 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 	}
 
 	@Override
-	public void applyTo(TaskRepository repository) {
-		super.applyTo(repository);
+	protected void applyValidatorResult(Validator validator) {
+		super.applyValidatorResult(validator);
+		if (validator.getStatus() != null && validator.getStatus().isOK()) {
+			GerritValidator gerritValidator = (GerritValidator) validator;
+			statusLabel.setText(NLS.bind("Logged in as {0}.", gerritValidator.getInfo().getFullName()));
+		} else {
+			statusLabel.setText(" ");
+		}
+		statusLabel.getParent().layout();
+	}
+
+	@Override
+	protected void createContributionControls(Composite parent) {
+		// ignore, task editor settings are not supported
+		statusLabel = new Label(parent, SWT.WRAP);
+		statusLabel.setText(" "); //$NON-NLS-1$
+		GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).span(3, SWT.DEFAULT).applyTo(statusLabel);
 	}
 
 	@Override
 	protected void createAdditionalControls(Composite parent) {
+		// ignore, advanced section is disabled 
 	}
 
 	@Override
@@ -87,50 +109,26 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		return false;
 	}
 
-	/**
-	 * Validator for the repository.
-	 * 
-	 * @author 23059115
-	 */
 	public class GerritValidator extends Validator {
 
 		final TaskRepository repository;
 
-		/**
-		 * Constructor.
-		 * 
-		 * @param repository
-		 */
+		private GerritSystemInfo info;
+
 		public GerritValidator(TaskRepository repository) {
 			this.repository = repository;
 		}
 
-		/**
-		 * @return repository url
-		 */
-		public String getRepositoryUrl() {
-			return repository.getRepositoryUrl();
-		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage
-		 * .Validator#run(org.eclipse.core.runtime.IProgressMonitor) */
 		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
-			try {
-				new URL(repository.getRepositoryUrl());
-			} catch (MalformedURLException ex) {
-				throw new CoreException(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, IStatus.OK,
-						"Invalid repository URL", null));
-			}
-
-			try {
-				// TODO: validate connection
-			} catch (Exception e) {
-				// TODO: handle
-			}
+			GerritConnector connector = (GerritConnector) getConnector();
+			info = connector.validate(repository, monitor);
 		}
+
+		public GerritSystemInfo getInfo() {
+			return info;
+		}
+
 	}
 
 }

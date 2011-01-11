@@ -7,18 +7,24 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Tasktop Technologies - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -197,6 +203,10 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	GerritClient getClient(TaskRepository repository) {
+		return createClient(repository);
+	}
+
+	private GerritClient createClient(TaskRepository repository) {
 		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository));
 	}
 
@@ -205,7 +215,26 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	Status toStatus(TaskRepository repository, GerritException e) {
-		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unexpected error: {0}", e), e);
+		String message;
+		if (e instanceof GerritHttpException) {
+			int code = ((GerritHttpException) e).getResponseCode();
+			message = NLS.bind("Unexpected error: {1} ({0})", code, HttpStatus.getStatusText(code));
+		} else if (e instanceof GerritLoginException) {
+			message = "Login failed";
+		} else if (e.getMessage() != null) {
+			message = NLS.bind("Unexpected error: {0}", e.getMessage());
+		} else {
+			message = "Unexpected error while communicating with Gerrit";
+		}
+		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
+	}
+
+	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		try {
+			return createClient(repository).getInfo(Policy.backgroundMonitorFor(monitor));
+		} catch (GerritException e) {
+			throw toCoreException(repository, e);
+		}
 	}
 
 }

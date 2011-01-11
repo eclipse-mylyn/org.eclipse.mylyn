@@ -22,8 +22,11 @@ public class GerritHttpException extends GerritException {
 
 	private AuthScheme authScheme;
 
+	private final int responseCode;
+
 	public GerritHttpException(int responseCode) {
 		super("HTTP Error " + responseCode); //$NON-NLS-1$
+		this.responseCode = responseCode;
 	}
 
 	public AuthScheme getAuthScheme() {
@@ -32,6 +35,10 @@ public class GerritHttpException extends GerritException {
 
 	public void setAuthScheme(AuthScheme authScheme) {
 		this.authScheme = authScheme;
+	}
+
+	public int getResponseCode() {
+		return responseCode;
 	}
 
 }
