@@ -608,6 +608,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				relations.add(TaskRelation.subtask(taskId.trim()));
 			}
 		}
+		attribute = taskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey());
+		if (attribute != null && attribute.getValue().length() > 0) {
+			for (String taskId : attribute.getValue().split(",")) { //$NON-NLS-1$
+				relations.add(TaskRelation.parentTask(taskId.trim()));
+			}
+		}
 		return relations;
 	}
 
