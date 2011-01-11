@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.reviewdb.Change;
@@ -117,9 +118,9 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	public void updateTaskData(TaskData data, ChangeDetail changeDetail) {
 		Change change = changeDetail.getChange();
-
+		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 		setAttributeValue(data, GerritAttribute.ID, change.getChangeId() + ""); //$NON-NLS-1$
-		setAttributeValue(data, GerritAttribute.OWNER, change.getOwner().toString());
+		setAttributeValue(data, GerritAttribute.OWNER, owner.getFullName());
 		setAttributeValue(data, GerritAttribute.PROJECT, change.getProject().get());
 		setAttributeValue(data, GerritAttribute.SUMMARY, change.getSubject());
 		setAttributeValue(data, GerritAttribute.STATUS, change.getStatus().toString());

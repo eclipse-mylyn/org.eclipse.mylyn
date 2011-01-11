@@ -10,9 +10,13 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 /**
  * @author Mikael Kober
@@ -23,7 +27,19 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 	public GerritTaskEditorPage(TaskEditor editor) {
 		super(editor, GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
-		setNeedsSubmitButton(true);
+		setNeedsSubmitButton(false);
+	}
+
+	@Override
+	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
+		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
+			TaskEditorPartDescriptor descriptor = it.next();
+			if (PATH_ACTIONS.equals(descriptor.getPath())) {
+				it.remove();
+			}
+		}
+		return descriptors;
 	}
 
 }

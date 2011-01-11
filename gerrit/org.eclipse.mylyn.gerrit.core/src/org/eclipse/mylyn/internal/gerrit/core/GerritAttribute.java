@@ -75,7 +75,12 @@ public enum GerritAttribute {
 	 * @return attribute kind
 	 */
 	public String getKind() {
-		return (this == DESCRIPTION) ? null : TaskAttribute.KIND_DEFAULT;
+		switch (this) {
+		case PROJECT:
+			return TaskAttribute.KIND_DEFAULT;
+		default:
+			return null;
+		}
 	}
 
 	/**
