@@ -831,6 +831,9 @@ public class TasksUiInternal {
 		}
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
 		workingCopy.save(null, null);
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskData.getConnectorKind(),
+				taskData.getRepositoryUrl());
+		connector.updateNewTaskFromTaskData(taskRepository, task, taskData);
 		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);

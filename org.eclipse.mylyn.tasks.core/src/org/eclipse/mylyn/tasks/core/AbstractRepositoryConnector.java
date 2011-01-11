@@ -347,6 +347,16 @@ public abstract class AbstractRepositoryConnector {
 	public abstract void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData);
 
 	/**
+	 * Called when a new task is created, before it is opened in a task editor. Connectors should override this method
+	 * if they need information from the {@link TaskData} to determine kind labels or other information that should be
+	 * displayed in a new task editor.
+	 * 
+	 * @since 3.5
+	 */
+	public void updateNewTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	}
+
+	/**
 	 * Invoked when a task associated with this connector is migrated. This typically happens when an unsubmitted task
 	 * is submitted to the repository. Implementers may override to implement custom migration rules.
 	 * <p>
