@@ -18,6 +18,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
@@ -234,6 +237,23 @@ public class GerritClient {
 			serviceByClass.put(clazz, service);
 		}
 		return clazz.cast(service);
+	}
+
+	public IReview getReview(String reviewId, IProgressMonitor monitor) throws GerritException {
+		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		ChangeDetail detail = getChangeDetail(Integer.parseInt(reviewId), monitor);
+		List<PatchSet> patchSets = detail.getPatchSets();
+		for (PatchSet patchSet : patchSets) {
+			//
+		}
+		if (detail.getCurrentPatchSetDetail() != null) {
+			for (Patch patch : detail.getCurrentPatchSetDetail().getPatches()) {
+				IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
+				item.setName(patch.getFileName());
+				review.getReviewItems().add(item);
+			}
+		}
+		return review;
 	}
 
 }
