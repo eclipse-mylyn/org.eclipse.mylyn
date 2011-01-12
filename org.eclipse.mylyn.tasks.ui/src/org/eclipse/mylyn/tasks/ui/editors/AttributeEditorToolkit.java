@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
@@ -170,7 +172,8 @@ public class AttributeEditorToolkit {
 	 * @return the IContentProposalProvider.
 	 */
 	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
-		return new PersonProposalProvider(null, attribute.getTaskData());
+		Map<String, String> proposals = attribute.getTaskData().getAttributeMapper().getOptions(attribute);
+		return new PersonProposalProvider(null, attribute.getTaskData(), proposals);
 	}
 
 	private ILabelProvider createLabelProposalProvider(TaskAttribute attribute) {

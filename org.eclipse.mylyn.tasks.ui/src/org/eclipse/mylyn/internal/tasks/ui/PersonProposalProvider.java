@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -41,6 +42,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  * @author David Shepherd
+ * @author Sam Davis
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -56,6 +58,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private TaskData currentTaskData;
 
+	private Map<String, String> proposals;
+
 	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
 		this.currentTask = task;
 		this.currentTaskData = taskData;
@@ -68,10 +72,20 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 	}
 
+	public PersonProposalProvider(AbstractTask task, TaskData taskData, Map<String, String> proposals) {
+		this(task, taskData);
+		this.proposals = proposals;
+	}
+
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind) {
 		this.currentTask = null;
 		this.repositoryUrl = repositoryUrl;
 		this.connectorKind = repositoryKind;
+	}
+
+	public PersonProposalProvider(String repositoryUrl, String repositoryKind, Map<String, String> proposals) {
+		this(repositoryUrl, repositoryKind);
+		this.proposals = proposals;
 	}
 
 	protected String getRepositoryUrl() {
@@ -122,6 +136,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	protected String getPrettyName(String address) {
+		if (proposals != null && proposals.get(address) != null) {
+			return proposals.get(address) + " [" + address + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		return address;
 	}
 
@@ -154,6 +171,13 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				return s1.compareToIgnoreCase(s2);
 			}
 		});
+
+		if (proposals != null && !proposals.isEmpty()) {
+			for (String proposal : proposals.keySet()) {
+				addAddress(addressSet, proposal);
+			}
+			return addressSet;
+		}
 
 		if (currentTask != null) {
 			addAddress(addressSet, currentTask.getOwner());
