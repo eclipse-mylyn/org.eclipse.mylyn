@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.TableBlock;
-import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.DeletedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.EscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.MonospacePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.SimplePhraseModifier;
@@ -268,7 +267,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new DeletedPhraseModifier());
+		phraseModifierSyntax.add(new SimplePhraseModifier("~~", SpanType.DELETED, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$

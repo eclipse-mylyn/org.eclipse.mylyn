@@ -159,31 +159,31 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testDeleted() {
-		String html = parser.parseToHtml("normal --test text-- normal");
+		String html = parser.parseToHtml("normal ~~test text~~ normal");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><p>normal <del>test text</del> normal</p></body>").matcher(html).find());
 	}
 
 	public void testDeleted2() {
-		String html = parser.parseToHtml("normal ---test text-- normal");
+		String html = parser.parseToHtml("normal ~~~test text~~ normal");
 		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal ---test text-- normal</p></body>").matcher(html).find());
+		assertTrue(Pattern.compile("<body><p>normal <del>~test text</del> normal</p></body>").matcher(html).find());
 	}
 
 	public void testDeleted3() {
-		String html = parser.parseToHtml("normal --test text--- normal");
+		String html = parser.parseToHtml("normal ~~test text~~~ normal");
 		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal --test text--- normal</p></body>").matcher(html).find());
+		assertTrue(Pattern.compile("<body><p>normal <del>test text</del>~ normal</p></body>").matcher(html).find());
 	}
 
 	public void testDeleted_AtStartOfLine() {
-		String html = parser.parseToHtml("--test text-- normal");
+		String html = parser.parseToHtml("~~test text~~ normal");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p><del>test text</del> normal</p></body>"));
 	}
 
 	public void testDeleted_AtEndOfLine() {
-		String html = parser.parseToHtml("normal --test text--");
+		String html = parser.parseToHtml("normal ~~test text~~");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>normal <del>test text</del></p></body>"));
 	}
