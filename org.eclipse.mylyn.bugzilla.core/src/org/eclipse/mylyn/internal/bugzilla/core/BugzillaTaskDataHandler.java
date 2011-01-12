@@ -470,11 +470,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 			}
-			if (updateConfig) {
-				// this info CoreException is only used internal
-				throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
-						repository.getRepositoryUrl(), "Update Config")); //$NON-NLS-1$
-			}
+			//TODO: enalble this if we want to do the Configuration update
+//			if (updateConfig) {
+//				// this info CoreException is only used internal
+//				throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
+//						repository.getRepositoryUrl(), "Update Config")); //$NON-NLS-1$
+//			}
 
 		} finally {
 			monitor.done();
