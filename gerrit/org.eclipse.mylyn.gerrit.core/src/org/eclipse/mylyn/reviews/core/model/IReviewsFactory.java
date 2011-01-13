@@ -107,4 +107,13 @@ public interface IReviewsFactory {
 	 */
 	IFileItem createFileItem();
 
+	/**
+	 * Returns a new object of class '<em>Review Item Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Review Item Set</em>'.
+	 * @generated
+	 */
+	IReviewItemSet createReviewItemSet();
+
 } //IReviewsFactory

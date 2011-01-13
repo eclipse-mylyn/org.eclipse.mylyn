@@ -202,7 +202,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		mapper.applyTo(task);
 	}
 
-	GerritClient getClient(TaskRepository repository) {
+	public GerritClient getClient(TaskRepository repository) {
 		return createClient(repository);
 	}
 

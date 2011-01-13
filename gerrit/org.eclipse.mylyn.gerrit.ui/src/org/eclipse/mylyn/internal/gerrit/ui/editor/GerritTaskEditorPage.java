@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -39,6 +40,12 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 				it.remove();
 			}
 		}
+		descriptors.add(new TaskEditorPartDescriptor("review") { //$NON-NLS-1$
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new ReviewSection();
+			}
+		});
 		return descriptors;
 	}
 

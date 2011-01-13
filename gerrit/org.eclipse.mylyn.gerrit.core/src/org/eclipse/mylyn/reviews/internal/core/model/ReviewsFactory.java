@@ -89,6 +89,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return (EObject) createReviewComponent();
 		case ReviewsPackage.FILE_ITEM:
 			return (EObject) createFileItem();
+		case ReviewsPackage.REVIEW_ITEM_SET:
+			return (EObject) createReviewItemSet();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -182,6 +184,16 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public IFileItem createFileItem() {
 		FileItem fileItem = new FileItem();
 		return fileItem;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IReviewItemSet createReviewItemSet() {
+		ReviewItemSet reviewItemSet = new ReviewItemSet();
+		return reviewItemSet;
 	}
 
 	/**

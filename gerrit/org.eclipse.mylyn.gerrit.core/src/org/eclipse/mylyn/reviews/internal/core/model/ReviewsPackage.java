@@ -27,6 +27,7 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewComponent;
 import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
@@ -137,13 +138,13 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW__TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Review Items</b></em>' reference list.
+	 * The feature id for the '<em><b>Items</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__REVIEW_ITEMS = REVIEW_COMPONENT_FEATURE_COUNT + 1;
+	public static final int REVIEW__ITEMS = REVIEW_COMPONENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Review Task</b></em>' containment reference.
@@ -642,6 +643,79 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet <em>Review Item Set</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewItemSet()
+	 * @generated
+	 */
+	public static final int REVIEW_ITEM_SET = 12;
+
+	/**
+	 * The feature id for the '<em><b>Enabled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__ENABLED = REVIEW_ITEM__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>Added By</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__ADDED_BY = REVIEW_ITEM__ADDED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Review</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__REVIEW = REVIEW_ITEM__REVIEW;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__NAME = REVIEW_ITEM__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__ID = REVIEW_ITEM_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Items</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Review Item Set</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 2;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -724,6 +798,13 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass fileItemEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass reviewItemSetEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -813,15 +894,15 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewItems <em>Review Items</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.mylyn.reviews.core.model.IReview#getItems <em>Items</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Review Items</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getReviewItems()
+	 * @return the meta object for the reference list '<em>Items</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getItems()
 	 * @see #getReview()
 	 * @generated
 	 */
-	public EReference getReview_ReviewItems() {
+	public EReference getReview_Items() {
 		return (EReference) reviewEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1231,6 +1312,44 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet <em>Review Item Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Review Item Set</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet
+	 * @generated
+	 */
+	public EClass getReviewItemSet() {
+		return reviewItemSetEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getId()
+	 * @see #getReviewItemSet()
+	 * @generated
+	 */
+	public EAttribute getReviewItemSet_Id() {
+		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Items</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems()
+	 * @see #getReviewItemSet()
+	 * @generated
+	 */
+	public EReference getReviewItemSet_Items() {
+		return (EReference) reviewItemSetEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1263,7 +1382,7 @@ public class ReviewsPackage extends EPackageImpl {
 		// Create classes and their features
 		reviewEClass = createEClass(REVIEW);
 		createEReference(reviewEClass, REVIEW__TOPICS);
-		createEReference(reviewEClass, REVIEW__REVIEW_ITEMS);
+		createEReference(reviewEClass, REVIEW__ITEMS);
 		createEReference(reviewEClass, REVIEW__REVIEW_TASK);
 		createEReference(reviewEClass, REVIEW__STATE);
 
@@ -1307,6 +1426,10 @@ public class ReviewsPackage extends EPackageImpl {
 
 		fileItemEClass = createEClass(FILE_ITEM);
 		createEAttribute(fileItemEClass, FILE_ITEM__PATH);
+
+		reviewItemSetEClass = createEClass(REVIEW_ITEM_SET);
+		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__ID);
+		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__ITEMS);
 	}
 
 	/**
@@ -1346,6 +1469,7 @@ public class ReviewsPackage extends EPackageImpl {
 		reviewGroupEClass.getESuperTypes().add(this.getReviewComponent());
 		topicEClass.getESuperTypes().add(this.getComment());
 		fileItemEClass.getESuperTypes().add(this.getReviewItem());
+		reviewItemSetEClass.getESuperTypes().add(this.getReviewItem());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1355,10 +1479,10 @@ public class ReviewsPackage extends EPackageImpl {
 				null,
 				"topics", null, 0, -1, IReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
-				getReview_ReviewItems(),
+				getReview_Items(),
 				this.getReviewItem(),
 				null,
-				"reviewItems", null, 0, -1, IReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"items", null, 0, -1, IReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getReview_ReviewTask(),
 				this.getTaskReference(),
@@ -1485,6 +1609,18 @@ public class ReviewsPackage extends EPackageImpl {
 				ecorePackage.getEString(),
 				"path", "", 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
+		initEClass(reviewItemSetEClass, IReviewItemSet.class,
+				"ReviewItemSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getReviewItemSet_Id(),
+				ecorePackage.getEString(),
+				"id", null, 0, 1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReviewItemSet_Items(),
+				this.getReviewItem(),
+				null,
+				"items", null, 0, -1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
 		// Create resource
 		createResource(eNS_URI);
 
@@ -1539,12 +1675,12 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference REVIEW__TOPICS = eINSTANCE.getReview_Topics();
 
 		/**
-		 * The meta object literal for the '<em><b>Review Items</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Items</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		public static final EReference REVIEW__REVIEW_ITEMS = eINSTANCE.getReview_ReviewItems();
+		public static final EReference REVIEW__ITEMS = eINSTANCE.getReview_Items();
 
 		/**
 		 * The meta object literal for the '<em><b>Review Task</b></em>' containment reference feature.
@@ -1823,6 +1959,32 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute FILE_ITEM__PATH = eINSTANCE.getFileItem_Path();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet <em>Review Item Set</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewItemSet()
+		 * @generated
+		 */
+		public static final EClass REVIEW_ITEM_SET = eINSTANCE.getReviewItemSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute REVIEW_ITEM_SET__ID = eINSTANCE.getReviewItemSet_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Items</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EReference REVIEW_ITEM_SET__ITEMS = eINSTANCE.getReviewItemSet_Items();
 
 	}
 

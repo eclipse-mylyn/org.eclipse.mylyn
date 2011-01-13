@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.osgi.util.NLS;
 
@@ -49,6 +50,8 @@ import com.google.gwtjsonrpc.client.RemoteJsonService;
  * @author Steffen Pingel
  */
 public class GerritClient {
+
+	private static final ReviewsFactory FACTORY = ReviewsFactory.eINSTANCE;
 
 	private abstract class GerritOperation<T> implements AsyncCallback<T> {
 
@@ -240,17 +243,25 @@ public class GerritClient {
 	}
 
 	public IReview getReview(String reviewId, IProgressMonitor monitor) throws GerritException {
-		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		IReview review = FACTORY.createReview();
 		ChangeDetail detail = getChangeDetail(Integer.parseInt(reviewId), monitor);
 		List<PatchSet> patchSets = detail.getPatchSets();
 		for (PatchSet patchSet : patchSets) {
-			//
-		}
-		if (detail.getCurrentPatchSetDetail() != null) {
-			for (Patch patch : detail.getCurrentPatchSetDetail().getPatches()) {
-				IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
-				item.setName(patch.getFileName());
-				review.getReviewItems().add(item);
+			IReviewItemSet itemSet = FACTORY.createReviewItemSet();
+			itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
+			itemSet.setId(patchSet.getRevision().get());
+			review.getItems().add(itemSet);
+			if (patchSet.getId().equals(detail.getCurrentPatchSetDetail().getPatchSet().getId())) {
+				for (Patch patch : detail.getCurrentPatchSetDetail().getPatches()) {
+					IFileItem item = FACTORY.createFileItem();
+					if (patch.getCommentCount() > 0) {
+						item.setName(NLS.bind("{0}  [{1} comments]", patch.getFileName(), patch.getCommentCount()));
+					} else {
+						item.setName(patch.getFileName());
+					}
+					itemSet.getItems().add(item);
+				}
+				//
 			}
 		}
 		return review;

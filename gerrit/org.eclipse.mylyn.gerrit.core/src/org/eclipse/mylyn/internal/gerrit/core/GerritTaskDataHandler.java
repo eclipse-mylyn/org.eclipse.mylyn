@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -25,12 +26,14 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.ChangeMessage;
 
 /**
  * @author Mikael Kober
@@ -96,7 +99,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			GerritClient client = connector.getClient(repository);
 			ChangeDetail changeDetail = client.getChangeDetail(client.id(taskId), monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
-			updateTaskData(taskData, changeDetail);
+			updateTaskData(repository, taskData, changeDetail);
 			return taskData;
 		} catch (GerritException e) {
 			throw connector.toCoreException(repository, e);
@@ -116,7 +119,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		throw new UnsupportedOperationException();
 	}
 
-	public void updateTaskData(TaskData data, ChangeDetail changeDetail) {
+	public void updateTaskData(TaskRepository repository, TaskData data, ChangeDetail changeDetail) {
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 		setAttributeValue(data, GerritAttribute.ID, change.getChangeId() + ""); //$NON-NLS-1$
@@ -128,6 +131,22 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, GerritAttribute.UPDATED, dateToString(change.getLastUpdatedOn()));
 		setAttributeValue(data, GerritAttribute.UPLOADED, dateToString(change.getCreatedOn()));
 		setAttributeValue(data, GerritAttribute.DESCRIPTION, changeDetail.getDescription());
+		setAttributeValue(data, GerritAttribute.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
+		int i = 1;
+		for (ChangeMessage message : changeDetail.getMessages()) {
+			TaskCommentMapper mapper = new TaskCommentMapper();
+			AccountInfo author = changeDetail.getAccounts().get(message.getAuthor());
+			IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null) ? author.getPreferredEmail()
+					: author.getId() + ""); //$NON-NLS-1$
+			person.setName(author.getFullName());
+			mapper.setAuthor(person);
+			mapper.setText(message.getMessage());
+			mapper.setCreationDate(message.getWrittenOn());
+			mapper.setNumber(i);
+			TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + i);
+			mapper.applyTo(attribute);
+			i++;
+		}
 	}
 
 	public void updateTaskData(TaskData data, ChangeInfo changeInfo) {

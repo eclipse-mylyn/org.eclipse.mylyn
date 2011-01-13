@@ -40,7 +40,7 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getTopics <em>Topics</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewItems <em>Review Items</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getItems <em>Items</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewTask <em>Review Task</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getState <em>State</em>}</li>
  * </ul>
@@ -60,14 +60,14 @@ public class Review extends ReviewComponent implements IReview {
 	protected EList<ITopic> topics;
 
 	/**
-	 * The cached value of the '{@link #getReviewItems() <em>Review Items</em>}' reference list.
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getReviewItems()
+	 * @see #getItems()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<IReviewItem> reviewItems;
+	protected EList<IReviewItem> items;
 
 	/**
 	 * The cached value of the '{@link #getReviewTask() <em>Review Task</em>}' containment reference.
@@ -125,12 +125,11 @@ public class Review extends ReviewComponent implements IReview {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List<IReviewItem> getReviewItems() {
-		if (reviewItems == null) {
-			reviewItems = new EObjectResolvingEList<IReviewItem>(IReviewItem.class, this,
-					ReviewsPackage.REVIEW__REVIEW_ITEMS);
+	public List<IReviewItem> getItems() {
+		if (items == null) {
+			items = new EObjectResolvingEList<IReviewItem>(IReviewItem.class, this, ReviewsPackage.REVIEW__ITEMS);
 		}
-		return reviewItems;
+		return items;
 	}
 
 	/**
@@ -258,8 +257,8 @@ public class Review extends ReviewComponent implements IReview {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW__TOPICS:
 			return getTopics();
-		case ReviewsPackage.REVIEW__REVIEW_ITEMS:
-			return getReviewItems();
+		case ReviewsPackage.REVIEW__ITEMS:
+			return getItems();
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
 			return getReviewTask();
 		case ReviewsPackage.REVIEW__STATE:
@@ -281,9 +280,9 @@ public class Review extends ReviewComponent implements IReview {
 			getTopics().clear();
 			getTopics().addAll((Collection<? extends ITopic>) newValue);
 			return;
-		case ReviewsPackage.REVIEW__REVIEW_ITEMS:
-			getReviewItems().clear();
-			getReviewItems().addAll((Collection<? extends IReviewItem>) newValue);
+		case ReviewsPackage.REVIEW__ITEMS:
+			getItems().clear();
+			getItems().addAll((Collection<? extends IReviewItem>) newValue);
 			return;
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
 			setReviewTask((ITaskReference) newValue);
@@ -306,8 +305,8 @@ public class Review extends ReviewComponent implements IReview {
 		case ReviewsPackage.REVIEW__TOPICS:
 			getTopics().clear();
 			return;
-		case ReviewsPackage.REVIEW__REVIEW_ITEMS:
-			getReviewItems().clear();
+		case ReviewsPackage.REVIEW__ITEMS:
+			getItems().clear();
 			return;
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
 			setReviewTask((ITaskReference) null);
@@ -329,8 +328,8 @@ public class Review extends ReviewComponent implements IReview {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW__TOPICS:
 			return topics != null && !topics.isEmpty();
-		case ReviewsPackage.REVIEW__REVIEW_ITEMS:
-			return reviewItems != null && !reviewItems.isEmpty();
+		case ReviewsPackage.REVIEW__ITEMS:
+			return items != null && !items.isEmpty();
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
 			return reviewTask != null;
 		case ReviewsPackage.REVIEW__STATE:

@@ -135,6 +135,11 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseReviewItemSet(IReviewItemSet object) {
+			return createReviewItemSetAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -318,6 +323,20 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createFileItemAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet <em>Review Item Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet
+	 * @generated
+	 */
+	public Adapter createReviewItemSetAdapter() {
 		return null;
 	}
 

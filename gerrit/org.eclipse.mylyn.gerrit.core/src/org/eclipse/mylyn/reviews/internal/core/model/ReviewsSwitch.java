@@ -191,6 +191,17 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ReviewsPackage.REVIEW_ITEM_SET: {
+			IReviewItemSet reviewItemSet = (IReviewItemSet) theEObject;
+			T result = caseReviewItemSet(reviewItemSet);
+			if (result == null)
+				result = caseReviewItem(reviewItemSet);
+			if (result == null)
+				result = caseReviewComponent(reviewItemSet);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -373,6 +384,21 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseFileItem(IFileItem object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Review Item Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Review Item Set</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReviewItemSet(IReviewItemSet object) {
 		return null;
 	}
 
