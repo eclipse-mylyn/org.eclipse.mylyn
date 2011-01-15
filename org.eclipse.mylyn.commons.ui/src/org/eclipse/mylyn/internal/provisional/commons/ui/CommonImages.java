@@ -266,6 +266,14 @@ public class CommonImages {
 	public static final ImageDescriptor NOTIFICATION_CONFIGURE_HOVER = create(T_TOOL,
 			"notification-configure-active.gif"); //$NON-NLS-1$;
 
+	public static final ImageDescriptor CHECKBOX_CLEARED = create(T_ELCL, "checkboxcleared.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor CHECKBOX_SELECTED = create(T_ELCL, "checkboxselected.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor CHECKBOX_UNSELECTED = create(T_ELCL, "checkboxunselected.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor CHECKBOX_DISABLED = create(T_ELCL, "checkboxgreyed.gif"); //$NON-NLS-1$;
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
