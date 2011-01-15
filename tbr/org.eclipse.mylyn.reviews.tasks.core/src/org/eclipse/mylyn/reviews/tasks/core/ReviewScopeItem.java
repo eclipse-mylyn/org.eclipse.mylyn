@@ -23,5 +23,6 @@ public interface ReviewScopeItem {
 	List<IReviewFile> getReviewFiles(NullProgressMonitor monitor)throws CoreException;
 
 	String getDescription();
+	String getType(int count);
 	
 }

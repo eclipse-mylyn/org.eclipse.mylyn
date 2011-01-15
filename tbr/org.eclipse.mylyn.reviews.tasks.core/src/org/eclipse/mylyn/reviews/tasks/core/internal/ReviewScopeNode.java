@@ -13,7 +13,6 @@ package org.eclipse.mylyn.reviews.tasks.core.internal;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
@@ -46,16 +45,22 @@ public class ReviewScopeNode extends AbstractTreeNode {
 		}
 		return description;
 	}
-
+	private static class Counter {
+		int counter;
+		ReviewScopeItem item;
+		public Counter(ReviewScopeItem item) {
+			this.item=item;
+		}
+	}
 	private String convertScopeToDescription() {
 		StringBuilder sb = new StringBuilder();
-		Map<String, AtomicInteger> counts = new TreeMap<String, AtomicInteger>();
+		Map<String, Counter> counts = new TreeMap<String, Counter>();
 		for (ReviewScopeItem item : scope.getItems()) {
-			String key = item.getDescription();
+			String key = item.getType(1);
 			if (!counts.containsKey(key)) {
-				counts.put(key, new AtomicInteger());
+				counts.put(key, new Counter(item));
 			}
-			counts.get(key).incrementAndGet();
+			counts.get(key).counter++;
 		}
 		boolean isFirstElement = true;
 		for (String type : counts.keySet()) {
@@ -65,10 +70,10 @@ public class ReviewScopeNode extends AbstractTreeNode {
 				sb.append(", ");
 			}
 
-			int count = counts.get(type).get();
+			int count = counts.get(type).counter;
 			sb.append(count);
 			sb.append(" ");
-			sb.append(type);
+			sb.append(counts.get(type).item.getType(count));
 		}
 		return sb.toString();
 	}

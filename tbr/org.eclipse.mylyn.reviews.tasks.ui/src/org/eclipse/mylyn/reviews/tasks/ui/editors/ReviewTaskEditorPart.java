@@ -13,7 +13,6 @@ package org.eclipse.mylyn.reviews.tasks.ui.editors;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -27,7 +26,6 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -36,9 +34,10 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TreeNode;
+import org.eclipse.jface.viewers.TreeNodeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewFile;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
@@ -74,10 +73,11 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 	public static final String ID_PART_REVIEW = "org.eclipse.mylyn.reviews.ui.editors.ReviewTaskEditorPart"; //$NON-NLS-1$
-	private TableViewer fileList;
+	private TreeViewer fileList;
 	private Composite composite;
 	private ITaskProperties taskProperties;
 	private ComboViewer ratingList;
+	private Section section;
 
 	public ReviewTaskEditorPart() {
 		setPartName("Review ");
@@ -86,53 +86,58 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		Section section = createSection(parent, toolkit, true);
+		section = createSection(parent, toolkit, true);
 		GridLayout gl = new GridLayout(1, false);
 		gl.marginBottom = 16;
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 4;
 		section.setLayout(gl);
 		section.setLayoutData(gd);
+setSection(toolkit, section);
 
 		composite = toolkit.createComposite(section);
 
 		composite.setLayout(new GridLayout(1, true));
 
-		fileList = new TableViewer(composite);
+		fileList = new TreeViewer(composite);
 
 		fileList.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		TableViewerColumn column = new TableViewerColumn(fileList, SWT.LEFT);
-		column.getColumn().setText("Filename");
-		column.getColumn().setWidth(100);
-		column.getColumn().setResizable(true);
-
-		TableLayout tableLayout = new TableLayout();
-		tableLayout.addColumnData(new ColumnWeightData(100, true));
-		fileList.getTable().setLayout(tableLayout);
+		createColumn(fileList, "Group", 100);
+		createColumn(fileList, "Filename", 100);
+		fileList.getTree().setLinesVisible(true);
+		fileList.getTree().setHeaderVisible(true);
 
 		fileList.setLabelProvider(new TableLabelProvider() {
-			private final int COLUMN_FILE = 0;
+			private final int COLUMN_GROUP = 0;
+			private final int COLUMN_FILE = 1;
 
 			@Override
-			public String getColumnText(Object element, int columnIndex) {
-				if (columnIndex == COLUMN_FILE) {
-					if (element instanceof IReviewFile) {
-						IReviewFile file = ((IReviewFile) element);
-
-						return file.getFileName();
+			public String getColumnText(Object node, int columnIndex) {
+				Object element = ((TreeNode) node).getValue();
+				switch (columnIndex) {
+				case COLUMN_GROUP:
+					if (element instanceof ReviewScopeItem) {
+						return ((ReviewScopeItem) element).getDescription();
 					}
+					break;
+				case COLUMN_FILE:
+					if (element instanceof IReviewFile) {
+						return ((IReviewFile) element).getFileName();
+					}
+					break;
 				}
 				return null;
 			}
 
 			@Override
-			public Image getColumnImage(Object element, int columnIndex) {
-				if (columnIndex == COLUMN_FILE) {
-					ISharedImages sharedImages = PlatformUI.getWorkbench()
-							.getSharedImages();
-					if (element instanceof IReviewFile) {
+			public Image getColumnImage(Object node, int columnIndex) {
+				Object element = ((TreeNode) node).getValue();
+				if (element instanceof IReviewFile) {
+					if (columnIndex == COLUMN_FILE) {
+						ISharedImages sharedImages = PlatformUI.getWorkbench()
+								.getSharedImages();
 						IReviewFile file = ((IReviewFile) element);
 						if (file.isNewFile()) {
 							return new NewFile().createImage();
@@ -140,24 +145,25 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 						if (!file.canReview()) {
 							return new MissingFile().createImage();
 						}
-					}
 
-					return sharedImages.getImage(ISharedImages.IMG_OBJ_FILE);
+						return sharedImages
+								.getImage(ISharedImages.IMG_OBJ_FILE);
+					}
 				}
 				return null;
 			}
 		});
 
-		fileList.setContentProvider(ArrayContentProvider.getInstance());
+		fileList.setContentProvider(new TreeNodeContentProvider());
 		fileList.addDoubleClickListener(new IDoubleClickListener() {
 
 			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
-					if (sel.getFirstElement() instanceof IReviewFile) {
-						final IReviewFile file = ((IReviewFile) sel
-								.getFirstElement());
+					Object value = ((TreeNode)sel.getFirstElement()).getValue();
+					if (value instanceof IReviewFile) {
+						final IReviewFile file = (IReviewFile) value;
 						if (file.canReview()) {
 							CompareConfiguration configuration = new CompareConfiguration();
 							configuration.setLeftEditable(false);
@@ -173,7 +179,8 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 									.setProperty(
 											CompareConfiguration.USE_OUTLINE_VIEW,
 											true);
-							CompareUI.openCompareEditor(new CompareEditorInput(configuration) {
+							CompareUI.openCompareEditor(new CompareEditorInput(
+									configuration) {
 
 								@Override
 								protected Object prepareInput(
@@ -207,37 +214,60 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 		setSection(toolkit, section);
 
 		SafeRunner.run(new ISafeRunnable() {
-			
+
 			@Override
 			public void run() throws Exception {
-				final List<IReviewFile> files = getInput();
+
+				ReviewScope reviewScope = getReviewScope();
+				if (reviewScope == null) {
+					section.setExpanded(false);
+					return;
+				}
+				List<ReviewScopeItem> files = reviewScope.getItems();
+				
+				final TreeNode[] rootNodes = new TreeNode[files.size()];
+				int index = 0;
+				for (ReviewScopeItem item : files) {
+					TreeNode node = new TreeNode(item);
+					List<IReviewFile> reviewFiles = item
+							.getReviewFiles(new NullProgressMonitor());
+					TreeNode[] children = new TreeNode[reviewFiles.size()];
+					for (int i = 0; i < reviewFiles.size(); i++) {
+						children[i] = new TreeNode(reviewFiles.get(i));
+						children[i].setParent(node);
+					}
+					node.setChildren(children);
+
+					rootNodes[index++] = node;
+				}
+
 				Display.getCurrent().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						fileList.setInput(files);	
+						fileList.setInput(rootNodes);	
+						if(rootNodes.length==0) {
+							section.setExpanded(false);
+						}
 					}
 				});
-				
+
 			}
-			
+
 			@Override
 			public void handleException(Throwable exception) {
 				exception.printStackTrace();
 			}
-			private List<IReviewFile> getInput() throws CoreException {
-				List<IReviewFile> files = new ArrayList<IReviewFile>();
-				ReviewScope reviewScope = getReviewScope();
-				if (reviewScope != null) {
-					// FIXME parse all scopes
-					for (ReviewScopeItem scopeItem : reviewScope.getItems()) {
-						files.addAll(scopeItem
-								.getReviewFiles(new NullProgressMonitor()));
-					}
-				}
-				return files;
-			}
 
 		});
+	}
+
+	private TreeViewerColumn createColumn(TreeViewer tree, String title,
+			int width) {
+		TreeViewerColumn column = new TreeViewerColumn(tree, SWT.LEFT);
+		column.getColumn().setText(title);
+		column.getColumn().setWidth(width);
+		column.getColumn().setResizable(true);
+		return column;
 	}
 
 	private void createResultFields(Composite composite, FormToolkit toolkit) {
@@ -367,7 +397,6 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 		ReviewResult res = mapper.mapCurrentReviewResult(taskProperties);
 		return res;
 	}
-
 
 	private static class MissingFile extends CompositeImageDescriptor {
 		ISharedImages sharedImages = PlatformUI.getWorkbench()

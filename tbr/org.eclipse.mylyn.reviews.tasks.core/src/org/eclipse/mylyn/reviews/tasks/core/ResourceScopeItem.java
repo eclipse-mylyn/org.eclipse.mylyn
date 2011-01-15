@@ -136,7 +136,13 @@ public class ResourceScopeItem implements ReviewScopeItem {
 
 	@Override
 	public String getDescription() {
-		return "resource";
+		return "Attachment "+attachment.getFileName();
 	}
+
+	@Override
+	public String getType(int count) {
+		return count==1?"resource":"resources";
+	}
+
 
 }

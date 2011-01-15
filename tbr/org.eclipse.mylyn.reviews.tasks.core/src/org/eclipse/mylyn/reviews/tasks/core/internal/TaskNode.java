@@ -38,7 +38,7 @@ public class TaskNode extends AbstractTreeNode {
 		StringBuilder sb = new StringBuilder();
 		if(patchCount >0) {
 			sb.append(patchCount);
-			sb.append(" Patch");
+			sb.append(" patch");
 			if(patchCount>1) {
 				sb.append("es");
 			}

@@ -74,7 +74,12 @@ public class PatchScopeItem implements ReviewScopeItem {
 
 	@Override
 	public String getDescription() {
-		return "patch";
+		return "Patch "+attachment.getFileName();
+	}
+
+	@Override
+	public String getType(int count) {
+		return count ==1? "patch":"patches";
 	}
 
 }

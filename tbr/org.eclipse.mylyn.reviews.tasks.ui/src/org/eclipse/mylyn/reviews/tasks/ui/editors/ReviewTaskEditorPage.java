@@ -120,9 +120,8 @@ public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
 		return scope;
 	}
 
-	/*package*/ ITreeNode getReviewResults(IProgressMonitor monitor) throws CoreException {
-		return ReviewsUtil
-		.getReviewSubTasksFor(getModel().getTask(),
+	/* package */ITreeNode getReviewResults(IProgressMonitor monitor) throws CoreException {
+		return ReviewsUtil.getReviewSubTasksFor(getModel().getTask(),
 				TasksUi.getTaskDataManager(),
 				ReviewsUiPlugin.getMapper(),
 				monitor);
