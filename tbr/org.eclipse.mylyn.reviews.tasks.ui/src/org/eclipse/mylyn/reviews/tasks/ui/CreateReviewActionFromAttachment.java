@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.tasks.ui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -27,7 +31,6 @@ import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewsUtil;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskProperties;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -39,81 +42,88 @@ import org.eclipse.ui.IActionDelegate;
 public class CreateReviewActionFromAttachment extends Action implements
 		IActionDelegate {
 
-	private Attachment attachment;
-	private ITaskAttachment taskAttachment;
+	private List<ITaskAttachment> selection2;
 
 	public void run(IAction action) {
-		if (attachment != null) {
-			try {
-				// FIXME move common creation to a subclass
-				TaskRepository taskRepository = taskAttachment
-						.getTaskRepository();
-				ITaskDataManager manager = TasksUi.getTaskDataManager();
-				ITask parentTask = taskAttachment.getTask();
-				TaskData parentTaskData = manager.getTaskData(taskAttachment
-						.getTask());
+		try {
+			// FIXME move common creation to a subclass
+			ITaskAttachment taskAttachment = selection2.get(0);
 
-				TaskMapper initializationData = new TaskMapper(parentTaskData);
-				IReviewMapper taskMapper = ReviewsUiPlugin.getMapper();
+			TaskRepository taskRepository = taskAttachment.getTaskRepository();
+			ITaskDataManager manager = TasksUi.getTaskDataManager();
+			TaskData parentTaskData = manager.getTaskData(taskAttachment
+					.getTask());
+			ITaskProperties parentTask= TaskProperties.fromTaskData(manager, parentTaskData);
 
-				TaskData taskData = TasksUiInternal.createTaskData(
-						taskRepository, initializationData, null,
-						new NullProgressMonitor());
-				AbstractRepositoryConnector connector = TasksUiPlugin
-						.getConnector(taskRepository.getConnectorKind());
+			TaskMapper initializationData = new TaskMapper(parentTaskData);
+			IReviewMapper taskMapper = ReviewsUiPlugin.getMapper();
 
-				connector.getTaskDataHandler().initializeSubTaskData(
-						taskRepository, taskData, parentTaskData,
-						new NullProgressMonitor());
+			TaskData taskData = TasksUiInternal.createTaskData(taskRepository,
+					initializationData, null, new NullProgressMonitor());
+			AbstractRepositoryConnector connector = TasksUiPlugin
+					.getConnector(taskRepository.getConnectorKind());
 
-				ITaskProperties taskProperties = TaskProperties.fromTaskData(
-						manager, taskData);
-				taskProperties
-						.setSummary("[review] " + parentTask.getSummary());
+			connector.getTaskDataHandler().initializeSubTaskData(
+					taskRepository, taskData, parentTaskData,
+					new NullProgressMonitor());
 
-				String reviewer = taskRepository.getUserName();
-				taskProperties.setAssignedTo(reviewer);
+			ITaskProperties taskProperties = TaskProperties.fromTaskData(
+					manager, taskData);
+			taskProperties.setSummary("[review] " + parentTask.getDescription());
 
-				initTaskProperties(taskMapper, taskProperties);
+			String reviewer = taskRepository.getUserName();
+			taskProperties.setAssignedTo(reviewer);
 
-				TasksUiInternal.createAndOpenNewTask(taskData);
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
-			}
+			initTaskProperties(taskMapper, taskProperties,parentTask);
+
+			TasksUiInternal.createAndOpenNewTask(taskData);
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	private void initTaskProperties(IReviewMapper taskMapper,
-			ITaskProperties taskProperties) {
+			ITaskProperties taskProperties,ITaskProperties parentTask) {
 		ReviewScope scope = new ReviewScope();
-		if (attachment.isPatch()) {
-			scope.addScope(new PatchScopeItem(attachment));
-		} else {
-			scope.addScope(new ResourceScopeItem(attachment));
+		for (ITaskAttachment taskAttachment : selection2) {
+			// FIXME date from task attachment
+			Attachment attachment = ReviewsUtil
+					.findAttachment(taskAttachment.getFileName(),
+							taskAttachment.getAuthor().getPersonId(),
+							taskAttachment.getCreationDate().toString(),
+							parentTask);
+			if (attachment.isPatch()) {
+				scope.addScope(new PatchScopeItem(attachment));
+			} else {
+				scope.addScope(new ResourceScopeItem(attachment));
+			}
 		}
 		taskMapper.mapScopeToTask(scope, taskProperties);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		action.setEnabled(false);
+		action.setEnabled(true);
 		if (selection instanceof IStructuredSelection) {
+			if (selection.isEmpty()) {
+				action.setEnabled(false);
+				return;
+			}
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-			if (structuredSelection.size() == 1) {
-				if (structuredSelection.getFirstElement() instanceof ITaskAttachment) {
-					action.setEnabled(true);
-					taskAttachment = (ITaskAttachment) structuredSelection
-							.getFirstElement();
-					ITaskProperties taskProperties = TaskProperties
-							.fromTaskData(TasksUi.getTaskDataManager(),
-									taskAttachment.getTaskAttribute()
-											.getTaskData());
-					// FIXME date from task attachment
-					this.attachment = ReviewsUtil.findAttachment(taskAttachment
-							.getFileName(), taskAttachment.getAuthor()
-							.getPersonId(), taskAttachment.getCreationDate()
-							.toString(), taskProperties);
+			selection2 = new ArrayList<ITaskAttachment>();
+			@SuppressWarnings("unchecked")
+			Iterator<ITaskAttachment> iterator = structuredSelection.iterator();
+			TaskRepository taskRepository = null;
+			while (iterator.hasNext()) {
+				ITaskAttachment attachment = iterator.next();
+				if (taskRepository == null) {
+					taskRepository = attachment.getTaskRepository();
+				} else if (!taskRepository.equals(attachment
+						.getTaskRepository())) {
+					action.setEnabled(false);
 				}
+
+				selection2.add(attachment);
 			}
 		}
 	}
