@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
+package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
 import java.text.DateFormat;
 

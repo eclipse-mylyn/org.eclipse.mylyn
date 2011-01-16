@@ -43,6 +43,7 @@ import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.SingleListChangeInfo;
+import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
@@ -138,6 +139,7 @@ public class GerritClient {
 		diffPrefs.setTabSize(4);
 		diffPrefs.setContext(AccountDiffPreference.WHOLE_FILE_CONTEXT);
 		diffPrefs.setIgnoreWhitespace(Whitespace.IGNORE_NONE);
+		diffPrefs.setIntralineDifference(false);
 		return execute(monitor, new GerritOperation<PatchScript>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
@@ -311,7 +313,8 @@ public class GerritClient {
 						item.setBase(revisionA);
 
 						IFileRevision revisionB = FACTORY.createFileRevision();
-						revisionB.setContent(patchScript.getB().asString());
+						SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
+						revisionB.setContent(target.asString());
 						revisionB.setPath(patchScript.getB().getPath());
 						revisionB.setRevision(itemSet.getName());
 						addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());

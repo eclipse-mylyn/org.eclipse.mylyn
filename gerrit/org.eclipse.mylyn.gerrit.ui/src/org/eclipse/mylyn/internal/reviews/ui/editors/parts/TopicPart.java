@@ -9,8 +9,9 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
+package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
+import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
@@ -19,7 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
 
 /**
  * A UI part to represent a general comment in a review

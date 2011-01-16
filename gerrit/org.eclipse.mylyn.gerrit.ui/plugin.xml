@@ -53,17 +53,17 @@
 	-->
 	
 	<extension point="org.eclipse.ui.editors.annotationTypes">
-		<type name="com.atlassian.connector.eclipse.cruicible.ui.comment.annotation"/>
+		<type name="org.eclipse.mylyn.reviews.ui.comment.Annotation"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
-		<specification annotationType="com.atlassian.connector.eclipse.cruicible.ui.comment.annotation" 
+		<specification annotationType="org.eclipse.mylyn.reviews.ui.comment.Annotation" 
 			colorPreferenceKey="comment_color" 
 			colorPreferenceValue="179,215,255" 
 			contributesToHeader="true" 
 			highlightPreferenceKey="comment_highlight" 
 			highlightPreferenceValue="true" 
-			icon="/icons/gerrit.png" 
+			icon="icons/gerrit.png" 
 			includeOnPreferencePage="true" 
 			isGoToNextNavigationTarget="false" 
 			isGoToNextNavigationTargetKey="comment_isGoToNextNavigationTargetKey" 
@@ -84,9 +84,9 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">
-		<column id="com.atlassian.connector.eclipse.crucible.ui.editor.annotationRuler" name="Crucible Comments"
+		<column id="org.eclipse.mylyn.reviews.ui.editor.AnnotationRuler" name="Review Comments"
 			icon="icons/gerrit.png"
-			class="com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler.CommentAnnotationRulerColumn"
+			class="org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn"
 			enabled="true"
 			global="true"
 			includeInMenu="true">

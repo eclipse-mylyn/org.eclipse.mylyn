@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +39,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
@@ -59,7 +60,6 @@ import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler.CommentAnnotationRulerColumn;
 
 /**
  * Model for annotations in the diff view.
@@ -67,7 +67,7 @@ import com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler.Comment
  * @author Thomas Ehrnhoefer
  */
 @SuppressWarnings("restriction")
-public class CrucibleCompareAnnotationModel {
+public class ReviewCompareAnnotationModel {
 
 	private static SourceViewer getSourceViewer(MergeSourceViewer sourceViewer) {
 		if (SourceViewer.class.isInstance(sourceViewer)) {
@@ -88,7 +88,7 @@ public class CrucibleCompareAnnotationModel {
 		return null;
 	}
 
-	private final class CrucibleViewerTextInputListener implements ITextInputListener, ICrucibleCompareSourceViewer {
+	private final class CrucibleViewerTextInputListener implements ITextInputListener, IReviewCompareSourceViewer {
 		private final class ColoringLineBackgroundListener implements LineBackgroundListener {
 			private final StyledText styledText;
 
@@ -115,7 +115,7 @@ public class CrucibleCompareAnnotationModel {
 				}
 
 				AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-				final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CrucibleCommentAnnotation.COMMENT_ANNOTATION_ID);
+				final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
 
 				updateCommentedColor(commentedPref, store);
 
@@ -135,9 +135,9 @@ public class CrucibleCompareAnnotationModel {
 				int documentOffset = 0;
 				documentOffset = getDocumentOffset(event);
 				int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1 + documentOffset;
-				Iterator<CrucibleCommentAnnotation> it = crucibleAnnotationModel.getAnnotationIterator();
+				Iterator<CommentAnnotation> it = crucibleAnnotationModel.getAnnotationIterator();
 				while (it.hasNext()) {
-					CrucibleCommentAnnotation annotation = it.next();
+					CommentAnnotation annotation = it.next();
 					int startLine;
 					int endLine;
 					ITopic comment = annotation.getTopic();
@@ -204,7 +204,7 @@ public class CrucibleCompareAnnotationModel {
 
 		private final SourceViewer sourceViewer;
 
-		private final CrucibleAnnotationModel crucibleAnnotationModel;
+		private final ReviewAnnotationModel crucibleAnnotationModel;
 
 		private final boolean oldFile;
 
@@ -217,7 +217,7 @@ public class CrucibleCompareAnnotationModel {
 		private String initialText;
 
 		private CrucibleViewerTextInputListener(MergeSourceViewer sourceViewer,
-				CrucibleAnnotationModel crucibleAnnotationModel, boolean oldFile) {
+				ReviewAnnotationModel crucibleAnnotationModel, boolean oldFile) {
 			this.sourceViewer = getSourceViewer(sourceViewer);
 			this.mergeSourceViewer = sourceViewer;
 			this.crucibleAnnotationModel = crucibleAnnotationModel;
@@ -281,7 +281,7 @@ public class CrucibleCompareAnnotationModel {
 				throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException,
 				IllegalAccessException, InvocationTargetException {
 
-			sourceViewer.setOverviewRulerAnnotationHover(new CrucibleAnnotationHover(null));
+			sourceViewer.setOverviewRulerAnnotationHover(new CommentAnnotationHover(null));
 
 			OverviewRuler ruler = new OverviewRuler(new DefaultMarkerAnnotationAccess(), 15, EditorsPlugin.getDefault()
 					.getSharedTextColors());
@@ -311,7 +311,7 @@ public class CrucibleCompareAnnotationModel {
 				Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
 				annotationHover.setAccessible(true);
 				IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
-				annotationHover.set(manager, new CrucibleAnnotationHover(null));
+				annotationHover.set(manager, new CommentAnnotationHover(null));
 			}
 			sourceViewer.showAnnotations(true);
 			sourceViewer.showAnnotationsOverview(true);
@@ -348,13 +348,13 @@ public class CrucibleCompareAnnotationModel {
 
 		public void forceCustomAnnotationHover() throws NoSuchFieldException, IllegalAccessException {
 			Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
-			sourceViewer.setAnnotationHover(new CrucibleAnnotationHover(null));
+			sourceViewer.setAnnotationHover(new CommentAnnotationHover(null));
 
 			// FIXME: hack for e3.5
 			try {
 				Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator");
 				hoverControlCreator.setAccessible(true);
-				hoverControlCreator.set(sourceViewer, new CrucibleInformationControlCreator());
+				hoverControlCreator.set(sourceViewer, new CommentInformationControlCreator());
 			} catch (Throwable t) {
 				// ignore as it may not exist in other versions
 			}
@@ -375,7 +375,7 @@ public class CrucibleCompareAnnotationModel {
 				Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
 				annotationHover.setAccessible(true);
 				IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
-				annotationHover.set(manager, new CrucibleAnnotationHover(hover));
+				annotationHover.set(manager, new CommentAnnotationHover(hover));
 			}
 			sourceViewer.showAnnotations(true);
 			sourceViewer.showAnnotationsOverview(true);
@@ -435,14 +435,14 @@ public class CrucibleCompareAnnotationModel {
 			return null;
 		}
 
-		public boolean isListenerFor(MergeSourceViewer viewer, CrucibleAnnotationModel annotationModel) {
+		public boolean isListenerFor(MergeSourceViewer viewer, ReviewAnnotationModel annotationModel) {
 			return this.mergeSourceViewer == viewer && this.crucibleAnnotationModel == annotationModel;
 		}
 	}
 
-	private final CrucibleAnnotationModel leftAnnotationModel;
+	private final ReviewAnnotationModel leftAnnotationModel;
 
-	private final CrucibleAnnotationModel rightAnnotationModel;
+	private final ReviewAnnotationModel rightAnnotationModel;
 
 	private final IReview review;
 
@@ -458,12 +458,12 @@ public class CrucibleCompareAnnotationModel {
 
 	private MergeSourceViewer fLeftSourceViewer;
 
-	public CrucibleCompareAnnotationModel(IFileItem crucibleFile, IReview review, ITopic commentToFocus) {
+	public ReviewCompareAnnotationModel(IFileItem crucibleFile, IReview review, ITopic commentToFocus) {
 		super();
 		this.review = review;
-		this.leftAnnotationModel = new CrucibleAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase(),
+		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase(),
 				review);
-		this.rightAnnotationModel = new CrucibleAnnotationModel(null, null, null, crucibleFile,
+		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile,
 				crucibleFile.getTarget(), review);
 		this.commentToFocus = commentToFocus;
 	}
@@ -517,7 +517,7 @@ public class CrucibleCompareAnnotationModel {
 	}
 
 	private boolean isListenerFor(CrucibleViewerTextInputListener listener, MergeSourceViewer viewer,
-			CrucibleAnnotationModel annotationModel) {
+			ReviewAnnotationModel annotationModel) {
 		if (listener == null) {
 			return false;
 		}
@@ -525,7 +525,7 @@ public class CrucibleCompareAnnotationModel {
 	}
 
 	private CrucibleViewerTextInputListener addTextInputListener(final MergeSourceViewer sourceViewer,
-			final CrucibleAnnotationModel crucibleAnnotationModel, boolean oldFile) {
+			final ReviewAnnotationModel crucibleAnnotationModel, boolean oldFile) {
 		CrucibleViewerTextInputListener listener = new CrucibleViewerTextInputListener(sourceViewer,
 				crucibleAnnotationModel, oldFile);
 		SourceViewer viewer = getSourceViewer(sourceViewer);
@@ -615,7 +615,7 @@ public class CrucibleCompareAnnotationModel {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		CrucibleCompareAnnotationModel other = (CrucibleCompareAnnotationModel) obj;
+		ReviewCompareAnnotationModel other = (ReviewCompareAnnotationModel) obj;
 		if (leftAnnotationModel == null) {
 			if (other.leftAnnotationModel != null) {
 				return false;

@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -53,36 +53,65 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleAnnotationHoverInput;
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleCommentAnnotation;
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleCommentPopupDialog;
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleInformationControlCreator;
+/**
+ * Class to determine the annotations to show the hover for. This class delegates to a parent hover if it exists.
+ * 
+ * @author Shawn Minto
+ */
+public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHoverExtension, IAnnotationHoverExtension2 {
 
-public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotationHoverExtension,
-		IAnnotationHoverExtension2 {
+	private final IAnnotationHover parentHover;
 
-	private final IInformationControlCreator informationControlCreator = new CrucibleInformationControlCreator();
-
-	private final CommentAnnotationRulerColumn rulerColumn;
+	private final IInformationControlCreator informationControlCreator;
 
 	private static ISourceViewer currentSourceViewer;
 
-	private static CommentAnnotationRulerHover currentAnnotationHover;
+	private static CommentAnnotationHover currentAnnotationHover;
 
-	public CommentAnnotationRulerHover(CommentAnnotationRulerColumn column) {
-		this.rulerColumn = column;
+	public CommentAnnotationHover(IAnnotationHover hover) {
+		this.parentHover = hover;
+		informationControlCreator = new CommentInformationControlCreator();
 	}
 
 	public void dispose() {
 		// ignore for now
 	}
 
-	/**
-	 * This is from {@link IAnnotationHover} but we also implement {@link IAnnotationHoverExtension} and
-	 * {@link IAnnotationHoverExtension2} which supersede this so there's no point in implementing it.
-	 */
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
-		throw new UnsupportedOperationException("This API should not be used");
+		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(sourceViewer, lineNumber);
+		if (commentAnnotations != null && commentAnnotations.size() > 0) {
+
+			if (commentAnnotations.size() == 1) {
+				CommentAnnotation annotation = commentAnnotations.get(0);
+				String message = annotation.getText();
+				if (message != null && message.trim().length() > 0) {
+					return formatSingleMessage(message);
+				}
+
+			} else {
+
+				List<String> messages = new ArrayList<String>();
+				for (CommentAnnotation annotation : commentAnnotations) {
+					String message = annotation.getText();
+					if (message != null && message.trim().length() > 0) {
+						messages.add(message.trim());
+					}
+				}
+
+				if (messages.size() == 1) {
+					return formatSingleMessage(messages.get(0));
+				}
+
+				if (messages.size() > 1) {
+					return formatMultipleMessages(messages);
+				}
+			}
+		} else {
+			if (parentHover != null) {
+				return parentHover.getHoverInfo(sourceViewer, lineNumber);
+			}
+		}
+		return null;
 	}
 
 	public IInformationControlCreator getHoverControlCreator() {
@@ -98,24 +127,26 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	}
 
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
-		List<CrucibleCommentAnnotation> annotationsForLine = rulerColumn.getAnnotations(lineRange.getStartLine());
-		if (annotationsForLine != null && annotationsForLine.size() > 0) {
-			return new CrucibleAnnotationHoverInput(annotationsForLine);
+		List<CommentAnnotation> annotationsForLine = getCrucibleAnnotationsForLine(sourceViewer,
+				lineRange.getStartLine());
+		if (annotationsForLine == null || annotationsForLine.size() == 0) {
+			return getHoverInfo(sourceViewer, lineRange.getStartLine());
+		} else {
+			return new CommentAnnotationHoverInput(annotationsForLine);
 		}
-		return null;
 	}
 
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		currentAnnotationHover = this;
 		currentSourceViewer = viewer;
-		List<CrucibleCommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(viewer, lineNumber);
+		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(viewer, lineNumber);
 		if (commentAnnotations != null && commentAnnotations.size() > 0) {
 			IDocument document = viewer.getDocument();
 			int lowestStart = Integer.MAX_VALUE;
 			int highestEnd = 0;
 			for (Annotation a : commentAnnotations) {
-				if (a instanceof CrucibleCommentAnnotation) {
-					Position p = ((CrucibleCommentAnnotation) a).getPosition();
+				if (a instanceof CommentAnnotation) {
+					Position p = ((CommentAnnotation) a).getPosition();
 					try {
 
 						int start = document.getLineOfOffset(p.offset);
@@ -188,8 +219,8 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	}
 
 	private boolean includeAnnotation(Annotation annotation, Position position,
-			List<CrucibleCommentAnnotation> annotations) {
-		if (!(annotation instanceof CrucibleCommentAnnotation)) {
+			List<CommentAnnotation> annotations) {
+		if (!(annotation instanceof CommentAnnotation)) {
 			return false;
 		}
 
@@ -197,14 +228,14 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<CrucibleCommentAnnotation> getCrucibleAnnotationsForLine(ISourceViewer viewer, int line) {
+	private List<CommentAnnotation> getCrucibleAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {
 			return null;
 		}
 
 		IDocument document = viewer.getDocument();
-		List<CrucibleCommentAnnotation> commentAnnotations = new ArrayList<CrucibleCommentAnnotation>();
+		List<CommentAnnotation> commentAnnotations = new ArrayList<CommentAnnotation>();
 		Iterator<Annotation> iterator = model.getAnnotationIterator();
 
 		while (iterator.hasNext()) {
@@ -226,16 +257,16 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 					annotation = e.next();
 					position = model.getPosition(annotation);
 					if (position != null && includeAnnotation(annotation, position, commentAnnotations)
-							&& annotation instanceof CrucibleCommentAnnotation) {
-						commentAnnotations.add((CrucibleCommentAnnotation) annotation);
+							&& annotation instanceof CommentAnnotation) {
+						commentAnnotations.add((CommentAnnotation) annotation);
 					}
 				}
 				continue;
 			}
 
 			if (includeAnnotation(annotation, position, commentAnnotations)
-					&& annotation instanceof CrucibleCommentAnnotation) {
-				commentAnnotations.add((CrucibleCommentAnnotation) annotation);
+					&& annotation instanceof CommentAnnotation) {
+				commentAnnotations.add((CommentAnnotation) annotation);
 			}
 		}
 
@@ -276,15 +307,15 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 		try {
 
 			// compute the hover information
-			Object hoverInfo = null;
+			Object hoverInfo;
 			if (currentAnnotationHover instanceof IAnnotationHoverExtension) {
-				/*FIXME: IAnnotationHoverExtension extension = currentAnnotationHover;
+				IAnnotationHoverExtension extension = currentAnnotationHover;
 				ILineRange hoverLineRange = extension.getHoverLineRange(currentSourceViewer, line);
 				if (hoverLineRange == null) {
 					return false;
 				}
 				final int maxVisibleLines = Integer.MAX_VALUE;
-				hoverInfo = extension.getHoverInfo(currentSourceViewer, hoverLineRange, maxVisibleLines);*/
+				hoverInfo = extension.getHoverInfo(currentSourceViewer, hoverLineRange, maxVisibleLines);
 			} else {
 				hoverInfo = currentAnnotationHover.getHoverInfo(currentSourceViewer, line);
 			}
@@ -306,7 +337,7 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 			IInformationProvider informationProvider = new InformationProvider(new Region(offset, 0), hoverInfo,
 					controlCreator);
 
-			CrucibleCommentPopupDialog dialog = CrucibleCommentPopupDialog.getCurrentPopupDialog();
+			CommentPopupDialog dialog = CommentPopupDialog.getCurrentPopupDialog();
 			if (dialog != null) {
 
 				InformationPresenter fInformationPresenter = dialog.getInformationControl().getInformationPresenter();

@@ -23,17 +23,19 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
+import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -42,15 +44,13 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleCompareAnnotationModel;
-import com.atlassian.connector.eclipse.internal.crucible.ui.operations.CrucibleFileInfoCompareEditorInput;
 
 /**
  * @author Steffen Pingel
@@ -147,7 +147,7 @@ public class ReviewSection extends AbstractTaskEditorSection {
 		subSection.setTextClient(toolkit.createLabel(subSection, item.getId()));
 
 		if (item.getItems().size() > 0) {
-			ListViewer viewer = new ListViewer(subSection);
+			TableViewer viewer = new TableViewer(subSection, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
 			viewer.setContentProvider(new IStructuredContentProvider() {
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 					// ignore
@@ -162,19 +162,14 @@ public class ReviewSection extends AbstractTaskEditorSection {
 				}
 			});
 			viewer.setInput(item.getItems());
-			viewer.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element) {
-					return ((IFileItem) element).getName();
-				}
-			});
+			viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ReviewItemLabelProvider()));
 			viewer.addOpenListener(new IOpenListener() {
 				public void open(OpenEvent event) {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					IFileItem item = (IFileItem) selection.getFirstElement();
-					CrucibleCompareAnnotationModel model = new CrucibleCompareAnnotationModel(item, review, null);
+					ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, review, null);
 					CompareConfiguration configuration = new CompareConfiguration();
-					CompareUI.openCompareEditor(new CrucibleFileInfoCompareEditorInput(item, model, configuration));
+					CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
 				}
 			});
 			subSection.setClient(viewer.getControl());

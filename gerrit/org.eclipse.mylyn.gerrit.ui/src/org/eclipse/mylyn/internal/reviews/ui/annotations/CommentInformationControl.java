@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,21 +37,21 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author sminto
  */
-public class CrucibleInformationControl extends DefaultInformationControl implements IInformationControlExtension2 {
+public class CommentInformationControl extends DefaultInformationControl implements IInformationControlExtension2 {
 
 	private Object input;
 
-	private CrucibleCommentPopupDialog commentPopupDialog;
+	private CommentPopupDialog commentPopupDialog;
 
-	private final CrucibleInformationControlCreator informationControlCreator;
+	private final CommentInformationControlCreator informationControlCreator;
 
 	private Job markAsReadJob;
 
 	@SuppressWarnings("restriction")
-	public CrucibleInformationControl(Shell parent, CrucibleInformationControlCreator crucibleInformationControlCreator) {
+	public CommentInformationControl(Shell parent, CommentInformationControlCreator crucibleInformationControlCreator) {
 		super(parent, new HTMLTextPresenter(true));
 		this.informationControlCreator = crucibleInformationControlCreator;
-		commentPopupDialog = new CrucibleCommentPopupDialog(parent, SWT.NO_FOCUS | SWT.ON_TOP);
+		commentPopupDialog = new CommentPopupDialog(parent, SWT.NO_FOCUS | SWT.ON_TOP);
 		// Force create early so that listeners can be added at all times with API.
 		commentPopupDialog.create();
 		commentPopupDialog.setInformationControl(this);
@@ -78,14 +78,14 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 		return input != null || super.hasContents();
 	}
 
-	private void runMarkCommentAsReadJob(CrucibleAnnotationHoverInput input) {
-		List<CrucibleCommentAnnotation> annotations = input.getCrucibleAnnotations();
+	private void runMarkCommentAsReadJob(CommentAnnotationHoverInput input) {
+		List<CommentAnnotation> annotations = input.getCrucibleAnnotations();
 		if (annotations == null || annotations.size() == 0) {
 			return;
 		}
 
 		Set<IComment> comments = new HashSet<IComment>();
-		for (CrucibleCommentAnnotation annotation : annotations) {
+		for (CommentAnnotation annotation : annotations) {
 			comments.addAll(getUnreadComments(annotation.getTopic()));
 		}
 
@@ -121,10 +121,10 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 		if (input instanceof String) {
 			setInformation((String) input);
 			super.setVisible(visible);
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			if (visible) {
 				commentPopupDialog.open();
-				runMarkCommentAsReadJob((CrucibleAnnotationHoverInput) input);
+				runMarkCommentAsReadJob((CommentAnnotationHoverInput) input);
 			} else {
 				commentPopupDialog.getShell().setVisible(false);
 			}
@@ -163,7 +163,7 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 	public Rectangle computeTrim() {
 		if (input instanceof String) {
 			return super.computeTrim();
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			return commentPopupDialog.computeTrim();
 		} else {
 			return super.computeTrim();
@@ -175,7 +175,7 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 	public Rectangle getBounds() {
 		if (input instanceof String) {
 			return super.getBounds();
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			return commentPopupDialog.getBounds();
 		} else {
 			return super.getBounds();
@@ -210,7 +210,7 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 	public boolean isFocusControl() {
 		if (input instanceof String) {
 			return super.isFocusControl();
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			return commentPopupDialog.isFocusControl();
 		} else {
 			return super.isFocusControl();
@@ -223,7 +223,7 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 
 		if (input instanceof String) {
 			super.setFocus();
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			commentPopupDialog.setFocus();
 		} else {
 			super.setFocus();
@@ -247,17 +247,16 @@ public class CrucibleInformationControl extends DefaultInformationControl implem
 		if (input instanceof String) {
 			setInformation((String) input);
 			return super.computeSizeHint();
-		} else if (input instanceof CrucibleAnnotationHoverInput) {
+		} else if (input instanceof CommentAnnotationHoverInput) {
 			return commentPopupDialog.computeSizeHint();
 		} else {
 			return super.computeSizeHint();
 		}
-
 	}
 
 	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		return new CrucibleInformationControlCreator();
+		return new CommentInformationControlCreator();
 	}
 
 }

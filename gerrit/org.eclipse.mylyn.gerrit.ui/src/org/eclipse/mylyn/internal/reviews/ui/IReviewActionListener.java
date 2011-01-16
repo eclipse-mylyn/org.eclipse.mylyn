@@ -1,3 +1,4 @@
+package org.eclipse.mylyn.internal.reviews.ui;
 /*******************************************************************************
  * Copyright (c) 2009 Atlassian and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,19 +10,18 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
 
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jface.action.Action;
 
 /**
- * The class that will created the information control for the annotation
+ * Listener for when an IReviewAction has ran
  * 
  * @author Shawn Minto
  */
-public class CrucibleInformationControlCreator implements IInformationControlCreator {
-	public IInformationControl createInformationControl(Shell parent) {
-		return new CrucibleInformationControl(parent, this);
-	}
+public interface IReviewActionListener {
+
+	void actionRan(Action action);
+
+	void actionAboutToRun(Action action);
+
 }

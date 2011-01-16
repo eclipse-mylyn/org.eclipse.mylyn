@@ -1,4 +1,3 @@
-package com.atlassian.connector.eclipse.internal.crucible.ui;
 /*******************************************************************************
  * Copyright (c) 2009 Atlassian and others.
  * All rights reserved. This program and the accompanying materials
@@ -10,18 +9,29 @@ package com.atlassian.connector.eclipse.internal.crucible.ui;
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
-import org.eclipse.jface.action.Action;
+import java.util.List;
 
 /**
- * Listener for when an IReviewAction has ran
+ * Data model to represent the annotations that we need to display in the hover.
  * 
  * @author Shawn Minto
  */
-public interface IReviewActionListener {
+public class CommentAnnotationHoverInput {
 
-	void actionRan(Action action);
+	private final List<CommentAnnotation> annotations;
 
-	void actionAboutToRun(Action action);
+	public CommentAnnotationHoverInput(List<CommentAnnotation> annotations) {
+		this.annotations = annotations;
+	}
+
+	public boolean containsInput() {
+		return annotations != null && annotations.size() > 0;
+	}
+
+	public List<CommentAnnotation> getCrucibleAnnotations() {
+		return annotations;
+	}
 
 }

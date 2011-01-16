@@ -10,7 +10,7 @@
  *     Tasktop Technologies - improvements
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
@@ -22,15 +22,15 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
-public class CrucibleCommentAnnotation extends Annotation {
+public class CommentAnnotation extends Annotation {
 
-	public static final String COMMENT_ANNOTATION_ID = "com.atlassian.connector.eclipse.cruicible.ui.comment.annotation";
+	public static final String COMMENT_ANNOTATION_ID = "org.eclipse.mylyn.reviews.ui.comment.Annotation";
 
 	private final Position position;
 
 	private final ITopic comment;
 
-	public CrucibleCommentAnnotation(int offset, int length, ITopic comment) {
+	public CommentAnnotation(int offset, int length, ITopic comment) {
 		super(COMMENT_ANNOTATION_ID, false, null);
 		position = new Position(offset, length);
 		this.comment = comment;
@@ -66,10 +66,10 @@ public class CrucibleCommentAnnotation extends Annotation {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof CrucibleCommentAnnotation)) {
+		if (!(obj instanceof CommentAnnotation)) {
 			return false;
 		}
-		final CrucibleCommentAnnotation other = (CrucibleCommentAnnotation) obj;
+		final CommentAnnotation other = (CommentAnnotation) obj;
 		if (comment == null) {
 			if (other.comment != null) {
 				return false;

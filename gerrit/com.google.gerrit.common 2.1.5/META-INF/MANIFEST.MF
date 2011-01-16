@@ -11,10 +11,10 @@ Export-Package: com.google.gerrit.common;version="2.1.5",
  com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.common.errors;version="2.1.5"
-Import-Package: com.google.gwtjsonrpc.client,
+Import-Package: com.google.gwt.user.client.rpc,
+ com.google.gwtjsonrpc.client,
  com.google.gwtorm.client,
- com.google.gwt.user.client.rpc,
- org.eclipse.jgit.diff
+ org.eclipse.jgit.diff;resolution:=optional
 Require-Bundle: com.google.gerrit.reviewdb;bundle-version="2.1.5",
  com.google.gerrit.prettify;bundle-version="2.1.5"
 Bundle-Localization: plugin

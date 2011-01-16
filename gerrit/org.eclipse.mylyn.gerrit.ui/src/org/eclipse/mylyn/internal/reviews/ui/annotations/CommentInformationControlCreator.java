@@ -9,18 +9,21 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.swt.widgets.Shell;
 
 /**
- * An action that is used in a part for a review. This is used to notify other parts when the action has run (e.g. close
- * the annotation popup).
+ * The class that will created the information control for the annotation
  * 
  * @author Shawn Minto
  */
-public interface IReviewAction extends IAction {
-
-	void setActionListener(IReviewActionListener listener);
-
+public class CommentInformationControlCreator implements IInformationControlCreator {
+	
+	public IInformationControl createInformationControl(Shell parent) {
+		return new CommentInformationControl(parent, this);
+	}
+	
 }

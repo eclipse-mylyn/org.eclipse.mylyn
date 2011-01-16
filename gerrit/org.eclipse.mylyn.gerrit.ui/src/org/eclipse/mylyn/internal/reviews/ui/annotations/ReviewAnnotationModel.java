@@ -7,9 +7,10 @@
  *
  * Contributors:
  *     Atlassian - initial API and implementation
+ *     Tasktop Technologies - improvements
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,10 +45,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * The model for the annotations
  * 
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
-public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnotationModel {
+public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotationModel {
 
-	private final Set<CrucibleCommentAnnotation> annotations = new HashSet<CrucibleCommentAnnotation>(32);
+	private final Set<CommentAnnotation> annotations = new HashSet<CommentAnnotation>(32);
 
 	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
 
@@ -74,7 +76,7 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 
 	private final IFileRevision revision;
 
-	public CrucibleAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
+	public ReviewAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
 			IFileItem crucibleFile, IFileRevision revision, IReview review) {
 		this.textEditor = editor;
 		this.editorInput = editorInput;
@@ -123,7 +125,7 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 	}
 
 	protected void clear(AnnotationModelEvent event) {
-		for (CrucibleCommentAnnotation commentAnnotation : annotations) {
+		for (CommentAnnotation commentAnnotation : annotations) {
 			event.annotationRemoved(commentAnnotation, commentAnnotation.getPosition());
 		}
 		annotations.clear();
@@ -133,8 +135,11 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 		AnnotationModelEvent event = new AnnotationModelEvent(this);
 		clear(event);
 
-		if (crucibleFile != null) {
-
+		if (revision != null) {
+			for (ITopic comment : revision.getTopics()) {
+				createCommentAnnotation(event, comment);
+			}
+		} else if (crucibleFile != null) {
 			for (ITopic comment : crucibleFile.getTopics()) {
 				createCommentAnnotation(event, comment);
 			}
@@ -164,7 +169,7 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 				length = Math.max(editorDocument.getLineOffset(endLine - 1) - offset, 0);
 
 			}
-			CrucibleCommentAnnotation ca = new CrucibleCommentAnnotation(offset, length, comment);
+			CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
 			annotations.add(ca);
 			event.annotationAdded(ca);
 
@@ -199,7 +204,7 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 
 	public void connect(IDocument document) {
 
-		for (CrucibleCommentAnnotation commentAnnotation : annotations) {
+		for (CommentAnnotation commentAnnotation : annotations) {
 			try {
 				document.addPosition(commentAnnotation.getPosition());
 			} catch (BadLocationException e) {
@@ -211,7 +216,7 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 
 	public void disconnect(IDocument document) {
 
-		for (CrucibleCommentAnnotation commentAnnotation : annotations) {
+		for (CommentAnnotation commentAnnotation : annotations) {
 			document.removePosition(commentAnnotation.getPosition());
 		}
 
@@ -226,13 +231,13 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 		// do nothing, we do not support external modification
 	}
 
-	public Iterator<CrucibleCommentAnnotation> getAnnotationIterator() {
+	public Iterator<CommentAnnotation> getAnnotationIterator() {
 		return annotations.iterator();
 	}
 
 	public Position getPosition(Annotation annotation) {
-		if (annotation instanceof CrucibleCommentAnnotation) {
-			return ((CrucibleCommentAnnotation) annotation).getPosition();
+		if (annotation instanceof CommentAnnotation) {
+			return ((CommentAnnotation) annotation).getPosition();
 		} else {
 			// we dont understand any other annotations
 			return null;
@@ -253,8 +258,8 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 	/**
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
-	public CrucibleCommentAnnotation getFirstAnnotationForOffset(int offset) {
-		for (CrucibleCommentAnnotation annotation : annotations) {
+	public CommentAnnotation getFirstAnnotationForOffset(int offset) {
+		for (CommentAnnotation annotation : annotations) {
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				return annotation;
@@ -266,9 +271,9 @@ public class CrucibleAnnotationModel implements IAnnotationModel, ICrucibleAnnot
 	/**
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
-	public List<CrucibleCommentAnnotation> getAnnotationsForOffset(int offset) {
-		List<CrucibleCommentAnnotation> result = new ArrayList<CrucibleCommentAnnotation>();
-		for (CrucibleCommentAnnotation annotation : this.annotations) {
+	public List<CommentAnnotation> getAnnotationsForOffset(int offset) {
+		List<CommentAnnotation> result = new ArrayList<CommentAnnotation>();
+		for (CommentAnnotation annotation : this.annotations) {
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				result.add(annotation);

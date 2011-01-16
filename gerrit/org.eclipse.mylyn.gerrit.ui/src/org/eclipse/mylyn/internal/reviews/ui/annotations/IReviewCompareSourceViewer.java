@@ -9,12 +9,12 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 
-public interface ICrucibleCompareSourceViewer {
+public interface IReviewCompareSourceViewer {
 
 	LineRange getSelection();
 

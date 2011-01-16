@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
+package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -22,9 +22,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
+import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.ui.SizeCachingComposite;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
@@ -38,9 +41,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewAction;
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
-import com.atlassian.connector.eclipse.ui.forms.SizeCachingComposite;
 
 /**
  * A UI part to represent a comment in a review

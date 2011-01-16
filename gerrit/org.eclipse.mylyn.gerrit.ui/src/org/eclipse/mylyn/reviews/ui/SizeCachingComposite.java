@@ -8,7 +8,7 @@
  * Contributors:
  *     Atlassian - initial API and implementation
  ******************************************************************************/
-package com.atlassian.connector.eclipse.ui.forms;
+package org.eclipse.mylyn.reviews.ui;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;

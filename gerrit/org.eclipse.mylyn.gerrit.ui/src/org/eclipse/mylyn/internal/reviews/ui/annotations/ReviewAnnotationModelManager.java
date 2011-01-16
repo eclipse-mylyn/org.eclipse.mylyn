@@ -9,9 +9,10 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.compare.internal.CompareEditor;
+import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
 import org.eclipse.mylyn.reviews.internal.core.model.Review;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -20,16 +21,15 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.operations.CrucibleFileInfoCompareEditorInput;
 
 /**
  * Class to manage the annotation model for the open editors
  * 
  * @author Shawn Minto
  */
-public final class CrucibleAnnotationModelManager {
+public final class ReviewAnnotationModelManager {
 
-	private CrucibleAnnotationModelManager() {
+	private ReviewAnnotationModelManager() {
 		// ignore
 	}
 
@@ -48,8 +48,8 @@ public final class CrucibleAnnotationModelManager {
 
 	private static void update(CompareEditor editor, Review activeReview) {
 		IEditorInput editorInput = editor.getEditorInput();
-		if (editorInput instanceof CrucibleFileInfoCompareEditorInput) {
-			((CrucibleFileInfoCompareEditorInput) editorInput).getAnnotationModelToAttach().updateCrucibleFile(
+		if (editorInput instanceof ReviewCompareEditorInput) {
+			((ReviewCompareEditorInput) editorInput).getAnnotationModelToAttach().updateCrucibleFile(
 					activeReview);
 		}
 	}

@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.operations;
+package org.eclipse.mylyn.internal.reviews.ui.operations;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -36,14 +36,13 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleCompareAnnotationModel;
-
-public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
+public class ReviewCompareEditorInput extends CompareEditorInput {
 
 	static class ByteArrayInput implements ITypedElement, IStreamContentAccessor {
 
@@ -66,7 +65,7 @@ public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
 
 		public String getType() {
 			String extension = FilenameUtils.getExtension(name);
-			return extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
+			return extension != null && extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
 		}
 
 		public InputStream getContents() throws CoreException {
@@ -79,11 +78,11 @@ public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
 
 	private final byte[] content2;
 
-	private final CrucibleCompareAnnotationModel annotationModel;
+	private final ReviewCompareAnnotationModel annotationModel;
 
 	private final IFileItem file;
 
-	public CrucibleFileInfoCompareEditorInput(IFileItem file, CrucibleCompareAnnotationModel annotationModel,
+	public ReviewCompareEditorInput(IFileItem file, ReviewCompareAnnotationModel annotationModel,
 			CompareConfiguration compareConfiguration) {
 		super(compareConfiguration);
 		this.content1 = getContent(file.getBase());
@@ -111,11 +110,11 @@ public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
 	@Override
 	public Viewer findContentViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
 		Viewer contentViewer = super.findContentViewer(oldViewer, input, parent);
-		return CrucibleFileInfoCompareEditorInput.findContentViewer(contentViewer, input, parent, annotationModel);
+		return ReviewCompareEditorInput.findContentViewer(contentViewer, input, parent, annotationModel);
 	}
 
 	private static Viewer findContentViewer(Viewer contentViewer, ICompareInput input, Composite parent,
-			CrucibleCompareAnnotationModel annotationModel) {
+			ReviewCompareAnnotationModel annotationModel) {
 
 		// FIXME: hack
 		if (contentViewer instanceof TextMergeViewer) {
@@ -178,7 +177,7 @@ public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
 		}
 	}
 
-	public CrucibleCompareAnnotationModel getAnnotationModelToAttach() {
+	public ReviewCompareAnnotationModel getAnnotationModelToAttach() {
 		return annotationModel;
 	}
 
@@ -201,7 +200,7 @@ public class CrucibleFileInfoCompareEditorInput extends CompareEditorInput {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		CrucibleFileInfoCompareEditorInput other = (CrucibleFileInfoCompareEditorInput) obj;
+		ReviewCompareEditorInput other = (ReviewCompareEditorInput) obj;
 		if (annotationModel == null) {
 			if (other.annotationModel != null) {
 				return false;

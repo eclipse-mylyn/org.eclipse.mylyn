@@ -9,11 +9,13 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
+import org.eclipse.mylyn.internal.reviews.ui.editors.parts.TopicPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeListener;
@@ -28,21 +30,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
-import com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts.TopicPart;
 
 /**
  * Popup to show the information about the annotation in
  * 
  * @author Shawn Minto
  */
-public class CrucibleCommentPopupDialog extends PopupDialog implements IReviewActionListener {
+public class CommentPopupDialog extends PopupDialog implements IReviewActionListener {
 
 	private static final int MAX_WIDTH = 500;
 
 	private int maxWidth;
 
-	private CrucibleAnnotationHoverInput annotationInput;
+	private CommentAnnotationHoverInput annotationInput;
 
 	private FormToolkit toolkit;
 
@@ -52,11 +52,11 @@ public class CrucibleCommentPopupDialog extends PopupDialog implements IReviewAc
 
 	private ScrolledComposite scrolledComposite;
 
-	private CrucibleInformationControl informationControl;
+	private CommentInformationControl informationControl;
 
-	private static CrucibleCommentPopupDialog currentPopupDialog;
+	private static CommentPopupDialog currentPopupDialog;
 
-	public CrucibleCommentPopupDialog(Shell parent, int shellStyle) {
+	public CommentPopupDialog(Shell parent, int shellStyle) {
 		super(parent, shellStyle, false, false, false, false, false, null, null);
 	}
 
@@ -164,8 +164,8 @@ public class CrucibleCommentPopupDialog extends PopupDialog implements IReviewAc
 	}
 
 	public void setInput(Object input) {
-		if (input instanceof CrucibleAnnotationHoverInput) {
-			this.annotationInput = (CrucibleAnnotationHoverInput) input;
+		if (input instanceof CommentAnnotationHoverInput) {
+			this.annotationInput = (CommentAnnotationHoverInput) input;
 
 			// clear the composite in case we are re-using it
 			for (Control control : composite.getChildren()) {
@@ -174,7 +174,7 @@ public class CrucibleCommentPopupDialog extends PopupDialog implements IReviewAc
 
 			currentPopupDialog = this;
 			// FIXME
-			for (CrucibleCommentAnnotation annotation : annotationInput.getCrucibleAnnotations()) {
+			for (CommentAnnotation annotation : annotationInput.getCrucibleAnnotations()) {
 				TopicPart part = new TopicPart(annotation.getTopic());
 
 				part.hookCustomActionRunListener(this);
@@ -203,15 +203,15 @@ public class CrucibleCommentPopupDialog extends PopupDialog implements IReviewAc
 		close();
 	}
 
-	public static CrucibleCommentPopupDialog getCurrentPopupDialog() {
+	public static CommentPopupDialog getCurrentPopupDialog() {
 		return currentPopupDialog;
 	}
 
-	public void setInformationControl(CrucibleInformationControl crucibleInformationControl) {
+	public void setInformationControl(CommentInformationControl crucibleInformationControl) {
 		this.informationControl = crucibleInformationControl;
 	}
 
-	public CrucibleInformationControl getInformationControl() {
+	public CommentInformationControl getInformationControl() {
 		return informationControl;
 	}
 }

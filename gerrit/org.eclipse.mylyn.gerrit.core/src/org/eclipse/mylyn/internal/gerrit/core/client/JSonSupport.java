@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.jgit.diff.Edit;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -89,6 +90,13 @@ public class JSonSupport {
 				.registerTypeAdapter(Edit.class, new JsonDeserializer<Edit>() {
 					public Edit deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 							throws JsonParseException {
+						if (json.isJsonArray()) {
+							JsonArray array = json.getAsJsonArray();
+							if (array.size() == 4) {
+								return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(), array.get(2)
+										.getAsInt(), array.get(3).getAsInt());
+							}
+						}
 						return new Edit(0, 0);
 					}
 				})

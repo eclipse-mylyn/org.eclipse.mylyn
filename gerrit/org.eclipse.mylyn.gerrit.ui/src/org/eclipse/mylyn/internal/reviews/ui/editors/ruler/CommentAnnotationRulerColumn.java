@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler;
+package org.eclipse.mylyn.internal.reviews.ui.editors.ruler;
 
 import java.util.List;
 
@@ -27,6 +27,8 @@ import org.eclipse.jface.text.source.ISharedTextColors;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.internal.core.model.Review;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
@@ -45,15 +47,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.rulers.IContributedRulerColumn;
 import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleAnnotationModel;
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleCommentAnnotation;
 
 public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements IContributedRulerColumn {
 
 	/** The contribution descriptor. */
 	private RulerColumnDescriptor fDescriptor;
 
-	private CrucibleAnnotationModel annotationModel;
+	private ReviewAnnotationModel annotationModel;
 
 	private ITextEditor fEditor;
 
@@ -101,7 +101,7 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 	}
 
 	protected Color computeLeftBackground(int line) {
-		List<CrucibleCommentAnnotation> annotations = getAnnotations(line);
+		List<CommentAnnotation> annotations = getAnnotations(line);
 		if (annotations == null || annotations.size() == 0) {
 			return super.computeBackground(line);
 		} else {
@@ -120,7 +120,7 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		gc.fillRectangle(0, linePixel, getWidth(), lineHeight);
 	}
 
-	public List<CrucibleCommentAnnotation> getAnnotations(int startLine) {
+	public List<CommentAnnotation> getAnnotations(int startLine) {
 		try {
 			int offset = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput()).getLineOffset(startLine);
 			return annotationModel == null ? null : annotationModel.getAnnotationsForOffset(offset);
@@ -166,7 +166,7 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		}
 
 		AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-		final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CrucibleCommentAnnotation.COMMENT_ANNOTATION_ID);
+		final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
 
 		updateCommentedColor(commentedPref, store);
 

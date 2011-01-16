@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
+package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +23,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
+import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -42,8 +44,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewAction;
-import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
 
 /**
  * A UI part that is expandable like a tree
