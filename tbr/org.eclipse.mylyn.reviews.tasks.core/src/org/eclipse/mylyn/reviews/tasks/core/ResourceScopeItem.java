@@ -32,7 +32,7 @@ import org.eclipse.swt.graphics.Image;
  * @author mattk
  *
  */
-public class ResourceScopeItem implements ReviewScopeItem {
+public class ResourceScopeItem implements IReviewScopeItem {
 	private Attachment attachment;
 
 	public ResourceScopeItem(Attachment attachment) {

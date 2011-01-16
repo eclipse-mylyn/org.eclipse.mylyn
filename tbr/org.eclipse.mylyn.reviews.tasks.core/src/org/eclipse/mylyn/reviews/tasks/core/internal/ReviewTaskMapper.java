@@ -22,7 +22,7 @@ import org.eclipse.mylyn.reviews.tasks.core.PatchScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ResourceScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.ReviewScopeItem;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.TaskComment;
 import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.AttachmentSource;
@@ -149,14 +149,14 @@ public class ReviewTaskMapper implements IReviewMapper {
 			ReviewScope scope) {
 		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope2 = ReviewDslFactory.eINSTANCE
 				.createReviewScope();
-		for (ReviewScopeItem item : scope.getItems()) {
+		for (IReviewScopeItem item : scope.getItems()) {
 			scope2.getScope().add(mapScopeItem(item));
 		}
 		return scope2;
 	}
 
 	private org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem mapScopeItem(
-			ReviewScopeItem item) {
+			IReviewScopeItem item) {
 		if (item instanceof PatchScopeItem) {
 			PatchScopeItem patchItem = (PatchScopeItem) item;
 			PatchDef patch = ReviewDslFactory.eINSTANCE.createPatchDef();
@@ -174,7 +174,6 @@ public class ReviewTaskMapper implements IReviewMapper {
 			resource.setSource(source);
 			return resource;
 		}
-		System.err.println("would return null");
 		return null;
 	}
 

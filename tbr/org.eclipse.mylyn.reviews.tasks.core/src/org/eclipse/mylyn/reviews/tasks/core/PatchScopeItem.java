@@ -31,7 +31,7 @@ import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewConstants;
  * @author mattk
  * 
  */
-public class PatchScopeItem implements ReviewScopeItem {
+public class PatchScopeItem implements IReviewScopeItem {
 
 	private Attachment attachment;
 

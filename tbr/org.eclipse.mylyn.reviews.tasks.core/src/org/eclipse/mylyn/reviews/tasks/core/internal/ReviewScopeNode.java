@@ -18,7 +18,7 @@ import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.ReviewScopeItem;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 /**
  * 
  * @author mattk
@@ -47,15 +47,15 @@ public class ReviewScopeNode extends AbstractTreeNode {
 	}
 	private static class Counter {
 		int counter;
-		ReviewScopeItem item;
-		public Counter(ReviewScopeItem item) {
+		IReviewScopeItem item;
+		public Counter(IReviewScopeItem item) {
 			this.item=item;
 		}
 	}
 	private String convertScopeToDescription() {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Counter> counts = new TreeMap<String, Counter>();
-		for (ReviewScopeItem item : scope.getItems()) {
+		for (IReviewScopeItem item : scope.getItems()) {
 			String key = item.getType(1);
 			if (!counts.containsKey(key)) {
 				counts.put(key, new Counter(item));

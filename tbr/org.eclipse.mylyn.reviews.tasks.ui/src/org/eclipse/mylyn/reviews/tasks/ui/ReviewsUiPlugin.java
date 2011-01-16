@@ -12,13 +12,9 @@ package org.eclipse.mylyn.reviews.tasks.ui;
 
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewTaskMapper;
-import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslStandaloneSetup;
-import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
+import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewsUtil;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.parsetree.reconstr.Serializer;
 import org.osgi.framework.BundleContext;
-
-import com.google.inject.Injector;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -78,13 +74,7 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	public static IReviewMapper getMapper() {
 		if (mapper == null) {
-			Injector createInjectorAndDoEMFRegistration = new ReviewDslStandaloneSetup()
-					.createInjectorAndDoEMFRegistration();
-			ReviewDslParser parser = createInjectorAndDoEMFRegistration
-					.getInstance(ReviewDslParser.class);
-			Serializer serializer = createInjectorAndDoEMFRegistration
-					.getInstance(Serializer.class);
-			mapper = new ReviewTaskMapper(parser, serializer);
+			mapper=ReviewsUtil.createMapper();
 		}
 		return mapper;
 	}

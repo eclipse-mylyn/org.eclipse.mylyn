@@ -23,9 +23,14 @@ import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
 import org.eclipse.mylyn.reviews.tasks.core.patch.GitPatchPathFindingStrategy;
 import org.eclipse.mylyn.reviews.tasks.core.patch.ITargetPathStrategy;
 import org.eclipse.mylyn.reviews.tasks.core.patch.SimplePathFindingStrategy;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslStandaloneSetup;
+import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
+import org.eclipse.xtext.parsetree.reconstr.Serializer;
+
+import com.google.inject.Injector;
 
 /**
  * @author Kilian Matt
@@ -48,9 +53,8 @@ public class ReviewsUtil {
 			if (task instanceof ITaskContainer) {
 				ITaskContainer taskContainer = (ITaskContainer) task;
 				for (ITask subTask : taskContainer.getChildren()) {
-					current.addChildren(
-							getReviewSubTasksFor(subTask, taskDataManager,
-									mapper, monitor));
+					current.addChildren(getReviewSubTasksFor(subTask,
+							taskDataManager, mapper, monitor));
 				}
 			}
 			return current;
@@ -85,6 +89,16 @@ public class ReviewsUtil {
 
 		}
 		return null;
+	}
+
+	public static ReviewTaskMapper createMapper() {
+		Injector createInjectorAndDoEMFRegistration = new ReviewDslStandaloneSetup()
+				.createInjectorAndDoEMFRegistration();
+		ReviewDslParser parser = createInjectorAndDoEMFRegistration
+				.getInstance(ReviewDslParser.class);
+		Serializer serializer = createInjectorAndDoEMFRegistration
+				.getInstance(Serializer.class);
+		return new ReviewTaskMapper(parser, serializer);
 	}
 
 }

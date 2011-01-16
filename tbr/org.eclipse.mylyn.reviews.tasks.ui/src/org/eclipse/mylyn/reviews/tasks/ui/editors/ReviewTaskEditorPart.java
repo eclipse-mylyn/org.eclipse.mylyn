@@ -44,7 +44,7 @@ import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.ReviewScopeItem;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskProperties;
 import org.eclipse.mylyn.reviews.tasks.ui.Images;
 import org.eclipse.mylyn.reviews.tasks.ui.ReviewsUiPlugin;
@@ -118,8 +118,8 @@ setSection(toolkit, section);
 				Object element = ((TreeNode) node).getValue();
 				switch (columnIndex) {
 				case COLUMN_GROUP:
-					if (element instanceof ReviewScopeItem) {
-						return ((ReviewScopeItem) element).getDescription();
+					if (element instanceof IReviewScopeItem) {
+						return ((IReviewScopeItem) element).getDescription();
 					}
 					break;
 				case COLUMN_FILE:
@@ -223,11 +223,11 @@ setSection(toolkit, section);
 					section.setExpanded(false);
 					return;
 				}
-				List<ReviewScopeItem> files = reviewScope.getItems();
+				List<IReviewScopeItem> files = reviewScope.getItems();
 				
 				final TreeNode[] rootNodes = new TreeNode[files.size()];
 				int index = 0;
-				for (ReviewScopeItem item : files) {
+				for (IReviewScopeItem item : files) {
 					TreeNode node = new TreeNode(item);
 					List<IReviewFile> reviewFiles = item
 							.getReviewFiles(new NullProgressMonitor());

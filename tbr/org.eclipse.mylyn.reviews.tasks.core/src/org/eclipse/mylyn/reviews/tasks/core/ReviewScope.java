@@ -19,13 +19,13 @@ import java.util.List;
  *
  */
 public class ReviewScope {
-	private List<ReviewScopeItem> items = new ArrayList<ReviewScopeItem>();
+	private List<IReviewScopeItem> items = new ArrayList<IReviewScopeItem>();
 	private String creator;
 
-	public List<ReviewScopeItem> getItems() {
+	public List<IReviewScopeItem> getItems() {
 		return Collections.unmodifiableList( items );
 	}
-	public void addScope(ReviewScopeItem item)  {
+	public void addScope(IReviewScopeItem item)  {
 		this.items.add(item);
 	}
 	public String getCreator() {

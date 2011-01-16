@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  * @author mattk
  *
  */
-public interface ReviewScopeItem {
+public interface IReviewScopeItem {
 
 	List<IReviewFile> getReviewFiles(NullProgressMonitor monitor)throws CoreException;
 

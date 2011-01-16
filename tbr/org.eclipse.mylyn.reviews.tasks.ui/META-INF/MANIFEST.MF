@@ -11,11 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
  org.eclipse.compare;bundle-version="3.5.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
- org.eclipse.mylyn.reviews.tasks.dsl;bundle-version="0.0.1",
- org.eclipse.emf.common;bundle-version="2.6.0",
- org.eclipse.emf.ecore;bundle-version="2.6.1",
- org.eclipse.xtext;bundle-version="1.0.1",
- org.eclipse.xtext.util;bundle-version="1.0.1",
  org.eclipse.mylyn.reviews.tasks.core;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
