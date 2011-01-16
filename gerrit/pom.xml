@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>com.google.gerrit.common 2.1.5</module>
-    <module>com.google.gerrit.common 2.1.5/source-bundle</module>
+    <module>com.google.gerrit.prettify 2.1.5</module>
     <module>com.google.gerrit.reviewdb 2.1.5</module>
     <module>com.google.gwtjsonrpc 1.2.2</module>
     <module>com.google.gwtorm 1.1.4</module>

@@ -15,5 +15,6 @@ Import-Package: com.google.gwtjsonrpc.client,
  com.google.gwtorm.client,
  com.google.gwt.user.client.rpc,
  org.eclipse.jgit.diff
-Require-Bundle: com.google.gerrit.reviewdb;bundle-version="2.1.5"
+Require-Bundle: com.google.gerrit.reviewdb;bundle-version="2.1.5",
+ com.google.gerrit.prettify;bundle-version="2.1.5"
 Bundle-Localization: plugin
