@@ -10,14 +10,19 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.Collection;
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.ITopic;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,7 +39,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
  *
  * @generated
  */
-public class FileRevision extends EObjectImpl implements IFileRevision {
+public class FileRevision extends ReviewItem implements IFileRevision {
 	/**
 	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -202,6 +207,7 @@ public class FileRevision extends EObjectImpl implements IFileRevision {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

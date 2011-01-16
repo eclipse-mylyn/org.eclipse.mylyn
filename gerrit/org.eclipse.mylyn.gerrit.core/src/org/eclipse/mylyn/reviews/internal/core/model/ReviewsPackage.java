@@ -736,22 +736,13 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__TOPICS = REVIEW_ITEM__TOPICS;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FILE_ITEM__PATH = REVIEW_ITEM_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Base</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_ITEM__BASE = REVIEW_ITEM_FEATURE_COUNT + 1;
+	public static final int FILE_ITEM__BASE = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -760,7 +751,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_ITEM__TARGET = REVIEW_ITEM_FEATURE_COUNT + 2;
+	public static final int FILE_ITEM__TARGET = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>File Item</em>' class.
@@ -769,7 +760,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_ITEM_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
+	public static final int FILE_ITEM_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet <em>Review Item Set</em>}' class.
@@ -929,13 +920,58 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_REVISION = 15;
 
 	/**
+	 * The feature id for the '<em><b>Enabled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__ENABLED = REVIEW_ITEM__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>Added By</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__ADDED_BY = REVIEW_ITEM__ADDED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Review</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__REVIEW = REVIEW_ITEM__REVIEW;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__NAME = REVIEW_ITEM__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Topics</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__TOPICS = REVIEW_ITEM__TOPICS;
+
+	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__PATH = 0;
+	public static final int FILE_REVISION__PATH = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Revision</b></em>' attribute.
@@ -944,7 +980,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__REVISION = 1;
+	public static final int FILE_REVISION__REVISION = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Content</b></em>' attribute.
@@ -953,7 +989,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__CONTENT = 2;
+	public static final int FILE_REVISION__CONTENT = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>File Revision</em>' class.
@@ -962,7 +998,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION_FEATURE_COUNT = 3;
+	public static final int FILE_REVISION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1660,19 +1696,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getPath <em>Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getPath()
-	 * @see #getFileItem()
-	 * @generated
-	 */
-	public EAttribute getFileItem_Path() {
-		return (EAttribute) fileItemEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1682,7 +1705,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getFileItem_Base() {
-		return (EReference) fileItemEClass.getEStructuralFeatures().get(1);
+		return (EReference) fileItemEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1695,7 +1718,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getFileItem_Target() {
-		return (EReference) fileItemEClass.getEStructuralFeatures().get(2);
+		return (EReference) fileItemEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1933,7 +1956,6 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(reviewComponentEClass, REVIEW_COMPONENT__ENABLED);
 
 		fileItemEClass = createEClass(FILE_ITEM);
-		createEAttribute(fileItemEClass, FILE_ITEM__PATH);
 		createEReference(fileItemEClass, FILE_ITEM__BASE);
 		createEReference(fileItemEClass, FILE_ITEM__TARGET);
 
@@ -1993,6 +2015,7 @@ public class ReviewsPackage extends EPackageImpl {
 		fileItemEClass.getESuperTypes().add(this.getReviewItem());
 		reviewItemSetEClass.getESuperTypes().add(this.getReviewItem());
 		lineLocationEClass.getESuperTypes().add(this.getLocation());
+		fileRevisionEClass.getESuperTypes().add(this.getReviewItem());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2158,10 +2181,6 @@ public class ReviewsPackage extends EPackageImpl {
 
 		initEClass(fileItemEClass, IFileItem.class,
 				"FileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getFileItem_Path(),
-				ecorePackage.getEString(),
-				"path", "", 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 		initEReference(
 				getFileItem_Base(),
 				this.getFileRevision(),
@@ -2605,14 +2624,6 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass FILE_ITEM = eINSTANCE.getFileItem();
-
-		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		public static final EAttribute FILE_ITEM__PATH = eINSTANCE.getFileItem_Path();
 
 		/**
 		 * The meta object literal for the '<em><b>Base</b></em>' reference feature.

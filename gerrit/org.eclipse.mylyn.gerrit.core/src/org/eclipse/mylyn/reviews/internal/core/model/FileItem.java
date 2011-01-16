@@ -28,7 +28,6 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem#getPath <em>Path</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem#getBase <em>Base</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem#getTarget <em>Target</em>}</li>
  * </ul>
@@ -37,26 +36,6 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
  * @generated
  */
 public class FileItem extends ReviewItem implements IFileItem {
-	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String PATH_EDEFAULT = ""; //$NON-NLS-1$
-
-	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String path = PATH_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -94,27 +73,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	protected EClass eStaticClass() {
 		return ReviewsPackage.Literals.FILE_ITEM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__PATH, oldPath, path));
 	}
 
 	/**
@@ -203,8 +161,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__PATH:
-			return getPath();
 		case ReviewsPackage.FILE_ITEM__BASE:
 			if (resolve)
 				return getBase();
@@ -225,9 +181,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__PATH:
-			setPath((String) newValue);
-			return;
 		case ReviewsPackage.FILE_ITEM__BASE:
 			setBase((IFileRevision) newValue);
 			return;
@@ -246,9 +199,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__PATH:
-			setPath(PATH_EDEFAULT);
-			return;
 		case ReviewsPackage.FILE_ITEM__BASE:
 			setBase((IFileRevision) null);
 			return;
@@ -267,31 +217,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_ITEM__PATH:
-			return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
 		case ReviewsPackage.FILE_ITEM__BASE:
 			return base != null;
 		case ReviewsPackage.FILE_ITEM__TARGET:
 			return target != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (path: "); //$NON-NLS-1$
-		result.append(path);
-		result.append(')');
-		return result.toString();
 	}
 
 } //FileItem

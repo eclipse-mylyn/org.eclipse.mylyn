@@ -14,9 +14,12 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -32,6 +35,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
+
+import com.google.gerrit.common.auth.userpass.LoginResult;
 
 /**
  * Abstract class that handles the http communications with the Gerrit server.
@@ -69,7 +74,7 @@ public class GerritHttpClient {
 		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
 	}
 
-	public int getId() {
+	public synchronized int getId() {
 		return id++;
 	}
 
@@ -96,25 +101,9 @@ public class GerritHttpClient {
 				}
 			}
 
-			PostMethod method = new PostMethod(location.getUrl() + serviceUri);
-			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
-			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+			PostMethod method = postJsonRequestInternal(serviceUri, entity, monitor);
 
-			int code;
-			try {
-				RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
-				method.setRequestEntity(requestEntity);
-
-				// Execute the method.
-				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			} catch (IOException e) {
-				WebUtil.releaseConnection(method, monitor);
-				throw e;
-			} catch (RuntimeException e) {
-				WebUtil.releaseConnection(method, monitor);
-				throw e;
-			}
-
+			int code = method.getStatusCode();
 			if (code == HttpURLConnection.HTTP_OK) {
 				return method.getResponseBodyAsString();
 			} else {
@@ -123,14 +112,37 @@ public class GerritHttpClient {
 					// login or re-authenticate due to an expired session
 					authenticate(monitor);
 				} else {
-					System.err.println("Method failed: " + method.getStatusLine() + "\n"
-							+ method.getResponseBodyAsString());
+//					System.err.println("Method failed: " + method.getStatusLine() + "\n"
+//							+ method.getResponseBodyAsString());
 					throw new GerritHttpException(code);
 				}
 			}
 		}
 
 		throw new GerritLoginException();
+	}
+
+	private PostMethod postJsonRequestInternal(String serviceUri, JsonEntity entity, IProgressMonitor monitor)
+			throws IOException {
+		PostMethod method = new PostMethod(location.getUrl() + serviceUri);
+		method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+
+		try {
+			RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
+			method.setRequestEntity(requestEntity);
+
+			// Execute the method.
+			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			return method;
+		} catch (IOException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		}
+
 	}
 
 	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
@@ -140,56 +152,115 @@ public class GerritHttpClient {
 				throw new GerritLoginException();
 			}
 
-			// try standard basic/digest/ntlm authentication first
-			String repositoryUrl = location.getUrl();
-			AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
-					AuthScope.ANY_SCHEME);
-			Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
-			httpClient.getState().setCredentials(authScope, httpCredentials);
-//			if (CoreUtil.TEST_MODE) {
-//				System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
-//			}
-
-			boolean testMode = false;
-
-			GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
-			method.setFollowRedirects(false);
-			int code;
-			try {
-				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (needsReauthentication(code, monitor)) {
+			// try form based authentication first
+			int code = authenticateForm(credentials, monitor);
+			if (code == -1) {
+				continue;
+			} else if (code == HttpStatus.SC_NOT_FOUND) {
+				code = authenticateService(credentials, monitor);
+				if (code == -1) {
 					continue;
+				} else if (code == HttpStatus.SC_NOT_FOUND) {
+					authenticateTestMode(credentials, monitor);
 				}
-
-				if (code == HttpStatus.SC_NOT_FOUND) {
-					testMode = true;
-				} else if (code != HttpStatus.SC_MOVED_TEMPORARILY) {
-					throw new GerritHttpException(code);
-				}
-			} finally {
-				WebUtil.releaseConnection(method, monitor);
 			}
-
-			method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
-					+ credentials.getUserName()));
-			method.setFollowRedirects(false);
-			try {
-				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (needsReauthentication(code, monitor)) {
-					continue;
-				}
-
-				if (code != HttpStatus.SC_MOVED_TEMPORARILY) {
-					throw new GerritHttpException(code);
-				}
-			} finally {
-				WebUtil.releaseConnection(method, monitor);
-			}
-
+			// Location: http://egit.eclipse.org/r/#SignInFailure,SIGN_IN,Session cookie not available
 			validateAuthenticationState(httpClient);
 
 			// success since no exception was thrown
 			break;
+		}
+	}
+
+	private int authenticateService(AuthenticationCredentials credentials, IProgressMonitor monitor)
+			throws IOException, GerritException {
+		JSonSupport json = new JSonSupport();
+
+		List<Object> args = new ArrayList<Object>(2);
+		args.add(credentials.getUserName());
+		args.add(credentials.getPassword());
+
+		final String request = json.createRequest(getId(), null, "authenticate", args);
+		JsonEntity entity = new JsonEntity() {
+			@Override
+			public String getContent() {
+				return request;
+			}
+		};
+
+		PostMethod method = postJsonRequestInternal("/gerrit/rpc/UserPassAuthService", entity, monitor);
+		try {
+			int code = method.getStatusCode();
+			if (code == HttpURLConnection.HTTP_OK) {
+				LoginResult result = json.parseResponse(method.getResponseBodyAsString(), LoginResult.class);
+				if (result.success) {
+					return HttpStatus.SC_TEMPORARY_REDIRECT;
+				} else {
+					return -1;
+				}
+			}
+			return code;
+		} finally {
+			method.releaseConnection();
+		}
+	}
+
+	private int authenticateTestMode(AuthenticationCredentials credentials, IProgressMonitor monitor)
+			throws IOException, GerritException {
+		String repositoryUrl = location.getUrl();
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
+				+ credentials.getUserName()));
+		method.setFollowRedirects(false);
+		try {
+			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			if (needsReauthentication(code, monitor)) {
+				return -1;
+			}
+
+			if (code != HttpStatus.SC_NOT_FOUND && code != HttpStatus.SC_MOVED_TEMPORARILY) {
+				throw new GerritHttpException(code);
+			}
+			return code;
+		} finally {
+			WebUtil.releaseConnection(method, monitor);
+		}
+	}
+
+	private int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
+			GerritException {
+		// try standard basic/digest/ntlm authentication first
+		String repositoryUrl = location.getUrl();
+		AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
+				AuthScope.ANY_SCHEME);
+		Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
+		httpClient.getState().setCredentials(authScope, httpCredentials);
+//		if (CoreUtil.TEST_MODE) {
+//			System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
+//		}
+
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		method.setFollowRedirects(false);
+		int code;
+		try {
+			code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			if (needsReauthentication(code, monitor)) {
+				return -1;
+			}
+
+			if (code == HttpStatus.SC_MOVED_TEMPORARILY) {
+				Header locationHeader = method.getResponseHeader("Location");
+				if (locationHeader != null) {
+					if (locationHeader.getValue().endsWith("#SignInFailure,SIGN_IN,Session cookie not available.")) {
+						// try different authentication method
+						return HttpStatus.SC_NOT_FOUND;
+					}
+				}
+			} else if (code != HttpStatus.SC_NOT_FOUND) {
+				throw new GerritHttpException(code);
+			}
+			return code;
+		} finally {
+			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 

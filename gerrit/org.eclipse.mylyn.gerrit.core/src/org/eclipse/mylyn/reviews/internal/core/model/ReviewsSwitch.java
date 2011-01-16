@@ -222,6 +222,10 @@ public class ReviewsSwitch<T> {
 			IFileRevision fileRevision = (IFileRevision) theEObject;
 			T result = caseFileRevision(fileRevision);
 			if (result == null)
+				result = caseReviewItem(fileRevision);
+			if (result == null)
+				result = caseReviewComponent(fileRevision);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}

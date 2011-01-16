@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>File Revision</b></em>'.
@@ -26,7 +28,7 @@ package org.eclipse.mylyn.reviews.core.model;
  *
  * @generated
  */
-public interface IFileRevision {
+public interface IFileRevision extends IReviewItem {
 	/**
 	 * Returns the value of the '<em><b>Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->

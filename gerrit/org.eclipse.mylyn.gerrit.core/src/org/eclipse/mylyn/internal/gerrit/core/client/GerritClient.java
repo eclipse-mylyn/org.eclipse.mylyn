@@ -46,6 +46,7 @@ import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
+import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
@@ -131,8 +132,12 @@ public class GerritClient {
 
 	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			IProgressMonitor monitor) throws GerritException {
-		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
-		final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
+		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
+		final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
+		diffPrefs.setLineLength(Integer.MAX_VALUE);
+		diffPrefs.setTabSize(4);
+		diffPrefs.setContext(AccountDiffPreference.WHOLE_FILE_CONTEXT);
+		diffPrefs.setIgnoreWhitespace(Whitespace.IGNORE_NONE);
 		return execute(monitor, new GerritOperation<PatchScript>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
@@ -195,7 +200,7 @@ public class GerritClient {
 		return allMyChanges;
 	}
 
-	private AccountDiffPreference getDiffPreference(IProgressMonitor monitor) throws GerritException {
+	public AccountDiffPreference getDiffPreference(IProgressMonitor monitor) throws GerritException {
 		synchronized (this) {
 			if (myDiffPreference != null) {
 				return myDiffPreference;
@@ -297,25 +302,22 @@ public class GerritClient {
 					PatchScript patchScript = getPatchScript(patch.getKey(), null, patchSet.getId(), monitor);
 					if (patchScript != null) {
 						CommentDetail commentDetail = patchScript.getCommentDetail();
-						if (commentDetail != null) {
-							addComments(item, commentDetail.getCommentsA(), commentDetail.getAccounts());
-							addComments(item, commentDetail.getCommentsB(), commentDetail.getAccounts());
-						}
+
 						IFileRevision revisionA = FACTORY.createFileRevision();
 						revisionA.setContent(patchScript.getA().asString());
 						revisionA.setPath(patchScript.getA().getPath());
+						revisionA.setRevision("Base");
+						addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
 						item.setBase(revisionA);
 
 						IFileRevision revisionB = FACTORY.createFileRevision();
 						revisionB.setContent(patchScript.getB().asString());
 						revisionB.setPath(patchScript.getB().getPath());
+						revisionB.setRevision(itemSet.getName());
+						addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
 						item.setTarget(revisionB);
 					}
-					if (patch.getCommentCount() > 0) {
-						item.setName(NLS.bind("{0}  [{1} comments]", patch.getFileName(), patch.getCommentCount()));
-					} else {
-						item.setName(patch.getFileName());
-					}
+					item.setName(patch.getFileName());
 					itemSet.getItems().add(item);
 				}
 			}
@@ -323,7 +325,7 @@ public class GerritClient {
 		return review;
 	}
 
-	private void addComments(IFileItem item, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
+	private void addComments(IFileRevision revision, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
 		if (comments == null) {
 			return;
 		}
@@ -345,11 +347,11 @@ public class GerritClient {
 			topic.setAuthor(author);
 			topic.setCreationDate(comment.getWrittenOn());
 			topic.setLocation(location);
-			topic.setItem(item);
+			topic.setItem(revision);
 			topic.setDescription(comment.getMessage());
 			topic.getComments().add(topicComment);
 
-			item.getTopics().add(topic);
+			revision.getTopics().add(topic);
 		}
 	}
 
