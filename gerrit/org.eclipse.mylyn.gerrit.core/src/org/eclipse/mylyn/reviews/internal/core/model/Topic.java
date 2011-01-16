@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 
@@ -46,6 +47,7 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getComments <em>Comments</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTitle <em>Title</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getItem <em>Item</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,14 +65,14 @@ public class Topic extends Comment implements ITopic {
 	protected ITaskReference task;
 
 	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' containment reference list.
+	 * The cached value of the '{@link #getLocation() <em>Location</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ILocation> location;
+	protected ILocation location;
 
 	/**
 	 * The cached value of the '{@link #getComments() <em>Comments</em>}' reference list.
@@ -111,6 +113,16 @@ public class Topic extends Comment implements ITopic {
 	 * @ordered
 	 */
 	protected String title = TITLE_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getItem() <em>Item</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getItem()
+	 * @generated
+	 * @ordered
+	 */
+	protected IReviewItem item;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -185,11 +197,49 @@ public class Topic extends Comment implements ITopic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public List<ILocation> getLocation() {
-		if (location == null) {
-			location = new EObjectContainmentEList<ILocation>(ILocation.class, this, ReviewsPackage.TOPIC__LOCATION);
-		}
+	public ILocation getLocation() {
 		return location;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetLocation(ILocation newLocation, NotificationChain msgs) {
+		ILocation oldLocation = location;
+		location = newLocation;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.TOPIC__LOCATION, oldLocation, newLocation);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLocation(ILocation newLocation) {
+		if (newLocation != location) {
+			NotificationChain msgs = null;
+			if (location != null)
+				msgs = ((InternalEObject) location).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.TOPIC__LOCATION, null, msgs);
+			if (newLocation != null)
+				msgs = ((InternalEObject) newLocation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.TOPIC__LOCATION, null, msgs);
+			msgs = basicSetLocation(newLocation, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__LOCATION, newLocation,
+					newLocation));
 	}
 
 	/**
@@ -269,13 +319,98 @@ public class Topic extends Comment implements ITopic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public IReviewItem getItem() {
+		if (item != null && ((EObject) item).eIsProxy()) {
+			InternalEObject oldItem = (InternalEObject) item;
+			item = (IReviewItem) eResolveProxy(oldItem);
+			if (item != oldItem) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__ITEM, oldItem, item));
+			}
+		}
+		return item;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IReviewItem basicGetItem() {
+		return item;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetItem(IReviewItem newItem, NotificationChain msgs) {
+		IReviewItem oldItem = item;
+		item = newItem;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM,
+					oldItem, newItem);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setItem(IReviewItem newItem) {
+		if (newItem != item) {
+			NotificationChain msgs = null;
+			if (item != null)
+				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
+						IReviewItem.class, msgs);
+			if (newItem != null)
+				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
+						IReviewItem.class, msgs);
+			msgs = basicSetItem(newItem, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM, newItem, newItem));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.TOPIC__ITEM:
+			if (item != null)
+				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
+						IReviewItem.class, msgs);
+			return basicSetItem((IReviewItem) otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ReviewsPackage.TOPIC__TASK:
 			return basicSetTask(null, msgs);
 		case ReviewsPackage.TOPIC__LOCATION:
-			return ((InternalEList<?>) getLocation()).basicRemove(otherEnd, msgs);
+			return basicSetLocation(null, msgs);
+		case ReviewsPackage.TOPIC__ITEM:
+			return basicSetItem(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -300,6 +435,10 @@ public class Topic extends Comment implements ITopic {
 			return basicGetReview();
 		case ReviewsPackage.TOPIC__TITLE:
 			return getTitle();
+		case ReviewsPackage.TOPIC__ITEM:
+			if (resolve)
+				return getItem();
+			return basicGetItem();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -317,8 +456,7 @@ public class Topic extends Comment implements ITopic {
 			setTask((ITaskReference) newValue);
 			return;
 		case ReviewsPackage.TOPIC__LOCATION:
-			getLocation().clear();
-			getLocation().addAll((Collection<? extends ILocation>) newValue);
+			setLocation((ILocation) newValue);
 			return;
 		case ReviewsPackage.TOPIC__COMMENTS:
 			getComments().clear();
@@ -329,6 +467,9 @@ public class Topic extends Comment implements ITopic {
 			return;
 		case ReviewsPackage.TOPIC__TITLE:
 			setTitle((String) newValue);
+			return;
+		case ReviewsPackage.TOPIC__ITEM:
+			setItem((IReviewItem) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -346,7 +487,7 @@ public class Topic extends Comment implements ITopic {
 			setTask((ITaskReference) null);
 			return;
 		case ReviewsPackage.TOPIC__LOCATION:
-			getLocation().clear();
+			setLocation((ILocation) null);
 			return;
 		case ReviewsPackage.TOPIC__COMMENTS:
 			getComments().clear();
@@ -356,6 +497,9 @@ public class Topic extends Comment implements ITopic {
 			return;
 		case ReviewsPackage.TOPIC__TITLE:
 			setTitle(TITLE_EDEFAULT);
+			return;
+		case ReviewsPackage.TOPIC__ITEM:
+			setItem((IReviewItem) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -372,13 +516,15 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__TASK:
 			return task != null;
 		case ReviewsPackage.TOPIC__LOCATION:
-			return location != null && !location.isEmpty();
+			return location != null;
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return comments != null && !comments.isEmpty();
 		case ReviewsPackage.TOPIC__REVIEW:
 			return review != null;
 		case ReviewsPackage.TOPIC__TITLE:
 			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+		case ReviewsPackage.TOPIC__ITEM:
+			return item != null;
 		}
 		return super.eIsSet(featureID);
 	}

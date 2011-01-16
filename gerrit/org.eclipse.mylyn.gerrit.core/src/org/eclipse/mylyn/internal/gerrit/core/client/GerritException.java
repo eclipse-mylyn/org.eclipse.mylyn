@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.JSonError;
+
 /**
  * Indicates an error during repository access.
  * 
@@ -21,18 +23,23 @@ public class GerritException extends Exception {
 	private static final long serialVersionUID = 1929614326467463462L;
 
 	public GerritException() {
+		// ignore
 	}
 
 	public GerritException(String message) {
 		super(message);
 	}
 
+	public GerritException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 	public GerritException(Throwable cause) {
 		super(cause.getMessage(), cause);
 	}
 
-	public GerritException(String message, Throwable cause) {
-		super(message, cause);
+	GerritException(JSonError error) {
+		super(error.message);
 	}
 
 }

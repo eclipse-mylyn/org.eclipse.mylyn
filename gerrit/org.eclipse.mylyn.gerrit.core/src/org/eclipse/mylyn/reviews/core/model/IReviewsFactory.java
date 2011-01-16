@@ -116,4 +116,31 @@ public interface IReviewsFactory {
 	 */
 	IReviewItemSet createReviewItemSet();
 
+	/**
+	 * Returns a new object of class '<em>Line Location</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Line Location</em>'.
+	 * @generated
+	 */
+	ILineLocation createLineLocation();
+
+	/**
+	 * Returns a new object of class '<em>Line Range</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Line Range</em>'.
+	 * @generated
+	 */
+	ILineRange createLineRange();
+
+	/**
+	 * Returns a new object of class '<em>File Revision</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>File Revision</em>'.
+	 * @generated
+	 */
+	IFileRevision createFileRevision();
+
 } //IReviewsFactory

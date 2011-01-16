@@ -27,6 +27,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.User#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.User#getDisplayName <em>Display Name</em>}</li>
  * </ul>
  * </p>
  *
@@ -52,6 +53,26 @@ public class User extends EObjectImpl implements IUser {
 	 * @ordered
 	 */
 	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDisplayName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DISPLAY_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDisplayName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String displayName = DISPLAY_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -98,11 +119,35 @@ public class User extends EObjectImpl implements IUser {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDisplayName(String newDisplayName) {
+		String oldDisplayName = displayName;
+		displayName = newDisplayName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER__DISPLAY_NAME, oldDisplayName,
+					displayName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			return getId();
+		case ReviewsPackage.USER__DISPLAY_NAME:
+			return getDisplayName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -117,6 +162,9 @@ public class User extends EObjectImpl implements IUser {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			setId((String) newValue);
+			return;
+		case ReviewsPackage.USER__DISPLAY_NAME:
+			setDisplayName((String) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,6 +181,9 @@ public class User extends EObjectImpl implements IUser {
 		case ReviewsPackage.USER__ID:
 			setId(ID_EDEFAULT);
 			return;
+		case ReviewsPackage.USER__DISPLAY_NAME:
+			setDisplayName(DISPLAY_NAME_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -147,6 +198,8 @@ public class User extends EObjectImpl implements IUser {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+		case ReviewsPackage.USER__DISPLAY_NAME:
+			return DISPLAY_NAME_EDEFAULT == null ? displayName != null : !DISPLAY_NAME_EDEFAULT.equals(displayName);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -164,6 +217,8 @@ public class User extends EObjectImpl implements IUser {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
+		result.append(", displayName: "); //$NON-NLS-1$
+		result.append(displayName);
 		result.append(')');
 		return result.toString();
 	}

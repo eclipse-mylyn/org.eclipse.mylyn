@@ -18,26 +18,37 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.ILineLocation;
+import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
+import com.google.gerrit.common.data.AccountInfo;
+import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeDetailService;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
+import com.google.gerrit.common.data.CommentDetail;
 import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
@@ -88,6 +99,8 @@ public class GerritClient {
 
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
 
+	private AccountDiffPreference myDiffPreference;
+
 	public GerritClient(AbstractWebLocation location) {
 		this.client = new GerritHttpClient(location);
 		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
@@ -118,7 +131,8 @@ public class GerritClient {
 
 	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			IProgressMonitor monitor) throws GerritException {
-		final AccountDiffPreference diffPrefs = null;
+		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
+		final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
 		return execute(monitor, new GerritOperation<PatchScript>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
@@ -181,7 +195,33 @@ public class GerritClient {
 		return allMyChanges;
 	}
 
+	private AccountDiffPreference getDiffPreference(IProgressMonitor monitor) throws GerritException {
+		synchronized (this) {
+			if (myDiffPreference != null) {
+				return myDiffPreference;
+			}
+		}
+		AccountDiffPreference diffPreference = execute(monitor, new GerritOperation<AccountDiffPreference>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getAccountService().myDiffPreferences(this);
+			}
+		});
+
+		synchronized (this) {
+			myDiffPreference = diffPreference;
+		}
+		return myDiffPreference;
+	}
+
 	private Account getAccount(IProgressMonitor monitor) throws GerritException {
+//		LoginResult result = execute(monitor, new GerritOperation<LoginResult>() {
+//			@Override
+//			public void execute(IProgressMonitor monitor) throws GerritException {
+//				getService(UserPassAuthService.class).authenticate("steffen.pingel", null, this);
+//			}
+//		});
+
 		synchronized (this) {
 			if (myAcount != null) {
 				return myAcount;
@@ -254,6 +294,23 @@ public class GerritClient {
 			if (patchSet.getId().equals(detail.getCurrentPatchSetDetail().getPatchSet().getId())) {
 				for (Patch patch : detail.getCurrentPatchSetDetail().getPatches()) {
 					IFileItem item = FACTORY.createFileItem();
+					PatchScript patchScript = getPatchScript(patch.getKey(), null, patchSet.getId(), monitor);
+					if (patchScript != null) {
+						CommentDetail commentDetail = patchScript.getCommentDetail();
+						if (commentDetail != null) {
+							addComments(item, commentDetail.getCommentsA(), commentDetail.getAccounts());
+							addComments(item, commentDetail.getCommentsB(), commentDetail.getAccounts());
+						}
+						IFileRevision revisionA = FACTORY.createFileRevision();
+						revisionA.setContent(patchScript.getA().asString());
+						revisionA.setPath(patchScript.getA().getPath());
+						item.setBase(revisionA);
+
+						IFileRevision revisionB = FACTORY.createFileRevision();
+						revisionB.setContent(patchScript.getB().asString());
+						revisionB.setPath(patchScript.getB().getPath());
+						item.setTarget(revisionB);
+					}
 					if (patch.getCommentCount() > 0) {
 						item.setName(NLS.bind("{0}  [{1} comments]", patch.getFileName(), patch.getCommentCount()));
 					} else {
@@ -261,10 +318,47 @@ public class GerritClient {
 					}
 					itemSet.getItems().add(item);
 				}
-				//
 			}
 		}
 		return review;
+	}
+
+	private void addComments(IFileItem item, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
+		if (comments == null) {
+			return;
+		}
+		for (PatchLineComment comment : comments) {
+			ILineRange line = FACTORY.createLineRange();
+			line.setStart(comment.getLine());
+			line.setEnd(comment.getLine());
+			ILineLocation location = FACTORY.createLineLocation();
+			location.getRanges().add(line);
+
+			IUser author = createUser(comment.getAuthor(), accountInfoCache);
+
+			IComment topicComment = FACTORY.createComment();
+			topicComment.setAuthor(author);
+			topicComment.setCreationDate(comment.getWrittenOn());
+			topicComment.setDescription(comment.getMessage());
+
+			ITopic topic = FACTORY.createTopic();
+			topic.setAuthor(author);
+			topic.setCreationDate(comment.getWrittenOn());
+			topic.setLocation(location);
+			topic.setItem(item);
+			topic.setDescription(comment.getMessage());
+			topic.getComments().add(topicComment);
+
+			item.getTopics().add(topic);
+		}
+	}
+
+	private IUser createUser(Id id, AccountInfoCache accountInfoCache) {
+		AccountInfo info = accountInfoCache.get(id);
+		IUser user = FACTORY.createUser();
+		user.setDisplayName(info.getFullName());
+		user.setId(Integer.toString(id.get()));
+		return user;
 	}
 
 }

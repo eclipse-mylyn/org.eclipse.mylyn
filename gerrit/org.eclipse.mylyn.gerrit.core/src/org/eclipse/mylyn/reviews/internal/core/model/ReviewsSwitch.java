@@ -202,6 +202,29 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ReviewsPackage.LINE_LOCATION: {
+			ILineLocation lineLocation = (ILineLocation) theEObject;
+			T result = caseLineLocation(lineLocation);
+			if (result == null)
+				result = caseLocation(lineLocation);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.LINE_RANGE: {
+			ILineRange lineRange = (ILineRange) theEObject;
+			T result = caseLineRange(lineRange);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.FILE_REVISION: {
+			IFileRevision fileRevision = (IFileRevision) theEObject;
+			T result = caseFileRevision(fileRevision);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -399,6 +422,51 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseReviewItemSet(IReviewItemSet object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Line Location</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Line Location</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLineLocation(ILineLocation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Line Range</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Line Range</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLineRange(ILineRange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>File Revision</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>File Revision</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFileRevision(IFileRevision object) {
 		return null;
 	}
 

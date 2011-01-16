@@ -91,6 +91,12 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return (EObject) createFileItem();
 		case ReviewsPackage.REVIEW_ITEM_SET:
 			return (EObject) createReviewItemSet();
+		case ReviewsPackage.LINE_LOCATION:
+			return (EObject) createLineLocation();
+		case ReviewsPackage.LINE_RANGE:
+			return (EObject) createLineRange();
+		case ReviewsPackage.FILE_REVISION:
+			return (EObject) createFileRevision();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -194,6 +200,36 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public IReviewItemSet createReviewItemSet() {
 		ReviewItemSet reviewItemSet = new ReviewItemSet();
 		return reviewItemSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ILineLocation createLineLocation() {
+		LineLocation lineLocation = new LineLocation();
+		return lineLocation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ILineRange createLineRange() {
+		LineRange lineRange = new LineRange();
+		return lineRange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IFileRevision createFileRevision() {
+		FileRevision fileRevision = new FileRevision();
+		return fileRevision;
 	}
 
 	/**

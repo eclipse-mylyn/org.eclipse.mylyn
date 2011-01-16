@@ -25,6 +25,7 @@ import java.util.List;
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getTitle <em>Title</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}</li>
  * </ul>
  * </p>
  *
@@ -56,18 +57,28 @@ public interface ITopic extends IComment {
 	void setTask(ITaskReference value);
 
 	/**
-	 * Returns the value of the '<em><b>Location</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.reviews.core.model.ILocation}.
+	 * Returns the value of the '<em><b>Location</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Location</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location</em>' containment reference list.
+	 * @return the value of the '<em>Location</em>' containment reference.
+	 * @see #setLocation(ILocation)
 	 * @generated
 	 */
-	List<ILocation> getLocation();
+	ILocation getLocation();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getLocation <em>Location</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Location</em>' containment reference.
+	 * @see #getLocation()
+	 * @generated
+	 */
+	void setLocation(ILocation value);
 
 	/**
 	 * Returns the value of the '<em><b>Comments</b></em>' reference list.
@@ -130,5 +141,31 @@ public interface ITopic extends IComment {
 	 * @generated
 	 */
 	void setTitle(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Item</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Item</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Item</em>' reference.
+	 * @see #setItem(IReviewItem)
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics
+	 * @generated
+	 */
+	IReviewItem getItem();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Item</em>' reference.
+	 * @see #getItem()
+	 * @generated
+	 */
+	void setItem(IReviewItem value);
 
 } // ITopic

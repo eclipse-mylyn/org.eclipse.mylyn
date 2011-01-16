@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Review Item</b></em>'.
@@ -21,6 +23,7 @@ package org.eclipse.mylyn.reviews.core.model;
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getAddedBy <em>Added By</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}</li>
  * </ul>
  * </p>
  *
@@ -98,5 +101,21 @@ public interface IReviewItem extends IReviewComponent {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Topics</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.mylyn.reviews.core.model.ITopic}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Topics</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Topics</em>' reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getItem
+	 * @generated
+	 */
+	List<ITopic> getTopics();
 
 } // IReviewItem

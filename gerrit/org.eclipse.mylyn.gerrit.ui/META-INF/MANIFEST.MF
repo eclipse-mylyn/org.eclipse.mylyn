@@ -6,14 +6,22 @@ Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.eclipse.mylyn.commons.core;bundle-version="3.3.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.3.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.3.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
  org.eclipse.mylyn.gerrit.core;bundle-version="0.1.0",
- org.eclipse.ui.forms;bundle-version="3.4.1"
+ org.eclipse.jface, 
+ org.eclipse.jface.text,
+ org.eclipse.compare,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.emf.ecore
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true
+Import-Package: org.apache.commons.io

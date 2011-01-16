@@ -10,16 +10,23 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.Collection;
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
@@ -32,6 +39,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
  * </ul>
  * </p>
  *
@@ -77,6 +85,16 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTopics()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ITopic> topics;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -202,6 +220,48 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public List<ITopic> getTopics() {
+		if (topics == null) {
+			topics = new EObjectWithInverseResolvingEList<ITopic>(ITopic.class, this,
+					ReviewsPackage.REVIEW_ITEM__TOPICS, ReviewsPackage.TOPIC__ITEM);
+		}
+		return topics;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getTopics()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			return ((InternalEList<?>) getTopics()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -215,6 +275,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			return basicGetReview();
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return getName();
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			return getTopics();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -224,6 +286,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -235,6 +298,10 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			return;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			setName((String) newValue);
+			return;
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			getTopics().clear();
+			getTopics().addAll((Collection<? extends ITopic>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -257,6 +324,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			setName(NAME_EDEFAULT);
 			return;
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			getTopics().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -275,6 +345,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			return review != null;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case ReviewsPackage.REVIEW_ITEM__TOPICS:
+			return topics != null && !topics.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

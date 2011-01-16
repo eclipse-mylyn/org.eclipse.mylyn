@@ -52,6 +52,8 @@ public class GerritHttpClient {
 
 	private static final String LOGIN_URL = "/login/mine"; //$NON-NLS-1$
 
+	private static final String BECOME_URL = "/become"; //$NON-NLS-1$
+
 	private HostConfiguration hostConfiguration;
 
 	private final HttpClient httpClient;
@@ -148,9 +150,29 @@ public class GerritHttpClient {
 //				System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
 //			}
 
+			boolean testMode = false;
+
 			GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 			method.setFollowRedirects(false);
 			int code;
+			try {
+				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				if (needsReauthentication(code, monitor)) {
+					continue;
+				}
+
+				if (code == HttpStatus.SC_NOT_FOUND) {
+					testMode = true;
+				} else if (code != HttpStatus.SC_MOVED_TEMPORARILY) {
+					throw new GerritHttpException(code);
+				}
+			} finally {
+				WebUtil.releaseConnection(method, monitor);
+			}
+
+			method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
+					+ credentials.getUserName()));
+			method.setFollowRedirects(false);
 			try {
 				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 				if (needsReauthentication(code, monitor)) {
