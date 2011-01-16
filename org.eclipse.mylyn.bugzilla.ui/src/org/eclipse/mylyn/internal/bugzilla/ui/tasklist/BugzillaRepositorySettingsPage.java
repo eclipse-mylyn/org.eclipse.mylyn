@@ -461,14 +461,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		AuthenticationCredentials httpAuth = repository.getCredentials(AuthenticationType.HTTP);
 		AuthenticationCredentials proxyAuth = repository.getCredentials(AuthenticationType.PROXY);
 		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding();
+		String descriptorFileName = repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
+		if (descriptorFileName == null) {
+			descriptorFileName = ""; //$NON-NLS-1$
+		}
 		changed = changed || repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword();
 		changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
 		changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
 		changed = changed
 				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
-		changed = changed
-				|| descriptorFile.getText().compareTo(
-						repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE)) != 0;
+		changed = changed || descriptorFileName.compareTo(descriptorFile.getText()) != 0;
 		if (httpAuth != null) {
 			changed = changed || httpAuth.getUserName().compareTo(getHttpAuthUserId()) != 0
 					|| httpAuth.getPassword().compareTo(getHttpAuthPassword()) != 0
