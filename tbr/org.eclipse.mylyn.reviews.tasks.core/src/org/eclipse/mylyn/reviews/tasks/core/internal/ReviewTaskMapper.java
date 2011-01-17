@@ -57,7 +57,7 @@ public class ReviewTaskMapper implements IReviewMapper {
 		result.setReviewer(comment.getAuthor());
 		result.setDate(comment.getDate());
 		result.setRating(mapRating(parsed.getResult()));
-		result.setComment(comment.getText());
+		result.setComment(parsed.getComment());
 		return result;
 	}
 
@@ -211,7 +211,6 @@ public class ReviewTaskMapper implements IReviewMapper {
 		result.setComment(res.getComment());
 
 		String resultAsText = serializer.serialize(result);
-		System.err.println(resultAsText);
 		taskProperties.setNewCommentText(resultAsText);
 	}
 
