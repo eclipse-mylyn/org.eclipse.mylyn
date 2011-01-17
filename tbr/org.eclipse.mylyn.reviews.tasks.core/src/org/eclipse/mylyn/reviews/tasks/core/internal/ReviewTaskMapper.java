@@ -17,20 +17,22 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.reviews.tasks.core.Attachment;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.PatchScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ResourceScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.TaskComment;
 import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.AttachmentSource;
+import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ChangedReviewScope;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.PatchDef;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResourceDef;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResultEnum;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewDslFactory;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult;
+import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.Source;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parsetree.reconstr.Serializer;
@@ -83,7 +85,25 @@ public class ReviewTaskMapper implements IReviewMapper {
 
 		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope = (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope) parsed
 				.getRootASTElement();
-		return mapReviewScope(properties, scope);
+		ReviewScope originalScope = mapReviewScope(properties, scope);
+		for(TaskComment comment : properties.getComments()) {
+			if(properties.getReporter().equals(comment.getAuthor()))  {
+				parsed= parser.doParse(comment.getText());
+				if(parsed.getRootASTElement() instanceof ChangedReviewScope) {
+					ChangedReviewScope changedScope=(ChangedReviewScope) parsed.getRootASTElement();
+					applyChangedScope(properties, originalScope, changedScope);
+				}
+			}
+		}
+		return originalScope;
+	}
+
+	private void applyChangedScope(ITaskProperties properties, ReviewScope originalScope,
+			ChangedReviewScope changedScope) throws CoreException {
+		for(ReviewScopeItem scope :changedScope.getScope()) {
+			IReviewScopeItem item = mapReviewScopeItem(properties, scope);
+			originalScope.addScope(item);
+		}
 	}
 
 	private ReviewScope mapReviewScope(ITaskProperties properties,
@@ -96,16 +116,25 @@ public class ReviewTaskMapper implements IReviewMapper {
 		mappedScope.setCreator(properties.getReporter());
 		for (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem s : scope
 				.getScope()) {
-			if (s instanceof PatchDef) {
-				PatchScopeItem item = mapPatchDef(properties, mappedScope, (PatchDef) s);
-				mappedScope.addScope(item);
-			} else if (s instanceof ResourceDef) {
-				ResourceDef res = (ResourceDef) s;
-				ResourceScopeItem item = mapResourceDef(properties, res);
+			IReviewScopeItem item = mapReviewScopeItem(properties, s);
+			if(item!=null) {
 				mappedScope.addScope(item);
 			}
 		}
 		return mappedScope;
+	}
+
+	private IReviewScopeItem mapReviewScopeItem(ITaskProperties properties,
+			org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem s)
+			throws CoreException {
+		IReviewScopeItem item = null;
+		if (s instanceof PatchDef) {
+			item = mapPatchDef(properties, (PatchDef) s);
+		} else if (s instanceof ResourceDef) {
+			ResourceDef res = (ResourceDef) s;
+			item = mapResourceDef(properties, res);
+		}
+		return item;
 	}
 
 	private ResourceScopeItem mapResourceDef(ITaskProperties properties,
@@ -118,8 +147,7 @@ public class ReviewTaskMapper implements IReviewMapper {
 		return new ResourceScopeItem(att);
 	}
 
-	private PatchScopeItem mapPatchDef(ITaskProperties properties,
-			ReviewScope mappedScope, PatchDef patch) throws CoreException {
+	private PatchScopeItem mapPatchDef(ITaskProperties properties, PatchDef patch) throws CoreException {
 		Source source = patch.getSource();
 		Attachment att = null;
 		if (source instanceof AttachmentSource) {

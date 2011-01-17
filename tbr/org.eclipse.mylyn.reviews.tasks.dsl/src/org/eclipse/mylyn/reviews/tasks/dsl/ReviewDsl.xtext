@@ -3,7 +3,7 @@ grammar org.eclipse.mylyn.reviews.tasks.dsl.ReviewDsl with org.eclipse.xtext.com
 generate reviewDsl "http://www.eclipse.org/mylyn/reviews/tasks/dsl/ReviewDsl"
 
 Model:
-	ReviewResult | ReviewScope;
+	ReviewResult | ReviewScope | ChangedReviewScope;
 
 ReviewResult:
 	"Review result:" result=ResultEnum
@@ -26,6 +26,10 @@ ReviewScope:
 	 scope+=ReviewScopeItem
 	 )+;
 
+ChangedReviewScope:
+	"Updated review scope:" 
+	//(refines" (refineOriginal?="original scope"| ("scope from comment #" refineComment=INT))  ":" 
+	(scope+=ReviewScopeItem)+;
 //ChangesetDef:
 //	("Changeset" revision=INT " from " repoType=ID url=STRING );
 ReviewScopeItem:
