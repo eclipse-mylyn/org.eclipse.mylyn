@@ -21,10 +21,11 @@ LineComment:
 	"Line " start=INT ("-" end=INT)? ":"  comment=STRING;
 
 ReviewScope:
-	"Review scope:" 
+{ReviewScope}"Review scope:" 
 	(
 	 scope+=ReviewScopeItem
-	 )+;
+	 )*
+	 ;
 
 ChangedReviewScope:
 	"Updated review scope:" 
