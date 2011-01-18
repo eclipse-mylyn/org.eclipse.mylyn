@@ -10,6 +10,7 @@
   <modules>
     <module>releng/target-definition</module>
     <module>gerrit</module>
+    <module>tbr</module>
     <module>releng/reviews-site</module>
   </modules>
 

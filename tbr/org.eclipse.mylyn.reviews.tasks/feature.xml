@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.reviews.tasks"
-      label="Mylyn Reviews TBR (Incubation)"
-      version="0.0.1"
-      provider-name="Mylyn Reviews Team">
+      label="Task-based Reviews for Mylyn (Incubation)"
+      version="0.7.0.qualifier"
+      provider-name="Eclipse Mylyn"
+      plugin="org.eclipse.mylyn">
 
    <description url="http://www.eclipse.org/reviews">
       Provides Review functionality for Mylyn
@@ -69,6 +70,13 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
 
    <plugin
          id="org.eclipse.mylyn.reviews.tasks.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.reviews.tasks.dsl"
          download-size="0"
          install-size="0"
          version="0.0.0"
