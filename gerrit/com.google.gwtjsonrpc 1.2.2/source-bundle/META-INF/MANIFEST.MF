@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: %bundleName
-Bundle-SymbolicName: com.google.gwtjsonrpc.source
-Bundle-Version: 1.2.2.qualifier
-Bundle-Localization: plugin
-Bundle-Vendor: %bundleProvider
-Eclipse-SourceBundle: com.google.gwtjsonrpc;version="1.2.2.qualifier"
