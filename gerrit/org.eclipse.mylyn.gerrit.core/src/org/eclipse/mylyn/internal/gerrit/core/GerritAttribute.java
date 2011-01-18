@@ -31,7 +31,8 @@ public enum GerritAttribute {
 	UPDATED(GerritConstants.ATTRIBUTE_UPDATED, "Updated", TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATE,
 			true), //
 	DESCRIPTION(GerritConstants.ATTRIBUTE_DESCRIPTION, "Description", TaskAttribute.DESCRIPTION,
-			TaskAttribute.TYPE_LONG_RICH_TEXT, true);
+			TaskAttribute.TYPE_LONG_RICH_TEXT, true), //
+	COMPLETED(TaskAttribute.DATE_COMPLETION, "Completed", TaskAttribute.DATE_COMPLETION, TaskAttribute.TYPE_DATE, true); //
 
 	private final String gerritKey;
 

@@ -132,6 +132,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, GerritAttribute.UPLOADED, dateToString(change.getCreatedOn()));
 		setAttributeValue(data, GerritAttribute.DESCRIPTION, changeDetail.getDescription());
 		setAttributeValue(data, GerritAttribute.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
+		if (change.getStatus() != null && change.getStatus().isClosed()) {
+			createAttribute(data, GerritAttribute.COMPLETED);
+			setAttributeValue(data, GerritAttribute.COMPLETED, dateToString(change.getLastUpdatedOn()));
+		}
 		int i = 1;
 		for (ChangeMessage message : changeDetail.getMessages()) {
 			TaskCommentMapper mapper = new TaskCommentMapper();
