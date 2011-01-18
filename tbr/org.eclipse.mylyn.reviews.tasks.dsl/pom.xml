@@ -22,7 +22,7 @@
 	<artifactId>fornax-oaw-m2-plugin</artifactId>
 	  <configuration>
 	    <workflowEngine>mwe2</workflowEngine>
-	    <workflowDescriptor>src/org/eclipse/mylyn/reviews/tasks/dsl/GenerateReviewDsl.mwe2</workflowDescriptor>
+	    <workflowDescriptor>${project.basedir}/src/org/eclipse/mylyn/reviews/tasks/dsl/GenerateReviewDsl.mwe2</workflowDescriptor>
 	  </configuration>
       </plugin>
       <plugin>

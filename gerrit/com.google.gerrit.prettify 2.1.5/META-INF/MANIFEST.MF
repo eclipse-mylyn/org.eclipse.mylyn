@@ -9,5 +9,5 @@ Export-Package: com.google.gerrit.prettify.client;version="2.1.5",
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: com.google.gwtjsonrpc.client;version="1.2.2",
  com.google.gwtorm.client;version="1.1.4",
- org.eclipse.jgit.diff;version="0.9.3";resolution:=optional
+ org.eclipse.jgit.diff;resolution:=optional
 Bundle-Localization: plugin

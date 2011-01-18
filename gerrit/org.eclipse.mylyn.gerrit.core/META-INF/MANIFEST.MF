@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.common;bundle-version="2.5.0",
  org.eclipse.emf.ecore;bundle-version="2.5.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
- org.eclipse.jgit;bundle-version="0.9.3",
+ org.eclipse.jgit,
  com.google.gerrit.prettify;bundle-version="2.1.5"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

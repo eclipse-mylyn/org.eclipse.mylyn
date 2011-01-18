@@ -7,11 +7,11 @@ import org.eclipse.xtext.ui.generator.*
 var grammarURI = "classpath:/org/eclipse/mylyn/reviews/tasks/dsl/ReviewDsl.xtext"
 var file.extensions = "review-dsl"
 var projectName = "org.eclipse.mylyn.reviews.tasks.dsl"
-var runtimeProject = "../${projectName}"
+var runtimeProject = "${projectName}"
 
 Workflow {
     bean = StandaloneSetup {
-		platformUri = "${runtimeProject}/.."
+		platformUri = ".."
 	}
 
 	component = DirectoryCleaner {
