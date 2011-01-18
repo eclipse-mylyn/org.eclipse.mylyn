@@ -17,20 +17,14 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
- * Testclass for GerritAttribute.
- * 
  * @author Mikael Kober
  */
 public class GerritAttributeTest extends TestCase {
 
-	/**
-	 * tests some getters.
-	 */
 	public void testGetters() {
 		final GerritAttribute id = GerritAttribute.ID;
 		assertTrue("should be read only", id.isReadOnly());
 		assertEquals("wrong gerrit key", GerritConstants.ATTRIBUTE_ID, id.getGerritKey());
-		assertEquals("wrong kind", TaskAttribute.KIND_DEFAULT, id.getKind());
 		assertEquals("wrong task key", TaskAttribute.TASK_KEY, id.getTaskKey());
 		assertEquals("wrong type", TaskAttribute.TYPE_SHORT_TEXT, id.getType());
 	}

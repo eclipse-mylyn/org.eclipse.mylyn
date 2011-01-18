@@ -15,39 +15,20 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 
 /**
- * Testclass for GerritConnector.
- * 
  * @author Mikael Kober
  */
 public class GerritConnectorTest extends TestCase {
 
-	/**
-	 * tests canCreateNewTask()
-	 */
 	public void testCanCreateNewTask() {
 		GerritConnector connector = new GerritConnector();
 		assertFalse("should not be able to create new task", connector.canCreateNewTask(null));
 	}
 
-	/**
-	 * tests canCreateTaskFromKey()
-	 */
-	public void testCanCreateTaskFromKey() {
-		GerritConnector connector = new GerritConnector();
-		assertTrue("should be able to create a task from key", connector.canCreateTaskFromKey(null));
-	}
-
-	/**
-	 * test getConnctorKind()
-	 */
 	public void testGetConnectorKind() {
 		GerritConnector connector = new GerritConnector();
 		assertEquals("wrong connector kind", GerritConnector.CONNECTOR_KIND, connector.getConnectorKind());
 	}
 
-	/**
-	 * tests getRepositoryUrlFromTaskUrl()
-	 */
 	public void testGetRepositoryUrlFromTaskUrl() {
 		GerritConnector connector = new GerritConnector();
 		assertNull("should be null", connector.getRepositoryUrlFromTaskUrl(null));
@@ -58,9 +39,6 @@ public class GerritConnectorTest extends TestCase {
 		//assertEquals("wrong url", "http://review.source.android.com", connector.getRepositoryUrlFromTaskUrl("http://review.source.android.com/#change,13492"));
 	}
 
-	/**
-	 * tests getTaskIdFromTaskUrl()
-	 */
 	public void testGetTaskIdFromTaskUrl() {
 		GerritConnector connector = new GerritConnector();
 		connector.getTaskIdFromTaskUrl("");
@@ -72,9 +50,6 @@ public class GerritConnectorTest extends TestCase {
 				connector.getTaskIdFromTaskUrl("http://review.source.android.com/#change,13492"));
 	}
 
-	/**
-	 * tests getTaskUrl()
-	 */
 	public void testGetTaskUrl() {
 		GerritConnector connector = new GerritConnector();
 		assertNull("should be null", connector.getTaskUrl(null, null));

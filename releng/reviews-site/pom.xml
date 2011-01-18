@@ -6,11 +6,11 @@
   <parent>
     <artifactId>mylyn-reviews-parent</artifactId>
     <groupId>org.eclipse.mylyn.reviews</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.7.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
   <artifactId>reviews-site</artifactId>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>0.7.0-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn Reviews for Eclipse 3.5, 3.6 and 3.7</name>
   <build>
