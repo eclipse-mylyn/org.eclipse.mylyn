@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ITreeNode;
+import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewResultNode;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskNode;
 import org.eclipse.mylyn.reviews.tasks.ui.Images;
 import org.eclipse.mylyn.reviews.tasks.ui.ReviewUiUtils;
@@ -162,8 +163,12 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 
 			public void doubleClick(DoubleClickEvent event) {
 				if (!event.getSelection().isEmpty()) {
-					ITaskProperties task = ((ITreeNode) ((IStructuredSelection) event
-							.getSelection()).getFirstElement()).getTask();
+					ITreeNode treeNode = (ITreeNode) ((IStructuredSelection) event
+							.getSelection()).getFirstElement();
+					if(treeNode instanceof ReviewResultNode) {
+						treeNode = treeNode.getParent();
+					}
+					ITaskProperties task = treeNode.getTask();
 					ReviewUiUtils.openTaskInMylyn(task);
 				}
 			}
