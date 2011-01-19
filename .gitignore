@@ -1,4 +1,2 @@
-*~
-/*/org.eclipse*/bin
-/*/*/target
-/*/*/source-bundle/target
+bin/
+target/
