@@ -11,11 +11,23 @@
 <unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20101215-0940"/>
 <unit id="org.eclipse.emf.common.feature.group" version="2.6.0.v20101215-0917"/>
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101215-0940"/>
-<unit id="org.eclipse.egit.feature.group" version="0.9.3"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="1.0.1.v201008251220"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
+<repository location="http://download.eclipse.org/egit/updates"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
+<unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
+<unit id="com.google.gson" version="1.6.0.v201101131530"/>
+<unit id="com.google.gwtjsonrpc" version="1.2.2.v201101101830"/>
+<unit id="com.google.gwtorm" version="1.1.4.v201101121000"/>
+<unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
+<unit id="com.google.gerrit.prettify" version="2.1.5.v201101170600"/>
+<unit id="com.google.gerrit.reviewdb" version="2.1.5.v201101121030"/>
+<unit id="com.google.gerrit.common" version="2.1.5.v201101131540"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201011030300"/>
 <unit id="javax.activation" version="1.1.0.v201005080500"/>
@@ -38,10 +50,10 @@
 <unit id="org.apache.ws.commons.util" version="1.0.0.v20100518-1135"/>
 <unit id="org.jdom" version="1.0.0.v201005080400"/>
 <unit id="org.json" version="1.0.0.v201011060100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20101204061544/repository"/>
+<repository location="http://download.eclipse.org/tools/orbit/committers/drops/I20110118151342/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.1.20101106_1831-73ca7af-dev-e36"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.2.20110117_1743-b492ddb-dev-e36"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
 </locations>
