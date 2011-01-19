@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
@@ -84,13 +83,68 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 		summarySection.setClient(reviewResultsComposite);
 		setSection(toolkit, summarySection);
 	}
+	enum Column implements IColumnSpec<ITreeNode> {
+		TASK("Task") {
+			@Override
+			public String getText(ITreeNode value) {
+				return value.getTaskId();
+			}
+		},
+		RESULT(Messages.ReviewSummaryTaskEditorPart_Header_Result) {
+			@Override
+			public String getText(ITreeNode value) {
+				return value.getResult() != null ? value.getResult().name()
+						: "";
+			}
 
-	private TreeViewerColumn createColumn(TreeViewer tree, String columnTitle) {
-		TreeViewerColumn column = new TreeViewerColumn(tree, SWT.LEFT);
-		column.getColumn().setText(columnTitle);
-		column.getColumn().setWidth(100);
-		column.getColumn().setResizable(true);
-		return column;
+			@Override
+			public Image getImage(ITreeNode value) {
+				if (value.getResult() == null)
+					return null;
+				switch (value.getResult()) {
+				case FAIL:
+					return Images.REVIEW_RESULT_FAILED.createImage();
+				case WARNING:
+					return Images.REVIEW_RESULT_WARNING.createImage();
+				case PASSED:
+					return Images.REVIEW_RESULT_PASSED.createImage();
+				case TODO:
+					return Images.REVIEW_RESULT_NONE.createImage();
+				}
+				return null;
+			}
+		},
+		DESCRIPTION("Description") {
+			@Override
+			public String getText(ITreeNode value) {
+				return value.getDescription();
+			}
+		},
+		WHO("Who") {
+			@Override
+			public String getText(ITreeNode value) {
+				return value.getPerson();
+			}
+		};
+
+		private String title;
+
+		private Column(String title) {
+			this.title = title;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getText(ITreeNode value) {
+			return value != null ? value.toString() : "";
+		}
+
+		public Image getImage(ITreeNode value) {
+			return null;
+		}
+
 	}
 
 	private TreeViewer createResultsViewer(Composite reviewResultsComposite,
@@ -105,67 +159,19 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 		}
 		tree.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
-		TreeViewer reviewResults = new TreeViewer(tree);
-		createColumn(reviewResults, "Task");
-		createColumn(reviewResults,
-				Messages.ReviewSummaryTaskEditorPart_Header_Result);
-		createColumn(reviewResults, "Description");
-		createColumn(reviewResults, "Who");
+		TreeViewer reviewResults = createTreeWithColumns(tree);
 
 		reviewResults.setContentProvider(new ReviewResultContentProvider());
 
-		reviewResults.setLabelProvider(new TableLabelProvider() {
-			private static final int COLUMN_TASK_ID = 0;
-			private static final int COLUMN_RESULT = 1;
-			private static final int COLUMN_DESCRIPTION = 2;
-			private static final int COLUMN_WHO = 3;
-
-			public Image getColumnImage(Object element, int columnIndex) {
-				if (columnIndex == COLUMN_RESULT) {
-					ITreeNode node = (ITreeNode) element;
-					if (node.getResult() == null)
-						return null;
-					switch (node.getResult()) {
-					case FAIL:
-						return Images.REVIEW_RESULT_FAILED.createImage();
-					case WARNING:
-						return Images.REVIEW_RESULT_WARNING.createImage();
-					case PASSED:
-						return Images.REVIEW_RESULT_PASSED.createImage();
-					case TODO:
-						return Images.REVIEW_RESULT_NONE.createImage();
-
-					}
-				}
-				return null;
-			}
-
-			public String getColumnText(Object element, int columnIndex) {
-
-				ITreeNode node = (ITreeNode) element;
-				switch (columnIndex) {
-				case COLUMN_TASK_ID:
-					return node.getTaskId();
-				case COLUMN_RESULT:
-					return node.getResult() != null ? node.getResult().name()
-							: "";
-				case COLUMN_DESCRIPTION:
-					return node.getDescription();
-				case COLUMN_WHO:
-					return node.getPerson();
-				default:
-					return null;
-				}
-			}
-
-		});
+		reviewResults.setLabelProvider(new ColumnLabelProvider<ITreeNode>(
+				Column.values()));
 		reviewResults.addDoubleClickListener(new IDoubleClickListener() {
 
 			public void doubleClick(DoubleClickEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					ITreeNode treeNode = (ITreeNode) ((IStructuredSelection) event
 							.getSelection()).getFirstElement();
-					if(treeNode instanceof ReviewResultNode) {
+					if (treeNode instanceof ReviewResultNode) {
 						treeNode = treeNode.getParent();
 					}
 					ITaskProperties task = treeNode.getTask();
@@ -175,6 +181,13 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 		});
 		return reviewResults;
 	}
+
+	private TreeViewer createTreeWithColumns(Tree tree) {
+		TreeViewer reviewResults = new TreeViewer(tree);
+		return TreeHelper.createColumns(reviewResults, Column.values());
+	}
+
+
 
 	private final class ScopeViewerFilter extends ViewerFilter {
 		@Override

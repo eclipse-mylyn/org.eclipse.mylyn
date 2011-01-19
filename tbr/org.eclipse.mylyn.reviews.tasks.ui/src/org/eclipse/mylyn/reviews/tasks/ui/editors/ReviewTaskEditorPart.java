@@ -37,14 +37,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeNode;
 import org.eclipse.jface.viewers.TreeNodeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewFile;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskProperties;
 import org.eclipse.mylyn.reviews.tasks.ui.Images;
 import org.eclipse.mylyn.reviews.tasks.ui.ReviewsUiPlugin;
@@ -84,6 +83,73 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 		setExpandVertically(true);
 	}
 
+	private enum Column implements IColumnSpec<TreeNode> {
+		GROUP("Group") {
+			@Override
+			public String getText(TreeNode node) {
+				Object value = node.getValue();
+				if (value instanceof IReviewScopeItem) {
+					return ((IReviewScopeItem) value).getDescription();
+				}
+				return null;
+			}
+		},
+		FILES("Filename") {
+			@Override
+			public String getText(TreeNode node) {
+				Object value = node.getValue();
+				if (value instanceof IReviewFile) {
+					return ((IReviewFile) value).getFileName();
+				}
+				return null;
+			}
+
+			@Override
+			public Image getImage(TreeNode node) {
+				Object element = node.getValue();
+				if (element instanceof IReviewFile) {
+					ISharedImages sharedImages = PlatformUI.getWorkbench()
+							.getSharedImages();
+					IReviewFile file = ((IReviewFile) element);
+					if (file.isNewFile()) {
+						return new NewFile().createImage();
+					}
+					if (!file.canReview()) {
+						return new MissingFile().createImage();
+					}
+
+					return sharedImages.getImage(ISharedImages.IMG_OBJ_FILE);
+				}
+				return null;
+			}
+		};
+
+		/*
+		 * Object element = ((TreeNode) node).getValue(); if (columnIndex ==
+		 * COLUMN_FILE) {
+		 * 
+		 * } } return null;
+		 */
+		private String title;
+
+		private Column(String title) {
+			this.title = title;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getText(TreeNode value) {
+			return value != null ? value.toString() : "";
+		}
+
+		public Image getImage(TreeNode value) {
+			return null;
+		}
+
+	}
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		section = createSection(parent, toolkit, true);
@@ -93,7 +159,7 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 		gd.horizontalSpan = 4;
 		section.setLayout(gl);
 		section.setLayoutData(gd);
-setSection(toolkit, section);
+		setSection(toolkit, section);
 
 		composite = toolkit.createComposite(section);
 
@@ -104,55 +170,12 @@ setSection(toolkit, section);
 		fileList.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		createColumn(fileList, "Group", 100);
-		createColumn(fileList, "Filename", 100);
+		TreeHelper.createColumns(fileList, Column.values());
 		fileList.getTree().setLinesVisible(true);
 		fileList.getTree().setHeaderVisible(true);
 
-		fileList.setLabelProvider(new TableLabelProvider() {
-			private final int COLUMN_GROUP = 0;
-			private final int COLUMN_FILE = 1;
-
-			@Override
-			public String getColumnText(Object node, int columnIndex) {
-				Object element = ((TreeNode) node).getValue();
-				switch (columnIndex) {
-				case COLUMN_GROUP:
-					if (element instanceof IReviewScopeItem) {
-						return ((IReviewScopeItem) element).getDescription();
-					}
-					break;
-				case COLUMN_FILE:
-					if (element instanceof IReviewFile) {
-						return ((IReviewFile) element).getFileName();
-					}
-					break;
-				}
-				return null;
-			}
-
-			@Override
-			public Image getColumnImage(Object node, int columnIndex) {
-				Object element = ((TreeNode) node).getValue();
-				if (element instanceof IReviewFile) {
-					if (columnIndex == COLUMN_FILE) {
-						ISharedImages sharedImages = PlatformUI.getWorkbench()
-								.getSharedImages();
-						IReviewFile file = ((IReviewFile) element);
-						if (file.isNewFile()) {
-							return new NewFile().createImage();
-						}
-						if (!file.canReview()) {
-							return new MissingFile().createImage();
-						}
-
-						return sharedImages
-								.getImage(ISharedImages.IMG_OBJ_FILE);
-					}
-				}
-				return null;
-			}
-		});
+		fileList.setLabelProvider(new ColumnLabelProvider<TreeNode>(Column
+				.values()));
 
 		fileList.setContentProvider(new TreeNodeContentProvider());
 		fileList.addDoubleClickListener(new IDoubleClickListener() {
@@ -161,7 +184,8 @@ setSection(toolkit, section);
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
-					Object value = ((TreeNode)sel.getFirstElement()).getValue();
+					Object value = ((TreeNode) sel.getFirstElement())
+							.getValue();
 					if (value instanceof IReviewFile) {
 						final IReviewFile file = (IReviewFile) value;
 						if (file.canReview()) {
@@ -224,7 +248,7 @@ setSection(toolkit, section);
 					return;
 				}
 				List<IReviewScopeItem> files = reviewScope.getItems();
-				
+
 				final TreeNode[] rootNodes = new TreeNode[files.size()];
 				int index = 0;
 				for (IReviewScopeItem item : files) {
@@ -244,8 +268,8 @@ setSection(toolkit, section);
 				Display.getCurrent().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						fileList.setInput(rootNodes);	
-						if(rootNodes.length==0) {
+						fileList.setInput(rootNodes);
+						if (rootNodes.length == 0) {
 							section.setExpanded(false);
 						}
 					}
@@ -259,15 +283,6 @@ setSection(toolkit, section);
 			}
 
 		});
-	}
-
-	private TreeViewerColumn createColumn(TreeViewer tree, String title,
-			int width) {
-		TreeViewerColumn column = new TreeViewerColumn(tree, SWT.LEFT);
-		column.getColumn().setText(title);
-		column.getColumn().setWidth(width);
-		column.getColumn().setResizable(true);
-		return column;
 	}
 
 	private void createResultFields(Composite composite, FormToolkit toolkit) {
