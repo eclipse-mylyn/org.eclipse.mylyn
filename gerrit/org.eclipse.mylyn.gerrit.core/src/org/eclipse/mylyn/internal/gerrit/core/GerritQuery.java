@@ -33,4 +33,14 @@ public class GerritQuery {
 	 */
 	public static final String ALL_OPEN_CHANGES = "all open changes";
 
+	/**
+	 * query type: all open changes
+	 */
+	public static final String OPEN_CHANGES_BY_PROJECT = "open changes by project"; //$NON-NLS-1$
+
+	/**
+	 * Key for the project attribute
+	 */
+	public static final String PROJECT = "gerrit query project"; //$NON-NLS-1$
+
 }

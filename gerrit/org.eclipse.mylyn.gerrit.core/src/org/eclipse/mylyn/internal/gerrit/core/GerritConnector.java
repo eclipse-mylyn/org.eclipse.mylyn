@@ -161,10 +161,13 @@ public class GerritConnector extends AbstractRepositoryConnector {
 			monitor.beginTask("Executing query", IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
 			List<ChangeInfo> result = null;
-			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute("gerrit query type"))) {
+			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);
-			} else if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute("gerrit query type"))) {
+			} else if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryMyReviews(monitor);
+			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
+				String project = query.getAttribute(GerritQuery.PROJECT);
+				result = client.queryByProject(monitor, project);
 			}
 
 			if (result != null) {
@@ -177,7 +180,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				return Status.OK_STATUS;
 			} else {
 				return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknows query type: {0}",
-						query.getAttribute("gerrit query type")));
+						query.getAttribute(GerritQuery.PROJECT)));
 			}
 		} catch (GerritException e) {
 			return toStatus(repository, e);

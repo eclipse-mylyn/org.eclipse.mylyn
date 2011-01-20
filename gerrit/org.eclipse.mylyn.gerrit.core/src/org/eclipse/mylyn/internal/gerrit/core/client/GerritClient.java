@@ -174,10 +174,21 @@ public class GerritClient {
 	 * Returns the latest 25 reviews.
 	 */
 	public List<ChangeInfo> queryAllReviews(IProgressMonitor monitor) throws GerritException {
+		return executeQuery(monitor, "status:open"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the latest 25 reviews for the given project.
+	 */
+	public List<ChangeInfo> queryByProject(IProgressMonitor monitor, final String project) throws GerritException {
+		return executeQuery(monitor, "status:open project:" + project); //$NON-NLS-1$
+	}
+
+	private List<ChangeInfo> executeQuery(IProgressMonitor monitor, final String queryString) throws GerritException {
 		SingleListChangeInfo sl = execute(monitor, new GerritOperation<SingleListChangeInfo>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeListService().allQueryNext("status:open", "z", 25, this);
+				getChangeListService().allQueryNext(queryString, "z", 25, this); //$NON-NLS-1$
 			}
 		});
 		return sl.getChanges();
