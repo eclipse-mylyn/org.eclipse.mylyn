@@ -13,6 +13,6 @@
     <module>org.eclipse.mylyn.gerrit.core</module>
     <module>org.eclipse.mylyn.gerrit.tests</module>
     <module>org.eclipse.mylyn.gerrit.ui</module>
-    <module>org.eclipse.mylyn.gerrit-feature</module>
+    <module>org.eclipse.mylyn.gerrit.feature</module>
   </modules>
 </project>

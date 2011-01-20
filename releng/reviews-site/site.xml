@@ -18,7 +18,7 @@
       <category name="Features"/>
    </feature>
    -->
-   <feature url="features/org.eclipse.gerrit_0.0.0.jar" id="org.eclipse.mylyn.gerrit" version="0.0.0">
+   <feature url="features/org.eclipse.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
    <category-def name="Features" label="Mylyn Reviews Features">
