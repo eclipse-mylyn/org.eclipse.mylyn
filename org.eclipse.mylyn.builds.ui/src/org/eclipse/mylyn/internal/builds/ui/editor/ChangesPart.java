@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -25,15 +27,21 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IChange;
+import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.internal.core.Change;
 import org.eclipse.mylyn.builds.internal.core.ChangeArtifact;
 import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
+import org.eclipse.mylyn.versions.core.ScmArtifact;
+import org.eclipse.mylyn.versions.core.ScmCore;
+import org.eclipse.mylyn.versions.core.spi.ScmConnector;
+import org.eclipse.mylyn.versions.ui.ScmUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -159,12 +167,25 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		return composite;
 	}
 
-	private void open(ChangeArtifact selection) {
-		// ignore
+	private void open(IChangeArtifact changeArtifact) {
+		IResource resource = ScmCore.findResource(changeArtifact.getFile());
+		if (resource == null) {
+			return;
+		}
 
+		ScmConnector connector = ScmCore.getConnector(resource);
+		if (connector == null) {
+			return;
+		}
+
+		ScmArtifact artifact = connector.getArtifact(resource);
+		IFileRevision left = artifact.getFileRevision(changeArtifact.getPrevRevision(), new NullProgressMonitor());
+		IFileRevision right = artifact.getFileRevision(changeArtifact.getRevision(), new NullProgressMonitor());
+
+		ScmUi.openCompareEditor(getPage().getSite().getPage(), left, right);
 	}
 
-	private void open(Change selection) {
+	private void open(IChange selection) {
 		TaskReference reference = new TaskReference();
 		reference.setText(selection.getMessage());
 		TaskFinder finder = new TaskFinder(reference);
