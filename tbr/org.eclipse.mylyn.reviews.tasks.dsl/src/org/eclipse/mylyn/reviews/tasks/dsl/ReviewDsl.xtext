@@ -7,49 +7,49 @@ Model:
 
 ReviewResult:
 	"Review result:" result=ResultEnum
-	("Comment:" comment=STRING )? (filecomments+=FileComment)* ;
+	("Comment:" comment=STRING)? (filecomments+=FileComment)*;
 
 enum ResultEnum:
 	passed="PASSED" | failed="FAILED"
-	| todo="TODO" |	warning="WARNING";
+	| todo="TODO" | warning="WARNING";
 
 FileComment:
-	"File"  path=STRING  ":"  comment=STRING?
+	"File" path=STRING ":" comment=STRING?
 	linecomments+=LineComment*;
 
 LineComment:
-	"Line " start=INT ("-" end=INT)? ":"  comment=STRING;
+	"Line" start=INT ("-" end=INT)? ":" comment=STRING;
 
 ReviewScope:
-{ReviewScope}"Review scope:" 
-	(
-	 scope+=ReviewScopeItem
-	 )*
-	 ;
+	{ReviewScope} "Review scope:"
+	(scope+=ReviewScopeItem)*;
 
 ChangedReviewScope:
-	"Updated review scope:" 
+	"Updated review scope:"
 	//(refines" (refineOriginal?="original scope"| ("scope from comment #" refineComment=INT))  ":" 
 	(scope+=ReviewScopeItem)+;
-//ChangesetDef:
-//	("Changeset" revision=INT " from " repoType=ID url=STRING );
+
+ChangesetDef:
+	("Changeset" revision=STRING "from" url=STRING);
+
 ReviewScopeItem:
-	ResourceDef|PatchDef;
+	ResourceDef | PatchDef | ChangesetDef;
+
 ResourceDef:
-	("Resource" source=Source );
+	("Resource" source=Source);
 
 PatchDef:
-	("Patch" source=Source );
+	("Patch" source=Source);
 
 Source:
 	AttachmentSource;
 
 AttachmentSource:
-	"from Attachment"  filename=STRING  
-	"by" author=STRING  
-	"on" createdDate=STRING  
+	"from Attachment" filename=STRING
+	"by" author=STRING
+	"on" createdDate=STRING
 	"of task" taskId=TASK_ID;
 
-
-terminal TASK_ID  		: ('a'..'z'|'A'..'Z'|'_'|'-'|'0'..'9')*;
+terminal TASK_ID:
+	('a'..'z' | 'A'..'Z' | '_' | '-' | '0'..'9')*;
 	

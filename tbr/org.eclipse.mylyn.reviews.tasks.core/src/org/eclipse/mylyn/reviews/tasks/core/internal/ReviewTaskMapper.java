@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.reviews.tasks.core.Attachment;
+import org.eclipse.mylyn.reviews.tasks.core.ChangesetScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.reviews.tasks.core.TaskComment;
 import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.AttachmentSource;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ChangedReviewScope;
+import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ChangesetDef;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.PatchDef;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResourceDef;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResultEnum;
@@ -36,9 +38,10 @@ import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.Source;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parsetree.reconstr.Serializer;
+
 /**
  * @author mattk
- *
+ * 
  */
 public class ReviewTaskMapper implements IReviewMapper {
 	private ReviewDslParser parser;
@@ -86,11 +89,12 @@ public class ReviewTaskMapper implements IReviewMapper {
 		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope = (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope) parsed
 				.getRootASTElement();
 		ReviewScope originalScope = mapReviewScope(properties, scope);
-		for(TaskComment comment : properties.getComments()) {
-			if(properties.getReporter().equals(comment.getAuthor()))  {
-				parsed= parser.doParse(comment.getText());
-				if(parsed.getRootASTElement() instanceof ChangedReviewScope) {
-					ChangedReviewScope changedScope=(ChangedReviewScope) parsed.getRootASTElement();
+		for (TaskComment comment : properties.getComments()) {
+			if (properties.getReporter().equals(comment.getAuthor())) {
+				parsed = parser.doParse(comment.getText());
+				if (parsed.getRootASTElement() instanceof ChangedReviewScope) {
+					ChangedReviewScope changedScope = (ChangedReviewScope) parsed
+							.getRootASTElement();
 					applyChangedScope(properties, originalScope, changedScope);
 				}
 			}
@@ -98,9 +102,10 @@ public class ReviewTaskMapper implements IReviewMapper {
 		return originalScope;
 	}
 
-	private void applyChangedScope(ITaskProperties properties, ReviewScope originalScope,
-			ChangedReviewScope changedScope) throws CoreException {
-		for(ReviewScopeItem scope :changedScope.getScope()) {
+	private void applyChangedScope(ITaskProperties properties,
+			ReviewScope originalScope, ChangedReviewScope changedScope)
+			throws CoreException {
+		for (ReviewScopeItem scope : changedScope.getScope()) {
 			IReviewScopeItem item = mapReviewScopeItem(properties, scope);
 			originalScope.addScope(item);
 		}
@@ -117,7 +122,7 @@ public class ReviewTaskMapper implements IReviewMapper {
 		for (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem s : scope
 				.getScope()) {
 			IReviewScopeItem item = mapReviewScopeItem(properties, s);
-			if(item!=null) {
+			if (item != null) {
 				mappedScope.addScope(item);
 			}
 		}
@@ -133,8 +138,16 @@ public class ReviewTaskMapper implements IReviewMapper {
 		} else if (s instanceof ResourceDef) {
 			ResourceDef res = (ResourceDef) s;
 			item = mapResourceDef(properties, res);
+		} else if (s instanceof ChangesetDef) {
+			ChangesetDef res = (ChangesetDef) s;
+			item = mapChangesetDef(properties, res);
 		}
 		return item;
+	}
+
+	private ChangesetScopeItem mapChangesetDef(ITaskProperties properties,
+			ChangesetDef cs) throws CoreException {
+		return new ChangesetScopeItem(cs.getRevision(), cs.getUrl());
 	}
 
 	private ResourceScopeItem mapResourceDef(ITaskProperties properties,
@@ -147,7 +160,8 @@ public class ReviewTaskMapper implements IReviewMapper {
 		return new ResourceScopeItem(att);
 	}
 
-	private PatchScopeItem mapPatchDef(ITaskProperties properties, PatchDef patch) throws CoreException {
+	private PatchScopeItem mapPatchDef(ITaskProperties properties,
+			PatchDef patch) throws CoreException {
 		Source source = patch.getSource();
 		Attachment att = null;
 		if (source instanceof AttachmentSource) {
@@ -201,6 +215,13 @@ public class ReviewTaskMapper implements IReviewMapper {
 			AttachmentSource source = mapAttachment(attachment);
 			resource.setSource(source);
 			return resource;
+		} else if (item instanceof ChangesetScopeItem) {
+			ChangesetScopeItem changesetItem = (ChangesetScopeItem) item;
+			ChangesetDef changeset = ReviewDslFactory.eINSTANCE
+					.createChangesetDef();
+			changeset.setRevision(changesetItem.getRevisionId());
+			changeset.setUrl(changesetItem.getRepositoryUrl());
+			return changeset;
 		}
 		return null;
 	}

@@ -25,6 +25,16 @@
                tooltip="Create a new review from this attachment">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.reviews.tasks.ui.changesets"
+            objectClass="org.eclipse.mylyn.versions.tasks.core.TaskChangeSet">
+         <action
+               class="org.eclipse.mylyn.reviews.tasks.ui.internal.CreateReviewFromChangeSetAction"
+               id="org.eclipse.mylyn.reviews.tasks.ui.action1"
+               label="Create Review">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
