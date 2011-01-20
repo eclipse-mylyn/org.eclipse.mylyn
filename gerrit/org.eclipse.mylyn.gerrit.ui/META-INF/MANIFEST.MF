@@ -23,5 +23,11 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
- org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true
+ org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.editors.parts;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.editors.ruler;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.operations;x-internal:=true,
+ org.eclipse.mylyn.reviews.ui
 Import-Package: org.apache.commons.io
