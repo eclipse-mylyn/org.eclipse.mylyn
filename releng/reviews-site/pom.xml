@@ -10,7 +10,6 @@
     <relativePath>../..</relativePath>
   </parent>
   <artifactId>reviews-site</artifactId>
-  <version>0.7.0-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn Reviews for Eclipse 3.5, 3.6 and 3.7</name>
   <build>

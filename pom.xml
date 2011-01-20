@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>releng/target-definition</module>
+    <module>releng/reviews-target-definition</module>
     <module>gerrit</module>
     <!--
        <module>tbr</module>
@@ -47,10 +47,6 @@
 
   <properties>
     <tycho-version>0.10.0</tycho-version>
-    <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
-    <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20101204061544/repository</orbit-site>
   </properties>
 
   <profiles>
@@ -104,7 +100,7 @@
           <target>
             <artifact>
               <groupId>org.eclipse.mylyn.reviews</groupId>
-              <artifactId>mylyn-reviews-target-definition</artifactId>
+              <artifactId>reviews-target-definition</artifactId>
               <version>0.7.0-SNAPSHOT</version>
               <classifier>${target-platform}</classifier>
             </artifact>

@@ -7,9 +7,7 @@
     <artifactId>mylyn-reviews-parent</artifactId>
     <version>0.7.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.eclipse.mylyn.reviews</groupId>
   <artifactId>mylyn-reviews-gerrit-parent</artifactId>
-  <version>0.7.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>org.eclipse.mylyn.gerrit.core</module>

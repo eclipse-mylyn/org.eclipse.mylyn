@@ -9,7 +9,7 @@
     <version>0.7.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
-  <artifactId>mylyn-reviews-target-definition</artifactId>
+  <artifactId>reviews-target-definition</artifactId>
   <packaging>pom</packaging>
   <build>
     <plugins>
