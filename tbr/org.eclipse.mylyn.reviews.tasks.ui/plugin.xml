@@ -18,7 +18,7 @@
             id="org.eclipse.mylyn.reviews.ui.objectContribution1"
             objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
          <action
-               class="org.eclipse.mylyn.reviews.tasks.ui.CreateReviewActionFromAttachment"
+               class="org.eclipse.mylyn.reviews.tasks.ui.internal.CreateReviewActionFromAttachment"
                enablesFor="*"
                id="org.eclipse.mylyn.reviews.tasks.ui.create_review_from_attachment"
                label="Create Review from Attachment"
@@ -29,7 +29,7 @@
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
-            class="org.eclipse.mylyn.reviews.tasks.ui.editors.ReviewTaskEditorPageFactory"
+            class="org.eclipse.mylyn.reviews.tasks.ui.internal.editors.ReviewTaskEditorPageFactory"
             id="org.eclipse.mylyn.reviews.ui.pageFactory2">
       </pageFactory>
    </extension>

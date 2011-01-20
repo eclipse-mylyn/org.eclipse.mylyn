@@ -8,10 +8,10 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.tasks.ui.editors;
+package org.eclipse.mylyn.reviews.tasks.ui.internal.editors;
 
-import org.eclipse.mylyn.reviews.tasks.ui.Images;
-import org.eclipse.mylyn.reviews.tasks.ui.Messages;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.Images;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.Messages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;

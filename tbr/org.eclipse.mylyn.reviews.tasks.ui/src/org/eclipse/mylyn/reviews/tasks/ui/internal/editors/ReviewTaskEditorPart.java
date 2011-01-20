@@ -8,7 +8,7 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.tasks.ui.editors;
+package org.eclipse.mylyn.reviews.tasks.ui.internal.editors;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -45,8 +45,8 @@ import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskProperties;
-import org.eclipse.mylyn.reviews.tasks.ui.Images;
-import org.eclipse.mylyn.reviews.tasks.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.Images;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.ReviewsUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;

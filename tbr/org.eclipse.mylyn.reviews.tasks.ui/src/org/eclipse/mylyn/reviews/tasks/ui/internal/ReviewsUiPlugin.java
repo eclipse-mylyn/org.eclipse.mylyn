@@ -8,7 +8,7 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.tasks.ui;
+package org.eclipse.mylyn.reviews.tasks.ui.internal;
 
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewTaskMapper;

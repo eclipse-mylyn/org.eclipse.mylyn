@@ -8,7 +8,7 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.tasks.ui.editors;
+package org.eclipse.mylyn.reviews.tasks.ui.internal.editors;
 
 import java.util.Collection;
 
@@ -27,8 +27,8 @@ import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ITreeNode;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewResultNode;
 import org.eclipse.mylyn.reviews.tasks.core.internal.TaskNode;
-import org.eclipse.mylyn.reviews.tasks.ui.Images;
-import org.eclipse.mylyn.reviews.tasks.ui.ReviewUiUtils;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.Images;
+import org.eclipse.mylyn.reviews.tasks.ui.internal.ReviewUiUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;

@@ -8,7 +8,7 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.tasks.ui.editors;
+package org.eclipse.mylyn.reviews.tasks.ui.internal.editors;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
  * @author Kilian Matt
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.reviews.tasks.ui.editors.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.reviews.tasks.ui.internal.editors.messages"; //$NON-NLS-1$
 	public static String CreateReviewTaskEditorPageFactory_Reviews;
 	public static String CreateReviewTaskEditorPart_Patches;
 	public static String CreateReviewTaskEditorPart_Create_Review;
