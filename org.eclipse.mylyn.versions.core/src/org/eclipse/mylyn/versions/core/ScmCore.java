@@ -39,7 +39,7 @@ public class ScmCore {
 
 	private static HashMap<String, ScmConnector> connectorById = new HashMap<String, ScmConnector>();
 
-	private static final String ID_PLUGIN = "org.eclipse.mylyn.scm.core"; //$NON-NLS-1$
+	private static final String ID_PLUGIN = "org.eclipse.mylyn.versions.core"; //$NON-NLS-1$
 
 	public static IResource findResource(String file) {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
