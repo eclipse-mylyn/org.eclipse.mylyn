@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentHyperlink;
+import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentTableEditorHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -45,6 +47,8 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author Mik Kersten
@@ -64,6 +68,22 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	private static final Pattern PATTERN_BUG = Pattern.compile(REGEXP_BUG, Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(REGEXP_ATTACHMENT, Pattern.CASE_INSENSITIVE);
+
+	/*
+	 * because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List)
+	 * for MacOS we enable this only if running on Eclipse >= "3.7.0.v201101192000"
+	 * 
+	 */
+	private final boolean doAttachmentTableEditorHyperlink;
+
+	public BugzillaConnectorUi() {
+		super();
+		Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
+		String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+
+		Version version = new Version(versionString);
+		doAttachmentTableEditorHyperlink = version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
+	}
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
@@ -220,11 +240,14 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			if (index == -1 || (index >= ma.start() && index <= ma.end())) {
 				// attachment
 				Region region = new Region(textOffset + ma.start(), ma.end() - ma.start());
-				TaskAttachmentHyperlink link = new TaskAttachmentHyperlink(region, repository, ma.group(1));
+				TaskAttachmentHyperlink link0 = new TaskAttachmentHyperlink(region, repository, ma.group(1));
 				if (hyperlinksFound == null) {
 					hyperlinksFound = new ArrayList<IHyperlink>();
 				}
-				hyperlinksFound.add(link);
+				hyperlinksFound.add(link0);
+				if (doAttachmentTableEditorHyperlink) {
+					hyperlinksFound.add(new TaskAttachmentTableEditorHyperlink(region, repository, ma.group(1)));
+				}
 			}
 		}
 

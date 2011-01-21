@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 
@@ -143,6 +144,12 @@ public class TaskEditorOutlineNode {
 					} else {
 						label = NLS.bind(Messages.TaskEditorOutlineNode_TaskRelation_Label,
 								new Object[] { taskRelation.getTaskId(), Messages.TaskEditorOutlineNode_unknown_Label });
+					}
+
+					if (taskRelation.getDirection().compareTo(Direction.INWARD) == 0) {
+						label = label + Messages.TaskEditorOutlineNode_ParentRelation;
+					} else {
+						label = label + Messages.TaskEditorOutlineNode_ChildRelation;
 					}
 					TaskEditorOutlineNode childNode = new TaskEditorOutlineNode(label);
 

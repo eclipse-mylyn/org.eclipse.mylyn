@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Frank Becker and others.
+ * Copyright (c) 2010 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,12 +18,19 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
  * @since 3.2
  */
-public final class TaskAttachmentHyperlink implements IHyperlink {
+public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 
 	private final IRegion region;
 
@@ -31,7 +38,7 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 
 	private final String attachmentId;
 
-	public TaskAttachmentHyperlink(IRegion region, TaskRepository repository, String attachmentId) {
+	public TaskAttachmentTableEditorHyperlink(IRegion region, TaskRepository repository, String attachmentId) {
 		Assert.isNotNull(repository);
 		this.region = region;
 		this.repository = repository;
@@ -43,7 +50,7 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return MessageFormat.format(Messages.TaskAttachmentHyperlink_Open_Attachment_X_in_Y, attachmentId,
+		return MessageFormat.format(Messages.TaskAttachmentTableEditorHyperlink_Show_Attachment_X_in_Y, attachmentId,
 				repository.getRepositoryLabel());
 	}
 
@@ -52,8 +59,13 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 	}
 
 	public void open() {
-		String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
-		TasksUiUtil.openUrl(url);
+		AbstractTaskEditorPage page = getTaskEditorPage();
+		if (page != null) {
+			if (!page.selectReveal(TaskAttribute.PREFIX_ATTACHMENT + attachmentId)) {
+				String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
+				TasksUiUtil.openUrl(url);
+			}
+		}
 	}
 
 	@Override
@@ -77,7 +89,7 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		TaskAttachmentHyperlink other = (TaskAttachmentHyperlink) obj;
+		TaskAttachmentTableEditorHyperlink other = (TaskAttachmentTableEditorHyperlink) obj;
 		if (attachmentId == null) {
 			if (other.attachmentId != null) {
 				return false;
@@ -106,6 +118,23 @@ public final class TaskAttachmentHyperlink implements IHyperlink {
 	public String toString() {
 		return "TaskAttachmentHyperlink [attachmentId=" + attachmentId + ", region=" + region + ", repository=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ repository + "]"; //$NON-NLS-1$
+	}
+
+	protected AbstractTaskEditorPage getTaskEditorPage() {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null) {
+			return null;
+		}
+		IEditorPart editorPart = activePage.getActiveEditor();
+		AbstractTaskEditorPage taskEditorPage = null;
+		if (editorPart instanceof TaskEditor) {
+			TaskEditor taskEditor = (TaskEditor) editorPart;
+			IFormPage formPage = taskEditor.getActivePageInstance();
+			if (formPage instanceof AbstractTaskEditorPage) {
+				taskEditorPage = (AbstractTaskEditorPage) formPage;
+			}
+		}
+		return taskEditorPage;
 	}
 
 }

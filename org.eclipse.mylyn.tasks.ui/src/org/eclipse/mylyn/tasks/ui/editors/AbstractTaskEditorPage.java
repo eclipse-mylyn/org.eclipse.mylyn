@@ -1732,7 +1732,46 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	@Override
 	public boolean selectReveal(Object object) {
-		if (object instanceof TaskEditorOutlineNode) {
+		if (object instanceof String) {
+			String objString = (String) object;
+			if (objString != null && objString.startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
+				AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS);
+				if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+					CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
+					if (actionPart.getControl() instanceof Section) {
+						Control client = actionPart.getControl();
+						if (client instanceof Composite) {
+							for (Control control : ((Composite) client).getChildren()) {
+								if (control instanceof Composite) {
+									for (Control control1 : ((Composite) control).getChildren()) {
+										if (control1 instanceof org.eclipse.swt.widgets.Table) {
+											org.eclipse.swt.widgets.Table attachmentTable = ((org.eclipse.swt.widgets.Table) control1);
+											TableItem[] attachments = attachmentTable.getItems();
+											int index = 0;
+											for (TableItem attachment : attachments) {
+												Object data = attachment.getData();
+												if (data instanceof ITaskAttachment) {
+													ITaskAttachment attachmentData = ((ITaskAttachment) data);
+													if (attachmentData.getTaskAttribute().getId().equals(objString)) {
+														attachmentTable.deselectAll();
+														attachmentTable.select(index);
+														IManagedForm mform = actionPart.getManagedForm();
+														ScrolledForm form = mform.getForm();
+														EditorUtil.focusOn(form, attachmentTable);
+														return true;
+													}
+												}
+												index++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} else if (object instanceof TaskEditorOutlineNode) {
 			TaskEditorOutlineNode node = (TaskEditorOutlineNode) object;
 			TaskAttribute attribute = node.getData();
 			if (attribute != null) {

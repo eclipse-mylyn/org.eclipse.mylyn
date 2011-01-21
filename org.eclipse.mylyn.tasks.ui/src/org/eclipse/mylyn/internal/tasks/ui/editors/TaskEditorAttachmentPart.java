@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.TableSorter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.TableViewerSupport;
@@ -56,10 +57,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -116,6 +121,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private MenuManager menuManager;
 
 	private Composite attachmentsComposite;
+
+	private Table attachmentsTable;
 
 	public TaskEditorAttachmentPart() {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
@@ -315,4 +322,46 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			// canceled
 		}
 	}
+
+	@Override
+	public boolean setFormInput(Object input) {
+		if (input instanceof String) {
+			String text = (String) input;
+			if (attachments != null) {
+				for (TaskAttribute attachmentAttribute : attachments) {
+					if (text.equals(attachmentAttribute.getId())) {
+						CommonFormUtil.setExpanded((ExpandableComposite) getControl(), true);
+
+						return selectReveal(attachmentAttribute);
+					}
+				}
+			}
+		}
+		return super.setFormInput(input);
+	}
+
+	public boolean selectReveal(TaskAttribute attachmentAttribute) {
+		if (attachmentAttribute == null || attachmentsTable == null) {
+			return false;
+		}
+		TableItem[] attachments = attachmentsTable.getItems();
+		int index = 0;
+		for (TableItem attachment : attachments) {
+			Object data = attachment.getData();
+			if (data instanceof ITaskAttachment) {
+				ITaskAttachment attachmentData = ((ITaskAttachment) data);
+				if (attachmentData.getTaskAttribute().getValue().equals(attachmentAttribute.getValue())) {
+					attachmentsTable.deselectAll();
+					attachmentsTable.select(index);
+					IManagedForm mform = getManagedForm();
+					ScrolledForm form = mform.getForm();
+					EditorUtil.focusOn(form, attachmentsTable);
+					return true;
+				}
+			}
+			index++;
+		}
+		return false;
+	}
+
 }
