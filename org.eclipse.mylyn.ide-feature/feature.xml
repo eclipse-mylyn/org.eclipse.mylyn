@@ -28,13 +28,9 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
-
    <requires>
-      <import feature="org.eclipse.mylyn.context_feature" version="3.5.0.qualifier" match="perfect"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="3.5.0.qualifier" match="perfect"/>
+      <import feature="org.eclipse.mylyn.context_feature" version="3.5.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.team_feature" version="3.5.0" match="equivalent"/>
       <import feature="org.eclipse.cvs" version="1.1.0" match="compatible"/>
    </requires>
 

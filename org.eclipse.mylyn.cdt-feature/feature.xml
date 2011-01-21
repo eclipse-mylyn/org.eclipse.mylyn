@@ -28,10 +28,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
-
    <requires>
       <import feature="org.eclipse.cdt.platform" version="5.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.mylyn.context_feature" version="3.2.0" match="greaterOrEqual"/>
