@@ -38,7 +38,5 @@ else
     cd ..
 fi
 
-cd ..
-
 echo "Building Mylyn..."
 $MVN $*
