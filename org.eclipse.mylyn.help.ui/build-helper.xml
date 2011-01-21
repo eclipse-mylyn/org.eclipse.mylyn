@@ -18,7 +18,10 @@
 	<property name="mylyn.wiki.url.base" value="${mylyn.help.doc.url.base}/Mylyn"/>
 	<property name="imageFolder" value="images"/>
 	
-	<path id="tasks.classpath" path="bin"/>
+	<path id="wikitext.tasks.classpath">
+		<pathelement path="${wikitext.tasks.classpath.path}"/>
+	</path>
+	<!--
 	<path id="wikitext.tasks.classpath">
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
@@ -27,7 +30,8 @@
 		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
 		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
 	</path>
-	
+	-->
+
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
 	
