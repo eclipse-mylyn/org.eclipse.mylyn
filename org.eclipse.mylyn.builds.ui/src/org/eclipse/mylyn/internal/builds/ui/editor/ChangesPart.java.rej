@@ -1,0 +1,16 @@
+@@ -129,11 +135,11 @@
+ 			viewer.addOpenListener(new IOpenListener() {
+ 				public void open(OpenEvent event) {
+ 					Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
+-					if (selection instanceof Change) {
+-						ChangesPart.this.open((Change) selection);
++					if (selection instanceof IChange) {
++						ChangesPart.this.open((IChange) selection);
+ 					}
+-					if (selection instanceof ChangeArtifact) {
+-						ChangesPart.this.open((ChangeArtifact) selection);
++					if (selection instanceof IChangeArtifact) {
++						ChangesPart.this.open((IChangeArtifact) selection);
+ 					}
+ 				}
+ 
