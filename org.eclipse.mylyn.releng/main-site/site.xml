@@ -13,6 +13,7 @@
    <description url="http://download.eclipse.org/mylyn/3.5">
       Mylyn for Eclipse 3.5, 3.6 and 3.7
    </description>
+   <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0"/>
    <feature url="features/org.eclipse.mylyn_feature_0.0.0.jar" id="org.eclipse.mylyn_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
@@ -49,7 +50,18 @@
    <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.gerrit_0.0.0.jar" id="org.eclipse.mylyn.gerrit" version="0.0.0">
+      <category name="Incubator"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.hudson_0.0.0.jar" id="org.eclipse.mylyn.hudson" version="0.0.0">
+      <category name="Incubator"/>
+   </feature>
    <category-def name="Features" label="Mylyn Features">
+      <description>
+         The Task List and the Task-Focused Interface.
+      </description>
+   </category-def>
+   <category-def name="Incubator" label="Mylyn Incubator">
       <description>
          The Task List and the Task-Focused Interface.
       </description>
