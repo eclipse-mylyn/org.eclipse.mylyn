@@ -27,10 +27,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
-
    <plugin
          id="org.eclipse.mylyn.bugzilla.tests"
          download-size="0"

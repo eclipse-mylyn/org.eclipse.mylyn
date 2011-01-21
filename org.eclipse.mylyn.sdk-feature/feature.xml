@@ -31,10 +31,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
-
    <requires>
       <import feature="org.eclipse.mylyn.bugzilla_feature" version="3.4.0"/>
       <import feature="org.eclipse.mylyn.commons" version="3.4.0"/>

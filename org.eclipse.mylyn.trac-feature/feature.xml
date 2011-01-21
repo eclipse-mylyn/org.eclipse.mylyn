@@ -28,10 +28,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.mylyn.context.core" version="3.4.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="compatible"/>
