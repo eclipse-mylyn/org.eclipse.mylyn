@@ -50,7 +50,7 @@
    <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.gerrit_0.0.0.jar" id="org.eclipse.mylyn.gerrit" version="0.0.0">
+   <feature url="features/org.eclipse.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
       <category name="Incubator"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.hudson_0.0.0.jar" id="org.eclipse.mylyn.hudson" version="0.0.0">
