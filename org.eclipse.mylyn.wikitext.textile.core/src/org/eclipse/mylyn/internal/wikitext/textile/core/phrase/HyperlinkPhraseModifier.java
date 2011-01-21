@@ -12,9 +12,9 @@ package org.eclipse.mylyn.internal.wikitext.textile.core.phrase;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
@@ -29,7 +29,7 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:(\")" + Textile.REGEX_ATTRIBUTES + "([^\"]+)\\" + (1 + groupOffset) + ":([^\\s]*[^\\s!.)(,:;]))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "(?:(\")" + Textile.REGEX_ATTRIBUTES + "([^\"]+)\\" + (1 + groupOffset) + ":([^\\s]*[^\\s!.(,:;]))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
