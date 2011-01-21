@@ -16,6 +16,8 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
@@ -116,6 +118,20 @@ public class PlatformUiUtil {
 	 */
 	public static int getViewMenuWidth() {
 		return 32;
+	}
+
+	/**
+	 * Because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List) for MacOS we enable this
+	 * only if running on Eclipse >= "3.7.0.v201101192000"
+	 */
+	public static boolean supportsMultipleHyperlinkPresenter() {
+		if (isMac()) {
+			Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
+			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			Version version = new Version(versionString);
+			return version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
+		}
+		return true;
 	}
 
 }
