@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentTableEditorHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -47,8 +47,6 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
 
 /**
  * @author Mik Kersten
@@ -69,20 +67,10 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(REGEXP_ATTACHMENT, Pattern.CASE_INSENSITIVE);
 
-	/*
-	 * because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List)
-	 * for MacOS we enable this only if running on Eclipse >= "3.7.0.v201101192000"
-	 * 
-	 */
 	private final boolean doAttachmentTableEditorHyperlink;
 
 	public BugzillaConnectorUi() {
-		super();
-		Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
-		String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-
-		Version version = new Version(versionString);
-		doAttachmentTableEditorHyperlink = version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
+		doAttachmentTableEditorHyperlink = PlatformUiUtil.supportsMultipleHyperlinkPresenter();
 	}
 
 	@Override
