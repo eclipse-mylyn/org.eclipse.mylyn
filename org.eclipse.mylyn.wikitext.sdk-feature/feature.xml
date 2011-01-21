@@ -28,9 +28,12 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
-   </url>
+   <plugin
+         id="org.eclipse.mylyn.htmltext"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core"
@@ -145,6 +148,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.mylyn.htmltext.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core.source"
          download-size="0"
          install-size="0"
@@ -181,6 +191,13 @@
 
    <plugin
          id="org.eclipse.mylyn.wikitext.tasks.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.wikitext.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

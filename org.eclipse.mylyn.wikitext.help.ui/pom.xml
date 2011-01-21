@@ -5,10 +5,48 @@
   <parent>
     <artifactId>mylyn-docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.docs</groupId>
   <artifactId>org.eclipse.mylyn.wikitext.help.ui</artifactId>
   <version>1.4.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  <build>
+    <plugins>
+      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.6</version>
+		<executions>
+		  <execution>
+		    <phase>generate-sources</phase>
+		    <configuration>
+		      <target>
+		      	<property name="wikitext.tasks.classpath.path" refid="maven.compile.classpath"/>
+		      	<path id="wikitext.ant.classpath">
+	              <pathelement path="${wikitext.tasks.classpath.path}"/>
+		        </path>
+	            <ant target="all" inheritRefs="true" antfile="build-helper.xml"/>
+		      </target>
+		    </configuration>
+		    <goals>
+		      <goal>run</goal>
+		    </goals>
+		  </execution>
+		</executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
