@@ -19,8 +19,12 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
+import java.net.ProxySelector;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -746,6 +750,20 @@ public class WebUtil {
 					credentials = new AuthenticationCredentials(data.getUserId(), data.getPassword());
 				}
 				return createProxy(proxyHost, proxyPort, credentials);
+			}
+		} else {
+			try {
+				// fall back to JDK proxy selector
+				URI uri = new URI(proxyType, "//" + host, null); //$NON-NLS-1$
+				List<Proxy> proxies = ProxySelector.getDefault().select(uri);
+				if (proxies != null && proxies.size() > 0) {
+					Proxy proxy = proxies.iterator().next();
+					if (proxy != Proxy.NO_PROXY) {
+						return proxy;
+					}
+				}
+			} catch (URISyntaxException e) {
+				// ignore
 			}
 		}
 		return null;
