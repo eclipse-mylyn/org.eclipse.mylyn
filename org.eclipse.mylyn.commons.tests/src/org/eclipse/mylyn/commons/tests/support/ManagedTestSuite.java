@@ -36,8 +36,11 @@ public class ManagedTestSuite extends TestSuite {
 
 		private final Test test;
 
+		private final Thread testThread;
+
 		public DumpThreadTask(Test test) {
 			this.test = test;
+			this.testThread = Thread.currentThread();
 		}
 
 		@Override
@@ -56,6 +59,9 @@ public class ManagedTestSuite extends TestSuite {
 				sb.append("\n");
 			}
 			System.err.println(sb.toString());
+
+			System.err.println("Sending interrupt to thread: " + testThread.toString());
+			testThread.interrupt();
 		}
 
 	}
