@@ -57,7 +57,8 @@
           <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
           <testSuite>org.eclipse.mylyn.tests</testSuite>
           <testClass>${mylyn-test-suite}</testClass>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory}</argLine>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${mylyn-test-args}</argLine>
+          <appArgLine>${mylyn-test-app-args}</appArgLine> 
         </configuration>
       </plugin>
       <!--
