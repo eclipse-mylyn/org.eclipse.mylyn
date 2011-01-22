@@ -12,6 +12,14 @@
   <artifactId>mylyn-mylyn-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <profiles>
+    <profile>
+      <id>standalone</id>
+      <modules>
+	<module>org.eclipse.mylyn.tests.standalone</module>
+      </modules>
+    </profile>
+  </profiles>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>
     <module>org.eclipse.mylyn.help.sdk</module>
