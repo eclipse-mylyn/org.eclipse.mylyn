@@ -25,6 +25,8 @@
     <mylyn-keyring>${basedir}/eclipse.keyring</mylyn-keyring>
     <mylyn-keyring-password>${basedir}/eclipse.keyring.password</mylyn-keyring-password>
 
+    <mylyn-skip-source-check>true</mylyn-skip-source-check>
+
     <mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
     <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
 
@@ -97,6 +99,7 @@
       </activation>
       <properties>
         <target-platform>mylyn-e3.7</target-platform>
+	<mylyn-skip-source-check>false</mylyn-skip-source-check>
       </properties>
     </profile>
   </profiles>
@@ -225,7 +228,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-	    <skip>true</skip>
+	    <skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>
@@ -245,7 +248,7 @@
             <targetJdk>1.5</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
-	    <skip>true</skip>
+	    <skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>
