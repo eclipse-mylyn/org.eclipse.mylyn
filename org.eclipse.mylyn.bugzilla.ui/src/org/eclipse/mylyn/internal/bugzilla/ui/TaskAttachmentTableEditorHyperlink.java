@@ -50,8 +50,7 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return MessageFormat.format(Messages.TaskAttachmentTableEditorHyperlink_Show_Attachment_X_in_Y, attachmentId,
-				repository.getRepositoryLabel());
+		return MessageFormat.format(Messages.TaskAttachmentTableEditorHyperlink_Show_Attachment_X_in_Y, attachmentId);
 	}
 
 	public String getTypeLabel() {

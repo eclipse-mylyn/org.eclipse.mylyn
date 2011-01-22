@@ -331,7 +331,6 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				for (TaskAttribute attachmentAttribute : attachments) {
 					if (text.equals(attachmentAttribute.getId())) {
 						CommonFormUtil.setExpanded((ExpandableComposite) getControl(), true);
-
 						return selectReveal(attachmentAttribute);
 					}
 				}
