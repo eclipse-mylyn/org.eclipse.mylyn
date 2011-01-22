@@ -1,9 +1,5 @@
 #!/bin/bash -e
 
-if [ -z "$MVN" ]; then
-  MVN=mvn
-fi
-
 #echo "Updating Mylyn Commons, Mylyn Context, Mylyn Incubator, Mylyn Tasks..."
 #if [ ! -e org.eclipse.mylyn ]; then
 #    cvs -d :pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn co .
@@ -37,6 +33,3 @@ else
     git pull
     cd ..
 fi
-
-echo "Building Mylyn..."
-$MVN $*
