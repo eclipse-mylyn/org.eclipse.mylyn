@@ -7,7 +7,7 @@ Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,
  org.eclipse.mylyn.tests.misc;x-internal:=true
-Bundle-ClassPath: mylyn-tests.jar
+Bundle-ClassPath: .
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,

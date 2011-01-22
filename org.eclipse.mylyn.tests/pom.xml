@@ -18,61 +18,70 @@
     <profile>
       <id>heartbeat</id>
       <properties>
-	<mylyn-test-suite>org.eclipse.mylyn.tests.AllHeartbeatTests</mylyn-test-suite>
+        <mylyn-test-suite>org.eclipse.mylyn.tests.AllHeartbeatTests</mylyn-test-suite>
+      </properties>
+    </profile>
+    <profile>
+      <id>performance</id>
+      <properties>
+        <mylyn-test-suite>org.eclipse.mylyn.tests.AllPerformanceTests</mylyn-test-suite>
       </properties>
     </profile>
   </profiles>
   <build>
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-antrun-plugin</artifactId>
-	<version>1.6</version>
-	<executions>
-	  <execution>
-	    <phase>pre-integration-test</phase>
-	    <configuration>
-	      <target>
-		<echo>Initializing Test Harness</echo>
-	      </target>
-	    </configuration>
-	    <goals>
-	      <goal>run</goal>
-	    </goals>
-	  </execution>
-	</executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <target>
+                <echo>Initializing Test Harness</echo>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
-	<groupId>org.sonatype.tycho</groupId>
-	<artifactId>maven-osgi-test-plugin</artifactId>
-	<version>${tycho-version}</version>
-	<configuration>
-	  <useUIHarness>true</useUIHarness>
-	  <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
-	  <testSuite>org.eclipse.mylyn.tests</testSuite>
-	  <testClass>${mylyn-test-suite}</testClass>
-	  <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory}</argLine>
-	</configuration>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-test-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <useUIHarness>true</useUIHarness>
+          <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
+          <testSuite>org.eclipse.mylyn.tests</testSuite>
+          <testClass>${mylyn-test-suite}</testClass>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory}</argLine>
+        </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-	<version>2.5</version>
+        <version>2.5</version>
         <executions>
           <execution>
             <id>test</id>
             <phase>test</phase>
             <configuration>
-	      <includes>
-		<include>org/eclipse/mylyn/tests/AllHeadlessStandaloneTests.java</include>
-	      </includes>
+              <includes>
+                <include>org/eclipse/mylyn/tests/AllHeadlessStandaloneTests.java</include>
+              </includes>
+              <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
             </configuration>
             <goals>
-	      <goal>test</goal>
+              <goal>test</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
+      -->
       <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-source-plugin</artifactId>
@@ -87,4 +96,20 @@
       </plugin>
     </plugins>
   </build>
+  <!--
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.commons</groupId>
+      <artifactId>org.eclipse.mylyn.commons.net</artifactId>
+      <version>3.5.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  -->
 </project>
