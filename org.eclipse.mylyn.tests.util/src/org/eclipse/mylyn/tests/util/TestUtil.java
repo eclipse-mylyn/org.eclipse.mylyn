@@ -79,7 +79,10 @@ public class TestUtil {
 			}
 			properties.load(new FileInputStream(file));
 		} catch (Exception e) {
-			throw new AssertionFailedError("must define credentials in <plug-in dir>/credentials.properties");
+			AssertionFailedError error = new AssertionFailedError(
+					"must define credentials in <plug-in dir>/credentials.properties");
+			error.initCause(e);
+			throw error;
 		}
 
 		String defaultPassword = properties.getProperty("pass");
