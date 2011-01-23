@@ -8,7 +8,7 @@
     <mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
     <mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
     <mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
-    <mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898</mylyn-test-args>
+    <mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -ea</mylyn-test-args>
   </properties>
 
   <groupId>org.eclipse.mylyn</groupId>
