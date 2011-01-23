@@ -102,6 +102,22 @@
 	<mylyn-skip-source-check>false</mylyn-skip-source-check>
       </properties>
     </profile>
+    <profile>
+      <id>hudson.eclipse.org</id>
+      <activation>
+	<property>
+          <name>user.name</name>
+          <value>hudsonbuild</value>
+	</property>
+      </activation>
+      <properties>
+	<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
+	<mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
+	<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
+	<mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898</mylyn-test-args>
+	<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
+      </properties>
+    </profile>
   </profiles>
 
   <modules>
