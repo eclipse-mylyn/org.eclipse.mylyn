@@ -8,11 +8,11 @@
    are made available under the terms of the Eclipse Public License v1.0
    which accompanies this distribution, and is available at
    http://www.eclipse.org/legal/epl-v10.html
--->
+  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
@@ -63,12 +63,12 @@
     <license>
       <name>Eclipse Public License v1.0</name>
       <comments>
-       All rights reserved.
+		All rights reserved.
 
-       This program and the accompanying materials are made
-       available under the terms of the Eclipse Public License v1.0
-       which accompanies this distribution, and is available at
-       http://www.eclipse.org/legal/epl-v10.htm
+		This program and the accompanying materials are made
+		available under the terms of the Eclipse Public License v1.0
+		which accompanies this distribution, and is available at
+		http://www.eclipse.org/legal/epl-v10.htm
       </comments>
     </license>
   </licenses>
@@ -77,18 +77,21 @@
     <profile>
       <id>ganymede</id>
       <properties>
+        <target-version>3.4</target-version>
         <target-platform>mylyn-e3.4</target-platform>
       </properties>
     </profile>
     <profile>
       <id>galileo</id>
       <properties>
+        <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
       </properties>
     </profile>
     <profile>
       <id>helios</id>
       <properties>
+        <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
       </properties>
     </profile>
@@ -98,35 +101,43 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
+        <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
-	<mylyn-skip-source-check>false</mylyn-skip-source-check>
+		<mylyn-skip-source-check>false</mylyn-skip-source-check>
+      </properties>
+    </profile>
+    <profile>
+      <id>e4.1</id>
+      <properties>
+        <target-version>4.1</target-version>
+        <target-platform>mylyn-e4.1</target-platform>
       </properties>
     </profile>
     <profile>
       <id>hudson.eclipse.org</id>
       <activation>
-	<property>
+		<property>
           <name>user.name</name>
           <value>hudsonbuild</value>
-	</property>
+		</property>
       </activation>
       <properties>
-	<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
-	<mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
-	<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
-	<mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898</mylyn-test-args>
-	<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
+		<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
+		<mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
+		<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
+		<mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898</mylyn-test-args>
+		<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
       </properties>
     </profile>
     <profile>
       <id>dist</id>
       <modules>
-	<module>main-site</module>
-	<module>incubator-site</module>
+		<module>main-site</module>
+		<module>incubator-site</module>
       </modules>
     </profile>
   </profiles>
-
+<!--
   <modules>
     <module>target-definition</module>
     <module>../../org.eclipse.mylyn</module>
@@ -138,8 +149,8 @@
     <module>../../org.eclipse.mylyn.docs</module>
     <module>../../org.eclipse.mylyn.incubator</module>
     <module>../../org.eclipse.mylyn.reviews</module>
-   </modules>
-
+  </modules>
+-->
   <pluginRepositories>
     <pluginRepository>
       <!-- need maven-findbugs-2.3.2-SNAPSHOT, see
@@ -192,6 +203,59 @@
           </environments>
         </configuration>
       </plugin>
+	  <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+		<version>1.0-beta-3</version>
+        <executions>
+          <execution>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+			<!-- append @x.y.z to repository test cases to differentiate test fixtures -->
+            <transformationSet>
+              <dir>../org.eclipse.mylyn.tests/target/surefire-reports</dir>
+              <outputDir>../org.eclipse.mylyn.tests/target/surefire-reports</outputDir>
+			  <includes>
+				<include>*.xml</include>
+			  </includes>
+			  <!-- map to different file extensions since overriding source
+				   file does not work -->
+			  <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.tmp</targetExtension>
+                </fileMapper>
+              </fileMappers>
+			  <stylesheet>scripts/test-fixture.xsl</stylesheet>
+            </transformationSet>
+			<!-- append @e3.5 to all test cases to differentiate target platform -->
+            <transformationSet>
+              <dir>../org.eclipse.mylyn.tests/target/surefire-reports</dir>
+              <outputDir>../org.eclipse.mylyn.tests/target/surefire-reports</outputDir>
+              <stylesheet>scripts/test-suite.xsl</stylesheet>
+			  <includes>
+				<include>*.tmp</include>
+			  </includes>
+			  <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.xml</targetExtension>
+                </fileMapper>
+              </fileMappers>
+              <parameters>
+                <parameter>
+                  <name>append</name>
+                  <value>@e${target-version}</value>
+                </parameter>
+              </parameters>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -205,8 +269,8 @@
         </plugin>
         <plugin>
           <!-- TODO remove workaround when
-             https://issues.sonatype.org/browse/TYCHO-473
-             is fixed -->
+               https://issues.sonatype.org/browse/TYCHO-473
+               is fixed -->
           <groupId>org.sonatype.tycho</groupId>
           <artifactId>maven-osgi-source-plugin</artifactId>
           <version>${tycho-version}</version>
@@ -249,7 +313,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-	    <skip>${mylyn-skip-source-check}</skip>
+			<skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>
@@ -269,7 +333,7 @@
             <targetJdk>1.5</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
-	    <skip>${mylyn-skip-source-check}</skip>
+			<skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>

@@ -9,6 +9,10 @@ user: tests@mylyn.eclipse.org
 pass: mylyntest
 EOF
 
+if [ "$1" == "e4.1" ]; then
+	cvs up -r e_4_0_m_3_x org.eclipse.mylyn.contexts/org.eclipse.mylyn.context.ui
+fi
+
 #echo "Updating Mylyn Commons, Mylyn Context, Mylyn Incubator, Mylyn Tasks..."
 #if [ ! -e org.eclipse.mylyn ]; then
 #    cvs -d :pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn co .
