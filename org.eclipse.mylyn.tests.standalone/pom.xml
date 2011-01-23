@@ -106,8 +106,13 @@
     </dependency>
     <dependency>
       <groupId>p2.osgi.bundle</groupId>
+      <artifactId>org.eclipse.core.jobs</artifactId>
+      <version>3.5.1.R36x_v20100824</version>
+    </dependency>
+    <dependency>
+      <groupId>p2.osgi.bundle</groupId>
       <artifactId>org.eclipse.core.runtime</artifactId>
-      <version>3.6.100.v20101122</version>
+      <version>3.6.0.v20100505</version>
     </dependency>
     <dependency>
       <groupId>p2.osgi.bundle</groupId>
@@ -117,17 +122,12 @@
     <dependency>
       <groupId>p2.osgi.bundle</groupId>
       <artifactId>org.eclipse.equinox.security</artifactId>
-      <version>1.1.0.v20101004</version>
+      <version>1.0.200.v20100503</version>
     </dependency>
     <dependency>
       <groupId>p2.osgi.bundle</groupId>
       <artifactId>org.eclipse.osgi</artifactId>
       <version>3.6.1.R36x_v20100806</version>
-    </dependency>
-    <dependency>
-      <groupId>p2.osgi.bundle</groupId>
-      <artifactId>org.eclipse.core.jobs</artifactId>
-      <version>3.5.1.R36x_v20100824</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>

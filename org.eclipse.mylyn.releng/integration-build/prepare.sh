@@ -6,7 +6,7 @@ EOF
 
 cat > credentials.properties << EOF
 user: tests@mylyn.eclipse.org
-pass: $1
+pass: mylyntest
 EOF
 
 #echo "Updating Mylyn Commons, Mylyn Context, Mylyn Incubator, Mylyn Tasks..."
