@@ -770,6 +770,22 @@ public class WebUtil {
 	}
 
 	/**
+	 * Returns the platform default proxy for <code>url</code> or <code>null</code> if none.
+	 * 
+	 * @since 3.5
+	 */
+	public static Proxy getProxyForUrl(String url) {
+		String host = WebUtil.getHost(url);
+		Proxy proxy;
+		if (WebUtil.isRepositoryHttps(url)) {
+			proxy = getProxy(host, IProxyData.HTTPS_PROXY_TYPE);
+		} else {
+			proxy = getProxy(host, IProxyData.HTTP_PROXY_TYPE);
+		}
+		return proxy;
+	}
+
+	/**
 	 * @since 3.1
 	 */
 	public static Proxy getProxy(String host, Proxy.Type proxyType) {
