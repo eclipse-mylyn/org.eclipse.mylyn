@@ -16,6 +16,12 @@
   </properties>
   <profiles>
     <profile>
+      <id>localonly</id>
+      <properties>
+        <mylyn-test-suite>org.eclipse.mylyn.tests.AllNonConnectorTests</mylyn-test-suite>
+      </properties>
+    </profile>
+    <profile>
       <id>heartbeat</id>
       <properties>
         <mylyn-test-suite>org.eclipse.mylyn.tests.AllHeartbeatTests</mylyn-test-suite>
