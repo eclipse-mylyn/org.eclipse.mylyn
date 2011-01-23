@@ -15,6 +15,7 @@ import java.net.Proxy;
 
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -178,11 +179,15 @@ public class TracFixture extends TestFixture {
 	}
 
 	public ITracClient connect(PrivilegeLevel level) throws Exception {
-		return connect(repositoryUrl, Proxy.NO_PROXY, level);
+		return connect(repositoryUrl, getDefaultProxy(repositoryUrl), level);
+	}
+
+	private Proxy getDefaultProxy(String url) {
+		return WebUtil.getProxyForUrl(url);
 	}
 
 	public ITracClient connect(String url) throws Exception {
-		return connect(url, Proxy.NO_PROXY, PrivilegeLevel.USER);
+		return connect(url, getDefaultProxy(url), PrivilegeLevel.USER);
 	}
 
 	public ITracClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
@@ -191,7 +196,7 @@ public class TracFixture extends TestFixture {
 	}
 
 	public ITracClient connect(String url, String username, String password) throws Exception {
-		return connect(url, username, password, Proxy.NO_PROXY);
+		return connect(url, username, password, getDefaultProxy(url));
 	}
 
 	public ITracClient connect(String url, String username, String password, Proxy proxy) throws Exception {
