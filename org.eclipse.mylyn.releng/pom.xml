@@ -27,7 +27,7 @@
 
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
 
-    <mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
+    <mylyn-test-args>-Dmylyn.credentials=${mylyn-credentials} -ea</mylyn-test-args>
     <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
 
     <!--<maven.test.skip>true</maven.test.skip>-->
@@ -118,6 +118,13 @@
 	<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
       </properties>
     </profile>
+    <profile>
+      <id>dist</id>
+      <modules>
+	<module>main-site</module>
+	<module>incubator-site</module>
+      </modules>
+    </profile>
   </profiles>
 
   <modules>
@@ -131,8 +138,6 @@
     <module>../../org.eclipse.mylyn.docs</module>
     <module>../../org.eclipse.mylyn.incubator</module>
     <module>../../org.eclipse.mylyn.reviews</module>
-    <module>main-site</module>
-    <module>incubator-site</module>
    </modules>
 
   <pluginRepositories>

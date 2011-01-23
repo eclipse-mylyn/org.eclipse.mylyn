@@ -67,56 +67,10 @@
           <appArgLine>${mylyn-test-app-args}</appArgLine> 
         </configuration>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.5</version>
-        <executions>
-          <execution>
-            <id>test</id>
-            <phase>test</phase>
-            <configuration>
-              <includes>
-                <include>org/eclipse/mylyn/tests/AllHeadlessStandaloneTests.java</include>
-              </includes>
-              <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-            </configuration>
-            <goals>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      -->
       <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-source-plugin</artifactId>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
     </plugins>
   </build>
-  <!--
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.mylyn.commons</groupId>
-      <artifactId>org.eclipse.mylyn.commons.net</artifactId>
-      <version>3.5.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  -->
 </project>
