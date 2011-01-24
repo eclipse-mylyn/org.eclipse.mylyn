@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
+import org.eclipse.mylyn.team.ui.TeamUiUtil;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
@@ -91,7 +92,7 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 	}
 
 	public String getComment(boolean checkTaskRepository) {
-		return ContextChangeSet.getComment(checkTaskRepository, task, getChangedResources());
+		return TeamUiUtil.getComment(checkTaskRepository, task, getChangedResources());
 	}
 
 	@Override
