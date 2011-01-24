@@ -10,9 +10,9 @@
 <unit id="com.google.gwtjsonrpc" version="1.2.2.v201101101830"/>
 <unit id="com.google.gwtorm" version="1.1.4.v201101121000"/>
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
-<unit id="com.google.gerrit.prettify" version="2.1.5.v201101170600"/>
+<unit id="com.google.gerrit.prettify" version="2.1.5.v201101181500"/>
 <unit id="com.google.gerrit.reviewdb" version="2.1.5.v201101121030"/>
-<unit id="com.google.gerrit.common" version="2.1.5.v201101131540"/>
+<unit id="com.google.gerrit.common" version="2.1.5.v201101200205"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201011030300"/>
 <unit id="javax.activation" version="1.1.0.v201005080500"/>
@@ -35,7 +35,7 @@
 <unit id="org.apache.ws.commons.util" version="1.0.0.v20100518-1135"/>
 <unit id="org.jdom" version="1.0.0.v201005080400"/>
 <unit id="org.json" version="1.0.0.v201011060100"/>
-<repository location="http://download.eclipse.org/tools/orbit/committers/drops/I20110118151342/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/committers/drops/I20110122134753/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.2.20110117_1743-b492ddb-dev-e36"/>
