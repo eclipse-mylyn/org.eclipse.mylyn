@@ -23,6 +23,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -163,7 +164,7 @@ public abstract class TestFixture {
 	}
 
 	public AbstractWebLocation location(PrivilegeLevel level) throws Exception {
-		return location(level, Proxy.NO_PROXY);
+		return location(level, WebUtil.getProxyForUrl(repositoryUrl));
 	}
 
 	public AbstractWebLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
@@ -172,7 +173,7 @@ public abstract class TestFixture {
 	}
 
 	public AbstractWebLocation location(String username, String password) throws Exception {
-		return location(username, password, Proxy.NO_PROXY);
+		return location(username, password, WebUtil.getProxyForUrl(repositoryUrl));
 	}
 
 	public AbstractWebLocation location(String username, String password, final Proxy proxy) throws Exception {
