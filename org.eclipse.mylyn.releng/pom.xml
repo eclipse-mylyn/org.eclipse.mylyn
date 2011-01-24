@@ -137,7 +137,7 @@
       </modules>
     </profile>
   </profiles>
-<!--
+
   <modules>
     <module>target-definition</module>
     <module>../../org.eclipse.mylyn</module>
@@ -150,7 +150,7 @@
     <module>../../org.eclipse.mylyn.incubator</module>
     <module>../../org.eclipse.mylyn.reviews</module>
   </modules>
--->
+
   <pluginRepositories>
     <pluginRepository>
       <!-- need maven-findbugs-2.3.2-SNAPSHOT, see
