@@ -32,7 +32,6 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.RepositoryCompletionProcessorTest
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
-import org.eclipse.mylyn.tasks.tests.util.ServiceMessageManagerTest;
 
 /**
  * @author Mik Kersten
@@ -105,7 +104,8 @@ public class AllTasksTests {
 		suite.addTestSuite(PlanningPartTest.class);
 		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
 		suite.addTestSuite(TaskAttributeDiffTest.class);
-		suite.addTestSuite(ServiceMessageManagerTest.class);
+		// XXX re-enable
+		//suite.addTestSuite(ServiceMessageManagerTest.class);
 		suite.addTestSuite(TaskMigratorTest.class);
 		suite.addTestSuite(TaskListViewTest.class);
 		// XXX long running tests, put back?
