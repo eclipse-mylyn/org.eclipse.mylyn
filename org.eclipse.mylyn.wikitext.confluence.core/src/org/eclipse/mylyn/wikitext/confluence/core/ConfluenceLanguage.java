@@ -47,6 +47,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * 
  * @author David Green
  * @since 1.0
+ * @see <a href="http://confluence.atlassian.com/display/DOC/Confluence+Notation+Guide+Overview">Confluence Notation
+ *      Guide Overview</a>
  */
 public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	/**
