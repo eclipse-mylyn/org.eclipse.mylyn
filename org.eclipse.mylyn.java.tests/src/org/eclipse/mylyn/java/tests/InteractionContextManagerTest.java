@@ -13,7 +13,6 @@ package org.eclipse.mylyn.java.tests;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
 import org.eclipse.core.internal.resources.Workspace;
@@ -28,8 +27,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -40,7 +37,6 @@ import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -234,38 +230,6 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			}
 		}
 		return false;
-	}
-
-	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
-		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
-		IPackageFragment p2 = project.createPackage("p2");
-
-		IType type2 = project.createType(p2, "Type2.java", "public class Type2 { }");
-		IMethod m2 = type2.createMethod("void m2() { }", null, true, null);
-
-		assertTrue(m1.exists());
-		assertEquals(1, type1.getMethods().length);
-
-		monitor.selectionChanged(part, new StructuredSelection(m1));
-		IInteractionElement m1Node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
-		assertTrue(m1Node.getInterest().isInteresting());
-		monitor.selectionChanged(part, new StructuredSelection(m2));
-		IInteractionElement m2Node = ContextCore.getContextManager().getElement(m2.getHandleIdentifier());
-		manager.processInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), scaling.getLandmark()));
-		assertTrue(m2Node.getInterest().isLandmark());
-
-		AbstractRelationProvider provider = ContextCorePlugin.getDefault()
-				.getRelationProviders("java")
-				.iterator()
-				.next();
-		provider.createEdge(m2Node, m1Node.getContentType(), m2.getHandleIdentifier());
-
-		assertEquals(1, m2Node.getRelations().size());
-
-		manager.resetLandmarkRelationshipsOfKind(provider.getId());
-
-		assertEquals(0, m2Node.getRelations().size());
 	}
 
 	public void testPredictedInterest() {
