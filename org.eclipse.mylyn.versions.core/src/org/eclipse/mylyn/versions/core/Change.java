@@ -12,36 +12,25 @@
 package org.eclipse.mylyn.versions.core;
 
 /**
- * @author Steffen Pingel
+ * @author mattk
  */
-public class ScmRepository {
+public class Change {
+	private final ScmArtifact base;
 
-	private String name;
+	private final ScmArtifact target;
 
-	private String url;
-
-	protected ScmRepository() {
+	public Change(ScmArtifact base, ScmArtifact target) {
+		super();
+		this.base = base;
+		this.target = target;
 	}
 
-	public ScmRepository(String name, String url) {
-		this.name = name;
-		this.url = url;
+	public ScmArtifact getBase() {
+		return base;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	protected void setName(String name) {
-		this.name = name;
-	}
-
-	protected void setUrl(String url) {
-		this.url = url;
+	public ScmArtifact getTarget() {
+		return target;
 	}
 
 }

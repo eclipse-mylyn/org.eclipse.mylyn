@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.versions.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -55,6 +57,18 @@ public class ScmCore {
 		return null;
 	}
 
+	public static List<ScmConnector> getAllRegisteredConnectors() {
+		List<ScmConnector> scmConnectors = new ArrayList<ScmConnector>();
+		String[] teamProviderIds = RepositoryProvider.getAllProviderTypeIds();
+		for (String providerId : teamProviderIds) {
+			ScmConnector connector = getScmConnectorById(providerId);
+			if (connector != null) {
+				scmConnectors.add(connector);
+			}
+		}
+		return scmConnectors;
+	}
+
 	public static ScmConnector getConnector(IResource resource) {
 		if (!RepositoryProvider.isShared(resource.getProject())) {
 			return null;
@@ -78,12 +92,12 @@ public class ScmCore {
 		MultiStatus result = new MultiStatus(ScmCore.ID_PLUGIN, 0, "Scm connectors failed to load.", null); //$NON-NLS-1$
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ScmCore.ID_PLUGIN + ".connectors");
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ScmCore.ID_PLUGIN + ".connectors"); //$NON-NLS-1$
 		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (id.equals(element.getAttribute("id"))) {
+				if (id.equals(element.getAttribute("id"))) { //$NON-NLS-1$
 					try {
 						Object object = element.createExecutableExtension("core"); //$NON-NLS-1$
 						if (object instanceof ScmConnector) {

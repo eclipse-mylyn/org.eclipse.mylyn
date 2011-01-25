@@ -19,26 +19,33 @@ import org.eclipse.team.core.history.IFileRevision;
  */
 public abstract class ScmArtifact {
 
-	ChangeType changeType;
+	private String path;
 
-	String path;
+	private String id;
 
-	public ChangeType getChangeType() {
-		return changeType;
+	protected ScmArtifact() {
 	}
 
-	public abstract IFileRevision getFileRevision(String id, IProgressMonitor monitor);
+	protected ScmArtifact(String id, String path) {
+		this.id = id;
+		this.path = path;
+	}
+
+	protected void setId(String id) {
+		this.id = id;
+	}
+
+	protected void setPath(String path) {
+		this.path = path;
+	}
+
+	public abstract IFileRevision getFileRevision(IProgressMonitor monitor);
 
 	public String getPath() {
 		return path;
 	}
 
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public String getId() {
+		return id;
 	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
 }

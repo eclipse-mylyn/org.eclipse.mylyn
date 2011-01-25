@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.versions.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -20,25 +21,36 @@ import java.util.List;
  */
 public class ChangeSet {
 
-	List<ScmArtifact> artifacts = new ArrayList<ScmArtifact>();
+	private final List<Change> changes;
 
-	ScmUser author;
+	private final ScmUser author;
 
-	Date date;
+	private final Date date;
 
 	/**
 	 * SHA1 hash or revision.
 	 */
-	String id;
+	private final String id;
 
-	String kind;
+	private String kind;
 
-	String message;
+	private final String message;
 
-	ScmRepository repository;
+	private ScmRepository repository;
 
-	public List<ScmArtifact> getArtifacts() {
-		return artifacts;
+	public ChangeSet(ScmUser author, Date date, String id, String fullMessage, ScmRepository repository,
+			List<? extends Change> changes) {
+		this.author = author;
+		this.date = date;
+		this.id = id;
+		this.message = fullMessage;
+		this.repository = repository;
+		this.changes = new ArrayList<Change>(changes);
+
+	}
+
+	public List<Change> getChanges() {
+		return Collections.unmodifiableList(changes);
 	}
 
 	public String getKind() {
@@ -49,10 +61,38 @@ public class ChangeSet {
 		return repository;
 	}
 
+	public ScmUser getAuthor() {
+		return author;
+	}
+
+	public Date getDate() {
+		return date != null ? new Date(date.getTime()) : null;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * This object should not be mutable
+	 * 
+	 * @param kind
+	 */
+	@Deprecated
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
 
+	/**
+	 * This object should not be mutable
+	 * 
+	 * @param kind
+	 */
+	@Deprecated
 	public void setRepository(ScmRepository repository) {
 		this.repository = repository;
 	}

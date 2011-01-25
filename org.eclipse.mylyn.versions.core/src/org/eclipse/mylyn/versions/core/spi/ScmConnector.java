@@ -35,7 +35,7 @@ public abstract class ScmConnector {
 	/**
 	 * Lookup a local resource.
 	 */
-	public abstract ScmArtifact getArtifact(IResource resource);
+	public abstract ScmArtifact getArtifact(IResource resource) throws CoreException;
 
 	public abstract ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException;
