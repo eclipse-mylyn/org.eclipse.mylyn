@@ -28,17 +28,19 @@ public class CvsArtifact extends ScmArtifact {
 
 	private final CvsConnector connector;
 
-	public CvsArtifact(CvsConnector connector, IResource resource) {
+	public CvsArtifact(CvsConnector connector, IResource resource, String id) {
 		this.connector = connector;
 		this.resource = resource;
+		setId(id);
+		setPath(resource.getFullPath().toString());
 	}
 
 	@Override
-	public IFileRevision getFileRevision(String id, IProgressMonitor monitor) {
+	public IFileRevision getFileRevision(IProgressMonitor monitor) {
 		RepositoryProvider provider = RepositoryProvider.getProvider(resource.getProject(), connector.getProviderId());
 		IFileHistory history = provider.getFileHistoryProvider().getFileHistoryFor(resource, IFileHistoryProvider.NONE,
 				monitor);
-		return history.getFileRevision(id);
+		return history.getFileRevision(getId());
 	}
 
 }

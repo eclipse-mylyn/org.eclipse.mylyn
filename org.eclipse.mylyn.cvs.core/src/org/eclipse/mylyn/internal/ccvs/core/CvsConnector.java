@@ -31,6 +31,7 @@ import org.eclipse.team.internal.ccvs.core.ICVSRepositoryLocation;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("restriction")
 public class CvsConnector extends ScmConnector {
 
 	@Override
@@ -40,7 +41,7 @@ public class CvsConnector extends ScmConnector {
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource) {
-		return new CvsArtifact(this, resource);
+		return new CvsArtifact(this, resource,null);
 	}
 
 	@Override
@@ -74,8 +75,6 @@ public class CvsConnector extends ScmConnector {
 
 	protected CvsRepository getRepository(ICVSRepositoryLocation location) {
 		CvsRepository repository = new CvsRepository(location);
-		repository.setName(location.getLocation(true));
-		repository.setUrl(location.getLocation(true));
 		return repository;
 	}
 

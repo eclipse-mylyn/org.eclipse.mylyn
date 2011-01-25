@@ -17,12 +17,15 @@ import org.eclipse.team.internal.ccvs.core.ICVSRepositoryLocation;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("restriction")
 public class CvsRepository extends ScmRepository {
 
 	private final ICVSRepositoryLocation location;
 
 	public CvsRepository(ICVSRepositoryLocation location) {
 		this.location = location;
+		setName(location.getLocation(true));
+		setUrl(location.getLocation(true));
 	}
 
 	public ICVSRepositoryLocation getLocation() {
