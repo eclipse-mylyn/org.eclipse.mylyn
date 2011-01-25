@@ -40,8 +40,8 @@ public class CvsConnector extends ScmConnector {
 	}
 
 	@Override
-	public ScmArtifact getArtifact(IResource resource) {
-		return new CvsArtifact(this, resource,null);
+	public ScmArtifact getArtifact(IResource resource, String revision) {
+		return new CvsArtifact(this, resource, revision);
 	}
 
 	@Override
