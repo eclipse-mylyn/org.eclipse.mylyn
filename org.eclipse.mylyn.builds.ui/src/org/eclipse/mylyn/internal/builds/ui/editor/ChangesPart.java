@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.MenuManager;
@@ -145,7 +146,11 @@ public class ChangesPart extends AbstractBuildEditorPart {
 					ChangesPart.this.open((Change) selection);
 				}
 				if (selection instanceof ChangeArtifact) {
-					ChangesPart.this.open((ChangeArtifact) selection);
+					try {
+						ChangesPart.this.open((ChangeArtifact) selection);
+					} catch (CoreException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -167,7 +172,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		return composite;
 	}
 
-	private void open(IChangeArtifact changeArtifact) {
+	private void open(IChangeArtifact changeArtifact) throws CoreException {
 		IResource resource = ScmCore.findResource(changeArtifact.getFile());
 		if (resource == null) {
 			return;
@@ -178,9 +183,10 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			return;
 		}
 
-		ScmArtifact artifact = connector.getArtifact(resource);
-		IFileRevision left = artifact.getFileRevision(changeArtifact.getPrevRevision(), new NullProgressMonitor());
-		IFileRevision right = artifact.getFileRevision(changeArtifact.getRevision(), new NullProgressMonitor());
+		ScmArtifact prevArtifact = connector.getArtifact(resource, changeArtifact.getPrevRevision());
+		ScmArtifact artifact = connector.getArtifact(resource, changeArtifact.getRevision());
+		IFileRevision left = prevArtifact.getFileRevision(new NullProgressMonitor());
+		IFileRevision right = artifact.getFileRevision(new NullProgressMonitor());
 
 		ScmUi.openCompareEditor(getPage().getSite().getPage(), left, right);
 	}
