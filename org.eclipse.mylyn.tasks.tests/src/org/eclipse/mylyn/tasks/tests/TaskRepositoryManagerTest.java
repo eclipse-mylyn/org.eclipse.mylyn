@@ -29,6 +29,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -206,8 +207,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testGet() throws MalformedURLException {
-		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("",
+				TasksUiPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
@@ -243,8 +244,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryAttributePersistance() throws Exception {
-		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("",
+				TasksUiPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
 		String encoding = "UTF-16";
@@ -318,8 +319,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryPersistanceSameUrl() throws Exception {
-		TaskRepository repository1 = new TaskRepository("local", "http://repository");
-		TaskRepository repository2 = new TaskRepository("web", "http://repository");
+		TaskRepository repository1 = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND, "http://repository");
+		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://repository");
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 		assertEquals(2, manager.getAllRepositories().size());
