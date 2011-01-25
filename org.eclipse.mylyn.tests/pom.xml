@@ -122,6 +122,9 @@
               </parameters>
             </transformationSet>
           </transformationSets>
+		  <explodedBundles>
+			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
+		  </explodedBundles>
         </configuration>
       </plugin>
     </plugins>
