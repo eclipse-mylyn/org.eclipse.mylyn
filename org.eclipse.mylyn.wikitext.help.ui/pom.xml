@@ -1,14 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>mylyn-docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.docs</groupId>
   <artifactId>org.eclipse.mylyn.wikitext.help.ui</artifactId>
   <version>1.4.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+              
+                <!-- Generate help docs -->
+
+                <taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+
+                <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
+                                          multipleOutputFiles="true"
+                                          navigationImages="true"
+                                          helpPrefix="help">
+                  <fileset dir="help" includes="**/*.textile"/>
+                  <stylesheet url="book.css"/>
+                  <stylesheet file="${basedir}/help/styles/main.css"/>
+                </wikitext-to-eclipse-help>
+
+                <!-- Verify generated docs -->
+
+                <echo level="info">
+                  Validating help content XML and HTML files: The Eclipse help system expects well-formed XML
+                  
+                  If validation fails it is because either:
+                  
+                  * the userguide source code is poorly formed, or
+                  * the WikiText MediaWiki parser has a bug
+                  
+                  Problems with userguide source are usually caused by improper use of HTML markup in the MediaWiki source,
+                  or inadvertently starting a line with a space character (in MediaWiki this starts a preformatted block)
+                </echo>
+
+                <!-- 
+                   Don't bother with DTD validation: we only care if the files are well-formed.
+                   We therefore provide an empty DTD 
+                  -->
+                <mkdir dir="__tmp"/>
+                <echo file="__tmp/__empty.dtd" message=""/>
+                <xmlvalidate lenient="true">
+                  <fileset dir="help">
+                    <include name="**/*.xml"/>
+                  </fileset>
+                  <fileset dir="help">
+                    <include name="**/*.html"/>
+                  </fileset>
+                  <dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/__tmp/__empty.dtd"/>
+                </xmlvalidate>
+                <delete dir="__tmp"/>
+
+                <!-- Generate New & Noteworthy -->
+
+                <xslt style="docs/new/new.xsl" destdir="docs/new" basedir="docs/new" includes="new*.xml"/>
+                
+            </target>
+          </configuration>
+          <goals>
+            <goal>run</goal>
+          </goals>
+        </execution>
+      </executions>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse.mylyn.docs</groupId>
+          <artifactId>org.eclipse.mylyn.wikitext.core</artifactId>
+          <version>1.4.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.eclipse.mylyn.docs</groupId>
+          <artifactId>org.eclipse.mylyn.wikitext.textile.core</artifactId>
+          <version>1.4.0-SNAPSHOT</version>
+        </dependency>
+      </dependencies>
+    </plugin>
+    <plugin>
+      <groupId>org.sonatype.tycho</groupId>
+      <artifactId>maven-osgi-source-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>findbugs-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-pmd-plugin</artifactId>
+    </plugin>
+  </plugins>
+</build>
 </project>
