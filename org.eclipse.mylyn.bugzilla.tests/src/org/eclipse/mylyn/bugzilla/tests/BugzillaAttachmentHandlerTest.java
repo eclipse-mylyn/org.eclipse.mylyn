@@ -264,7 +264,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					new NullProgressMonitor());
 			fail("never reach this!");
 		} catch (Exception e) {
-			assertEquals("An unknown repository error has occurred: file is empty", e.getMessage());
+			assertEquals(
+					"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.",
+					e.getMessage());
 		}
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
@@ -289,7 +291,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					new NullProgressMonitor());
 			fail("never reach this!");
 		} catch (Exception e) {
-			assertEquals("An unknown repository error has occurred: file is empty", e.getMessage());
+			assertEquals(
+					"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.",
+					e.getMessage());
 		}
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);

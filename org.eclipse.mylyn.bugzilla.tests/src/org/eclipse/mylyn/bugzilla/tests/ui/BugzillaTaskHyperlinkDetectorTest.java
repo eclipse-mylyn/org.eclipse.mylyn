@@ -20,6 +20,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector;
@@ -626,8 +627,14 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
+		if (PlatformUiUtil.supportsMultipleHyperlinkPresenter()) {
+			assertEquals(2, links.length);
+			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
+			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[1].getHyperlinkRegion().getOffset());
+		} else {
+			assertEquals(1, links.length);
+			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
+		}
 	}
 
 	public void testAttachmentNew() {
@@ -636,8 +643,14 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
+		if (PlatformUiUtil.supportsMultipleHyperlinkPresenter()) {
+			assertEquals(2, links.length);
+			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
+			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[1].getHyperlinkRegion().getOffset());
+		} else {
+			assertEquals(1, links.length);
+			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
+		}
 	}
 
 	public void testCommentLotsOfWhitespace() {
