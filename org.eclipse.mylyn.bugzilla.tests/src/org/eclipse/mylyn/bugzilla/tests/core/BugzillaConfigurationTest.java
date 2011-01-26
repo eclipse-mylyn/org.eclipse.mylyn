@@ -13,7 +13,7 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
@@ -107,8 +107,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	 * included (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
-		File file = BugzillaFixture.getFile("testdata/configuration/rdfconfig218.txt");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+		InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
+		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 
 		if (true) {
 			File tempFile = File.createTempFile("XmlCleaner-", "tmp");

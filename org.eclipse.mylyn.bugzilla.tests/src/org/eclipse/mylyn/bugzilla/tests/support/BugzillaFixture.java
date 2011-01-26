@@ -13,6 +13,7 @@ package org.eclipse.mylyn.bugzilla.tests.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 
 import junit.framework.AssertionFailedError;
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
@@ -222,6 +224,10 @@ public class BugzillaFixture extends TestFixture {
 
 	public static File getFile(String filename) throws IOException {
 		return TestUtil.getFile(BugzillaFixture.class, filename);
+	}
+
+	public static InputStream getResource(String filename) throws IOException {
+		return CommonTestUtil.getResource(BugzillaFixture.class, filename);
 	}
 
 	/**

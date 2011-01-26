@@ -18,6 +18,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -130,10 +132,9 @@ public class BugzillaClientTest extends TestCase {
 		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
 		try {
 			client.validate(new NullProgressMonitor());
-		} catch (Exception e) {
-			assertEquals("Unable to login to " + repository.getUrl()
-					+ ".\n\n\n    The username or password you entered is not valid.\n\n"
-					+ "Please validate credentials via Task Repositories view.", e.getMessage());
+		} catch (CoreException e) {
+			assertEquals("Expected login error, got: " + e.getMessage(), RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+					e.getStatus().getCode());
 		}
 	}
 

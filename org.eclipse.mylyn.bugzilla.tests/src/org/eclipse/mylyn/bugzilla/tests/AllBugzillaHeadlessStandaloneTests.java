@@ -69,8 +69,6 @@ public class AllBugzillaHeadlessStandaloneTests {
 				fixture.add(BugzillaCustomFieldsTest.class);
 				fixture.add(BugzillaFlagsTest.class);
 			}
-
-			fixture.add(BugzillaClientTest.class);
 		}
 		fixture.done();
 	}
