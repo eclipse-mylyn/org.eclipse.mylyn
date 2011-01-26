@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -134,6 +135,10 @@ public class TaskTestUtil {
 
 	public static TaskData createMockTaskData(String taskId) {
 		return createTaskData(createMockRepository(), taskId);
+	}
+
+	public static TaskAttachment createMockTaskAttachment(String taskId) {
+		return new TaskAttachment(createMockRepository(), createMockTask(taskId), createMockTaskData(taskId).getRoot());
 	}
 
 }

@@ -41,8 +41,6 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
 
-	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	private final TaskDataModel model;
@@ -130,12 +128,13 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	static String getAttachmentId(ITaskAttachment attachment) {
 		String a = attachment.getUrl();
-		int i = a.indexOf("?id="); //$NON-NLS-1$
-		if (i != -1) {
-			return a.substring(i + 4);
-		} else {
-			return ""; //$NON-NLS-1$
+		if (a != null) {
+			int i = a.indexOf("?id="); //$NON-NLS-1$
+			if (i != -1) {
+				return a.substring(i + 4);
+			}
 		}
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -163,6 +162,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public Color getForeground(Object element) {
 		ITaskAttachment att = (ITaskAttachment) element;
 		if (att.isDeprecated()) {
+			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 		}
 		return super.getForeground(element);
@@ -217,12 +217,13 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public Color getBackground(Object element) {
-		ITaskAttachment attachment = (ITaskAttachment) element;
-		if (model.hasIncomingChanges(attachment.getTaskAttribute())) {
-			return attributeEditorToolkit.getColorIncoming();
-		} else {
-			return null;
+		if (model != null && attributeEditorToolkit != null) {
+			ITaskAttachment attachment = (ITaskAttachment) element;
+			if (model.hasIncomingChanges(attachment.getTaskAttribute())) {
+				return attributeEditorToolkit.getColorIncoming();
+			}
 		}
+		return null;
 	}
 
 }

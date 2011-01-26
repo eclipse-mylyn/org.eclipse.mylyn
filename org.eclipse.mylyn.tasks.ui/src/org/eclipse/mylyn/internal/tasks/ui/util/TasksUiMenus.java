@@ -41,6 +41,15 @@ public class TasksUiMenus {
 					clip.dispose();
 				}
 			}
+
+			@Override
+			public boolean isEnabled() {
+				ITaskAttachment attachment = AttachmentUtil.getSelectedAttachment();
+				if (attachment != null) {
+					return attachment.getUrl() != null;
+				}
+				return super.isEnabled();
+			}
 		};
 
 		final Action copyToClipAction = new Action(Messages.TasksUiMenus_Copy_Contents) {
