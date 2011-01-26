@@ -15,10 +15,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.discovery.tests.DiscoveryTestConstants;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
+import org.eclipse.osgi.service.resolver.VersionRange;
+import org.osgi.framework.Bundle;
 
 /**
  * A test that uses the real discovery directory and verifies that it works, and that all referenced update sites appear
@@ -57,6 +60,14 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 		connectorDiscovery.verifySiteAvailability(new NullProgressMonitor());
 
 		assertFalse(connectorDiscovery.getConnectors().isEmpty());
+
+		if (System.getProperty("http.proxyHost") != null) {
+			Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
+			if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
+				System.err.println("Skipping test on Eclipse 3.5 due to lack of proxy support");
+				return;
+			}
+		}
 
 		int unavailableCount = 0;
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
