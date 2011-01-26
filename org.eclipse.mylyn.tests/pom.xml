@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>mylyn-mylyn-parent</artifactId>
@@ -61,6 +61,8 @@
         <configuration>
           <useUIHarness>true</useUIHarness>
           <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
+          <product>org.eclipse.sdk.ide</product>
+          <application>org.eclipse.ui.ide.workbench</application>
           <testSuite>org.eclipse.mylyn.tests</testSuite>
           <testClass>${mylyn-test-suite}</testClass>
           <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${mylyn-test-args}</argLine>
@@ -69,6 +71,11 @@
 			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
 		  </explodedBundles>
           <dependencies>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.sdk.feature.group</artifactId>
+              <version>${platform-version}</version>
+            </dependency>
             <dependency>
               <type>p2-installable-unit</type>
               <artifactId>org.eclipse.mylyn.sdk_feature.feature.group</artifactId>
