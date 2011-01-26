@@ -56,12 +56,14 @@
                   <targetExtension>.xml</targetExtension>
                 </fileMapper>
               </fileMappers>
+			  <!--
               <parameters>
                 <parameter>
                   <name>append</name>
                   <value>${mylyn-test-append}</value>
                 </parameter>
               </parameters>
+			  -->
             </transformationSet>
           </transformationSets>
         </configuration>
