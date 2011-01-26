@@ -29,6 +29,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public abstract class AbstractAttributeEditor {
 
+	/**
+	 * The key used to associate the editor control with the corresponding task attribute. This enables lookup of the
+	 * model element from the widget hierarchy.
+	 * 
+	 * @since 3.5
+	 * @see Control#getData(String)
+	 * @see #getControl()
+	 * @see #getTaskAttribute()
+	 */
+	public static final String KEY_TASK_ATTRIBUTE = "org.eclipse.mylyn.tasks.ui.editors.TaskAttribute"; //$NON-NLS-1$
+
 	private Control control;
 
 	private boolean decorationEnabled;
@@ -156,6 +167,9 @@ public abstract class AbstractAttributeEditor {
 	 */
 	protected void setControl(Control control) {
 		this.control = control;
+		if (control != null) {
+			control.setData(KEY_TASK_ATTRIBUTE, taskAttribute);
+		}
 	}
 
 	/**
