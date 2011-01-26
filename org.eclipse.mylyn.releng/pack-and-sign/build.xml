@@ -1,0 +1,80 @@
+<project name="pack-and-sign" default="pack-and-sign" basedir=".">
+
+  <dirname property="scriptdir" file="${ant.file.pack-and-sign}"/>
+
+  <target name="pack-and-sign">
+	<fail unless="localRepository">Required property localRepository not set</fail>
+	<fail unless="projectDir">Required property projectDir not set</fail>
+	<fail unless="repositoryName">Required property repositoryName not set</fail>
+
+	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
+	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
+	  <arg value="${projectDir}/site"/>
+	</exec>
+
+	<antcall target="publish"/>
+	<zip file="${projectDir}/main.zip">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*"/>
+	  </fileset>
+	</zip>
+	
+	<antcall target="pack"/>
+	<antcall target="publish"/>
+  </target>
+
+  <target name="pack">	
+	<delete file="${projectDir}/site/content.jar" />
+	<delete file="${projectDir}/site/artifacts.jar" />
+	
+	<path id="jarprocessor.classpath">
+	  <fileset dir="${localRepository}/org/sonatype/tycho/tycho-p2-runtime">
+		<include name="*/eclipse/plugins/org.eclipse.equinox.p2.jarprocessor_*.jar" />
+	  </fileset>
+	</path>		
+	
+	<!-- pack200 -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.internal.p2.jarprocessor.Main"
+			  fork="true" classpathref="jarprocessor.classpath" failonerror="true" maxmemory="256m"
+		  dir="${projectDir}/site">
+	  <arg line="-verbose -processAll -repack -pack" />
+	  <arg line="-outputDir ${projectDir}/site ${projectDir}/site" />
+	</java>
+
+	<path id="eclipse.classpath">
+	  <fileset dir="${localRepository}/org/sonatype/tycho/tycho-p2-runtime">
+		<include name="*/eclipse/plugins/org.eclipse.equinox.launcher_*.jar" />
+	  </fileset>
+	</path>
+  </target>
+
+  <target name="publish">	
+	<delete file="${projectDir}/site/content.jar" />
+	<delete file="${projectDir}/site/artifacts.jar" />
+
+	<!-- generate metadata -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.launcher.Main" fork="true"
+		  classpathref="eclipse.classpath" failonerror="true" maxmemory="256m"
+		  dir="${projectDir}/site">
+	  <arg line="-application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher" />
+	  <arg line="-source ${projectDir}/site" />
+	  <arg line="-metadataRepository file://${projectDir}/site" />
+	  <arg line="-artifactRepository file://${projectDir}/site" />
+	  <arg line="-metadataRepositoryName '${repositoryName}'" />
+	  <arg line="-artifactRepositoryName '${repositoryName}'" />
+	  <arg line="-compress -reusePackedFiles -reusePack200Files -publishArtifacts" />
+	</java>
+	
+	<!-- publish categories -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.launcher.Main" fork="true"
+		  classpathref="eclipse.classpath" failonerror="true" maxmemory="256m"
+		  dir="${projectDir}/site">
+	  <arg line="-application org.eclipse.equinox.p2.publisher.CategoryPublisher" />
+	  <arg line="-metadataRepository file://${projectDir}/site" />
+	  <arg line="-categoryDefinition file://${projectDir}/../site.xml" />
+	  <arg line="-compress -categoryQualifier" />
+	</java>	
+  </target>
+
+</project>
+

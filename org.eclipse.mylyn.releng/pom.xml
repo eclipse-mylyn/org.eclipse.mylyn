@@ -31,6 +31,10 @@
     <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
 	<mylyn-test-append></mylyn-test-append>
 
+	<mylyn-sign>false</mylyn-sign>
+	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
+	<mylyn-incubator-repository>Mylyn Incubator</mylyn-incubator-repository>
+
     <!--<maven.test.skip>true</maven.test.skip>-->
     <maven.test.error.ignore>true</maven.test.error.ignore>
     <maven.test.failure.ignore>true</maven.test.failure.ignore>    
@@ -150,6 +154,8 @@
     <module>../../org.eclipse.mylyn.docs</module>
     <module>../../org.eclipse.mylyn.incubator</module>
     <module>../../org.eclipse.mylyn.reviews</module>
+	<!-- needs to be last -->
+    <module>process-test-results</module>
   </modules>
 
   <pluginRepositories>
