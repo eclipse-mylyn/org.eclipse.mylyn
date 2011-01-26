@@ -144,6 +144,12 @@
       <id>dist</id>
       <modules>
 		<module>main-site</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>incubator</id>
+      <modules>
+		<module>../../org.eclipse.mylyn.incubator</module>
 		<module>incubator-site</module>
       </modules>
     </profile>
@@ -158,7 +164,6 @@
     <module>../../org.eclipse.mylyn.contexts</module>
     <module>../../org.eclipse.mylyn.builds</module>
     <module>../../org.eclipse.mylyn.docs</module>
-    <module>../../org.eclipse.mylyn.incubator</module>
     <module>../../org.eclipse.mylyn.reviews</module>
 	<!-- needs to be last -->
     <module>process-test-results</module>

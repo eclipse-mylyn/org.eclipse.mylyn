@@ -13,6 +13,7 @@
   <packaging>eclipse-test-plugin</packaging>
   <properties>
     <mylyn-test-suite>org.eclipse.mylyn.tests.AllTests</mylyn-test-suite>
+    <mylyn-skip-test>${maven.test.skip}</mylyn-skip-test>
   </properties>
   <profiles>
     <profile>
@@ -25,6 +26,12 @@
       <id>heartbeat</id>
       <properties>
         <mylyn-test-suite>org.eclipse.mylyn.tests.AllHeartbeatTests</mylyn-test-suite>
+      </properties>
+    </profile>
+    <profile>
+      <id>incubator</id>
+      <properties>
+        <mylyn-skip-test>true</mylyn-skip-test>
       </properties>
     </profile>
     <profile>
@@ -59,6 +66,7 @@
         <artifactId>maven-osgi-test-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
+		  <skip>${mylyn-skip-test}</skip>
           <useUIHarness>true</useUIHarness>
           <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
           <product>org.eclipse.sdk.ide</product>
