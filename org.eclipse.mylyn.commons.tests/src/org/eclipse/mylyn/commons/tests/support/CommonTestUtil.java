@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
+import org.eclipse.osgi.util.NLS;
 
 @SuppressWarnings("restriction")
 public class CommonTestUtil {
@@ -143,6 +144,22 @@ public class CommonTestUtil {
 				}
 			}
 		}
+	}
+
+	public static InputStream getResource(Object source, String filename) throws IOException {
+		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
+		ClassLoader classLoader = clazz.getClassLoader();
+		InputStream in = classLoader.getResourceAsStream(filename);
+		if (in == null) {
+			File file = getFile(source, filename);
+			if (file != null) {
+				return new FileInputStream(file);
+			}
+		}
+		if (in == null) {
+			throw new IOException(NLS.bind("Failed to locate ''{0}'' for ''{1}''", filename, clazz.getName()));
+		}
+		return in;
 	}
 
 	public static File getFile(Object source, String filename) throws IOException {
