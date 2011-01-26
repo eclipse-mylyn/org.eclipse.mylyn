@@ -957,6 +957,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}
 
+		if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+			TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
+		}
+
 		updateHeaderMessage();
 		getManagedForm().dirtyStateChanged();
 		getTaskEditor().updateHeaderToolBar();
@@ -985,6 +989,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		} catch (RuntimeException e) {
 			showEditorBusy(false);
 			throw e;
+		}
+
+		if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+			TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 		}
 	}
 

@@ -170,8 +170,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					shell = WorkbenchUtil.getShell();
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(shell, theCalendar,
-						DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-								ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
+						DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault()
+								.getPreferenceStore()
+								.getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					DateRange range = null;
@@ -262,6 +263,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		for (IRepositoryElement element : taskListElementsToSchedule) {
 			if (element instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) element;
+				if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+					TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
+				}
 				if (dateContainer != null) {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
 				} else {
