@@ -18,5 +18,14 @@
         <artifactId>maven-osgi-source-plugin</artifactId>
       </plugin>
     </plugins>
+	<!-- resources for standalone tests -->
+    <resources>
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>testdata/**</include>
+		</includes>
+	  </resource>
+	</resources>
   </build>
 </project>
