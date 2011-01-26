@@ -7,10 +7,12 @@
 	<fail unless="projectDir">Required property projectDir not set</fail>
 	<fail unless="repositoryName">Required property repositoryName not set</fail>
 
+	<!--
 	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
 	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
 	  <arg value="${projectDir}/site"/>
 	</exec>
+	-->
 
 	<antcall target="publish"/>
 	<zip file="${projectDir}/main.zip">
@@ -40,17 +42,17 @@
 	  <arg line="-verbose -processAll -repack -pack" />
 	  <arg line="-outputDir ${projectDir}/site ${projectDir}/site" />
 	</java>
+  </target>
+
+  <target name="publish">	
+	<delete file="${projectDir}/site/content.jar" />
+	<delete file="${projectDir}/site/artifacts.jar" />
 
 	<path id="eclipse.classpath">
 	  <fileset dir="${localRepository}/org/sonatype/tycho/tycho-p2-runtime">
 		<include name="*/eclipse/plugins/org.eclipse.equinox.launcher_*.jar" />
 	  </fileset>
 	</path>
-  </target>
-
-  <target name="publish">	
-	<delete file="${projectDir}/site/content.jar" />
-	<delete file="${projectDir}/site/artifacts.jar" />
 
 	<!-- generate metadata -->
 	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.launcher.Main" fork="true"
