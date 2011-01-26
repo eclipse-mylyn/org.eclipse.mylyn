@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.builds.tests.AllBuildsTests;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
+import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
@@ -29,12 +30,17 @@ import org.eclipse.mylyn.tests.misc.AllMiscTests;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class AllNonConnectorTests {
 
 	public static Test suite() {
-		// the order of these tests might still matter, but shouldn't
-		TestSuite suite = new TestSuite("All Non-Connector Tests for org.eclipse.mylyn.tests");
+		TestSuite suite = new ManagedTestSuite(AllNonConnectorTests.class.getName());
+		addTests(suite);
+		return suite;
+	}
+
+	static void addTests(TestSuite suite) {
 		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllDiscoveryTests.suite());
@@ -48,6 +54,6 @@ public class AllNonConnectorTests {
 		suite.addTest(AllTeamTests.suite());
 		suite.addTest(AllMiscTests.suite());
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessTests.suite());
-		return suite;
 	}
+
 }

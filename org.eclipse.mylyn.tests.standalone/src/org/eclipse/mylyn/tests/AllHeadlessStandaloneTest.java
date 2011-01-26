@@ -38,7 +38,7 @@ public class AllHeadlessStandaloneTest {
 	}
 
 	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new ManagedTestSuite("Tests not requiring Eclipse Workbench");
+		TestSuite suite = new ManagedTestSuite(AllHeadlessStandaloneTest.class.getName());
 
 		// commons
 		suite.addTestSuite(WebUtilTest.class);

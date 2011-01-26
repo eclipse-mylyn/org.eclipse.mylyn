@@ -22,8 +22,8 @@ import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 public class AllConnectorHeartbeatTests {
 
 	public static Test suite() {
-		TestSuite suite = new ManagedTestSuite("Heartbeat Tests for org.eclipse.mylyn.tests");
-		suite.addTest(AllConnectorTests.suite(true));
+		TestSuite suite = new ManagedTestSuite(AllConnectorHeartbeatTests.class.getName());
+		AllConnectorTests.addTests(suite, true);
 		return suite;
 	}
 

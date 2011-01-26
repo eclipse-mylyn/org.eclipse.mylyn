@@ -22,9 +22,9 @@ import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new ManagedTestSuite("Tests for org.eclipse.mylyn.tests");
-		suite.addTest(AllNonConnectorTests.suite());
-		suite.addTest(AllConnectorTests.suite());
+		TestSuite suite = new ManagedTestSuite(AllTests.class.getName());
+		AllNonConnectorTests.addTests(suite);
+		AllConnectorTests.addTests(suite, false);
 		return suite;
 	}
 
