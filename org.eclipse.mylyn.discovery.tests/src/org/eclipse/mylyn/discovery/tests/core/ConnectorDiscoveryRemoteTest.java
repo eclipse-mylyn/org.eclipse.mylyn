@@ -53,14 +53,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 	}
 
 	public void testVerifyAvailability() throws CoreException {
-		connectorDiscovery.performDiscovery(new NullProgressMonitor());
-		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-			assertNull(connector.getAvailable());
-		}
-		connectorDiscovery.verifySiteAvailability(new NullProgressMonitor());
-
-		assertFalse(connectorDiscovery.getConnectors().isEmpty());
-
+		// XXX e3.5 skip test
 		if (System.getProperty("http.proxyHost") != null) {
 			Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
 			if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
@@ -68,6 +61,14 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 				return;
 			}
 		}
+
+		connectorDiscovery.performDiscovery(new NullProgressMonitor());
+		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
+			assertNull(connector.getAvailable());
+		}
+		connectorDiscovery.verifySiteAvailability(new NullProgressMonitor());
+
+		assertFalse(connectorDiscovery.getConnectors().isEmpty());
 
 		int unavailableCount = 0;
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
