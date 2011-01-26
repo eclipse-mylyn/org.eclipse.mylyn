@@ -131,7 +131,9 @@
 		<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
 		<mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</mylyn-test-args>
 		<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
+		<!--
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
+		-->
       </properties>
     </profile>
     <profile>
