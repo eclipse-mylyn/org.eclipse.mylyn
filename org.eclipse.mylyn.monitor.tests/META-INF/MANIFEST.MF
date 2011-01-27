@@ -6,21 +6,6 @@ Bundle-Version: 3.5.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
- org.eclipse.jface,
- org.eclipse.ui.workbench,
- org.eclipse.mylyn.commons.tests,
- org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.context.tests,
- org.eclipse.jdt.ui,
- org.eclipse.mylyn.java.ui,
- org.eclipse.mylyn.context.ui,
- org.eclipse.mylyn.tasks.ui,
- org.eclipse.ui.ide,
- org.eclipse.mylyn.monitor.usage,
- org.eclipse.mylyn.monitor.ui,
- org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn.commons.core
-Export-Package: org.eclipse.mylyn.monitor.reports.tests;x-internal:=true,
- org.eclipse.mylyn.monitor.tests;x-internal:=true,
- org.eclipse.mylyn.monitor.tests.usage.tests;x-internal:=true
+ org.eclipse.mylyn.monitor.ui
+Export-Package: org.eclipse.mylyn.monitor.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
