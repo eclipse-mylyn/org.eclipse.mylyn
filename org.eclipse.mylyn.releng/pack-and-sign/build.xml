@@ -49,6 +49,13 @@
 	  <arg line="-verbose -processAll -repack -pack" />
 	  <arg line="-outputDir ${projectDir}/site ${projectDir}/site" />
 	</java>
+	
+	<!-- remove corrupted jars -->
+	<delete>
+	  <fileset dir="${projectDir}/site">
+		<include name="plugins/com.google.gwt*"/>
+	  </fileset>
+	</delete>
   </target>
 
   <target name="publish">	
