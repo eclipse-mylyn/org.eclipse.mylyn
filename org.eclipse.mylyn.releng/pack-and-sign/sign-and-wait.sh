@@ -1,3 +1,5 @@
+#!/bin/sh -e
+
 #*******************************************************************************
 # Copyright (c) 2009 Tasktop Technologies and others.
 # All rights reserved. This program and the accompanying materials
@@ -8,7 +10,6 @@
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
-#!/bin/bash -e
 
 if [ $# -eq 0 ]
 then
@@ -17,31 +18,32 @@ then
 fi
 
 SRC=$1
-DST=/opt/public/download-staging.priv/tools/mylyn
+DST=/home/data/httpd/download-staging.priv/tools/mylyn/hudson/signing
 OUT=$DST/output
-TMP=$DST/tmp/work
+
+# prepare
+
+rm -rf $DST
+mkdir -p $DST
+mkdir -p $OUT
 
 # create zip
 
-if [ ! -e $DST/mylyn.zip ]; then
- echo Creating archive for signing, output is logged to $DST/sign.log
+echo Creating archive for signing, output is logged to $DST/sign.log
 
- cd $SRC
- /usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
+cd $SRC
+/usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
 
- # sign
+# sign
 
- mkdir -p $OUT
- /bin/rm $OUT/mylyn.zip || true
- /usr/bin/sign $DST/mylyn.zip nomail $OUT
-fi
+/usr/bin/sign $DST/mylyn.zip nomail $OUT
 
-# wait for signing to complete
+# wait 20 minutes for signing to complete
 
 I=0
-while [ $I -lt 30 ] && [ ! -e $OUT/mylyn.zip ]; do
+while [ $I -lt 40 ] && [ ! -e $OUT/mylyn.zip ]; do
   echo Waiting for $OUT/mylyn.zip
-  sleep 45
+  sleep 30
   let I=I+1
 done
 
@@ -56,8 +58,7 @@ fi
 
 echo Unzipping signed files, output is logged to $DST/sign.log
 /usr/bin/unzip -o -d $SRC $OUT/mylyn.zip >> $DST/sign.log
+
+# cleanup
+
 rm $DST/mylyn.zip
-
-# clean up
-
-/bin/rm -R $TMP || true
