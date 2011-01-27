@@ -64,12 +64,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.sandbox.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.mylyn.tasks.tests"
          download-size="0"
          install-size="0"
@@ -133,13 +127,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.ide.capabilities"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.discovery.tests"
          download-size="0"
          install-size="0"
@@ -147,13 +134,6 @@
 
    <plugin
          id="org.eclipse.mylyn.tests.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.ide.dev"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -182,20 +162,6 @@
 
    <plugin
          id="org.eclipse.mylyn.oslc.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.ide.capabilities"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.json"
          download-size="0"
          install-size="0"
          version="0.0.0"
