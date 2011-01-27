@@ -113,6 +113,11 @@
               <arch>x86</arch>
             </environment>
             <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
               <os>linux</os>
               <ws>gtk</ws>
               <arch>x86</arch>
@@ -120,6 +125,11 @@
             <environment>
               <os>linux</os>
               <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
               <arch>x86_64</arch>
             </environment>
           </environments>
@@ -153,7 +163,7 @@
             </execution>
           </executions>
         </plugin>
-	<plugin>
+        <plugin>
           <groupId>org.sonatype.tycho</groupId>
           <artifactId>maven-osgi-packaging-plugin</artifactId>
           <version>${tycho-version}</version>
@@ -182,7 +192,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-	    <skip>true</skip>
+            <skip>true</skip>
           </configuration>
           <executions>
             <execution>
@@ -202,7 +212,7 @@
             <targetJdk>1.5</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
-	    <skip>true</skip>
+            <skip>true</skip>
           </configuration>
           <executions>
             <execution>
