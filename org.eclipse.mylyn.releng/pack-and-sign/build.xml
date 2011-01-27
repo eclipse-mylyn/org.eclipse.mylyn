@@ -53,7 +53,7 @@
 	<!-- remove corrupted jars -->
 	<delete>
 	  <fileset dir="${projectDir}/site">
-		<include name="plugins/com.google.gwt*"/>
+		<include name="plugins/com.google.gwt*.pack.gz"/>
 	  </fileset>
 	</delete>
   </target>
