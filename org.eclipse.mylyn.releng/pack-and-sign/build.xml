@@ -1,5 +1,7 @@
 <project name="pack-and-sign" default="pack-and-sign" basedir=".">
 
+  <echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
+
   <dirname property="scriptdir" file="${ant.file.pack-and-sign}"/>
 
   <target name="pack-and-sign">

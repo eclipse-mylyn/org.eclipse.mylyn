@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 #*******************************************************************************
 # Copyright (c) 2009 Tasktop Technologies and others.
@@ -17,9 +17,12 @@ then
   exit 1
 fi
 
+set -v
+
 SRC=$1
 DST=/home/data/httpd/download-staging.priv/tools/mylyn/hudson/signing
 OUT=$DST/output
+LOG=/home/data/httpd/download-staging.priv/arch/signer.log
 
 # prepare
 
@@ -29,23 +32,28 @@ mkdir -p $OUT
 
 # create zip
 
-echo Creating archive for signing, output is logged to $DST/sign.log
+echo Creating archive for signing
 
 cd $SRC
-/usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@ > $DST/sign.log
+/usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@
 
 # sign
 
 /usr/bin/sign $DST/mylyn.zip nomail $OUT
 
-# wait 20 minutes for signing to complete
+# wait 30 minutes for signing to complete
+
+tail -f $LOG
+PID=$!
 
 I=0
-while [ $I -lt 40 ] && [ ! -e $OUT/mylyn.zip ]; do
+while [ $I -lt 30 ] && [ ! -e $OUT/mylyn.zip ]; do
   echo Waiting for $OUT/mylyn.zip
   sleep 30
   let I=I+1
 done
+
+kill $PID
 
 if [ ! -e $OUT/mylyn.zip ]
 then
@@ -56,8 +64,8 @@ fi
 
 # unzip
 
-echo Unzipping signed files, output is logged to $DST/sign.log
-/usr/bin/unzip -v -o -d $SRC $OUT/mylyn.zip >> $DST/sign.log
+echo Unzipping signed files
+/usr/bin/unzip -o -d $SRC $OUT/mylyn.zip
 
 # cleanup
 

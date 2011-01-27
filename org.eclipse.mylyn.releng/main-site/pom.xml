@@ -22,7 +22,6 @@
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 3.5, 3.6 and 3.7</name>
   <properties>
-	<p2.repository.name>${project.build.directory}</p2.repository.name>
 	<p2.sign>${mylyn-sign}</p2.sign>
   </properties>
   <build>
