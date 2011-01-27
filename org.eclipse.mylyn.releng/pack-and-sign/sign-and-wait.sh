@@ -57,7 +57,7 @@ fi
 # unzip
 
 echo Unzipping signed files, output is logged to $DST/sign.log
-/usr/bin/unzip -o -d $SRC $OUT/mylyn.zip >> $DST/sign.log
+/usr/bin/unzip -v -o -d $SRC $OUT/mylyn.zip >> $DST/sign.log
 
 # cleanup
 

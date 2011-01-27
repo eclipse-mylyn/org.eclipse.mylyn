@@ -7,15 +7,13 @@
 	<fail unless="projectDir">Required property projectDir not set</fail>
 	<fail unless="repositoryName">Required property repositoryName not set</fail>
 
-	<!--
 	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
 	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
 	  <arg value="${projectDir}/site"/>
 	</exec>
-	-->
 
 	<antcall target="publish"/>
-	<zip file="${projectDir}/main.zip">
+	<zip file="${projectDir}/site-archive.zip">
 	  <fileset dir="${projectDir}/site">
 		<include name="**/*"/>
 	  </fileset>
@@ -23,6 +21,13 @@
 	
 	<antcall target="pack"/>
 	<antcall target="publish"/>
+
+	<antcall target="publish"/>
+	<zip file="${projectDir}/site-packed.zip">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*"/>
+	  </fileset>
+	</zip>
   </target>
 
   <target name="pack">	

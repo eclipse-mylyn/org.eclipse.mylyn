@@ -91,6 +91,7 @@
 			  <goal>run</goal>
 			</goals>
 		  </execution>
+		  <!--
 		  <execution>
 			<id>dist</id>
 			<phase>deploy</phase>
@@ -103,6 +104,7 @@
 			  <goal>run</goal>
 			</goals>
 		  </execution>
+		  -->
 		</executions>
 	  </plugin>
 
