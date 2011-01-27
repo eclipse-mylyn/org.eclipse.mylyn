@@ -1,30 +1,60 @@
 <project name="pack-and-sign" default="pack-and-sign" basedir=".">
 
-  <echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
-
   <dirname property="scriptdir" file="${ant.file.pack-and-sign}"/>
+  <property name="pack200" value="${java.home}/bin"/>
 
   <target name="pack-and-sign">
 	<fail unless="localRepository">Required property localRepository not set</fail>
 	<fail unless="projectDir">Required property projectDir not set</fail>
 	<fail unless="repositoryName">Required property repositoryName not set</fail>
 
-	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
-	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
-	  <arg value="${projectDir}/site"/>
-	</exec>
+	<echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
+
+	<!-- sign -->
+
+	<antcall target="sign"/>
+
+	<!-- condition jars -->
+
+	<delete dir="${projectDir}/condition"/>
+	<copy todir="${projectDir}/condition">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*mylyn*.jar"/>
+	  </fileset>
+	</copy>
+
+	<antcall target="pack">
+	  <param name="args" value="-processAll -repack"/>
+	  <param name="site" value="${projectDir}/condition"/>
+	</antcall>
+
+	<copy todir="${projectDir}/site">
+	  <fileset dir="${projectDir}/condition">
+		<include name="**/*mylyn*.jar"/>
+	  </fileset>
+	</copy>
+
+	<!-- create site archive  -->
 
 	<antcall target="publish"/>
+
 	<zip file="${projectDir}/site-archive.zip">
 	  <fileset dir="${projectDir}/site">
 		<include name="**/*"/>
 	  </fileset>
 	</zip>
+
+	<!-- pack200  -->
 	
-	<antcall target="pack"/>
-	<antcall target="publish"/>
+	<antcall target="pack">
+	  <param name="args" value="-pack"/>
+	  <param name="site" value="${projectDir}/site"/>
+	</antcall>
 
 	<antcall target="publish"/>
+
+	<!-- create packed site archive  -->
+
 	<zip file="${projectDir}/site-packed.zip">
 	  <fileset dir="${projectDir}/site">
 		<include name="**/*"/>
@@ -32,30 +62,42 @@
 	</zip>
   </target>
 
+  <target name="sign" unless="skip.sign">	
+	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
+	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
+	  <arg value="${projectDir}/site"/>
+	</exec>
+  </target>
+
   <target name="pack">	
-	<delete file="${projectDir}/site/content.jar" />
-	<delete file="${projectDir}/site/artifacts.jar" />
+	<delete file="${site}/content.jar" />
+	<delete file="${site}/artifacts.jar" />
 	
 	<path id="jarprocessor.classpath">
 	  <fileset dir="${localRepository}/org/sonatype/tycho/tycho-p2-runtime">
 		<include name="*/eclipse/plugins/org.eclipse.equinox.p2.jarprocessor_*.jar" />
 	  </fileset>
 	</path>		
-	
+
+	<echo>Using ${pack200} for packing</echo>
+
 	<!-- pack200 -->
 	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.internal.p2.jarprocessor.Main"
-			  fork="true" classpathref="jarprocessor.classpath" failonerror="true" maxmemory="256m"
+			  fork="true" classpathref="jarprocessor.classpath" failonerror="true" maxmemory="512m"
 		  dir="${projectDir}/site">
-	  <arg line="-verbose -processAll -repack -pack" />
-	  <arg line="-outputDir ${projectDir}/site ${projectDir}/site" />
+	  <jvmarg line="-Dorg.eclipse.update.jarprocessor.pack200=${pack200}" />
+	  <arg line="-verbose ${args}" />
+	  <arg line="-outputDir ${site} ${site}" />
 	</java>
 	
 	<!-- remove corrupted jars -->
+	<!--
 	<delete>
 	  <fileset dir="${projectDir}/site">
 		<include name="plugins/com.google.gwt*.pack.gz"/>
 	  </fileset>
 	</delete>
+	-->
   </target>
 
   <target name="publish">	

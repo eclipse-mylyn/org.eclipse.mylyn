@@ -83,6 +83,7 @@
 				  <property name="localRepository" value="${settings.localRepository}"/>
 				  <property name="projectDir" value="${project.build.directory}"/>
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
+				  <property name="pack200" value="${java.home}/bin"/>
 				</ant>
 			  </target>
 			</configuration>
