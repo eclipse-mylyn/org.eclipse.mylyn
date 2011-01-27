@@ -34,6 +34,8 @@
 	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
 	<mylyn-incubator-repository>Mylyn Incubator</mylyn-incubator-repository>
 
+	<mylyn-pack200>${java.home}/bin</mylyn-pack200>
+
     <!--<maven.test.skip>true</maven.test.skip>-->
     <maven.test.error.ignore>true</maven.test.error.ignore>
     <maven.test.failure.ignore>true</maven.test.failure.ignore>    
@@ -133,6 +135,7 @@
 		<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
 		<mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
 		<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
+		<mylyn-pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</mylyn-pack200>
 		<mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</mylyn-test-args>
 		<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
 		<!--
