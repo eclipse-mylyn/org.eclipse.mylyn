@@ -43,8 +43,7 @@ cd $SRC
 
 # wait 30 minutes for signing to complete
 
-tail -f $LOG
-PID=$!
+tail -f $LOG | grep mylyn &
 
 I=0
 while [ $I -lt 30 ] && [ ! -e $OUT/mylyn.zip ]; do
@@ -53,6 +52,7 @@ while [ $I -lt 30 ] && [ ! -e $OUT/mylyn.zip ]; do
   let I=I+1
 done
 
+PID=`jobs -l -p`
 kill $PID
 
 if [ ! -e $OUT/mylyn.zip ]
