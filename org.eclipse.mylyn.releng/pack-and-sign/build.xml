@@ -12,6 +12,8 @@
 
 	<!-- sign -->
 
+	<condition property="sign.skip" value="true"><equals arg1="${skipSign}" arg2="true"/></condition>
+
 	<antcall target="sign"/>
 
 	<!-- condition jars -->
@@ -62,7 +64,7 @@
 	</zip>
   </target>
 
-  <target name="sign" unless="skip.sign">	
+  <target name="sign" unless="sign.skip">	
 	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
 	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
 	  <arg value="${projectDir}/site"/>

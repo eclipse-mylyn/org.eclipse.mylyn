@@ -22,7 +22,7 @@
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 3.5, 3.6 and 3.7</name>
   <properties>
-	<p2.sign>${mylyn-sign}</p2.sign>
+    <qualifier>${project.unqualifiedVersion}</qualifier>
   </properties>
   <build>
     <plugins>
@@ -78,33 +78,26 @@
 			<id>pack-and-sign</id>
 			<phase>install</phase>
 			<configuration>
-			  <target if="p2.sign">
+			  <target>
 				<ant antfile="../pack-and-sign/build.xml">
 				  <property name="localRepository" value="${settings.localRepository}"/>
 				  <property name="projectDir" value="${project.build.directory}"/>
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
 				  <property name="pack200" value="${mylyn-pack200}"/>
+				  <property name="skipSign" value="${mylyn-skip-sign}"/>
 				</ant>
+				<echo file="${project.build.directory}/version.properties">
+				  <![CDATA[
+${unqualifiedVersion}
+${buildQualifier}
+]]>
+				</echo>
 			  </target>
 			</configuration>
 			<goals>
 			  <goal>run</goal>
 			</goals>
 		  </execution>
-		  <!--
-		  <execution>
-			<id>dist</id>
-			<phase>deploy</phase>
-			<configuration>
-			  <target>
-				<ant antfile="../pack-and-sign/build.xml"/>
-			  </target>
-			</configuration>
-			<goals>
-			  <goal>run</goal>
-			</goals>
-		  </execution>
-		  -->
 		</executions>
 	  </plugin>
 

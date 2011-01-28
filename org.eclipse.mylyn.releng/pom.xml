@@ -25,15 +25,16 @@
     <mylyn-keyring-password>${basedir}/eclipse.keyring.password</mylyn-keyring-password>
 
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
+	<mylyn-skip-sign>true</mylyn-skip-sign>
 
     <mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
     <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
 	<mylyn-test-append></mylyn-test-append>
 
-	<mylyn-sign>false</mylyn-sign>
 	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
 	<mylyn-incubator-repository>Mylyn Incubator</mylyn-incubator-repository>
 
+	<mylyn-qualifier-format>'I'yyyyMMdd-HHmm</mylyn-qualifier-format>
 	<mylyn-pack200>${java.home}/bin</mylyn-pack200>
 
     <!--<maven.test.skip>true</maven.test.skip>-->
@@ -156,6 +157,31 @@
 		<module>incubator-site</module>
       </modules>
     </profile>
+    <profile>
+      <id>weekly</id>
+      <activation>
+		<property>
+          <name>env.TYPE</name>
+          <value>weekly</value>
+		</property>
+      </activation>
+      <properties>
+		<mylyn-skip-sign>false</mylyn-skip-sign>
+	  </properties>
+	</profile>
+    <profile>
+      <id>release</id>
+      <activation>
+		<property>
+          <name>env.TYPE</name>
+          <value>release</value>
+		</property>
+      </activation>
+      <properties>
+		<mylyn-qualifier-format>'v'yyyyMMdd-HH00</mylyn-qualifier-format>
+		<mylyn-skip-sign>false</mylyn-skip-sign>
+	  </properties>
+	</profile>
   </profiles>
 
   <modules>
@@ -257,8 +283,8 @@
           <artifactId>maven-osgi-packaging-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
-            <format>'I'yyyyMMdd-HHmm</format>
-            <archiveSite>true</archiveSite>
+            <format>${mylyn-qualifier-format}</format>
+            <archiveSite>false</archiveSite>
           </configuration>
         </plugin>
         <plugin>
