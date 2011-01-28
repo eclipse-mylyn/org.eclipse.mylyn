@@ -43,7 +43,7 @@ cd $SRC
 
 # wait up to 30 minutes for signing to complete
 
-tail -f $LOG | grep mylyn &
+tail -f $LOG | grep -E \(Extracting\|Finished\) &
 
 I=0
 while [ $I -lt 60 ] && [ ! -e $OUT/mylyn.zip ]; do

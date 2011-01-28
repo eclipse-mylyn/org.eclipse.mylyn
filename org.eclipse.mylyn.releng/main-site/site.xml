@@ -66,7 +66,7 @@
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="Incubator" label="Integration (Incubation)">
+   <category-def name="Incubator" label="Mylyn Integration (Incubation)">
       <description>
          Mylyn extensions that are in incubation.  
       </description>
