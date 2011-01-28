@@ -61,14 +61,14 @@
          The Task List and the Task-Focused Interface.
       </description>
    </category-def>
-   <category-def name="Incubator" label="Mylyn Incubator">
-      <description>
-         The Task List and the Task-Focused Interface.
-      </description>
-   </category-def>
    <category-def name="Integration" label="Mylyn Integration">
       <description>
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
+      </description>
+   </category-def>
+   <category-def name="Incubator" label="Integration (Incubation)">
+      <description>
+         Mylyn extensions that are in incubation.  
       </description>
    </category-def>
    <category-def name="SDK" label="Mylyn Plug-in Development">
