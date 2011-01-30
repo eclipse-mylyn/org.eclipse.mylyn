@@ -461,21 +461,19 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		AuthenticationCredentials httpAuth = repository.getCredentials(AuthenticationType.HTTP);
 		AuthenticationCredentials proxyAuth = repository.getCredentials(AuthenticationType.PROXY);
 		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding();
-		String descriptorFileName = repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE);
-		if (descriptorFileName == null) {
-			descriptorFileName = ""; //$NON-NLS-1$
-		}
 		changed = changed || repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword();
 		changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
 		changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
 		changed = changed
 				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
-		changed = changed || descriptorFileName.compareTo(descriptorFile.getText()) != 0;
+		changed = changed
+				|| !equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
+						descriptorFile.getText());
 		if (httpAuth != null) {
 			changed = changed || httpAuth.getUserName().compareTo(getHttpAuthUserId()) != 0
 					|| httpAuth.getPassword().compareTo(getHttpAuthPassword()) != 0
-					|| repository.getProperty(TaskRepository.PROXY_HOSTNAME).compareTo(getProxyHostname()) != 0
-					|| repository.getProperty(TaskRepository.PROXY_PORT).compareTo(getProxyPort()) != 0;
+					|| !equals(repository.getProperty(TaskRepository.PROXY_HOSTNAME), getProxyHostname())
+					|| !equals(repository.getProperty(TaskRepository.PROXY_PORT), getProxyPort());
 		}
 		if (proxyAuth != null) {
 			changed = changed || proxyAuth.getUserName().compareTo(getProxyUserName()) != 0
@@ -504,6 +502,19 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			updateJob.schedule();
 
 		}
+	}
+
+	/**
+	 * Treats null as equal to the empty string
+	 */
+	private boolean equals(String s1, String s2) {
+		if (s1 == null) {
+			s1 = "";
+		}
+		if (s2 == null) {
+			s2 = "";
+		}
+		return s1.equals(s2);
 	}
 
 	public void performUpdate(final TaskRepository repository, final AbstractRepositoryConnector connector,
