@@ -10,6 +10,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -122,7 +123,10 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		SelectionListener buttonSelectionListener = new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				projectText.setEnabled(byProjectButton.getSelection());
-				getContainer().updateButtons();
+				IWizardContainer c = getContainer();
+				if (c.getCurrentPage() != null) {
+					c.updateButtons();
+				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
