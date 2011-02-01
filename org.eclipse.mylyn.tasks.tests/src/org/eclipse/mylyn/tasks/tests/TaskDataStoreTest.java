@@ -241,10 +241,19 @@ public class TaskDataStoreTest extends TestCase {
 		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
-		try {
+		if (System.getProperty("java.version").compareTo("1.5") <= 0) {
+			// Java 1.5 fails to parse C1 characters with XML 1.1
+			try {
+				TaskDataState state2 = storage.getTaskDataState(file);
+				fail("Expected CoreException, got '" + state2.getRepositoryData().getRoot().toString() + "'");
+			} catch (CoreException expected) {
+			}
+		} else {
+			// Java 1.6 is apparently able to parse C1 characters with XML 1.1
 			TaskDataState state2 = storage.getTaskDataState(file);
-			fail("Expected CoreException, got '" + state2.getRepositoryData().getRoot().toString() + "'");
-		} catch (CoreException expected) {
+			assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData()
+					.getRoot()
+					.toString());
 		}
 	}
 

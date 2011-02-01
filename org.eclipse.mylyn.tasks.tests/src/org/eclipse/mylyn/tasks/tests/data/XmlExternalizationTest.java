@@ -80,6 +80,7 @@ public class XmlExternalizationTest extends TestCase {
 	}
 
 	public void testWriteandReadBadCharacterXml10() throws Exception {
+		System.err.println("= XML 1.0 =");
 		for (int i = 0; i < 0xFFFF; i++) {
 			char badChar = (char) i;
 
@@ -100,15 +101,15 @@ public class XmlExternalizationTest extends TestCase {
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {
 				public void warning(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 
 				public void fatalError(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 
 				public void error(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 			});
 			parser.setContentHandler(readHandler);
@@ -119,6 +120,7 @@ public class XmlExternalizationTest extends TestCase {
 	}
 
 	public void testWriteandReadBadCharacterXml11() throws Exception {
+		System.err.println("= XML 1.1 =");
 		for (int i = 0; i < 0xFFFF; i++) {
 			char badChar = (char) i;
 
@@ -139,19 +141,20 @@ public class XmlExternalizationTest extends TestCase {
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {
 				public void warning(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 
 				public void fatalError(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 
 				public void error(SAXParseException exception) throws SAXException {
-					exception.printStackTrace();
+					System.err.println(exception.getMessage());
 				}
 			});
 			parser.setContentHandler(readHandler);
 			parser.parse(new InputSource(new ByteArrayInputStream(out.toByteArray())));
+
 			char character = readHandler.getCharacter();
 			assertEquals(badChar, character);
 		}
