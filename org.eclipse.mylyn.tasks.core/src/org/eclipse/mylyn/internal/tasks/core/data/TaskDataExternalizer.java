@@ -116,6 +116,8 @@ public class TaskDataExternalizer {
 			if (pointer < header.length) {
 				// skip at most the number of bytes remaining in the header
 				long skip = Math.min(header.length - pointer, n);
+				// never skip more bytes than underlying stream
+				skip = super.skip(skip);
 				pointer += skip;
 				return skip;
 			} else {

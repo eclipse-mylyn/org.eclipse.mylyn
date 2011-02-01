@@ -243,7 +243,7 @@ public class TaskDataStoreTest extends TestCase {
 
 		try {
 			TaskDataState state2 = storage.getTaskDataState(file);
-			fail("Expected CoreException, got " + state2);
+			fail("Expected CoreException, got '" + state2.getRepositoryData().getRoot().toString() + "'");
 		} catch (CoreException expected) {
 		}
 	}
