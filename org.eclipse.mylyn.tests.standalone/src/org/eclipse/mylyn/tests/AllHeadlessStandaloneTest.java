@@ -23,6 +23,8 @@ import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
+import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
+import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
@@ -59,6 +61,8 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(TasksUtilTest.class);
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
+		suite.addTestSuite(TaskDataExternalizerTest.class);
+		suite.addTestSuite(Xml11InputStreamTest.class);
 
 		// bugzilla
 		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
