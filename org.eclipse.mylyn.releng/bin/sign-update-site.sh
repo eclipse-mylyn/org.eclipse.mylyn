@@ -1,3 +1,5 @@
+#!/bin/bash -e
+
 #*******************************************************************************
 # Copyright (c) 2009 Tasktop Technologies and others.
 # All rights reserved. This program and the accompanying materials
@@ -8,7 +10,6 @@
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
-#!/bin/bash -e
 
 help() {
   echo "usage: sign-update-site.sh major build"
@@ -39,7 +40,7 @@ SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR_VERS
 DST=/opt/public/download-staging.priv/tools/mylyn
 OUT=$DST/output
 TMP=$DST/tmp/$MAJOR_VERSION.$QUALIFIER
-JAVA_HOME=/opt/ibm/java2-ppc-50
+JAVA_HOME=/shared/common/jdk-1.5.0-22.x86_64
 ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 
 unzip() {
