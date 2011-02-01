@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.io.EOFException;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +42,88 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Steffen Pingel
  */
 public class TaskDataExternalizer {
+
+	/**
+	 * Replaces the first 38 bytes of a an input stream with an XML 1.1 header.
+	 */
+	public static class Xml11InputStream extends FilterInputStream {
+
+		/**
+		 * XML 1.1 header.
+		 */
+		byte[] header;
+
+		/**
+		 * Current position in {@link #header}.
+		 */
+		int pointer;
+
+		public Xml11InputStream(InputStream in) throws IOException {
+			super(in);
+			header = new String("<?xml version=\"1.1\" encoding=\"UTF-8\"?>").getBytes("US-ASCII"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		@Override
+		public synchronized void reset() throws IOException {
+			throw new IOException();
+		}
+
+		@Override
+		public synchronized void mark(int readlimit) {
+		}
+
+		@Override
+		public boolean markSupported() {
+			return false;
+		}
+
+		@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+			// fill b with bytes from header until the header has been read
+			if (pointer < header.length) {
+				int read = 0;
+				for (; pointer < header.length && read < len; read++, pointer++) {
+					b[off + read] = header[pointer];
+					readByte();
+				}
+				return read;
+			} else {
+				return super.read(b, off, len);
+			}
+		}
+
+		/**
+		 * Advances the underlying stream by a single byte.
+		 */
+		private void readByte() throws IOException, EOFException {
+			if (in.read() == -1) {
+				throw new EOFException();
+			}
+		}
+
+		@Override
+		public int read() throws IOException {
+			if (pointer < header.length) {
+				readByte();
+				return header[pointer++];
+			} else {
+				return super.read();
+			}
+		}
+
+		@Override
+		public long skip(long n) throws IOException {
+			if (pointer < header.length) {
+				// skip at most the number of bytes remaining in the header
+				long skip = Math.min(header.length - pointer, n);
+				pointer += skip;
+				return skip;
+			} else {
+				return super.skip(n);
+			}
+		}
+
+	}
 
 	private final IRepositoryManager taskRepositoryManager;
 
@@ -90,21 +174,16 @@ public class TaskDataExternalizer {
 		}
 	}
 
-	public TaskDataState readState(InputStream in) throws IOException {
-		try {
-			XMLReader parser = XMLReaderFactory.createXMLReader();
-			TaskDataStateReader handler = new TaskDataStateReader(taskRepositoryManager);
-			parser.setContentHandler(handler);
-			parser.parse(new InputSource(in));
-			TaskDataState taskDataState = handler.getTaskDataState();
-			if (taskDataState != null) {
-				migrate(taskDataState);
-			}
-			return taskDataState;
-		} catch (SAXException e) {
-			//e.printStackTrace();
-			throw new IOException("Error parsing task data: " + e.getMessage()); //$NON-NLS-1$
+	public TaskDataState readState(InputStream in) throws IOException, SAXException {
+		XMLReader parser = XMLReaderFactory.createXMLReader();
+		TaskDataStateReader handler = new TaskDataStateReader(taskRepositoryManager);
+		parser.setContentHandler(handler);
+		parser.parse(new InputSource(in));
+		TaskDataState taskDataState = handler.getTaskDataState();
+		if (taskDataState != null) {
+			migrate(taskDataState);
 		}
+		return taskDataState;
 	}
 
 	public void writeState(OutputStream out, ITaskDataWorkingCopy state) throws IOException {

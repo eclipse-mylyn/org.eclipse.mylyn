@@ -18,6 +18,8 @@ import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
+import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
+import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.ContextPerspectiveManagerTest;
 import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
@@ -110,6 +112,8 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskMigratorTest.class);
 		suite.addTestSuite(TaskListViewTest.class);
 		suite.addTestSuite(AttachmentTableLabelProviderTest.class);
+		suite.addTestSuite(TaskDataExternalizerTest.class);
+		suite.addTestSuite(Xml11InputStreamTest.class);
 		// XXX long running tests, put back?
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);

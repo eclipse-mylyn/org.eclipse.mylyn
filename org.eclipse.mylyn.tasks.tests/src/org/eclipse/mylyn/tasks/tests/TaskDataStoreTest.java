@@ -193,4 +193,59 @@ public class TaskDataStoreTest extends TestCase {
 
 		assertData(2);
 	}
+
+	public void testReadWriteInvalidCharacters() throws Exception {
+		setupData();
+		data.getRoot().createAttribute("attribute").setValue("\u0000");
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		try {
+			TaskDataState state2 = storage.getTaskDataState(file);
+			fail("Expected CoreException, got " + state2);
+		} catch (CoreException expected) {
+		}
+	}
+
+	public void testReadWriteC0Characters() throws Exception {
+		setupData();
+		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F");
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		TaskDataState state2 = storage.getTaskDataState(file);
+		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
+	}
+
+	public void testReadWriteC1Characters() throws Exception {
+		setupData();
+		data.getRoot().createAttribute("attribute").setValue("\u007F\u0080");
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		TaskDataState state2 = storage.getTaskDataState(file);
+		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
+	}
+
+	public void testReadWriteC0C1Characters() throws Exception {
+		setupData();
+		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F\u007F\u0080");
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		try {
+			TaskDataState state2 = storage.getTaskDataState(file);
+			fail("Expected CoreException, got " + state2);
+		} catch (CoreException expected) {
+		}
+	}
+
 }

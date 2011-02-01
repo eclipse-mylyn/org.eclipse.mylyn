@@ -26,8 +26,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer.Xml11InputStream;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.xml.sax.SAXException;
 
 /**
  * @author Steffen Pingel
@@ -106,15 +108,41 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
+	private TaskDataState readStateInternal(File file, boolean xml11) throws IOException, SAXException {
+		ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
+		try {
+			in.getNextEntry();
+			// bug 268456: When TaskData that contains C0 control characters is written to disk using XML 1.0 reading it back 
+			// in fails with a SAXException. The XML 1.1 standard allows C0 entities but fails if C1 entities. If C0 control 
+			// characters are detected while parsing file as XML 1.0 a second attempt is made using XML 1.1. If the file contains 
+			// C0 and C1 control characters reading will fail regardless.
+			if (xml11) {
+				return externalizer.readState(new Xml11InputStream(in));
+			} else {
+				return externalizer.readState(in);
+			}
+		} finally {
+			in.close();
+		}
+	}
+
 	private TaskDataState readState(File file) throws CoreException {
 		try {
 			if (file.exists()) {
-				ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
 				try {
-					in.getNextEntry();
-					return externalizer.readState(in);
-				} finally {
-					in.close();
+					try {
+						return readStateInternal(file, false);
+					} catch (SAXException e) {
+						// bug 268456: if reading fails, try again using a different XML version
+						if (e.getMessage() != null && e.getMessage().contains("invalid XML character")) { //$NON-NLS-1$
+							return readStateInternal(file, true);
+						} else {
+							throw e;
+						}
+					}
+
+				} catch (SAXException e) {
+					throw new IOException("Error parsing task data: " + e.getMessage()); //$NON-NLS-1$
 				}
 			}
 			return null;
