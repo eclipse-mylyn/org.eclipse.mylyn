@@ -40,7 +40,7 @@ SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR_VERS
 DST=/opt/public/download-staging.priv/tools/mylyn
 OUT=$DST/output
 TMP=$DST/tmp/$MAJOR_VERSION.$QUALIFIER
-JAVA_HOME=/shared/common/jdk-1.5.0-22.x86_64
+JAVA_HOME=/shared/tools/mylyn/tools/jdk
 ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 
 unzip() {

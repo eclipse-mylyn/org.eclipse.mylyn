@@ -1,3 +1,5 @@
+#!/bin/bash -e
+
 #*******************************************************************************
 # Copyright (c) 2009 Tasktop Technologies and others.
 # All rights reserved. This program and the accompanying materials
@@ -8,7 +10,6 @@
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
-#!/bin/bash -e
 
 if [ $# -lt 1 ]
 then
@@ -17,7 +18,7 @@ else
  ROOT=$1
 fi
 
-JAVA_HOME=/opt/ibm/java2-ppc-50
+JAVA_HOME=/shared/tools/mylyn/tools/jdk
 ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 
 pack() {
