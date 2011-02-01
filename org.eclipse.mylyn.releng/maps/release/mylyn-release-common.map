@@ -1,5 +1,5 @@
 !******* PLUGINS **********
-plugin@org.eclipse.mylyn=v20100608-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn,,org.eclipse.mylyn.commons/org.eclipse.mylyn
+plugin@org.eclipse.mylyn=v20110131-0200-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn,,org.eclipse.mylyn.commons/org.eclipse.mylyn
 plugin@org.eclipse.mylyn.bugzilla.core=v20100902-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn,,org.eclipse.mylyn.tasks/org.eclipse.mylyn.bugzilla.core
 plugin@org.eclipse.mylyn.bugzilla.ide=v20110131-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn,,org.eclipse.mylyn.contexts/org.eclipse.mylyn.bugzilla.ide
 plugin@org.eclipse.mylyn.bugzilla.ui=v20110131-0100-e3x,:pserver:anonymous@dev.eclipse.org:/cvsroot/mylyn,,org.eclipse.mylyn.tasks/org.eclipse.mylyn.bugzilla.ui
