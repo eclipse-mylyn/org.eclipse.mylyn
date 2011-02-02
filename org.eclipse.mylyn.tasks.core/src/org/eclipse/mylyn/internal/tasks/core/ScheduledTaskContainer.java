@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Rob Elves
@@ -36,7 +37,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		this.activityManager = activityManager;
 		this.range = range;
 		if (summary == null) {
-			this.summary = range.toString(false);
+			if (range instanceof DayDateRange && TaskActivityUtil.getNextWeek().includes(range)) {
+				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Date_Day_Pattern, range.toString(false),
+						((DayDateRange) range).getDayOfWeek());
+			} else {
+				this.summary = range.toString(false);
+			}
 		} else {
 			this.summary = summary;
 		}

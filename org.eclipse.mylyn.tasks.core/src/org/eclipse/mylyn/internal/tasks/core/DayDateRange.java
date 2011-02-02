@@ -47,30 +47,7 @@ public class DayDateRange extends DateRange {
 		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
 		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
 		if (isThisWeek || (useDayOfWeekForNextWeek && isNextWeek)) {
-			String day = ""; //$NON-NLS-1$
-			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
-			case Calendar.MONDAY:
-				day = CommonMessages.Monday;
-				break;
-			case Calendar.TUESDAY:
-				day = CommonMessages.Tuesday;
-				break;
-			case Calendar.WEDNESDAY:
-				day = CommonMessages.Wednesday;
-				break;
-			case Calendar.THURSDAY:
-				day = CommonMessages.Thursday;
-				break;
-			case Calendar.FRIDAY:
-				day = CommonMessages.Friday;
-				break;
-			case Calendar.SATURDAY:
-				day = CommonMessages.Saturday;
-				break;
-			case Calendar.SUNDAY:
-				day = CommonMessages.Sunday;
-				break;
-			}
+			String day = getDayOfWeek();
 			if (isPresent()) {
 				return day + Messages.DayDateRange___Today;
 			} else {
@@ -78,6 +55,34 @@ public class DayDateRange extends DateRange {
 			}
 		}
 		return super.toString(useDayOfWeekForNextWeek);
+	}
+
+	public String getDayOfWeek() {
+		String day = ""; //$NON-NLS-1$
+		switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
+		case Calendar.MONDAY:
+			day = CommonMessages.Monday;
+			break;
+		case Calendar.TUESDAY:
+			day = CommonMessages.Tuesday;
+			break;
+		case Calendar.WEDNESDAY:
+			day = CommonMessages.Wednesday;
+			break;
+		case Calendar.THURSDAY:
+			day = CommonMessages.Thursday;
+			break;
+		case Calendar.FRIDAY:
+			day = CommonMessages.Friday;
+			break;
+		case Calendar.SATURDAY:
+			day = CommonMessages.Saturday;
+			break;
+		case Calendar.SUNDAY:
+			day = CommonMessages.Sunday;
+			break;
+		}
+		return day;
 	}
 
 	public static boolean isDayRange(Calendar calStart, Calendar calEnd) {
