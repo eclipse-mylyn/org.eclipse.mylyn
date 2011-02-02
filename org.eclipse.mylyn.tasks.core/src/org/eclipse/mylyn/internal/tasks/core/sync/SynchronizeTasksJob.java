@@ -32,16 +32,16 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Kind;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mik Kersten
@@ -168,8 +169,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 							try {
 								task = synchronizeTask(monitor, relation.getTaskId());
 							} catch (CoreException e) {
-								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-										"Synchronization failed", e)); //$NON-NLS-1$
+								String taskKey = (task != null && task.getTaskKey() != null) ? task.getTaskKey()
+										: relation.getTaskId();
+								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+										Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,
+										taskKey, taskRepository.getRepositoryLabel()), e));
 							}
 						} else {
 							removedChildTasks.remove(task);
