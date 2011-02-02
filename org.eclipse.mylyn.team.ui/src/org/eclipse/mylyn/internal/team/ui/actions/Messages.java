@@ -34,10 +34,8 @@ public class Messages extends NLS {
 	public static String ApplyPatchAction_Apply_Patch;
 
 	public static String ApplyPatchAction_cannotApplyPatch;
-	
+
 	public static String ApplyPatchAction_downloadingPatch;
-	
-	public static String ApplyPatchAction_Error_Retrieving_Context;
 
 	public static String ApplyPatchAction_failedToDownloadPatch;
 
@@ -46,8 +44,6 @@ public class Messages extends NLS {
 	public static String OpenCorrespondingTaskAction_Open_Corresponding_Task;
 
 	public static String OpenCorrespondingTaskAction_Open_Task;
-
-	public static String OpenCorrespondingTaskAction_Opening_Corresponding_Task;
 
 	public static String OpenCorrespondingTaskAction_Progress_on;
 
