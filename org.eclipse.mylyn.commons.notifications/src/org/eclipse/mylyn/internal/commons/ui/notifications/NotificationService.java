@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
@@ -53,19 +52,21 @@ public class NotificationService implements INotificationService {
 		for (AbstractNotification abstractNotification : notifications) {
 			String id = abstractNotification.getEventId();
 			NotificationHandler handler = NotificationsPlugin.getDefault().getModel().getNotificationHandler(id);
-			Assert.isNotNull(handler, "Notification handler has not been initialized"); //$NON-NLS-1$
-			if (handler.getEvent().isSelected()) {
-				List<NotificationAction> actions = handler.getActions();
-				for (NotificationAction notificationAction : actions) {
-					if (notificationAction.isSelected()) {
-						NotificationSink sink = notificationAction.getSinkDescriptor().getSink();
-						if (sink != null) {
-							ArrayList<AbstractNotification> list = filtered.get(sink);
-							if (list == null) {
-								list = new ArrayList<AbstractNotification>();
-								filtered.put(sink, list);
+			if (handler != null) {
+				//Assert.isNotNull(handler, NLS.bind("Notification handler for event ''{0}'' has not been initialized", id)); //$NON-NLS-1$
+				if (handler.getEvent().isSelected()) {
+					List<NotificationAction> actions = handler.getActions();
+					for (NotificationAction notificationAction : actions) {
+						if (notificationAction.isSelected()) {
+							NotificationSink sink = notificationAction.getSinkDescriptor().getSink();
+							if (sink != null) {
+								ArrayList<AbstractNotification> list = filtered.get(sink);
+								if (list == null) {
+									list = new ArrayList<AbstractNotification>();
+									filtered.put(sink, list);
+								}
+								list.add(abstractNotification);
 							}
-							list.add(abstractNotification);
 						}
 					}
 				}
