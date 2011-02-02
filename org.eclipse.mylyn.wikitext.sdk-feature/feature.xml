@@ -29,13 +29,6 @@
    </license>
 
    <plugin
-         id="org.eclipse.mylyn.htmltext"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core"
          download-size="0"
          install-size="0"
@@ -142,13 +135,6 @@
 
    <plugin
          id="org.eclipse.mylyn.wikitext.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.htmltext.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
