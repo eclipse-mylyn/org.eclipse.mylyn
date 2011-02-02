@@ -18,8 +18,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttachmentWizard_Attachment_Details_Dialog_Title;
 
-	public static String BugzillaAttachmentWizard_Now_synchronize_the_Task;
-
 	public static String BugzillaAttachmentWizardPage_Advanced;
 
 	public static String BugzillaAttachmentWizardPage_Description;

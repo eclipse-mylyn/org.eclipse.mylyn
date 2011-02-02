@@ -41,8 +41,6 @@ public class Messages extends NLS {
 
 	public static String DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment;
 
-	public static String MoveToCategoryMenuContributor_Move_to;
-
 	public static String MoveToCategoryMenuContributor_Set_Category_Menu_Item;
 
 	public static String OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X;
@@ -75,15 +73,11 @@ public class Messages extends NLS {
 
 	public static String TaskAttachmentEditorViewer_openingAttachment;
 
-	public static String TaskAttachmentEditorViewer_ErrorDownloadingAttachment;
-
 	public static String TaskAttachmentViewerBrowser_browser;
 
 	public static String TaskHistoryDropDown_Activate_Task_;
 
 	public static String TaskHistoryDropDown_Deactivate_Task;
-
-	public static String TaskJobFactory_Refreshing_repository_configuration;
 
 	public static String TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup;
 

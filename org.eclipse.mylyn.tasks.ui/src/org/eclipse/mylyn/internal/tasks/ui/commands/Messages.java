@@ -33,12 +33,6 @@ public class Messages extends NLS {
 
 	public static String OpenTaskAttachmentHandler_noAttachmentViewerFound;
 
-	public static String OpenTaskAttachmentInDefaultEditorHandler_Failed_to_open_editor;
-
-	public static String OpenTaskAttachmentInDefaultEditorHandler_No_default_editor_for_X_found;
-
-	public static String OpenTaskAttachmentInDefaultEditorHandler_Open_Attachment_Failed;
-
 	public static String RemoteTaskSelectionDialog_Add_;
 
 	public static String RemoteTaskSelectionDialog_Add_to_Task_List_category;

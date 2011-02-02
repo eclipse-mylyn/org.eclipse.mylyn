@@ -33,16 +33,6 @@ public class Messages extends NLS {
 
 	public static String RepositoryElementActionGroup_New;
 
-	public static String TaskInputDialog_Clear;
-
-	public static String TaskInputDialog_Description;
-
-	public static String TaskInputDialog_Get_Description;
-
-	public static String TaskInputDialog_New_Task;
-
-	public static String TaskInputDialog_Web_Link;
-
 	public static String TaskListDropAdapter__retrieving_from_URL_;
 
 	public static String TaskListFilteredTree_Activate;

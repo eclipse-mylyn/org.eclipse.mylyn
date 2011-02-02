@@ -209,8 +209,6 @@ public class Messages extends NLS {
 
 	public static String TaskPlanningEditor_Incomplete;
 
-	public static String TaskPlanningEditor_Notes;
-
 	public static String TaskPlanningEditor_Planning;
 
 	public static String TaskPlanningEditor_Retrieve_task_description_from_URL;

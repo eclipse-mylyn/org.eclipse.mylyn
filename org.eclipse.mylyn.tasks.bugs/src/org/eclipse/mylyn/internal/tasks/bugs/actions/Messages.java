@@ -25,18 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String NewTaskFromErrorAction_ERROR_LOG_DATE;
-
-	public static String NewTaskFromErrorAction_MESSGAE;
-
-	public static String NewTaskFromErrorAction_no_stack_trace_available;
-
-	public static String NewTaskFromErrorAction_PLUGIN_ID;
-
-	public static String NewTaskFromErrorAction_SEVERITY;
-
-	public static String NewTaskFromErrorAction_STACK_TRACE;
-
 	public static String NewTaskFromMarkerHandler_LOCATION_LINE;
 
 	public static String NewTaskFromMarkerHandler_New_Task_from_Marker;

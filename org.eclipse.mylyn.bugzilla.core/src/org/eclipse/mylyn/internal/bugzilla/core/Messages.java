@@ -301,8 +301,4 @@ public class Messages extends NLS {
 
 	public static String CustomTransitionManager_UnexpectedResponse;
 
-	public static String RepositoryConfiguration_new_default;
-
-	public static String RepositoryConfiguration_new_not_shure;
-
 }

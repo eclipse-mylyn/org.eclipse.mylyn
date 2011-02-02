@@ -77,8 +77,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_descriptor_file;
 
-	public static String BugzillaRepositorySettingsPage_DescriptorCannotBeApplied;
-
 	public static String BugzillaRepositorySettingsPage_DescriptorFileNotExists;
 
 	public static String BugzillaRepositorySettingsPage_Error_updating_repository_configuration;
