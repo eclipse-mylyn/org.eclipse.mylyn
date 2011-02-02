@@ -14,13 +14,14 @@ package org.eclipse.mylyn.internal.discovery.ui.util;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author David Green
  */
 class Messages extends NLS {
+
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.discovery.ui.util.messages"; //$NON-NLS-1$
 
 	public static String DiscoveryUi_seeErrorLog;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -28,4 +29,5 @@ class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }
