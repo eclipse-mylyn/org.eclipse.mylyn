@@ -20,9 +20,17 @@ fi
 echo Downloading $VERSION.$QUALIFIER
 
 wget -O site.zip $SRC/site-packed.zip
-unzip -d  site.zip 
+unzip -d $DST/ site.zip 
 wget wget -O $DST/mylyn-$VERSION.$QUALIFIER.zip $SRC/site-archive.zip
 rm site.zip
 
+chgrp -R mylynadmin $DST
+chmod g+w -R $DST
+
 echo Updating $SITE
-$(dirname $0)/create-composite.sh $SITE
+cd $(dirname $0)
+BASE=$(pwd)
+
+cd $SITE
+$BASE/create-composite.sh
+
