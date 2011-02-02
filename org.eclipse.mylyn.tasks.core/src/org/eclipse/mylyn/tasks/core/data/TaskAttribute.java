@@ -126,9 +126,21 @@ public final class TaskAttribute {
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
 	/**
+	 * Key for the meta datum that determines if an attribute is disabled. This is used to indicate that an attribute
+	 * should not be modified, e.g. due to work-flow state but it may still be generally writeable.
+	 * 
 	 * @since 3.5
+	 * @see TaskAttributeMetaData#isDisabled()
 	 */
-	public static final String META_DESCRIPTION = "task.meta.ToolTip"; //$NON-NLS-1$
+	public static final String META_DISABLED = "task.meta.disabled"; //$NON-NLS-1$
+
+	/**
+	 * Key for the meta datum that provides a description of an attribute, e.g. for display in a tooltip.
+	 * 
+	 * @since 3.5
+	 * @see TaskAttributeMetaData
+	 */
+	public static final String META_DESCRIPTION = "task.meta.description"; //$NON-NLS-1$
 
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment"; //$NON-NLS-1$
 

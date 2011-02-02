@@ -86,6 +86,14 @@ public class TaskAttributeMetaData {
 		return taskAttribute.getMetaDataMap();
 	}
 
+	/**
+	 * @since 3.5
+	 * @see TaskAttribute#META_DISABLED
+	 */
+	public boolean isDisabled() {
+		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_DISABLED));
+	}
+
 	public boolean isReadOnly() {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_READ_ONLY));
 	}
@@ -152,6 +160,16 @@ public class TaskAttributeMetaData {
 		} else {
 			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_TYPE);
 		}
+		return this;
+	}
+
+	/**
+	 * @since 3.5
+	 * @see TaskAttribute#META_DISABLED
+	 * @return this
+	 */
+	public TaskAttributeMetaData setDisabled(boolean value) {
+		taskAttribute.putMetaDatum(TaskAttribute.META_DISABLED, Boolean.toString(value));
 		return this;
 	}
 

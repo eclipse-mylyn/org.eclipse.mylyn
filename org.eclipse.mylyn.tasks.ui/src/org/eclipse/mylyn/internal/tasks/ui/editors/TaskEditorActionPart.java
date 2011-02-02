@@ -466,7 +466,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	public void refreshOperations() {
 		for (Button button : operationButtons) {
 			TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
-			//button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isReadOnly());
+			button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isDisabled());
 			button.setToolTipText(taskOperation.getTaskAttribute()
 					.getMetaData()
 					.getValue(TaskAttribute.META_DESCRIPTION));
