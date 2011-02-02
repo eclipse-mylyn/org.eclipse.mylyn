@@ -1,5 +1,4 @@
-#!/bin/bash -e
-
+BASE#!/bin/bash -e
 BASE=$(dirname $0)
 source composite.index
 
