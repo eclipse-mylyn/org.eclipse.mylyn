@@ -20,7 +20,7 @@ fi
 echo Downloading $VERSION.$QUALIFIER
 
 wget -O site.zip $SRC/site-packed.zip
-unzip -d $DST/ site.zip 
+unzip -d $DST/e3.4/ site.zip 
 wget wget -O $DST/mylyn-$VERSION.$QUALIFIER.zip $SRC/site-archive.zip
 rm site.zip
 
