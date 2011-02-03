@@ -9,7 +9,7 @@
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.versions.git;
+package org.eclipse.mylyn.internal.git.core;
 
 import java.io.InputStream;
 

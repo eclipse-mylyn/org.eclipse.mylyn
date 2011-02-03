@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.mylyn.versions.core.connectors">
       <connector
-            core="org.eclipse.mylyn.versions.git.GitConnector"
+            core="org.eclipse.mylyn.internal.git.core.GitConnector"
             id="org.eclipse.egit.core.GitProvider">
       </connector>
    </extension>
