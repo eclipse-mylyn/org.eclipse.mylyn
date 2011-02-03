@@ -19,10 +19,13 @@ public class Change {
 
 	private final ScmArtifact target;
 
-	public Change(ScmArtifact base, ScmArtifact target) {
+	private final ChangeType changeType;
+
+	public Change(ScmArtifact base, ScmArtifact target, ChangeType changeType) {
 		super();
 		this.base = base;
 		this.target = target;
+		this.changeType = changeType;
 	}
 
 	public ScmArtifact getBase() {
@@ -31,6 +34,10 @@ public class Change {
 
 	public ScmArtifact getTarget() {
 		return target;
+	}
+
+	public ChangeType getChangeType() {
+		return changeType;
 	}
 
 }

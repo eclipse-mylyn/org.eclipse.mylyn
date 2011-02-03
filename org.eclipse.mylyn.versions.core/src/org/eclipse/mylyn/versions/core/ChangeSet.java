@@ -46,7 +46,6 @@ public class ChangeSet {
 		this.message = fullMessage;
 		this.repository = repository;
 		this.changes = new ArrayList<Change>(changes);
-
 	}
 
 	public List<Change> getChanges() {
