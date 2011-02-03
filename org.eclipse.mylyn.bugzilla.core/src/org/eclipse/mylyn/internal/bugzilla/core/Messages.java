@@ -301,4 +301,24 @@ public class Messages extends NLS {
 
 	public static String CustomTransitionManager_UnexpectedResponse;
 
+	public static String RepositoryConfiguration_Operation_Tooltip_close;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_confirmed;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_duplicate;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_in_progress;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_new_default;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_none;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_reopen;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_resolve;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_unconfirmed;
+
+	public static String RepositoryConfiguration_Operation_Tooltip_veryfy;
+
 }

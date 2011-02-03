@@ -708,7 +708,7 @@ public class RepositoryConfiguration implements Serializable {
 				TaskAttribute unconfirmedAttribute = bugReport.getRoot().getAttribute(
 						TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
 				if (unconfirmedAttribute != null && unconfirmedAllowed != null) {
-					unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed.booleanValue());
+					unconfirmedAttribute.getMetaData().setDisabled(!unconfirmedAllowed.booleanValue());
 				}
 				addOperation(bugReport, BugzillaOperation.confirmed);
 				addOperation(bugReport, BugzillaOperation.in_progress);
@@ -992,6 +992,41 @@ public class RepositoryConfiguration implements Serializable {
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
 			}
 		}
+		//set the Tooltip
+		if (op.toString().equals(BugzillaOperation.none.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_none);
+		} else if (op.toString().equals(BugzillaOperation.new_default.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_new_default);
+		} else if (op.toString().equals(BugzillaOperation.unconfirmed.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_unconfirmed);
+		} else if (op.toString().equals(BugzillaOperation.confirmed.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_confirmed);
+		} else if (op.toString().equals(BugzillaOperation.in_progress.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_in_progress);
+		} else if (op.toString().equals(BugzillaOperation.resolve.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_resolve);
+		} else if (op.toString().equals(BugzillaOperation.verify.toString())
+				|| op.toString().equals(BugzillaOperation.verify_with_resolution.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_veryfy);
+		} else if (op.toString().equals(BugzillaOperation.duplicate.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_duplicate);
+		} else if (op.toString().equals(BugzillaOperation.reopen.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_reopen);
+		} else if (op.toString().equals(BugzillaOperation.close.toString())
+				|| op.toString().equals(BugzillaOperation.close_with_resolution.toString())) {
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
+					Messages.RepositoryConfiguration_Operation_Tooltip_close);
+		}
+
 	}
 
 	/**

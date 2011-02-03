@@ -381,6 +381,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				button.setFont(TEXT_FONT);
 				button.setData(KEY_OPERATION, operation);
 				//button.setEnabled(!operation.getTaskAttribute().getMetaData().isReadOnly());
+				button.setEnabled(!operation.getTaskAttribute().getMetaData().isDisabled());
 				button.setToolTipText(operation.getTaskAttribute()
 						.getMetaData()
 						.getValue(TaskAttribute.META_DESCRIPTION));
