@@ -74,7 +74,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 				}
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}
-		} else if (columnIndex == 3) {
+		} else if (columnIndex == 3 && attachment.getAuthor() != null) {
 			return getAuthorImage(attachment.getAuthor(), attachment.getTaskRepository());
 		}
 		return null;
