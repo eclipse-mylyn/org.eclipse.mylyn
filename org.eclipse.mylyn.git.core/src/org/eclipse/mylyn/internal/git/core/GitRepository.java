@@ -20,10 +20,10 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
  * ScmRepository implementation for git
  * 
  * @author mattk
- * 
  */
 public class GitRepository extends ScmRepository {
-	private RepositoryMapping mapping;
+
+	private final RepositoryMapping mapping;
 
 	public GitRepository(RepositoryMapping mapping) {
 		this.mapping = mapping;
@@ -40,11 +40,11 @@ public class GitRepository extends ScmRepository {
 	@Override
 	public String getUrl() {
 		// FIXME - use a better approach and handle multiple remotes better
-		String originUrl = getRepository().getConfig().getString("remote",
-				"origin", "url");
+		String originUrl = getRepository().getConfig().getString("remote", "origin", "url"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		if (originUrl != null)
+		if (originUrl != null) {
 			return originUrl;
+		}
 
 		return super.getUrl();
 	}
@@ -58,4 +58,5 @@ public class GitRepository extends ScmRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

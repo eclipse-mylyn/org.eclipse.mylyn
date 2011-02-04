@@ -43,14 +43,15 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.ScmUser;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.team.core.history.IFileRevision;
+
 /**
  * Git Connector implementation
+ * 
  * @author mattk
- *
  */
 public class GitConnector extends ScmConnector {
 
-	static final String ID = "org.eclipse.mylyn.versions.git";
+	static final String ID = "org.eclipse.mylyn.versions.git"; //$NON-NLS-1$
 
 	@Override
 	public String getProviderId() {
@@ -58,33 +59,29 @@ public class GitConnector extends ScmConnector {
 	}
 
 	@Override
-	public ScmArtifact getArtifact(ScmArtifactInfo resource,
-			IProgressMonitor monitor) throws CoreException {
+	public ScmArtifact getArtifact(ScmArtifactInfo resource, IProgressMonitor monitor) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource) throws CoreException {
-		GitRepository repository = (GitRepository) this.getRepository(resource,
-				new NullProgressMonitor());
+		GitRepository repository = (GitRepository) this.getRepository(resource, new NullProgressMonitor());
 
-		return new GitArtifact(repository.getWorkspaceRevision(resource),
-				repository.convertWorkspacePath(resource), repository);
+		return new GitArtifact(repository.getWorkspaceRevision(resource), repository.convertWorkspacePath(resource),
+				repository);
 	}
 
 	@Override
-	public ChangeSet getChangeset(ScmRepository repository,
-			IFileRevision revision, IProgressMonitor monitor)
+	public ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException {
 		Repository repository2 = ((GitRepository) repository).getRepository();
 		RevWalk walk = new RevWalk(repository2);
 		try {
 			RevCommit commit;
-			commit = walk.parseCommit(ObjectId.fromString(revision
-					.getContentIdentifier()));
+			commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
 			TreeWalk treeWalk = new TreeWalk(repository2);
-			for(RevCommit p: commit.getParents()) {
+			for (RevCommit p : commit.getParents()) {
 				walk.parseHeaders(p);
 				walk.parseBody(p);
 				treeWalk.addTree(p.getTree());
@@ -92,32 +89,33 @@ public class GitConnector extends ScmConnector {
 			treeWalk.addTree(commit.getTree());
 			treeWalk.setRecursive(true);
 
-			List<DiffEntry> entries= DiffEntry.scan(treeWalk);
+			List<DiffEntry> entries = DiffEntry.scan(treeWalk);
 			List<Change> changes = new ArrayList<Change>();
 			for (DiffEntry d : entries) {
 				// FIXME - could not work for renaming
-				if(!d.getChangeType().equals(org.eclipse.jgit.diff.DiffEntry.ChangeType.RENAME) &&d.getOldId().equals(d.getNewId())) continue;
-				
-				changes.add(new Change(new GitArtifact(d.getOldId().name(),
-						d.getOldPath(), (GitRepository) repository),
-						new GitArtifact(d.getNewId().name(), d.getNewPath(),
-								(GitRepository) repository),mapChangeType(d.getChangeType())));
+				if (!d.getChangeType().equals(org.eclipse.jgit.diff.DiffEntry.ChangeType.RENAME)
+						&& d.getOldId().equals(d.getNewId())) {
+					continue;
+				}
+
+				changes.add(new Change(
+						new GitArtifact(d.getOldId().name(), d.getOldPath(), (GitRepository) repository),
+						new GitArtifact(d.getNewId().name(), d.getNewPath(), (GitRepository) repository),
+						mapChangeType(d.getChangeType())));
 
 			}
 			return changeSet(commit, repository, changes);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, GitConnector.ID,
-					e.getMessage()));
+			throw new CoreException(new Status(IStatus.ERROR, GitConnector.ID, e.getMessage()));
 		}
 
 	}
 
-	private ChangeType mapChangeType(
-			org.eclipse.jgit.diff.DiffEntry.ChangeType change) {
-		switch(change) {
+	private ChangeType mapChangeType(org.eclipse.jgit.diff.DiffEntry.ChangeType change) {
+		switch (change) {
 		case ADD:
-		case  COPY:
+		case COPY:
 			return ChangeType.ADDED;
 		case DELETE:
 			return ChangeType.DELETED;
@@ -130,8 +128,7 @@ public class GitConnector extends ScmConnector {
 	}
 
 	@Override
-	public List<ChangeSet> getChangeSets(ScmRepository repository,
-			IProgressMonitor monitor) throws CoreException {
+	public List<ChangeSet> getChangeSets(ScmRepository repository, IProgressMonitor monitor) throws CoreException {
 		List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
 
 		try {
@@ -146,51 +143,45 @@ public class GitConnector extends ScmConnector {
 		return changeSets;
 	}
 
-	private ChangeSet changeSet(RevCommit r, ScmRepository repository,
-			List<Change> changes) {
-		ChangeSet changeSet = new ChangeSet(getScmUser(r.getCommitterIdent()),
-				new Date(r.getCommitTime() * 1000), r.name(),
-				r.getFullMessage(), repository, changes);
+	private ChangeSet changeSet(RevCommit r, ScmRepository repository, List<Change> changes) {
+		ChangeSet changeSet = new ChangeSet(getScmUser(r.getCommitterIdent()), new Date(r.getCommitTime() * 1000), r
+				.name(), r.getFullMessage(), repository, changes);
 		return changeSet;
 	}
 
 	private ScmUser getScmUser(PersonIdent person) {
-		return new ScmUser(person.getEmailAddress(), person.getName(),
-				person.getEmailAddress());
+		return new ScmUser(person.getEmailAddress(), person.getName(), person.getEmailAddress());
 	}
 
 	@Override
-	public List<ScmRepository> getRepositories(IProgressMonitor monitor)
-			throws CoreException {
+	public List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException {
 		ArrayList<ScmRepository> repos = new ArrayList<ScmRepository>();
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects()) {
-			GitRepository repository = (GitRepository) this.getRepository(
-					project, monitor);
-			if (repository != null)
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			GitRepository repository = (GitRepository) this.getRepository(project, monitor);
+			if (repository != null) {
 				repos.add(repository);
+			}
 		}
 		return repos;
 	}
 
 	@Override
-	public ScmRepository getRepository(IResource resource,
-			IProgressMonitor monitor) throws CoreException {
+	public ScmRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException {
 		RepositoryMapping mapping = RepositoryMapping.getMapping(resource);
-		if (mapping == null)
+		if (mapping == null) {
 			return null;
+		}
 		return new GitRepository(mapping);
 	}
 
 	protected RepositoryCache getRepositoryCache() {
-		return org.eclipse.egit.core.Activator.getDefault()
-				.getRepositoryCache();
+		return org.eclipse.egit.core.Activator.getDefault().getRepositoryCache();
 	}
 
 	@Override
-	public ScmArtifact getArtifact(IResource resource, String revision)
-			throws CoreException {
+	public ScmArtifact getArtifact(IResource resource, String revision) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

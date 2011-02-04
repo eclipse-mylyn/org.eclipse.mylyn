@@ -28,11 +28,12 @@ import org.eclipse.team.core.history.provider.FileRevision;
 
 /**
  * ScmArtifact implementation for git
+ * 
  * @author mattk
- *
  */
 public class GitArtifact extends ScmArtifact {
-	private GitRepository repository;
+
+	private final GitRepository repository;
 
 	public GitArtifact(String id, String path, GitRepository repository) {
 		super(id, path);
@@ -47,62 +48,46 @@ public class GitArtifact extends ScmArtifact {
 			final IPath path = Path.fromPortableString(getPath());
 			return new FileRevision() {
 
-				@Override
-				public IFileRevision withAllProperties(IProgressMonitor monitor)
-						throws CoreException {
+				public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 					return this;
 				}
 
-				@Override
 				public boolean isPropertyMissing() {
 					return false;
 				}
 
-				@Override
-				public IStorage getStorage(IProgressMonitor monitor)
-						throws CoreException {
+				public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 					return new IStorage() {
 
 						@SuppressWarnings("rawtypes")
-						@Override
 						public Object getAdapter(Class adapter) {
 							return null;
 						}
 
-						@Override
 						public boolean isReadOnly() {
 							return true;
 						}
 
-						@Override
 						public String getName() {
 							return path.lastSegment();
 						}
 
-						@Override
 						public IPath getFullPath() {
 							return path;
 						}
 
-						@Override
 						public InputStream getContents() throws CoreException {
 							try {
-								return repository
-										.getRepository()
-										.open(ObjectId.fromString(getId()),
-												Constants.OBJ_BLOB)
-										.openStream();
+								return repository.getRepository()
+										.open(ObjectId.fromString(getId()), Constants.OBJ_BLOB).openStream();
 							} catch (Exception e) {
 								e.printStackTrace();
-								throw new CoreException(new Status(
-										IStatus.ERROR, GitConnector.ID,
-										e.getMessage()));
+								throw new CoreException(new Status(IStatus.ERROR, GitConnector.ID, e.getMessage()));
 							}
 						}
 					};
 				}
 
-				@Override
 				public String getName() {
 					return path.lastSegment();
 				}
@@ -113,4 +98,5 @@ public class GitArtifact extends ScmArtifact {
 			return null;
 		}
 	}
+
 }
