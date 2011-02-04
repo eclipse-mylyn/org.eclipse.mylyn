@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn CDT Tests
+Bundle-SymbolicName: org.eclipse.mylyn.cdt.tests;singleton:=true
+Bundle-Version: 3.5.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jface,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench,
+ org.junit,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.cdt.mylyn.ui,
+ org.eclipse.cdt.core,
+ org.eclipse.cdt.ui,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.resources.ui,
+ org.eclipse.mylyn.context.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.monitor.ui,
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn.commons.tests,
+ org.eclipse.mylyn.resources.tests,
+ org.eclipse.mylyn.context.tests
+Export-Package: org.eclipse.mylyn.cdt.tests;x-internal:=true,
+ org.eclipse.mylyn.cdt.tests.support;x-internal:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

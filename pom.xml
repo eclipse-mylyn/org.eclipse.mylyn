@@ -15,6 +15,7 @@
   <modules>
     <module>org.eclipse.mylyn.bugzilla.ide</module>
     <module>org.eclipse.mylyn.cdt-feature</module>
+    <module>org.eclipse.mylyn.cdt.tests</module>
     <module>org.eclipse.mylyn.cdt.ui</module>
     <module>org.eclipse.mylyn.context-feature</module>
     <module>org.eclipse.mylyn.context.core</module>
