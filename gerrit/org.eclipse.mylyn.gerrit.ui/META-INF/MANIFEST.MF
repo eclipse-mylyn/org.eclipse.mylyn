@@ -30,4 +30,4 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.editors.ruler;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.operations;x-internal:=true,
  org.eclipse.mylyn.reviews.ui
-Import-Package: org.apache.commons.io
+Import-Package: org.apache.commons.io;version="1.4.0"
