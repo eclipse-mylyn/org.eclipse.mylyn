@@ -15,6 +15,7 @@ import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.ICElement;
+import org.eclipse.cdt.core.model.ICProject;
 import org.eclipse.cdt.core.model.IFunction;
 import org.eclipse.cdt.core.model.IInclude;
 import org.eclipse.cdt.core.model.IMethod;
@@ -125,7 +126,18 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	// The element name (optional) allows us to find an element within the
 	// TranslationUnit.
 	public static String getHandleForElement(ICElement element) {
-		return element.getHandleIdentifier();
+		String handle = element.getHandleIdentifier();
+		if (handle != null && !(element instanceof ICProject)) {
+			ICProject cProject = element.getCProject();
+			if (cProject != null) {
+				String projectHandle = getHandleForElement(cProject);
+				if (handle.equals(projectHandle)) {
+					// see bug 328300
+					return null;
+				}
+			}
+		}
+		return handle;
 	}
 
 	/**
@@ -204,7 +216,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 					for (Object adaptable : elements) {
 						IInteractionElement element = ContextCore.getContextManager().getElement(
 								getHandleIdentifier(adaptable));
-						if (element.getInterest().isInteresting()) {
+						if (element != null && element.getInterest().isInteresting()) {
 							return false;
 						}
 					}
