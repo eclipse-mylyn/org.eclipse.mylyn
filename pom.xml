@@ -13,6 +13,8 @@
     <!--
        <module>tbr</module>
     -->
+    <module>framework</module>
+    <module>r4e</module>
     <module>releng/reviews-site</module>
   </modules>
 
