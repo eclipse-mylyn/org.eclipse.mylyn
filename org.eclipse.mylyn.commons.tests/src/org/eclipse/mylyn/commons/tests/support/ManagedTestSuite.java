@@ -17,10 +17,10 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import junit.framework.AssertionFailedError;
@@ -32,6 +32,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
@@ -160,7 +161,15 @@ public class ManagedTestSuite extends TestSuite {
 		});
 	}
 
-	private void dumpSystemInfo() {
+	private static void dumpSystemInfo() {
+		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
+				&& !CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()) {
+			// XXX e3.5/gtk.x86_64 activate manual proxy configuration which
+			// defaults to Java system properties if system proxy support is
+			// not available
+			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
+		}
+
 		Properties p = System.getProperties();
 		if (Platform.isRunning()) {
 			p.put("build.system", Platform.getOS() + "-" + Platform.getOSArch() + "-" + Platform.getWS());
