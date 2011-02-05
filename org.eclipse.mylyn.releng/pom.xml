@@ -125,6 +125,10 @@
       </properties>
     </profile>
     <profile>
+      <id>heartbeat</id>
+      <properties>
+		<mylyn-reviews-skip-test>true</mylyn-reviews-skip-test>
+    <profile>
       <id>hudson.eclipse.org</id>
       <activation>
 		<property>
