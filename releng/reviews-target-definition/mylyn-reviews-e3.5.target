@@ -10,6 +10,7 @@
 <unit id="org.eclipse.emf.edit.feature.group" version="2.5.0.v200906151043"/>
 <unit id="org.eclipse.emf.common.feature.group" version="2.5.0.v200906151043"/>
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.1.0.v200906151043"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
 <repository location="http://download.eclipse.org/tools/orbit/committers/drops/S20110124210048/repository/"/>

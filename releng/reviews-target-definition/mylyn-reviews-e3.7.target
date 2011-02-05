@@ -12,6 +12,7 @@
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101215-0940"/>
 <unit id="org.eclipse.egit.feature.group" version="0.9.3"/>
 <unit id="org.eclipse.xtext.runtime.feature.group" version="1.0.1.v201008251220"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201012131338"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
 <repository location="http://download.eclipse.org/tools/orbit/committers/drops/S20110124210048/repository/"/>
