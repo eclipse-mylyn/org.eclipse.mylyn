@@ -56,12 +56,14 @@
       <id>galileo</id>
       <properties>
         <target-platform>mylyn-reviews-e3.5</target-platform>
+        <platform-version>[3.5.0,3.6.0)</platform-version>
       </properties>
     </profile>
     <profile>
       <id>helios</id>
       <properties>
         <target-platform>mylyn-reviews-e3.6</target-platform>
+        <platform-version>[3.6.0,3.7.0)</platform-version>
       </properties>
     </profile>
     <profile>
@@ -71,6 +73,7 @@
       </activation>
       <properties>
         <target-platform>mylyn-reviews-e3.7</target-platform>
+        <platform-version>[3.7.0,3.8.0)</platform-version>
       </properties>
     </profile>
   </profiles>
