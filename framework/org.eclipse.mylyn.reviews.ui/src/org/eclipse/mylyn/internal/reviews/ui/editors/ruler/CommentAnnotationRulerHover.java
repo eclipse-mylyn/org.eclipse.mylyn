@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.mylyn.internal.reviews.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.editors.ruler;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -47,71 +47,41 @@ import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.projection.AnnotationBag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotationHoverInput;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentInformationControlCreator;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-/**
- * Class to determine the annotations to show the hover for. This class delegates to a parent hover if it exists.
- * 
- * @author Shawn Minto
- */
-public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHoverExtension, IAnnotationHoverExtension2 {
+public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotationHoverExtension,
+		IAnnotationHoverExtension2 {
 
-	private final IAnnotationHover parentHover;
+	private final IInformationControlCreator informationControlCreator = new CommentInformationControlCreator();
 
-	private final IInformationControlCreator informationControlCreator;
+	private final CommentAnnotationRulerColumn rulerColumn;
 
 	private static ISourceViewer currentSourceViewer;
 
-	private static CommentAnnotationHover currentAnnotationHover;
+	private static CommentAnnotationRulerHover currentAnnotationHover;
 
-	public CommentAnnotationHover(IAnnotationHover hover) {
-		this.parentHover = hover;
-		informationControlCreator = new CommentInformationControlCreator();
+	public CommentAnnotationRulerHover(CommentAnnotationRulerColumn column) {
+		this.rulerColumn = column;
 	}
 
 	public void dispose() {
 		// ignore for now
 	}
 
+	/**
+	 * This is from {@link IAnnotationHover} but we also implement {@link IAnnotationHoverExtension} and
+	 * {@link IAnnotationHoverExtension2} which supersede this so there's no point in implementing it.
+	 */
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
-		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(sourceViewer, lineNumber);
-		if (commentAnnotations != null && commentAnnotations.size() > 0) {
-
-			if (commentAnnotations.size() == 1) {
-				CommentAnnotation annotation = commentAnnotations.get(0);
-				String message = annotation.getText();
-				if (message != null && message.trim().length() > 0) {
-					return formatSingleMessage(message);
-				}
-
-			} else {
-
-				List<String> messages = new ArrayList<String>();
-				for (CommentAnnotation annotation : commentAnnotations) {
-					String message = annotation.getText();
-					if (message != null && message.trim().length() > 0) {
-						messages.add(message.trim());
-					}
-				}
-
-				if (messages.size() == 1) {
-					return formatSingleMessage(messages.get(0));
-				}
-
-				if (messages.size() > 1) {
-					return formatMultipleMessages(messages);
-				}
-			}
-		} else {
-			if (parentHover != null) {
-				return parentHover.getHoverInfo(sourceViewer, lineNumber);
-			}
-		}
-		return null;
+		throw new UnsupportedOperationException("This API should not be used");
 	}
 
 	public IInformationControlCreator getHoverControlCreator() {
@@ -127,13 +97,11 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	}
 
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
-		List<CommentAnnotation> annotationsForLine = getCrucibleAnnotationsForLine(sourceViewer,
-				lineRange.getStartLine());
-		if (annotationsForLine == null || annotationsForLine.size() == 0) {
-			return getHoverInfo(sourceViewer, lineRange.getStartLine());
-		} else {
+		List<CommentAnnotation> annotationsForLine = rulerColumn.getAnnotations(lineRange.getStartLine());
+		if (annotationsForLine != null && annotationsForLine.size() > 0) {
 			return new CommentAnnotationHoverInput(annotationsForLine);
 		}
+		return null;
 	}
 
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
@@ -218,8 +186,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 		return viewer.getAnnotationModel();
 	}
 
-	private boolean includeAnnotation(Annotation annotation, Position position,
-			List<CommentAnnotation> annotations) {
+	private boolean includeAnnotation(Annotation annotation, Position position, List<CommentAnnotation> annotations) {
 		if (!(annotation instanceof CommentAnnotation)) {
 			return false;
 		}
@@ -264,8 +231,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 				continue;
 			}
 
-			if (includeAnnotation(annotation, position, commentAnnotations)
-					&& annotation instanceof CommentAnnotation) {
+			if (includeAnnotation(annotation, position, commentAnnotations) && annotation instanceof CommentAnnotation) {
 				commentAnnotations.add((CommentAnnotation) annotation);
 			}
 		}
@@ -291,7 +257,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 			declaredMethod2.setAccessible(true);
 			info = (CompositeRuler) declaredMethod2.invoke(currentSourceViewer);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 					"Error getting CompareEditor's vertical ruler. ", e));
 		}
 
@@ -307,15 +273,15 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 		try {
 
 			// compute the hover information
-			Object hoverInfo;
+			Object hoverInfo = null;
 			if (currentAnnotationHover instanceof IAnnotationHoverExtension) {
-				IAnnotationHoverExtension extension = currentAnnotationHover;
+				/*FIXME: IAnnotationHoverExtension extension = currentAnnotationHover;
 				ILineRange hoverLineRange = extension.getHoverLineRange(currentSourceViewer, line);
 				if (hoverLineRange == null) {
 					return false;
 				}
 				final int maxVisibleLines = Integer.MAX_VALUE;
-				hoverInfo = extension.getHoverInfo(currentSourceViewer, hoverLineRange, maxVisibleLines);
+				hoverInfo = extension.getHoverInfo(currentSourceViewer, hoverLineRange, maxVisibleLines);*/
 			} else {
 				hoverInfo = currentAnnotationHover.getHoverInfo(currentSourceViewer, line);
 			}

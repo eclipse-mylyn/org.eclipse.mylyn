@@ -31,7 +31,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -174,7 +174,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 			event.annotationAdded(ca);
 
 		} catch (BadLocationException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Unable to add annotation.", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", e));
 		}
 	}
 
@@ -208,7 +208,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 			try {
 				document.addPosition(commentAnnotation.getPosition());
 			} catch (BadLocationException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, e.getMessage(), e));
+				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, e.getMessage(), e));
 			}
 		}
 		document.addDocumentListener(documentListener);

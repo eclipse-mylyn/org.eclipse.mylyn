@@ -10,6 +10,8 @@
   <artifactId>mylyn-reviews-framework-parent</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>org.eclipse.mylyn.reviews.core</module>
     <module>org.eclipse.mylyn.reviews.frame.core</module>
+    <module>org.eclipse.mylyn.reviews.ui</module>
   </modules>
 </project>

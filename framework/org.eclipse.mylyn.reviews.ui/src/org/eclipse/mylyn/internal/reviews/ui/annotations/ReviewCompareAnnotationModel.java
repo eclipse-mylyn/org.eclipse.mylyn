@@ -38,7 +38,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -193,7 +193,7 @@ public class ReviewCompareAnnotationModel {
 						return lineOffset;
 					} else {
 						// log error since we assume the initial text contains all slaveTexts.
-						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 								"Could not find text offset for annotation highlighting"
 										+ " - current text not contained in initial text."));
 					}
@@ -257,7 +257,7 @@ public class ReviewCompareAnnotationModel {
 						// createOverviewRuler(newInput, sourceViewerClazz);
 						createHighlighting(sourceViewerClazz);
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 								"Error attaching Crucible annotation model", t));
 					}
 				}
@@ -403,7 +403,7 @@ public class ReviewCompareAnnotationModel {
 								widget.setRedraw(true);
 							}
 						} catch (BadLocationException e) {
-							StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, e.getMessage(), e));
+							StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, e.getMessage(), e));
 						}
 					}
 				}
@@ -493,7 +493,7 @@ public class ReviewCompareAnnotationModel {
 						// if listeners exist, just make sure the hover hack is in there
 						leftViewerListener.forceCustomAnnotationHover();
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 								"Error attaching Crucible annotation hover", e));
 					}
 				}
@@ -508,7 +508,7 @@ public class ReviewCompareAnnotationModel {
 						// if listeners exist, just make sure the hover hack is in there
 						rightViewerListener.forceCustomAnnotationHover();
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 								"Error attaching Crucible annotation hover", e));
 					}
 				}
@@ -586,7 +586,7 @@ public class ReviewCompareAnnotationModel {
 			setActiveViewer.setAccessible(true);
 			setActiveViewer.invoke(fMergeViewer, focusViewer, true);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, GerritUiPlugin.PLUGIN_ID, "Failed to activate viewer", e));
+			StatusHandler.log(new Status(IStatus.WARNING, ReviewsUiPlugin.PLUGIN_ID, "Failed to activate viewer", e));
 		}
 	}
 

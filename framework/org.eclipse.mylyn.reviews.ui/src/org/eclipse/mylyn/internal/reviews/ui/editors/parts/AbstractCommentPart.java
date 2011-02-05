@@ -21,7 +21,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
@@ -40,7 +39,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
 
 /**
  * A UI part to represent a comment in a review
@@ -185,7 +183,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		int style = SWT.FLAT | SWT.READ_ONLY | SWT.MULTI | SWT.WRAP;
 		// FIXME
 		TaskRepository repository = TasksUi.getRepositoryManager()
-				.getRepositories(GerritConnector.CONNECTOR_KIND)
+				.getRepositories("org.eclipse.mylyn.gerrit")
 				.iterator()
 				.next();
 
