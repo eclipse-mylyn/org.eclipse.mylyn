@@ -163,10 +163,13 @@ public class ManagedTestSuite extends TestSuite {
 
 	private static void dumpSystemInfo() {
 		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
-				&& !CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()) {
+				&& CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()
+				&& !CommonsNetPlugin.getProxyService().hasSystemProxies()) {
 			// XXX e3.5/gtk.x86_64 activate manual proxy configuration which
 			// defaults to Java system properties if system proxy support is
 			// not available
+			System.err.println("Forcing manual proxy configuration");
+			CommonsNetPlugin.getProxyService().setSystemProxiesEnabled(false);
 			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
 		}
 
