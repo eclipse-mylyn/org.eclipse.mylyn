@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
@@ -140,7 +140,7 @@ public class ReviewCompareEditorInput extends CompareEditorInput {
 
 				hackGalileo(contentViewer, textMergeViewer, fLeft, fRight);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.WARNING, GerritUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, ReviewsUiPlugin.PLUGIN_ID,
 						"Could not initialize annotation model for " + input.getName(), t));
 			}
 		}

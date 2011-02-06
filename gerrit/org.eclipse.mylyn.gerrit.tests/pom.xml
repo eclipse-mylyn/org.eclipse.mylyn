@@ -9,8 +9,29 @@
   </parent>
   <artifactId>org.eclipse.mylyn.gerrit.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
+  <properties>
+    <mylyn-reviews-skip-test>${maven.test.skip}</mylyn-reviews-skip-test>
+  </properties>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-test-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+		  <skip>${mylyn-reviews-skip-test}</skip>
+          <useUIHarness>true</useUIHarness>
+          <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+          <dependencies>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.sdk.feature.group</artifactId>
+              <version>${platform-version}</version>
+            </dependency>
+          </dependencies>		  
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-source-plugin</artifactId>

@@ -1,18 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Gerrit Connector
-Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
+Bundle-Name: Mylyn Reviews
+Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui;singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core;bundle-version="3.3.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.3.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.3.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
- org.eclipse.mylyn.gerrit.core;bundle-version="0.1.0",
- org.eclipse.mylyn.reviews.core,
- org.eclipse.mylyn.reviews.ui,
+ org.eclipse.mylyn.reviews.core;bundle-version="0.1.0",
  org.eclipse.jface, 
  org.eclipse.jface.text,
  org.eclipse.compare,
@@ -23,7 +20,11 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
-Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
- org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
- org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.editors.parts;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.editors.ruler;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.operations;x-internal:=true,
+ org.eclipse.mylyn.reviews.ui
 Import-Package: org.apache.commons.io;version="1.4.0"
+Bundle-Activator: org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin
