@@ -11,15 +11,20 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,6 +51,8 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	private AbstractTaskEditorPage taskEditorPage;
 
 	private boolean expandVertically;
+
+	private MaximizePartAction maximizePartAction;
 
 	public AbstractTaskEditorPart() {
 	}
@@ -164,6 +171,77 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	public void setExpandVertically(boolean expandVertically) {
 		this.expandVertically = expandVertically;
+	}
+
+	/**
+	 * Returns an action for maximizing the part.
+	 * 
+	 * @since 3.5
+	 */
+	protected Action getMaximizePartAction() {
+		if (maximizePartAction == null) {
+			maximizePartAction = new MaximizePartAction();
+		}
+		return maximizePartAction;
+	}
+
+	/**
+	 * Returns the control that determines the size of the part.
+	 * 
+	 * @see #getMaximizePartAction()
+	 * @since 3.5
+	 */
+	protected Control getLayoutControl() {
+		return getControl();
+	}
+
+	private class MaximizePartAction extends Action {
+
+		private static final String COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.maximizePart"; //$NON-NLS-1$
+
+		private static final int SECTION_HEADER_HEIGHT = 50;
+
+		private int originalHeight = -2;
+
+		public MaximizePartAction() {
+			super(Messages.TaskEditorRichTextPart_Maximize, SWT.TOGGLE);
+			setImageDescriptor(CommonImages.PART_MAXIMIZE);
+			setToolTipText(Messages.TaskEditorRichTextPart_Maximize);
+			setActionDefinitionId(COMMAND_ID);
+			setChecked(false);
+		}
+
+		@Override
+		public void run() {
+			Control control = getLayoutControl();
+			if (control == null || !(control.getLayoutData() instanceof GridData)) {
+				return;
+			}
+
+			GridData gd = (GridData) control.getLayoutData();
+
+			// initialize originalHeight on first invocation
+			if (originalHeight == -2) {
+				originalHeight = gd.heightHint;
+			}
+
+			int heightHint;
+			if (isChecked()) {
+				heightHint = getManagedForm().getForm().getClientArea().height - SECTION_HEADER_HEIGHT;
+			} else {
+				heightHint = originalHeight;
+			}
+
+			// ignore when not necessary
+			if (gd.heightHint == heightHint) {
+				return;
+			}
+			gd.heightHint = heightHint;
+			gd.minimumHeight = heightHint;
+
+			getTaskEditorPage().reflow();
+			CommonFormUtil.ensureVisible(control);
+		}
 	}
 
 }

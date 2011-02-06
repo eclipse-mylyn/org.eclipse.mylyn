@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.State;
@@ -27,7 +26,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -46,8 +44,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	private Composite composite;
 
 	private int sectionStyle;
-
-	private ToggleToMaximizePartAction toggleToMaximizePartAction;
 
 	private Action toggleEditAction;
 
@@ -165,68 +161,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	protected Action getMaximizePartAction() {
-		if (toggleToMaximizePartAction == null) {
-			toggleToMaximizePartAction = new ToggleToMaximizePartAction();
-		}
-		return toggleToMaximizePartAction;
-	}
-
-	private class ToggleToMaximizePartAction extends Action {
-
-		private static final String COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.maximizePart"; //$NON-NLS-1$
-
-		private/*static*/final String MAXIMIZE = Messages.TaskEditorRichTextPart_Maximize;
-
-		private static final int SECTION_HEADER_HEIGHT = 50;
-
-		private int originalHeight = -2;
-
-		public ToggleToMaximizePartAction() {
-			super("", SWT.TOGGLE); //$NON-NLS-1$
-			setImageDescriptor(CommonImages.PART_MAXIMIZE);
-			setToolTipText(MAXIMIZE);
-			setActionDefinitionId(COMMAND_ID);
-			setChecked(false);
-		}
-
-		@Override
-		public void run() {
-			if (!(getEditor().getControl().getLayoutData() instanceof GridData)) {
-				return;
-			}
-
-			GridData gd = (GridData) getEditor().getControl().getLayoutData();
-
-			if (originalHeight == -2) {
-				originalHeight = gd.heightHint;
-			}
-
-			try {
-				getTaskEditorPage().setReflow(false);
-
-				int heightHint;
-				if (isChecked()) {
-					heightHint = getManagedForm().getForm().getClientArea().height - SECTION_HEADER_HEIGHT;
-				} else {
-					heightHint = originalHeight;
-				}
-
-				// ignore when not necessary
-				if (gd.heightHint == heightHint) {
-					return;
-				}
-				gd.heightHint = heightHint;
-				gd.minimumHeight = heightHint;
-			} finally {
-				getTaskEditorPage().setReflow(true);
-			}
-
-			getTaskEditorPage().reflow();
-			CommonFormUtil.ensureVisible(getEditor().getControl());
-		}
-	}
-
 	@Override
 	protected void fillToolBar(ToolBarManager manager) {
 		if (getEditor().hasPreview()) {
@@ -296,6 +230,11 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			manager.add(getMaximizePartAction());
 		}
 		super.fillToolBar(manager);
+	}
+
+	@Override
+	protected Control getLayoutControl() {
+		return (getEditor() != null) ? getEditor().getControl() : null;
 	}
 
 }
