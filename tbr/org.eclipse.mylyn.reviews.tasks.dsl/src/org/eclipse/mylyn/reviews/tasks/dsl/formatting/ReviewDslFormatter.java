@@ -3,7 +3,7 @@
  */
 package org.eclipse.mylyn.reviews.tasks.dsl.formatting;
 
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewDslPackage;
+import org.eclipse.mylyn.reviews.tasks.dsl.services.ReviewDslGrammarAccess;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
 
@@ -11,22 +11,23 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig;
  * This class contains custom formatting description.
  * 
  * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#formatting
- * on how and when to use it 
+ * on how and when to use it
  * 
- * Also see {@link org.eclipse.xtext.xtext.XtextFormattingTokenSerializer} as an example
+ * Also see {@link org.eclipse.xtext.xtext.XtextFormattingTokenSerializer} as an
+ * example
  */
 public class ReviewDslFormatter extends AbstractDeclarativeFormatter {
-	
+
 	@Override
 	protected void configureFormatting(FormattingConfig c) {
-		c.setLinewrap(1).after(ReviewDslPackage.eINSTANCE.getReviewScope());
-		c.setIndentationIncrement().before(ReviewDslPackage.eINSTANCE.getReviewScopeItem());
-		c.setIndentationDecrement().after(ReviewDslPackage.eINSTANCE.getReviewScopeItem());
-		c.setLinewrap(1).after(ReviewDslPackage.eINSTANCE.getReviewScopeItem());
-
-		//		c.setLinewrap(1, 1, 2).before(ReviewDslPackage.eINSTANCE.getFileComment());
-//		c.setLinewrap(1, 1, 2).before(ReviewDslPackage.eINSTANCE.getLineComment());
-//		c.setLinewrap(1, 1, 2).before(ReviewDslPackage.eINSTANCE.getResourceDef());
-//		c.setLinewrap(1, 1, 2).before(ReviewDslPackage.eINSTANCE.getPatchDef());
+		ReviewDslGrammarAccess grammar = (ReviewDslGrammarAccess) getGrammarAccess();
+		c.setLinewrap().after(grammar.getModelRule());
+		c.setIndentationIncrement().before(grammar.getReviewScopeItemRule());
+		c.setIndentationDecrement().after(grammar.getReviewScopeItemRule());
+		c.setLinewrap().after(grammar.getReviewScopeItemRule());
+		c.setLinewrap().before(
+				grammar.getReviewResultAccess().getCommentKeyword_2_0());
+		c.setLinewrap().after(
+				grammar.getReviewResultAccess().getCommentAssignment_2_1());
 	}
 }
