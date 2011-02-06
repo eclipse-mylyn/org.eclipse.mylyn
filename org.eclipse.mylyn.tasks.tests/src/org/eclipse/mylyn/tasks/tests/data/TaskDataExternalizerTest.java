@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.xml.sax.SAXParseException;
 
@@ -41,7 +40,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		TaskRepositoryManager taskRepositoryManager = new TaskRepositoryManager();
 		taskRepositoryManager.addRepositoryConnector(new MockRepositoryConnector());
 		//taskRepositoryManager.addRepositoryConnector(new BugzillaRepositoryConnector());
-		repository = TaskTestUtil.createMockRepository();
+		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		taskRepositoryManager.addRepository(repository);
 		externalizer = new TaskDataExternalizer(taskRepositoryManager);
 	}
