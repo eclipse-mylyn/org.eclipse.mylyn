@@ -59,8 +59,8 @@
 <repository location="http://download.eclipse.org/egit/updates-nightly"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.1.0.I20101216-1305"/>
-<repository location="http://download.eclipse.org/e4/sdk/drops/S-4.1M4a-201012161305/repository"/>
+<unit id="org.eclipse.sdk.ide" version="4.1.0"/>
+<repository location="http://download.eclipse.org/e4/sdk/drops/S-4.1M5-201101282000/repository"/>
 </location>
 </locations>
 </target>
