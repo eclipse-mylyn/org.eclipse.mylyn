@@ -39,6 +39,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IActionDelegate;
 
+/**
+ * 
+ * @author mattk
+ * 
+ */
+@SuppressWarnings("restriction")
 public class CreateReviewActionFromAttachment extends Action implements
 		IActionDelegate {
 
@@ -53,7 +59,8 @@ public class CreateReviewActionFromAttachment extends Action implements
 			ITaskDataManager manager = TasksUi.getTaskDataManager();
 			TaskData parentTaskData = manager.getTaskData(taskAttachment
 					.getTask());
-			ITaskProperties parentTask= TaskProperties.fromTaskData(manager, parentTaskData);
+			ITaskProperties parentTask = TaskProperties.fromTaskData(manager,
+					parentTaskData);
 
 			TaskMapper initializationData = new TaskMapper(parentTaskData);
 			IReviewMapper taskMapper = ReviewsUiPlugin.getMapper();
@@ -69,12 +76,13 @@ public class CreateReviewActionFromAttachment extends Action implements
 
 			ITaskProperties taskProperties = TaskProperties.fromTaskData(
 					manager, taskData);
-			taskProperties.setSummary("[review] " + parentTask.getDescription());
+			taskProperties
+					.setSummary("[review] " + parentTask.getDescription());
 
 			String reviewer = taskRepository.getUserName();
 			taskProperties.setAssignedTo(reviewer);
 
-			initTaskProperties(taskMapper, taskProperties,parentTask);
+			initTaskProperties(taskMapper, taskProperties, parentTask);
 
 			TasksUiInternal.createAndOpenNewTask(taskData);
 		} catch (CoreException e) {
@@ -84,15 +92,13 @@ public class CreateReviewActionFromAttachment extends Action implements
 	}
 
 	private void initTaskProperties(IReviewMapper taskMapper,
-			ITaskProperties taskProperties,ITaskProperties parentTask) {
+			ITaskProperties taskProperties, ITaskProperties parentTask) {
 		ReviewScope scope = new ReviewScope();
 		for (ITaskAttachment taskAttachment : selection2) {
 			// FIXME date from task attachment
-			Attachment attachment = ReviewsUtil
-					.findAttachment(taskAttachment.getFileName(),
-							taskAttachment.getAuthor().getPersonId(),
-							taskAttachment.getCreationDate().toString(),
-							parentTask);
+			Attachment attachment = ReviewsUtil.findAttachment(taskAttachment
+					.getFileName(), taskAttachment.getAuthor().getPersonId(),
+					taskAttachment.getCreationDate().toString(), parentTask);
 			if (attachment.isPatch()) {
 				scope.addScope(new PatchScopeItem(attachment));
 			} else {
@@ -127,5 +133,4 @@ public class CreateReviewActionFromAttachment extends Action implements
 			}
 		}
 	}
-
 }

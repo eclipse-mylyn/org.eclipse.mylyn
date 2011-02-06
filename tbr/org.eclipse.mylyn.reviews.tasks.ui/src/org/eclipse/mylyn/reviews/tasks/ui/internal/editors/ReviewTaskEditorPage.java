@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Listener;
 /*
  * @author Kilian Matt
  */
+@SuppressWarnings("restriction")
 public class ReviewTaskEditorPage extends AbstractTaskEditorPage {
 	private ReviewScope scope;
 
