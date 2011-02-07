@@ -28,7 +28,7 @@ public class AllHudsonTests {
 	}
 
 	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.hudson.tests");
+		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
 		for (HudsonFixture fixture : HudsonFixture.ALL) {

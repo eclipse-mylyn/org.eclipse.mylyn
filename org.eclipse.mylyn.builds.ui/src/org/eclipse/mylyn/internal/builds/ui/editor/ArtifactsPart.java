@@ -33,7 +33,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -139,8 +138,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 		viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
 		GridDataFactory.fillDefaults().hint(300, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ArtifactsContentProvider());
-		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ArtifactsLabelProvider(), null, null));
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());

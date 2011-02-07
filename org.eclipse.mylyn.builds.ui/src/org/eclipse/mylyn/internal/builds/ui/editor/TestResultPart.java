@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -141,8 +140,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
 		GridDataFactory.fillDefaults().hint(300, 100).span(6, 1).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new TestResultContentProvider());
-		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new TestResultLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new TestResultLabelProvider(), null, null));
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				getPage().getSite().getSelectionProvider().setSelection(event.getSelection());

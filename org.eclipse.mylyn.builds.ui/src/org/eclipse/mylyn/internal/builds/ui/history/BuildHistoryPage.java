@@ -53,7 +53,6 @@ import org.eclipse.team.ui.history.HistoryPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
@@ -98,7 +97,8 @@ public class BuildHistoryPage extends HistoryPage {
 		return NLS.bind("Build history for {0}", getName());
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
 		return null;
 	}
 
@@ -191,8 +191,8 @@ public class BuildHistoryPage extends HistoryPage {
 		tree.setHeaderVisible(true);
 
 		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
-		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
+		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null,
+				null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("ID");
 		buildColumn.setWidth(70);
