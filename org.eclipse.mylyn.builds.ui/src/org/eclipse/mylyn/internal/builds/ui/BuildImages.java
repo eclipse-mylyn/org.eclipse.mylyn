@@ -92,6 +92,8 @@ public class BuildImages {
 
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;
 
+	public static final ImageDescriptor FILTER_FAILURES = create(T_OBJ, "failures.gif"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

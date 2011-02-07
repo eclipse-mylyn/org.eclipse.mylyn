@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
 import org.eclipse.emf.databinding.FeaturePath;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -24,12 +27,15 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.ITestCase;
 import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
+import org.eclipse.mylyn.builds.core.TestCaseResult;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage.Literals;
 import org.eclipse.mylyn.builds.internal.core.TestResult;
+import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.util.TestResultManager;
 import org.eclipse.swt.SWT;
@@ -46,6 +52,26 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  */
 public class TestResultPart extends AbstractBuildEditorPart {
+
+	public class FilterTestFailuresAction extends Action {
+
+		public FilterTestFailuresAction() {
+			super("Show Failures Only", IAction.AS_CHECK_BOX);
+			setToolTipText("Show Failures Only");
+			setImageDescriptor(BuildImages.FILTER_FAILURES);
+		}
+
+		@Override
+		public void run() {
+			if (isChecked()) {
+				viewer.addFilter(testFailureFilter);
+				viewer.expandAll();
+			} else {
+				viewer.removeFilter(testFailureFilter);
+			}
+		}
+
+	}
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.TestResult"; //$NON-NLS-1$
 
@@ -97,11 +123,41 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 	}
 
+	/**
+	 * Selects failed tests only.
+	 */
+	private class TestFailureFilter extends ViewerFilter {
+
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ITestCase) {
+				return isFailure(element);
+			} else if (element instanceof ITestSuite) {
+				for (ITestCase testCase : ((ITestSuite) element).getCases()) {
+					if (isFailure(testCase)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		boolean isFailure(Object element) {
+			TestCaseResult status = ((ITestCase) element).getStatus();
+			return status == TestCaseResult.FAILED || status == TestCaseResult.REGRESSION;
+		}
+
+	}
+
 	private MenuManager menuManager;
 
 	private ShowTestResultsAction showTestResultsAction;
 
+	private FilterTestFailuresAction filterTestFailuresAction;
+
 	private TreeViewer viewer;
+
+	private TestFailureFilter testFailureFilter;
 
 	public TestResultPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
@@ -157,6 +213,8 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			}
 		});
 
+		testFailureFilter = new TestFailureFilter();
+
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
@@ -179,13 +237,16 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 		showTestResultsAction = new ShowTestResultsAction();
 		showTestResultsAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
+
+		filterTestFailuresAction = new FilterTestFailuresAction();
+		showTestResultsAction.selectionChanged(new StructuredSelection(getInput(IBuild.class)));
 	}
 
-//	@Override
-//	protected void fillToolBar(ToolBarManager toolBarManager) {
-//		super.fillToolBar(toolBarManager);
-//
-//		toolBarManager.add(showTestResultsAction);
-//	}
+	@Override
+	protected void fillToolBar(ToolBarManager toolBarManager) {
+		super.fillToolBar(toolBarManager);
+
+		toolBarManager.add(filterTestFailuresAction);
+	}
 
 }
