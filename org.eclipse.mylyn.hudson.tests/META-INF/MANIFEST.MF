@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Hudson Connector Tests
+Bundle-Name: Mylyn Hudson Connector (Incubation)
 Bundle-SymbolicName: org.eclipse.mylyn.hudson.tests;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: org.junit,
