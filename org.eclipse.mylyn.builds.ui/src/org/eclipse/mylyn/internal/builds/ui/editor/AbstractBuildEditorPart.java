@@ -267,11 +267,15 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 						&& ((Composite) section.getClient()).getLayout() instanceof GridLayout) {
 					GridLayout layout = (GridLayout) ((Composite) section.getClient()).getLayout();
 					layout.marginHeight = 0;
-					layout.marginTop = 0;
+					// leave one pixel for borders
+					layout.marginTop = 1;
 					layout.marginBottom = 5;
 				}
 
 				section.setTextClient(toolbarComposite);
+			} else {
+				// make spacing consistent with sections that have a toolbar
+				section.clientVerticalSpacing = 7;
 			}
 		}
 		setControl(section);
