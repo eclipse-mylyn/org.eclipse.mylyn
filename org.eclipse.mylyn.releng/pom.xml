@@ -32,7 +32,6 @@
 	<mylyn-test-append></mylyn-test-append>
 
 	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
-	<mylyn-incubator-repository>Mylyn Incubator</mylyn-incubator-repository>
 
 	<mylyn-qualifier-format>'I'yyyyMMdd-HHmm</mylyn-qualifier-format>
 	<mylyn-pack200>${java.home}/bin</mylyn-pack200>
@@ -154,13 +153,6 @@
       <id>dist</id>
       <modules>
 		<module>main-site</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>incubator</id>
-      <modules>
-		<module>../../org.eclipse.mylyn.incubator</module>
-		<module>incubator-site</module>
       </modules>
     </profile>
     <profile>
