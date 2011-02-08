@@ -25,7 +25,7 @@ unzip -d $DST/ site.zip
 wget -O $DST/mylyn-$VERSION.$QUALIFIER.zip $SRC/site-archive.zip
 rm site.zip
 
-chgrp -R mylyn $DST
+chgrp -R mylynadmin $DST
 chmod g+w -R $DST
 
 echo Updating $SITE
