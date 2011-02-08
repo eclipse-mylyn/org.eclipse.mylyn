@@ -14,7 +14,6 @@
       Mylyn for Eclipse 3.5, 3.6 and 3.7
    </description>
    <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0"/>
-   <feature url="features/org.eclipse.mylyn.test_feature_0.0.0.jar" id="org.eclipse.mylyn.test_feature" version="0.0.0"/>
    <feature url="features/org.eclipse.mylyn_feature_0.0.0.jar" id="org.eclipse.mylyn_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
@@ -52,6 +51,9 @@
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.test_feature_0.0.0.jar" id="org.eclipse.mylyn.test_feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
