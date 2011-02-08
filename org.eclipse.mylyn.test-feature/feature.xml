@@ -94,12 +94,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.mylyn.discovery.tests"
          download-size="0"
          install-size="0"
@@ -120,13 +114,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.oslc.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.oslc.tests"
          download-size="0"
          install-size="0"
@@ -134,7 +121,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.oslc.ui"
+         id="org.eclipse.mylyn.commons.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -151,5 +138,27 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.cdt.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.gerrit.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tests.standalone"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
