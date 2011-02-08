@@ -6,8 +6,9 @@ wget -O version.properties $SRC/version.properties
 
 VERSION=$(head -n 1 version.properties)
 QUALIFIER=$(tail -n 1 version.properties)
+MAJOR=3.5
 DST=/home/data/httpd/download.eclipse.org/mylyn/incubator/$QUALIFIER
-SITE=/home/data/httpd/download.eclipse.org/mylyn/incubator
+SITE=/home/data/httpd/download.eclipse.org/mylyn/incubator/$MAJOR
 
 rm version.properties
 
