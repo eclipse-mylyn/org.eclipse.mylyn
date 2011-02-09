@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,15 +42,16 @@ import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
@@ -67,6 +70,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -85,8 +89,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.IProgressService;
@@ -149,8 +151,154 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 			"emaillongdesc2", "emailqa_contact2" }; //$NON-NLS-1$ //$NON-NLS-2$
 
+	private static final ArrayList<String> chartFieldTextDefault = new ArrayList<String>() {
+		private static final long serialVersionUID = 1974092160992399001L;
+		{
+			add(Messages.BugzillaSearchPage_Field_Noop);
+			add(Messages.BugzillaSearchPage_Field_Alias);
+			add(Messages.BugzillaSearchPage_Field_AssignedTo);
+			add(Messages.BugzillaSearchPage_Field_Attachment_creator);
+			add(Messages.BugzillaSearchPage_Field_Attachment_data);
+			add(Messages.BugzillaSearchPage_Field_Attachment_description);
+			add(Messages.BugzillaSearchPage_Field_Attachment_filename);
+			add(Messages.BugzillaSearchPage_Field_Attachment_is_a_URL);
+			add(Messages.BugzillaSearchPage_Field_Attachment_is_obsolete);
+			add(Messages.BugzillaSearchPage_Field_Attachment_is_patch);
+			add(Messages.BugzillaSearchPage_Field_Attachment_is_private);
+			add(Messages.BugzillaSearchPage_Field_Attachment_mime_type);
+			add(Messages.BugzillaSearchPage_Field_Blocks);
+			add(Messages.BugzillaSearchPage_Field_Bug);
+			add(Messages.BugzillaSearchPage_Field_CC);
+			add(Messages.BugzillaSearchPage_Field_CC_Accessible);
+			add(Messages.BugzillaSearchPage_Field_Classification);
+			add(Messages.BugzillaSearchPage_Field_Comment);
+			add(Messages.BugzillaSearchPage_Field_Comment_is_private);
+			add(Messages.BugzillaSearchPage_Field_Commenter);
+			add(Messages.BugzillaSearchPage_Field_Component);
+			add(Messages.BugzillaSearchPage_Field_Content);
+			add(Messages.BugzillaSearchPage_Field_Creation_date);
+			add(Messages.BugzillaSearchPage_Field_Days_since_bug_changed);
+			add(Messages.BugzillaSearchPage_Field_Depends_on);
+			add(Messages.BugzillaSearchPage_Field_drop_down_custom_field);
+			add(Messages.BugzillaSearchPage_Field_Ever_Confirmed);
+			add(Messages.BugzillaSearchPage_Field_Flag);
+			add(Messages.BugzillaSearchPage_Field_Flag_Requestee);
+			add(Messages.BugzillaSearchPage_Field_Flag_Setter);
+			add(Messages.BugzillaSearchPage_Field_free_text_custom_field);
+			add(Messages.BugzillaSearchPage_Field_Group);
+			add(Messages.BugzillaSearchPage_Field_Keywords);
+			add(Messages.BugzillaSearchPage_Field_Last_changed_date);
+			add(Messages.BugzillaSearchPage_Field_OS_Version);
+			add(Messages.BugzillaSearchPage_Field_Platform);
+			add(Messages.BugzillaSearchPage_Field_Priority);
+			add(Messages.BugzillaSearchPage_Field_Product);
+			add(Messages.BugzillaSearchPage_Field_QAContact);
+			add(Messages.BugzillaSearchPage_Field_ReportedBy);
+			add(Messages.BugzillaSearchPage_Field_Reporter_Accessible);
+			add(Messages.BugzillaSearchPage_Field_Resolution);
+			add(Messages.BugzillaSearchPage_Field_Severity);
+			add(Messages.BugzillaSearchPage_Field_Status);
+			add(Messages.BugzillaSearchPage_Field_Status_Whiteboard);
+			add(Messages.BugzillaSearchPage_Field_Summary);
+			add(Messages.BugzillaSearchPage_Field_Target_Milestone);
+			add(Messages.BugzillaSearchPage_Field_Time_Since_Assignee_Touched);
+			add(Messages.BugzillaSearchPage_Field_URL);
+			add(Messages.BugzillaSearchPage_Field_Version);
+			add(Messages.BugzillaSearchPage_Field_Votes);
+		}
+	};
+
+	private static final ArrayList<String> chartFieldValuesDefault = new ArrayList<String>() {
+		private static final long serialVersionUID = 9135403539678279982L;
+		{
+			add("noop"); //$NON-NLS-1$
+			add("alias"); //$NON-NLS-1$
+			add("assigned_to"); //$NON-NLS-1$
+			add("attachments.submitter"); //$NON-NLS-1$
+			add("attach_data.thedata"); //$NON-NLS-1$
+			add("attachments.description"); //$NON-NLS-1$
+			add("attachments.filename"); //$NON-NLS-1$
+			add("attachments.isurl"); //$NON-NLS-1$
+			add("attachments.isobsolete"); //$NON-NLS-1$
+			add("attachments.ispatch"); //$NON-NLS-1$
+			add("attachments.isprivate"); //$NON-NLS-1$
+			add("attachments.mimetype"); //$NON-NLS-1$
+			add("blocked"); //$NON-NLS-1$
+			add("bug_id"); //$NON-NLS-1$
+			add("cc"); //$NON-NLS-1$
+			add("cclist_accessible"); //$NON-NLS-1$
+			add("classification"); //$NON-NLS-1$
+			add("longdesc"); //$NON-NLS-1$
+			add("longdescs.isprivate"); //$NON-NLS-1$
+			add("commenter"); //$NON-NLS-1$
+			add("component"); //$NON-NLS-1$
+			add("content"); //$NON-NLS-1$
+			add("creation_ts"); //$NON-NLS-1$
+			add("days_elapsed"); //$NON-NLS-1$
+			add("dependson"); //$NON-NLS-1$
+			add("cf_dropdown"); //$NON-NLS-1$
+			add("everconfirmed"); //$NON-NLS-1$
+			add("flagtypes.name"); //$NON-NLS-1$
+			add("requestees.login_name"); //$NON-NLS-1$
+			add("setters.login_name"); //$NON-NLS-1$
+			add("cf_freetext"); //$NON-NLS-1$
+			add("bug_group"); //$NON-NLS-1$
+			add("keywords"); //$NON-NLS-1$
+			add("delta_ts"); //$NON-NLS-1$
+			add("op_sys"); //$NON-NLS-1$
+			add("rep_platform"); //$NON-NLS-1$
+			add("priority"); //$NON-NLS-1$
+			add("product"); //$NON-NLS-1$
+			add("qa_contact"); //$NON-NLS-1$
+			add("reporter"); //$NON-NLS-1$
+			add("reporter_accessible"); //$NON-NLS-1$
+			add("resolution"); //$NON-NLS-1$
+			add("bug_severity"); //$NON-NLS-1$
+			add("bug_status"); //$NON-NLS-1$
+			add("status_whiteboard"); //$NON-NLS-1$
+			add("short_desc"); //$NON-NLS-1$
+			add("target_milestone"); //$NON-NLS-1$
+			add("owner_idle_time"); //$NON-NLS-1$
+			add("bug_file_loc"); //$NON-NLS-1$
+			add("version"); //$NON-NLS-1$
+			add("votes"); //$NON-NLS-1$
+		}
+	};
+
+	private static final String[] chartOperationText = { Messages.BugzillaSearchPage_Operation_Noop,
+			Messages.BugzillaSearchPage_Operation_is_equal_to, Messages.BugzillaSearchPage_Operation_is_not_equal_to,
+			Messages.BugzillaSearchPage_Operation_is_equal_to_any_of_the_strings,
+			Messages.BugzillaSearchPage_Operation_contains_the_string,
+			Messages.BugzillaSearchPage_Operation_contains_the_string_exact_case,
+			Messages.BugzillaSearchPage_Operation_does_not_contain_the_string,
+			Messages.BugzillaSearchPage_Operation_contains_any_of_the_strings,
+			Messages.BugzillaSearchPage_Operation_contains_all_of_the_strings,
+			Messages.BugzillaSearchPage_Operation_contains_none_of_the_strings,
+			Messages.BugzillaSearchPage_Operation_contains_regexp,
+			Messages.BugzillaSearchPage_Operation_does_not_contain_regexp,
+			Messages.BugzillaSearchPage_Operation_is_less_than, Messages.BugzillaSearchPage_Operation_is_greater_than,
+			Messages.BugzillaSearchPage_Operation_contains_any_of_he_words,
+			Messages.BugzillaSearchPage_Operation_contains_all_of_the_words,
+			Messages.BugzillaSearchPage_Operation_contains_none_of_the_words,
+			Messages.BugzillaSearchPage_Operation_changed_before, Messages.BugzillaSearchPage_Operation_changed_after,
+			Messages.BugzillaSearchPage_Operation_changed_from, Messages.BugzillaSearchPage_Operation_changed_to,
+			Messages.BugzillaSearchPage_Operation_changed_by, Messages.BugzillaSearchPage_Operation_matches };
+
+	private static final String[] chartOperationValues = { "noop", "equals", "notequals", "anyexact", "substring", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"casesubstring", "notsubstring", "anywordssubstr", "allwordssubstr", "nowordssubstr", "regexp", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"notregexp", "lessthan", "greaterthan", "anywords", "allwords", "nowords", "changedbefore", "changedafter", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+			"changedfrom", "changedto", "changedby", "matches" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
 	// dialog store id constants
 	private final static String DIALOG_BOUNDS_KEY = "ResizableDialogBounds"; //$NON-NLS-1$
+
+	private final static String REGEXP_CHART_EXPR = "(field|type|value)([0-9]+)-([0-9]+)-([0-9]+)"; //$NON-NLS-1$
+
+	private static final Pattern PATTERN_CHART_EXPR = Pattern.compile(REGEXP_CHART_EXPR, Pattern.CASE_INSENSITIVE);
+
+	private final static String REGEXP_CHART_NEGATE = "(negate)([0-9]+)"; //$NON-NLS-1$
+
+	private static final Pattern PATTERN_CHART_NEGATE = Pattern.compile(REGEXP_CHART_NEGATE, Pattern.CASE_INSENSITIVE);
 
 	private static final String X = "x"; //$NON-NLS-1$
 
@@ -215,6 +363,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private Combo whiteboardOperation;
 
 	protected Text daysText;
+
+	protected String[] chartFieldText;
+
+	protected String[] chartFieldValues;
 
 	// /** File containing saved queries */
 	// protected static SavedQueryFile input;
@@ -292,6 +444,204 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private ExpandableComposite moreOptionsExpandComposite;
 
+	private ExpandableComposite chartExpandComposite;
+
+	private SectionComposite scrolledComposite;
+
+	private Composite chartGroup;
+
+	protected class ChartExpression {
+		private int fieldName;
+
+		private int operation;
+
+		private String value;
+
+		public ChartExpression(int fieldName, int operation, String value) {
+			super();
+			this.fieldName = fieldName;
+			this.operation = operation;
+			this.value = value;
+		}
+
+		public int getFieldName() {
+			return fieldName;
+		}
+
+		public void setFieldName(int fieldName) {
+			this.fieldName = fieldName;
+		}
+
+		public int getOperation() {
+			return operation;
+		}
+
+		public void setOperation(int operation) {
+			this.operation = operation;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+	}
+
+	protected class Chart {
+		private final ArrayList<ArrayList<ChartExpression>> expressions;
+
+		private boolean negate;
+
+		public Chart() {
+			super();
+			ChartExpression expression = new ChartExpression(0, 0, ""); //$NON-NLS-1$
+			ArrayList<ChartExpression> column = new ArrayList<ChartExpression>(1);
+			column.add(expression);
+			expressions = new ArrayList<ArrayList<ChartExpression>>(1);
+			expressions.add(column);
+			negate = false;
+		}
+
+		public boolean isNegate() {
+			return negate;
+		}
+
+		public void setNegate(boolean negate) {
+			this.negate = negate;
+		}
+
+		public void addExpression(int rowIndex, int columnIndex) {
+			ChartExpression expression = new ChartExpression(0, 0, ""); //$NON-NLS-1$
+			int size = expressions.size();
+			if (rowIndex > size + 1) {
+				rowIndex = size + 1;
+			}
+			if (rowIndex < 0) {
+				rowIndex = 0;
+			}
+			ArrayList<ChartExpression> row;
+			if (rowIndex == size) {
+				row = new ArrayList<BugzillaSearchPage.ChartExpression>();
+				expressions.add(rowIndex, row);
+			} else {
+				row = expressions.get(rowIndex);
+			}
+			if (row != null) {
+				int size1 = expressions.size();
+				if (columnIndex > size1 + 1) {
+					columnIndex = size1 + 1;
+				}
+				if (columnIndex < 0) {
+					columnIndex = 0;
+				}
+				row.add(columnIndex, expression);
+			}
+
+		}
+
+		public void addRow(int index) {
+			int size = expressions.size();
+			if (index > size) {
+				index = size;
+			}
+			if (index < 0) {
+				index = 0;
+			}
+			addRow(index);
+		}
+
+		public int getRowSize() {
+			return expressions.size();
+		}
+
+		public int getColumnSize(int row) {
+			int size = expressions.size();
+			if (row > size) {
+				row = size;
+			}
+			if (row < 0) {
+				row = 0;
+			}
+			return expressions.get(row).size();
+		}
+
+		public ChartExpression getChartExpression(int row, int column) {
+			int rowSize = expressions.size();
+			if (row > rowSize) {
+				row = rowSize;
+			}
+			if (row < 0) {
+				row = 0;
+			}
+
+			int columnSize = getColumnSize(row);
+			if (column > columnSize) {
+				column = columnSize;
+			}
+			if (column < 0) {
+				column = 0;
+			}
+			return expressions.get(row).get(column);
+		}
+
+		public void removeColumn(int row, int column) {
+			int rowSize = expressions.size();
+			if (row > rowSize) {
+				row = rowSize;
+			}
+			if (row < 0) {
+				row = 0;
+			}
+
+			int columnSize = getColumnSize(row);
+			if (column > columnSize) {
+				column = columnSize;
+			}
+			if (column < 0) {
+				column = 0;
+			}
+			expressions.get(row).remove(column);
+			if (column == 0) {
+				expressions.remove(row);
+			}
+		}
+	}
+
+	private final ArrayList<Chart> charts = new ArrayList<BugzillaSearchPage.Chart>(1);
+
+	private class ChartControls {
+		private final Combo field;
+
+		private final Combo operation;
+
+		private final Combo value;
+
+		public ChartControls(Combo field, Combo operation, Combo value) {
+			super();
+			this.field = field;
+			this.operation = operation;
+			this.value = value;
+		}
+
+		public Combo getField() {
+			return field;
+		}
+
+		public Combo getOperation() {
+			return operation;
+		}
+
+		public Combo getValue() {
+			return value;
+		}
+	}
+
+	private final ArrayList<ArrayList<ArrayList<ChartControls>>> chartControls = new ArrayList<ArrayList<ArrayList<ChartControls>>>();
+
+	private final ArrayList<Button> negateButtons = new ArrayList<Button>();
+
 	private final SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
@@ -347,9 +697,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
+		parent.setBackground(new Color(parent.getDisplay(), 0, 255, 0));
 		readConfiguration();
 
 		Composite control = new Composite(parent, SWT.NONE);
+		control.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 0;
 		control.setLayout(layout);
@@ -364,6 +716,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void createButtons(Composite control) {
 		Composite buttonComposite = new Composite(control, SWT.NONE);
+		buttonComposite.setBackground(control.getBackground());
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		buttonComposite.setLayout(layout);
@@ -429,14 +782,32 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void createOptionsGroup(Composite control) {
-		final Composite basicComposite = new Composite(control, SWT.NONE);
+		scrolledComposite = new SectionComposite(control, SWT.H_SCROLL | SWT.V_SCROLL /*| SWT.BORDER*/);
+		scrolledComposite.setBackground(control.getBackground());
+		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
+		scrolledComposite.setLayoutData(g);
+		Composite scrolledBodyComposite = scrolledComposite.getContent();
+		scrolledBodyComposite.setBackground(control.getBackground());
+		scrolledBodyComposite.setLayout(new GridLayout());
+		Dialog.applyDialogFont(scrolledBodyComposite);
+
+		basicCompositeCreate(scrolledBodyComposite);
+		moreCompositeCreate(scrolledBodyComposite);
+		boolChartCompositeCreate(scrolledBodyComposite);
+		Point p = scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		scrolledComposite.setMinSize(p);
+	}
+
+	private void basicCompositeCreate(Composite parent) {
+		final Composite basicComposite = new Composite(parent, SWT.NONE);
+		basicComposite.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout(4, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		layout.marginRight = 5;
 		basicComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
-		g.widthHint = 400;
+		g.widthHint = 500;
 		basicComposite.setLayoutData(g);
 		Dialog.applyDialogFont(basicComposite);
 
@@ -452,59 +823,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			queryTitle.addModifyListener(new ModifyListenerImplementation());
 			queryTitle.setFocus();
 		}
-		createBasicComposite(basicComposite);
-
-		moreOptionsExpandComposite = toolkit.createExpandableComposite(control, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
-		moreOptionsExpandComposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
-		moreOptionsExpandComposite.setBackground(null);
-		moreOptionsExpandComposite.setText(Messages.BugzillaSearchPage_More_Options);
-		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
-		g = new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_BEGINNING, true, false);
-		g.horizontalSpan = 4;
-		g.horizontalIndent = INDENT;
-		moreOptionsExpandComposite.setLayoutData(g);
-		moreOptionsExpandComposite.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				if ((Boolean) e.data == true) {
-					Point minSize = getControl().getShell().getMinimumSize();
-					minSize.y = 660;
-					getControl().getShell().setMinimumSize(minSize);
-				} else {
-					Point minSize = getControl().getShell().getMinimumSize();
-					minSize.y = 450;
-					getControl().getShell().setMinimumSize(minSize);
-				}
-				Shell shell = getShell();
-				shell.pack();
-				Point shellSize = shell.getSize();
-				shellSize.x++;
-				shell.setSize(shellSize);
-				shellSize.x--;
-				shell.setSize(shellSize);
-			}
-		});
-
-		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
-		GridLayout optionsLayout = new GridLayout(4, false);
-		optionsLayout.marginHeight = 0;
-		optionsLayout.marginWidth = 0;
-		moreOptionsComposite.setLayout(optionsLayout);
-
-		Dialog.applyDialogFont(moreOptionsComposite);
-		moreOptionsExpandComposite.setClient(moreOptionsComposite);
-
-		createMoreOptionsComposite(moreOptionsComposite);
-		createSearchGroup(moreOptionsComposite);
-		if (inSearchContainer()) {
-			control.getShell().setMinimumSize(new Point(610, 450));
-		} else {
-			control.getShell().setMinimumSize(new Point(590, 450));
-		}
-	}
-
-	private void createBasicComposite(Composite basicComposite) {
 		// Info text
 		Label labelSummary = new Label(basicComposite, SWT.LEFT);
 		labelSummary.setText(Messages.BugzillaSearchPage_Summary);
@@ -527,7 +845,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		summaryOperation.select(0);
 		Label labelEmail = new Label(basicComposite, SWT.LEFT);
 		labelEmail.setText(Messages.BugzillaSearchPage_Email);
-		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
 		emailPattern = new Combo(basicComposite, SWT.SINGLE | SWT.BORDER);
@@ -558,6 +875,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		new Label(basicComposite, SWT.NONE);
 		Composite emailComposite = new Composite(basicComposite, SWT.NONE);
+		emailComposite.setBackground(parent.getBackground());
 		emailComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		GridLayout emailLayout = new GridLayout();
 		emailLayout.marginWidth = 0;
@@ -599,6 +917,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout topLayout = new GridLayout();
 		topLayout.numColumns = 4;
 		SashForm topForm = new SashForm(sashForm, SWT.NONE);
+		topForm.setBackground(parent.getBackground());
 		GridData topLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
 		topLayoutData.widthHint = 00;
 		topLayoutData.heightHint = 60;
@@ -610,11 +929,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		productLayout.marginHeight = 0;
 		productLayout.horizontalSpacing = 0;
 		Composite productComposite = new Composite(topForm, SWT.NONE);
+		productComposite.setBackground(parent.getBackground());
 		productComposite.setLayout(productLayout);
 
 		Label productLabel = new Label(productComposite, SWT.LEFT);
+		productLabel.setBackground(parent.getBackground());
 		productLabel.setText(Messages.BugzillaSearchPage_Product);
 		productLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		productLabel.setBackground(parent.getBackground());
 
 		GridData productLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		productLayoutData.heightHint = HEIGHT_ATTRIBUTE_COMBO;
@@ -642,11 +964,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		componentLayout.marginHeight = 0;
 		componentLayout.horizontalSpacing = 0;
 		Composite componentComposite = new Composite(topForm, SWT.NONE);
+		componentComposite.setBackground(parent.getBackground());
 		componentComposite.setLayout(componentLayout);
 
 		Label componentLabel = new Label(componentComposite, SWT.LEFT);
 		componentLabel.setText(Messages.BugzillaSearchPage_Component);
 		componentLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		componentLabel.setBackground(parent.getBackground());
 
 		component = new List(componentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData componentLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -655,6 +979,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		component.addSelectionListener(updateActionSelectionAdapter);
 
 		Composite statusComposite = new Composite(topForm, SWT.NONE);
+		statusComposite.setBackground(parent.getBackground());
 		GridLayout statusLayout = new GridLayout();
 		statusLayout.marginWidth = 0;
 		statusLayout.horizontalSpacing = 0;
@@ -664,6 +989,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Label statusLabel = new Label(statusComposite, SWT.LEFT);
 		statusLabel.setText(Messages.BugzillaSearchPage_Status);
 		statusLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		statusLabel.setBackground(parent.getBackground());
 
 		status = new List(statusComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_status = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -672,6 +998,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		status.addSelectionListener(updateActionSelectionAdapter);
 
 		Composite severityComposite = new Composite(topForm, SWT.NONE);
+		severityComposite.setBackground(parent.getBackground());
 		GridLayout severityLayout = new GridLayout();
 		severityLayout.marginWidth = 0;
 		severityLayout.marginHeight = 0;
@@ -681,13 +1008,61 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Label severityLabel = new Label(severityComposite, SWT.LEFT);
 		severityLabel.setText(Messages.BugzillaSearchPage_Severity);
 		severityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		severityLabel.setBackground(parent.getBackground());
 
 		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd_severity.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		severity.setLayoutData(gd_severity);
 		severity.addSelectionListener(updateActionSelectionAdapter);
+	}
 
+	private void moreCompositeCreate(Composite parent) {
+		moreOptionsExpandComposite = scrolledComposite.createSection(Messages.BugzillaSearchPage_More_Options,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, true);
+		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
+		GridData g = new GridData(GridData.FILL, GridData.CENTER, true, false);
+		g.horizontalSpan = 4;
+		g.horizontalIndent = INDENT;
+		moreOptionsExpandComposite.setLayoutData(g);
+		moreOptionsExpandComposite.setBackground(parent.getBackground());
+		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
+		GridLayout optionsLayout = new GridLayout(4, false);
+		optionsLayout.marginHeight = 0;
+		optionsLayout.marginWidth = 0;
+		moreOptionsComposite.setBackground(parent.getBackground());
+		moreOptionsComposite.setLayout(optionsLayout);
+		g = new GridData(GridData.FILL, GridData.FILL, true, true);
+		g.widthHint = 400;
+		moreOptionsComposite.setLayoutData(g);
+		Dialog.applyDialogFont(moreOptionsComposite);
+		moreOptionsExpandComposite.setClient(moreOptionsComposite);
+		createMoreOptionsComposite(moreOptionsComposite);
+		createSearchGroup(moreOptionsComposite);
+	}
+
+	private void boolChartCompositeCreate(Composite parent) {
+		chartFieldText = chartFieldTextDefault.toArray(new String[chartFieldTextDefault.size()]);
+		chartFieldValues = chartFieldValuesDefault.toArray(new String[chartFieldValuesDefault.size()]);
+		chartExpandComposite = scrolledComposite.createSection(Messages.BugzillaSearchPage_BooleanChart,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, false);
+		chartExpandComposite.setLayout(new GridLayout(3, false));
+		chartExpandComposite.setBackground(parent.getBackground());
+		GridData g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
+		g.horizontalSpan = 4;
+		g.horizontalIndent = INDENT;
+		chartExpandComposite.setLayoutData(g);
+		Composite chartComposite = new Composite(chartExpandComposite, SWT.NULL);
+		GridLayout optionsLayout = new GridLayout(4, false);
+		optionsLayout.marginHeight = 0;
+		optionsLayout.marginWidth = 0;
+		chartComposite.setLayout(optionsLayout);
+		g = new GridData(GridData.FILL, GridData.FILL, true, true);
+		g.widthHint = 400;
+		chartComposite.setLayoutData(g);
+		Dialog.applyDialogFont(chartComposite);
+		chartExpandComposite.setClient(chartComposite);
+		createChartGroup(chartComposite);
 	}
 
 	private void createMoreOptionsComposite(Composite advancedComposite) {
@@ -695,7 +1070,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// Info text
 		Label labelComment = new Label(advancedComposite, SWT.LEFT);
 		labelComment.setText(Messages.BugzillaSearchPage_Comment);
-		//labelComment.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Comment pattern combo
 		commentPattern = new Combo(advancedComposite, SWT.SINGLE | SWT.BORDER);
@@ -716,7 +1090,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Label labelEmail2 = new Label(advancedComposite, SWT.LEFT);
 		labelEmail2.setText(Messages.BugzillaSearchPage_Email_2);
-		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
 		emailPattern2 = new Combo(advancedComposite, SWT.SINGLE | SWT.BORDER);
@@ -974,7 +1347,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		gd_os.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		os.setLayoutData(gd_os);
 		os.addSelectionListener(updateActionSelectionAdapter);
-
 	}
 
 	private void createSearchGroup(Composite control) {
@@ -1025,61 +1397,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
-
-		// loadButton = new Button(group, SWT.PUSH | SWT.LEFT);
-		// loadButton.setText("Saved Queries...");
-		// final BugzillaSearchPage bsp = this;
-		// loadButton.addSelectionListener(new SelectionAdapter() {
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent event) {
-		// GetQueryDialog qd = new GetQueryDialog(getShell(), "Saved Queries",
-		// input);
-		// if (qd.open() == InputDialog.OK) {
-		// selIndex = qd.getSelected();
-		// if (selIndex != -1) {
-		// rememberedQuery = true;
-		// performAction();
-		// bsp.getShell().close();
-		// }
-		// }
-		// }
-		// });
-		// loadButton.setEnabled(true);
-		// loadButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		//
-		// saveButton = new Button(group, SWT.PUSH | SWT.LEFT);
-		// saveButton.setText("Remember...");
-		// saveButton.addSelectionListener(new SelectionAdapter() {
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent event) {
-		// SaveQueryDialog qd = new SaveQueryDialog(getShell(), "Remember Query");
-		// if (qd.open() == InputDialog.OK) {
-		// String qName = qd.getText();
-		// if (qName != null && qName.compareTo("") != 0) {
-		// try {
-		// input.add(getQueryParameters().toString(), qName, summaryPattern.getText());
-		// } catch (UnsupportedEncodingException e) {
-		// /*
-		// * Do nothing. Every implementation of the Java
-		// * platform is required to support the standard
-		// * charset "UTF-8"
-		// */
-		// }
-		// }
-		// }
-		// }
-		// });
-		// saveButton.setEnabled(true);
-		// saveButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-
 		return group;
 	}
-
-	// public static SavedQueryFile getInput() {
-	// return input;
-	// }
 
 	private void handleWidgetSelected(Combo widget, Combo operation, ArrayList<BugzillaSearchData> history) {
 		if (widget.getSelectionIndex() < 0) {
@@ -1161,6 +1480,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (originalQuery != null) {
 					try {
 						updateDefaults(originalQuery.getUrl());
+						refreshChartControls();
 					} catch (UnsupportedEncodingException e) {
 						// ignore
 					}
@@ -1184,35 +1504,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					restoreWidgetValues();
 				}
 			}
-			if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
-					(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
-					(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
-					priority.getSelection().length > 0 || resolution.getSelection().length > 0
-					|| version.getSelection().length > 0 || target.getSelection().length > 0
-					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-				moreOptionsExpandComposite.setExpanded(true);
-				Shell shell = getShell();
-				if (inSearchContainer()) {
-					shell.setMinimumSize(new Point(610, 660));
-				} else {
-					shell.setMinimumSize(new Point(590, 660));
-				}
-				shell.layout(true);
-				shell.pack();
-				shell.layout(true);
-			}
 			setPageComplete(isPageComplete());
 		}
 		if (visible) {
-			getControl().getShell().layout(false, true);
-			Point oldSize = getControl().getSize();
-			Point newSize = getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-			if (!moreOptionsExpandComposite.isExpanded()) {
-				// for some reason in not expanded state the width is a little to small
-				newSize.x += 36;
-			}
-			resizeDialogIfNeeded(oldSize, newSize);
-			if (getWizard() == null) {
+			if (getWizard() == null && summaryPattern != null) {
 				// TODO: wierd check
 				summaryPattern.setFocus();
 			}
@@ -1466,7 +1761,28 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sb.append("&status_whiteboard_type="); //$NON-NLS-1$
 		sb.append(patternOperationValues[whiteboardOperation.getSelectionIndex()]);
 		appendToBuffer(sb, "&status_whiteboard=", whiteboardPattern.getText()); //$NON-NLS-1$
-
+		int indexMax = charts.size();
+		for (int index = 0; index < indexMax; index++) {
+			Chart chart = charts.get(index);
+			if (chart.isNegate()) {
+				sb.append("&negate" + index + "=1"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			int rowMax = chart.getRowSize();
+			for (int row = 0; row < rowMax; row++) {
+				int columnMax = chart.getColumnSize(row);
+				for (int column = 0; column < columnMax; column++) {
+					ChartExpression chartExpression = chart.getChartExpression(row, column);
+					if (chartExpression.getFieldName() == 0) {
+						continue;
+					}
+					sb.append("&field" + index + "-" + row + "-" + column + "=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+							+ chartFieldValues[chartExpression.getFieldName()]);
+					sb.append("&type" + index + "-" + row + "-" + column + "=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+							+ chartOperationValues[chartExpression.getOperation()]);
+					sb.append("&value" + index + "-" + row + "-" + column + "=" + chartExpression.getValue()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				}
+			}
+		}
 		return sb;
 	}
 
@@ -1496,6 +1812,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getDialogSettings();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
 		if (repositoryConfiguration != null) {
 			String[] saved_product = product.getSelection();
@@ -1542,16 +1859,30 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			setSelection(priority, saved_priority);
 			setSelection(hardware, saved_hardware);
 			setSelection(os, saved_os);
+
+			if (repositoryConfiguration != null) {
+				ArrayList<String> fieldText = (ArrayList<String>) chartFieldTextDefault.clone();
+				ArrayList<String> fieldValue = (ArrayList<String>) chartFieldValuesDefault.clone();
+
+				for (BugzillaCustomField bugzillaCustomField : repositoryConfiguration.getCustomFields()) {
+					fieldValue.add(bugzillaCustomField.getName());
+					fieldText.add(bugzillaCustomField.getDescription());
+				}
+				chartFieldText = fieldText.toArray(new String[fieldText.size()]);
+				chartFieldValues = fieldValue.toArray(new String[fieldValue.size()]);
+				recreateChartControls();
+			}
+
 		}
 	}
 
 	@Override
 	public boolean canFlipToNextPage() {
-		// if (getErrorMessage() != null)
-		// return false;
-		//
-		// return true;
-		return false;
+		if (getErrorMessage() != null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public void handleEvent(Event event) {
@@ -1564,9 +1895,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * TODO: get rid of this?
 	 */
 	public void updateDefaults(String startingUrl) throws UnsupportedEncodingException {
-		// String serverName = startingUrl.substring(0,
-		// startingUrl.indexOf("?"));
-
+		boolean adjustChart = false;
 		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1); //$NON-NLS-1$
 		String[] options = startingUrl.split("&"); //$NON-NLS-1$
 		for (String option : options) {
@@ -1586,13 +1915,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			if (key.equals("short_desc")) { //$NON-NLS-1$
 				summaryPattern.setText(value);
 			} else if (key.equals("short_desc_type")) { //$NON-NLS-1$
-				if (value.equals("allwordssubstr")) { //$NON-NLS-1$
-					value = "all words"; //$NON-NLS-1$
-				} else if (value.equals("anywordssubstr")) { //$NON-NLS-1$
-					value = "any word"; //$NON-NLS-1$
-				}
 				int index = 0;
-				for (String item : summaryOperation.getItems()) {
+				for (String item : patternOperationValues) {
 					if (item.compareTo(value) == 0) {
 						break;
 					}
@@ -1638,13 +1962,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
 			} else if (key.equals("long_desc_type")) { //$NON-NLS-1$
-				if (value.equals("allwordssubstr")) { //$NON-NLS-1$
-					value = "all words"; //$NON-NLS-1$
-				} else if (value.equals("anywordssubstr")) { //$NON-NLS-1$
-					value = "any word"; //$NON-NLS-1$
-				}
 				int index = 0;
-				for (String item : commentOperation.getItems()) {
+				for (String item : patternOperationValues) {
 					if (item.compareTo(value) == 0) {
 						break;
 					}
@@ -1826,7 +2145,93 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					}
 					index++;
 				}
+			} else if (key.equals("status_whiteboard_type")) { //$NON-NLS-1$
+				int index = 0;
+				for (String item : patternOperationValues) {
+					if (item.compareTo(value) == 0) {
+						break;
+					}
+					index++;
+				}
+				if (index < whiteboardOperation.getItemCount()) {
+					whiteboardOperation.select(index);
+				}
+			} else if (key.equals("status_whiteboard")) { //$NON-NLS-1$
+				whiteboardPattern.setText(value);
+			} else if (key.matches(REGEXP_CHART_EXPR)) {
+				Matcher mb = PATTERN_CHART_EXPR.matcher(key);
+				if (mb.find()) {
+					String g1 = mb.group(1);
+					String g2 = mb.group(2);
+					String g3 = mb.group(3);
+					String g4 = mb.group(4);
+					int chartNumber, row, column;
+					try {
+						chartNumber = Integer.parseInt(g2);
+						row = Integer.parseInt(g3);
+						column = Integer.parseInt(g4);
+					} catch (Exception E) {
+						chartNumber = -1;
+						row = -1;
+						column = -1;
+					}
+					for (int i = charts.size(); i <= chartNumber; i++) {
+						charts.add(new Chart());
+						adjustChart = true;
+					}
+					for (int i = charts.get(chartNumber).getRowSize(); i <= row; i++) {
+						charts.get(chartNumber).addExpression(i, 0);
+						adjustChart = true;
+					}
+					for (int i = charts.get(chartNumber).getColumnSize(row); i <= column; i++) {
+						charts.get(chartNumber).addExpression(row, i);
+						adjustChart = true;
+					}
+					ChartExpression ex = charts.get(chartNumber).getChartExpression(row, column);
+					if ("field".equals(g1)) { //$NON-NLS-1$
+						int index1 = 0;
+						for (String item : chartFieldValues) {
+							if (item.compareTo(value) == 0) {
+								break;
+							}
+							index1++;
+						}
+						if (index1 < chartFieldValues.length) {
+							ex.setFieldName(index1);
+						}
+					} else if ("type".equals(g1)) { //$NON-NLS-1$
+						int index1 = 0;
+						for (String item : chartOperationValues) {
+							if (item.compareTo(value) == 0) {
+								break;
+							}
+							index1++;
+						}
+						if (index1 < chartOperationValues.length) {
+							ex.setOperation(index1);
+						}
+					} else if ("value".equals(g1)) { //$NON-NLS-1$
+						ex.setValue(value);
+					}
+
+				}
+			} else if (key.matches(REGEXP_CHART_NEGATE)) {
+				Matcher mb = PATTERN_CHART_NEGATE.matcher(key);
+				if (mb.find()) {
+					String g2 = mb.group(2);
+					int index;
+					try {
+						index = Integer.parseInt(g2);
+					} catch (Exception E) {
+						index = -1;
+					}
+					Chart ch = charts.get(index);
+					ch.setNegate("1".equals(value)); //$NON-NLS-1$
+				}
 			}
+		}
+		if (adjustChart) {
+			recreateChartControls();
 		}
 	}
 
@@ -1891,7 +2296,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					priority.getSelection().length > 0 || resolution.getSelection().length > 0
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-				moreOptionsExpandComposite.setExpanded(true);
+				chartExpandComposite.setExpanded(true);
 			}
 
 		} catch (IllegalArgumentException e) {
@@ -2129,34 +2534,218 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		super.dispose();
 	}
 
-	private void resizeDialogIfNeeded(Point oldSize, Point newSize) {
-		if (oldSize == null || newSize == null) {
-			return;
-		}
-		Shell shell = getShell();
-		Point shellSize = shell.getSize();
-		if (mustResize(oldSize, newSize)) {
-			if (newSize.x > oldSize.x) {
-				shellSize.x += (newSize.x - oldSize.x);
-			}
-			if (newSize.y > oldSize.y) {
-				shellSize.y += (newSize.y - oldSize.y);
-			} else {
-				shellSize.y -= (oldSize.y - newSize.y);
-			}
-			shell.setSize(shellSize);
-			shell.layout(true);
-		} else {
-			shell.pack();
-			shellSize.x++;
-			shell.setSize(shellSize);
-			shellSize.x--;
-			shell.setSize(shellSize);
-		}
+	private void createChartGroup(final Composite parent) {
+		GridLayout layout;
+		GridData gd;
+		chartGroup = new Composite(parent, SWT.NONE);
+		layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.horizontalSpacing = 0;
+		chartGroup.setLayout(layout);
+		gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
+		chartGroup.setLayoutData(gd);
+		charts.add(0, new Chart());
+		recreateChartControls();
+
+		parent.layout(true);
+		parent.redraw();
 	}
 
-	private boolean mustResize(Point currentSize, Point newSize) {
-		return currentSize.x < newSize.x || currentSize.y != newSize.y;
+	private void refreshChartControls() {
+		int chartNumMax = chartControls.size();
+		for (int chartNum = 0; chartNum < chartNumMax; chartNum++) {
+			int chartRowMax = chartControls.get(chartNum).size();
+			for (int chartRow = 0; chartRow < chartRowMax; chartRow++) {
+				int chartColumnMax = chartControls.get(chartNum).get(chartRow).size();
+				for (int chartColumn = 0; chartColumn < chartColumnMax; chartColumn++) {
+					ChartExpression expression = charts.get(chartNum).getChartExpression(chartRow, chartColumn);
+					ChartControls controls = chartControls.get(chartNum).get(chartRow).get(chartColumn);
+					controls.getField().setText(chartFieldText[expression.getFieldName()]);
+					controls.getOperation().setText(chartOperationText[expression.getOperation()]);
+					controls.getValue().setText(expression.getValue());
+				}
+			}
+		}
+		int negButtonMax = negateButtons.size();
+		for (int chartNum = 0; chartNum < negButtonMax; chartNum++) {
+			Button b = negateButtons.get(chartNum);
+			Chart c = charts.get(chartNum);
+			b.setSelection(c.isNegate());
+		}
+		scrolledComposite.reflow(true);
 	}
 
+	private void recreateChartControls() {
+		GridLayout layout;
+		GridData gd;
+		Composite parent = chartGroup.getParent();
+		chartGroup.setVisible(false);
+		chartGroup.dispose();
+		chartControls.clear();
+		negateButtons.clear();
+		chartGroup = new Composite(parent, SWT.NONE);
+		layout = new GridLayout(1, false);
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		chartGroup.setLayout(layout);
+		gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
+		chartGroup.setLayoutData(gd);
+
+		int chartNumMax = charts.size();
+		for (int chartNumber = 0; chartNumber < chartNumMax; chartNumber++) {
+			final int chartNum = chartNumber;
+			final Composite chartGroup0 = new Composite(chartGroup, SWT.NONE);
+			if (chartNum > 0) {
+				Label sep = new Label(chartGroup0, SWT.SEPARATOR | SWT.HORIZONTAL);
+				gd = new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1);
+				sep.setLayoutData(gd);
+			}
+			layout = new GridLayout(3, false);
+			chartGroup0.setLayout(layout);
+			gd = new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1);
+			chartGroup0.setLayoutData(gd);
+			final int chartRowMax = charts.get(chartNum).getRowSize();
+			for (int chartRowNumber = 0; chartRowNumber < chartRowMax; chartRowNumber++) {
+				final int chartRow = chartRowNumber;
+				int chartColumnMax = charts.get(chartNum).getColumnSize(chartRow);
+				final Group chartGroup1 = new Group(chartGroup0, SWT.NONE);
+				layout = new GridLayout(4, false);
+				chartGroup1.setLayout(layout);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+				chartGroup1.setLayoutData(gd);
+				for (int chartColumnNumber = 0; chartColumnNumber < chartColumnMax; chartColumnNumber++) {
+					final int chartColumn = chartColumnNumber;
+					final Combo comboField = new Combo(chartGroup1, SWT.SINGLE | SWT.BORDER);
+					comboField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+					comboField.addModifyListener(new ModifyListenerImplementation());
+					comboField.setItems(chartFieldText);
+					comboField.setText(chartFieldText[0]);
+					comboField.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
+									chartColumn);
+							chartExpression.setFieldName(comboField.getSelectionIndex());
+							chartGroup.getShell().layout(true);
+							chartGroup.getShell().redraw();
+						}
+					});
+					comboField.setToolTipText(Messages.BugzillaSearchPage_Tooltip_Custom_fields_at_end);
+
+					final Combo comboOperation = new Combo(chartGroup1, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+					comboOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+					comboOperation.setItems(chartOperationText);
+					comboOperation.setText(chartOperationText[0]);
+					comboOperation.select(0);
+					comboOperation.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
+									chartColumn);
+							chartExpression.setOperation(comboOperation.getSelectionIndex());
+						}
+					});
+					final Combo comboValue = new Combo(chartGroup1, SWT.SINGLE | SWT.BORDER);
+					gd = new GridData(GridData.FILL, GridData.CENTER, true, false);
+					gd.widthHint = 150;
+					comboValue.setLayoutData(gd);
+					comboValue.addModifyListener(new ModifyListener() {
+
+						public void modifyText(ModifyEvent e) {
+							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
+									chartColumn);
+							chartExpression.setValue(comboValue.getText());
+							if (isControlCreated()) {
+								setPageComplete(isPageComplete());
+							}
+						}
+					});
+					Button orButton = new Button(chartGroup1, SWT.PUSH);
+					orButton.setText(Messages.BugzillaSearchPage_OR_Button);
+					gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+					orButton.setLayoutData(gd);
+					orButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							if (e.stateMask == SWT.CTRL) {
+								if (charts.size() == 1 && charts.get(0).getRowSize() == 1
+										&& charts.get(0).getColumnSize(0) == 1) {
+									return;
+								}
+								charts.get(chartNum).removeColumn(chartRow, chartColumn);
+								if (charts.get(chartNum).getRowSize() == 0) {
+									if (chartNum != 0) {
+										charts.remove(chartNum);
+									}
+								}
+							} else {
+								charts.get(chartNum).addExpression(chartRow, chartColumn + 1);
+							}
+							recreateChartControls();
+						}
+					});
+					orButton.setToolTipText(Messages.BugzillaSearchPage_Tooltip_remove_row);
+					ChartControls chartControl = new ChartControls(comboField, comboOperation, comboValue);
+					int chart1 = chartControls.size();
+					if (chart1 < chartNum + 1) {
+						chartControls.add(new ArrayList<ArrayList<ChartControls>>());
+					}
+					int chart2 = chartControls.get(chartNum).size();
+					if (chart2 < chartRow + 1) {
+						chartControls.get(chartNum).add(new ArrayList<BugzillaSearchPage.ChartControls>());
+					}
+					chartControls.get(chartNum).get(chartRow).add(chartControl);
+				}
+				if (chartRowNumber < chartRowMax - 1) {
+					Label lable = new Label(chartGroup0, SWT.NONE);
+					lable.setText(Messages.BugzillaSearchPage_AND_Button);
+					GridData g = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+					lable.setLayoutData(g);
+				} else {
+					final Button andButton = new Button(chartGroup0, SWT.PUSH);
+					andButton.setText(Messages.BugzillaSearchPage_AND_Button);
+					gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+					andButton.setLayoutData(gd);
+					final Button newButton = new Button(chartGroup0, SWT.PUSH);
+					newButton.setText(Messages.BugzillaSearchPage_Add_Chart_Button);
+					gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+					newButton.setLayoutData(gd);
+					final Button negateButton = new Button(chartGroup0, SWT.CHECK);
+					negateButton.setText(Messages.BugzillaSearchPage_Negate_Button);
+					negateButtons.add(negateButton);
+					gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+					negateButton.setLayoutData(gd);
+					negateButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							Chart chart = charts.get(chartNum);
+							chart.setNegate(negateButton.getSelection());
+						}
+					});
+					newButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							newButton.setVisible(false);
+							newButton.dispose();
+							charts.add(chartNum + 1, new Chart());
+							recreateChartControls();
+						}
+					});
+					andButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							charts.get(chartNum).addExpression(chartRow + 1, 0);
+							recreateChartControls();
+
+						}
+					});
+				}
+			}
+
+		}
+		scrolledComposite.reflow(true);
+		refreshChartControls();
+	}
 }
