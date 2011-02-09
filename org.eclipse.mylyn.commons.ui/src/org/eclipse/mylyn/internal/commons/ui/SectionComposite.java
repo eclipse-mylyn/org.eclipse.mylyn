@@ -17,6 +17,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -57,10 +58,14 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	public ExpandableComposite createSection(String title) {
-		return createSection(title, SWT.NONE);
+		return createSection(title, SWT.NONE, false);
 	}
 
 	public ExpandableComposite createSection(String title, int expansionStyle) {
+		return createSection(title, SWT.NONE, false);
+	}
+
+	public ExpandableComposite createSection(String title, int expansionStyle, final boolean grabExcessVerticalSpace) {
 		final ExpandableComposite section = getToolkit().createExpandableComposite(
 				getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
@@ -70,6 +75,17 @@ public class SectionComposite extends SharedScrolledComposite {
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
+				if ((Boolean) e.data == true && grabExcessVerticalSpace) {
+					GridData g = (GridData) section.getLayoutData();
+					g.verticalAlignment = GridData.FILL;
+					g.grabExcessVerticalSpace = true;
+					section.setLayoutData(g);
+				} else {
+					GridData g = (GridData) section.getLayoutData();
+					g.verticalAlignment = GridData.BEGINNING;
+					g.grabExcessVerticalSpace = false;
+					section.setLayoutData(g);
+				}
 				layout(true);
 				reflow(true);
 			}
