@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -189,14 +190,25 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		createStatusComposite(composite);
 
-		parent.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
-				setTrimVisible(uiPreferenceStore.getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
+		if (!shouldShowTrim()) {
+			if (parent instanceof ToolBar) {
+				// bug 201589: it's not possible to hide the contribution on startup, as a work-around the tool bar is hidden which avoids flickering of the layout
+				parent.setVisible(false);
 			}
-		});
+			// needs to be invoked asynchronously since the trim contribution is just getting constructed when createControl() is invoked
+			parent.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					setTrimVisible(shouldShowTrim());
+				}
+			});
+		}
 
 		return composite;
+	}
+
+	private boolean shouldShowTrim() {
+		IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+		return uiPreferenceStore.getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM);
 	}
 
 	private Composite createStatusComposite(final Composite container) {
