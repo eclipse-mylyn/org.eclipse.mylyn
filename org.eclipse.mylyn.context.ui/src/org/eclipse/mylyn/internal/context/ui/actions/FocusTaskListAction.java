@@ -27,7 +27,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -152,6 +154,14 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 								taskListView.getViewer().expandAll();
 							} else {
 								taskListView.getViewer().collapseAll();
+								// expand first element (Today) in scheduled mode
+								if (taskListView.getViewer().getContentProvider() instanceof TaskScheduleContentProvider
+										&& taskListView.getViewer().getTree().getItemCount() > 0) {
+									TreeItem item = taskListView.getViewer().getTree().getItem(0);
+									if (item.getData() != null) {
+										taskListView.getViewer().expandToLevel(item.getData(), 1);
+									}
+								}
 							}
 							taskListView.getViewer().setSorter(previousSorter);
 							showProgressBar(taskListView, false);
