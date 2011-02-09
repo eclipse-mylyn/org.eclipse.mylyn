@@ -79,12 +79,14 @@
          install-size="0"
          version="0.0.0"/>
 
+   <!-- depends on Incubator bundles
    <plugin
          id="org.eclipse.mylyn.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+   -->
+   
    <plugin
          id="org.eclipse.mylyn.trac.tests"
          download-size="0"
@@ -186,12 +188,14 @@
          install-size="0"
          version="0.0.0"/>
 
+   <!--
    <plugin
          id="org.eclipse.mylyn.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+   -->
+   
    <plugin
          id="org.eclipse.mylyn.trac.tests.source"
          download-size="0"
