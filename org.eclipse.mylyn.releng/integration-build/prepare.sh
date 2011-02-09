@@ -11,7 +11,7 @@ EOF
 
 if [ "$1" == "e4.1" ]; then
 	cvs up -r e_4_0_m_3_x org.eclipse.mylyn.contexts/org.eclipse.mylyn.context.ui
-	cvs up -r e_4_0_m_3_x org.eclipse.mylyn.commons/org.eclipse.mylyn.monitor.tests
+	cvs up -A org.eclipse.mylyn.commons/org.eclipse.mylyn.monitor.tests
 fi
 
 #echo "Updating Mylyn Commons, Mylyn Context, Mylyn Incubator, Mylyn Tasks..."
