@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.core.Messages;
 
 /**
  * @author Steffen Pingel
@@ -114,4 +115,16 @@ public class TaskRelation {
 		TaskRelation other = (TaskRelation) obj;
 		return direction.equals(other.direction) && kind.equals(other.kind) && taskId.equals(other.taskId);
 	}
+
+	@Override
+	public String toString() {
+		if (kind == Kind.CONTAINMENT && direction == Direction.INWARD) {
+			return Messages.TaskRelation_Parent;
+		} else if (kind == Kind.CONTAINMENT && direction == Direction.OUTWARD) {
+			return Messages.TaskRelation_Subtask;
+		} else {
+			return Messages.TaskRelation_Dependency;
+		}
+	}
+
 }

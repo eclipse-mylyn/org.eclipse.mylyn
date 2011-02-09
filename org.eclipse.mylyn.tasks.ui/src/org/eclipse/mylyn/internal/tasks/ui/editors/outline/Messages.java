@@ -16,6 +16,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.tasks.ui.editors.outline.messages"; //$NON-NLS-1$
 
+	public static String QuickOutlineDialog_Node_Label_Decoration;
+
 	public static String QuickOutlineDialog_Press_Esc_Info_Text;
 	static {
 		// initialize resource bundle

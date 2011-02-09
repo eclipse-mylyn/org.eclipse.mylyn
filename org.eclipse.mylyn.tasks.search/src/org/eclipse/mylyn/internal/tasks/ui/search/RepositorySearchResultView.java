@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DecoratingPatternStyledCellLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.EnhancedFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -151,7 +152,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private SearchResultSortAction sortByDialogAction;
 
-	private RepositorySearchStyledLabelProvider styledLabelProvider;
+	private DecoratingPatternStyledCellLabelProvider styledLabelProvider;
 
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
@@ -221,7 +222,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		searchResultProvider = new SearchResultTreeContentProvider();
 		viewer.setContentProvider(searchResultProvider);
 
-		styledLabelProvider = new RepositorySearchStyledLabelProvider(new SearchResultsLabelProvider(
+		styledLabelProvider = new DecoratingPatternStyledCellLabelProvider(new SearchResultsLabelProvider(
 				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
 				null);
 		viewer.setLabelProvider(styledLabelProvider);

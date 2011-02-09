@@ -23,17 +23,22 @@ import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DecoratingPatternStyledCellLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineModel;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -50,6 +55,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -71,6 +77,48 @@ import org.eclipse.ui.forms.editor.IFormPage;
  */
 public class QuickOutlineDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
 		IInformationControlExtension2, DisposeListener {
+
+	public final class Filter extends PatternFilter {
+		@Override
+		protected boolean wordMatches(String text) {
+			return super.wordMatches(text);
+		}
+	}
+
+	public final class TaskEditorOutlineLabelDecorator implements ILabelDecorator {
+
+		public String decorateText(String text, Object element) {
+			if (element instanceof TaskEditorOutlineNode) {
+				TaskEditorOutlineNode node = (TaskEditorOutlineNode) element;
+				if (node.getTaskRelation() != null) {
+					return NLS.bind(Messages.QuickOutlineDialog_Node_Label_Decoration, text, node.getTaskRelation()
+							.toString());
+				}
+			}
+			return null;
+		}
+
+		public void addListener(ILabelProviderListener listener) {
+			// ignore
+		}
+
+		public void dispose() {
+			// ignore
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+			// ignore
+		}
+
+		public Image decorateImage(Image image, Object element) {
+			return null;
+		}
+
+	}
 
 	private class OpenListener implements IOpenListener, IDoubleClickListener, MouseListener {
 
@@ -126,7 +174,7 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 
 	private Text filterText;
 
-	private PatternFilter namePatternFilter;
+	private Filter namePatternFilter;
 
 	private OpenListener openListener;
 
@@ -162,7 +210,7 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 		viewer.addOpenListener(openListener);
 		viewer.getTree().addMouseListener(openListener);
 
-		namePatternFilter = new PatternFilter();
+		namePatternFilter = new Filter();
 		namePatternFilter.setIncludeLeadingWildcard(true);
 		viewer.addFilter(namePatternFilter);
 
@@ -188,7 +236,8 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 		viewer.setUseHashlookup(true);
 		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		viewer.setContentProvider(new TaskEditorOutlineContentProvider());
-		viewer.setLabelProvider(new QuickOutlineLabelProvider());
+		viewer.setLabelProvider(new DecoratingPatternStyledCellLabelProvider(new QuickOutlineLabelProvider(),
+				new TaskEditorOutlineLabelDecorator(), null));
 		return viewer;
 	}
 
@@ -473,7 +522,7 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 		viewer.getControl().setRedraw(false);
 		viewer.refresh();
 		viewer.expandAll();
-//		selectFirstMatch();
+		selectFirstMatch();
 		viewer.getControl().setRedraw(true);
 	}
 
@@ -494,49 +543,45 @@ public class QuickOutlineDialog extends PopupDialog implements IInformationContr
 		return taskEditorPage;
 	}
 
-//	/**
-//	 * Selects the first element in the tree which matches the current filter pattern.
-//	 */
-//	private void selectFirstMatch() {
-//		Tree tree = viewer.getTree();
-//		Object element = findFirstMatchToPattern(tree.getItems());
-//		if (element != null) {
-//			viewer.setSelection(new StructuredSelection(element), true);
-//		} else {
-//			viewer.setSelection(StructuredSelection.EMPTY);
-//		}
-//	}
-//
-//	/**
-//	 * @param items
-//	 * @return
-//	 */
-//	private Object findFirstMatchToPattern(TreeItem[] items) {
-//		// Match the string pattern against labels
-//		ILabelProvider labelProvider = (ILabelProvider) viewer.getLabelProvider();
-//		// Process each item in the tree
-//		for (TreeItem item : items) {
-//			Object element = item.getData();
-//			// Return the first element if no pattern is set
-//			if (fStringMatcher == null) {
-//				return element;
-//			}
-//			// Return the element if it matches the pattern
-//			if (element != null) {
-//				String label = labelProvider.getText(element);
-//				if (fStringMatcher.match(label)) {
-//					return element;
-//				}
-//			}
-//			// Recursively check the elements children for a match
-//			element = findFirstMatchToPattern(item.getItems());
-//			// Return the child element match if found
-//			if (element != null) {
-//				return element;
-//			}
-//		}
-//		// No match found
-//		return null;
-//	}
+	/**
+	 * Selects the first element in the tree which matches the current filter pattern.
+	 */
+	private void selectFirstMatch() {
+		Tree tree = viewer.getTree();
+		Object element = findFirstMatchToPattern(tree.getItems());
+		if (element != null) {
+			viewer.setSelection(new StructuredSelection(element), true);
+		} else {
+			viewer.setSelection(StructuredSelection.EMPTY);
+		}
+	}
+
+	/**
+	 * @param items
+	 * @return
+	 */
+	private Object findFirstMatchToPattern(TreeItem[] items) {
+		// Match the string pattern against labels
+		ILabelProvider labelProvider = (ILabelProvider) viewer.getLabelProvider();
+		// Process each item in the tree
+		for (TreeItem item : items) {
+			Object element = item.getData();
+			// Return the element if it matches the pattern
+			if (element != null) {
+				String label = labelProvider.getText(element);
+				if (namePatternFilter.wordMatches(label)) {
+					return element;
+				}
+			}
+			// Recursively check the elements children for a match
+			element = findFirstMatchToPattern(item.getItems());
+			// Return the child element match if found
+			if (element != null) {
+				return element;
+			}
+		}
+		// No match found
+		return null;
+	}
 
 }
