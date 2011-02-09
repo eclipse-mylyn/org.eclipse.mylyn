@@ -26,6 +26,10 @@ public class RetrieveContextHandler extends AbstractTaskHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+		run(task);
+	}
+
+	public static void run(ITask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.create();

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
@@ -35,7 +34,10 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.IContextUiConstants;
+import org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler;
+import org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler;
+import org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler;
+import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
@@ -286,7 +288,14 @@ public class ContextEditorFormPage extends FormPage {
 			attachImage.setEnabled(task != null);
 			Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
 					Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
-			bindCommand(attachHyperlink, IContextUiConstants.ID_COMMAND_ATTACH_CONTEXT, null);
+			//bindCommand(attachHyperlink, IContextUiConstants.ID_COMMAND_ATTACH_CONTEXT, null);
+			attachHyperlink.setEnabled(task != null);
+			attachHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					AttachContextHandler.run(task);
+				}
+			});
 		}
 
 		if (AttachmentUtil.canDownloadAttachment(task)) {
@@ -295,46 +304,59 @@ public class ContextEditorFormPage extends FormPage {
 			retrieveImage.setEnabled(task != null);
 			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
 					Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
-			bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
-					Messages.ContextEditorFormPage_No_context_attachments_Error);
+			//bindCommand(retrieveHyperlink, IContextUiConstants.ID_COMMAND_RETRIEVE_CONTEXT,
+			//		Messages.ContextEditorFormPage_No_context_attachments_Error);
+			retrieveHyperlink.setEnabled(task != null);
+			retrieveHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					RetrieveContextHandler.run(task);
+				}
+			});
 		}
 
 		Label copyImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		copyImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_COPY));
 		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient,
 				Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
-		bindCommand(copyHyperlink, IContextUiConstants.ID_COMMAND_COPY_CONTEXT,
-				Messages.ContextEditorFormPage_Context_is_empty_Error);
+		//bindCommand(copyHyperlink, IContextUiConstants.ID_COMMAND_COPY_CONTEXT,
+		//		Messages.ContextEditorFormPage_Context_is_empty_Error);
+		copyHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				CopyContextHandler.run(task);
+			}
+		});
 
 		Label clearImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
 		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_RemoveAll,
 				SWT.NONE);
-		bindCommand(clearHyperlink, IContextUiConstants.ID_COMMAND_CLEAR_CONTEXT,
-				Messages.ContextEditorFormPage_Context_is_empty_Error);
+		//bindCommand(clearHyperlink, IContextUiConstants.ID_COMMAND_CLEAR_CONTEXT,
+		//		Messages.ContextEditorFormPage_Context_is_empty_Error);
+		clearHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				ClearContextHandler.run(task);
+			}
+		});
+
 		section.setExpanded(true);
 	}
 
-	private void bindCommand(final Hyperlink hyperlink, final String commandId, final String notEnabledMessage) {
-		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent event) {
-				try {
-					TasksUiInternal.executeCommand(getSite(), commandId, hyperlink.getText(), task, null);
-				} catch (NotEnabledException e) {
-					TasksUiInternal.displayStatus(hyperlink.getText(), new Status(IStatus.ERROR,
-							ContextUiPlugin.ID_PLUGIN, notEnabledMessage));
-				}
-			}
-		});
-//		command.addCommandListener(new ICommandListener() {
-//		public void commandChanged(CommandEvent commandEvent) {
-//				if (commandEvent.isEnabledChanged()) {
-//					hyperlink.setEnabled(commandEvent.getCommand().isEnabled());
+//	private void bindCommand(final Hyperlink hyperlink, final String commandId, final String notEnabledMessage) {
+//		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent event) {
+//				try {
+//					TasksUiInternal.executeCommand(getSite(), commandId, hyperlink.getText(), task, null);
+//				} catch (NotEnabledException e) {
+//					TasksUiInternal.displayStatus(hyperlink.getText(), new Status(IStatus.ERROR,
+//							ContextUiPlugin.ID_PLUGIN, notEnabledMessage));
 //				}
 //			}
 //		});
-	}
+//	}
 
 	private ContextEditorDelayedRefreshJob refreshJob;
 

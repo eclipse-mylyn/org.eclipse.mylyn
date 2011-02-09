@@ -27,6 +27,10 @@ public class AttachContextHandler extends AbstractTaskHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+		run(task);
+	}
+
+	public static void run(ITask task) {
 		ContextAttachWizard wizard = new ContextAttachWizard(task);
 		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
 		dialog.create();

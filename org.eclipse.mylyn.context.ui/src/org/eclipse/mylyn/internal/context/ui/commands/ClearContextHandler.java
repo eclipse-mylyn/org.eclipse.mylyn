@@ -27,6 +27,10 @@ public class ClearContextHandler extends AbstractTaskHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+		run(task);
+	}
+
+	public static void run(ITask task) {
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getShell(), Messages.ClearContextHandler_Confirm_clear_context,

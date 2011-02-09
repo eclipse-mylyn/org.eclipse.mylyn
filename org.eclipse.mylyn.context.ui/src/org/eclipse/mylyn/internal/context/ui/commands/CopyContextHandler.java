@@ -34,6 +34,10 @@ public class CopyContextHandler extends AbstractTaskHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask sourceTask) throws ExecutionException {
+		run(sourceTask);
+	}
+
+	public static void run(ITask sourceTask) {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					TITLE_DIALOG, Messages.CopyContextHandler_No_source_task_selected);
