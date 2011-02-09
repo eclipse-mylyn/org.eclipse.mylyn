@@ -238,12 +238,13 @@
             class="org.eclipse.mylyn.internal.builds.ui.commands.DeleteBuildElementHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
-			<with variable="activePartId">
-			    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
-			</with> 
-         </activeWhen>
-         <enabledWhen>
             <and>
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                  </equals>
+               </with>
                <count
                      value="1">
                </count>
@@ -255,7 +256,7 @@
                   </and>
                </iterate>
             </and>
-         </enabledWhen>
+         </activeWhen>
       </handler>
       <handler
             class="org.eclipse.mylyn.internal.builds.ui.commands.RefreshHandler"
