@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,9 +67,14 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 	@Override
 	public void run() {
 		final TaskRepository repositoryToDelete = getTaskRepository(getStructuredSelection());
-		if (repositoryToDelete == null) {
-			return;
+		if (repositoryToDelete != null) {
+			run(repositoryToDelete);
 		}
+	}
+
+	public static void run(final TaskRepository repositoryToDelete) {
+		Assert.isNotNull(repositoryToDelete);
+
 		final List<IRepositoryQuery> queriesToDelete = new ArrayList<IRepositoryQuery>();
 		final List<AbstractTask> tasksToDelete = new ArrayList<AbstractTask>();
 
@@ -105,10 +111,11 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		// confirm that the user wants to delete all tasks and queries that are associated
 		boolean deleteConfirmed;
 		if (queriesToDelete.size() > 0 || tasksToDelete.size() > 0) {
-			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
-					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
-							Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories, new Integer[] {
-									tasksToDelete.size(), queriesToDelete.size() }));
+			deleteConfirmed = MessageDialog.openQuestion(
+					WorkbenchUtil.getShell(),
+					Messages.DeleteTaskRepositoryAction_Confirm_Delete,
+					NLS.bind(Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories, new Integer[] {
+							tasksToDelete.size(), queriesToDelete.size() }));
 		} else {
 			deleteConfirmed = MessageDialog.openQuestion(WorkbenchUtil.getShell(),
 					Messages.DeleteTaskRepositoryAction_Confirm_Delete, NLS.bind(
