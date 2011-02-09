@@ -109,6 +109,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button taskListTooltipEnabledButton;
 
+	private Button showTaskTrimButton;
+
 	// Disabled for initial 3.4 release as per bug#263528
 //	private Button taskListServiceMessageEnabledButton;
 
@@ -127,6 +129,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		createTaskRefreshScheduleGroup(container);
 		createSchedulingGroup(container);
+		createTaskNavigationGroup(container);
 		createTaskListGroup(container);
 		createTaskEditorGroup(container);
 		createTaskActivityGroup(container);
@@ -210,21 +213,24 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED,
 				taskListTooltipEnabledButton.getSelection());
-
 		// Disabled for initial 3.4 release as per bug#263528
 //		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED,
 //				taskListServiceMessageEnabledButton.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SHOW_TRIM, showTaskTrimButton.getSelection());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 //		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
-				timeoutEnabledButton.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
-				timeoutMinutes.getSelection() * (60 * 1000));
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60 * 1000));
 
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
-				activityTrackingEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
 
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -282,10 +288,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-
 		// Disabled for initial 3.4 release as per bug#263528
 //		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
 //				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		showTaskTrimButton.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
@@ -294,11 +300,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 
-		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
 
 		return true;
 	}
@@ -320,10 +328,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-
 		// Disabled for initial 3.4 release as per bug#263528
 //		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 //				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		showTaskTrimButton.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -337,15 +345,18 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 //		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
-				ActivityContextManager.ACTIVITY_TIMEOUT)
+		int activityTimeoutMinutes = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 
-		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
+		activityTrackingEnabledButton.setSelection(MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getDefaultBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED));
 
 		updateRefreshGroupEnablements();
 	}
@@ -485,6 +496,18 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	}
 
+	private void createTaskNavigationGroup(Composite parent) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setText(Messages.TasksUiPreferencePage_Task_Navigation_Group_Label);
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		group.setLayout(new GridLayout());
+
+		showTaskTrimButton = new Button(group, SWT.CHECK);
+		showTaskTrimButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		showTaskTrimButton.setText(Messages.TasksUiPreferencePage_Show_active_task_trim_Button_Label);
+		showTaskTrimButton.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
+	}
+
 	private void createTaskListGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.TasksUiPreferencePage_Task_List_Group);
@@ -509,11 +532,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		boolean activityTrackingEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED);
+		boolean activityTrackingEnabled = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED);
 
-		boolean timeoutEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
+		boolean timeoutEnabled = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
 
 		activityTrackingEnabledButton = new Button(group, SWT.CHECK);
 		activityTrackingEnabledButton.setText(Messages.TasksUiPreferencePage_Enable_Time_Tracking);
@@ -546,8 +571,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutMinutes.setIncrement(5);
 		timeoutMinutes.setMaximum(60);
 		timeoutMinutes.setMinimum(1);
-		long minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getLong(
-				ActivityContextManager.ACTIVITY_TIMEOUT)
+		long minutes = MonitorUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getLong(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection((int) minutes);
 		timeoutMinutes.addSelectionListener(new SelectionAdapter() {

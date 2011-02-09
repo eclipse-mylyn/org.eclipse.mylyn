@@ -2034,4 +2034,37 @@
        </event>
     </extension>
     -->
+    
+    <extension point="org.eclipse.ui.menus">
+	    <!-- menu for pulldown command -->
+	    <menuContribution locationURI="menu:org.eclipse.mylyn.tasks.ui.trim">
+	      <dynamic
+	         class="org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown"
+	         id="org.eclipse.mylyn.tasks.ui.trim.dropdown"/>
+	    </menuContribution>
+	
+	    <menuContribution locationURI="toolbar:org.eclipse.ui.trim.command2?after">
+	      <toolbar id="org.eclipse.mylyn.tasks.ui.trim.container">
+	        <command
+	            id="org.eclipse.mylyn.tasks.ui.trim"
+	            commandId="org.eclipse.mylyn.tasks.ui.command.previousTask"
+	            label="Previous Task"
+	            icon="icons/etool16/navigate-previous.gif"
+	            style="pulldown">
+	        </command>
+	
+	        <control
+	           class="org.eclipse.mylyn.internal.tasks.ui.TaskTrimWidget"
+	           id="org.eclipse.mylyn.tasks.ui.trim.control"/>
+		        <!-- Bug 201589: this does not have any effect
+		        <visibleWhen checkEnabled="false">
+		           <test forcePluginActivation="true"
+		                 property="org.eclipse.mylyn.tasks.ui.trimEnabled"/>
+		        </visibleWhen>
+		        <visibleWhen><not><systemTest property="os.name" value="Windows XP"/></not></visibleWhen>
+		        -->
+	      </toolbar>
+	    </menuContribution>
+	</extension>
+    
 </plugin>
