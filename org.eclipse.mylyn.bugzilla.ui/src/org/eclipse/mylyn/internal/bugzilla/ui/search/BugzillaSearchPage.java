@@ -70,7 +70,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -697,7 +696,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
-		parent.setBackground(new Color(parent.getDisplay(), 0, 255, 0));
 		readConfiguration();
 
 		Composite control = new Composite(parent, SWT.NONE);
