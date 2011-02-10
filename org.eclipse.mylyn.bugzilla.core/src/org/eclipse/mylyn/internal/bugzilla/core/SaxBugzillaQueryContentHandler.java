@@ -61,7 +61,18 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		String parsedText = characters.toString();
 		BugzillaAttribute tag = BugzillaAttribute.UNKNOWN;
 		try {
-			tag = BugzillaAttribute.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
+			String tagName = localName.trim().toUpperCase(Locale.ENGLISH);
+			try {
+				tag = BugzillaAttribute.valueOf(tagName);
+			} catch (IllegalArgumentException e) {
+				if (tagName.equals("ASSIGNED_TO_REALNAME")) { //$NON-NLS-1$
+					tag = BugzillaAttribute.ASSIGNED_TO_NAME;
+				} else if (tagName.equals("REPORTER_REALNAME")) { //$NON-NLS-1$
+					tag = BugzillaAttribute.REPORTER_NAME;
+				} else {
+					throw e;
+				}
+			}
 			switch (tag) {
 			case QUERY_TIMESTAMP:
 				if (collector instanceof BugzillaTaskDataCollector) {
