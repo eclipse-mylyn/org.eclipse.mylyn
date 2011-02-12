@@ -186,7 +186,9 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		IFileRevision left = prevArtifact.getFileRevision(new NullProgressMonitor());
 		IFileRevision right = artifact.getFileRevision(new NullProgressMonitor());
 
-		ScmUi.openCompareEditor(getPage().getSite().getPage(), left, right);
+		if (left != null && right != null) {
+			ScmUi.openCompareEditor(getPage().getSite().getPage(), left, right);
+		}
 	}
 
 	private void open(IChange selection) {
