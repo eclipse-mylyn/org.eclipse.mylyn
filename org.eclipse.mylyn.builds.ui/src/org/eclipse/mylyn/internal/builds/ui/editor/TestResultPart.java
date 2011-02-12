@@ -221,14 +221,22 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		Menu menu = menuManager.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 
-		if (testResult != null) {
-			viewer.setInput(testResult);
-		} else {
-			viewer.setInput("No test results generated.");
-		}
+		refresh(testResult);
 
 		toolkit.paintBordersFor(composite);
 		return composite;
+	}
+
+	void refresh(ITestResult testResult) {
+		if (testResult != null) {
+			viewer.setInput(testResult);
+			filterTestFailuresAction.setEnabled(testResult.getFailCount() > 0);
+			showTestResultsAction.setEnabled(true);
+		} else {
+			viewer.setInput("No test results generated.");
+			filterTestFailuresAction.setEnabled(false);
+			showTestResultsAction.setEnabled(false);
+		}
 	}
 
 	@Override

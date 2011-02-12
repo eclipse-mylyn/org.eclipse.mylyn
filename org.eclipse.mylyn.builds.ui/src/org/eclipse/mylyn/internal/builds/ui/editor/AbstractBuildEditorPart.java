@@ -26,6 +26,7 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -275,7 +276,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 				section.setTextClient(toolbarComposite);
 			} else {
 				// make spacing consistent with sections that have a toolbar
-				section.clientVerticalSpacing = 7;
+				section.clientVerticalSpacing = PlatformUiUtil.getToolbarSectionClientVerticalSpacing();
 			}
 		}
 		setControl(section);
