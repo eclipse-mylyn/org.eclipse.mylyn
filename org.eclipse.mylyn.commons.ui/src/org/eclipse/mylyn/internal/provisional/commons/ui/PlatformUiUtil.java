@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.ui.forms.widgets.Section;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -114,6 +115,20 @@ public class PlatformUiUtil {
 	}
 
 	/**
+	 * If a a section does not use a toolbar as its text client the spacing between the section header and client will
+	 * be different from other sections. This method returns the value to set as the vertical spacing on those sections
+	 * to align the vertical position of section clients.
+	 * 
+	 * @return value for {@link Section#clientVerticalSpacing}
+	 */
+	public static int getToolbarSectionClientVerticalSpacing() {
+		if (Platform.WS_WIN32.equals(SWT.getPlatform())) {
+			return 5;
+		}
+		return 7;
+	}
+
+	/**
 	 * Returns the width of the view menu drop-down button.
 	 */
 	public static int getViewMenuWidth() {
@@ -127,7 +142,7 @@ public class PlatformUiUtil {
 	public static boolean supportsMultipleHyperlinkPresenter() {
 		if (isMac()) {
 			Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
-			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 			Version version = new Version(versionString);
 			return version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
 		}
