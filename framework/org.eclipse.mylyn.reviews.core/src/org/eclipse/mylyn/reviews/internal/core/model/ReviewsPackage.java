@@ -168,13 +168,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW__STATE = REVIEW_COMPONENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__ID = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Review</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+	public static final int REVIEW_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Comment <em>Comment</em>}' class.
@@ -836,13 +845,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Revision</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__REVISION = REVIEW_ITEM_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Review Item Set</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 2;
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation <em>Line Location</em>}' class.
@@ -1236,6 +1254,19 @@ public class ReviewsPackage extends EPackageImpl {
 	 */
 	public EReference getReview_State() {
 		return (EReference) reviewEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReview#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getId()
+	 * @see #getReview()
+	 * @generated
+	 */
+	public EAttribute getReview_Id() {
+		return (EAttribute) reviewEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1760,6 +1791,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Revision</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision()
+	 * @see #getReviewItemSet()
+	 * @generated
+	 */
+	public EAttribute getReviewItemSet_Revision() {
+		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ILineLocation <em>Line Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1909,6 +1953,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(reviewEClass, REVIEW__ITEMS);
 		createEReference(reviewEClass, REVIEW__REVIEW_TASK);
 		createEReference(reviewEClass, REVIEW__STATE);
+		createEAttribute(reviewEClass, REVIEW__ID);
 
 		commentEClass = createEClass(COMMENT);
 		createEReference(commentEClass, COMMENT__AUTHOR);
@@ -1962,6 +2007,7 @@ public class ReviewsPackage extends EPackageImpl {
 		reviewItemSetEClass = createEClass(REVIEW_ITEM_SET);
 		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__ID);
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__ITEMS);
+		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__REVISION);
 
 		lineLocationEClass = createEClass(LINE_LOCATION);
 		createEReference(lineLocationEClass, LINE_LOCATION__RANGES);
@@ -2039,6 +2085,10 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getReviewState(),
 				null,
 				"state", null, 1, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getReview_Id(),
+				ecorePackage.getEString(),
+				"id", null, 0, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(commentEClass, IComment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -2203,6 +2253,10 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getReviewItem(),
 				null,
 				"items", null, 0, -1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getReviewItemSet_Revision(),
+				ecorePackage.getEString(),
+				"revision", "", 0, 1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		initEClass(lineLocationEClass, ILineLocation.class,
 				"LineLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2314,6 +2368,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference REVIEW__STATE = eINSTANCE.getReview_State();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute REVIEW__ID = eINSTANCE.getReview_Id();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Comment <em>Comment</em>}' class.
@@ -2666,6 +2728,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference REVIEW_ITEM_SET__ITEMS = eINSTANCE.getReviewItemSet_Items();
+
+		/**
+		 * The meta object literal for the '<em><b>Revision</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute REVIEW_ITEM_SET__REVISION = eINSTANCE.getReviewItemSet_Revision();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation <em>Line Location</em>}' class.

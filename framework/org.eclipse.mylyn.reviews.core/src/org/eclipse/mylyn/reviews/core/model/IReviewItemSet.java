@@ -22,6 +22,7 @@ import java.util.List;
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,5 +66,30 @@ public interface IReviewItemSet extends IReviewItem {
 	 * @generated
 	 */
 	List<IReviewItem> getItems();
+
+	/**
+	 * Returns the value of the '<em><b>Revision</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Revision</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Revision</em>' attribute.
+	 * @see #setRevision(String)
+	 * @generated
+	 */
+	String getRevision();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Revision</em>' attribute.
+	 * @see #getRevision()
+	 * @generated
+	 */
+	void setRevision(String value);
 
 } // IReviewItemSet

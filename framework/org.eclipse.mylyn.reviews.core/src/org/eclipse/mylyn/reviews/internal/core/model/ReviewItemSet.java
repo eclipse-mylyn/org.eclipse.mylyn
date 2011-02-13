@@ -35,6 +35,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getItems <em>Items</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
  *
@@ -70,6 +71,26 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * @ordered
 	 */
 	protected EList<IReviewItem> items;
+
+	/**
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRevision()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String REVISION_EDEFAULT = ""; //$NON-NLS-1$
+
+	/**
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRevision()
+	 * @generated
+	 * @ordered
+	 */
+	protected String revision = REVISION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -129,6 +150,28 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRevision(String newRevision) {
+		String oldRevision = revision;
+		revision = newRevision;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION,
+					oldRevision, revision));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -150,6 +193,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return getId();
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return getItems();
+		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
+			return getRevision();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -170,6 +215,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			getItems().clear();
 			getItems().addAll((Collection<? extends IReviewItem>) newValue);
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
+			setRevision((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -188,6 +236,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			getItems().clear();
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
+			setRevision(REVISION_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -204,6 +255,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return items != null && !items.isEmpty();
+		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
+			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -221,6 +274,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
+		result.append(", revision: "); //$NON-NLS-1$
+		result.append(revision);
 		result.append(')');
 		return result.toString();
 	}

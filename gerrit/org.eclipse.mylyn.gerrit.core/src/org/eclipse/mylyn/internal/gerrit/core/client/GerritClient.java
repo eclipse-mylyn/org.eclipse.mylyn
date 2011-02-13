@@ -11,6 +11,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
@@ -153,7 +155,8 @@ public class GerritClient {
 	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			IProgressMonitor monitor) throws GerritException {
 		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
-		final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
+		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
+		final AccountDiffPreference diffPrefs = new AccountDiffPreference((Account.Id) null);
 		diffPrefs.setLineLength(Integer.MAX_VALUE);
 		diffPrefs.setTabSize(4);
 		diffPrefs.setContext(AccountDiffPreference.WHOLE_FILE_CONTEXT);
@@ -325,41 +328,52 @@ public class GerritClient {
 
 	public IReview getReview(String reviewId, IProgressMonitor monitor) throws GerritException {
 		IReview review = FACTORY.createReview();
-		ChangeDetail detail = getChangeDetail(Integer.parseInt(reviewId), monitor);
+		review.setId(reviewId);
+		ChangeDetail detail = getChangeDetail(id(reviewId), monitor);
 		List<PatchSet> patchSets = detail.getPatchSets();
 		for (PatchSet patchSet : patchSets) {
 			IReviewItemSet itemSet = FACTORY.createReviewItemSet();
 			itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
-			itemSet.setId(patchSet.getRevision().get());
+			itemSet.setId(patchSet.getPatchSetId() + "");
+			itemSet.setAddedBy(createUser(patchSet.getUploader(), detail.getAccounts()));
+			itemSet.setRevision(patchSet.getRevision().get());
+			itemSet.setReview(review);
+			// TODO store patchSet.getRefName()
 			review.getItems().add(itemSet);
-			if (patchSet.getId().equals(detail.getCurrentPatchSetDetail().getPatchSet().getId())) {
-				for (Patch patch : detail.getCurrentPatchSetDetail().getPatches()) {
-					IFileItem item = FACTORY.createFileItem();
-					PatchScript patchScript = getPatchScript(patch.getKey(), null, patchSet.getId(), monitor);
-					if (patchScript != null) {
-						CommentDetail commentDetail = patchScript.getCommentDetail();
-
-						IFileRevision revisionA = FACTORY.createFileRevision();
-						revisionA.setContent(patchScript.getA().asString());
-						revisionA.setPath(patchScript.getA().getPath());
-						revisionA.setRevision("Base");
-						addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
-						item.setBase(revisionA);
-
-						IFileRevision revisionB = FACTORY.createFileRevision();
-						SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-						revisionB.setContent(target.asString());
-						revisionB.setPath(patchScript.getB().getPath());
-						revisionB.setRevision(itemSet.getName());
-						addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
-						item.setTarget(revisionB);
-					}
-					item.setName(patch.getFileName());
-					itemSet.getItems().add(item);
-				}
-			}
 		}
 		return review;
+	}
+
+	public List<IReviewItem> getChangeSetDetails(IReviewItemSet itemSet, IProgressMonitor monitor)
+			throws GerritException {
+		List<IReviewItem> result = new ArrayList<IReviewItem>();
+		Change.Id changeId = new Change.Id(id(itemSet.getReview().getId()));
+		PatchSetDetail detail = getPatchSetDetail(changeId, id(itemSet.getId()), monitor);
+		for (Patch patch : detail.getPatches()) {
+			IFileItem item = FACTORY.createFileItem();
+			PatchScript patchScript = getPatchScript(patch.getKey(), null, detail.getPatchSet().getId(), monitor);
+			if (patchScript != null) {
+				CommentDetail commentDetail = patchScript.getCommentDetail();
+
+				IFileRevision revisionA = FACTORY.createFileRevision();
+				revisionA.setContent(patchScript.getA().asString());
+				revisionA.setPath(patchScript.getA().getPath());
+				revisionA.setRevision("Base");
+				addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
+				item.setBase(revisionA);
+
+				IFileRevision revisionB = FACTORY.createFileRevision();
+				SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
+				revisionB.setContent(target.asString());
+				revisionB.setPath(patchScript.getB().getPath());
+				revisionB.setRevision(itemSet.getName());
+				addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
+				item.setTarget(revisionB);
+			}
+			item.setName(patch.getFileName());
+			result.add(item);
+		}
+		return result;
 	}
 
 	private void addComments(IFileRevision revision, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
