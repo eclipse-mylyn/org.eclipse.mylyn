@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.builds.core.spi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -26,7 +27,7 @@ public class BuildServerConfiguration implements IBuildServerConfiguration {
 	private final List<IBuildPlan> plans;
 
 	public BuildServerConfiguration(List<IBuildPlan> plans) {
-		this.plans = new ArrayList<IBuildPlan>(plans);
+		this.plans = Collections.unmodifiableList(new ArrayList<IBuildPlan>(plans));
 	}
 
 	public List<IBuildPlan> getPlans() {

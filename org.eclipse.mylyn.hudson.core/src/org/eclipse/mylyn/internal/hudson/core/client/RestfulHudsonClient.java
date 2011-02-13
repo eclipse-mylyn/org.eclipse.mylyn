@@ -278,9 +278,12 @@ public class RestfulHudsonClient {
 						buildPlans.add(job);
 					}
 
-					HudsonConfiguration configuration = new HudsonConfiguration();
-					configuration.jobNameById = jobNameById;
-					setConfiguration(configuration);
+					if (ids == null) {
+						// update list of known jobs if all jobs were retrieved
+						HudsonConfiguration configuration = new HudsonConfiguration();
+						configuration.jobNameById = jobNameById;
+						setConfiguration(configuration);
+					}
 
 					return buildPlans;
 				} finally {

@@ -58,12 +58,12 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 
 	public C getConfiguration(String url) {
 		initialize();
-		C configuaration = configurationByUrl.get(url);
-		if (configuaration == null) {
-			configuaration = createConfiguration();
-			configurationByUrl.put(url, configuaration);
+		C configuration = configurationByUrl.get(url);
+		if (configuration == null) {
+			configuration = createConfiguration();
+			configurationByUrl.put(url, configuration);
 		}
-		return configuaration;
+		return configuration;
 	}
 
 	protected void initialize() {

@@ -24,4 +24,13 @@ public class HudsonConfiguration implements Serializable {
 
 	public Map<String, String> jobNameById = new HashMap<String, String>();
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HudsonConfiguration [jobNameById=");
+		builder.append(jobNameById);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
