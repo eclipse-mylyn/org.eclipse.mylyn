@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -20,12 +22,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -49,25 +51,30 @@ public class OpenHandler extends AbstractHandler {
 		return null;
 	}
 
-	public static void openBuildElements(IWorkbenchPage page, List<?> elements) {
+	public static List<IEditorPart> openBuildElements(IWorkbenchPage page, List<?> elements) {
 		if (elements.size() > 0) {
+			List<IEditorPart> parts = new ArrayList<IEditorPart>(elements.size());
 			Object item = elements.get(0);
 			BuildEditorInput input = null;
 			if (item instanceof IBuild) {
 				input = new BuildEditorInput((IBuild) item);
 			}
-			if (item instanceof IBuildPlan) {
-				input = new BuildEditorInput((IBuildPlan) item);
-			}
+			// TODO bug 324364
+//			if (item instanceof IBuildPlan) {
+//				input = new BuildEditorInput((IBuildPlan) item);
+//			}
 			if (input != null) {
 				try {
-					page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
+					IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
+					parts.add(part);
 				} catch (PartInitException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
 							"Unexpected error while opening build", e)); //$NON-NLS-1$
 				}
 			}
+			return parts;
 		}
+		return Collections.emptyList();
 	}
 
 }

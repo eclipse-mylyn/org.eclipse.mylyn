@@ -138,9 +138,11 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_EDIT));
 
-		NewTaskFromBuildAction newTaskFromBuildAction = new NewTaskFromBuildAction();
-		newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
-		toolBarManager.add(newTaskFromBuildAction);
+		if (getEditorInput().getBuild() != null) {
+			NewTaskFromBuildAction newTaskFromBuildAction = new NewTaskFromBuildAction();
+			newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
+			toolBarManager.add(newTaskFromBuildAction);
+		}
 
 		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 

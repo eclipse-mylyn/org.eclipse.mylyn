@@ -14,7 +14,9 @@ package org.eclipse.mylyn.builds.ui;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -22,7 +24,9 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
@@ -32,7 +36,13 @@ import org.eclipse.mylyn.commons.ui.notifications.Notifications;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
 import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceNotification;
+import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
@@ -104,6 +114,32 @@ public class BuildsUi {
 	public static void serverDiscovered(String title, String description) {
 		BuildsServiceNotification notification = new BuildsServiceNotification(title, description);
 		Notifications.getService().notify(Collections.singletonList(notification));
+	}
+
+	public static void open(IBuildElement element) {
+		Assert.isNotNull(element);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				IBuildElement openElement = null;
+				if (element instanceof IBuildPlan) {
+					IBuildPlan plan = (IBuildPlan) element;
+					if (plan.getLastBuild() != null) {
+						openElement = plan.getLastBuild();
+					}
+				}
+				if (openElement == null) {
+					openElement = element;
+				}
+				List<IEditorPart> parts = OpenHandler.openBuildElements(page, Collections.singletonList(openElement));
+				if (parts.size() > 0) {
+					return;
+				}
+			}
+		}
+		// fall back to opening builds view
+		BuildsView.openInActivePerspective();
 	}
 
 }

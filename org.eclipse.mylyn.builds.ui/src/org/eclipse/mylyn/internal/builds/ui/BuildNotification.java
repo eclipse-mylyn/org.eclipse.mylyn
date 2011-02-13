@@ -15,9 +15,9 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
+import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
-import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
@@ -27,11 +27,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public class BuildNotification extends AbstractNotification {
 
-	private static final String ID_EVENT_PLAN_STATUS_CHANGED = "org.eclipse.mylyn.builds.ui.events.PlanStatusChanged";
+	private static final String ID_EVENT_PLAN_STATUS_CHANGED = "org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"; //$NON-NLS-1$
 
-	private static final String ID_EVENT_BUILD_COMPLETED = "org.eclipse.mylyn.builds.ui.events.BuildCompleted";
+	private static final String ID_EVENT_BUILD_COMPLETED = "org.eclipse.mylyn.builds.ui.events.BuildCompleted"; //$NON-NLS-1$
 
-	private static final String ID_EVENT_BUILD_STARTED = "org.eclipse.mylyn.builds.ui.events.BuildStarted";
+	private static final String ID_EVENT_BUILD_STARTED = "org.eclipse.mylyn.builds.ui.events.BuildStarted"; //$NON-NLS-1$
 
 	private final IBuildElement element;
 
@@ -48,7 +48,8 @@ public class BuildNotification extends AbstractNotification {
 		return -1;
 	}
 
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
 		return null;
 	}
 
@@ -85,7 +86,7 @@ public class BuildNotification extends AbstractNotification {
 
 	@Override
 	public void open() {
-		BuildsView.openInActivePerspective();
+		BuildsUi.open(element);
 	}
 
 	public static BuildNotification createNotification(Notification msg) {
