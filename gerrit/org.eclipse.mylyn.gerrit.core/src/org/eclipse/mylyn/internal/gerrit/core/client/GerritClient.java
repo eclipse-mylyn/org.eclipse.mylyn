@@ -43,12 +43,14 @@ import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.SingleListChangeInfo;
+import com.google.gerrit.common.data.SystemInfoService;
 import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -122,13 +124,30 @@ public class GerritClient {
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
-		Account account = execute(monitor, new GerritOperation<Account>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getAccountService().myAccount(this);
-			}
-		});
-		return new GerritSystemInfo(account);
+		List<ContributorAgreement> contributorAgreements = null;
+		Account account = null;
+		if (!isAnonymous()) {
+//			contributorAgreements = execute(monitor, new GerritOperation<List<ContributorAgreement>>() {
+//				@Override
+//				public void execute(IProgressMonitor monitor) throws GerritException {
+//					getSystemInfoService().contributorAgreements(this);
+//				}
+//			});
+			account = execute(monitor, new GerritOperation<Account>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getAccountService().myAccount(this);
+				}
+			});
+		} else {
+			// XXX should run some more meaningful validation as anonymous, for now any call is good to validate the URL etc.
+			executeQuery(monitor, "status:open"); //$NON-NLS-1$
+		}
+		return new GerritSystemInfo(contributorAgreements, account);
+	}
+
+	private boolean isAnonymous() {
+		return client.isAnonymous();
 	}
 
 	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
@@ -256,6 +275,10 @@ public class GerritClient {
 			myAcount = account;
 		}
 		return myAcount;
+	}
+
+	private SystemInfoService getSystemInfoService() {
+		return getService(SystemInfoService.class);
 	}
 
 	private AccountService getAccountService() {

@@ -78,6 +78,10 @@ public class GerritHttpClient {
 		return id++;
 	}
 
+	public AbstractWebLocation getLocation() {
+		return location;
+	}
+
 	public synchronized String getXsrfKey() {
 		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
 	}
@@ -314,6 +318,10 @@ public class GerritHttpClient {
 		}
 
 		throw new GerritLoginException();
+	}
+
+	public boolean isAnonymous() {
+		return getLocation().getCredentials(AuthenticationType.REPOSITORY) == null;
 	}
 
 }
