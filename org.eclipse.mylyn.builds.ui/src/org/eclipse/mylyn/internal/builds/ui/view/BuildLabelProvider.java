@@ -98,7 +98,7 @@ public class BuildLabelProvider extends LabelProvider implements IStyledLabelPro
 		}
 
 		if (descriptor != null) {
-			if (bottomRightDecoration != null || bottomLeftDecoration != null) {
+			if (bottomRightDecoration != null || bottomLeftDecoration != null || topRightDecoration != null) {
 				descriptor = new DecorationOverlayIcon(CommonImages.getImage(descriptor), new ImageDescriptor[] { null,
 						topRightDecoration, bottomLeftDecoration, bottomRightDecoration });
 			}

@@ -61,15 +61,16 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 		@Override
 		protected IStatus doExecute(IOperationMonitor progress) {
 			try {
-				RefreshRequest request = new RefreshRequest(model);
+				List<IBuildPlan> plansToRefresh = null;
 				for (IBuildElement element : data.elements) {
 					if (element instanceof IBuildPlan) {
-						if (request.stalePlans == null) {
-							request.stalePlans = new ArrayList<IBuildPlan>();
+						if (plansToRefresh == null) {
+							plansToRefresh = new ArrayList<IBuildPlan>();
 						}
-						request.stalePlans.add((IBuildPlan) element);
+						plansToRefresh.add((IBuildPlan) element);
 					}
 				}
+				RefreshRequest request = new RefreshRequest(model, plansToRefresh);
 				((BuildServer) data.server).getRefreshSession().refresh(request, progress.newChild(1));
 			} catch (CoreException e) {
 				setStatus(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, NLS.bind(

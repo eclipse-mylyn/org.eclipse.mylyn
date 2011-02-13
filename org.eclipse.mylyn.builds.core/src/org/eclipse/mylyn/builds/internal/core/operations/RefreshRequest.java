@@ -23,10 +23,20 @@ public class RefreshRequest {
 
 	private final IBuildModel model;
 
+	/**
+	 * Private field used by {@link RefreshSession} to track stale plans on a request basis.
+	 */
 	List<IBuildPlan> stalePlans;
 
-	public RefreshRequest(IBuildModel model) {
+	final List<IBuildPlan> plansToRefresh;
+
+	public RefreshRequest(IBuildModel model, List<IBuildPlan> plansToRefresh) {
 		this.model = model;
+		this.plansToRefresh = plansToRefresh;
+	}
+
+	public RefreshRequest(IBuildModel model) {
+		this(model, null);
 	}
 
 	public IBuildModel getModel() {

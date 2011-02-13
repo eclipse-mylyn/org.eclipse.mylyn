@@ -71,7 +71,7 @@ public class HeaderPart extends AbstractBuildEditorPart {
 
 	private String getStatusLabel(IBuild build) {
 		if (build.getStatus() != null) {
-			return build.getStatus().toString();
+			return build.getStatus().getLabel();
 		}
 		return (build.getState() == BuildState.RUNNING) ? "Running" : "Unknown";
 	}

@@ -20,4 +20,21 @@ public enum BuildStatus {
 	// FIXME rename FAILED to FAILURE
 	FAILED, UNSTABLE, SUCCESS, DISABLED, ABORTED;
 
+	public String getLabel() {
+		switch (this) {
+		case FAILED:
+			return "Failed";
+		case UNSTABLE:
+			return "Unstable";
+		case SUCCESS:
+			return "Success";
+		case DISABLED:
+			return "Disabled";
+		case ABORTED:
+			return "Aborted";
+		default:
+			return "Unknown";
+		}
+	};
+
 }

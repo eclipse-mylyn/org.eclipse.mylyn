@@ -35,6 +35,9 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 
 /**
+ * Manages refreshes for plans and builds. Each server has one associated session that may process several requests
+ * concurrently.
+ * 
  * @author Steffen Pingel
  */
 public class RefreshSession {
@@ -59,11 +62,19 @@ public class RefreshSession {
 	private boolean isStale(IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
 		if (monitor.hasFlag(OperationFlag.BACKGROUND)) {
 			if (oldPlan.getLastBuild() != null && newPlan.getLastBuild() != null) {
-				// only refresh if there is a new build
-				return oldPlan.getLastBuild().getBuildNumber() != newPlan.getLastBuild().getBuildNumber();
+				// only refresh if there is a new build or if build status has changed
+				return isStale(oldPlan.getLastBuild(), newPlan.getLastBuild(), monitor);
 			}
 		}
 		return true;
+	}
+
+	private boolean isStale(IBuild oldBuild, IBuild newBuild, IOperationMonitor monitor) {
+		if (oldBuild.getBuildNumber() != newBuild.getBuildNumber() || oldBuild.getStatus() != newBuild.getStatus()
+				|| oldBuild.getState() != newBuild.getState()) {
+			return true;
+		}
+		return false;
 	}
 
 	protected void markStale(RefreshRequest request, BuildPlan newPlan) {
@@ -71,10 +82,19 @@ public class RefreshSession {
 	}
 
 	public void refresh(RefreshRequest request, IOperationMonitor monitor) throws CoreException {
-		if (request.stalePlans == null) {
-			request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
-			refreshPlans(request, monitor);
+		// initialize
+		request.stalePlans = Collections.synchronizedList(new ArrayList<IBuildPlan>());
+
+		// refresh selected or all plans
+		refreshPlans(request, monitor);
+
+		// force refresh of selected plans
+		if (request.plansToRefresh != null) {
+			request.stalePlans.clear();
+			request.stalePlans.addAll(request.plansToRefresh);
 		}
+
+		// refresh last build of stale plans
 		for (IBuildPlan plan : request.stalePlans) {
 			GetBuildsRequest buildRequest = new GetBuildsRequest(plan, Kind.LAST);
 			refreshBuilds(request, buildRequest, monitor);
@@ -122,17 +142,27 @@ public class RefreshSession {
 
 		// prepare
 		final AtomicReference<List<String>> input = new AtomicReference<List<String>>();
-		original.getLoader().getRealm().syncExec(new Runnable() {
-			public void run() {
-				List<String> planIds = new ArrayList<String>();
-				for (IBuildPlan oldPlan : request.getModel().getPlans()) {
-					if (oldPlan.getServer() == original) {
-						planIds.add(oldPlan.getId());
-					}
-				}
-				input.set(planIds);
+		if (request.plansToRefresh != null) {
+			// refresh selected plans
+			List<String> planIds = new ArrayList<String>();
+			for (IBuildPlan plan : request.plansToRefresh) {
+				planIds.add(plan.getId());
 			}
-		});
+			input.set(planIds);
+		} else {
+			// refresh all plans for server
+			original.getLoader().getRealm().syncExec(new Runnable() {
+				public void run() {
+					List<String> planIds = new ArrayList<String>();
+					for (IBuildPlan oldPlan : request.getModel().getPlans()) {
+						if (oldPlan.getServer() == original) {
+							planIds.add(oldPlan.getId());
+						}
+					}
+					input.set(planIds);
+				}
+			});
+		}
 
 		// execute
 		final List<IBuildPlan> result = BuildRunner.run(new BuildRunnableWithResult<List<IBuildPlan>>() {
