@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -48,6 +49,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -89,26 +94,178 @@ public class ReviewSection extends AbstractTaskEditorSection {
 
 	}
 
+	private class GetChangeSetDetailsJob extends Job {
+
+		private final TaskRepository repository;
+
+		private final IReviewItemSet itemSet;
+
+		private List<IReviewItem> items;
+
+		public GetChangeSetDetailsJob(TaskRepository repository, IReviewItemSet itemSet) {
+			super("Get Review");
+			this.repository = repository;
+			this.itemSet = itemSet;
+		}
+
+		public List<IReviewItem> getItems() {
+			return items;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+			GerritClient client = connector.getClient(repository);
+			try {
+				items = client.getChangeSetDetails(itemSet, monitor);
+			} catch (GerritException e) {
+				return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Review retrieval failed", e);
+			}
+			return Status.OK_STATUS;
+		}
+	}
+
 	private Composite composite;
 
-	private GetReviewJob job;
+	private final List<Job> jobs;
 
 	private FormToolkit toolkit;
 
+	private Label progressLabel;
+
 	public ReviewSection() {
 		setPartName("Review");
+		jobs = new ArrayList<Job>();
 	}
 
 	@Override
 	public void dispose() {
-		job.cancel();
+		for (Job job : jobs) {
+			job.cancel();
+		}
 		super.dispose();
 	}
 
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		job = new GetReviewJob(taskEditorPage.getTaskRepository(), taskEditorPage.getTask().getTaskId());
+	}
+
+	private void updateContent(IReview review) {
+		progressLabel.dispose();
+		for (IReviewItem item : review.getItems()) {
+			if (item instanceof IReviewItemSet) {
+				createSubSection(review, (IReviewItemSet) item);
+			}
+		}
+		composite.layout(true, true);
+		getTaskEditorPage().reflow();
+	}
+
+	private void createSubSection(final IReview review, final IReviewItemSet item) {
+		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT;
+		if (item.getItems().size() > 0) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		final Section subSection = toolkit.createSection(composite, style);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
+		subSection.setText(item.getName());
+
+		subSection.setTextClient(toolkit.createLabel(subSection, item.getRevision()));
+
+		if (item.getItems().size() > 0) {
+			createSubSectionContents(review, item, subSection);
+		} else {
+			subSection.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent e) {
+					if (subSection.getClient() == null) {
+						final Label progressLabel = new Label(subSection, SWT.NONE);
+						progressLabel.setText("Retrieving contents...");
+						progressLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+						subSection.setClient(progressLabel);
+						getTaskEditorPage().reflow();
+
+						final GetChangeSetDetailsJob job = new GetChangeSetDetailsJob(
+								getTaskEditorPage().getTaskRepository(), item);
+						job.addJobChangeListener(new JobChangeAdapter() {
+							@Override
+							public void done(final IJobChangeEvent event) {
+								if (event.getResult().isOK()) {
+									Display.getDefault().asyncExec(new Runnable() {
+										public void run() {
+											if (getControl() != null && !getControl().isDisposed()) {
+												if (job.getItems() != null) {
+													item.getItems().addAll(job.getItems());
+
+													progressLabel.dispose();
+													createSubSectionContents(review, item, subSection);
+												} else {
+													progressLabel.setText("No items found");
+												}
+												getTaskEditorPage().reflow();
+											}
+										}
+									});
+								}
+							}
+						});
+						jobs.add(job);
+						job.schedule();
+					}
+				}
+			});
+		}
+	}
+
+	void createSubSectionContents(final IReview review, IReviewItemSet item, Section subSection) {
+		TableViewer viewer = new TableViewer(subSection, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
+		viewer.setContentProvider(new IStructuredContentProvider() {
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				// ignore
+			}
+
+			public void dispose() {
+				// ignore					
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return ((List) inputElement).toArray();
+			}
+		});
+		viewer.setInput(item.getItems());
+		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ReviewItemLabelProvider()));
+		viewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				IFileItem item = (IFileItem) selection.getFirstElement();
+				ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, review, null);
+				CompareConfiguration configuration = new CompareConfiguration();
+				CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
+			}
+		});
+		subSection.setClient(viewer.getControl());
+	}
+
+	@Override
+	protected Control createContent(FormToolkit toolkit, Composite parent) {
+		this.toolkit = toolkit;
+
+		composite = toolkit.createComposite(parent);
+		GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).applyTo(composite);
+
+		progressLabel = new Label(composite, SWT.NONE);
+		progressLabel.setText("Retrieving contents...");
+		progressLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+
+		initializeUpdateJob();
+
+		return composite;
+	}
+
+	void initializeUpdateJob() {
+		GetReviewJob job = new GetReviewJob(getTaskEditorPage().getTaskRepository(), getTaskEditorPage().getTask()
+				.getTaskId());
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(final IJobChangeEvent event) {
@@ -119,72 +276,12 @@ public class ReviewSection extends AbstractTaskEditorSection {
 								updateContent(((GetReviewJob) event.getJob()).getReview());
 							}
 						}
-
 					});
 				}
 			}
 		});
-	}
-
-	private void updateContent(IReview review) {
-		for (IReviewItem item : review.getItems()) {
-			if (item instanceof IReviewItemSet) {
-				createSubSection(review, (IReviewItemSet) item);
-			}
-		}
-		getTaskEditorPage().reflow();
-	}
-
-	private void createSubSection(final IReview review, IReviewItemSet item) {
-		int style = ExpandableComposite.TWISTIE;
-		if (item.getItems().size() > 0) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-		Section subSection = toolkit.createSection(composite, style);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
-		subSection.setText(item.getName());
-
-		subSection.setTextClient(toolkit.createLabel(subSection, item.getId()));
-
-		if (item.getItems().size() > 0) {
-			TableViewer viewer = new TableViewer(subSection, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
-			viewer.setContentProvider(new IStructuredContentProvider() {
-				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-					// ignore
-				}
-
-				public void dispose() {
-					// ignore					
-				}
-
-				public Object[] getElements(Object inputElement) {
-					return ((List) inputElement).toArray();
-				}
-			});
-			viewer.setInput(item.getItems());
-			viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ReviewItemLabelProvider()));
-			viewer.addOpenListener(new IOpenListener() {
-				public void open(OpenEvent event) {
-					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-					IFileItem item = (IFileItem) selection.getFirstElement();
-					ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, review, null);
-					CompareConfiguration configuration = new CompareConfiguration();
-					CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
-				}
-			});
-			subSection.setClient(viewer.getControl());
-		}
-	}
-
-	@Override
-	protected Control createContent(FormToolkit toolkit, Composite parent) {
-		this.toolkit = toolkit;
-
+		jobs.add(job);
 		job.schedule();
-
-		composite = toolkit.createComposite(parent);
-		GridLayoutFactory.fillDefaults().applyTo(composite);
-		return composite;
 	}
 
 	@Override

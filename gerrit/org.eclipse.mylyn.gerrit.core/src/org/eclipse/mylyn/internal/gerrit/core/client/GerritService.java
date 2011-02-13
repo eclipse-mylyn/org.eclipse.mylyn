@@ -72,7 +72,7 @@ public class GerritService implements InvocationHandler {
 		return uri;
 	}
 
-	public Object invoke(Object proxy, final Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, final Method method, Object[] args) {
 		final JSonSupport json = new JSonSupport();
 
 		// construct request
@@ -101,7 +101,7 @@ public class GerritService implements InvocationHandler {
 
 			Object result = json.parseResponse(responseMessage, resultType);
 			callback.onSuccess(result);
-		} catch (GerritException e) {
+		} catch (Throwable e) {
 			callback.onFailure(e);
 		}
 		// all methods are designed to be asynchronous and expected to return void 

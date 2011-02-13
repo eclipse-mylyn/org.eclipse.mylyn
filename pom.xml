@@ -49,6 +49,7 @@
 
   <properties>
     <tycho-version>0.10.0</tycho-version>
+    <mylyn-skip-source-check>true</mylyn-skip-source-check>
   </properties>
 
   <profiles>
@@ -197,7 +198,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-            <skip>true</skip>
+			<skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>

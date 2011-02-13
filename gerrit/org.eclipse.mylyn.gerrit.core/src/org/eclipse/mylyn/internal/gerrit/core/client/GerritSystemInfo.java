@@ -11,7 +11,10 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.util.List;
+
 import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.ContributorAgreement;
 
 /**
  * @author Steffen Pingel
@@ -20,8 +23,15 @@ public class GerritSystemInfo {
 
 	private final Account account;
 
-	public GerritSystemInfo(Account account) {
+	private final List<ContributorAgreement> contributorAgreements;
+
+	public GerritSystemInfo(List<ContributorAgreement> contributorAgreements, Account account) {
+		this.contributorAgreements = contributorAgreements;
 		this.account = account;
+	}
+
+	public List<ContributorAgreement> getContributorAgreements() {
+		return contributorAgreements;
 	}
 
 	public String getFullName() {

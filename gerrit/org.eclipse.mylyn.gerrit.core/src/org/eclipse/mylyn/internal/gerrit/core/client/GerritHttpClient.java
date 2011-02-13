@@ -78,6 +78,10 @@ public class GerritHttpClient {
 		return id++;
 	}
 
+	public AbstractWebLocation getLocation() {
+		return location;
+	}
+
 	public synchronized String getXsrfKey() {
 		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
 	}
@@ -191,11 +195,16 @@ public class GerritHttpClient {
 		PostMethod method = postJsonRequestInternal("/gerrit/rpc/UserPassAuthService", entity, monitor);
 		try {
 			int code = method.getStatusCode();
+			if (needsReauthentication(code, monitor)) {
+				return -1;
+			}
+
 			if (code == HttpURLConnection.HTTP_OK) {
 				LoginResult result = json.parseResponse(method.getResponseBodyAsString(), LoginResult.class);
 				if (result.success) {
 					return HttpStatus.SC_TEMPORARY_REDIRECT;
 				} else {
+					requestCredentials(monitor, AuthenticationType.REPOSITORY);
 					return -1;
 				}
 			}
@@ -278,6 +287,12 @@ public class GerritHttpClient {
 			return false;
 		}
 
+		requestCredentials(monitor, authenticationType);
+		return true;
+	}
+
+	void requestCredentials(IProgressMonitor monitor, final AuthenticationType authenticationType)
+			throws GerritLoginException {
 		try {
 			location.requestCredentials(authenticationType, null, monitor);
 		} catch (UnsupportedRequestException e) {
@@ -285,7 +300,6 @@ public class GerritHttpClient {
 		}
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-		return true;
 	}
 
 	protected void validateAuthenticationState(HttpClient httpClient) throws GerritLoginException {
@@ -304,6 +318,10 @@ public class GerritHttpClient {
 		}
 
 		throw new GerritLoginException();
+	}
+
+	public boolean isAnonymous() {
+		return getLocation().getCredentials(AuthenticationType.REPOSITORY) == null;
 	}
 
 }
