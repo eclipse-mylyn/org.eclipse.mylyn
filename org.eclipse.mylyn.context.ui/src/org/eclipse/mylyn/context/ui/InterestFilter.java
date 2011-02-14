@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.context.ui;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
@@ -42,7 +45,9 @@ import org.eclipse.ui.internal.WorkingSet;
  */
 public class InterestFilter extends ViewerFilter {
 
-	private Object temporarilyUnfiltered = null;
+	private Set<Object> temporarilyUnfiltered = null;
+
+	private Object lastTemporarilyUnfiltered = null;
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
@@ -52,7 +57,7 @@ public class InterestFilter extends ViewerFilter {
 			}
 			if (isTemporarilyUnfiltered(parent)) {
 				return true;
-			} else if (temporarilyUnfiltered instanceof Tree
+			} else if (temporarilyUnfiltered != null && temporarilyUnfiltered.contains(Tree.class)
 					&& (isRootElement(object) || isRootElement(viewer, parent, object))) {
 				return true;
 			}
@@ -144,27 +149,55 @@ public class InterestFilter extends ViewerFilter {
 			TreePath treePath = (TreePath) parent;
 			parent = treePath.getLastSegment();
 		}
-		return temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent);
+		return temporarilyUnfiltered != null && temporarilyUnfiltered.contains(parent);
+
 	}
 
-	public void setTemporarilyUnfiltered(Object temprarilyUnfiltered) {
-		this.temporarilyUnfiltered = temprarilyUnfiltered;
+	@Deprecated
+	public void setTemporarilyUnfiltered(Object temporarilyUnfiltered) {
+		addTemporarilyUnfiltered(temporarilyUnfiltered);
+	}
+
+	/**
+	 * @since 3.5
+	 */
+	public void addTemporarilyUnfiltered(Object temporarilyUnfilteredObject) {
+		if (temporarilyUnfiltered == null) {
+			temporarilyUnfiltered = new HashSet<Object>();
+		}
+		if (temporarilyUnfilteredObject instanceof Tree) {
+			this.temporarilyUnfiltered.add(Tree.class);
+		} else {
+			// make sure to remove the tree so that we dont have weird performance issues
+			this.temporarilyUnfiltered.remove(Tree.class);
+			this.temporarilyUnfiltered.add(temporarilyUnfilteredObject);
+		}
+		this.lastTemporarilyUnfiltered = temporarilyUnfilteredObject;
 	}
 
 	/**
 	 * @return true if there was an unfiltered node
 	 */
 	public boolean resetTemporarilyUnfiltered() {
-		if (temporarilyUnfiltered != null) {
+		if (temporarilyUnfiltered != null || lastTemporarilyUnfiltered != null) {
 			this.temporarilyUnfiltered = null;
+			this.lastTemporarilyUnfiltered = null;
 			return true;
 		} else {
 			return false;
 		}
 	}
 
+	/**
+	 * @since 3.5
+	 */
+	public Object getLastTemporarilyUnfiltered() {
+		return lastTemporarilyUnfiltered;
+	}
+
+	@Deprecated
 	public Object getTemporarilyUnfiltered() {
-		return temporarilyUnfiltered;
+		return getLastTemporarilyUnfiltered();
 	}
 
 }

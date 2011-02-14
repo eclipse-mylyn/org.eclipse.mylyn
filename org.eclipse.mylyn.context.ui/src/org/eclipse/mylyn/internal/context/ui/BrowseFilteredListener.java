@@ -27,6 +27,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
@@ -55,7 +56,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		InterestFilter filter = getInterestFilter(treeViewer);
 		Object targetObject = targetSelection.getFirstElement();
 		if (filter != null && targetObject != null) {
-			filter.setTemporarilyUnfiltered(targetObject);
+			filter.addTemporarilyUnfiltered(targetObject);
 			if (targetObject instanceof Tree) {
 				treeViewer.refresh();
 			} else {
@@ -67,7 +68,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 
 	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
 		if (targetObject != null) {
-			filter.setTemporarilyUnfiltered(targetObject);
+			filter.addTemporarilyUnfiltered(targetObject);
 			if (targetObject instanceof Tree) {
 				treeViewer.refresh();
 			} else {
@@ -132,21 +133,26 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				if ((event.stateMask & SWT.MOD1) != 0) {
 					viewer.refresh(selectedObject);
 				} else {
-					final Object unfiltered = filter.getTemporarilyUnfiltered();
+					final Object unfiltered = filter.getLastTemporarilyUnfiltered();
 					if (unfiltered != null) {
 						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
-						new UIJob("") { //$NON-NLS-1$
-							@Override
-							public IStatus runInUIThread(IProgressMonitor monitor) {
-								filter.resetTemporarilyUnfiltered();
-								viewer.refresh(unfiltered);
-								return Status.OK_STATUS;
-							}
-						}.schedule(event.display.getDoubleClickTime() + 50);
+						resetUnfiltered();
 					}
 				}
 			}
 		}
+	}
+
+	public void resetUnfiltered() {
+		new UIJob("") { //$NON-NLS-1$
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				final InterestFilter filter = getInterestFilter(viewer);
+				filter.resetTemporarilyUnfiltered();
+				viewer.refresh();
+				return Status.OK_STATUS;
+			}
+		}.schedule(Display.getDefault().getDoubleClickTime() + 50);
 	}
 
 	private Object getClickedItem(MouseEvent event) {
