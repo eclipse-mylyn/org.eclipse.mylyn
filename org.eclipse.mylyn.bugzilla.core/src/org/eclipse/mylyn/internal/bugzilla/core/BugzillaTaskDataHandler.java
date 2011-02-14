@@ -384,15 +384,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			try {
 				return client.postTaskData(taskData, monitor);
 			} catch (CoreException e) {
-				// TODO: Move retry handling into client
-				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					return client.postTaskData(taskData, monitor);
-				} else if (e.getStatus().getCode() == IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION) {
-					taskData.getRoot().removeAttribute(BugzillaAttribute.TOKEN.getKey());
-					return client.postTaskData(taskData, monitor);
-				} else {
-					throw e;
-				}
+				throw e;
 			}
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,

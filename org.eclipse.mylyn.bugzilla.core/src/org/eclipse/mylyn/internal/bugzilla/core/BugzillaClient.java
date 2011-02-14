@@ -244,8 +244,6 @@ public class BugzillaClient {
 					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 							"XMLRPC user could not login")); //$NON-NLS-1$					
 				}
-				int i = 9;
-				i++;
 			} catch (XmlRpcException e) {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						"XMLRPC is not installed")); //$NON-NLS-1$
@@ -1167,6 +1165,46 @@ public class BugzillaClient {
 
 	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws IOException,
 			CoreException {
+		try {
+			return postTaskDataInternal(taskData, monitor);
+		} catch (CoreException e) {
+			TaskAttribute qaContact = taskData.getRoot().getAttribute(BugzillaAttribute.QA_CONTACT.getKey());
+			if (qaContact != null) {
+				String qaContactValue = qaContact.getValue();
+				String message = e.getMessage();
+				if ("An unknown repository error has occurred: Bugzilla/Bug.pm line".equals(message) //$NON-NLS-1$
+						&& qaContactValue != null && !qaContactValue.equals("")) { //$NON-NLS-1$
+					if (e.getStatus() instanceof RepositoryStatus) {
+						RepositoryStatus repositoryStatus = (RepositoryStatus) e.getStatus();
+						RepositoryStatus status = RepositoryStatus.createHtmlStatus(
+								repositoryStatus.getRepositoryUrl(), IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+								RepositoryStatus.ERROR_REPOSITORY,
+								"Error may result when QAContact field not enabled.", //$NON-NLS-1$
+								repositoryStatus.getHtmlMessage());
+						throw new CoreException(status);
+					}
+				}
+			}
+			try {
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
+					return postTaskDataInternal(taskData, monitor);
+				} else if (e.getStatus().getCode() == IBugzillaConstants.REPOSITORY_STATUS_SUSPICIOUS_ACTION) {
+					taskData.getRoot().removeAttribute(BugzillaAttribute.TOKEN.getKey());
+					return postTaskDataInternal(taskData, monitor);
+				} else {
+					throw e;
+				}
+			} catch (CoreException e1) {
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
+					throw e;
+				}
+			}
+		}
+		return null;
+	}
+
+	public RepositoryResponse postTaskDataInternal(TaskData taskData, IProgressMonitor monitor) throws IOException,
+			CoreException {
 		NameValuePair[] formData = null;
 		monitor = Policy.monitorFor(monitor);
 		BugzillaRepositoryResponse response;
@@ -1201,25 +1239,8 @@ public class BugzillaClient {
 			response = parsePostResponse(taskData.getTaskId(), input);
 			return response;
 		} catch (CoreException e) {
-			TaskAttribute qaContact = taskData.getRoot().getAttribute(BugzillaAttribute.QA_CONTACT.getKey());
-			if (qaContact != null) {
-				String qaContactValue = qaContact.getValue();
-				String message = e.getMessage();
-				if ("An unknown repository error has occurred: Bugzilla/Bug.pm line".equals(message) //$NON-NLS-1$
-						&& qaContactValue != null && !qaContactValue.equals("")) { //$NON-NLS-1$
-					if (e.getStatus() instanceof RepositoryStatus) {
-						RepositoryStatus repositoryStatus = (RepositoryStatus) e.getStatus();
-						RepositoryStatus status = RepositoryStatus.createHtmlStatus(
-								repositoryStatus.getRepositoryUrl(), IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-								RepositoryStatus.ERROR_REPOSITORY,
-								"Error may result when QAContact field not enabled.", //$NON-NLS-1$
-								repositoryStatus.getHtmlMessage());
-						throw new CoreException(status);
-					}
-				}
-			}
-
 			throw e;
+
 		} finally {
 			if (input != null) {
 				input.close();
@@ -1790,7 +1811,7 @@ public class BugzillaClient {
 										RepositoryStatus.ERROR_INTERNAL,
 										"Unable to retrieve new task id from: " + title)); //$NON-NLS-1$
 								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-										RepositoryStatus.ERROR_INTERNAL, "Unable to retrieve new task.")); //$NON-NLS-1$
+										RepositoryStatus.ERROR_INTERNAL, Messages.BugzillaClient_Unable_to_retrieve_new_task));
 							}
 						}
 
@@ -1801,8 +1822,15 @@ public class BugzillaClient {
 							found = title.indexOf(value) != -1;
 							if (found) {
 								loggedIn = false;
-								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-										RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
+								if (hasAuthenticationCredentials()) {
+									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
+											BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+											repositoryUrl.toString(), title));
+								} else {
+									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
+											BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+											repositoryUrl.toString(), Messages.BugzillaClient_anonymous_user_not_allowed));
+								}
 							}
 						}
 

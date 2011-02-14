@@ -462,8 +462,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		AuthenticationCredentials proxyAuth = repository.getCredentials(AuthenticationType.PROXY);
 		boolean changed = repository.getCharacterEncoding() != getCharacterEncoding();
 		changed = changed || repository.getSavePassword(AuthenticationType.REPOSITORY) != getSavePassword();
-		changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
-		changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
+		if (repositoryAuth != null) {
+			changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
+			changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
+		}
 		changed = changed
 				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
 		changed = changed
@@ -509,10 +511,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	 */
 	private boolean equals(String s1, String s2) {
 		if (s1 == null) {
-			s1 = "";
+			s1 = ""; //$NON-NLS-1$
 		}
 		if (s2 == null) {
-			s2 = "";
+			s2 = ""; //$NON-NLS-1$
 		}
 		return s1.equals(s2);
 	}

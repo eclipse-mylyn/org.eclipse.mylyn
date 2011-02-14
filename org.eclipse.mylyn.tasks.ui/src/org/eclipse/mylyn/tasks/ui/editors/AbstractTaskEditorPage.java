@@ -1229,6 +1229,20 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				if (TasksUiUtil.openEditRepositoryWizard(getTaskRepository()) == Window.OK) {
 					submitEnabled = true;
 					doSubmit();
+				} else {
+					String message;
+					if (status.getMessage().length() > 0) {
+						message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage();
+					} else {
+						message = Messages.AbstractTaskEditorPage_Submit_failed;
+					}
+					message = message.replaceAll("\n", " ");
+					getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Submit_failed, status);
+						}
+					});
 				}
 			} else {
 				String message;

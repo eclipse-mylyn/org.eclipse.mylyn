@@ -205,9 +205,13 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttachmentMapper_URL;
 
+	public static String BugzillaClient_anonymous_user_not_allowed;
+
 	public static String BugzillaClient_could_not_post_form_null_returned;
 
 	public static String BugzillaClient_description_required_when_submitting_attachments;
+
+	public static String BugzillaClient_Unable_to_retrieve_new_task;
 
 	public static String BugzillaOperation_Accept_to_ASSIGNED;
 
