@@ -11,243 +11,135 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 
 /**
  * @author Steffen Pingel
  */
-public class DefaultTaskSchema {
+public class DefaultTaskSchema extends AbstractTaskSchema {
 
-	public static class Field {
-
-		private EnumSet<Flag> flags;
-
-		private final String key;
-
-		private final String label;
-
-		private final String type;
-
-		protected Field(String key, String label, String type) {
-			this(key, label, type, (Flag[]) null);
-		}
-
-		protected Field(String key, String label, String type, Flag... flags) {
-			Assert.isNotNull(key);
-			Assert.isNotNull(label);
-			Assert.isNotNull(type);
-			this.key = key;
-			this.label = label;
-			this.type = type;
-			if (flags == null) {
-				this.flags = NO_FLAGS;
-			} else {
-				this.flags = EnumSet.copyOf(Arrays.asList(flags));
-			}
-		}
-
-		public TaskAttribute createAttribute(TaskAttribute parent) {
-			TaskAttribute attribute = parent.createMappedAttribute(getKey());
-			// meta data
-			TaskAttributeMetaData metaData = attribute.getMetaData();
-			metaData.setLabel(getLabel());
-			metaData.setType(getType());
-			metaData.setReadOnly(isReadOnly());
-			metaData.setKind(getKind());
-			// options
-			Map<String, String> options = getDefaultOptions();
-			if (options != null) {
-				for (Entry<String, String> option : options.entrySet()) {
-					attribute.putOption(option.getKey(), option.getValue());
-				}
-			}
-			return attribute;
-		}
-
-		public Map<String, String> getDefaultOptions() {
-			return Collections.emptyMap();
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public String getKind() {
-			if (flags.contains(Flag.ATTRIBUTE)) {
-				return TaskAttribute.KIND_DEFAULT;
-			} else if (flags.contains(Flag.PEOPLE)) {
-				return TaskAttribute.KIND_PEOPLE;
-			} else if (flags.contains(Flag.OPERATION)) {
-				return TaskAttribute.KIND_OPERATION;
-			}
-			return null;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public boolean isReadOnly() {
-			return flags.contains(Flag.READ_ONLY);
-		}
-
-		@Override
-		public String toString() {
-			return getLabel();
-		}
-
-	};
-
-	public enum Flag {
-		ATTRIBUTE, PEOPLE, READ_ONLY, OPERATION
-	}
-
-	private static Map<String, Field> fieldByKey = new HashMap<String, Field>();
-
-	public static final EnumSet<Flag> NO_FLAGS = EnumSet.noneOf(Flag.class);
+	private static DefaultTaskSchema instance = new DefaultTaskSchema();
 
 	public static Field getField(String taskKey) {
-		return fieldByKey.get(taskKey);
+		return instance.getFieldByKey(taskKey);
 	}
 
-	public static final Field ADD_SELF_CC = createField(TaskAttribute.ADD_SELF_CC,
+	public static final Field ADD_SELF_CC = instance.createField(TaskAttribute.ADD_SELF_CC,
 			Messages.DefaultTaskSchema_Add_Self_to_CC_Label, TaskAttribute.TYPE_BOOLEAN);
 
-	public static final Field ATTACHMENT_AUTHOR = createField(TaskAttribute.ATTACHMENT_AUTHOR,
+	public static final Field ATTACHMENT_AUTHOR = instance.createField(TaskAttribute.ATTACHMENT_AUTHOR,
 			Messages.DefaultTaskSchema_Author_Label, TaskAttribute.TYPE_PERSON);
 
-	public static final Field ATTACHMENT_CONTENT_TYPE = createField(TaskAttribute.ATTACHMENT_CONTENT_TYPE,
+	public static final Field ATTACHMENT_CONTENT_TYPE = instance.createField(TaskAttribute.ATTACHMENT_CONTENT_TYPE,
 			Messages.DefaultTaskSchema_Content_Type_Label, TaskAttribute.TYPE_SHORT_TEXT);
 
-	public static final Field ATTACHMENT_DATE = createField(TaskAttribute.ATTACHMENT_DATE,
+	public static final Field ATTACHMENT_DATE = instance.createField(TaskAttribute.ATTACHMENT_DATE,
 			Messages.DefaultTaskSchema_Created_Label, TaskAttribute.TYPE_DATETIME, Flag.READ_ONLY);
 
-	public static final Field ATTACHMENT_DESCRIPTION = createField(TaskAttribute.ATTACHMENT_DESCRIPTION,
+	public static final Field ATTACHMENT_DESCRIPTION = instance.createField(TaskAttribute.ATTACHMENT_DESCRIPTION,
 			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_SHORT_RICH_TEXT);
 
-	public static final Field ATTACHMENT_FILENAME = createField(TaskAttribute.ATTACHMENT_FILENAME,
+	public static final Field ATTACHMENT_FILENAME = instance.createField(TaskAttribute.ATTACHMENT_FILENAME,
 			Messages.DefaultTaskSchema_Filename_Label, TaskAttribute.TYPE_SHORT_TEXT);
 
-	public static final Field ATTACHMENT_ID = createField(TaskAttribute.ATTACHMENT_ID,
+	public static final Field ATTACHMENT_ID = instance.createField(TaskAttribute.ATTACHMENT_ID,
 			Messages.DefaultTaskSchema_ID_Label, TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
 
-	public static final Field ATTACHMENT_IS_DEPRECATED = createField(TaskAttribute.ATTACHMENT_IS_DEPRECATED,
+	public static final Field ATTACHMENT_IS_DEPRECATED = instance.createField(TaskAttribute.ATTACHMENT_IS_DEPRECATED,
 			Messages.DefaultTaskSchema_Deprecated_Label, TaskAttribute.TYPE_BOOLEAN);
 
-	public static final Field ATTACHMENT_IS_PATCH = createField(TaskAttribute.ATTACHMENT_IS_PATCH,
+	public static final Field ATTACHMENT_IS_PATCH = instance.createField(TaskAttribute.ATTACHMENT_IS_PATCH,
 			Messages.DefaultTaskSchema_Patch_Label, TaskAttribute.TYPE_BOOLEAN);
 
-	public static final Field ATTACHMENT_REPLACE_EXISTING = createField(TaskAttribute.ATTACHMENT_REPLACE_EXISTING,
-			Messages.DefaultTaskSchema_Replace_existing_attachment, TaskAttribute.TYPE_BOOLEAN);
+	public static final Field ATTACHMENT_REPLACE_EXISTING = instance.createField(
+			TaskAttribute.ATTACHMENT_REPLACE_EXISTING, Messages.DefaultTaskSchema_Replace_existing_attachment,
+			TaskAttribute.TYPE_BOOLEAN);
 
-	public static final Field ATTACHMENT_SIZE = createField(TaskAttribute.ATTACHMENT_SIZE,
+	public static final Field ATTACHMENT_SIZE = instance.createField(TaskAttribute.ATTACHMENT_SIZE,
 			Messages.DefaultTaskSchema_Size_Label, TaskAttribute.TYPE_LONG, Flag.READ_ONLY);
 
-	public static final Field ATTACHMENT_URL = createField(TaskAttribute.ATTACHMENT_URL,
+	public static final Field ATTACHMENT_URL = instance.createField(TaskAttribute.ATTACHMENT_URL,
 			Messages.DefaultTaskSchema_URL_Label, TaskAttribute.TYPE_URL);
 
-	public static final Field COMMENT_ATTACHMENT_ID = createField(TaskAttribute.COMMENT_ATTACHMENT_ID,
+	public static final Field COMMENT_ATTACHMENT_ID = instance.createField(TaskAttribute.COMMENT_ATTACHMENT_ID,
 			Messages.DefaultTaskSchema_Attachment_ID_Label, TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
 
-	public static final Field COMMENT_AUTHOR = createField(TaskAttribute.COMMENT_AUTHOR,
+	public static final Field COMMENT_AUTHOR = instance.createField(TaskAttribute.COMMENT_AUTHOR,
 			Messages.DefaultTaskSchema_Author_Label, TaskAttribute.TYPE_PERSON, Flag.READ_ONLY);
 
-	public static final Field COMMENT_DATE = createField(TaskAttribute.COMMENT_DATE,
+	public static final Field COMMENT_DATE = instance.createField(TaskAttribute.COMMENT_DATE,
 			Messages.DefaultTaskSchema_Created_Label, TaskAttribute.TYPE_DATETIME, Flag.READ_ONLY);
 
-	public static final Field COMMENT_HAS_ATTACHMENT = createField(TaskAttribute.COMMENT_HAS_ATTACHMENT,
+	public static final Field COMMENT_HAS_ATTACHMENT = instance.createField(TaskAttribute.COMMENT_HAS_ATTACHMENT,
 			Messages.DefaultTaskSchema_Attachment_Label, TaskAttribute.TYPE_BOOLEAN, Flag.READ_ONLY);
 
-	public static final Field COMMENT_NUMBER = createField(TaskAttribute.COMMENT_NUMBER,
+	public static final Field COMMENT_NUMBER = instance.createField(TaskAttribute.COMMENT_NUMBER,
 			Messages.DefaultTaskSchema_Number_Label, TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 
-	public static final Field COMMENT_TEXT = createField(TaskAttribute.COMMENT_TEXT,
+	public static final Field COMMENT_TEXT = instance.createField(TaskAttribute.COMMENT_TEXT,
 			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_LONG_RICH_TEXT, Flag.READ_ONLY);
 
-	public static final Field COMMENT_URL = createField(TaskAttribute.COMMENT_URL,
+	public static final Field COMMENT_URL = instance.createField(TaskAttribute.COMMENT_URL,
 			Messages.DefaultTaskSchema_URL_Label, TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
-	public static final Field COMPONENT = createField(TaskAttribute.COMPONENT,
+	public static final Field COMPONENT = instance.createField(TaskAttribute.COMPONENT,
 			Messages.DefaultTaskSchema_Component_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field DATE_COMPLETION = createField(TaskAttribute.DATE_COMPLETION,
+	public static final Field DATE_COMPLETION = instance.createField(TaskAttribute.DATE_COMPLETION,
 			Messages.DefaultTaskSchema_Completion_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
 
-	public static final Field DATE_CREATION = createField(TaskAttribute.DATE_CREATION,
+	public static final Field DATE_CREATION = instance.createField(TaskAttribute.DATE_CREATION,
 			Messages.DefaultTaskSchema_Created_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
 
-	public static final Field DATE_DUE = createField(TaskAttribute.DATE_DUE, Messages.DefaultTaskSchema_Due_Label,
-			TaskAttribute.TYPE_DATE);
+	public static final Field DATE_DUE = instance.createField(TaskAttribute.DATE_DUE,
+			Messages.DefaultTaskSchema_Due_Label, TaskAttribute.TYPE_DATE);
 
-	public static final Field DATE_MODIFICATION = createField(TaskAttribute.DATE_MODIFICATION,
+	public static final Field DATE_MODIFICATION = instance.createField(TaskAttribute.DATE_MODIFICATION,
 			Messages.DefaultTaskSchema_Modified_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
 
-	public static final Field DESCRIPTION = createField(TaskAttribute.DESCRIPTION,
+	public static final Field DESCRIPTION = instance.createField(TaskAttribute.DESCRIPTION,
 			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_LONG_RICH_TEXT);
 
-	public static final Field KEYWORDS = createField(TaskAttribute.KEYWORDS, Messages.DefaultTaskSchema_Keywords_Label,
-			TaskAttribute.TYPE_MULTI_SELECT, Flag.ATTRIBUTE);
+	public static final Field KEYWORDS = instance.createField(TaskAttribute.KEYWORDS,
+			Messages.DefaultTaskSchema_Keywords_Label, TaskAttribute.TYPE_MULTI_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field NEW_COMMENT = createField(TaskAttribute.COMMENT_NEW,
+	public static final Field NEW_COMMENT = instance.createField(TaskAttribute.COMMENT_NEW,
 			Messages.DefaultTaskSchema_Rank_Label, TaskAttribute.TYPE_LONG_RICH_TEXT);
 
-	public static final Field PRIORITY = createField(TaskAttribute.PRIORITY, Messages.DefaultTaskSchema_Priority_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public static final Field PRIORITY = instance.createField(TaskAttribute.PRIORITY,
+			Messages.DefaultTaskSchema_Priority_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field PRODUCT = createField(TaskAttribute.PRODUCT, Messages.DefaultTaskSchema_Product_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public static final Field PRODUCT = instance.createField(TaskAttribute.PRODUCT,
+			Messages.DefaultTaskSchema_Product_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field RANK = createField(TaskAttribute.RANK, Messages.DefaultTaskSchema_Rank_Label,
+	public static final Field RANK = instance.createField(TaskAttribute.RANK, Messages.DefaultTaskSchema_Rank_Label,
 			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 
-	public static final Field RESOLUTION = createField(TaskAttribute.RESOLUTION,
+	public static final Field RESOLUTION = instance.createField(TaskAttribute.RESOLUTION,
 			Messages.DefaultTaskSchema_Resolution_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.READ_ONLY);
 
-	public static final Field SEVERITY = createField(TaskAttribute.SEVERITY, Messages.DefaultTaskSchema_Severity_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public static final Field SEVERITY = instance.createField(TaskAttribute.SEVERITY,
+			Messages.DefaultTaskSchema_Severity_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field STATUS = createField(TaskAttribute.STATUS, Messages.DefaultTaskSchema_Status_Label,
-			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
+	public static final Field STATUS = instance.createField(TaskAttribute.STATUS,
+			Messages.DefaultTaskSchema_Status_Label, TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
 
-	public static final Field SUMMARY = createField(TaskAttribute.SUMMARY, Messages.DefaultTaskSchema_Summary_Label,
-			TaskAttribute.TYPE_SHORT_RICH_TEXT);
+	public static final Field SUMMARY = instance.createField(TaskAttribute.SUMMARY,
+			Messages.DefaultTaskSchema_Summary_Label, TaskAttribute.TYPE_SHORT_RICH_TEXT);
 
-	public static final Field TASK_KEY = createField(TaskAttribute.TASK_KEY, Messages.DefaultTaskSchema_Key_Label,
-			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
+	public static final Field TASK_KEY = instance.createField(TaskAttribute.TASK_KEY,
+			Messages.DefaultTaskSchema_Key_Label, TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
 
-	public static final Field TASK_KIND = createField(TaskAttribute.TASK_KIND, Messages.DefaultTaskSchema_Kind_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public static final Field TASK_KIND = instance.createField(TaskAttribute.TASK_KIND,
+			Messages.DefaultTaskSchema_Kind_Label, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
-	public static final Field USER_ASSIGNED = createField(TaskAttribute.USER_ASSIGNED,
+	public static final Field USER_ASSIGNED = instance.createField(TaskAttribute.USER_ASSIGNED,
 			Messages.DefaultTaskSchema_Owner_Label, TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
 
-	public static final Field USER_REPORTER = createField(TaskAttribute.USER_REPORTER,
+	public static final Field USER_REPORTER = instance.createField(TaskAttribute.USER_REPORTER,
 			Messages.DefaultTaskSchema_Reporter_Label, TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
 
-	public static final Field TASK_URL = createField(TaskAttribute.TASK_URL, Messages.DefaultTaskSchema_URL_Label,
-			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
-
-	protected static Field createField(String key, String label, String type) {
-		return createField(key, label, type, (Flag[]) null);
-	}
-
-	protected static Field createField(String key, String label, String type, Flag... flags) {
-		Field field = new Field(key, label, type, flags);
-		fieldByKey.put(key, field);
-		return field;
-	}
+	public static final Field TASK_URL = instance.createField(TaskAttribute.TASK_URL,
+			Messages.DefaultTaskSchema_URL_Label, TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
 }
