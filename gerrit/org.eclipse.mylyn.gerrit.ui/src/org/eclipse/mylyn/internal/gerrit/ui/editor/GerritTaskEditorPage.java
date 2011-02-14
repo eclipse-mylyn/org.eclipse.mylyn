@@ -14,8 +14,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -29,6 +36,21 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 		super(editor, GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
 		setNeedsSubmitButton(false);
+	}
+
+	@Override
+	protected AttributeEditorFactory createAttributeEditorFactory() {
+		return new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite()) {
+			@Override
+			public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
+				if (taskAttribute.getId().equals(GerritTaskSchema.getDefault().CHANGE_ID.getKey())) {
+					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
+					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
+					return editor;
+				}
+				return super.createEditor(type, taskAttribute);
+			}
+		};
 	}
 
 	@Override

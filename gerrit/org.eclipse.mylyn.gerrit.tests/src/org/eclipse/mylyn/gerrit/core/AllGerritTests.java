@@ -23,7 +23,6 @@ public class AllGerritTests {
 		TestSuite suite = new TestSuite(AllGerritTests.class.getName());
 		suite.addTestSuite(GerritAttributeTest.class);
 		suite.addTestSuite(GerritConnectorTest.class);
-		suite.addTestSuite(GerritTaskAttributeMapperTest.class);
 		return suite;
 	}
 
