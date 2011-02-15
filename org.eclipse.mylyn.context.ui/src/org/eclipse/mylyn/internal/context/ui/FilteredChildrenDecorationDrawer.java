@@ -1,6 +1,5 @@
 package org.eclipse.mylyn.internal.context.ui;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -194,8 +193,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 	// XXX Update Images
 	private final Image moreImage = CommonImages.getImage(CommonImages.EXPAND);
 
-	private final Image moreErrorImage = CommonImages.getImage(ImageDescriptor.createWithFlags(CommonImages.EXPAND,
-			SWT.IMAGE_GRAY));
+	private final Image moreErrorImage = CommonImages.getImage(CommonImages.REMOVE);
 
 	enum NodeState {
 		MORE, LESS, MORE_ERROR
@@ -269,14 +267,17 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			if (imageStartX > currentTreeBounds) {
 				imageStartX = currentTreeBounds - moreImage.getBounds().width;
 			}
+			NodeState value = (NodeState) item.getData(ID_HOVER);
 
 			int imageStartY = event.y;
 			int imageHeight = moreImage.getBounds().height;
+			if (value != null && value.equals(NodeState.MORE_ERROR)) {
+				imageHeight = moreErrorImage.getBounds().height;
+			}
 
 			int offset = Math.round(((float) event.height) / 2 - ((float) imageHeight) / 2);
 			imageStartY += offset;
 
-			NodeState value = (NodeState) item.getData(ID_HOVER);
 			if (value != null && value.equals(NodeState.MORE)) {
 				event.gc.drawImage(moreImage, imageStartX, imageStartY);
 			} else if (value != null && value.equals(NodeState.MORE_ERROR)) {
