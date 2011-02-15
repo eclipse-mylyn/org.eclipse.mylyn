@@ -227,6 +227,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor EXPAND = create(T_ELCL, "expand.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor EXPAND_ALL_SMALL = create(T_ELCL, "expandall-small.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif"); //$NON-NLS-1$
