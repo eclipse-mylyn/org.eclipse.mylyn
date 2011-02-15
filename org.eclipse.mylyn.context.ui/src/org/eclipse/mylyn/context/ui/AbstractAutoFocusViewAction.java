@@ -39,8 +39,10 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		@SuppressWarnings("deprecation")
 		@Override
 		public void contextActivated(IInteractionContext context) {
-			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
+			if (ContextUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)
+					&& context.getAllElements().size() > 0) {
 				AbstractAutoFocusViewAction.super.internalSuppressExpandAll = true;
 				AbstractAutoFocusViewAction.super.update(true);
 			} else {
@@ -87,8 +89,9 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 			public void run() {
 				try {
 					if (ContextCore.getContextManager().isContextActive()
-							&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-									IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
+							&& ContextUiPlugin.getDefault()
+									.getPreferenceStore()
+									.getBoolean(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
 						internalSuppressExpandAll = true;
 						update(true);
 					}
