@@ -33,12 +33,11 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 
 		private final BrowseFilteredListener browseFilteredListener;
 
-		private final ToolTip toolTip;
+		private ToolTip toolTip;
 
 		public MoveListener(TreeViewer viewer, BrowseFilteredListener browseFilteredListener) {
 			this.viewer = viewer;
 			this.browseFilteredListener = browseFilteredListener;
-			toolTip = new ToolTip(WorkbenchUtil.getShell(), SWT.NONE);
 		}
 
 		public void mouseEnter(MouseEvent e) {
@@ -51,6 +50,8 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			}
 			if (toolTip != null && !toolTip.isDisposed()) {
 				toolTip.setVisible(false);
+				toolTip.dispose();
+				toolTip = null;
 			}
 
 			lastItem = null;
@@ -65,15 +66,19 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 
 		public void mouseHover(MouseEvent e) {
 
+			if (toolTip == null || toolTip.isDisposed()) {
+				toolTip = new ToolTip(WorkbenchUtil.getShell(), SWT.NONE);
+			}
+
 			if (toolTip != null && !toolTip.isDisposed()) {
 				Tree tree = (Tree) e.widget;
 				TreeItem item = findItem(tree, e.y);
 				if (item != null && !item.isDisposed()) {
 					Object data = item.getData(ID_HOVER);
 					if (data == NodeState.MORE) {
-						toolTip.setText(Messages.FilteredChildrenDecorationDrawer_Show_Filtered_Children);
+						toolTip.setMessage(Messages.FilteredChildrenDecorationDrawer_Show_Filtered_Children);
 					} else {
-						toolTip.setText(Messages.FilteredChildrenDecorationDrawer_No_Filtered_Children);
+						toolTip.setMessage(Messages.FilteredChildrenDecorationDrawer_No_Filtered_Children);
 					}
 					if (inImageBounds(tree, item, e)) {
 						toolTip.setVisible(true);
@@ -101,6 +106,8 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		public void mouseMove(MouseEvent e) {
 			if (toolTip != null && !toolTip.isDisposed()) {
 				toolTip.setVisible(false);
+				toolTip.dispose();
+				toolTip = null;
 			}
 
 			if (!(e.widget instanceof Tree) || e.widget.isDisposed()) {
@@ -143,6 +150,8 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		public void mouseDown(MouseEvent e) {
 			if (toolTip != null && !toolTip.isDisposed()) {
 				toolTip.setVisible(false);
+				toolTip.dispose();
+				toolTip = null;
 			}
 
 			if (!(e.widget instanceof Tree) || e.widget.isDisposed()) {
@@ -245,7 +254,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		switch (event.type) {
 		case SWT.PaintItem: {
 			Tree tree = (Tree) event.widget;
-			if (tree.isDisposed()) {
+			if (tree.isDisposed() || event.index != 0) {
 				return;
 			}
 			TreeItem item = findItem(tree, event.y);
@@ -261,11 +270,17 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				imageStartX = currentTreeBounds - moreImage.getBounds().width;
 			}
 
+			int imageStartY = event.y;
+			int imageHeight = moreImage.getBounds().height;
+
+			int offset = Math.round(((float) event.height) / 2 - ((float) imageHeight) / 2);
+			imageStartY += offset;
+
 			NodeState value = (NodeState) item.getData(ID_HOVER);
 			if (value != null && value.equals(NodeState.MORE)) {
-				event.gc.drawImage(moreImage, imageStartX, event.y);
+				event.gc.drawImage(moreImage, imageStartX, imageStartY);
 			} else if (value != null && value.equals(NodeState.MORE_ERROR)) {
-				event.gc.drawImage(moreErrorImage, imageStartX, event.y);
+				event.gc.drawImage(moreErrorImage, imageStartX, imageStartY);
 			}
 			break;
 		}
