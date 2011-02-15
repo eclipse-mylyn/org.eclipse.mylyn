@@ -1195,12 +1195,9 @@ public class BugzillaClient {
 					throw e;
 				}
 			} catch (CoreException e1) {
-				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					throw e;
-				}
+				throw e1;
 			}
 		}
-		return null;
 	}
 
 	public RepositoryResponse postTaskDataInternal(TaskData taskData, IProgressMonitor monitor) throws IOException,
@@ -1811,7 +1808,8 @@ public class BugzillaClient {
 										RepositoryStatus.ERROR_INTERNAL,
 										"Unable to retrieve new task id from: " + title)); //$NON-NLS-1$
 								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-										RepositoryStatus.ERROR_INTERNAL, Messages.BugzillaClient_Unable_to_retrieve_new_task));
+										RepositoryStatus.ERROR_INTERNAL,
+										Messages.BugzillaClient_Unable_to_retrieve_new_task));
 							}
 						}
 
@@ -1829,7 +1827,8 @@ public class BugzillaClient {
 								} else {
 									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
 											BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
-											repositoryUrl.toString(), Messages.BugzillaClient_anonymous_user_not_allowed));
+											repositoryUrl.toString(),
+											Messages.BugzillaClient_anonymous_user_not_allowed));
 								}
 							}
 						}
