@@ -144,7 +144,10 @@ public class InterestFilter extends ViewerFilter {
 //		}
 	}
 
-	private boolean isTemporarilyUnfiltered(Object parent) {
+	/**
+	 * @since 3.5
+	 */
+	public boolean isTemporarilyUnfiltered(Object parent) {
 		if (parent instanceof TreePath) {
 			TreePath treePath = (TreePath) parent;
 			parent = treePath.getLastSegment();

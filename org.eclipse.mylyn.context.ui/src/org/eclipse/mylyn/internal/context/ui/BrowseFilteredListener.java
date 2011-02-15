@@ -42,6 +42,8 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 
 	private final StructuredViewer viewer;
 
+	private boolean wasExternalClick = false;
+
 	public BrowseFilteredListener(StructuredViewer viewer) {
 		this.viewer = viewer;
 	}
@@ -76,6 +78,10 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				treeViewer.expandToLevel(targetObject, 1);
 			}
 		}
+	}
+
+	public void setWasExternalClick(boolean wasExternalClick) {
+		this.wasExternalClick = wasExternalClick;
 	}
 
 	public void keyPressed(KeyEvent event) {
@@ -130,8 +136,9 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			unfilter(filter, treeViewer, selectedObject);
 		} else {
 			if (event.button == 1) {
-				if ((event.stateMask & SWT.MOD1) != 0) {
+				if ((event.stateMask & SWT.MOD1) != 0 || wasExternalClick) {
 					viewer.refresh(selectedObject);
+					wasExternalClick = false;
 				} else {
 					final Object unfiltered = filter.getLastTemporarilyUnfiltered();
 					if (unfiltered != null) {
@@ -186,5 +193,13 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			}
 		}
 		return null;
+	}
+
+	public boolean isUnfiltered(Object object) {
+		InterestFilter interestFilter = getInterestFilter(viewer);
+		if (interestFilter != null) {
+			return interestFilter.isTemporarilyUnfiltered(object);
+		}
+		return false;
 	}
 }

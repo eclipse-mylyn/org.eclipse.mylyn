@@ -40,4 +40,8 @@ public class Messages extends NLS {
 	public static String AbstractFocusViewAction_Apply_Mylyn;
 
 	public static String AbstractFocusViewAction_Empty_task_context;
+
+	public static String FilteredChildrenDecorationDrawer_No_Filtered_Children;
+
+	public static String FilteredChildrenDecorationDrawer_Show_Filtered_Children;
 }
