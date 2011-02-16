@@ -149,4 +149,15 @@ public class PlatformUiUtil {
 		return true;
 	}
 
+	/**
+	 * Because of bug#175655: [context] provide an on-hover affordance to supplement Alt+click navigation Tooltips will
+	 * show everyone on Linux unless they are balloons.
+	 */
+	public static int getSwtTooltipStyle() {
+		if ("gtk".equals(SWT.getPlatform())) {
+			return SWT.BALLOON;
+		}
+		return SWT.NONE;
+	}
+
 }
