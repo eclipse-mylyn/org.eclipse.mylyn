@@ -3,6 +3,7 @@ package org.eclipse.mylyn.internal.context.ui;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -66,7 +67,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		public void mouseHover(MouseEvent e) {
 
 			if (toolTip == null || toolTip.isDisposed()) {
-				toolTip = new ToolTip(WorkbenchUtil.getShell(), SWT.NONE);
+				toolTip = new ToolTip(WorkbenchUtil.getShell(), PlatformUiUtil.getSwtTooltipStyle());
 			}
 
 			if (toolTip != null && !toolTip.isDisposed()) {
