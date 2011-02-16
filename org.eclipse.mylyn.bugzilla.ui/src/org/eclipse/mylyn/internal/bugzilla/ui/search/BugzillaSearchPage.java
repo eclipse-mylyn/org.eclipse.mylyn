@@ -70,6 +70,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -909,7 +910,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sashForm.setLayout(sashFormLayout);
 		final GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1);
 		gd_sashForm.widthHint = 400;
-		gd_sashForm.heightHint = 60;
+		gd_sashForm.heightHint = 80;
 		sashForm.setLayoutData(gd_sashForm);
 
 		GridLayout topLayout = new GridLayout();
@@ -1044,18 +1045,26 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		chartFieldValues = chartFieldValuesDefault.toArray(new String[chartFieldValuesDefault.size()]);
 		chartExpandComposite = scrolledComposite.createSection(Messages.BugzillaSearchPage_BooleanChart,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, false);
-		chartExpandComposite.setLayout(new GridLayout(3, false));
+		GridLayout optionsLayout = new GridLayout(3, false);
+		optionsLayout.marginHeight = 0;
+		optionsLayout.marginWidth = 0;
+		optionsLayout.horizontalSpacing = 0;
+		optionsLayout.verticalSpacing = 0;
+		chartExpandComposite.setLayout(optionsLayout);
 		chartExpandComposite.setBackground(parent.getBackground());
 		GridData g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
 		chartExpandComposite.setLayoutData(g);
 		Composite chartComposite = new Composite(chartExpandComposite, SWT.NULL);
-		GridLayout optionsLayout = new GridLayout(4, false);
+		optionsLayout = new GridLayout(4, false);
 		optionsLayout.marginHeight = 0;
 		optionsLayout.marginWidth = 0;
+		optionsLayout.horizontalSpacing = 0;
+		optionsLayout.verticalSpacing = 0;
 		chartComposite.setLayout(optionsLayout);
-		g = new GridData(GridData.FILL, GridData.FILL, true, true);
+		g = new GridData(SWT.FILL, SWT.FILL, true, true);
+		g.horizontalIndent = INDENT;
 		g.widthHint = 400;
 		chartComposite.setLayoutData(g);
 		Dialog.applyDialogFont(chartComposite);
@@ -1240,7 +1249,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		bottomLayout.numColumns = 6;
 		bottomForm.setLayout(bottomLayout);
 		GridData bottomLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1);
-		bottomLayoutData.heightHint = 60;
+		bottomLayoutData.heightHint = 80;
 		bottomLayoutData.widthHint = 400;
 		bottomForm.setLayoutData(bottomLayoutData);
 
@@ -1482,6 +1491,22 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					} catch (UnsupportedEncodingException e) {
 						// ignore
 					}
+				}
+				if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
+						(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
+						(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
+						(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
+						priority.getSelection().length > 0 || resolution.getSelection().length > 0
+						|| version.getSelection().length > 0 || target.getSelection().length > 0
+						|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
+					moreOptionsExpandComposite.setExpanded(true);
+					scrolledComposite.reflow(true);
+					refreshChartControls();
+				}
+				if (charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
+					chartExpandComposite.setExpanded(true);
+					scrolledComposite.reflow(true);
+					refreshChartControls();
 				}
 			}
 
@@ -2542,6 +2567,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		layout.horizontalSpacing = 0;
 		chartGroup.setLayout(layout);
 		gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
+		gd.horizontalIndent = INDENT;
 		chartGroup.setLayoutData(gd);
 		charts.add(0, new Chart());
 		recreateChartControls();
@@ -2667,7 +2693,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					orButton.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							if (e.stateMask == SWT.CTRL) {
+							if (e.stateMask == SWT.SHIFT) {
 								if (charts.size() == 1 && charts.get(0).getRowSize() == 1
 										&& charts.get(0).getColumnSize(0) == 1) {
 									return;
