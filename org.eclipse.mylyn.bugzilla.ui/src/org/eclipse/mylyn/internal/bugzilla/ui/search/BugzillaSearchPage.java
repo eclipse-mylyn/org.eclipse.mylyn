@@ -756,6 +756,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				whiteboardPattern.setText(""); //$NON-NLS-1$
 				whiteboardOperation.select(0);
 				daysText.setText(""); //$NON-NLS-1$
+
+				charts.clear();
+				charts.add(0, new Chart());
+				recreateChartControls();
+
 			}
 		});
 
@@ -1881,11 +1886,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	@Override
 	public boolean canFlipToNextPage() {
-		if (getErrorMessage() != null) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	public void handleEvent(Event event) {
@@ -2736,6 +2737,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 
 		}
+		chartSection.layout(true);
 		scrolledComposite.reflow(true);
 		refreshChartControls();
 	}
