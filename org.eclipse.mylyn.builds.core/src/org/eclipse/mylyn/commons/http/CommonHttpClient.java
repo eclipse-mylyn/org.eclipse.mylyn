@@ -75,7 +75,10 @@ public class CommonHttpClient {
 		return WebUtil.execute(getHttpClient(), hostConfiguration, method, monitor);
 	}
 
-	public synchronized HostConfiguration getHostConfiguration(IOperationMonitor monitor) {
+	public synchronized HostConfiguration getHostConfiguration(IOperationMonitor monitor) throws IOException {
+		if (location.getUrl() == null) {
+			throw new IOException("No URL specified.");
+		}
 		return WebUtil.createHostConfiguration(httpClient, location, monitor);
 	}
 
