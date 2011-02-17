@@ -104,9 +104,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;
 
-	/** Expandable composites are indented by 6 pixels by default. */
-	private static final int INDENT = -6;
-
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
@@ -782,11 +779,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void createOptionsGroup(Composite control) {
-		scrolledComposite = new SectionComposite(control, SWT.H_SCROLL | SWT.V_SCROLL /*| SWT.BORDER*/);
+		scrolledComposite = new SectionComposite(control, SWT.NONE);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		scrolledComposite.setLayoutData(g);
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
-		scrolledBodyComposite.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		scrolledBodyComposite.setLayout(layout);
 
 		basicCompositeCreate(scrolledBodyComposite);
 		createMoreOptionsSection(scrolledBodyComposite);
@@ -801,7 +801,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout layout = new GridLayout(4, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.marginRight = 5;
+		//layout.marginRight = 5;
 		basicComposite.setLayout(layout);
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		g.widthHint = 500;
@@ -1006,13 +1006,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void createMoreOptionsSection(Composite parent) {
 		moreOptionsSection = scrolledComposite.createSection(Messages.BugzillaSearchPage_More_Options,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, true);
-		moreOptionsSection.setLayout(new GridLayout(3, false));
 		GridData g = new GridData(GridData.FILL, GridData.CENTER, true, false);
 		g.horizontalSpan = 4;
-		g.horizontalIndent = INDENT;
 		moreOptionsSection.setLayoutData(g);
 
-		Composite moreOptionsComposite = new Composite(moreOptionsSection, SWT.NULL);
+		Composite moreOptionsComposite = new Composite(moreOptionsSection, SWT.NONE);
 		GridLayout optionsLayout = new GridLayout(4, false);
 		optionsLayout.marginHeight = 0;
 		optionsLayout.marginWidth = 0;
@@ -1031,7 +1029,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, false);
 		GridData g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
 		g.horizontalSpan = 4;
-		g.horizontalIndent = INDENT;
 		chartSection.setLayoutData(g);
 
 		charts.add(0, new Chart());
