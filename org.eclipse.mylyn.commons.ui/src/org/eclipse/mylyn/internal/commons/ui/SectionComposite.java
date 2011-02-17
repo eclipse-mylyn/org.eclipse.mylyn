@@ -48,6 +48,7 @@ public class SectionComposite extends SharedScrolledComposite {
 		content = new Composite(this, SWT.NONE);
 		content.setLayout(GridLayoutFactory.fillDefaults().create());
 		setContent(content);
+		content.setBackground(null);
 		setExpandVertical(true);
 		setExpandHorizontal(true);
 	}
@@ -70,7 +71,7 @@ public class SectionComposite extends SharedScrolledComposite {
 				getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
 						| expansionStyle);
-		section.setBackground(getBackground());
+
 		section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
