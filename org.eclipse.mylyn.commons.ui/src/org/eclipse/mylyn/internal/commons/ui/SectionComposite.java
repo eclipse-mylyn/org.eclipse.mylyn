@@ -71,7 +71,8 @@ public class SectionComposite extends SharedScrolledComposite {
 				getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
 						| expansionStyle);
-
+		section.titleBarTextMarginWidth = 0;
+		section.setBackground(null);
 		section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
