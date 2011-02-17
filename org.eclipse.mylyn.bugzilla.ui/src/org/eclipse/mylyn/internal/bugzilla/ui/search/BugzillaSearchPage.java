@@ -697,7 +697,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		readConfiguration();
 
 		Composite control = new Composite(parent, SWT.NONE);
-		control.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 0;
 		control.setLayout(layout);
@@ -715,7 +714,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void createButtons(Composite control) {
 		Composite buttonComposite = new Composite(control, SWT.NONE);
-		buttonComposite.setBackground(control.getBackground());
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		buttonComposite.setLayout(layout);
@@ -785,11 +783,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void createOptionsGroup(Composite control) {
 		scrolledComposite = new SectionComposite(control, SWT.H_SCROLL | SWT.V_SCROLL /*| SWT.BORDER*/);
-		scrolledComposite.setBackground(control.getBackground());
 		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
 		scrolledComposite.setLayoutData(g);
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
-		scrolledBodyComposite.setBackground(control.getBackground());
 		scrolledBodyComposite.setLayout(new GridLayout());
 
 		basicCompositeCreate(scrolledBodyComposite);
@@ -802,7 +798,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private void basicCompositeCreate(Composite parent) {
 		final Composite basicComposite = new Composite(parent, SWT.NONE);
-		basicComposite.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout(4, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -877,7 +872,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		new Label(basicComposite, SWT.NONE);
 		Composite emailComposite = new Composite(basicComposite, SWT.NONE);
-		emailComposite.setBackground(parent.getBackground());
 		emailComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		GridLayout emailLayout = new GridLayout();
 		emailLayout.marginWidth = 0;
@@ -919,7 +913,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout topLayout = new GridLayout();
 		topLayout.numColumns = 4;
 		SashForm topForm = new SashForm(sashForm, SWT.NONE);
-		topForm.setBackground(parent.getBackground());
 		GridData topLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
 		topLayoutData.widthHint = 00;
 		topLayoutData.heightHint = 60;
@@ -931,14 +924,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		productLayout.marginHeight = 0;
 		productLayout.horizontalSpacing = 0;
 		Composite productComposite = new Composite(topForm, SWT.NONE);
-		productComposite.setBackground(parent.getBackground());
 		productComposite.setLayout(productLayout);
 
 		Label productLabel = new Label(productComposite, SWT.LEFT);
-		productLabel.setBackground(parent.getBackground());
 		productLabel.setText(Messages.BugzillaSearchPage_Product);
 		productLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		productLabel.setBackground(parent.getBackground());
 
 		GridData productLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		productLayoutData.heightHint = HEIGHT_ATTRIBUTE_COMBO;
@@ -966,13 +956,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		componentLayout.marginHeight = 0;
 		componentLayout.horizontalSpacing = 0;
 		Composite componentComposite = new Composite(topForm, SWT.NONE);
-		componentComposite.setBackground(parent.getBackground());
 		componentComposite.setLayout(componentLayout);
 
 		Label componentLabel = new Label(componentComposite, SWT.LEFT);
 		componentLabel.setText(Messages.BugzillaSearchPage_Component);
 		componentLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		componentLabel.setBackground(parent.getBackground());
 
 		component = new List(componentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData componentLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -981,7 +969,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		component.addSelectionListener(updateActionSelectionAdapter);
 
 		Composite statusComposite = new Composite(topForm, SWT.NONE);
-		statusComposite.setBackground(parent.getBackground());
 		GridLayout statusLayout = new GridLayout();
 		statusLayout.marginWidth = 0;
 		statusLayout.horizontalSpacing = 0;
@@ -991,7 +978,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Label statusLabel = new Label(statusComposite, SWT.LEFT);
 		statusLabel.setText(Messages.BugzillaSearchPage_Status);
 		statusLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		statusLabel.setBackground(parent.getBackground());
 
 		status = new List(statusComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_status = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -1000,7 +986,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		status.addSelectionListener(updateActionSelectionAdapter);
 
 		Composite severityComposite = new Composite(topForm, SWT.NONE);
-		severityComposite.setBackground(parent.getBackground());
 		GridLayout severityLayout = new GridLayout();
 		severityLayout.marginWidth = 0;
 		severityLayout.marginHeight = 0;
@@ -1010,7 +995,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Label severityLabel = new Label(severityComposite, SWT.LEFT);
 		severityLabel.setText(Messages.BugzillaSearchPage_Severity);
 		severityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		severityLabel.setBackground(parent.getBackground());
 
 		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -1027,14 +1011,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
 		moreOptionsSection.setLayoutData(g);
-		moreOptionsSection.setBackground(parent.getBackground());
 
 		Composite moreOptionsComposite = new Composite(moreOptionsSection, SWT.NULL);
 		GridLayout optionsLayout = new GridLayout(4, false);
 		optionsLayout.marginHeight = 0;
 		optionsLayout.marginWidth = 0;
 		moreOptionsComposite.setLayout(optionsLayout);
-		moreOptionsComposite.setBackground(parent.getBackground());
 		moreOptionsSection.setClient(moreOptionsComposite);
 
 		createMoreOptionsContent(moreOptionsComposite);
@@ -1047,7 +1029,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		chartSection = scrolledComposite.createSection(Messages.BugzillaSearchPage_BooleanChart,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, false);
-		chartSection.setBackground(parent.getBackground());
 		GridData g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
