@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,9 +43,10 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			if (range instanceof DayDateRange && TaskActivityUtil.getNextWeek().includes(range)) {
 				DayDateRange dayRange = (DayDateRange) range;
 				String day = NLS.bind(Messages.ScheduledTaskContainer_Next_Day, dayRange.getDayOfWeek());
-				String shortDate = DateFormat.getDateInstance(DateFormat.SHORT).format(
-						dayRange.getStartDate().getTime());
-				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Dash_Pattern, day, shortDate);
+//				String shortDate = DateFormat.getDateInstance(DateFormat.SHORT).format(
+//						dayRange.getStartDate().getTime());
+//				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Dash_Pattern, day, shortDate);
+				this.summary = day;
 				this.shortSummary = day;
 			} else {
 				this.summary = range.toString(false);
