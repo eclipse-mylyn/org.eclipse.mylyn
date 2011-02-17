@@ -55,12 +55,17 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			}
 
 			lastItem = null;
-			redrawTree();
+			redrawTree(lastItem);
 		}
 
-		private void redrawTree() {
+		private void redrawTree(TreeItem item) {
 			if (viewer.getTree() != null && !viewer.getTree().isDisposed()) {
-				viewer.getTree().redraw();
+				if (item != null && !item.isDisposed()) {
+					Rectangle bounds = item.getBounds();
+					viewer.getTree().redraw(bounds.x, bounds.y, viewer.getTree().getSize().x, bounds.height, true);
+				} else {
+					viewer.getTree().redraw();
+				}
 			}
 		}
 
@@ -124,13 +129,14 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 					item.setData(ID_HOVER, NodeState.MORE);
 				}
 				if (lastItem == null || (!lastItem.isDisposed() && !lastItem.equals(item))) {
-					redrawTree();
+					redrawTree(lastItem);
+					redrawTree(item);
 				}
 				lastItem = item;
 			} else {
 				if (lastItem != null && !lastItem.isDisposed() && !lastItem.equals(item)) {
 					lastItem.setData(ID_HOVER, NodeState.LESS);
-					redrawTree();
+					redrawTree(lastItem);
 				}
 				lastItem = item;
 			}
@@ -175,11 +181,12 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			if (inImageBounds(tree, item, e)) {
 				browseFilteredListener.setWasExternalClick(true);
 				browseFilteredListener.unfilterSelection(viewer, new StructuredSelection(item.getData()));
-			}
-			int newNumItems = item.getItemCount();
-			if (newNumItems == prevNumberItems && prevHasData) {
-				item.setData(ID_HOVER, NodeState.MORE_ERROR);
-				redrawTree();
+
+				int newNumItems = item.getItemCount();
+				if (newNumItems == prevNumberItems && prevHasData) {
+					item.setData(ID_HOVER, NodeState.MORE_ERROR);
+					redrawTree(item);
+				}
 			}
 		}
 
