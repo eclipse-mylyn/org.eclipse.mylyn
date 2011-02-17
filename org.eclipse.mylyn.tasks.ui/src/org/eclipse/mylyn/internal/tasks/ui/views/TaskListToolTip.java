@@ -160,12 +160,11 @@ public class TaskListToolTip extends GradientToolTip {
 	private String getTitleText(IRepositoryElement element) {
 		if (element instanceof ScheduledTaskContainer) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(element.getSummary());
+			sb.append(((ScheduledTaskContainer) element).getShortSummary());
 			if (!(element instanceof StateTaskContainer)) {
 				Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
-				sb.append("  ["); //$NON-NLS-1$
+				sb.append(" - "); //$NON-NLS-1$
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
-				sb.append("]"); //$NON-NLS-1$
 			}
 			return sb.toString();
 		} else if (element instanceof IRepositoryQuery) {

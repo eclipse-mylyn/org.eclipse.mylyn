@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @author Sam Davis
  */
 public class ScheduledTaskContainer extends AbstractTaskContainer {
 
@@ -32,16 +34,23 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	private final DateRange range;
 
+	private String shortSummary;
+
 	public ScheduledTaskContainer(TaskActivityManager activityManager, DateRange range, String summary) {
 		super(summary == null ? range.toString(false) : summary);
 		this.activityManager = activityManager;
 		this.range = range;
 		if (summary == null) {
 			if (range instanceof DayDateRange && TaskActivityUtil.getNextWeek().includes(range)) {
-				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Date_Day_Pattern, range.toString(false),
-						((DayDateRange) range).getDayOfWeek());
+				DayDateRange dayRange = (DayDateRange) range;
+				String day = NLS.bind(Messages.ScheduledTaskContainer_Next_Day, dayRange.getDayOfWeek());
+				String shortDate = DateFormat.getDateInstance(DateFormat.SHORT).format(
+						dayRange.getStartDate().getTime());
+				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Dash_Pattern, day, shortDate);
+				this.shortSummary = day;
 			} else {
 				this.summary = range.toString(false);
+				this.shortSummary = this.summary;
 			}
 		} else {
 			this.summary = summary;
@@ -245,6 +254,13 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	public String getSummary() {
 		if (summary != null) {
 			return summary;
+		}
+		return range.toString();
+	}
+
+	public String getShortSummary() {
+		if (shortSummary != null) {
+			return shortSummary;
 		}
 		return range.toString();
 	}
