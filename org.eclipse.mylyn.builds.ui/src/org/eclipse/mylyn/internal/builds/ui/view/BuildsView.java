@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.mylyn.builds.core.BuildStatus;
@@ -434,20 +435,24 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		manager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 
 		OpenWithBrowserAction openInBrowserAction = new OpenWithBrowserAction();
+		openInBrowserAction.selectionChanged(StructuredSelection.EMPTY);
 		viewer.addSelectionChangedListener(openInBrowserAction);
 		manager.add(openInBrowserAction);
 
 		RunBuildAction runBuildAction = new RunBuildAction();
+		runBuildAction.selectionChanged(StructuredSelection.EMPTY);
 		viewer.addSelectionChangedListener(runBuildAction);
 		manager.add(runBuildAction);
 
 		manager.add(new Separator(BuildsUiConstants.GROUP_FILE));
 
 		ShowBuildOutputAction openConsoleAction = new ShowBuildOutputAction();
+		openConsoleAction.selectionChanged(StructuredSelection.EMPTY);
 		viewer.addSelectionChangedListener(openConsoleAction);
 		manager.add(openConsoleAction);
 
 		ShowTestResultsAction showTestResultsAction = new ShowTestResultsAction();
+		showTestResultsAction.selectionChanged(StructuredSelection.EMPTY);
 		viewer.addSelectionChangedListener(showTestResultsAction);
 		manager.add(showTestResultsAction);
 	}
