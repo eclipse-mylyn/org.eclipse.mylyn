@@ -70,7 +70,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -442,13 +441,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private final FormToolkit toolkit;
 
-	private ExpandableComposite moreOptionsExpandComposite;
+	private ExpandableComposite moreOptionsSection;
 
-	private ExpandableComposite chartExpandComposite;
+	private ExpandableComposite chartSection;
 
 	private SectionComposite scrolledComposite;
-
-	private Composite chartGroup;
 
 	protected class ChartExpression {
 		private int fieldName;
@@ -705,10 +702,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		layout.marginHeight = 0;
 		control.setLayout(layout);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		createOptionsGroup(control);
 		createButtons(control);
+
 		Dialog.applyDialogFont(control);
 		setControl(control);
+
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 		restoreBounds();
 	}
@@ -776,8 +776,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		});
 
 		buttonComposite.setLayoutData(g);
-		Dialog.applyDialogFont(buttonComposite);
-
 	}
 
 	private void createOptionsGroup(Composite control) {
@@ -788,11 +786,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
 		scrolledBodyComposite.setBackground(control.getBackground());
 		scrolledBodyComposite.setLayout(new GridLayout());
-		Dialog.applyDialogFont(scrolledBodyComposite);
 
 		basicCompositeCreate(scrolledBodyComposite);
-		moreCompositeCreate(scrolledBodyComposite);
-		boolChartCompositeCreate(scrolledBodyComposite);
+		createMoreOptionsSection(scrolledBodyComposite);
+		createChartSection(scrolledBodyComposite);
+
 		Point p = scrolledBodyComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		scrolledComposite.setMinSize(p);
 	}
@@ -1016,63 +1014,45 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		severity.addSelectionListener(updateActionSelectionAdapter);
 	}
 
-	private void moreCompositeCreate(Composite parent) {
-		moreOptionsExpandComposite = scrolledComposite.createSection(Messages.BugzillaSearchPage_More_Options,
+	private void createMoreOptionsSection(Composite parent) {
+		moreOptionsSection = scrolledComposite.createSection(Messages.BugzillaSearchPage_More_Options,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, true);
-		moreOptionsExpandComposite.setLayout(new GridLayout(3, false));
+		moreOptionsSection.setLayout(new GridLayout(3, false));
 		GridData g = new GridData(GridData.FILL, GridData.CENTER, true, false);
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
-		moreOptionsExpandComposite.setLayoutData(g);
-		moreOptionsExpandComposite.setBackground(parent.getBackground());
-		Composite moreOptionsComposite = new Composite(moreOptionsExpandComposite, SWT.NULL);
+		moreOptionsSection.setLayoutData(g);
+		moreOptionsSection.setBackground(parent.getBackground());
+
+		Composite moreOptionsComposite = new Composite(moreOptionsSection, SWT.NULL);
 		GridLayout optionsLayout = new GridLayout(4, false);
 		optionsLayout.marginHeight = 0;
 		optionsLayout.marginWidth = 0;
-		moreOptionsComposite.setBackground(parent.getBackground());
 		moreOptionsComposite.setLayout(optionsLayout);
-		g = new GridData(GridData.FILL, GridData.FILL, true, true);
-		g.widthHint = 400;
-		moreOptionsComposite.setLayoutData(g);
-		Dialog.applyDialogFont(moreOptionsComposite);
-		moreOptionsExpandComposite.setClient(moreOptionsComposite);
-		createMoreOptionsComposite(moreOptionsComposite);
-		createSearchGroup(moreOptionsComposite);
+		moreOptionsComposite.setBackground(parent.getBackground());
+		moreOptionsSection.setClient(moreOptionsComposite);
+
+		createMoreOptionsContent(moreOptionsComposite);
+		createMoreOptionsChangedInFilter(moreOptionsComposite);
 	}
 
-	private void boolChartCompositeCreate(Composite parent) {
+	private void createChartSection(Composite parent) {
 		chartFieldText = chartFieldTextDefault.toArray(new String[chartFieldTextDefault.size()]);
 		chartFieldValues = chartFieldValuesDefault.toArray(new String[chartFieldValuesDefault.size()]);
-		chartExpandComposite = scrolledComposite.createSection(Messages.BugzillaSearchPage_BooleanChart,
+
+		chartSection = scrolledComposite.createSection(Messages.BugzillaSearchPage_BooleanChart,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR, false);
-		GridLayout optionsLayout = new GridLayout(3, false);
-		optionsLayout.marginHeight = 0;
-		optionsLayout.marginWidth = 0;
-		optionsLayout.horizontalSpacing = 0;
-		optionsLayout.verticalSpacing = 0;
-		chartExpandComposite.setLayout(optionsLayout);
-		chartExpandComposite.setBackground(parent.getBackground());
+		chartSection.setBackground(parent.getBackground());
 		GridData g = new GridData(GridData.FILL, GridData.BEGINNING, true, false);
 		g.horizontalSpan = 4;
 		g.horizontalIndent = INDENT;
-		chartExpandComposite.setLayoutData(g);
-		Composite chartComposite = new Composite(chartExpandComposite, SWT.NULL);
-		optionsLayout = new GridLayout(4, false);
-		optionsLayout.marginHeight = 0;
-		optionsLayout.marginWidth = 0;
-		optionsLayout.horizontalSpacing = 0;
-		optionsLayout.verticalSpacing = 0;
-		chartComposite.setLayout(optionsLayout);
-		g = new GridData(SWT.FILL, SWT.FILL, true, true);
-		g.horizontalIndent = INDENT;
-		g.widthHint = 400;
-		chartComposite.setLayoutData(g);
-		Dialog.applyDialogFont(chartComposite);
-		chartExpandComposite.setClient(chartComposite);
-		createChartGroup(chartComposite);
+		chartSection.setLayoutData(g);
+
+		charts.add(0, new Chart());
+		recreateChartControls();
 	}
 
-	private void createMoreOptionsComposite(Composite advancedComposite) {
+	private void createMoreOptionsContent(Composite advancedComposite) {
 
 		// Info text
 		Label labelComment = new Label(advancedComposite, SWT.LEFT);
@@ -1356,7 +1336,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		os.addSelectionListener(updateActionSelectionAdapter);
 	}
 
-	private void createSearchGroup(Composite control) {
+	private void createMoreOptionsChangedInFilter(Composite control) {
 		Composite composite = new Composite(control, SWT.NONE);
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd.horizontalSpan = 4;
@@ -1499,12 +1479,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						priority.getSelection().length > 0 || resolution.getSelection().length > 0
 						|| version.getSelection().length > 0 || target.getSelection().length > 0
 						|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-					moreOptionsExpandComposite.setExpanded(true);
+					moreOptionsSection.setExpanded(true);
 					scrolledComposite.reflow(true);
 					refreshChartControls();
 				}
-				if (charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
-					chartExpandComposite.setExpanded(true);
+				if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
+					chartSection.setExpanded(true);
 					scrolledComposite.reflow(true);
 					refreshChartControls();
 				}
@@ -2319,7 +2299,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					priority.getSelection().length > 0 || resolution.getSelection().length > 0
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-				chartExpandComposite.setExpanded(true);
+				chartSection.setExpanded(true);
 			}
 
 		} catch (IllegalArgumentException e) {
@@ -2557,25 +2537,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		super.dispose();
 	}
 
-	private void createChartGroup(final Composite parent) {
-		GridLayout layout;
-		GridData gd;
-		chartGroup = new Composite(parent, SWT.NONE);
-		layout = new GridLayout(1, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		layout.horizontalSpacing = 0;
-		chartGroup.setLayout(layout);
-		gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
-		gd.horizontalIndent = INDENT;
-		chartGroup.setLayoutData(gd);
-		charts.add(0, new Chart());
-		recreateChartControls();
-
-		parent.layout(true);
-		parent.redraw();
-	}
-
 	private void refreshChartControls() {
 		int chartNumMax = chartControls.size();
 		for (int chartNum = 0; chartNum < chartNumMax; chartNum++) {
@@ -2603,30 +2564,36 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void recreateChartControls() {
 		GridLayout layout;
 		GridData gd;
-		Composite parent = chartGroup.getParent();
-		chartGroup.setVisible(false);
-		chartGroup.dispose();
+
+		if (chartSection.getClient() != null) {
+			chartSection.getClient().dispose();
+		}
+
 		chartControls.clear();
 		negateButtons.clear();
-		chartGroup = new Composite(parent, SWT.NONE);
+
+		Composite chartGroup = new Composite(chartSection, SWT.NONE);
 		layout = new GridLayout(1, false);
 		layout.verticalSpacing = 0;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		chartGroup.setLayout(layout);
-		gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
-		chartGroup.setLayoutData(gd);
+		chartSection.setClient(chartGroup);
 
 		int chartNumMax = charts.size();
 		for (int chartNumber = 0; chartNumber < chartNumMax; chartNumber++) {
 			final int chartNum = chartNumber;
 			final Composite chartGroup0 = new Composite(chartGroup, SWT.NONE);
 			if (chartNum > 0) {
-				Label sep = new Label(chartGroup0, SWT.SEPARATOR | SWT.HORIZONTAL);
+				// separator
+				Label sep = new Label(chartGroup0, SWT.NONE);
+				sep.setText(" "); //$NON-NLS-1$
 				gd = new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1);
 				sep.setLayoutData(gd);
 			}
 			layout = new GridLayout(3, false);
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
 			chartGroup0.setLayout(layout);
 			gd = new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1);
 			chartGroup0.setLayoutData(gd);
@@ -2652,8 +2619,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
 									chartColumn);
 							chartExpression.setFieldName(comboField.getSelectionIndex());
-							chartGroup.getShell().layout(true);
-							chartGroup.getShell().redraw();
+							getShell().layout(true);
+							getShell().redraw();
 						}
 					});
 					comboField.setToolTipText(Messages.BugzillaSearchPage_Tooltip_Custom_fields_at_end);
