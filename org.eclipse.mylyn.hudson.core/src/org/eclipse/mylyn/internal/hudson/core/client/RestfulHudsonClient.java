@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -250,6 +251,11 @@ public class RestfulHudsonClient {
 	}
 
 	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor) throws HudsonException {
+		Assert.isNotNull(ids);
+		if (ids.isEmpty()) {
+			return Collections.emptyList();
+		}
+
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
