@@ -45,8 +45,8 @@ public abstract class AbstractTaskSchema {
 			this.type = source.type;
 		}
 
-		public FieldFactory flags(EnumSet<Flag> flags) {
-			this.flags = flags;
+		public FieldFactory flags(Flag... flags) {
+			this.flags = EnumSet.copyOf(Arrays.asList(flags));
 			return this;
 		}
 
