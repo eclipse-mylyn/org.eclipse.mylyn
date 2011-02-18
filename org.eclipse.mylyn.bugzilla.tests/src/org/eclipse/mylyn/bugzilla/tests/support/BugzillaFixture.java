@@ -96,28 +96,28 @@ public class BugzillaFixture extends TestFixture {
 			"3.0.11", "");
 
 	public static BugzillaFixture BUGS_3_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_32_URL, //
-			"3.2.9", "");
+			"3.2.10", "");
 
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
-			"3.4.9", "");
+			"3.4.10", "");
 
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
-			"3.6.3", "");
+			"3.6.4", "");
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-custom-wf", "3.6.3", "Custom Workflow");
+			+ "-custom-wf", "3.6.4", "Custom Workflow");
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
-			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6.3", "Custom Workflow and Status");
+			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6.4", "Custom Workflow and Status");
 
 	public static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-xml-rpc-disabled", "3.6.3", "XML-RPC disabled");
+			+ "-xml-rpc-disabled", "3.6.4", "XML-RPC disabled");
 
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.1", "");
 
 	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
-			"4.0RC1+", "");
+			"4.0", "");
 
 	public static BugzillaFixture DEFAULT = BUGS_4_0;
 
