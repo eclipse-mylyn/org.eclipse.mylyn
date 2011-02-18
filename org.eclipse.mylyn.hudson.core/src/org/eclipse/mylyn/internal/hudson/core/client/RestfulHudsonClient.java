@@ -251,8 +251,7 @@ public class RestfulHudsonClient {
 	}
 
 	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor) throws HudsonException {
-		Assert.isNotNull(ids);
-		if (ids.isEmpty()) {
+		if (ids != null && ids.isEmpty()) {
 			return Collections.emptyList();
 		}
 
