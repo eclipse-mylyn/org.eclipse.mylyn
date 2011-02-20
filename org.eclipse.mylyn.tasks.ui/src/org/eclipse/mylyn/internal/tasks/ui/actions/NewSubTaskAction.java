@@ -33,8 +33,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -173,7 +173,10 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						selectedTask.getConnectorKind());
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(null, selectedTask)) {
+
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						selectedTask.getRepositoryUrl());
+				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(repository, selectedTask)) {
 					selectedTask = null;
 				}
 			}
