@@ -23,7 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -39,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
 /**
  * @author Mik Kersten
@@ -293,7 +296,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		try {
 			monitor.beginTask(Messages.BugzillaTaskDataHandler_Receiving_tasks, taskIds.size());
-			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+			final BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			final CoreException[] collectionException = new CoreException[1];
 			final Boolean[] updateConfig = new Boolean[1];
 
@@ -340,9 +343,47 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				throw collectionException[0];
 			}
 			if (updateConfig[0] != null) {
-				SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
-				client.getRepositoryConfiguration(subMonitor, null);
-				subMonitor.done();
+//				SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
+//				client.getRepositoryConfiguration(subMonitor, null);
+//				subMonitor.done();
+
+				// async. Update the Repository Configuration
+				TaskJob updateJob = new TaskJob(Messages.BugzillaTaskDataHandler_Refreshing_repository_configuration) {
+
+					private IStatus error;
+
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor = SubMonitor.convert(monitor);
+						monitor.beginTask(Messages.BugzillaTaskDataHandler_Receiving_configuration,
+								IProgressMonitor.UNKNOWN);
+						try {
+							try {
+								client.getRepositoryConfiguration(monitor, null);
+							} catch (CoreException e) {
+								error = e.getStatus();
+							} catch (IOException e) {
+								error = new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e);
+							}
+						} finally {
+							monitor.done();
+						}
+						return Status.OK_STATUS;
+					}
+
+					@Override
+					public boolean belongsTo(Object family) {
+						return family == repository;
+					}
+
+					@Override
+					public IStatus getStatus() {
+						return error;
+					}
+				};
+				updateJob.setPriority(Job.INTERACTIVE);
+				updateJob.schedule();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
@@ -462,7 +503,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 			}
-			//TODO: enalble this if we want to do the Configuration update
+			//TODO: enable this if we want to do the Configuration update
 //			if (updateConfig) {
 //				// this info CoreException is only used internal
 //				throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,

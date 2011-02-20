@@ -261,7 +261,11 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskAttachmentHandler_unable_to_submit_attachment;
 
+	public static String BugzillaTaskDataHandler_Receiving_configuration;
+
 	public static String BugzillaTaskDataHandler_Receiving_tasks;
+
+	public static String BugzillaTaskDataHandler_Refreshing_repository_configuration;
 
 	public static String BugzillaTaskDataHandler_Submitting_task;
 
