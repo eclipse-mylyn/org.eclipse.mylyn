@@ -188,4 +188,10 @@ public class CompositeInteractionContext implements IInteractionContext {
 	public void setContentLimitedTo(String contentLimitedTo) {
 		this.contentLimitedTo = contentLimitedTo;
 	}
+
+	public void addEvents(IInteractionContext otherContext) {
+		for (InteractionContext context : contexts.values()) {
+			context.addEvents(otherContext);
+		}
+	}
 }

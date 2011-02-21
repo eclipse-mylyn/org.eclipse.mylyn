@@ -74,6 +74,12 @@ public class InteractionContext implements IInteractionContext {
 		activeNode = lastEdgeNode;
 	}
 
+	public synchronized void addEvents(IInteractionContext otherContext) {
+		for (InteractionEvent event : otherContext.getInteractionHistory()) {
+			parseEvent(event);
+		}
+	}
+
 	public synchronized IInteractionElement parseEvent(InteractionEvent event) {
 		interactionHistory.add(event);
 		return parseInteractionEvent(event);
@@ -277,7 +283,7 @@ public class InteractionContext implements IInteractionContext {
 		copiedContext.contentLimitedTo = contentLimitedTo;
 
 		collapseHistory(copiedContext.interactionHistory);
-		
+
 		// none of the following are used for writing contexts so we aren't going to try to copy them
 		//copiedContext.numUserEvents = numUserEvents;
 		// copiedContext.lastEdgeNode = lastEdgeNode;

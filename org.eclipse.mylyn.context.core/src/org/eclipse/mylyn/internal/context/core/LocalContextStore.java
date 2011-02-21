@@ -179,6 +179,18 @@ public class LocalContextStore implements IContextStore {
 		}
 	}
 
+	public void merge(String sourceTaskHandle, String targetTaskHandle) {
+		IInteractionContext sourceContext = loadContext(sourceTaskHandle);
+		IInteractionContext targetContext = loadContext(targetTaskHandle);
+		if (targetContext instanceof InteractionContext) {
+			((InteractionContext) targetContext).addEvents(sourceContext);
+			ContextCorePlugin.getContextStore().saveContext(targetContext);
+		} else {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Cannot merge contexts of " //$NON-NLS-1$
+					+ sourceTaskHandle + " and " + targetTaskHandle, new Exception().fillInStackTrace())); //$NON-NLS-1$
+		}
+	}
+
 	public IInteractionContext cloneContext(String sourceContextHandle, String destinationContextHandle) {
 
 		InteractionContext readContext = (InteractionContext) externalizer.readContextFromXml(sourceContextHandle,

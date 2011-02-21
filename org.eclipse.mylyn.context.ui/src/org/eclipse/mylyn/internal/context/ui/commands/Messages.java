@@ -29,15 +29,21 @@ public class Messages extends NLS {
 
 	public static String ClearContextHandler_Confirm_clear_context;
 
+	public static String CopyContextHandler_Merge;
+
 	public static String CopyContextHandler_Copy_Context;
 
 	public static String CopyContextHandler_No_source_task_selected;
 
 	public static String CopyContextHandler_No_target_task_selected;
 
+	public static String CopyContextHandler_Replace;
+
 	public static String CopyContextHandler_Select_Target_Task;
 
 	public static String CopyContextHandler_Select_the_target_task__;
+
+	public static String CopyContextHandler_SELECTED_TASK_ALREADY_HAS_CONTEXT;
 
 	public static String CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT;
 

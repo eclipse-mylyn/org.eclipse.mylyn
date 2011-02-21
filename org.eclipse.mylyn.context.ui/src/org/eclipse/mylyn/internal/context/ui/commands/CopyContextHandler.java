@@ -13,10 +13,12 @@ package org.eclipse.mylyn.internal.context.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
@@ -64,16 +66,46 @@ public class CopyContextHandler extends AbstractTaskHandler {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TITLE_DIALOG, Messages.CopyContextHandler_TARGET_TASK_CON_NOT_BE_THE_SAME_AS_SOURCE_TASK);
 			} else {
-				IInteractionContext context = ContextCore.getContextStore().cloneContext(
-						sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
-				if (context == null) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							TITLE_DIALOG, Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);
-				} else {
+				final int REPLACE = 0;
+				final int MERGE = 1;
+				final int CANCEL = 2;
+				int action = REPLACE;
+				if (ContextCorePlugin.getContextStore().hasContext(targetTask.getHandleIdentifier())) {
+					MessageDialog dialog2 = new MessageDialog(PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow()
+							.getShell(), TITLE_DIALOG, null,
+							Messages.CopyContextHandler_SELECTED_TASK_ALREADY_HAS_CONTEXT, MessageDialog.QUESTION,
+							new String[] { Messages.CopyContextHandler_Replace, Messages.CopyContextHandler_Merge,
+									IDialogConstants.CANCEL_LABEL }, 1);
+					action = dialog2.open();
+				}
+
+				boolean shouldCopyEditorMemento = true;
+				switch (action) {
+				case REPLACE:
+					IInteractionContext context = ContextCore.getContextStore().cloneContext(
+							sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
+					if (context == null) {
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								TITLE_DIALOG, Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);
+						return;
+					}
+					break;
+				case MERGE:
+					ContextCorePlugin.getContextStore().merge(sourceTask.getHandleIdentifier(),
+							targetTask.getHandleIdentifier());
+					shouldCopyEditorMemento = !ContextUiPlugin.getEditorManager().hasEditorMemento(
+							targetTask.getHandleIdentifier());
+					break;
+				case CANCEL:
+					return;
+				}
+
+				if (shouldCopyEditorMemento) {
 					ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
 							targetTask.getHandleIdentifier());
-					TasksUiInternal.activateTaskThroughCommand(targetTask);
 				}
+				TasksUiInternal.activateTaskThroughCommand(targetTask);
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
