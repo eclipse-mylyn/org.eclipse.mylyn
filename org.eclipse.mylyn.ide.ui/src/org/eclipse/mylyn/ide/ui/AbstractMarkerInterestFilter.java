@@ -12,9 +12,14 @@
 package org.eclipse.mylyn.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mik Kersten
@@ -23,17 +28,23 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 public abstract class AbstractMarkerInterestFilter extends InterestFilter {
 
 	protected boolean isInteresting(IMarker marker, Viewer viewer, Object parent) {
-		if (isImplicitlyInteresting(marker)) {
-			return true;
-		} else {
-			String handle = ContextCore.getStructureBridge(marker.getResource().getFileExtension())
-					.getHandleForOffsetInObject(marker, 0);
-			if (handle == null) {
-				return false;
+		try {
+			if (isImplicitlyInteresting(marker)) {
+				return true;
 			} else {
-				return super.select(viewer, parent, ContextCore.getContextManager().getElement(handle));
+				String handle = ContextCore.getStructureBridge(marker.getResource().getFileExtension())
+						.getHandleForOffsetInObject(marker, 0);
+				if (handle == null) {
+					return false;
+				} else {
+					return super.select(viewer, parent, ContextCore.getContextManager().getElement(handle));
+				}
 			}
+		} catch (Throwable t) {
+			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Unable to get handle for marker: {0}", marker.getResource()), t)); //$NON-NLS-1$
 		}
+		return false;
 	}
 
 	protected abstract boolean isImplicitlyInteresting(IMarker marker);
