@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
+import org.eclipse.mylyn.internal.java.ui.editor.BreakpointEditorTracker;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -56,6 +57,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	private JavaEditingMonitor javaEditingMonitor;
 
 	private InterestUpdateDeltaListener javaElementChangeListener;
+
+	private BreakpointEditorTracker breakpointEditorTracker;
 
 	private static final String MYLYN_PREVIOUS_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
 
@@ -126,6 +129,9 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not install type history manager: incompatible Eclipse version", t)); //$NON-NLS-1$
 		}
+
+		breakpointEditorTracker = new BreakpointEditorTracker();
+		breakpointEditorTracker.install(PlatformUI.getWorkbench());
 	}
 
 	private void lazyStop() {
@@ -140,6 +146,9 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		}
 		if (javaElementChangeListener != null) {
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
+		}
+		if (breakpointEditorTracker != null) {
+			breakpointEditorTracker.dispose(PlatformUI.getWorkbench());
 		}
 		// TODO: uninstall editor tracker
 	}
