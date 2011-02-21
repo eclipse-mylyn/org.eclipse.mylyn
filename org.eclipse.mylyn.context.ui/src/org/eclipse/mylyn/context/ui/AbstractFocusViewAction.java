@@ -91,7 +91,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasRun = false;
 
-	private Set<Class<?>> cachedPreservedFilters;
+	private Set<String> cachedPreservedFilters;
 
 	/**
 	 * Work-around for suppressing expansion without breaking API. Will be remove post 3.0
@@ -161,11 +161,11 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 
 			List<StructuredViewer> viewers = getViewers();
-			Set<Class<?>> excludedFilters = getPreservedFilterClasses(false);
+			Set<String> excludedFilters = getPreservedFilterClasses(false);
 			for (StructuredViewer viewer : viewers) {
 				if (previousFilters.containsKey(viewer)) {
 					for (ViewerFilter filter : previousFilters.get(viewer)) {
-						if (!excludedFilters.contains(filter.getClass())) {
+						if (!excludedFilters.contains(filter.getClass().getName())) {
 							try {
 								viewer.addFilter(filter);
 							} catch (Throwable t) {
@@ -439,7 +439,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	/**
 	 * @return filters that should not be removed when the interest filter is installed
 	 */
-	private Set<Class<?>> getPreservedFilterClasses(boolean cacheFilters) {
+	private Set<String> getPreservedFilterClasses(boolean cacheFilters) {
 		if (ContextUiPlugin.getDefault() == null || viewPart == null) {
 			return Collections.emptySet();
 		}
@@ -482,10 +482,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (viewPart != null && manageFilters) {
 				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
-				Set<Class<?>> preservedFilterClasses = getPreservedFilterClasses(true);
+				Set<String> preservedFilterClasses = getPreservedFilterClasses(true);
 
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
-					if (preservedFilterClasses.contains(filter.getClass()) || isPreservedFilter(filter)) {
+					if (preservedFilterClasses.contains(filter.getClass().getName()) || isPreservedFilter(filter)) {
 						toAdd.add(filter);
 					}
 				}

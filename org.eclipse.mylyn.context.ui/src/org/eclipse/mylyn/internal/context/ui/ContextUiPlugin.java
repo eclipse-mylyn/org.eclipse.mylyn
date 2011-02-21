@@ -35,7 +35,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
@@ -107,7 +106,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private final Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
 
-	private final Map<String, Set<Class<?>>> preservedFilterClasses = new HashMap<String, Set<Class<?>>>();
+	private final Map<String, Set<String>> preservedFilterClasses = new HashMap<String, Set<String>>();
 
 	private final Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
 
@@ -492,11 +491,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			for (IConfigurationElement child : children) {
 				if (child.getName().equals(UiExtensionPointReader.ELEMENT_FILTER)) {
 					try {
-						Object filterClass = child.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
-						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, (ViewerFilter) filterClass);
-					} catch (Exception e) {
 						String filterId = child.getAttribute(ELEMENT_ID);
 						ContextUiPlugin.getDefault().addPreservedFilterId(viewId, filterId);
+
+						String filterClass = child.getAttribute(UiExtensionPointReader.ELEMENT_CLASS);
+						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, filterClass);
+					} catch (Exception e) {
 					}
 				}
 			}
@@ -596,16 +596,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		return activeSearchLabels.get(bridge);
 	}
 
-	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
-		Set<Class<?>> preservedList = preservedFilterClasses.get(viewId);
+	public void addPreservedFilterClass(String viewId, String filterClass) {
+		Set<String> preservedList = preservedFilterClasses.get(viewId);
 		if (preservedList == null) {
-			preservedList = new HashSet<Class<?>>();
+			preservedList = new HashSet<String>();
 			preservedFilterClasses.put(viewId, preservedList);
 		}
-		preservedList.add(filter.getClass());
+		preservedList.add(filterClass);
 	}
 
-	public Set<Class<?>> getPreservedFilterClasses(String viewId) {
+	public Set<String> getPreservedFilterClasses(String viewId) {
 		UiExtensionPointReader.initExtensions();
 		if (preservedFilterClasses.containsKey(viewId)) {
 			return preservedFilterClasses.get(viewId);

@@ -46,6 +46,9 @@
           <filter
                 class="org.eclipse.jdt.internal.ui.filters.ClosedProjectFilter">
           </filter>
+          <filter
+                class="org.eclipse.m2e.ui.internal.filter.MavenModuleFilter">
+          </filter>
         </preservedFilters>
         <preservedFilters
               viewId="org.eclipse.ui.navigator.ProjectExplorer">

@@ -23,6 +23,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiExtensionPointReader;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -201,8 +202,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 				.getDefaultBoolean(ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED);
 		resourceMonitoringButton.setSelection(resourceModificationsEnabled);
 		ignoreTable.removeAll();
-		ResourcesUiPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
-		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns(),
+		fillTable(ResourcesUiExtensionPointReader.getDefaultResourceExclusions(),
 				ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
 	}
 

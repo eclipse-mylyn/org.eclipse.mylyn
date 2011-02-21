@@ -50,6 +50,12 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	public static final String PREF_MODIFIED_DATE_EXCLUSIONS = PREF_DEFAULT_SCOPE + ".date.modified.exclusion"; //$NON-NLS-1$
 
+	public static final String PREF_RESOURCE_PATTERNS_VERSION = PREF_DEFAULT_SCOPE + ".ignore.pattern.version"; //$NON-NLS-1$
+
+	private static final String RESOURCE_PATTERN_VERSION = "1.0"; //$NON-NLS-1$
+
+	private static final Set<String> ADDED_PATTERNS_1_0;
+
 	private static final String KEY_RESOURCE_EXCLUSIONS = "resourceExclusions"; //$NON-NLS-1$
 
 	private static final String KEY_EXCLUSION = "exclusion"; //$NON-NLS-1$
@@ -60,25 +66,25 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	public static Set<String> cachedExclusionPatterns = null;
 
+	static {
+		ADDED_PATTERNS_1_0 = new HashSet<String>(1);
+		ADDED_PATTERNS_1_0.add("target/**"); //$NON-NLS-1$
+	}
+
 	@Override
 	public void initializeDefaultPreferences() {
 		// most defaults come from extension points
 		Set<String> defaultPatterns = new HashSet<String>();
 
 		defaultPatterns.addAll(ResourcePatternExclusionStrategy.convertToAntPattern(".*")); //$NON-NLS-1$
+		defaultPatterns.addAll(ADDED_PATTERNS_1_0);
+
+		defaultPatterns.addAll(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCE_MONITOR_ENABLED, true);
-		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setDefault(PREF_RESOURCES_IGNORED_ANT, createResourceExclusionMemento(defaultPatterns));
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED_ANT,
+				createResourceExclusionMemento(defaultPatterns));
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_MODIFIED_DATE_EXCLUSIONS, true);
-	}
-
-	/**
-	 * Restores the default values for the patterns to ignore.
-	 */
-	public static void restoreDefaultExcludedResourcePatterns() {
-		setExcludedResourcePatterns(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 	}
 
 	public static synchronized void setExcludedResourcePatterns(Set<String> patterns) {
@@ -160,6 +166,16 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		}
 
 		cachedExclusionPatterns = new HashSet<String>(exclusions);
+
+		if (!RESOURCE_PATTERN_VERSION.equals(ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(
+				PREF_RESOURCE_PATTERNS_VERSION))) {
+			cachedExclusionPatterns.addAll(ADDED_PATTERNS_1_0);
+			ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCE_PATTERNS_VERSION,
+					RESOURCE_PATTERN_VERSION);
+			// make sure to save the new value
+			setExcludedResourcePatterns(cachedExclusionPatterns);
+		}
+
 		return cachedExclusionPatterns;
 	}
 

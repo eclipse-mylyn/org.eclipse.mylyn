@@ -41,6 +41,8 @@
          	antPattern=".*/**"/>
          <exclude
          	antPattern="**/.*/**"/>
+         <exclude
+         	antPattern="target/**"/>
    </extension>
  
    <extension

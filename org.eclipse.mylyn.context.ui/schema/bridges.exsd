@@ -174,9 +174,6 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.ViewerFilter"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
