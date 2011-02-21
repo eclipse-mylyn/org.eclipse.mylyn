@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -28,6 +29,12 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 	private final class MoveListener implements MouseMoveListener, MouseListener, MouseTrackListener {
 
 		private TreeItem lastItem;
+
+		private TreeItem currentItem;
+
+		private long lastMoveTime;
+
+		private long startMoveTime;
 
 		private final TreeViewer viewer;
 
@@ -54,8 +61,9 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				toolTip = null;
 			}
 
-			lastItem = null;
 			redrawTree(lastItem);
+			lastItem = null;
+			currentItem = null;
 		}
 
 		private void redrawTree(TreeItem item) {
@@ -119,20 +127,39 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				return;
 			}
 			Tree tree = (Tree) e.widget;
-			TreeItem item = findItem(tree, e.y);
+			final TreeItem item = findItem(tree, e.y);
 			if (item != null && !item.isDisposed()) {
 				if (lastItem != null && !lastItem.isDisposed() && !lastItem.equals(item)) {
+					boolean redraw = lastItem.getData(ID_HOVER) != NodeState.LESS;
 					lastItem.setData(ID_HOVER, NodeState.LESS);
+					if (redraw) {// hide the + immediately
+						redrawTree(lastItem);
+					}
 				}
 
-				if (item.getData(ID_HOVER) != NodeState.MORE_ERROR) {
-					item.setData(ID_HOVER, NodeState.MORE);
+				currentItem = item;
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - lastMoveTime > 250) {// user paused movement
+					startMoveTime = currentTime;
 				}
-				if (lastItem == null || (!lastItem.isDisposed() && !lastItem.equals(item))) {
-					redrawTree(lastItem);
-					redrawTree(item);
-				}
-				lastItem = item;
+
+				lastMoveTime = currentTime;
+				// be responsive for small moves but delay more for bigger ones
+				int delay = Math.min(100, (int) ((currentTime - startMoveTime) / 4.0));
+				PlatformUI.getWorkbench().getDisplay().timerExec(delay, new Runnable() {
+					public void run() {// do nothing if we aren't using the most recent item
+						if (currentItem == item && !item.isDisposed()) {
+							if (item.getData(ID_HOVER) != NodeState.MORE_ERROR) {
+								item.setData(ID_HOVER, NodeState.MORE);
+							}
+							if (lastItem == null || (!lastItem.isDisposed() && !lastItem.equals(item))) {
+								redrawTree(lastItem);
+								redrawTree(item);
+							}
+							lastItem = item;
+						}
+					}
+				});
 			} else {
 				if (lastItem != null && !lastItem.isDisposed() && !lastItem.equals(item)) {
 					lastItem.setData(ID_HOVER, NodeState.LESS);
