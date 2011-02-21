@@ -60,7 +60,6 @@ import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 
-
 /**
  * Model for annotations in the diff view.
  * 
@@ -444,8 +443,6 @@ public class ReviewCompareAnnotationModel {
 
 	private final ReviewAnnotationModel rightAnnotationModel;
 
-	private final IReview review;
-
 	private CrucibleViewerTextInputListener leftViewerListener;
 
 	private CrucibleViewerTextInputListener rightViewerListener;
@@ -458,13 +455,10 @@ public class ReviewCompareAnnotationModel {
 
 	private MergeSourceViewer fLeftSourceViewer;
 
-	public ReviewCompareAnnotationModel(IFileItem crucibleFile, IReview review, ITopic commentToFocus) {
+	public ReviewCompareAnnotationModel(IFileItem crucibleFile, ITopic commentToFocus) {
 		super();
-		this.review = review;
-		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase(),
-				review);
-		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile,
-				crucibleFile.getTarget(), review);
+		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase());
+		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getTarget());
 		this.commentToFocus = commentToFocus;
 	}
 

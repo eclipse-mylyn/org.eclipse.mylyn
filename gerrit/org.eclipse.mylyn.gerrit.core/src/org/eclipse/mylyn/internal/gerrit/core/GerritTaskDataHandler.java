@@ -16,8 +16,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -75,9 +77,9 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			GerritClient client = connector.getClient(repository);
-			ChangeDetail changeDetail = client.getChangeDetail(client.id(taskId), monitor);
+			GerritChange review = client.getChange(taskId, monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
-			updateTaskData(repository, taskData, changeDetail);
+			updateTaskData(repository, taskData, review, !client.isAnonymous());
 			return taskData;
 		} catch (GerritException e) {
 			throw connector.toCoreException(repository, e);
@@ -97,10 +99,13 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		throw new UnsupportedOperationException();
 	}
 
-	public void updateTaskData(TaskRepository repository, TaskData data, ChangeDetail changeDetail) {
+	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange review, boolean canPublish) {
 		GerritTaskSchema schema = GerritTaskSchema.getDefault();
+
+		ChangeDetail changeDetail = review.getChangeDetail();
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
+
 		setAttributeValue(data, schema.KEY, change.getId().toString());
 		//setAttributeValue(data, schema.KEY, change.getKey().abbreviate());
 		setAttributeValue(data, schema.CHANGE_ID, change.getKey().get());
@@ -134,6 +139,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			mapper.applyTo(attribute);
 			i++;
 		}
+
+		JSonSupport json = new JSonSupport();
+		setAttributeValue(data, schema.OBJ_REVIEW, json.getGson().toJson(review));
+		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
 	}
 
 	public void updateTaskData(TaskData data, ChangeInfo changeInfo) {

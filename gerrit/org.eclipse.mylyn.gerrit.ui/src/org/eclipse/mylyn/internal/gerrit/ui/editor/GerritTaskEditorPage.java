@@ -61,11 +61,20 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 			if (PATH_ACTIONS.equals(descriptor.getPath())) {
 				it.remove();
 			}
+			if (PATH_PEOPLE.equals(descriptor.getPath())) {
+				it.remove();
+			}
 		}
-		descriptors.add(new TaskEditorPartDescriptor("review") { //$NON-NLS-1$
+		descriptors.add(new TaskEditorPartDescriptor(ReviewSection.class.getName()) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new ReviewSection();
+			}
+		});
+		descriptors.add(new TaskEditorPartDescriptor(PatchSetSection.class.getName()) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new PatchSetSection();
 			}
 		});
 		return descriptors;

@@ -36,6 +36,9 @@ public class GerritTaskSchema extends AbstractTaskSchema {
 
 	public final Field UPDATED = inheritFrom(DefaultTaskSchema.DATE_MODIFICATION).create();
 
+	public final Field OWNER = inheritFrom(DefaultTaskSchema.USER_ASSIGNED).flags(Flag.READ_ONLY, Flag.ATTRIBUTE)
+			.create();
+
 	public final Field PROJECT = createField(TaskAttribute.PRODUCT, "Project", TaskAttribute.TYPE_SHORT_TEXT,
 			Flag.READ_ONLY, Flag.ATTRIBUTE);
 
@@ -47,10 +50,12 @@ public class GerritTaskSchema extends AbstractTaskSchema {
 
 	public final Field KEY = inheritFrom(DefaultTaskSchema.TASK_KEY).create();
 
-	public final Field OWNER = inheritFrom(DefaultTaskSchema.USER_ASSIGNED).create();
-
 	public final Field URL = inheritFrom(DefaultTaskSchema.TASK_URL).create();
 
 	public final Field DESCRIPTION = inheritFrom(DefaultTaskSchema.DESCRIPTION).create();
+
+	public final Field OBJ_REVIEW = createField("org.eclipse.gerrit.Review", "Review", TaskAttribute.TYPE_LONG_TEXT);
+
+	public final Field CAN_PUBLISH = createField("org.eclipse.gerrit.CanPublish", "Publish", TaskAttribute.TYPE_BOOLEAN);
 
 }
