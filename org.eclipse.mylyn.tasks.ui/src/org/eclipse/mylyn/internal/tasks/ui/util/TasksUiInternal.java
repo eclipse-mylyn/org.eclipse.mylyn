@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -677,7 +678,7 @@ public class TasksUiInternal {
 	 * @return - true if dialog was opened successfully and not canceled, false otherwise
 	 * @since 3.0
 	 */
-	public static boolean openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, IRepositoryQuery query) {
+	public static boolean openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, final IRepositoryQuery query) {
 		try {
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
@@ -689,7 +690,20 @@ public class TasksUiInternal {
 
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
+				WizardDialog dialog = new WizardDialog(shell, wizard) {
+					private static final String DIALOG_SETTINGS = "EditQueryWizardWizard"; //$NON-NLS-1$
+
+					@Override
+					protected IDialogSettings getDialogBoundsSettings() {
+						IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
+						String settingsSectionId = DIALOG_SETTINGS + '.' + query.getRepositoryUrl();
+						IDialogSettings section = settings.getSection(settingsSectionId);
+						if (section == null) {
+							section = settings.addNewSection(settingsSectionId);
+						}
+						return section;
+					}
+				};
 				dialog.create();
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {

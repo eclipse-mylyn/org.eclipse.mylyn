@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -71,7 +70,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -285,9 +283,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			"notregexp", "lessthan", "greaterthan", "anywords", "allwords", "nowords", "changedbefore", "changedafter", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			"changedfrom", "changedto", "changedby", "matches" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	// dialog store id constants
-	private final static String DIALOG_BOUNDS_KEY = "ResizableDialogBounds"; //$NON-NLS-1$
-
 	private final static String REGEXP_CHART_EXPR = "(field|type|value)([0-9]+)-([0-9]+)-([0-9]+)"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN_CHART_EXPR = Pattern.compile(REGEXP_CHART_EXPR, Pattern.CASE_INSENSITIVE);
@@ -295,14 +290,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private final static String REGEXP_CHART_NEGATE = "(negate)([0-9]+)"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN_CHART_NEGATE = Pattern.compile(REGEXP_CHART_NEGATE, Pattern.CASE_INSENSITIVE);
-
-	private static final String X = "x"; //$NON-NLS-1$
-
-	private static final String Y = "y"; //$NON-NLS-1$
-
-	private static final String WIDTH = "width"; //$NON-NLS-1$
-
-	private static final String HEIGHT = "height"; //$NON-NLS-1$
 
 	private IRepositoryQuery originalQuery = null;
 
@@ -706,7 +693,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		setControl(control);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
-		restoreBounds();
 	}
 
 	private void createButtons(Composite control) {
@@ -2322,49 +2308,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
 	}
 
-	private void saveBounds(Rectangle bounds) {
-		if (inSearchContainer()) {
-			return;
-		}
-
-		IDialogSettings settings = getDialogSettings();
-		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
-		if (dialogBounds == null) {
-			dialogBounds = new DialogSettings(DIALOG_BOUNDS_KEY);
-			settings.addSection(dialogBounds);
-		}
-		dialogBounds.put(X, bounds.x);
-		dialogBounds.put(Y, bounds.y);
-		dialogBounds.put(WIDTH, bounds.width);
-		dialogBounds.put(HEIGHT, bounds.height);
-	}
-
-	private void restoreBounds() {
-		if (inSearchContainer()) {
-			return;
-		}
-
-		IDialogSettings settings = getDialogSettings();
-		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
-		Shell shell = getShell();
-		if (shell != null) {
-			Rectangle bounds = shell.getBounds();
-
-			if (bounds != null && dialogBounds != null) {
-				try {
-					bounds.x = dialogBounds.getInt(X);
-					bounds.y = dialogBounds.getInt(Y);
-					bounds.height = dialogBounds.getInt(HEIGHT);
-					bounds.width = dialogBounds.getInt(WIDTH);
-					shell.setBounds(bounds);
-				} catch (NumberFormatException e) {
-					// silently ignored
-				}
-			}
-		}
-
-	}
-
 	/* Testing hook to see if any products are present */
 	public int getProductCount() throws Exception {
 		return product.getItemCount();
@@ -2500,10 +2443,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public void applyTo(IRepositoryQuery query) {
 		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 		query.setSummary(getQueryTitle());
-		Shell shell = getShell();
-		if (shell != null) {
-			saveBounds(shell.getBounds());
-		}
 	}
 
 	@Override
