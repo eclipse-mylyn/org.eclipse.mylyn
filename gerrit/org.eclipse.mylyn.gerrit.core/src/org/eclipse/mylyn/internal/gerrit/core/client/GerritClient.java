@@ -11,13 +11,27 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.html.HTML.Tag;
+
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.net.HtmlTag;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
@@ -41,6 +55,7 @@ import com.google.gerrit.common.data.ChangeDetailService;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.CommentDetail;
+import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -106,6 +121,8 @@ public class GerritClient {
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
 
 	private AccountDiffPreference myDiffPreference;
+
+	private volatile GerritConfig config;
 
 	public GerritClient(AbstractWebLocation location) {
 		this.client = new GerritHttpClient(location);
@@ -412,6 +429,92 @@ public class GerritClient {
 		user.setDisplayName(info.getFullName());
 		user.setId(Integer.toString(id.get()));
 		return user;
+	}
+
+	public GerritConfig getConfig() {
+		return config;
+	}
+
+	/**
+	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
+	 * portion of the page.
+	 */
+	public GerritConfig refreshConfig(IProgressMonitor monitor) throws GerritException {
+		GerritConfig config = null;
+		try {
+			GetMethod method = client.getRequest("", monitor); //$NON-NLS-1$
+			try {
+				if (method.getStatusCode() == HttpStatus.SC_OK) {
+					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+					try {
+						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
+								method.getResponseCharSet()));
+						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+						try {
+							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+								if (token.getType() == Token.TAG) {
+									HtmlTag tag = (HtmlTag) token.getValue();
+									if (tag.getTagType() == Tag.SCRIPT) {
+										String text = getText(tokenizer);
+										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
+										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
+										config = parseConfig(text);
+										break;
+									}
+								}
+							}
+						} catch (ParseException e) {
+							throw new IOException("Error reading url"); //$NON-NLS-1$
+						}
+					} finally {
+						in.close();
+					}
+				}
+
+				if (config == null) {
+					throw new GerritException("Failed to obtain Gerrit configuration");
+				}
+
+				this.config = config;
+				return config;
+			} finally {
+				method.releaseConnection();
+			}
+		} catch (IOException cause) {
+			GerritException e = new GerritException();
+			e.initCause(cause);
+			throw e;
+		}
+	}
+
+	/**
+	 * Parses the configuration from <code>text</code>.
+	 */
+	private GerritConfig parseConfig(String text) {
+		String prefix = "var gerrit_hostpagedata={\"config\":"; //$NON-NLS-1$
+		String[] tokens = text.split("};"); //$NON-NLS-1$
+		for (String token : tokens) {
+			if (token.startsWith(prefix)) {
+				token = token.substring(prefix.length());
+				JSonSupport support = new JSonSupport();
+				return support.getGson().fromJson(token, GerritConfig.class);
+			}
+		}
+		return null;
+	}
+
+	private static String getText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		StringBuilder sb = new StringBuilder();
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TEXT) {
+				sb.append(token.toString());
+			} else if (token.getType() == Token.COMMENT) {
+				// ignore
+			} else {
+				break;
+			}
+		}
+		return StringEscapeUtils.unescapeHtml(sb.toString());
 	}
 
 }

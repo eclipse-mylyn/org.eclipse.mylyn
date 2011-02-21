@@ -149,6 +149,21 @@ public class GerritHttpClient {
 
 	}
 
+	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
+		GetMethod method = new GetMethod(location.getUrl() + serviceUri);
+		try {
+			// Execute the method.
+			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			return method;
+		} catch (IOException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		}
+	}
+
 	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
 		while (true) {
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
