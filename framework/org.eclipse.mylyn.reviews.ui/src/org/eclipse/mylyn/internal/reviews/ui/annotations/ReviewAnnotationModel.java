@@ -20,6 +20,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -59,7 +62,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 
 	private IDocument editorDocument;
 
-	private IFileItem crucibleFile;
+	private IFileItem reviewItem;
 
 	private boolean annotated = false;
 
@@ -74,12 +77,14 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 
 	private final IFileRevision revision;
 
+	private EContentAdapter modelAdapter;
+
 	public ReviewAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
 			IFileItem crucibleFile, IFileRevision revision) {
 		this.textEditor = editor;
 		this.editorInput = editorInput;
 		this.editorDocument = document;
-		this.crucibleFile = crucibleFile;
+		this.reviewItem = crucibleFile;
 		this.revision = revision;
 		updateAnnotations(true);
 	}
@@ -95,7 +100,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		} else {
 			if (editorDocument == null) {
 				annotate = false;
-			} else if (!textEditor.isDirty() && editorInput != null && crucibleFile != null) {
+			} else if (!textEditor.isDirty() && editorInput != null && reviewItem != null) {
 				annotate = true;
 			} else {
 				annotate = false;
@@ -136,8 +141,8 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 			for (ITopic comment : revision.getTopics()) {
 				createCommentAnnotation(event, comment);
 			}
-		} else if (crucibleFile != null) {
-			for (ITopic comment : crucibleFile.getTopics()) {
+		} else if (reviewItem != null) {
+			for (ITopic comment : reviewItem.getTopics()) {
 				createCommentAnnotation(event, comment);
 			}
 		}
@@ -166,6 +171,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 				length = Math.max(editorDocument.getLineOffset(endLine - 1) - offset, 0);
 
 			}
+			length = Math.max(1, length);
 			CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
 			annotations.add(ca);
 			event.annotationAdded(ca);
@@ -200,7 +206,6 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 	}
 
 	public void connect(IDocument document) {
-
 		for (CommentAnnotation commentAnnotation : annotations) {
 			try {
 				document.addPosition(commentAnnotation.getPosition());
@@ -209,14 +214,28 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 			}
 		}
 		document.addDocumentListener(documentListener);
+
+		modelAdapter = new EContentAdapter() {
+			@Override
+			public void notifyChanged(Notification notification) {
+				if (notification.getEventType() == Notification.ADD) {
+					AnnotationModelEvent event = new AnnotationModelEvent(ReviewAnnotationModel.this);
+					if (notification.getNewValue() instanceof ITopic) {
+						createCommentAnnotation(event, (ITopic) notification.getNewValue());
+					}
+					fireModelChanged(event);
+				}
+			}
+		};
+		((EObject) reviewItem).eAdapters().add(modelAdapter);
 	}
 
 	public void disconnect(IDocument document) {
+		((EObject) reviewItem).eAdapters().remove(modelAdapter);
 
 		for (CommentAnnotation commentAnnotation : annotations) {
 			document.removePosition(commentAnnotation.getPosition());
 		}
-
 		document.removeDocumentListener(documentListener);
 	}
 
@@ -241,14 +260,14 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		}
 	}
 
-	public void updateCrucibleFile(IFileItem newCrucibleFile, IReview newReview) {
+	public void updateCrucibleFile(IFileItem reviewItem, IReview newReview) {
 		// TODO we could just update the annotations appropriately instead of remove and re-add
-		this.crucibleFile = newCrucibleFile;
+		this.reviewItem = reviewItem;
 		updateAnnotations(true);
 	}
 
-	public IFileItem getCrucibleFile() {
-		return crucibleFile;
+	public IFileItem getItem() {
+		return reviewItem;
 	}
 
 	/**

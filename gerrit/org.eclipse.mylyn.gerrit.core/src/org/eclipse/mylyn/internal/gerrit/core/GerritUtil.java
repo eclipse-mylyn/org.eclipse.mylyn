@@ -82,6 +82,7 @@ public class GerritUtil {
 		List<IReviewItem> items = new ArrayList<IReviewItem>();
 		for (Patch patch : detail.getPatches()) {
 			IFileItem item = FACTORY.createFileItem();
+			item.setId(patch.getKey().toString());
 			item.setName(patch.getFileName());
 			items.add(item);
 
@@ -130,10 +131,12 @@ public class GerritUtil {
 			topicComment.setDescription(comment.getMessage());
 
 			ITopic topic = FACTORY.createTopic();
+			topic.setId(comment.getKey().get());
 			topic.setAuthor(author);
 			topic.setCreationDate(comment.getWrittenOn());
 			topic.setLocation(location);
 			topic.setItem(revision);
+			topic.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
 			topic.setDescription(comment.getMessage());
 			topic.getComments().add(topicComment);
 

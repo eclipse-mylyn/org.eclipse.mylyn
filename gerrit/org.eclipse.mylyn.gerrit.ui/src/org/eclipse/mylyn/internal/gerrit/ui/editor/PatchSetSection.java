@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -39,6 +42,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
@@ -48,6 +52,7 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotation
 import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -120,6 +125,9 @@ public class PatchSetSection extends AbstractGerritSection {
 	private final List<Job> jobs;
 
 	private FormToolkit toolkit;
+
+	// XXX drafts added after the publish detail was refreshed from server
+	private int addedDrafts;
 
 	public PatchSetSection() {
 		setPartName("Patch Sets");
@@ -300,7 +308,7 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doPublish(PatchSetPublishDetail publishDetail) {
-		PublishDialog dialog = new PublishDialog(getShell(), getTask(), publishDetail);
+		PublishDialog dialog = new PublishDialog(getShell(), getTask(), publishDetail, addedDrafts);
 		openOperationDialog(dialog);
 	}
 
@@ -325,9 +333,11 @@ public class PatchSetSection extends AbstractGerritSection {
 		GridLayoutFactory.fillDefaults().applyTo(composite);
 		subSection.setClient(composite);
 
-		TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
+		final TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
 		GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
+			private EContentAdapter modelAdapter;
+
 			public void dispose() {
 				// ignore					
 			}
@@ -336,8 +346,28 @@ public class PatchSetSection extends AbstractGerritSection {
 				return ((List) inputElement).toArray();
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// ignore
+			public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
+				if (oldInput instanceof List<?> && modelAdapter != null) {
+					for (Object item : (List) oldInput) {
+						((EObject) item).eAdapters().remove(modelAdapter);
+					}
+					addedDrafts = 0;
+				}
+
+				if (newInput instanceof List<?>) {
+					modelAdapter = new EContentAdapter() {
+						@Override
+						public void notifyChanged(Notification notification) {
+							if (notification.getEventType() == Notification.ADD) {
+								viewer.refresh();
+								addedDrafts++;
+							}
+						}
+					};
+					for (Object item : (List) newInput) {
+						((EObject) item).eAdapters().add(modelAdapter);
+					}
+				}
 			}
 		});
 		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ReviewItemLabelProvider()));
@@ -345,6 +375,9 @@ public class PatchSetSection extends AbstractGerritSection {
 			public void open(OpenEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				IFileItem item = (IFileItem) selection.getFirstElement();
+
+				ReviewUi.setActiveReview(new GerritReviewBehavior(getTask(), item));
+
 				ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, null);
 				CompareConfiguration configuration = new CompareConfiguration();
 				CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));

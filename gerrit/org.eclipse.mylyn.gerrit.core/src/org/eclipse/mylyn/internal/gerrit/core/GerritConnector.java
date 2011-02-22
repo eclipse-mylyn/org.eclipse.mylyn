@@ -40,6 +40,8 @@ import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.GerritConfig;
+import com.google.gwtorm.client.KeyUtil;
+import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * The Gerrit connector core.
@@ -49,12 +51,24 @@ import com.google.gerrit.common.data.GerritConfig;
  */
 public class GerritConnector extends AbstractRepositoryConnector {
 
+	static {
+		KeyUtil.setEncoderImpl(new StandardKeyEncoder());
+	}
+
 	/**
 	 * Prefix for task id in a task-url: http://[gerrit-repository]/#change,[task.id].
 	 */
 	public static final String CHANGE_PREFIX = "/#change,"; //$NON-NLS-1$
 
+	/**
+	 * Connector kind
+	 */
 	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gerrit"; //$NON-NLS-1$
+
+	/**
+	 * Label for the connector.
+	 */
+	public static final String CONNECTOR_LABEL = "Gerrit Code Review"; //$NON-NLS-1$
 
 	private static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
 

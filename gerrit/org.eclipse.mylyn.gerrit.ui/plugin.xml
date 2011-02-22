@@ -14,6 +14,7 @@
          name="Gerrit"
          overlayIcon="icons/gerrit-overlay.png"/>
    </extension>
+
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
       <repository
@@ -24,6 +25,7 @@
             urlRepository="http://egit.eclipse.org/r">
       </repository>
    </extension>
+
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
          <pageFactory

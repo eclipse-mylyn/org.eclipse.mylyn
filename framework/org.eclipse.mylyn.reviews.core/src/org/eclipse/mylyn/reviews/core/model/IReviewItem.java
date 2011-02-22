@@ -24,6 +24,7 @@ import java.util.List;
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -117,5 +118,29 @@ public interface IReviewItem extends IReviewComponent {
 	 * @generated
 	 */
 	List<ITopic> getTopics();
+
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @generated
+	 */
+	String getId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(String value);
 
 } // IReviewItem

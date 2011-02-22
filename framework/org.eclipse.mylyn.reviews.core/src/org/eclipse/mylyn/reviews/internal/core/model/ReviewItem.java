@@ -40,6 +40,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -95,6 +96,26 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * @ordered
 	 */
 	protected EList<ITopic> topics;
+
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -233,6 +254,27 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -277,6 +319,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			return getName();
 		case ReviewsPackage.REVIEW_ITEM__TOPICS:
 			return getTopics();
+		case ReviewsPackage.REVIEW_ITEM__ID:
+			return getId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -303,6 +347,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			getTopics().clear();
 			getTopics().addAll((Collection<? extends ITopic>) newValue);
 			return;
+		case ReviewsPackage.REVIEW_ITEM__ID:
+			setId((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -327,6 +374,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 		case ReviewsPackage.REVIEW_ITEM__TOPICS:
 			getTopics().clear();
 			return;
+		case ReviewsPackage.REVIEW_ITEM__ID:
+			setId(ID_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -347,6 +397,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case ReviewsPackage.REVIEW_ITEM__TOPICS:
 			return topics != null && !topics.isEmpty();
+		case ReviewsPackage.REVIEW_ITEM__ID:
+			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -364,6 +416,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
+		result.append(", id: "); //$NON-NLS-1$
+		result.append(id);
 		result.append(')');
 		return result.toString();
 	}

@@ -29,4 +29,5 @@ Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gwt.user.client.rpc,
  com.google.gwtjsonrpc.client;version="1.2.2",
  com.google.gwtjsonrpc.server;version="1.2.2",
- com.google.gwtorm.client;version="1.1.4"
+ com.google.gwtorm.client;version="1.1.4",
+ com.google.gwtorm.server;version="1.1.4"
