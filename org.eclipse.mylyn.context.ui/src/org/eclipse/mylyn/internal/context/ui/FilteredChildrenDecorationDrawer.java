@@ -103,13 +103,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		private boolean inImageBounds(Tree tree, TreeItem item, MouseEvent e) {
 			int selectedX = e.x;
 
-			int imageStartX = item.getBounds().x + item.getBounds().width + IMAGE_PADDING;
-
-			Rectangle clientArea = tree.getClientArea();
-			int currentTreeBounds = clientArea.x + clientArea.width;
-			if (imageStartX > currentTreeBounds) {
-				imageStartX = currentTreeBounds - moreImage.getBounds().width;
-			}
+			int imageStartX = getImageStartX(item.getBounds().x, item.getBounds().width, tree);
 
 			int imageEndX = imageStartX + moreImage.getBounds().width;
 
@@ -295,13 +289,8 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 				return;
 			}
 
-			int imageStartX = event.x + event.width + IMAGE_PADDING;
+			int imageStartX = getImageStartX(event.x, event.width, tree);
 
-			Rectangle clientArea = tree.getClientArea();
-			int currentTreeBounds = clientArea.x + clientArea.width;
-			if (imageStartX > currentTreeBounds) {
-				imageStartX = currentTreeBounds - moreImage.getBounds().width;
-			}
 			NodeState value = (NodeState) item.getData(ID_HOVER);
 
 			int imageStartY = event.y;
@@ -321,6 +310,24 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			break;
 		}
 		}
+	}
+
+	private int getImageStartX(int x, int width, Tree tree) {
+		int imageStartX = x + width + IMAGE_PADDING;
+
+		int imageEndX = imageStartX + moreImage.getBounds().width;
+
+		Rectangle clientArea = tree.getClientArea();
+		int currentTreeBounds = clientArea.x + clientArea.width;
+		if (imageStartX > currentTreeBounds) {
+			imageStartX = currentTreeBounds - moreImage.getBounds().width;
+		}
+
+		float tolerance = 0;//moreImage.getBounds().width - (((float) moreImage.getBounds().width) / 3 * 2); // draw over item if more than 33% of the image is hidden 
+		if (imageEndX > currentTreeBounds && imageEndX - currentTreeBounds > tolerance) {
+			imageStartX = currentTreeBounds - moreImage.getBounds().width;
+		}
+		return imageStartX;
 	}
 
 	private TreeItem findItem(Tree tree, int y) {
