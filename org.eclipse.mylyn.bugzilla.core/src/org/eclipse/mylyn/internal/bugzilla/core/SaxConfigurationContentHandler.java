@@ -533,6 +533,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				int idx = about.indexOf("&product="); //$NON-NLS-1$
 				if (idx != -1) {
 					currentProduct = about.substring(idx + 9);
+					currentProduct = currentProduct.replaceAll("%20", " "); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			break;
