@@ -32,18 +32,22 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.tests.util.UrlBuilder;
 
 /**
  * @author Robert Elves
  * @author Thomas Ehrnhoefer
  * @author Frank Becker
+ * @author David Green
  */
 public class BugzillaClientTest extends TestCase {
 
@@ -200,6 +204,48 @@ public class BugzillaClientTest extends TestCase {
 		client.getSearchHits(query, collector, mapper, new NullProgressMonitor());
 		assertEquals(1, returnedData.size());
 		assertEquals(bugid, returnedData.iterator().next().getTaskId());
+	}
+
+	/**
+	 * test for bug 335278: enhance search result handler to handle additional attributes
+	 */
+	public void testQueryRealName_Bug335278() throws Exception {
+		IRepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "query");
+		UrlBuilder urlBuilder = UrlBuilder.build(BugzillaFixture.current().repository()).append("/buglist.cgi");
+
+		urlBuilder.parameter(
+				"columnlist",
+				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
+		query.setUrl(urlBuilder.toString());
+
+		final Set<TaskData> returnedData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				returnedData.add(taskData);
+			}
+		};
+		TaskAttributeMapper mapper = BugzillaFixture.current()
+				.connector()
+				.getTaskDataHandler()
+				.getAttributeMapper(BugzillaFixture.current().repository());
+
+		client.getSearchHits(query, collector, mapper, new NullProgressMonitor());
+
+		assertTrue(returnedData.size() > 0);
+		for (TaskData taskData : returnedData) {
+			TaskAttribute reporterName = taskData.getRoot().getAttribute(BugzillaAttribute.REPORTER_NAME.getKey());
+			TaskAttribute assignedToName = taskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO_NAME.getKey());
+			assertHasValue(reporterName);
+			assertHasValue(assignedToName);
+		}
+	}
+
+	private void assertHasValue(TaskAttribute attribute) {
+		assertNotNull(attribute);
+		assertNotNull(attribute.getValue());
+		assertTrue(attribute.getValue().trim().length() > 0);
 	}
 
 	public void testLeadingZeros() throws Exception {
