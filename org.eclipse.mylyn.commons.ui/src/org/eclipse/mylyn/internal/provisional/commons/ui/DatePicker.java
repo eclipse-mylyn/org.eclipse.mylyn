@@ -27,8 +27,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEv
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -114,16 +112,6 @@ public class DatePicker extends Composite {
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
-		dateText.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// key listener used because setting of date picker text causes
-				// modify listener to fire which results in perpetual dirty
-				// editor
-				notifyPickerListeners();
-			}
-		});
-
 		dateText.addFocusListener(new FocusAdapter() {
 			Calendar calendar = Calendar.getInstance();
 
@@ -135,6 +123,7 @@ public class DatePicker extends Composite {
 					calendar.setTime(reminderDate);
 					date = calendar;
 					updateDateText();
+					notifyPickerListeners();
 				} catch (ParseException e1) {
 					updateDateText();
 				}
