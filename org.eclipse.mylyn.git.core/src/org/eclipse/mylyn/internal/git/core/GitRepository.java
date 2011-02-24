@@ -55,8 +55,7 @@ public class GitRepository extends ScmRepository {
 	}
 
 	public String convertWorkspacePath(IResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapping.getRepoRelativePath(resource);
 	}
 
 }

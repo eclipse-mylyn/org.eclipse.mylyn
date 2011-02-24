@@ -21,8 +21,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
@@ -38,10 +38,10 @@ import org.eclipse.mylyn.versions.core.Change;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ChangeType;
 import org.eclipse.mylyn.versions.core.ScmArtifact;
-import org.eclipse.mylyn.versions.core.ScmArtifactInfo;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.ScmUser;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
+import org.eclipse.mylyn.versions.core.spi.ScmResourceArtifact;
 import org.eclipse.team.core.history.IFileRevision;
 
 /**
@@ -51,29 +51,25 @@ import org.eclipse.team.core.history.IFileRevision;
  */
 public class GitConnector extends ScmConnector {
 
-	static final String ID = "org.eclipse.mylyn.versions.git"; //$NON-NLS-1$
+	static String PLUGIN_ID = "org.eclipse.mylyn.git.core"; //$NON-NLS-1$
 
 	@Override
 	public String getProviderId() {
-		return ID;
-	}
-
-	@Override
-	public ScmArtifact getArtifact(ScmArtifactInfo resource, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
+		return GitProvider.class.getName();
 	}
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource) throws CoreException {
-		GitRepository repository = (GitRepository) this.getRepository(resource, new NullProgressMonitor());
-
-		return new GitArtifact(repository.getWorkspaceRevision(resource), repository.convertWorkspacePath(resource),
-				repository);
+		return getArtifact(resource, null);
 	}
 
 	@Override
-	public ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
+	public ScmArtifact getArtifact(IResource resource, String revision) throws CoreException {
+		return new ScmResourceArtifact(this, resource, revision);
+	}
+
+	@Override
+	public ChangeSet getChangeSet(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException {
 		Repository repository2 = ((GitRepository) repository).getRepository();
 		RevWalk walk = new RevWalk(repository2);
@@ -107,7 +103,7 @@ public class GitConnector extends ScmConnector {
 			return changeSet(commit, repository, changes);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, GitConnector.ID, e.getMessage()));
+			throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
 		}
 
 	}
@@ -157,7 +153,7 @@ public class GitConnector extends ScmConnector {
 	public List<ScmRepository> getRepositories(IProgressMonitor monitor) throws CoreException {
 		ArrayList<ScmRepository> repos = new ArrayList<ScmRepository>();
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			GitRepository repository = (GitRepository) this.getRepository(project, monitor);
+			GitRepository repository = this.getRepository(project, monitor);
 			if (repository != null) {
 				repos.add(repository);
 			}
@@ -166,7 +162,11 @@ public class GitConnector extends ScmConnector {
 	}
 
 	@Override
-	public ScmRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException {
+	public GitRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException {
+		return getRepository(resource);
+	}
+
+	public GitRepository getRepository(IResource resource) {
 		RepositoryMapping mapping = RepositoryMapping.getMapping(resource);
 		if (mapping == null) {
 			return null;
@@ -176,12 +176,6 @@ public class GitConnector extends ScmConnector {
 
 	protected RepositoryCache getRepositoryCache() {
 		return org.eclipse.egit.core.Activator.getDefault().getRepositoryCache();
-	}
-
-	@Override
-	public ScmArtifact getArtifact(IResource resource, String revision) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
