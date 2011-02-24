@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmArtifact;
-import org.eclipse.mylyn.versions.core.ScmArtifactInfo;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.team.core.history.IFileRevision;
 
@@ -26,11 +25,6 @@ import org.eclipse.team.core.history.IFileRevision;
  * @author Steffen Pingel
  */
 public abstract class ScmConnector {
-
-	/**
-	 * Lookup a remote or local resource.
-	 */
-	public abstract ScmArtifact getArtifact(ScmArtifactInfo resource, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Lookup a local resource.
@@ -41,7 +35,7 @@ public abstract class ScmConnector {
 		return getArtifact(resource, null);
 	}
 
-	public abstract ChangeSet getChangeset(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
+	public abstract ChangeSet getChangeSet(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException;
 
 	public abstract List<ChangeSet> getChangeSets(ScmRepository repository, IProgressMonitor monitor)

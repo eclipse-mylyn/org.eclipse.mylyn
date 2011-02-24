@@ -12,35 +12,15 @@
 package org.eclipse.mylyn.internal.ccvs.core;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.versions.core.ScmArtifact;
-import org.eclipse.team.core.RepositoryProvider;
-import org.eclipse.team.core.history.IFileHistory;
-import org.eclipse.team.core.history.IFileHistoryProvider;
-import org.eclipse.team.core.history.IFileRevision;
+import org.eclipse.mylyn.versions.core.spi.ScmResourceArtifact;
 
 /**
  * @author Steffen Pingel
  */
-public class CvsArtifact extends ScmArtifact {
-
-	private final IResource resource;
-
-	private final CvsConnector connector;
+public class CvsArtifact extends ScmResourceArtifact {
 
 	public CvsArtifact(CvsConnector connector, IResource resource, String id) {
-		this.connector = connector;
-		this.resource = resource;
-		setId(id);
-		setPath(resource.getFullPath().toString());
+		super(connector, resource, id);
 	}
-
-	@Override
-	public IFileRevision getFileRevision(IProgressMonitor monitor) {
-		RepositoryProvider provider = RepositoryProvider.getProvider(resource.getProject(), connector.getProviderId());
-		IFileHistory history = provider.getFileHistoryProvider().getFileHistoryFor(resource, IFileHistoryProvider.NONE,
-				monitor);
-		return history.getFileRevision(getId());
-	}
-
+		
 }

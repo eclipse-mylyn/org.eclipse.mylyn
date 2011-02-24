@@ -19,33 +19,27 @@ import org.eclipse.team.core.history.IFileRevision;
  */
 public abstract class ScmArtifact {
 
-	private String path;
+	private final String id;
 
-	private String id;
-
-	protected ScmArtifact() {
-	}
+	private final String path;
 
 	protected ScmArtifact(String id, String path) {
 		this.id = id;
 		this.path = path;
 	}
 
-	protected void setId(String id) {
-		this.id = id;
-	}
-
-	protected void setPath(String path) {
-		this.path = path;
-	}
+	public abstract IFileRevision[] getContributors(IProgressMonitor monitor);
 
 	public abstract IFileRevision getFileRevision(IProgressMonitor monitor);
+
+	public String getId() {
+		return id;
+	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public String getId() {
-		return id;
-	}
+	public abstract IFileRevision[] getTargets(IProgressMonitor monitor);
+
 }

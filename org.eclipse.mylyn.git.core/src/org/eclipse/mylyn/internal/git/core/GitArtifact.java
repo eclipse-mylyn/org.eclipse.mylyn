@@ -38,8 +38,6 @@ public class GitArtifact extends ScmArtifact {
 	public GitArtifact(String id, String path, GitRepository repository) {
 		super(id, path);
 		this.repository = repository;
-		setPath(path);
-		setId(id);
 	}
 
 	@Override
@@ -82,7 +80,8 @@ public class GitArtifact extends ScmArtifact {
 										.open(ObjectId.fromString(getId()), Constants.OBJ_BLOB).openStream();
 							} catch (Exception e) {
 								e.printStackTrace();
-								throw new CoreException(new Status(IStatus.ERROR, GitConnector.ID, e.getMessage()));
+								throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e
+										.getMessage()));
 							}
 						}
 					};
@@ -97,6 +96,16 @@ public class GitArtifact extends ScmArtifact {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public IFileRevision[] getContributors(IProgressMonitor monitor) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public IFileRevision[] getTargets(IProgressMonitor monitor) {
+		throw new UnsupportedOperationException();
 	}
 
 }
