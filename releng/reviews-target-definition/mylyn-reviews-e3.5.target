@@ -13,7 +13,7 @@
 <unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
-<repository location="http://download.eclipse.org/tools/orbit/committers/drops/S20110124210048/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository/"/>
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
 <unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
 <unit id="com.google.gson" version="1.6.0.v201101131530"/>
