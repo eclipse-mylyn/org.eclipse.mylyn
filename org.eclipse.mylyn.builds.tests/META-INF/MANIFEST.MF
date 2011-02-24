@@ -20,5 +20,6 @@ Require-Bundle: org.junit,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.builds.tests;x-internal:=true,
+ org.eclipse.mylyn.builds.tests.core;x-internal:=true,
  org.eclipse.mylyn.builds.tests.mock;x-internal:=true,
  org.eclipse.mylyn.builds.tests.util;x-internal:=true
