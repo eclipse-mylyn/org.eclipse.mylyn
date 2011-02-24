@@ -163,6 +163,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("Executing query", IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
+			client.refreshConfigOnce(monitor);
 			List<ChangeInfo> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);

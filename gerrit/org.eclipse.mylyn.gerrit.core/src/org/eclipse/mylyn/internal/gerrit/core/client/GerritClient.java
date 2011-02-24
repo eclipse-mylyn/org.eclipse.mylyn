@@ -212,6 +212,8 @@ public class GerritClient {
 
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
 
+	private volatile boolean configRefreshed;
+
 	public GerritClient(AbstractWebLocation location) {
 		this(location, null);
 	}
@@ -307,6 +309,7 @@ public class GerritClient {
 			// XXX should run some more meaningful validation as anonymous, for now any call is good to validate the URL etc.
 			executeQuery(monitor, "status:open"); //$NON-NLS-1$
 		}
+		refreshConfigOnce(monitor);
 		return new GerritSystemInfo(contributorAgreements, account);
 	}
 
@@ -443,6 +446,7 @@ public class GerritClient {
 	 * portion of the page.
 	 */
 	public GerritConfig refreshConfig(IProgressMonitor monitor) throws GerritException {
+		configRefreshed = true;
 		GerritConfig config = null;
 		try {
 			GetMethod method = client.getRequest("/", monitor); //$NON-NLS-1$
@@ -489,6 +493,17 @@ public class GerritClient {
 			e.initCause(cause);
 			throw e;
 		}
+	}
+
+	public GerritConfig refreshConfigOnce(IProgressMonitor monitor) throws GerritException {
+		if (!configRefreshed && config == null) {
+			try {
+				refreshConfig(monitor);
+			} catch (GerritException e) {
+				// don't fail validation in case config parsing fails
+			}
+		}
+		return getConfig();
 	}
 
 	public ChangeDetail restore(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)

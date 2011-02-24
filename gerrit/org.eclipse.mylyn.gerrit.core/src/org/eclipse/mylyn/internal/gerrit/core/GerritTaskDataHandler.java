@@ -77,6 +77,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			GerritClient client = connector.getClient(repository);
+			client.refreshConfigOnce(monitor);
 			GerritChange review = client.getChange(taskId, monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
 			updateTaskData(repository, taskData, review, !client.isAnonymous());
