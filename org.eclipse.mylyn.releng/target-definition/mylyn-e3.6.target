@@ -3,7 +3,7 @@
 
 <target name="mylyn-e3.6" sequenceNumber="5">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
 <unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
 <unit id="com.google.gson" version="1.6.0.v201101131530"/>
@@ -32,13 +32,13 @@
 <unit id="org.apache.ws.commons.util" version="1.0.0.v20100518-1135"/>
 <unit id="org.jdom" version="1.1.1.v201101151400"/>
 <unit id="org.json" version="1.0.0.v201011060100"/>
-<repository location="http://download.eclipse.org/tools/orbit/committers/drops/S20110124210048/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.2.20110117_1743-b492ddb-dev-e36"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="7.0.1.201009141542"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.3.1.v20100913-1814"/>
 <unit id="org.eclipse.sdk.ide" version="3.6.1.M20100909-0800"/>
@@ -48,7 +48,7 @@
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20100914-1218"/>
 <repository location="http://download.eclipse.org/releases/maintenance"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="0.10.1"/>
 <unit id="org.eclipse.egit.source.feature.group" version="0.10.1"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
