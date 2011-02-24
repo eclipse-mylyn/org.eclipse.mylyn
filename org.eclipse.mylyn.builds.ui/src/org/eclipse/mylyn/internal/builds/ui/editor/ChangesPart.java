@@ -195,7 +195,12 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		}
 
 		final String prevRevision = changeArtifact.getPrevRevision();
-		final String revision = changeArtifact.getRevision();
+		final String revision = (changeArtifact.getRevision() != null) ? changeArtifact.getRevision()
+				: ((IChange) ((ChangeArtifact) changeArtifact).eContainer()).getRevision();
+		if (revision == null) {
+			getMessageManager().addMessage(ChangesPart.class.getName(),
+					"Could not determine change revisions for the selected file", null, IMessageProvider.ERROR);
+		}
 
 		try {
 			final AtomicReference<IFileRevision> left = new AtomicReference<IFileRevision>();
@@ -203,9 +208,13 @@ public class ChangesPart extends AbstractBuildEditorPart {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						ScmArtifact leftArtifact = connector.getArtifact(resource, prevRevision);
 						ScmArtifact rightArtifact = connector.getArtifact(resource, revision);
-						left.set(leftArtifact.getFileRevision(monitor));
+						right.set(rightArtifact.getFileRevision(monitor));
+
+						if (prevRevision != null) {
+							ScmArtifact leftArtifact = connector.getArtifact(resource, prevRevision);
+							left.set(leftArtifact.getFileRevision(monitor));
+						}
 						if (left.get() == null) {
 							try {
 								IFileRevision[] contributors = rightArtifact.getContributors(monitor);
@@ -216,13 +225,12 @@ public class ChangesPart extends AbstractBuildEditorPart {
 								// ignore
 							}
 						}
-						right.set(rightArtifact.getFileRevision(monitor));
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}
 				}
 			});
-			if (left.get() != null && right.get() != null) {
+			if (right.get() != null) {
 				getMessageManager().removeMessage(ChangesPart.class.getName());
 
 				ScmUi.openCompareEditor(getPage().getSite().getPage(), left.get(), right.get());
