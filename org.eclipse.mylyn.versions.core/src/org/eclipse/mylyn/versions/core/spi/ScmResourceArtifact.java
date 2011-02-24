@@ -53,13 +53,15 @@ public class ScmResourceArtifact extends ScmArtifact {
 	@Override
 	public IFileRevision[] getContributors(IProgressMonitor monitor) {
 		IFileHistory history = getFileHistory(monitor);
-		return history.getContributors(history.getFileRevision(getId()));
+		IFileRevision fileRevision = history.getFileRevision(getId());
+		return (fileRevision != null) ? history.getContributors(fileRevision) : null;
 	}
 
 	@Override
 	public IFileRevision[] getTargets(IProgressMonitor monitor) {
 		IFileHistory history = getFileHistory(monitor);
-		return history.getTargets(history.getFileRevision(getId()));
+		IFileRevision fileRevision = history.getFileRevision(getId());
+		return (fileRevision != null) ? history.getTargets(fileRevision) : null;
 	}
 
 }
