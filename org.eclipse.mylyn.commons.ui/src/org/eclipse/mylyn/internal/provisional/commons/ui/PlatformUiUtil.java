@@ -154,7 +154,7 @@ public class PlatformUiUtil {
 	 * show everyone on Linux unless they are balloons.
 	 */
 	public static int getSwtTooltipStyle() {
-		if ("gtk".equals(SWT.getPlatform())) {
+		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return SWT.BALLOON;
 		}
 		return SWT.NONE;

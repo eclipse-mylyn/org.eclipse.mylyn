@@ -50,7 +50,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  */
 public abstract class ServiceMessageControl {
 
-	private static final String NOTIFICATIONS_PREF_PAGE = "org.eclipse.mylyn.commons.notifications.preferencePages.Notifications";
+	private static final String NOTIFICATIONS_PREF_PAGE = "org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"; //$NON-NLS-1$
 
 	protected static Font setHeaderFontSizeAndStyle(Control text) {
 		float sizeFactor = 1.2f;
