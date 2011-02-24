@@ -231,6 +231,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Validate_Settings;
 
+	public static String AbstractRepositorySettingsPage_Validate_Settings_Button_Label;
+
 	public static String AbstractRepositorySettingsPage_Validating_server_settings;
 
 	public static String NewTaskWizard_Create_Task;

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.mylyn.tasks.ui" version="2">
-    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/TaskJobFactory.java" type="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory">
-        <filter id="571519004">
-            <message_arguments>
-                <message_argument value="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory.createUpdateRepositoryConfigurationJob(AbstractRepositoryConnector, TaskRepository, ITask)"/>
-                <message_argument value="TaskJob"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java" type="org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY">
         <filter id="574619656">
             <message_arguments>

@@ -124,6 +124,7 @@ public class RtcOlscTest extends TestCase {
 	 */
 	public void testSimpleQuery() throws Exception {
 		List<OslcServiceProvider> services = client.getAvailableServices(BASE_URL, null);
+		@SuppressWarnings("unused")
 		OslcServiceProvider desc = services.get(0);
 		Collection<AbstractChangeRequest> result = client.performQuery("dc:title=\"my first work item\"", null);
 		assertEquals(1, result.size());

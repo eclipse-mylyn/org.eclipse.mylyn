@@ -280,7 +280,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// show validation control on page since it's not provided by container
 		Button validateButton = new Button(composite, SWT.PUSH);
 		validateButton.setImage(CommonImages.getImage(CommonImages.VALIDATE));
-		validateButton.setText("&Validate Settings");
+		validateButton.setText(Messages.AbstractRepositorySettingsPage_Validate_Settings_Button_Label);
 		validateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

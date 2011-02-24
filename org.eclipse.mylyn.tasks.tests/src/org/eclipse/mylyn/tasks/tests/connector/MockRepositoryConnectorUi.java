@@ -62,6 +62,7 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
 		List<IHyperlink> links = new ArrayList<IHyperlink>();

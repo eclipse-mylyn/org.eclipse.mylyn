@@ -32,7 +32,7 @@ public interface IOslcCoreConstants {
 	public static final Namespace NAMESPACE_OSLC_DISCOVERY_1_0 = Namespace.getNamespace(
 			"oslc_disc", "http://open-services.net/xmlns/discovery/1.0/"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/terms/"); //$NON-NLS-1$
+	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/terms/"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final Namespace NAMESPACE_RDF = Namespace.getNamespace(
 			"rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"); //$NON-NLS-1$ //$NON-NLS-2$

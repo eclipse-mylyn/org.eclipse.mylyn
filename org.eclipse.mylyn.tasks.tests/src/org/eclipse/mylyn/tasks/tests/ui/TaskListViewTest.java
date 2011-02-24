@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
@@ -33,12 +32,10 @@ import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
  */
 public class TaskListViewTest extends TestCase {
 
-	private TaskRepository repository;
-
 	@Override
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
-		repository = TaskTestUtil.createMockRepository();
+		TaskTestUtil.createMockRepository();
 	}
 
 	@Override
