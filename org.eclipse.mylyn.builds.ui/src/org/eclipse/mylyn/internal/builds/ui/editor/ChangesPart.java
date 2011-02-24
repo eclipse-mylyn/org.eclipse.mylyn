@@ -11,12 +11,19 @@
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -32,6 +39,7 @@ import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 import org.eclipse.mylyn.builds.internal.core.Change;
 import org.eclipse.mylyn.builds.internal.core.ChangeArtifact;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
 import org.eclipse.mylyn.versions.core.ScmArtifact;
 import org.eclipse.mylyn.versions.core.ScmCore;
@@ -43,8 +51,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.team.core.history.IFileRevision;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
@@ -171,24 +181,63 @@ public class ChangesPart extends AbstractBuildEditorPart {
 	}
 
 	private void open(IChangeArtifact changeArtifact) throws CoreException {
-		IResource resource = ScmCore.findResource(changeArtifact.getFile());
+		final IResource resource = ScmCore.findResource(changeArtifact.getFile());
 		if (resource == null) {
+			getMessageManager().addMessage(ChangesPart.class.getName(),
+					"The selected file is not available in the workspace", null, IMessageProvider.ERROR);
 			return;
 		}
-
-		ScmConnector connector = ScmCore.getConnector(resource);
+		final ScmConnector connector = ScmCore.getConnector(resource);
 		if (connector == null) {
+			getMessageManager().addMessage(ChangesPart.class.getName(),
+					"No extension available to open the selected file", null, IMessageProvider.ERROR);
 			return;
 		}
 
-		ScmArtifact prevArtifact = connector.getArtifact(resource, changeArtifact.getPrevRevision());
-		ScmArtifact artifact = connector.getArtifact(resource, changeArtifact.getRevision());
-		IFileRevision left = prevArtifact.getFileRevision(new NullProgressMonitor());
-		IFileRevision right = artifact.getFileRevision(new NullProgressMonitor());
+		final String prevRevision = changeArtifact.getPrevRevision();
+		final String revision = changeArtifact.getRevision();
 
-		if (left != null && right != null) {
-			ScmUi.openCompareEditor(getPage().getSite().getPage(), left, right);
+		try {
+			final AtomicReference<IFileRevision> left = new AtomicReference<IFileRevision>();
+			final AtomicReference<IFileRevision> right = new AtomicReference<IFileRevision>();
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						ScmArtifact leftArtifact = connector.getArtifact(resource, prevRevision);
+						ScmArtifact rightArtifact = connector.getArtifact(resource, revision);
+						left.set(leftArtifact.getFileRevision(monitor));
+						if (left.get() == null) {
+							try {
+								IFileRevision[] contributors = rightArtifact.getContributors(monitor);
+								if (contributors != null && contributors.length > 0) {
+									left.set(contributors[0]);
+								}
+							} catch (UnsupportedOperationException e) {
+								// ignore
+							}
+						}
+						right.set(rightArtifact.getFileRevision(monitor));
+					} catch (CoreException e) {
+						throw new InvocationTargetException(e);
+					}
+				}
+			});
+			if (left.get() != null && right.get() != null) {
+				getMessageManager().removeMessage(ChangesPart.class.getName());
+
+				ScmUi.openCompareEditor(getPage().getSite().getPage(), left.get(), right.get());
+			} else {
+				getMessageManager().addMessage(ChangesPart.class.getName(),
+						"Could not determine change revisions for the selected file", null, IMessageProvider.ERROR);
+			}
+		} catch (InvocationTargetException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error", e),
+					StatusManager.SHOW | StatusManager.LOG);
+		} catch (InterruptedException e) {
+			// ignore
 		}
+
 	}
 
 	private void open(IChange selection) {

@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IMessageManager;
+import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -70,31 +72,6 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		this.sectionStyle = sectionStyle;
 	}
 
-	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, EStructuralFeature feature) {
-		return bind(text, clazz, FeaturePath.fromList(feature));
-	}
-
-	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, FeaturePath path) {
-		IWidgetValueProperty textProp = WidgetProperties.text(SWT.Modify);
-		IEMFValueProperty property = EMFProperties.value(path);
-		IObservableValue uiObservable = textProp.observe(text);
-		IObservableValue modelObservable = property.observe(getInput(clazz));
-
-		UpdateValueStrategy modelToTargetStrategy = null;
-		EStructuralFeature feature = path.getFeaturePath()[path.getFeaturePath().length - 1];
-		String name = feature.getEType().getName();
-		if (name.equals("ELong")) {
-			modelToTargetStrategy = new UpdateValueStrategy();
-			modelToTargetStrategy.setConverter(new TimestampToStringConverter());
-		} else {
-			modelToTargetStrategy = new EMFUpdateValueStrategy();
-		}
-
-		return getPage().getDataBindingContext().bindValue(uiObservable, modelObservable, null, modelToTargetStrategy);
-	}
-
-	protected abstract Control createContent(Composite parent, FormToolkit toolkit);
-
 	public Control createControl(Composite parent, final FormToolkit toolkit) {
 		section = createSection(parent, toolkit);
 		if ((section.getExpansionStyle() & ExpandableComposite.EXPANDED) != 0) {
@@ -114,6 +91,34 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		}
 		setSection(toolkit, section);
 		return control;
+	}
+
+	public Control getControl() {
+		return control;
+	}
+
+	public BuildEditorPage getPage() {
+		return page;
+	}
+
+	public String getPartId() {
+		return partId;
+	}
+
+	public String getPartName() {
+		return partName;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public int getSpan() {
+		return span;
+	}
+
+	public void initialize(BuildEditorPage page) {
+		this.page = page;
 	}
 
 	/**
@@ -139,6 +144,39 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 			}
 		});
 	}
+
+	private IBuild getBuild() {
+		return getPage().getEditorInput().getBuild();
+	}
+
+	private IBuildPlan getPlan() {
+		return getPage().getEditorInput().getPlan();
+	}
+
+	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, EStructuralFeature feature) {
+		return bind(text, clazz, FeaturePath.fromList(feature));
+	}
+
+	protected Binding bind(Text text, Class<? extends IBuildElement> clazz, FeaturePath path) {
+		IWidgetValueProperty textProp = WidgetProperties.text(SWT.Modify);
+		IEMFValueProperty property = EMFProperties.value(path);
+		IObservableValue uiObservable = textProp.observe(text);
+		IObservableValue modelObservable = property.observe(getInput(clazz));
+
+		UpdateValueStrategy modelToTargetStrategy = null;
+		EStructuralFeature feature = path.getFeaturePath()[path.getFeaturePath().length - 1];
+		String name = feature.getEType().getName();
+		if (name.equals("ELong")) {
+			modelToTargetStrategy = new UpdateValueStrategy();
+			modelToTargetStrategy.setConverter(new TimestampToStringConverter());
+		} else {
+			modelToTargetStrategy = new EMFUpdateValueStrategy();
+		}
+
+		return getPage().getDataBindingContext().bindValue(uiObservable, modelObservable, null, modelToTargetStrategy);
+	}
+
+	protected abstract Control createContent(Composite parent, FormToolkit toolkit);
 
 	protected Label createLabel(Composite parent, FormToolkit toolkit, String value) {
 		Label label = toolkit.createLabel(parent, value);
@@ -172,14 +210,6 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 	protected void fillToolBar(ToolBarManager toolBarManager) {
 	}
 
-	private IBuild getBuild() {
-		return getPage().getEditorInput().getBuild();
-	}
-
-	public Control getControl() {
-		return control;
-	}
-
 	/**
 	 * Clients can override to show summary information for the part.
 	 */
@@ -196,43 +226,15 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		return null;
 	}
 
-	public BuildEditorPage getPage() {
-		return page;
-	}
-
-	public String getPartId() {
-		return partId;
-	}
-
-	public String getPartName() {
-		return partName;
-	}
-
-	private IBuildPlan getPlan() {
-		return getPage().getEditorInput().getPlan();
-	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	public int getSpan() {
-		return span;
-	}
-
-	public void initialize(BuildEditorPage page) {
-		this.page = page;
+	protected IMessageManager getMessageManager() {
+		if (getPage().getEditor() instanceof SharedHeaderFormEditor) {
+			return ((SharedHeaderFormEditor) getPage().getEditor()).getHeaderForm().getForm().getMessageManager();
+		} else {
+			return getManagedForm().getMessageManager();
+		}
 	}
 
 	protected void inputChanged(IBuildElement oldInput, IBuildElement newInput) {
-	}
-
-	void setControl(Control control) {
-		this.control = control;
-	}
-
-	void setPartId(String partId) {
-		this.partId = partId;
 	}
 
 	protected void setPartName(String partName) {
@@ -280,6 +282,14 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 			}
 		}
 		setControl(section);
+	}
+
+	void setControl(Control control) {
+		this.control = control;
+	}
+
+	void setPartId(String partId) {
+		this.partId = partId;
 	}
 
 }
