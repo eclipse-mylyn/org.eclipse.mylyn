@@ -144,9 +144,24 @@ public class GerritUtil {
 	public static IUser createUser(Id id, AccountInfoCache accountInfoCache) {
 		AccountInfo info = accountInfoCache.get(id);
 		IUser user = FACTORY.createUser();
-		user.setDisplayName(info.getFullName());
+		user.setDisplayName(getUserLabel(info));
 		user.setId(Integer.toString(id.get()));
 		return user;
+	}
+
+	public static String getUserLabel(AccountInfo user) {
+		if (user == null) {
+			return "Anonymous";
+		}
+		if (user.getFullName() != null) {
+			return user.getFullName();
+		}
+		if (user.getPreferredEmail() != null) {
+			String email = user.getPreferredEmail();
+			int i = email.indexOf("@");
+			return (i > 0) ? email.substring(0, i) : email;
+		}
+		return "<Unknown>";
 	}
 
 }

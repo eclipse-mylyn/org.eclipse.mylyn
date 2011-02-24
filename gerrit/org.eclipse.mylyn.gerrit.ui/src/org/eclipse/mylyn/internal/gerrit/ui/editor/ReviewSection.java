@@ -139,7 +139,7 @@ public class ReviewSection extends AbstractGerritSection {
 
 				label = new Label(composite, SWT.NONE);
 				label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				label.setText(user.getFullName());
+				label.setText(GerritUtil.getUserLabel(user));
 
 				for (ApprovalType approvalType : approvalTypes) {
 					PatchSetApproval approval = approvalDetail.getApprovalMap().get(approvalType.getCategory().getId());
@@ -163,7 +163,7 @@ public class ReviewSection extends AbstractGerritSection {
 				if (names.length() > 0) {
 					names.append(", "); //$NON-NLS-1$
 				}
-				names.append(user.getFullName());
+				names.append(GerritUtil.getUserLabel(user));
 			}
 
 			if (names.length() > 0) {
@@ -253,8 +253,10 @@ public class ReviewSection extends AbstractGerritSection {
 		for (final ChangeInfo changeInfo : changeInfos) {
 			AccountInfo user = changeDetail.getAccounts().get(changeInfo.getOwner());
 			Link link = new Link(composite, SWT.NONE);
-			link.setText(NLS.bind("<a>{0}</a>: {1} by {2}",
-					new String[] { changeInfo.getKey().abbreviate(), changeInfo.getSubject(), user.getFullName() }));
+			link.setText(NLS.bind(
+					"<a>{0}</a>: {1} by {2}",
+					new String[] { changeInfo.getKey().abbreviate(), changeInfo.getSubject(),
+							GerritUtil.getUserLabel(user) }));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
