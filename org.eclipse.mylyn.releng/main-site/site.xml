@@ -100,12 +100,12 @@
          The Task List and the Task-Focused Interface.
       </description>
    </category-def>
-   <category-def name="Integration" label="Mylyn Connectors">
+   <category-def name="Integration" label="Mylyn Integrations">
       <description>
          Mylyn bridges that integrate with documents and programming languages. Mylyn connectors that integrate with task repositories.
       </description>
    </category-def>
-   <category-def name="SDK" label="Mylyn Frameworks and SDKs">
+   <category-def name="SDK" label="Mylyn SDKs and Frameworks">
       <description>
          Source code and documentation for integrators building on Mylyn.
       </description>
