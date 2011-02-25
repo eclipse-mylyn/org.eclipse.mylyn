@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.egit" version="0.10.1" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.git.core"
          download-size="0"
