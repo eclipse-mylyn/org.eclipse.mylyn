@@ -10,7 +10,7 @@
          Tasktop Technologies - initial API and implementation
  -->
 <feature
-      id="org.eclipse.mylyn.hudson"
+      id="org.eclipse.mylyn.builds.sdk"
       label="%featureName"
       version="0.7.0.qualifier"
       provider-name="%providerName"
@@ -28,36 +28,37 @@
       %license
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.1.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.4.0.I20100101" match="compatible"/>
-   </requires>
+   <includes
+         id="org.eclipse.mylyn.hudson"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.mylyn.builds"
+         version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.builds.core"
+         id="org.eclipse.mylyn.builds.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.builds.ui"
+         id="org.eclipse.mylyn.builds.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.hudson.core"
+         id="org.eclipse.mylyn.hudson.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.hudson.ui"
+         id="org.eclipse.mylyn.hudson.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -86,27 +87,6 @@
 
    <plugin
          id="javax.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.versions.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.versions.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.cvs.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
