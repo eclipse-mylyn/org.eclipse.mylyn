@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
-
 <target name="mylyn-e3.5" sequenceNumber="7">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
 <unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
 <unit id="com.google.gson" version="1.6.0.v201101131530"/>
@@ -34,11 +33,7 @@
 <unit id="org.json" version="1.0.0.v201011060100"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.2.20110117_1743-b492ddb-dev-e35"/>
-<repository location="http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site"/>
-</location>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.0.1.v20090916-2238"/>
 <unit id="org.eclipse.sdk.ide" version="3.5.2.M20100211-1343"/>
@@ -48,12 +43,13 @@
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.1.0.v200906151043"/>
 <repository location="http://download.eclipse.org/releases/galileo"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="0.10.1"/>
-<unit id="org.eclipse.egit.source.feature.group" version="0.10.1"/>
-<unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
-<unit id="org.eclipse.jgit.source.feature.group" version="0.10.1"/>
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
+</location>
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site"/>
 </location>
 </locations>
 </target>

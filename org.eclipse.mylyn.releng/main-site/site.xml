@@ -14,8 +14,6 @@
       Mylyn for Eclipse 3.5, 3.6 and 3.7
    </description>
 
-   <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0"/>
-
    <feature url="features/org.eclipse.mylyn_feature_0.0.0.jar" id="org.eclipse.mylyn_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
@@ -63,19 +61,37 @@
    <feature url="features/org.eclipse.mylyn.builds_0.0.0.jar" id="org.eclipse.mylyn.builds" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.versions_0.0.0.jar" id="org.eclipse.mylyn.versions" version="0.0.0">
+   <feature url="features/org.eclipse.mylyn.builds.sdk_0.0.0.jar" id="org.eclipse.mylyn.builds.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.htmltext_0.0.0.jar" id="org.eclipse.mylyn.htmltext" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.reviews.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.feature" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.reviews.sdk.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.sdk.feature" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.sdk_feature_0.0.0.jar" id="org.eclipse.mylyn.sdk_feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+   <feature url="features/org.eclipse.mylyn.test_feature_0.0.0.jar" id="org.eclipse.mylyn.test_feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.test_feature_0.0.0.jar" id="org.eclipse.mylyn.test_feature" version="0.0.0">
+   <feature url="features/org.eclipse.mylyn.versions_0.0.0.jar" id="org.eclipse.mylyn.versions" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.versions.sdk_0.0.0.jar" id="org.eclipse.mylyn.versions.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
    
