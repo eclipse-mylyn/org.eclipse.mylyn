@@ -4,7 +4,7 @@
 <locations>
 <location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 
-<repository location="http://download.eclipse.org/releases/helios"/>
+<repository location="http://download.eclipse.org/releases/indigo"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
