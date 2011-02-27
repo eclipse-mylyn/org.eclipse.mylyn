@@ -15,6 +15,10 @@
          id="org.eclipse.mylyn.helpDocs"
          name="Tasks"
          point="org.eclipse.help.toc">
+    <toc
+          file="primary-toc.xml"
+          primary="true">
+    </toc>
       <toc
             file="toc.xml"
             primary="true">

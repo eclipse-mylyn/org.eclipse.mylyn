@@ -584,6 +584,14 @@
 
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
+            name="Mylyn"
+            class="org.eclipse.mylyn.internal.tasks.ui.preferences.MylynPreferencePage"
+            id="org.eclipse.mylyn.preferencePages.Mylyn">
+            <keywordReference 
+            	id="org.eclipse.mylyn.tasks.ui.keywords"/>
+      </page>
+	  <page
+	  		category="org.eclipse.mylyn.preferencePages.Mylyn"
             name="%preferencePages.name"
             class="org.eclipse.mylyn.internal.tasks.ui.preferences.TasksUiPreferencePage"
             id="org.eclipse.mylyn.tasks.ui.preferences">
