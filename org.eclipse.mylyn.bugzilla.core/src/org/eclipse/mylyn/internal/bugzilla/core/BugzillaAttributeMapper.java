@@ -249,20 +249,23 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		IRepositoryPerson person = super.getRepositoryPerson(taskAttribute);
 		if (person.getName() == null) {
 			if (taskAttribute.getId().equals(BugzillaAttribute.ASSIGNED_TO.getKey())) {
-				TaskAttribute attrAssigned = taskAttribute.getTaskData().getRoot().getAttribute(
-						BugzillaAttribute.ASSIGNED_TO_NAME.getKey());
+				TaskAttribute attrAssigned = taskAttribute.getTaskData()
+						.getRoot()
+						.getAttribute(BugzillaAttribute.ASSIGNED_TO_NAME.getKey());
 				if (attrAssigned != null) {
 					person.setName(attrAssigned.getValue());
 				}
 			} else if (taskAttribute.getId().equals(BugzillaAttribute.REPORTER.getKey())) {
-				TaskAttribute attrReporter = taskAttribute.getTaskData().getRoot().getAttribute(
-						BugzillaAttribute.REPORTER_NAME.getKey());
+				TaskAttribute attrReporter = taskAttribute.getTaskData()
+						.getRoot()
+						.getAttribute(BugzillaAttribute.REPORTER_NAME.getKey());
 				if (attrReporter != null) {
 					person.setName(attrReporter.getValue());
 				}
 			} else if (taskAttribute.getId().equals(BugzillaAttribute.QA_CONTACT.getKey())) {
-				TaskAttribute attrReporter = taskAttribute.getTaskData().getRoot().getAttribute(
-						BugzillaAttribute.QA_CONTACT_NAME.getKey());
+				TaskAttribute attrReporter = taskAttribute.getTaskData()
+						.getRoot()
+						.getAttribute(BugzillaAttribute.QA_CONTACT_NAME.getKey());
 				if (attrReporter != null) {
 					person.setName(attrReporter.getValue());
 				}
@@ -275,11 +278,12 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 	public Map<String, String> getOptions(TaskAttribute attribute) {
 		RepositoryConfiguration configuration = connector.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
 		if (configuration != null) {
-			TaskAttribute attributeProduct = attribute.getTaskData().getRoot().getMappedAttribute(
-					BugzillaAttribute.PRODUCT.getKey());
+			TaskAttribute attributeProduct = attribute.getTaskData()
+					.getRoot()
+					.getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
 			if (attributeProduct != null && attributeProduct.getValue().length() > 0) {
 				List<String> options = configuration.getAttributeOptions(attributeProduct.getValue(), attribute);
-				if (options.size() == 0 && attribute.getId().equals("resolutionInput")) {
+				if (options.size() == 0 && attribute.getId().equals("resolutionInput")) { //$NON-NLS-1$
 					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
 					// DUPLICATE and MOVED have special meanings so do not show as resolution
 					// TODO: COPIED FUNCTIONALITY from RepositoryConfiguration.addOperation() refactor.
@@ -289,6 +293,19 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				Map<String, String> newOptions = new LinkedHashMap<String, String>();
 				for (String option : options) {
 					newOptions.put(option, option);
+				}
+				if (newOptions != null && !newOptions.isEmpty()) {
+					List<String> values = attribute.getValues();
+					for (String value : values) {
+						if (!newOptions.containsKey(value)) {
+							// the RepositoryConfiguration is not up to date a new option was add
+							// but Mylyn has not updated the RepositoryConfiguration. So we can have a value
+							// which is not in the Options of the RepositoryConfiguration and need to add
+							// it to the newOptions.
+							// TODO: change this with bug 338347
+							newOptions.put(value, value);
+						}
+					}
 				}
 				return newOptions;
 			}
