@@ -28,8 +28,16 @@
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
+      <!--
       <page
             category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.mylyn.internal.commons.ui.notifications.NotificationsPreferencesPage"
+            id="org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"
+            name="Notifications">
+      </page>
+      -->      
+      <page
+            category="org.eclipse.mylyn.preferencePages.Mylyn"
             class="org.eclipse.mylyn.internal.commons.ui.notifications.NotificationsPreferencesPage"
             id="org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"
             name="Notifications">
