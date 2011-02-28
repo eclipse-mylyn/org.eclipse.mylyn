@@ -1813,13 +1813,20 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						}
 					}
 				} else {
-					TaskEditorAttributePart actionPart = (TaskEditorAttributePart) this.getPart(AbstractTaskEditorPage.ID_PART_ATTRIBUTES);
-					Section section = actionPart.getSection();
-					boolean expanded = section.isExpanded();
-					if (!expanded && actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
-						if (!expanded) {
-							CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), false);
+					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_ATTRIBUTES);
+					Section section;
+					if (actionPart instanceof AbstractTaskEditorSection) {
+						section = ((AbstractTaskEditorSection) actionPart).getSection();
+					} else {
+						section = null;
+					}
+					if (section != null) {
+						boolean expanded = section.isExpanded();
+						if (!expanded && actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+							CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
+							if (!expanded) {
+								CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), false);
+							}
 						}
 					}
 
