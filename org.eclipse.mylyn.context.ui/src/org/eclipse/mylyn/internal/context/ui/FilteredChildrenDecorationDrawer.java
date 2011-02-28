@@ -70,7 +70,8 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			if (viewer.getTree() != null && !viewer.getTree().isDisposed()) {
 				if (item != null && !item.isDisposed()) {
 					Rectangle bounds = item.getBounds();
-					viewer.getTree().redraw(bounds.x, bounds.y, viewer.getTree().getSize().x, bounds.height, true);
+					Rectangle treeBounds = viewer.getTree().getBounds();
+					viewer.getTree().redraw(0, bounds.y, treeBounds.width, bounds.height, true);
 				} else {
 					viewer.getTree().redraw();
 				}
@@ -301,7 +302,11 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 
 			int offset = Math.round(((float) event.height) / 2 - ((float) imageHeight) / 2);
 			imageStartY += offset;
-
+			Rectangle clipping = event.gc.getClipping();
+			if (clipping.width < imageStartX && clipping.width > 0) {
+				clipping.width += IMAGE_PADDING + moreImage.getBounds().width;
+				event.gc.setClipping(clipping);
+			}
 			if (value != null && value.equals(NodeState.MORE)) {
 				event.gc.drawImage(moreImage, imageStartX, imageStartY);
 			} else if (value != null && value.equals(NodeState.MORE_ERROR)) {
