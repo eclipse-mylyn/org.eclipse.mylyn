@@ -93,7 +93,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -129,7 +128,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -144,7 +142,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.services.IDisposable;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -1758,81 +1755,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			TaskEditorOutlineNode node = (TaskEditorOutlineNode) object;
 			TaskAttribute attribute = node.getData();
 			if (attribute != null) {
-				if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
-					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_COMMENTS);
-					if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
-						if (actionPart.getControl() instanceof Section) {
-							Control client = ((Section) actionPart.getControl()).getClient();
-							if (client instanceof Composite) {
-								for (Control control : ((Composite) client).getChildren()) {
-									// toggle subsections
-									if (control instanceof Section) {
-										CommonFormUtil.setExpanded((Section) control, true);
-									}
-								}
-							}
-						}
-					}
-					EditorUtil.reveal(this.getManagedForm().getForm(), attribute.getId());
-					return true;
-				} else if (TaskAttribute.TYPE_ATTACHMENT.equals(attribute.getMetaData().getType())) {
-					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_ATTACHMENTS);
-					if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-						CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
-						if (actionPart.getControl() instanceof Section) {
-							Control client = actionPart.getControl();
-							if (client instanceof Composite) {
-								for (Control control : ((Composite) client).getChildren()) {
-									if (control instanceof Composite) {
-										for (Control control1 : ((Composite) control).getChildren()) {
-											if (control1 instanceof org.eclipse.swt.widgets.Table) {
-												org.eclipse.swt.widgets.Table attachmentTable = ((org.eclipse.swt.widgets.Table) control1);
-												TableItem[] attachments = attachmentTable.getItems();
-												int index = 0;
-												for (TableItem attachment : attachments) {
-													Object data = attachment.getData();
-													if (data instanceof ITaskAttachment) {
-														ITaskAttachment attachmentData = ((ITaskAttachment) data);
-														if (attachmentData.getTaskAttribute() == attribute) {
-															attachmentTable.deselectAll();
-															attachmentTable.select(index);
-															IManagedForm mform = actionPart.getManagedForm();
-															ScrolledForm form = mform.getForm();
-															EditorUtil.focusOn(form, attachmentTable);
-															return true;
-														}
-													}
-													index++;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				} else {
-					AbstractTaskEditorPart actionPart = this.getPart(AbstractTaskEditorPage.ID_PART_ATTRIBUTES);
-					Section section;
-					if (actionPart instanceof AbstractTaskEditorSection) {
-						section = ((AbstractTaskEditorSection) actionPart).getSection();
-					} else {
-						section = null;
-					}
-					if (section != null) {
-						boolean expanded = section.isExpanded();
-						if (!expanded && actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
-							CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), true);
-							if (!expanded) {
-								CommonFormUtil.setExpanded((ExpandableComposite) actionPart.getControl(), false);
-							}
-						}
-					}
-
-					EditorUtil.reveal(this.getManagedForm().getForm(), attribute.getId());
-					return true;
-				}
+				super.selectReveal(attribute.getId());
 			} else {
 				TaskRelation taskRelation = node.getTaskRelation();
 				TaskRepository taskRepository = node.getTaskRepository();

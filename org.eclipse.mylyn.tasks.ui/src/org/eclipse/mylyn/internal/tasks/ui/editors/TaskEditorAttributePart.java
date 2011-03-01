@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -312,6 +313,33 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 				return p1 - p2;
 			}
 		};
+	}
+
+	@Override
+	public boolean setFormInput(Object input) {
+		if (input instanceof String) {
+			String text = (String) input;
+			Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
+			for (TaskAttribute attribute : attributes.values()) {
+				if (text.equals(attribute.getId())) {
+					TaskAttributeMetaData properties = attribute.getMetaData();
+					if (TaskAttribute.KIND_DEFAULT.equals(properties.getKind())) {
+						selectReveal(attribute);
+					}
+				}
+			}
+		}
+		return super.setFormInput(input);
+	}
+
+	public void selectReveal(TaskAttribute attribute) {
+		if (attribute == null) {
+			return;
+		}
+		if (!getSection().isExpanded()) {
+			CommonFormUtil.setExpanded(getSection(), true);
+		}
+		EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(), attribute.getId());
 	}
 
 }
