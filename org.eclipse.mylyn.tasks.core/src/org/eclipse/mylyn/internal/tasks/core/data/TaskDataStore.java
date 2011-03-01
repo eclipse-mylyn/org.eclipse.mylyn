@@ -68,7 +68,7 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
-	public synchronized void putTaskData(File file, TaskData data, boolean setLastRead, boolean user)
+	public synchronized TaskDataState putTaskData(File file, TaskData data, boolean setLastRead, boolean user)
 			throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
@@ -93,9 +93,10 @@ public class TaskDataStore {
 		}
 		state.setRepositoryData(data);
 		writeState(file, state);
+		return state;
 	}
 
-	public synchronized void setTaskData(File file, TaskData data) throws CoreException {
+	public synchronized TaskDataState setTaskData(File file, TaskData data) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
 
@@ -106,6 +107,7 @@ public class TaskDataStore {
 		state.setEditsData(null);
 		state.setLastReadData(data);
 		writeState(file, state);
+		return state;
 	}
 
 	private TaskDataState readStateInternal(File file, boolean xml11) throws IOException, SAXException {

@@ -75,6 +75,13 @@
             id="org.eclipse.mylyn.tasks.tests.provider2"
             name="Invalid Test Provider">
       </provider>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.synchronizationParticipants">
+      <participant
+            class="org.eclipse.mylyn.tasks.tests.support.MockSynchronizationParticipant"
+            id="org.eclipse.mylyn.tasks.tests.participant">
+      </participant>
    </extension>  
    
 </plugin>

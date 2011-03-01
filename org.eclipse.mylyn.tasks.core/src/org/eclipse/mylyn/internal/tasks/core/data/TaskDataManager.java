@@ -35,8 +35,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -72,12 +72,15 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<ITaskDataManagerListener>();
 
+	private final SynchronizationManger synchronizationManger;
+
 	public TaskDataManager(TaskDataStore taskDataStore, IRepositoryManager repositoryManager, TaskList taskList,
-			TaskActivityManager taskActivityManager) {
+			TaskActivityManager taskActivityManager, SynchronizationManger synchronizationManger) {
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
 		this.taskActivityManager = taskActivityManager;
+		this.synchronizationManger = synchronizationManger;
 	}
 
 	public void addListener(ITaskDataManagerListener listener) {
@@ -188,9 +191,11 @@ public class TaskDataManager implements ITaskDataManager {
 		if (taskDataChanged || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
+					TaskDataState state = null;
 					if (!taskData.isPartial()) {
 						File file = getMigratedFile(task, task.getConnectorKind());
-						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(), user);
+						state = taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(),
+								user);
 						task.setMarkReadPending(false);
 						event.setTaskDataUpdated(true);
 					}
@@ -199,12 +204,26 @@ public class TaskDataManager implements ITaskDataManager {
 					event.setTaskChanged(taskChanged);
 
 					if (taskDataChanged) {
+						String suppressIncoming = null;
+						if (synchronizationManger.hasParticipants(task.getConnectorKind())) {
+							// determine whether to show an incoming
+							if (state == null) {
+								File file = getMigratedFile(task, task.getConnectorKind());
+								state = taskDataStore.getTaskDataState(ensurePathExists(file));
+							}
+							TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
+							TaskDataDiff diff = synchronizationManger.processUpdate(taskData, lastReadData, monitor);
+							suppressIncoming = Boolean.toString(!diff.hasChanged());
+						}
+
 						switch (task.getSynchronizationState()) {
 						case OUTGOING:
 							task.setSynchronizationState(SynchronizationState.CONFLICT);
+							task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
 							break;
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
+							task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
 							break;
 						}
 					}

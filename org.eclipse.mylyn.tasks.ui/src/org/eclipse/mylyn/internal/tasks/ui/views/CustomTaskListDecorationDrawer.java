@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -288,10 +289,12 @@ public class CustomTaskListDecorationDrawer implements Listener {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_OUTGOING;
 				}
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
-				if (synchViewStyle) {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
-				} else {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_INCOMMING;
+				if (!Boolean.parseBoolean(repositoryTask.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING))) {
+					if (synchViewStyle) {
+						imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
+					} else {
+						imageDescriptor = CommonImages.OVERLAY_SYNC_INCOMMING;
+					}
 				}
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;

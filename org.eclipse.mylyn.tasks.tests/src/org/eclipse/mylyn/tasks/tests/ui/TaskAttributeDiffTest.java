@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;

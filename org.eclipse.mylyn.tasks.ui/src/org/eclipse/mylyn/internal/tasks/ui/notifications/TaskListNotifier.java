@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
@@ -62,7 +63,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			TaskDataDiff diff = getDiff(task);
 			if (diff != null) {
 				TaskListNotification notification = new TaskListNotification(task, token);
-				notification.setDescription(diff.toString(60, true));
+				notification.setDescription(TaskDiffUtil.toString(diff, 60, true));
 				return notification;
 			}
 		}

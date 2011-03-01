@@ -12,10 +12,14 @@
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.mylyn.internal.tasks.core.data.TaskAttributeDiff;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttributeDiff;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Drawable;
 import org.eclipse.swt.graphics.GC;
@@ -26,10 +30,59 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class TaskDiffUtil {
 
+	private static final int MAX_CHANGED_ATTRIBUTES = 2;
+
 	// could use the ellipsis glyph on some platforms "\u2026"
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$ 
 
 	private static int DRAW_FLAGS = SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER;
+
+	public static String toString(TaskDataDiff diff) {
+		return toString(diff, 60, true);
+	}
+
+	// TODO implement trim based on text width
+	public static String toString(TaskDataDiff diff, int maxWidth, boolean includeNewest) {
+		StringBuilder sb = new StringBuilder();
+		String sep = ""; //$NON-NLS-1$
+		// append first comment
+		int newCommentCount = diff.getNewComments().size();
+		if (newCommentCount > 0) {
+			Iterator<ITaskComment> iter = diff.getNewComments().iterator();
+			ITaskComment comment = iter.next();
+			if (includeNewest) {
+				while (iter.hasNext()) {
+					comment = iter.next();
+				}
+			}
+
+			sb.append(TaskDiffUtil.trim(TaskDiffUtil.commentToString(comment), 60));
+			if (newCommentCount > 1) {
+				sb.append(" (" + (newCommentCount - 1) + Messages.TaskDataDiff_more_); //$NON-NLS-1$
+			}
+			sep = "\n"; //$NON-NLS-1$
+		}
+		// append changed attributes		
+		int n = 0;
+		for (ITaskAttributeDiff changedAttribute : diff.getChangedAttributes()) {
+			TaskAttributeDiff attributeDiff = (TaskAttributeDiff) changedAttribute;
+			String label = attributeDiff.getLabel();
+			if (label != null) {
+				sb.append(sep);
+				sb.append(" "); //$NON-NLS-1$
+				sb.append(label);
+				sb.append(" "); //$NON-NLS-1$
+				sb.append(TaskDiffUtil.trim(TaskDiffUtil.listToString(attributeDiff.getRemovedValues()), 28));
+				sb.append(" -> "); //$NON-NLS-1$
+				sb.append(TaskDiffUtil.trim(TaskDiffUtil.listToString(attributeDiff.getAddedValues()), 28));
+				if (++n == MAX_CHANGED_ATTRIBUTES) {
+					break;
+				}
+				sep = "\n"; //$NON-NLS-1$
+			}
+		}
+		return sb.toString();
+	}
 
 	public static String commentToString(ITaskComment comment) {
 		StringBuilder sb = new StringBuilder();
@@ -112,11 +165,9 @@ public class TaskDiffUtil {
 	}
 
 	/**
-	 * Note: Copied from CLabel.
-	 * 
-	 * Shorten the given text <code>t</code> so that its length doesn't exceed the given width. The default
-	 * implementation replaces characters in the center of the original string with an ellipsis ("..."). Override if you
-	 * need a different strategy.
+	 * Note: Copied from CLabel. Shorten the given text <code>t</code> so that its length doesn't exceed the given
+	 * width. The default implementation replaces characters in the center of the original string with an ellipsis
+	 * ("..."). Override if you need a different strategy.
 	 * 
 	 * @param gc
 	 *            the gc to use for text measurement

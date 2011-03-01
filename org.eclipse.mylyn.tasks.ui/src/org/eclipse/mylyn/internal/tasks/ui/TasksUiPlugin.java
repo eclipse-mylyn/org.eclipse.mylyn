@@ -74,6 +74,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.data.SynchronizationManger;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -603,7 +604,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
-			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskList, taskActivityManager);
+			SynchronizationManger synchronizationManger = new SynchronizationManger(repositoryModel);
+			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskList, taskActivityManager,
+					synchronizationManger);
 
 			taskJobFactory = new TaskJobFactory(taskList, taskDataManager, repositoryManager, repositoryModel);
 

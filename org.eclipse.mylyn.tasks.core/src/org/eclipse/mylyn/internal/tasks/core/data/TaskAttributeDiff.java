@@ -9,19 +9,20 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.notifications;
+package org.eclipse.mylyn.internal.tasks.core.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttributeDiff;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Steffen Pingel
  */
-public class TaskAttributeDiff {
+public class TaskAttributeDiff implements ITaskAttributeDiff {
 
 	private String attributeId;
 
@@ -124,4 +125,9 @@ public class TaskAttributeDiff {
 			return oldAttribute.getTaskData().getAttributeMapper().getLabel(oldAttribute);
 		}
 	}
+
+	public String getAttributeId() {
+		return attributeId;
+	}
+
 }

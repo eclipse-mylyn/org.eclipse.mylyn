@@ -37,11 +37,12 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -299,7 +300,7 @@ public class TaskListToolTip extends GradientToolTip {
 						TasksUiPlugin.getTaskDataManager());
 				TaskDataDiff diff = notifier.getDiff(task);
 				if (diff != null) {
-					text = diff.toString(MAX_TEXT_WIDTH, false);
+					text = TaskDiffUtil.toString(diff, MAX_TEXT_WIDTH, false);
 				}
 				if (text != null && text.length() > 0) {
 					return text;
