@@ -843,19 +843,23 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().getTree().addListener(SWT.Collapse, expandListener);
 
 		getViewer().getTree().addMouseListener(new MouseListener() {
-			public void mouseDown(MouseEvent e) {
+			public void mouseDown(MouseEvent event) {
 				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion 
 				if (System.currentTimeMillis() - lastExpansionTime < 150) {
 					return;
 				}
+				if (event.button == 3) {
+					// button3 is used for the context menu so we ignore the mouseDown Event
+					return;
+				}
 				// NOTE: need e.x offset for Linux/GTK, which does not see
 				// left-aligned items in tree
-				Object selectedNode = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
+				Object selectedNode = ((Tree) event.widget).getItem(new Point(event.x + 70, event.y));
 				if (selectedNode instanceof TreeItem) {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
 					if (selectedObject instanceof ITask) {
-						if (e.x > activationImageOffset && e.x < activationImageOffset + 13) {
-							taskListCellModifier.toggleTaskActivation((TreeItem) selectedNode);
+						if (event.x > activationImageOffset && event.x < activationImageOffset + 13) {
+							taskListCellModifier.toggleTaskActivation((TreeItem) selectedNode, event);
 						}
 					}
 				}

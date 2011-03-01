@@ -25,7 +25,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
@@ -89,7 +91,7 @@ class TaskListCellModifier implements ICellModifier {
 				case 1:
 					break;
 				case 2:
-					toggleTaskActivation((TreeItem) element);
+					toggleTaskActivation((TreeItem) element, null);
 					break;
 				}
 			} else if (data instanceof AbstractTaskCategory || data instanceof IRepositoryQuery) {
@@ -111,7 +113,7 @@ class TaskListCellModifier implements ICellModifier {
 		this.taskListView.refresh();
 	}
 
-	public void toggleTaskActivation(TreeItem element) {
+	public void toggleTaskActivation(TreeItem element, MouseEvent event) {
 		AbstractTask task = null;
 		if (element.getData() instanceof AbstractTask) {
 			task = (AbstractTask) element.getData();
@@ -130,6 +132,9 @@ class TaskListCellModifier implements ICellModifier {
 				TasksUi.getTaskActivityManager().deactivateTask(task);
 			} else {
 				TasksUiInternal.activateTaskThroughCommand(task);
+				if ((event.stateMask & SWT.SHIFT) != 0 || event.button == 2) {
+					TasksUiUtil.openTask(task);
+				}
 			}
 		}
 	}
