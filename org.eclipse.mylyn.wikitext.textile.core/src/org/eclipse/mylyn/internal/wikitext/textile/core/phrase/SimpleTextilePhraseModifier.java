@@ -98,7 +98,7 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 		String quotedDelimiter = quoteLite(getDelimiter());
 
 		return quotedDelimiter + "(?!" + quotedDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ "]+|\\S[^" + quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ "]+|\\S(?:[^" + quotedDelimiter + "]|(?:" + quotedDelimiter + "\\S))*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				quotedDelimiter;
 	}
 

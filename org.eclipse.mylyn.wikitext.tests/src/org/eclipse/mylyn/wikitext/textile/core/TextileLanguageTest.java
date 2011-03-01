@@ -12,8 +12,10 @@ package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -218,6 +220,12 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("- this is a list item with -deleted text-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>- this is a list item with <del>deleted text</del></p>"));
+	}
+
+	public void testListItemWithDeletedText2() {
+		String html = parser.parseToHtml("* this is a list item with -deleted text-");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<ul><li>this is a list item with <del>deleted text</del></li></ul>"));
 	}
 
 	public void testHtmlEntityEncoding() {
@@ -651,6 +659,25 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("Foo bar-baz one two three four-five.");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Foo bar-baz one two three four-five.</p>"));
+	}
+
+	public void testDeletedBug338284() {
+		Map<String, String> markupAndExpected = new LinkedHashMap<String, String>();
+		markupAndExpected.put("Foo -one two-three four-", "<p>Foo <del>one two-three four</del></p>");
+		markupAndExpected.put("Foo -one two- three four-", "<p>Foo <del>one two</del> three four-</p>");
+		markupAndExpected.put("-one two-", "<p><del>one two</del></p>");
+		markupAndExpected.put("-one-two-", "<p><del>one-two</del></p>");
+		markupAndExpected.put("-one- two-", "<p><del>one</del> two-</p>");
+		for (java.util.Map.Entry<String, String> entry : markupAndExpected.entrySet()) {
+			String markup = entry.getKey();
+			String expectedHtml = entry.getValue();
+
+			String html = parser.parseToHtml(markup);
+
+			TestUtil.println(markup + " gives HTML: \n" + html);
+
+			assertTrue("Expecting " + expectedHtml + " in HTML: " + html, html.contains(expectedHtml));
+		}
 	}
 
 	public void testImage() throws IOException {
