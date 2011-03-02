@@ -152,7 +152,6 @@
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
 		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/archive</mylyn-archive>
-		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</mylyn-site>
       </properties>
     </profile>
     <profile>
@@ -183,6 +182,7 @@
       </activation>
       <properties>
 		<mylyn-skip-sign>false</mylyn-skip-sign>
+		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</mylyn-site>
 	  </properties>
 	</profile>
     <profile>
@@ -196,6 +196,7 @@
       <properties>
 		<mylyn-qualifier-format>'v'yyyyMMdd-HH00</mylyn-qualifier-format>
 		<mylyn-skip-sign>false</mylyn-skip-sign>
+		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/releases</mylyn-site>
 	  </properties>
 	</profile>
   </profiles>
