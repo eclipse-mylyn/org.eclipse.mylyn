@@ -85,6 +85,9 @@
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
 				  <property name="pack200" value="${mylyn-pack200}"/>
 				  <property name="skipSign" value="${mylyn-skip-sign}"/>
+				  <property name="skipPromote" value="${mylyn-skip-promote}"/>
+				  <property name="version" value="${unqualifiedVersion}"/>
+				  <property name="qualifier" value="${buildQualifier}"/>
 				</ant>
 				<echo file="${project.build.directory}/version.properties">
 				  <![CDATA[

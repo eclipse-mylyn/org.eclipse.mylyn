@@ -10,9 +10,10 @@
 
 	<echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
 
-	<!-- sign -->
-
 	<condition property="sign.skip" value="true"><equals arg1="${skipSign}" arg2="true"/></condition>
+  	<condition property="promote.skip" value="true"><equals arg1="${skipPromote}" arg2="true"/></condition>
+
+  	<!-- sign -->
 
 	<antcall target="sign"/>
 
@@ -62,12 +63,27 @@
 		<include name="**/*"/>
 	  </fileset>
 	</zip>
+  	
+  	<!-- promote -->
+
+	<antcall target="promote"/>
+
   </target>
 
   <target name="sign" unless="sign.skip">	
 	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
 	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
 	  <arg value="${projectDir}/site"/>
+	</exec>
+  </target>
+
+  <target name="promote" unless="promote.skip">	
+	<chmod perm="755" file="${scriptdir}/promote.sh"/>
+  	<chmod perm="755" file="${scriptdir}/update-composite.sh"/>
+	<exec executable="${scriptdir}/promote.sh" dir="${scriptdir}" failonerror="true">
+	  <arg value="${version}"/>
+	  <arg value="${qualifier}"/>
+	  <arg value="${projectDir}"/>		
 	</exec>
   </target>
 

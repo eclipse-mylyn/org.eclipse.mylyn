@@ -26,6 +26,7 @@
 
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
 	<mylyn-skip-sign>true</mylyn-skip-sign>
+	<mylyn-skip-promote>true</mylyn-skip-promote>
 
     <mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
     <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
@@ -155,6 +156,18 @@
 		<module>main-site</module>
       </modules>
     </profile>
+    <profile>
+      <id>promote</id>
+      <activation>
+		<property>
+          <name>env.PROMOTE</name>
+          <value>true</value>
+		</property>
+      </activation>
+      <properties>
+		<mylyn-skip-promote>false</mylyn-skip-promote>
+	  </properties>
+	</profile>
     <profile>
       <id>weekly</id>
       <activation>
