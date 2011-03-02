@@ -478,6 +478,21 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 				if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
 					component = repositoryConfiguration.getComponents(product).get(0);
+				} else {
+					if (repositoryConfiguration.getProducts().size() > 0) {
+						product = repositoryConfiguration.getProducts().get(0);
+					}
+					if (product == null) {
+						return false;
+					}
+					if (repositoryConfiguration.getComponents(product).size() > 0) {
+						component = repositoryConfiguration.getComponents(product).get(0);
+					} else {
+						return false;
+					}
+					if (component == null) {
+						return false;
+					}
 				}
 
 				initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
