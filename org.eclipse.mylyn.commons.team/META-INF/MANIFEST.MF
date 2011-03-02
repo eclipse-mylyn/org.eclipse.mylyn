@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator.resources,
  org.eclipse.core.databinding,
  org.eclipse.core.databinding.beans,
- org.eclipse.core.databinding.property,
+ org.eclipse.core.databinding.property;resolution:=optional,
  org.eclipse.jface.databinding,
  org.eclipse.mylyn.commons.repositories;bundle-version="0.1.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.5.0"
