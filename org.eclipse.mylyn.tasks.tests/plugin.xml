@@ -82,6 +82,10 @@
             class="org.eclipse.mylyn.tasks.tests.support.MockSynchronizationParticipant"
             id="org.eclipse.mylyn.tasks.tests.participant">
       </participant>
+      <suppressIncoming
+            attributeId="version"
+            connectorKind="trac">
+      </suppressIncoming>
    </extension>  
    
 </plugin>

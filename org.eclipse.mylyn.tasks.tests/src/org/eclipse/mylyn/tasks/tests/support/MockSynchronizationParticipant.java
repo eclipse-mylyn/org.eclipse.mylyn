@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.tasks.tests.support;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttributeDiff;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataDiff;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationParticipant;
 
@@ -26,12 +25,7 @@ public class MockSynchronizationParticipant extends SynchronizationParticipant {
 
 	@Override
 	public void processUpdate(ITaskDataDiff diff, IProgressMonitor monitor) {
-		if (diff.getChangedAttributes().size() == 1) {
-			ITaskAttributeDiff attributeDiff = diff.getChangedAttributes().iterator().next();
-			if ("version".equals(attributeDiff.getAttributeId())) {
-				diff.setHasChanged(false);
-			}
-		}
+		//System.err.println(diff.getChangedAttributes());
 	}
 
 }

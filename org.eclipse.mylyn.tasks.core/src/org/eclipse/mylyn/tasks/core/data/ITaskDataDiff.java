@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Collection;
 
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -32,5 +33,7 @@ public interface ITaskDataDiff {
 	public TaskRepository getRepository();
 
 	public Collection<ITaskAttributeDiff> getChangedAttributes();
+
+	public Collection<ITaskComment> getNewComments();
 
 }

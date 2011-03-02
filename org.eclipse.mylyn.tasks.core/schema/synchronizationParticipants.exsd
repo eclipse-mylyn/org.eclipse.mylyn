@@ -18,7 +18,8 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="participant" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="participant" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="suppressIncoming" minOccurs="0" maxOccurs="unbounded"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -69,8 +70,27 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.sync.TaskSynchronizationParticipant:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.sync.SynchronizationParticipant:"/>
                </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="suppressIncoming">
+      <complexType>
+         <attribute name="connectorKind" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="attributeId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

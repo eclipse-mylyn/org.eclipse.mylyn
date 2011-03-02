@@ -130,4 +130,17 @@ public class TaskAttributeDiff implements ITaskAttributeDiff {
 		return attributeId;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TaskAttributeDiff [attributeId="); //$NON-NLS-1$
+		builder.append(attributeId);
+		builder.append(", newAttribute="); //$NON-NLS-1$
+		builder.append(newAttribute);
+		builder.append(", oldAttribute="); //$NON-NLS-1$
+		builder.append(oldAttribute);
+		builder.append("]"); //$NON-NLS-1$
+		return builder.toString();
+	}
+
 }

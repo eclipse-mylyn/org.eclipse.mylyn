@@ -13,8 +13,11 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -29,6 +32,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttributeDiff;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataDiff;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationParticipant;
 import org.eclipse.osgi.util.NLS;
@@ -38,7 +43,33 @@ import org.eclipse.osgi.util.NLS;
  */
 public class SynchronizationManger {
 
+	public static class DefaultParticipant extends SynchronizationParticipant {
+
+		private final Set<String> attributeIds;
+
+		public DefaultParticipant(List<String> attributeIds) {
+			Assert.isNotNull(attributeIds);
+			this.attributeIds = new HashSet<String>(attributeIds);
+		}
+
+		@Override
+		public void processUpdate(ITaskDataDiff diff, IProgressMonitor monitor) {
+			if (diff.getChangedAttributes().size() > 0) {
+				for (Iterator<ITaskAttributeDiff> it = diff.getChangedAttributes().iterator(); it.hasNext();) {
+					ITaskAttributeDiff attributeDiff = it.next();
+					if (attributeIds.contains(attributeDiff.getAttributeId())) {
+						it.remove();
+					}
+				}
+				diff.setHasChanged(diff.getChangedAttributes().size() > 0 || diff.getNewComments().size() > 0);
+			}
+		}
+
+	}
+
 	private final Map<String, List<SynchronizationParticipant>> participantsByConnectorKind = new HashMap<String, List<SynchronizationParticipant>>();
+
+	private List<SynchronizationParticipant> defaultParticipants;
 
 	private final RepositoryModel model;
 
@@ -48,11 +79,11 @@ public class SynchronizationManger {
 	}
 
 	private List<SynchronizationParticipant> loadParticipants(String connectorKind) {
-		Assert.isNotNull(connectorKind);
 		MultiStatus status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
 				"Synchronization participants failed to load.", null); //$NON-NLS-1$
 
-		List<SynchronizationParticipant> result = new ArrayList<SynchronizationParticipant>();
+		List<SynchronizationParticipant> participants = new ArrayList<SynchronizationParticipant>(1);
+		List<String> attributeIds = new ArrayList<String>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
@@ -61,40 +92,55 @@ public class SynchronizationManger {
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				String value = element.getAttribute("connectorKind"); //$NON-NLS-1$
-				if (value == null || connectorKind.equals(value)) {
-					try {
-						Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
-						if (object instanceof SynchronizationParticipant) {
-							result.add((SynchronizationParticipant) object);
-						} else {
+				if ("participant".equals(element.getName())) { //$NON-NLS-1$
+					String value = element.getAttribute("connectorKind"); //$NON-NLS-1$
+					if (value != null && value.equals(connectorKind) || value == connectorKind) {
+						try {
+							Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
+							if (object instanceof SynchronizationParticipant) {
+								participants.add((SynchronizationParticipant) object);
+							} else {
+								status.add(new Status(
+										IStatus.ERROR,
+										ITasksCoreConstants.ID_PLUGIN,
+										NLS.bind(
+												"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+												object.getClass().getCanonicalName(), element.getContributor()
+														.getName())));
+							}
+						} catch (Throwable e) {
 							status.add(new Status(
 									IStatus.ERROR,
 									ITasksCoreConstants.ID_PLUGIN,
 									NLS.bind(
-											"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-											object.getClass().getCanonicalName(), element.getContributor().getName())));
+											"Connector core failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
 						}
-					} catch (Throwable e) {
-						status.add(new Status(
-								IStatus.ERROR,
-								ITasksCoreConstants.ID_PLUGIN,
-								NLS.bind(
-										"Connector core failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
+					}
+				} else if ("suppressIncoming".equals(element.getName())) { //$NON-NLS-1$
+					String value = element.getAttribute("connectorKind"); //$NON-NLS-1$
+					if (value != null && value.equals(connectorKind) || value == connectorKind) {
+						String attributeId = element.getAttribute("connectorKind"); //$NON-NLS-1$
+						if (attributeId != null) {
+							attributeIds.add(attributeId);
+						}
 					}
 				}
 			}
+		}
+
+		if (attributeIds.size() > 0) {
+			participants.add(new DefaultParticipant(attributeIds));
 		}
 
 		if (!status.isOK()) {
 			StatusHandler.log(status);
 		}
 
-		return result;
+		return participants;
 	}
 
 	public synchronized boolean hasParticipants(String connectorKind) {
-		return getParticipants(connectorKind) != null;
+		return getDefaultParticipants().size() > 0 || getParticipants(connectorKind).size() > 0;
 	}
 
 	public synchronized List<SynchronizationParticipant> getParticipants(String connectorKind) {
@@ -106,12 +152,30 @@ public class SynchronizationManger {
 		return participants;
 	}
 
+	public synchronized List<SynchronizationParticipant> getDefaultParticipants() {
+		if (defaultParticipants == null) {
+			defaultParticipants = loadParticipants(null);
+		}
+		return defaultParticipants;
+	}
+
+	public synchronized List<SynchronizationParticipant> getIgnoredIncomings(String connectorKind) {
+		List<SynchronizationParticipant> participants = participantsByConnectorKind.get(connectorKind);
+		if (participants == null) {
+			participants = loadParticipants(connectorKind);
+			participantsByConnectorKind.put(connectorKind, participants);
+		}
+		return participants;
+	}
+
 	public TaskDataDiff processUpdate(TaskData newTaskData, TaskData oldTaskData, IProgressMonitor monitor) {
 		TaskDataDiff diff = new TaskDataDiff(model, newTaskData, oldTaskData);
+		for (SynchronizationParticipant participant : getDefaultParticipants()) {
+			participant.processUpdate(diff, monitor);
+		}
 		for (SynchronizationParticipant participant : getParticipants(newTaskData.getConnectorKind())) {
 			participant.processUpdate(diff, monitor);
 		}
 		return diff;
 	}
-
 }
