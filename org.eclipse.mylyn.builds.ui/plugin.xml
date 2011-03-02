@@ -17,19 +17,22 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="org.eclipse.mylyn.builds.ui.views.BuildsCategory"
+            category="org.eclipse.mylyn.ui"
             class="org.eclipse.mylyn.internal.builds.ui.view.BuildsView"
             icon="icons/eview16/build-view.png"
             id="org.eclipse.mylyn.builds.navigator.builds"
             name="Builds">
       </view>
+      <!--
       <category
             id="org.eclipse.mylyn.builds.ui.views.BuildsCategory"
             name="Builds">
       </category>
+      -->
    </extension>
     <extension point="org.eclipse.ui.preferencePages">
 		<page name="Builds"
+			category="org.eclipse.mylyn.preferencePages.Mylyn"		
 			class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesPage"
 			id="org.eclipse.mylyn.builds.preferences.BuildsPage">
 	    	<keywordReference id="org.eclipse.mylyn.builds.preferences.keywords"/>
