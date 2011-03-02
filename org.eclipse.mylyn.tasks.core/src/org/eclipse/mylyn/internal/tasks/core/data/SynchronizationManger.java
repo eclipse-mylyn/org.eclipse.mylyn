@@ -25,9 +25,11 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -47,9 +49,14 @@ public class SynchronizationManger {
 
 		private final Set<String> attributeIds;
 
-		public DefaultParticipant(List<String> attributeIds) {
+		public DefaultParticipant(List<String> attributeIds, String connectorKind) {
 			Assert.isNotNull(attributeIds);
 			this.attributeIds = new HashSet<String>(attributeIds);
+			String id = DefaultParticipant.class.getName();
+			if (connectorKind != null) {
+				id += "." + connectorKind; //$NON-NLS-1$
+			}
+			setId(id);
 		}
 
 		@Override
@@ -98,7 +105,9 @@ public class SynchronizationManger {
 						try {
 							Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
 							if (object instanceof SynchronizationParticipant) {
-								participants.add((SynchronizationParticipant) object);
+								SynchronizationParticipant participant = (SynchronizationParticipant) object;
+								participant.setId(element.getAttribute("id")); //$NON-NLS-1$
+								participants.add(participant);
 							} else {
 								status.add(new Status(
 										IStatus.ERROR,
@@ -119,7 +128,7 @@ public class SynchronizationManger {
 				} else if ("suppressIncoming".equals(element.getName())) { //$NON-NLS-1$
 					String value = element.getAttribute("connectorKind"); //$NON-NLS-1$
 					if (value != null && value.equals(connectorKind) || value == connectorKind) {
-						String attributeId = element.getAttribute("connectorKind"); //$NON-NLS-1$
+						String attributeId = element.getAttribute("attributeId"); //$NON-NLS-1$
 						if (attributeId != null) {
 							attributeIds.add(attributeId);
 						}
@@ -129,7 +138,7 @@ public class SynchronizationManger {
 		}
 
 		if (attributeIds.size() > 0) {
-			participants.add(new DefaultParticipant(attributeIds));
+			participants.add(new DefaultParticipant(attributeIds, connectorKind));
 		}
 
 		if (!status.isOK()) {
@@ -168,13 +177,29 @@ public class SynchronizationManger {
 		return participants;
 	}
 
-	public TaskDataDiff processUpdate(TaskData newTaskData, TaskData oldTaskData, IProgressMonitor monitor) {
-		TaskDataDiff diff = new TaskDataDiff(model, newTaskData, oldTaskData);
-		for (SynchronizationParticipant participant : getDefaultParticipants()) {
-			participant.processUpdate(diff, monitor);
+	public TaskDataDiff createDiff(TaskData newTaskData, TaskData oldTaskData, final IProgressMonitor monitor) {
+		final TaskDataDiff diff = new TaskDataDiff(model, newTaskData, oldTaskData);
+		for (final SynchronizationParticipant participant : getDefaultParticipants()) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable exception) {
+					// handled by framework
+				}
+
+				public void run() throws Exception {
+					participant.processUpdate(diff, monitor);
+				}
+			});
 		}
-		for (SynchronizationParticipant participant : getParticipants(newTaskData.getConnectorKind())) {
-			participant.processUpdate(diff, monitor);
+		for (final SynchronizationParticipant participant : getParticipants(newTaskData.getConnectorKind())) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable exception) {
+					// handled by framework
+				}
+
+				public void run() throws Exception {
+					participant.processUpdate(diff, monitor);
+				}
+			});
 		}
 		return diff;
 	}

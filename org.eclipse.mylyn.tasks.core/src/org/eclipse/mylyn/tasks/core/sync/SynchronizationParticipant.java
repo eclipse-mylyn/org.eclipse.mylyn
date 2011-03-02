@@ -34,7 +34,7 @@ public abstract class SynchronizationParticipant {
 
 	public final void setId(String id) {
 		Assert.isNotNull(id);
-		Assert.isNotNull(this.id);
+		Assert.isLegal(this.id == null);
 		this.id = id;
 	}
 

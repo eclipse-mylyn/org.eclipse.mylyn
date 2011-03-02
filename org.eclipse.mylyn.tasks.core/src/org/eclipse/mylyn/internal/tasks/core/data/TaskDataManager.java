@@ -212,7 +212,7 @@ public class TaskDataManager implements ITaskDataManager {
 								state = taskDataStore.getTaskDataState(ensurePathExists(file));
 							}
 							TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
-							TaskDataDiff diff = synchronizationManger.processUpdate(taskData, lastReadData, monitor);
+							TaskDataDiff diff = synchronizationManger.createDiff(taskData, lastReadData, monitor);
 							suppressIncoming = Boolean.toString(!diff.hasChanged());
 						}
 

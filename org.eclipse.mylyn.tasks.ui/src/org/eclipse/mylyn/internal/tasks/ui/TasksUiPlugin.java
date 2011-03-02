@@ -390,6 +390,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final AtomicInteger initializationCount = new AtomicInteger();
 
+	private SynchronizationManger synchronizationManger;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -604,7 +606,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
-			SynchronizationManger synchronizationManger = new SynchronizationManger(repositoryModel);
+			synchronizationManger = new SynchronizationManger(repositoryModel);
 			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskList, taskActivityManager,
 					synchronizationManger);
 
@@ -1359,8 +1361,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		try {
 			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 //				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-			taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
-					getTaskDataManager()));
+			TaskListNotifier taskListNotifier = new TaskListNotifier(getRepositoryModel(), getTaskDataManager(),
+					getSynchronizationManger());
+			getTaskDataManager().addListener(taskListNotifier);
+			taskListNotificationManager.addNotificationProvider(taskListNotifier);
 			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 		} catch (Throwable t) {
@@ -1383,6 +1387,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public ServiceMessageManager getServiceMessageManager() {
 		return serviceMessageManager;
+	}
+
+	public SynchronizationManger getSynchronizationManger() {
+		return synchronizationManger;
 	}
 
 }

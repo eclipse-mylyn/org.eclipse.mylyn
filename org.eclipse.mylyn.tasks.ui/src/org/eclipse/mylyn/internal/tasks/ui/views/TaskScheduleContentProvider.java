@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -221,6 +222,12 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		// ignore
 	}
 
+	private static boolean notScheduled(ITask task) {
+		SynchronizationState state = task.getSynchronizationState();
+		return state == SynchronizationState.SYNCHRONIZED
+				|| (state == SynchronizationState.INCOMING && Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
+	}
+
 	public class Unscheduled extends StateTaskContainer {
 
 		public Unscheduled() {
@@ -229,7 +236,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 		@Override
 		protected boolean select(ITask task) {
-			return task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED && !task.isCompleted();
+			return !task.isCompleted() && notScheduled(task);
 		}
 
 	}
@@ -309,9 +316,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		@Override
 		protected boolean select(ITask task) {
 			SynchronizationState state = task.getSynchronizationState();
-			return state == SynchronizationState.INCOMING || state == SynchronizationState.INCOMING_NEW;
+			return state == SynchronizationState.INCOMING_NEW
+					|| (state == SynchronizationState.INCOMING && !Boolean.parseBoolean(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)));
 		}
-
 	}
 
 	public class Outgoing extends StateTaskContainer {
@@ -336,8 +343,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 		@Override
 		public boolean select(ITask task) {
-			return (task.isCompleted() && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED));
+			return task.isCompleted() && notScheduled(task);
 		}
+
 	}
 
 	private class RolloverCheck extends Job {

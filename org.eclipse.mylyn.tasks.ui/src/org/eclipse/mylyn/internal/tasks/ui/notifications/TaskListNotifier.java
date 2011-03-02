@@ -19,11 +19,13 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
+import org.eclipse.mylyn.internal.tasks.core.data.SynchronizationManger;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
@@ -48,10 +50,13 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	public boolean enabled;
 
-	public TaskListNotifier(RepositoryModel repositoryModel, TaskDataManager taskDataManager) {
+	private final SynchronizationManger synchronizationManger;
+
+	public TaskListNotifier(RepositoryModel repositoryModel, TaskDataManager taskDataManager,
+			SynchronizationManger synchronizationManger) {
 		this.repositoryModel = repositoryModel;
 		this.taskDataManager = taskDataManager;
-		this.taskDataManager.addListener(this);
+		this.synchronizationManger = synchronizationManger;
 	}
 
 	public TaskListNotification getNotification(ITask task, Object token) {
@@ -61,7 +66,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			return notification;
 		} else if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
 			TaskDataDiff diff = getDiff(task);
-			if (diff != null) {
+			if (diff != null && diff.hasChanged()) {
 				TaskListNotification notification = new TaskListNotification(task, token);
 				notification.setDescription(TaskDiffUtil.toString(diff, 60, true));
 				return notification;
@@ -75,9 +80,8 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		try {
 			workingCopy = taskDataManager.getTaskDataState(task);
 			if (workingCopy != null) {
-				TaskDataDiff diff = new TaskDataDiff(repositoryModel, workingCopy.getRepositoryData(),
-						workingCopy.getLastReadData());
-				return diff;
+				return synchronizationManger.createDiff(workingCopy.getRepositoryData(), workingCopy.getLastReadData(),
+						new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to get task data for task: \"" //$NON-NLS-1$
