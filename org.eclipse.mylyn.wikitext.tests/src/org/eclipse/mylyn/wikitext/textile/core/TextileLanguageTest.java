@@ -668,6 +668,10 @@ public class TextileLanguageTest extends TestCase {
 		markupAndExpected.put("-one two-", "<p><del>one two</del></p>");
 		markupAndExpected.put("-one-two-", "<p><del>one-two</del></p>");
 		markupAndExpected.put("-one- two-", "<p><del>one</del> two-</p>");
+		markupAndExpected.put("text -one two- and -three four-",
+				"<p>text <del>one two</del> and <del>three four</del></p>");
+		markupAndExpected.put("-a-", "<p><del>a</del></p>");
+		markupAndExpected.put("--", "<p>--</p>");
 		for (java.util.Map.Entry<String, String> entry : markupAndExpected.entrySet()) {
 			String markup = entry.getKey();
 			String expectedHtml = entry.getValue();

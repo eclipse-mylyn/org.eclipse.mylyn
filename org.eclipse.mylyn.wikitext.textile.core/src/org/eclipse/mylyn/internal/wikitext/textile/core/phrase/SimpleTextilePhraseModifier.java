@@ -96,10 +96,12 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	@Override
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = quoteLite(getDelimiter());
+		String lastCharacterOfDelimiter = quoteLite(getDelimiter().substring(0, 1));
 
-		return quotedDelimiter + "(?!" + quotedDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ "]+|\\S(?:[^" + quotedDelimiter + "]|(?:" + quotedDelimiter + "\\S))*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				quotedDelimiter;
+		return quotedDelimiter
+				+ "(?!" + lastCharacterOfDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ 
+				"(?<!" + lastCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

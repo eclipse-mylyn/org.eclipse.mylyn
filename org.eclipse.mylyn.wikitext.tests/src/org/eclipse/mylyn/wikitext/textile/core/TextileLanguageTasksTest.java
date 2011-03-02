@@ -65,6 +65,8 @@ public class TextileLanguageTasksTest extends TestCase {
 			parser.parse(reader);
 			long endTime = System.currentTimeMillis();
 			TestUtil.println(String.format("Took %s millis", endTime - time));
+		} catch (Throwable t) {
+			t.printStackTrace();
 		} finally {
 			reader.close();
 		}
