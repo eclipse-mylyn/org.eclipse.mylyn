@@ -23,6 +23,7 @@
   <name>Mylyn for Eclipse 3.5, 3.6 and 3.7</name>
   <properties>
     <qualifier>${project.unqualifiedVersion}</qualifier>
+    <sign-dir>tools/mylyn/hudson/signing/mylyn</sign-dir>
   </properties>
   <build>
     <plugins>
@@ -79,13 +80,20 @@
 			<phase>install</phase>
 			<configuration>
 			  <target>
-				<ant antfile="../pack-and-sign/build.xml">
+				<ant antfile="pack-and-sign/build.xml">
 				  <property name="localRepository" value="${settings.localRepository}"/>
 				  <property name="projectDir" value="${project.build.directory}"/>
+				  <property name="signDir" value="${sign-dir}"/>
+				  <property name="archiveDir" value="${mylyn-archive}"/>
+				  <property name="siteDir" value="${mylyn-site}"/>
+				  
+				  <property name="filter" value="mylyn"/>
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
 				  <property name="pack200" value="${mylyn-pack200}"/>
+				  
 				  <property name="skipSign" value="${mylyn-skip-sign}"/>
 				  <property name="skipPromote" value="${mylyn-skip-promote}"/>
+				  
 				  <property name="version" value="${unqualifiedVersion}"/>
 				  <property name="qualifier" value="${buildQualifier}"/>
 				</ant>

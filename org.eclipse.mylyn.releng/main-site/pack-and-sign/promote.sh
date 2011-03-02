@@ -3,8 +3,10 @@
 VERSION=$1
 QUALIFIER=$2
 SRC=$3
-DST=/home/data/httpd/download.eclipse.org/mylyn/archive/$VERSION/$QUALIFIER
-SITE=/home/data/httpd/download.eclipse.org/mylyn/snapshots
+ARCHIVE=$4
+SITE=$5
+DST=$ARCHIVE/$VERSION/$QUALIFIER
+
 
 if [ -e $DST ]; then
  echo $DST already exists
@@ -20,12 +22,15 @@ cp $SRC/site-archive.zip $DST/mylyn-$VERSION.$QUALIFIER.zip
 #chgrp -R mylynadmin $DST
 chmod g+w -R $DST
 
-echo Updating $SITE
 cd $(dirname $0)
 BASE=$(pwd)
 
-for i in $SITE/*; do
- echo "Updating $i"
- cd $i
- $BASE/update-composite.sh
-done
+if [ -n "$SITE" ]; then
+ for i in $SITE $SITE/*; do
+  if [ -e $i/composite.index ]; then
+   echo "Updating $i"
+   cd $i
+   $BASE/update-composite.sh
+  fi
+ done
+fi

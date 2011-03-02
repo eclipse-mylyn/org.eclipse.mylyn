@@ -33,6 +33,8 @@
 	<mylyn-test-append></mylyn-test-append>
 
 	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
+	<mylyn-archive>${basedir}/archive</mylyn-archive>
+	<mylyn-site></mylyn-site>
 
 	<mylyn-qualifier-format>'I'yyyyMMdd-HHmm</mylyn-qualifier-format>
 	<mylyn-pack200>${java.home}/bin</mylyn-pack200>
@@ -148,6 +150,8 @@
 		<!--
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
+		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/archive</mylyn-archive>
+		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</mylyn-site>
       </properties>
     </profile>
     <profile>

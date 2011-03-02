@@ -11,16 +11,16 @@
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
 
-if [ $# -eq 0 ]
+if [ $# -lt 3 ]
 then
-  echo "usage: sign-and-wait.sh directory"
+  echo "usage: sign-and-wait.sh srcdir signdir filter"
   exit 1
 fi
 
 set -v
 
 SRC=$1
-DST=/home/data/httpd/download-staging.priv/tools/mylyn/hudson/signing
+DST=/home/data/httpd/download-staging.priv/$2
 OUT=$DST/output
 LOG=/home/data/httpd/download-staging.priv/arch/signer.log
 
@@ -35,19 +35,19 @@ mkdir -p $OUT
 echo Creating archive for signing
 
 cd $SRC
-/usr/bin/find -name "org.eclipse*mylyn*.jar" | zip $DST/mylyn.zip -@
+/usr/bin/find -name "*$3*" | zip $DST/site.zip -@
 
 # sign
 
-/usr/bin/sign $DST/mylyn.zip nomail $OUT
+/usr/bin/sign $DST/site.zip nomail $OUT
 
 # wait up to 30 minutes for signing to complete
 
 tail -f $LOG | grep -E \(Extracting\|Finished\) &
 
 I=0
-while [ $I -lt 60 ] && [ ! -e $OUT/mylyn.zip ]; do
-  echo Waiting for $OUT/mylyn.zip
+while [ $I -lt 60 ] && [ ! -e $OUT/site.zip ]; do
+  echo Waiting for $OUT/site.zip
   sleep 30
   let I=I+1
 done
@@ -55,18 +55,18 @@ done
 PID=`jobs -l -p`
 kill $PID
 
-if [ ! -e $OUT/mylyn.zip ]
+if [ ! -e $OUT/site.zip ]
 then
   echo
-  echo Signing Failed: Timeout waiting for $OUT/mylyn.zip
+  echo Signing Failed: Timeout waiting for $OUT/site.zip
   exit 1
 fi
 
 # unzip
 
 echo Unzipping signed files
-/usr/bin/unzip -o -d $SRC $OUT/mylyn.zip
+/usr/bin/unzip -o -d $SRC $OUT/site.zip
 
 # cleanup
 
-rm $DST/mylyn.zip
+rm $DST/site.zip
