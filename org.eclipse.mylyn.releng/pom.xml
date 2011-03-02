@@ -164,7 +164,7 @@
       <id>promote</id>
       <activation>
 		<property>
-          <name>env.PROMOTE</name>
+          <name>env.PUBLISH</name>
           <value>true</value>
 		</property>
       </activation>
@@ -196,7 +196,7 @@
       <properties>
 		<mylyn-qualifier-format>'v'yyyyMMdd-HH00</mylyn-qualifier-format>
 		<mylyn-skip-sign>false</mylyn-skip-sign>
-		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/releases</mylyn-site>
+		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</mylyn-site>
 	  </properties>
 	</profile>
   </profiles>
