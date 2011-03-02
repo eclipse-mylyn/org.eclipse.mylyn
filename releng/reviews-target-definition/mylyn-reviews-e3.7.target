@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
-
 <target name="mylyn-reviews-e3.7">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+
 <repository location="http://download.eclipse.org/releases/indigo"/>
-<unit id="org.eclipse.sdk.ide" version="3.7.0.I20101208-1300"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20101215-0917"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20101215-0940"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.6.0.v20101215-0917"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20101215-0940"/>
-<unit id="org.eclipse.egit.feature.group" version="0.9.3"/>
-<unit id="org.eclipse.xtext.runtime.feature.group" version="1.0.1.v201008251220"/>
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201012131338"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
+
+<repository location="http://download.eclipse.org/mylyn/snapshots/weekly"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
+
 <repository location="http://download.eclipse.org/egit/updates"/>
-<unit id="org.eclipse.jgit.feature.group" version="0.10.1"/>
-<repository location="http://download.eclipse.org/tools/orbit/committers/drops/S20110124210048/repository/"/>
+<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository/"/>
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
 <unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
 <unit id="com.google.gson" version="1.6.0.v201101131530"/>
@@ -25,10 +28,7 @@
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201101181500"/>
 <unit id="com.google.gerrit.reviewdb" version="2.1.5.v201101121030"/>
 <unit id="com.google.gerrit.common" version="2.1.5.v201101200205"/>
-<unit id="org.eclipse.mylyn_feature.feature.group" version="3.5.0.I20110104-0100-e3x"/>
-<repository location="http://download.eclipse.org/tools/mylyn/update/weekly"/>
-<unit id="org.eclipse.mylyn.bugzilla_feature.feature.group" version="3.5.0.I20110104-0100-e3x"/>
-<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="3.5.0.I20110104-0100-e3x"/>
+
 </location>
 </locations>
 </target>

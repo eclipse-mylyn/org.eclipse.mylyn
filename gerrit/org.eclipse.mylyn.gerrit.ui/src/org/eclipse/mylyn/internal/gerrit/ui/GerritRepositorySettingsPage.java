@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -47,6 +48,13 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);
 		setNeedsValidation(true);
+	}
+
+	@SuppressWarnings("restriction")
+	@Override
+	public void applyTo(TaskRepository repository) {
+		super.applyTo(repository);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_REVIEW);
 	}
 
 	@Override

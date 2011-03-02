@@ -14,6 +14,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.ui.wizards.GerritCustomQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -54,6 +55,11 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public boolean hasSearchPage() {
 		return false;
+	}
+
+	@Override
+	public String getTaskKindLabel(ITask task) {
+		return "Change";
 	}
 
 }

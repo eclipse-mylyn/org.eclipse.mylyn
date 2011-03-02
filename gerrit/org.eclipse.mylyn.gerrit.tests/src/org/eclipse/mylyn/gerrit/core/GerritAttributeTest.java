@@ -12,8 +12,8 @@ package org.eclipse.mylyn.gerrit.core;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritAttribute;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConstants;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
+import org.eclipse.mylyn.internal.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -22,10 +22,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 public class GerritAttributeTest extends TestCase {
 
 	public void testGetters() {
-		final GerritAttribute id = GerritAttribute.ID;
+		final Field id = GerritTaskSchema.getDefault().KEY;
 		assertTrue("should be read only", id.isReadOnly());
-		assertEquals("wrong gerrit key", GerritConstants.ATTRIBUTE_ID, id.getGerritKey());
-		assertEquals("wrong task key", TaskAttribute.TASK_KEY, id.getTaskKey());
+		assertEquals("wrong task key", TaskAttribute.TASK_KEY, id.getKey());
 		assertEquals("wrong type", TaskAttribute.TYPE_SHORT_TEXT, id.getType());
 	}
 

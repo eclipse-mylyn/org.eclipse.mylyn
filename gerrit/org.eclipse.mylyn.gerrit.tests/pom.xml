@@ -22,6 +22,8 @@
 		  <skip>${mylyn-reviews-skip-test}</skip>
           <useUIHarness>true</useUIHarness>
           <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
+          <testSuite>org.eclipse.mylyn.gerrit.tests</testSuite>
+          <testClass>org.eclipse.mylyn.gerrit.core.AllGerritTests</testClass>
           <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
           <dependencies>
             <dependency>

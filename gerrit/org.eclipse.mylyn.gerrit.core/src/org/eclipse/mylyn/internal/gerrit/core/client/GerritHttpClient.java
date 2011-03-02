@@ -78,6 +78,10 @@ public class GerritHttpClient {
 		return id++;
 	}
 
+	public AbstractWebLocation getLocation() {
+		return location;
+	}
+
 	public synchronized String getXsrfKey() {
 		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
 	}
@@ -124,7 +128,7 @@ public class GerritHttpClient {
 
 	private PostMethod postJsonRequestInternal(String serviceUri, JsonEntity entity, IProgressMonitor monitor)
 			throws IOException {
-		PostMethod method = new PostMethod(location.getUrl() + serviceUri);
+		PostMethod method = new PostMethod(getUrl() + serviceUri);
 		method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
 		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
 
@@ -143,6 +147,29 @@ public class GerritHttpClient {
 			throw e;
 		}
 
+	}
+
+	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
+		GetMethod method = new GetMethod(getUrl() + serviceUri);
+		try {
+			// Execute the method.
+			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			return method;
+		} catch (IOException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		}
+	}
+
+	private String getUrl() {
+		String url = location.getUrl();
+		if (url.endsWith("/")) { //$NON-NLS-1$
+			url = url.substring(0, url.length() - 1);
+		}
+		return url;
 	}
 
 	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
@@ -191,11 +218,16 @@ public class GerritHttpClient {
 		PostMethod method = postJsonRequestInternal("/gerrit/rpc/UserPassAuthService", entity, monitor);
 		try {
 			int code = method.getStatusCode();
+			if (needsReauthentication(code, monitor)) {
+				return -1;
+			}
+
 			if (code == HttpURLConnection.HTTP_OK) {
 				LoginResult result = json.parseResponse(method.getResponseBodyAsString(), LoginResult.class);
 				if (result.success) {
 					return HttpStatus.SC_TEMPORARY_REDIRECT;
 				} else {
+					requestCredentials(monitor, AuthenticationType.REPOSITORY);
 					return -1;
 				}
 			}
@@ -207,7 +239,7 @@ public class GerritHttpClient {
 
 	private int authenticateTestMode(AuthenticationCredentials credentials, IProgressMonitor monitor)
 			throws IOException, GerritException {
-		String repositoryUrl = location.getUrl();
+		String repositoryUrl = getUrl();
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
 				+ credentials.getUserName()));
 		method.setFollowRedirects(false);
@@ -229,7 +261,7 @@ public class GerritHttpClient {
 	private int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
 			GerritException {
 		// try standard basic/digest/ntlm authentication first
-		String repositoryUrl = location.getUrl();
+		String repositoryUrl = getUrl();
 		AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
 				AuthScope.ANY_SCHEME);
 		Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
@@ -278,6 +310,12 @@ public class GerritHttpClient {
 			return false;
 		}
 
+		requestCredentials(monitor, authenticationType);
+		return true;
+	}
+
+	void requestCredentials(IProgressMonitor monitor, final AuthenticationType authenticationType)
+			throws GerritLoginException {
 		try {
 			location.requestCredentials(authenticationType, null, monitor);
 		} catch (UnsupportedRequestException e) {
@@ -285,7 +323,6 @@ public class GerritHttpClient {
 		}
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-		return true;
 	}
 
 	protected void validateAuthenticationState(HttpClient httpClient) throws GerritLoginException {
@@ -304,6 +341,10 @@ public class GerritHttpClient {
 		}
 
 		throw new GerritLoginException();
+	}
+
+	public boolean isAnonymous() {
+		return getLocation().getCredentials(AuthenticationType.REPOSITORY) == null;
 	}
 
 }

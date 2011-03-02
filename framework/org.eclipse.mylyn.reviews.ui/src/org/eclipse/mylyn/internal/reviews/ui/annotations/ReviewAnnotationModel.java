@@ -63,8 +63,6 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 
 	private boolean annotated = false;
 
-	private IReview review;
-
 	private final IDocumentListener documentListener = new IDocumentListener() {
 		public void documentChanged(DocumentEvent event) {
 			updateAnnotations(false);
@@ -77,13 +75,12 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 	private final IFileRevision revision;
 
 	public ReviewAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
-			IFileItem crucibleFile, IFileRevision revision, IReview review) {
+			IFileItem crucibleFile, IFileRevision revision) {
 		this.textEditor = editor;
 		this.editorInput = editorInput;
 		this.editorDocument = document;
 		this.crucibleFile = crucibleFile;
 		this.revision = revision;
-		this.review = review;
 		updateAnnotations(true);
 	}
 
@@ -246,7 +243,6 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 
 	public void updateCrucibleFile(IFileItem newCrucibleFile, IReview newReview) {
 		// TODO we could just update the annotations appropriately instead of remove and re-add
-		this.review = newReview;
 		this.crucibleFile = newCrucibleFile;
 		updateAnnotations(true);
 	}

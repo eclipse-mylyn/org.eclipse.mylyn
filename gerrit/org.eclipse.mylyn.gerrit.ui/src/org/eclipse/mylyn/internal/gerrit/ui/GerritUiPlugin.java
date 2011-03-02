@@ -11,7 +11,9 @@
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -25,6 +27,8 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.gerrit.ui"; //$NON-NLS-1$
 
 	private static GerritUiPlugin plugin;
+
+	private GerritOperationFactory operationFactory;
 
 	public GerritUiPlugin() {
 	}
@@ -52,6 +56,13 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 	 */
 	public static GerritUiPlugin getDefault() {
 		return plugin;
+	}
+
+	public GerritOperationFactory getOperationFactory() {
+		if (operationFactory == null) {
+			operationFactory = new GerritOperationFactory(TasksUi.getRepositoryManager());
+		}
+		return operationFactory;
 	}
 
 }
