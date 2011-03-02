@@ -69,6 +69,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -1357,4 +1358,14 @@ public class TasksUiInternal {
 		}
 		return tasks;
 	}
+
+	public static boolean shouldShowIncoming(ITask task) {
+		SynchronizationState state = task.getSynchronizationState();
+		if ((state == SynchronizationState.INCOMING && !Boolean.valueOf(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)))
+				|| state == SynchronizationState.INCOMING_NEW || state == SynchronizationState.CONFLICT) {
+			return true;
+		}
+		return false;
+	}
+
 }

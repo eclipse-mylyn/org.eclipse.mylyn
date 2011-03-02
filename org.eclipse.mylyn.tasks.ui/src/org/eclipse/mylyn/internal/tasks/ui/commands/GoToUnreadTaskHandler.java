@@ -16,6 +16,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
@@ -49,7 +50,7 @@ public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler 
 			public boolean visit(Object object) {
 				if (object instanceof ITask) {
 					ITask task = (ITask) object;
-					if (task.getSynchronizationState().isIncoming()) {
+					if (TasksUiInternal.shouldShowIncoming(task)) { // task.getSynchronizationState().isIncoming()
 						return true;
 					}
 				}

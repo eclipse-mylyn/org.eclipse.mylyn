@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -557,7 +558,7 @@ public class TaskListToolTip extends GradientToolTip {
 						boolean hasIncoming = false;
 						for (Object child : children) {
 							if (child instanceof ITask) {
-								if (((ITask) child).getSynchronizationState().isIncoming()) {
+								if (TasksUiInternal.shouldShowIncoming((ITask) child)) {
 									hasIncoming = true;
 									break;
 								}

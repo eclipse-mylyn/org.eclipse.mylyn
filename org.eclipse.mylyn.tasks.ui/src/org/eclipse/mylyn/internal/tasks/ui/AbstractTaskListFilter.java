@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
@@ -35,9 +36,7 @@ public abstract class AbstractTaskListFilter {
 	}
 
 	/**
-	 * NOTE: performance implication of looking down children
-	 * 
-	 * TODO: Move to an internal utility class
+	 * NOTE: performance implication of looking down children TODO: Move to an internal utility class
 	 */
 	public static boolean hasDescendantIncoming(ITaskContainer container) {
 		return hasDescendantIncoming(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
@@ -56,7 +55,7 @@ public abstract class AbstractTaskListFilter {
 		for (ITask task : children) {
 			if (task != null) {
 				ITask containedRepositoryTask = task;
-				if (containedRepositoryTask.getSynchronizationState().isIncoming()) {
+				if (TasksUiInternal.shouldShowIncoming(containedRepositoryTask)) {
 					return true;
 				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer
 						&& hasDescendantIncoming((ITaskContainer) task, depth - 1)) {

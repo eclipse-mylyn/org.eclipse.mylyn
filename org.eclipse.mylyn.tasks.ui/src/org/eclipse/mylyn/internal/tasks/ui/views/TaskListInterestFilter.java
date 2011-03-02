@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Completed;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Incoming;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Outgoing;
@@ -109,7 +110,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				|| (!task.isCompleted() && (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task) || isInterestingForThisWeek(parent,
-						task)));
+							task)));
 	}
 
 	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
@@ -176,7 +177,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	private boolean hasChangesHelper(Object parent, ITask task) {
 		if (task.getSynchronizationState().isOutgoing()) {
 			return true;
-		} else if (task.getSynchronizationState().isIncoming()) {
+		} else if (TasksUiInternal.shouldShowIncoming(task)) {
 			return true;
 		}
 		if (task instanceof ITaskContainer) {
