@@ -50,7 +50,7 @@ public class ClassTraversal {
 			if (protocol.equals("file")) {
 				String file = url.getFile();
 				try {
-					file = URLDecoder.decode(file, "utf-8").substring(0, file.indexOf(resourceOfClass));
+					file = URLDecoder.decode(file.substring(0, file.indexOf(resourceOfClass)), "utf-8");
 				} catch (UnsupportedEncodingException e) {
 					throw new IllegalStateException(e);
 				}
