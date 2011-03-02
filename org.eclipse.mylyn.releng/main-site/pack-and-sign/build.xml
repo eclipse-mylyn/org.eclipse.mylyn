@@ -9,10 +9,12 @@
 	<fail unless="projectDir">Required property projectDir not set</fail>
 	<fail unless="repositoryName">Required property repositoryName not set</fail>
 	<fail unless="signDir">Required property signDir not set</fail>
+	<fail unless="dist">Required property dist not set</fail>
 
 	<echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
 
 	<condition property="sign.skip" value="true"><equals arg1="${skipSign}" arg2="true"/></condition>
+	<condition property="pack.skip" value="true"><equals arg1="${skipPack}" arg2="true"/></condition>
   	<condition property="promote.skip" value="true"><equals arg1="${skipPromote}" arg2="true"/></condition>
 
   	<!-- sign -->
@@ -85,6 +87,7 @@
 	<chmod perm="755" file="${scriptdir}/promote.sh"/>
   	<chmod perm="755" file="${scriptdir}/update-composite.sh"/>
 	<exec executable="${scriptdir}/promote.sh" dir="${scriptdir}" failonerror="true">
+	  <arg value="${dist}"/>
 	  <arg value="${version}"/>
 	  <arg value="${qualifier}"/>
 	  <arg value="${projectDir}"/>	
@@ -93,7 +96,7 @@
 	</exec>
   </target>
 
-  <target name="pack">	
+  <target name="pack" unless="pack.skip">	
 	<delete file="${site}/content.jar" />
 	<delete file="${site}/artifacts.jar" />
 	

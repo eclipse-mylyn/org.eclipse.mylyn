@@ -1,10 +1,12 @@
 #!/bin/sh -e
 
-VERSION=$1
-QUALIFIER=$2
-SRC=$3
-ARCHIVE=$4
-SITE=$5
+DIST=$1
+VERSION=$2
+QUALIFIER=$3
+SRC=$4
+ARCHIVE=$5
+SITE=$6
+
 DST=$ARCHIVE/$VERSION/$QUALIFIER
 
 
@@ -17,7 +19,7 @@ echo Promoting $VERSION.$QUALIFIER
 
 mkdir -p $DST/
 unzip -d $DST/ $SRC/site-packed.zip 
-cp $SRC/site-archive.zip $DST/mylyn-$VERSION.$QUALIFIER.zip
+cp $SRC/site-archive.zip $DST/$DIST-$VERSION.$QUALIFIER.zip
 
 #chgrp -R mylynadmin $DST
 chmod g+w -R $DST

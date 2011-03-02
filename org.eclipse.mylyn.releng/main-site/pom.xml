@@ -87,11 +87,13 @@
 				  <property name="archiveDir" value="${mylyn-archive}"/>
 				  <property name="siteDir" value="${mylyn-site}"/>
 				  
+				  <property name="dist" value="mylyn"/>
 				  <property name="filter" value="mylyn"/>
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
 				  <property name="pack200" value="${mylyn-pack200}"/>
 				  
 				  <property name="skipSign" value="${mylyn-skip-sign}"/>
+				  <property name="skipPack" value="${mylyn-skip-pack}"/>
 				  <property name="skipPromote" value="${mylyn-skip-promote}"/>
 				  
 				  <property name="version" value="${unqualifiedVersion}"/>

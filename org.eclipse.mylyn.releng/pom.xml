@@ -26,6 +26,7 @@
 
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
 	<mylyn-skip-sign>true</mylyn-skip-sign>
+	<mylyn-skip-pack>false</mylyn-skip-pack>
 	<mylyn-skip-promote>true</mylyn-skip-promote>
 
     <mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
