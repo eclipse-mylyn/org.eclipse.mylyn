@@ -136,7 +136,7 @@
          name="%FocusedTeamPreferencePage.name"
          class="org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage"
          id="org.eclipse.mylyn.team.ui.ui.preferences"
-         category="org.eclipse.mylyn.tasks.ui.preferences">
+         category="org.eclipse.mylyn.preferencePages.Mylyn">
          <keywordReference id="org.eclipse.mylyn.team.ui.keywords"/>
       </page> 
    </extension>

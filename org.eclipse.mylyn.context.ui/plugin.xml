@@ -75,7 +75,7 @@
             name="%ContextUiPreferencePage.name"
             class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
             id="org.eclipse.mylyn.context.ui.preferences"
-            category="org.eclipse.mylyn.tasks.ui.preferences">
+            category="org.eclipse.mylyn.preferencePages.Mylyn">
          <keywordReference id="org.eclipse.mylyn.context.ui.keywords"/>
       </page> 
    </extension>
