@@ -24,9 +24,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Test Suite</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Test Suite</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -39,8 +37,7 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  */
 public class TestSuite extends TestElement implements ITestSuite {
 	/**
-	 * The cached value of the '{@link #getCases() <em>Cases</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCases() <em>Cases</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getCases()
@@ -50,8 +47,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	protected EList<ITestCase> cases;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -60,8 +56,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -105,8 +100,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -116,8 +110,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -140,8 +133,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -160,8 +152,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -177,8 +168,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -192,8 +182,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -209,8 +198,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -230,8 +218,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -249,8 +236,7 @@ public class TestSuite extends TestElement implements ITestSuite {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

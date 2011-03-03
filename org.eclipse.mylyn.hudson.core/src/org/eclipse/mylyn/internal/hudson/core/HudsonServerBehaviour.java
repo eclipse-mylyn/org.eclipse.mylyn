@@ -318,8 +318,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			append(sb, string);
 		}
 		if (failCount != 0 || totalCount != 0 || skipCount != 0) {
-			append(sb, NLS
-					.bind("{0} tests: {1} failed, {2} skipped", new Object[] { totalCount, failCount, skipCount }));
+			append(sb,
+					NLS.bind("{0} tests: {1} failed, {2} skipped", new Object[] { totalCount, failCount, skipCount }));
 		}
 		if (sb.length() > 0) {
 			return sb.toString();

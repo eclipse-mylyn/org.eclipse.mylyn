@@ -13,8 +13,7 @@
 package org.eclipse.mylyn.builds.ui;
 
 /**
- * Plug-ins that register a builds startup extension will be activated before
- * the builds user interface starts.
+ * Plug-ins that register a builds startup extension will be activated before the builds user interface starts.
  * 
  * @since 3.5
  * @author Torkild U. Resheim

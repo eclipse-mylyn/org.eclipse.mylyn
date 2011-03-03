@@ -26,14 +26,16 @@ public class RefreshAutomaticallyAction extends Action {
 	}
 
 	protected void updateState() {
-		setChecked(BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
+		setChecked(BuildsUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED));
 	}
 
 	@Override
 	public void run() {
-		BuildsUiPlugin.getDefault().getPreferenceStore().setValue(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED,
-				isChecked());
+		BuildsUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED, isChecked());
 	}
 
 }

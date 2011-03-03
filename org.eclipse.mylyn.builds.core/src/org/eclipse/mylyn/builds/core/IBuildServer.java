@@ -16,9 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Server</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Server</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -33,10 +31,8 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  */
 public interface IBuildServer extends IBuildElement {
 	/**
-	 * Returns the value of the '<em><b>Attributes</b></em>' map.
-	 * The key is of type {@link java.lang.String},
-	 * and the value is of type {@link java.lang.String},
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Attributes</b></em>' map. The key is of type {@link java.lang.String}, and the
+	 * value is of type {@link java.lang.String}, <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
@@ -48,8 +44,7 @@ public interface IBuildServer extends IBuildElement {
 	Map<String, String> getAttributes();
 
 	/**
-	 * Returns the value of the '<em><b>Location</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Location</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -64,9 +59,7 @@ public interface IBuildServer extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Location</em>' attribute.
@@ -76,8 +69,7 @@ public interface IBuildServer extends IBuildElement {
 	void setLocation(RepositoryLocation value);
 
 	/**
-	 * Returns the value of the '<em><b>Connector Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Connector Kind</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a
 	 * description here...
@@ -92,9 +84,7 @@ public interface IBuildServer extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind
-	 * <em>Connector Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Connector Kind</em>' attribute.
@@ -104,8 +94,7 @@ public interface IBuildServer extends IBuildElement {
 	void setConnectorKind(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Repository Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Repository Url</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a
 	 * description here...
@@ -120,9 +109,7 @@ public interface IBuildServer extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl
-	 * <em>Repository Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Repository Url</em>' attribute.

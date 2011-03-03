@@ -11,9 +11,7 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>User</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>User</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -26,8 +24,7 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IUser extends IBuildElement {
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -40,9 +37,8 @@ public interface IUser extends IBuildElement {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getId <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getId <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
@@ -52,8 +48,7 @@ public interface IUser extends IBuildElement {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Email</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -67,9 +62,8 @@ public interface IUser extends IBuildElement {
 	String getEmail();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Email</em>' attribute.

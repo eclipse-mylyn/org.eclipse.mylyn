@@ -20,9 +20,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.builds.core.IBuildReference;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -35,9 +33,8 @@ import org.eclipse.mylyn.builds.core.IBuildReference;
  */
 public class BuildReference extends EObjectImpl implements IBuildReference {
 	/**
-	 * The default value of the '{@link #getPlan() <em>Plan</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -46,9 +43,8 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected static final String PLAN_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -57,9 +53,8 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected String plan = PLAN_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBuild() <em>Build</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getBuild()
 	 * @generated
@@ -68,9 +63,8 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected static final String BUILD_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBuild() <em>Build</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getBuild()
 	 * @generated
@@ -79,8 +73,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	protected String build = BUILD_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -89,8 +82,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -100,8 +92,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -110,8 +101,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -123,8 +113,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -133,8 +122,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -146,8 +134,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -163,8 +150,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -182,8 +168,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -201,8 +186,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -218,8 +202,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

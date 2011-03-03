@@ -53,8 +53,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		setNeedsProgressMonitor(true);
 		if (isNew()) {
 			setWindowTitle("New Build Server");
-			setDefaultPageImageDescriptor(WorkbenchImages
-					.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
+			setDefaultPageImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
 		} else {
 			setWindowTitle("Build Server Properties");
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);

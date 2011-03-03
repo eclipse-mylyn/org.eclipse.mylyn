@@ -38,9 +38,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Server</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Server</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -55,9 +53,8 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  */
 public class BuildServer extends BuildElement implements IBuildServer {
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getAttributes()
 	 * @generated
@@ -66,9 +63,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected EMap<String, String> attributes;
 
 	/**
-	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLocation()
 	 * @generated
@@ -77,9 +73,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final RepositoryLocation LOCATION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLocation()
 	 * @generated
@@ -88,8 +83,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected RepositoryLocation location = LOCATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getConnectorKind()
@@ -99,8 +93,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final String CONNECTOR_KIND_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getConnectorKind()
@@ -110,8 +103,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected String connectorKind = CONNECTOR_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepositoryUrl()
@@ -121,8 +113,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected static final String REPOSITORY_URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRepositoryUrl()
@@ -132,15 +123,13 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	protected String repositoryUrl = REPOSITORY_URL_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 */
 	protected BuildServer() {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -182,9 +171,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Location</em>' attribute.
@@ -220,8 +207,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -248,8 +234,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -262,8 +247,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -278,8 +262,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -302,8 +285,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -312,8 +294,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap())
-					.set(newValue);
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).set(newValue);
 			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation((RepositoryLocation) newValue);
@@ -329,8 +310,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -354,8 +334,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -367,18 +346,19 @@ public class BuildServer extends BuildElement implements IBuildServer {
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
-			return CONNECTOR_KIND_EDEFAULT == null ? connectorKind != null : !CONNECTOR_KIND_EDEFAULT
-					.equals(connectorKind);
+			return CONNECTOR_KIND_EDEFAULT == null
+					? connectorKind != null
+					: !CONNECTOR_KIND_EDEFAULT.equals(connectorKind);
 		case BuildPackage.BUILD_SERVER__REPOSITORY_URL:
-			return REPOSITORY_URL_EDEFAULT == null ? repositoryUrl != null : !REPOSITORY_URL_EDEFAULT
-					.equals(repositoryUrl);
+			return REPOSITORY_URL_EDEFAULT == null
+					? repositoryUrl != null
+					: !REPOSITORY_URL_EDEFAULT.equals(repositoryUrl);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

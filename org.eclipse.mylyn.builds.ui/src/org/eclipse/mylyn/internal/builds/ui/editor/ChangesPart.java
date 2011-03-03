@@ -195,7 +195,8 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		}
 
 		final String prevRevision = changeArtifact.getPrevRevision();
-		final String revision = (changeArtifact.getRevision() != null) ? changeArtifact.getRevision()
+		final String revision = (changeArtifact.getRevision() != null)
+				? changeArtifact.getRevision()
 				: ((IChange) ((ChangeArtifact) changeArtifact).eContainer()).getRevision();
 		if (revision == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),

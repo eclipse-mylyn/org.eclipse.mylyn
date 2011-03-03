@@ -18,9 +18,7 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.core.TestCaseResult;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Test Case</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Test Case</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,9 +35,8 @@ import org.eclipse.mylyn.builds.core.TestCaseResult;
  */
 public class TestCase extends TestElement implements ITestCase {
 	/**
-	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getClassName()
 	 * @generated
@@ -48,9 +45,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected static final String CLASS_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getClassName()
 	 * @generated
@@ -59,9 +55,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected String className = CLASS_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isSkipped() <em>Skipped</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isSkipped() <em>Skipped</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #isSkipped()
 	 * @generated
@@ -70,9 +65,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected static final boolean SKIPPED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isSkipped() <em>Skipped</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isSkipped() <em>Skipped</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #isSkipped()
 	 * @generated
@@ -81,9 +75,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected boolean skipped = SKIPPED_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -92,9 +85,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected static final TestCaseResult STATUS_EDEFAULT = TestCaseResult.PASSED;
 
 	/**
-	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -103,9 +95,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected TestCaseResult status = STATUS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -114,9 +105,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected static final String MESSAGE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -125,9 +115,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected String message = MESSAGE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStackTrace()
 	 * @generated
@@ -136,9 +125,8 @@ public class TestCase extends TestElement implements ITestCase {
 	protected static final String STACK_TRACE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStackTrace()
 	 * @generated
@@ -147,8 +135,7 @@ public class TestCase extends TestElement implements ITestCase {
 	protected String stackTrace = STACK_TRACE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -157,8 +144,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -182,8 +168,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -210,8 +195,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -239,8 +223,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -250,8 +233,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -288,8 +270,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -301,8 +282,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -311,8 +291,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -324,8 +303,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -334,8 +312,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -348,8 +325,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -365,8 +341,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -380,8 +355,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -395,8 +369,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -420,8 +393,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -451,8 +423,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -482,8 +453,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -507,8 +477,7 @@ public class TestCase extends TestElement implements ITestCase {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

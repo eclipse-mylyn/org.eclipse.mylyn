@@ -17,9 +17,7 @@ import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Artifact</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Artifact</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -31,8 +29,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  */
 public class Artifact extends BuildElement implements IArtifact {
 	/**
-	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
@@ -42,8 +39,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	protected static final String RELATIVE_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
@@ -53,8 +49,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	protected String relativePath = RELATIVE_PATH_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -63,8 +58,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -88,8 +82,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -102,8 +95,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -117,8 +109,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -133,8 +124,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -149,8 +139,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -164,8 +153,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

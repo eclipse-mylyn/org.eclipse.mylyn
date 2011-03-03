@@ -18,9 +18,8 @@ import org.eclipse.mylyn.builds.core.EditType;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Change Artifact</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Change Artifact</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,9 +36,8 @@ import org.eclipse.mylyn.builds.core.IChangeArtifact;
  */
 public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	/**
-	 * The default value of the '{@link #getFile() <em>File</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getFile()
 	 * @generated
@@ -48,9 +46,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String FILE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getFile()
 	 * @generated
@@ -59,8 +56,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String file = FILE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
@@ -70,8 +66,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String RELATIVE_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRelativePath()
@@ -81,8 +76,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String relativePath = RELATIVE_PATH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getPrevRevision()
@@ -92,8 +86,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String PREV_REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPrevRevision() <em>Prev Revision</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getPrevRevision()
@@ -103,9 +96,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String prevRevision = PREV_REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -114,9 +106,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final String REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -125,9 +116,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected String revision = REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isDead() <em>Dead</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #isDead()
 	 * @generated
@@ -136,9 +126,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final boolean DEAD_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDead() <em>Dead</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isDead() <em>Dead</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #isDead()
 	 * @generated
@@ -147,9 +136,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected boolean dead = DEAD_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEditType() <em>Edit Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getEditType()
 	 * @generated
@@ -158,9 +146,8 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected static final EditType EDIT_TYPE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEditType() <em>Edit Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getEditType() <em>Edit Type</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getEditType()
 	 * @generated
@@ -169,8 +156,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	protected EditType editType = EDIT_TYPE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -179,8 +165,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -190,8 +175,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -200,8 +184,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -213,8 +196,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -223,8 +205,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -237,8 +218,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -247,8 +227,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -261,8 +240,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -271,8 +249,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -285,8 +262,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -295,8 +271,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -308,8 +283,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -318,8 +292,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -332,8 +305,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -357,8 +329,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -388,8 +359,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -419,8 +389,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -444,8 +413,7 @@ public class ChangeArtifact extends EObjectImpl implements IChangeArtifact {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

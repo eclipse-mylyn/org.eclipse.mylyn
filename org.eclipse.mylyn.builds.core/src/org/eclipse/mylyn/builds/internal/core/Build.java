@@ -35,9 +35,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.IUser;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Build</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Build</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -64,9 +62,7 @@ import org.eclipse.mylyn.builds.core.IUser;
  */
 public class Build extends BuildElement implements IBuild {
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getId()
 	 * @generated
@@ -75,9 +71,7 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getId()
 	 * @generated
@@ -86,8 +80,7 @@ public class Build extends BuildElement implements IBuild {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildNumber()
@@ -97,9 +90,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final int BUILD_NUMBER_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getBuildNumber()
 	 * @generated
@@ -108,9 +100,8 @@ public class Build extends BuildElement implements IBuild {
 	protected int buildNumber = BUILD_NUMBER_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getTimestamp()
 	 * @generated
@@ -119,9 +110,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final long TIMESTAMP_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getTimestamp()
 	 * @generated
@@ -130,9 +120,8 @@ public class Build extends BuildElement implements IBuild {
 	protected long timestamp = TIMESTAMP_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -141,9 +130,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -152,8 +140,7 @@ public class Build extends BuildElement implements IBuild {
 	protected long duration = DURATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getDisplayName()
@@ -163,9 +150,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String DISPLAY_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDisplayName()
 	 * @generated
@@ -174,9 +160,8 @@ public class Build extends BuildElement implements IBuild {
 	protected String displayName = DISPLAY_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -185,9 +170,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final BuildState STATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -196,9 +180,8 @@ public class Build extends BuildElement implements IBuild {
 	protected BuildState state = STATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -207,9 +190,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final BuildStatus STATUS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -218,9 +200,8 @@ public class Build extends BuildElement implements IBuild {
 	protected BuildStatus status = STATUS_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getArtifacts()
 	 * @generated
@@ -229,9 +210,8 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IArtifact> artifacts;
 
 	/**
-	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getChangeSet()
 	 * @generated
@@ -240,9 +220,8 @@ public class Build extends BuildElement implements IBuild {
 	protected IChangeSet changeSet;
 
 	/**
-	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getPlan()
 	 * @generated
@@ -251,9 +230,8 @@ public class Build extends BuildElement implements IBuild {
 	protected IBuildPlan plan;
 
 	/**
-	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -262,9 +240,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String LABEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -273,9 +250,8 @@ public class Build extends BuildElement implements IBuild {
 	protected String label = LABEL_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getServer()
 	 * @generated
@@ -284,9 +260,8 @@ public class Build extends BuildElement implements IBuild {
 	protected IBuildServer server;
 
 	/**
-	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getTestResult()
 	 * @generated
@@ -295,9 +270,8 @@ public class Build extends BuildElement implements IBuild {
 	protected ITestResult testResult;
 
 	/**
-	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCulprits()
 	 * @generated
@@ -306,9 +280,8 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IUser> culprits;
 
 	/**
-	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -317,9 +290,8 @@ public class Build extends BuildElement implements IBuild {
 	protected static final String SUMMARY_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -328,8 +300,7 @@ public class Build extends BuildElement implements IBuild {
 	protected String summary = SUMMARY_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getCause()
@@ -339,8 +310,7 @@ public class Build extends BuildElement implements IBuild {
 	protected EList<IBuildCause> cause;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -349,8 +319,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -373,8 +342,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -400,8 +368,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -428,8 +395,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -456,8 +422,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -483,8 +448,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -511,8 +475,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -538,8 +501,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -582,8 +544,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -602,8 +563,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -646,8 +606,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -656,8 +615,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -684,8 +642,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -721,8 +678,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -731,8 +687,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -744,8 +699,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -754,8 +708,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -774,8 +727,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -797,8 +749,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -810,8 +761,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -820,8 +770,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -833,8 +782,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -846,8 +794,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -864,8 +811,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -887,8 +833,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -936,8 +881,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -1001,8 +945,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -1062,8 +1005,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -1107,8 +1049,7 @@ public class Build extends BuildElement implements IBuild {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

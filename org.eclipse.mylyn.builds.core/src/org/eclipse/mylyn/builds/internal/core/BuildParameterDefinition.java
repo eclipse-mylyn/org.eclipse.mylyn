@@ -19,9 +19,8 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -34,8 +33,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  */
 public class BuildParameterDefinition extends ParameterDefinition implements IBuildParameterDefinition {
 	/**
-	 * The default value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildPlanId()
@@ -45,8 +43,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	protected static final String BUILD_PLAN_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getBuildPlanId() <em>Build Plan Id</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getBuildPlanId()
@@ -56,8 +53,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	protected String buildPlanId = BUILD_PLAN_ID_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -66,8 +62,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -91,8 +86,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -116,13 +110,13 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	 */
 	public IBuildPlan getBuildPlan() {
 		IBuildPlan buildPlan = basicGetBuildPlan();
-		return buildPlan != null && ((EObject) buildPlan).eIsProxy() ? (IBuildPlan) eResolveProxy((InternalEObject) buildPlan)
+		return buildPlan != null && ((EObject) buildPlan).eIsProxy()
+				? (IBuildPlan) eResolveProxy((InternalEObject) buildPlan)
 				: buildPlan;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -152,8 +146,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -171,8 +164,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -187,8 +179,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -203,8 +194,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -220,8 +210,7 @@ public class BuildParameterDefinition extends ParameterDefinition implements IBu
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

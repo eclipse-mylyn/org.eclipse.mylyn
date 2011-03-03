@@ -17,9 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -35,8 +33,7 @@ import org.eclipse.core.runtime.IStatus;
  */
 public interface IBuildElement {
 	/**
-	 * Returns the value of the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -49,9 +46,8 @@ public interface IBuildElement {
 	String getUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Url</em>' attribute.
@@ -61,8 +57,7 @@ public interface IBuildElement {
 	void setUrl(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -75,9 +70,8 @@ public interface IBuildElement {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Name</em>' attribute.
@@ -87,9 +81,8 @@ public interface IBuildElement {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Operations</b></em>' attribute list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IOperation}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Operations</b></em>' attribute list. The list contents are of type
+	 * {@link org.eclipse.mylyn.builds.core.IOperation}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Operations</em>' reference list isn't clear, there really should be more of a
 	 * description here...
@@ -102,8 +95,7 @@ public interface IBuildElement {
 	List<IOperation> getOperations();
 
 	/**
-	 * Returns the value of the '<em><b>Element Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Element Status</em>' reference isn't clear, there really should be more of a
 	 * description here...
@@ -118,9 +110,7 @@ public interface IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus
-	 * <em>Element Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Element Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Element Status</em>' attribute.
@@ -130,8 +120,7 @@ public interface IBuildElement {
 	void setElementStatus(IStatus value);
 
 	/**
-	 * Returns the value of the '<em><b>Refresh Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Refresh Date</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -146,9 +135,7 @@ public interface IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate <em>Refresh Date</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Refresh Date</em>' attribute.
@@ -158,16 +145,14 @@ public interface IBuildElement {
 	void setRefreshDate(Date value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	String getLabel();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

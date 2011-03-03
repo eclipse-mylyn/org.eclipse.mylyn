@@ -11,9 +11,7 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -26,8 +24,7 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IBuildReference {
 	/**
-	 * Returns the value of the '<em><b>Plan</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Plan</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plan</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -41,8 +38,7 @@ public interface IBuildReference {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildReference#getPlan <em>Plan</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Plan</em>' attribute.
@@ -52,8 +48,7 @@ public interface IBuildReference {
 	void setPlan(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Build</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Build</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Build</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -68,8 +63,7 @@ public interface IBuildReference {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildReference#getBuild <em>Build</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Build</em>' attribute.

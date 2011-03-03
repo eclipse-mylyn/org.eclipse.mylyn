@@ -179,24 +179,24 @@ public class BuildToolTip extends RichToolTip {
 				}
 			}
 			if (passed > 0) {
-				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED), NLS.bind(
-						"{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_PASSED),
+						NLS.bind("{0} passed builds of a total of {1}", new Object[] { passed, plans.size() }));
 			}
 			if (failed > 0) {
-				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED), NLS.bind("{0} failed builds",
-						new Object[] { failed }));
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_FAILED),
+						NLS.bind("{0} failed builds", new Object[] { failed }));
 			}
 			if (unstable > 0) {
-				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE), NLS.bind(
-						"{0} unstable builds", new Object[] { unstable }));
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_UNSTABLE),
+						NLS.bind("{0} unstable builds", new Object[] { unstable }));
 			}
 			if (disabled > 0) {
-				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind(
-						"{0} disabled builds", new Object[] { disabled }));
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED),
+						NLS.bind("{0} disabled builds", new Object[] { disabled }));
 			}
 			if (unstable > 0) {
-				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED), NLS.bind(
-						"{0} aborted builds", new Object[] { unstable }));
+				addIconAndLabel(parent, CommonImages.getImage(BuildImages.STATUS_DISABLED),
+						NLS.bind("{0} aborted builds", new Object[] { unstable }));
 			}
 
 		}

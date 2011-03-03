@@ -25,9 +25,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Test Result</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Test Result</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -45,9 +43,8 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  */
 public class TestResult extends EObjectImpl implements ITestResult {
 	/**
-	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -56,9 +53,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -67,9 +63,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected long duration = DURATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getFailCount()
 	 * @generated
@@ -78,9 +73,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int FAIL_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getFailCount()
 	 * @generated
@@ -89,9 +83,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int failCount = FAIL_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getPassCount()
 	 * @generated
@@ -100,9 +93,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int PASS_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getPassCount()
 	 * @generated
@@ -111,8 +103,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int passCount = PASS_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getIgnoredCount()
@@ -122,8 +113,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int IGNORED_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getIgnoredCount()
@@ -133,9 +123,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int ignoredCount = IGNORED_COUNT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getErrorCount()
 	 * @generated
@@ -144,9 +133,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected static final int ERROR_COUNT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getErrorCount()
 	 * @generated
@@ -155,9 +143,8 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected int errorCount = ERROR_COUNT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSuites()
 	 * @generated
@@ -166,8 +153,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	protected EList<ITestSuite> suites;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -176,8 +162,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -203,8 +188,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -214,8 +198,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -252,8 +235,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -280,8 +262,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -308,8 +289,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -322,8 +302,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -332,8 +311,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -346,8 +324,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -356,8 +333,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -388,8 +364,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -408,8 +383,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -425,8 +399,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -440,8 +413,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -467,8 +439,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -503,8 +474,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -537,8 +507,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -564,8 +533,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

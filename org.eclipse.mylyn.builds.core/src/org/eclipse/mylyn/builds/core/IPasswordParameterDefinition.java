@@ -11,9 +11,8 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Password Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Password Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -25,8 +24,7 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IPasswordParameterDefinition extends IParameterDefinition {
 	/**
-	 * Returns the value of the '<em><b>Default Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a
 	 * description here...
@@ -41,9 +39,7 @@ public interface IPasswordParameterDefinition extends IParameterDefinition {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IPasswordParameterDefinition#getDefaultValue
-	 * <em>Default Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Default Value</em>' attribute.

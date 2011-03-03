@@ -15,9 +15,8 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Choice Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Choice Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -29,9 +28,8 @@ import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
  */
 public class ChoiceParameterDefinition extends ParameterDefinition implements IChoiceParameterDefinition {
 	/**
-	 * The cached value of the '{@link #getOptions() <em>Options</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOptions() <em>Options</em>}' attribute list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getOptions()
 	 * @generated
@@ -40,8 +38,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	protected EList<String> options;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -50,8 +47,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -79,8 +75,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -94,8 +89,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -112,8 +106,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -128,8 +121,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -143,8 +135,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

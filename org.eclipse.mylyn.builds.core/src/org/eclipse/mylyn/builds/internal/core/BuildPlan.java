@@ -35,9 +35,7 @@ import org.eclipse.mylyn.builds.core.IHealthReport;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Plan</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Plan</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -63,9 +61,8 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  */
 public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getServer()
 	 * @generated
@@ -74,9 +71,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected IBuildServer server;
 
 	/**
-	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getChildren()
 	 * @generated
@@ -85,9 +81,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected EList<IBuildPlan> children;
 
 	/**
-	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getParent()
 	 * @generated
@@ -96,9 +91,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected IBuildPlan parent;
 
 	/**
-	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -107,9 +101,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final int HEALTH_EDEFAULT = -1;
 
 	/**
-	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -118,9 +111,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected int health = HEALTH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getId()
 	 * @generated
@@ -129,9 +120,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getId()
 	 * @generated
@@ -140,9 +129,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getInfo() <em>Info</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getInfo() <em>Info</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getInfo()
 	 * @generated
@@ -151,9 +139,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final String INFO_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getInfo() <em>Info</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getInfo() <em>Info</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getInfo()
 	 * @generated
@@ -162,9 +149,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected String info = INFO_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #isSelected()
 	 * @generated
@@ -173,9 +159,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final boolean SELECTED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #isSelected()
 	 * @generated
@@ -184,9 +169,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected boolean selected = SELECTED_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -195,9 +179,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final String SUMMARY_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getSummary()
 	 * @generated
@@ -206,9 +189,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected String summary = SUMMARY_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -217,9 +199,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final BuildState STATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getState()
 	 * @generated
@@ -228,9 +209,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected BuildState state = STATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -239,9 +219,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final BuildStatus STATUS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getStatus()
 	 * @generated
@@ -250,9 +229,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected BuildStatus status = STATUS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -261,9 +239,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -272,9 +249,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getLastBuild() <em>Last Build</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLastBuild() <em>Last Build</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLastBuild()
 	 * @generated
@@ -284,9 +260,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getParameterDefinitions() <em>Parameter Definitions</em>}' containment reference
-	 * list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getParameterDefinitions()
 	 * @generated
@@ -295,9 +269,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected EList<IParameterDefinition> parameterDefinitions;
 
 	/**
-	 * The cached value of the '{@link #getHealthReports() <em>Health Reports</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHealthReports() <em>Health Reports</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getHealthReports()
 	 * @generated
@@ -306,9 +279,8 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected EList<IHealthReport> healthReports;
 
 	/**
-	 * The cached value of the '{@link #getFlags() <em>Flags</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFlags() <em>Flags</em>}' attribute list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getFlags()
 	 * @generated
@@ -317,8 +289,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	protected EList<BuildState> flags;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -327,8 +298,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -363,8 +333,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -373,8 +342,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -429,8 +397,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -439,8 +406,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -460,8 +426,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -500,8 +465,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -527,8 +491,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -554,8 +517,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -582,8 +544,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -611,8 +572,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -639,8 +599,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -667,8 +626,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -695,8 +653,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -734,8 +691,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -744,8 +700,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -778,8 +733,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -792,8 +746,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -805,8 +758,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -830,8 +782,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -851,8 +802,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -903,8 +853,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -966,8 +915,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -1024,8 +972,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -1067,8 +1014,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

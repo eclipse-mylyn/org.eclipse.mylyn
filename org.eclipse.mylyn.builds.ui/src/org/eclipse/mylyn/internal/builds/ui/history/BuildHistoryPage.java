@@ -173,8 +173,7 @@ public class BuildHistoryPage extends HistoryPage {
 	private void schedule(final Job job) {
 		final IWorkbenchPartSite site = getWorkbenchSite();
 		if (site != null) {
-			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site
-					.getAdapter(IWorkbenchSiteProgressService.class);
+			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site.getAdapter(IWorkbenchSiteProgressService.class);
 			if (progress != null) {
 				progress.schedule(job, 0, true);
 				return;
@@ -225,8 +224,8 @@ public class BuildHistoryPage extends HistoryPage {
 				if (item instanceof IBuild) {
 					IBuild build = (IBuild) item;
 					final IBuildPlan plan = build.getPlan();
-					GetBuildsRequest request = new GetBuildsRequest(build.getPlan(), Collections.singletonList(build
-							.getLabel()), Scope.FULL);
+					GetBuildsRequest request = new GetBuildsRequest(build.getPlan(),
+							Collections.singletonList(build.getLabel()), Scope.FULL);
 					GetBuildsOperation operation = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
 					operation.addOperationChangeListener(new OperationChangeListener() {
 						@Override

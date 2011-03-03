@@ -70,8 +70,8 @@ public class BuildRefresher implements IPropertyChangeListener {
 	}
 
 	/**
-	 * Performs an immediate one-shot refresh of build server data regardless of
-	 * the automatic refresh preference setting.
+	 * Performs an immediate one-shot refresh of build server data regardless of the automatic refresh preference
+	 * setting.
 	 */
 	void refresh() {
 		if (refreshJob == null) {

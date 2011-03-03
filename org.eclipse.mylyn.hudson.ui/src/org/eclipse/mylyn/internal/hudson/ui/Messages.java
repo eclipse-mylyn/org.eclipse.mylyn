@@ -29,6 +29,7 @@ public class Messages extends NLS {
 	public static String HudsonDiscovery_MissingURL;
 
 	public static String HudsonDiscovery_ServerName;
+
 	public static String NewHudsonServerWizard_Message;
 
 	public static String NewHudsonServerWizard_Title;

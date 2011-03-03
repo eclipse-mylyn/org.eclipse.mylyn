@@ -119,11 +119,11 @@ public class RestfulHudsonClient {
 		int statusCode = method.getStatusCode();
 		if (statusCode != expected) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
-				throw new HudsonResourceNotFoundException(NLS.bind("Requested resource ''{0}'' does not exist", method
-						.getPath()));
+				throw new HudsonResourceNotFoundException(NLS.bind("Requested resource ''{0}'' does not exist",
+						method.getPath()));
 			}
-			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", method
-					.getPath(), HttpStatus.getStatusText(statusCode)));
+			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}",
+					method.getPath(), HttpStatus.getStatusText(statusCode)));
 		}
 	}
 
@@ -132,8 +132,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelRun>>(client) {
 			@Override
 			public List<HudsonModelRun> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl
-						.create(getJobUrl(job))
+				String url = HudsonUrl.create(getJobUrl(job))
 						.depth(1)
 						.tree("builds[number,url,building,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
 						.toUrl();
@@ -182,8 +181,9 @@ public class RestfulHudsonClient {
 				String resultTree = "duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]";
 				String aggregatedTree = "failCount,skipCount,totalCount,childReports[child[number,url],result["
 						+ resultTree + "]]";
-				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport").tree(
-						resultTree + "," + aggregatedTree).toUrl();
+				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport")
+						.tree(resultTree + "," + aggregatedTree)
+						.toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);
@@ -258,8 +258,12 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl.create(client.getLocation().getUrl()).depth(1).include("/hudson/job").match(
-						"name", ids).exclude("/hudson/job/build").toUrl();
+				String url = HudsonUrl.create(client.getLocation().getUrl())
+						.depth(1)
+						.include("/hudson/job")
+						.match("name", ids)
+						.exclude("/hudson/job/build")
+						.toUrl();
 				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);
@@ -419,8 +423,8 @@ public class RestfulHudsonClient {
 					checkResponse(method);
 					Header header = method.getResponseHeader("X-Hudson"); //$NON-NLS-1$
 					if (header == null) {
-						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson instance", client
-								.getLocation().getUrl()));
+						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson instance",
+								client.getLocation().getUrl()));
 					}
 					HudsonServerInfo info = new HudsonServerInfo(header.getValue());
 					return info;

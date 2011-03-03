@@ -10,9 +10,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>File Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>File Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  * 
@@ -20,8 +19,7 @@ import org.eclipse.mylyn.builds.core.IFileParameterDefinition;
  */
 public class FileParameterDefinition extends ParameterDefinition implements IFileParameterDefinition {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -30,8 +28,7 @@ public class FileParameterDefinition extends ParameterDefinition implements IFil
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

@@ -11,9 +11,8 @@
 package org.eclipse.mylyn.builds.core;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -27,8 +26,7 @@ package org.eclipse.mylyn.builds.core;
  */
 public interface IParameterDefinition {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -42,9 +40,7 @@ public interface IParameterDefinition {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getName <em>Name</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Name</em>' attribute.
@@ -54,8 +50,7 @@ public interface IParameterDefinition {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -70,9 +65,7 @@ public interface IParameterDefinition {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getDescription
-	 * <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
@@ -82,10 +75,9 @@ public interface IParameterDefinition {
 	void setDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Containing Build Plan</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions
-	 * <em>Parameter Definitions</em>}'.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Containing Build Plan</b></em>' container reference. It is bidirectional and its
+	 * opposite is '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions
+	 * <em>Parameter Definitions</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Containing Build Plan</em>' container reference isn't clear, there really should be
 	 * more of a description here...
@@ -101,9 +93,7 @@ public interface IParameterDefinition {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan
-	 * <em>Containing Build Plan</em>}' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <em>Containing Build Plan</em>}' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Containing Build Plan</em>' container reference.

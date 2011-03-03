@@ -13,9 +13,7 @@ package org.eclipse.mylyn.builds.core;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Change</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -31,9 +29,8 @@ import java.util.List;
  */
 public interface IChange {
 	/**
-	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IChangeArtifact}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.builds.core.IChangeArtifact}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a
 	 * description here...
@@ -46,8 +43,7 @@ public interface IChange {
 	List<IChangeArtifact> getArtifacts();
 
 	/**
-	 * Returns the value of the '<em><b>Author</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Author</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -62,9 +58,7 @@ public interface IChange {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}' containment
-	 * reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Author</em>' containment reference.
@@ -74,8 +68,7 @@ public interface IChange {
 	void setAuthor(IUser value);
 
 	/**
-	 * Returns the value of the '<em><b>Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Message</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -89,9 +82,8 @@ public interface IChange {
 	String getMessage();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Message</em>' attribute.
@@ -101,8 +93,7 @@ public interface IChange {
 	void setMessage(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -115,9 +106,8 @@ public interface IChange {
 	long getDate();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Date</em>' attribute.
@@ -127,8 +117,7 @@ public interface IChange {
 	void setDate(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Revision</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Revision</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -143,8 +132,7 @@ public interface IChange {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Revision</em>' attribute.

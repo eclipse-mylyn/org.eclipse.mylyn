@@ -13,9 +13,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.builds.core.ITestElement;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Test Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Test Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -30,9 +28,8 @@ import org.eclipse.mylyn.builds.core.ITestElement;
  */
 public class TestElement extends EObjectImpl implements ITestElement {
 	/**
-	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -41,9 +38,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected static final String LABEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getLabel()
 	 * @generated
@@ -52,9 +48,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected String label = LABEL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -63,9 +58,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected static final long DURATION_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDuration()
 	 * @generated
@@ -74,8 +68,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected long duration = DURATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getErrorOutput()
@@ -85,9 +78,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected static final String ERROR_OUTPUT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getErrorOutput()
 	 * @generated
@@ -96,9 +88,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected String errorOutput = ERROR_OUTPUT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getOutput() <em>Output</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getOutput() <em>Output</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getOutput()
 	 * @generated
@@ -107,9 +98,8 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected static final String OUTPUT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOutput() <em>Output</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOutput() <em>Output</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getOutput()
 	 * @generated
@@ -118,8 +108,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	protected String output = OUTPUT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -128,8 +117,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -153,8 +141,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -180,8 +167,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -208,8 +194,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -236,8 +221,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -249,8 +233,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -270,8 +253,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -295,8 +277,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -320,8 +301,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -341,8 +321,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

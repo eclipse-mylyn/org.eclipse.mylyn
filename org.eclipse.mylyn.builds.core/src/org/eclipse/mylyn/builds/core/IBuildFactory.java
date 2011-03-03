@@ -13,27 +13,21 @@ package org.eclipse.mylyn.builds.core;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Factory</b> for the model.
- * It provides a create method for each non-abstract class of the model.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each non-abstract class of
+ * the model. <!-- end-user-doc -->
  * 
  * @generated
  */
 public interface IBuildFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	IBuildFactory INSTANCE = org.eclipse.mylyn.builds.internal.core.BuildFactory.eINSTANCE;
 
 	/**
-	 * Returns a new object of class '<em>Artifact</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Artifact</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Artifact</em>'.
 	 * @generated
@@ -41,9 +35,7 @@ public interface IBuildFactory {
 	IArtifact createArtifact();
 
 	/**
-	 * Returns a new object of class '<em>Build</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Build</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Build</em>'.
 	 * @generated
@@ -51,9 +43,7 @@ public interface IBuildFactory {
 	IBuild createBuild();
 
 	/**
-	 * Returns a new object of class '<em>Cause</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Cause</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Cause</em>'.
 	 * @generated
@@ -61,9 +51,7 @@ public interface IBuildFactory {
 	IBuildCause createBuildCause();
 
 	/**
-	 * Returns a new object of class '<em>Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Reference</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Reference</em>'.
 	 * @generated
@@ -71,9 +59,7 @@ public interface IBuildFactory {
 	IBuildReference createBuildReference();
 
 	/**
-	 * Returns a new object of class '<em>Plan</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Plan</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Plan</em>'.
 	 * @generated
@@ -81,9 +67,7 @@ public interface IBuildFactory {
 	IBuildPlan createBuildPlan();
 
 	/**
-	 * Returns a new object of class '<em>Health Report</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Health Report</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Health Report</em>'.
 	 * @generated
@@ -91,9 +75,7 @@ public interface IBuildFactory {
 	IHealthReport createHealthReport();
 
 	/**
-	 * Returns a new object of class '<em>Server</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Server</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Server</em>'.
 	 * @generated
@@ -101,9 +83,7 @@ public interface IBuildFactory {
 	IBuildServer createBuildServer();
 
 	/**
-	 * Returns a new object of class '<em>Model</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Model</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Model</em>'.
 	 * @generated
@@ -111,9 +91,7 @@ public interface IBuildFactory {
 	IBuildModel createBuildModel();
 
 	/**
-	 * Returns a new object of class '<em>Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Change</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Change</em>'.
 	 * @generated
@@ -121,9 +99,7 @@ public interface IBuildFactory {
 	IChange createChange();
 
 	/**
-	 * Returns a new object of class '<em>Change Set</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Change Set</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Change Set</em>'.
 	 * @generated
@@ -131,9 +107,7 @@ public interface IBuildFactory {
 	IChangeSet createChangeSet();
 
 	/**
-	 * Returns a new object of class '<em>Change Artifact</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Change Artifact</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Change Artifact</em>'.
 	 * @generated
@@ -141,9 +115,7 @@ public interface IBuildFactory {
 	IChangeArtifact createChangeArtifact();
 
 	/**
-	 * Returns a new object of class '<em>User</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>User</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>User</em>'.
 	 * @generated
@@ -151,9 +123,8 @@ public interface IBuildFactory {
 	IUser createUser();
 
 	/**
-	 * Returns a new object of class '<em>Choice Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Choice Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @return a new object of class '<em>Choice Parameter Definition</em>'.
 	 * @generated
@@ -161,9 +132,8 @@ public interface IBuildFactory {
 	IChoiceParameterDefinition createChoiceParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Boolean Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Boolean Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @return a new object of class '<em>Boolean Parameter Definition</em>'.
 	 * @generated
@@ -171,9 +141,7 @@ public interface IBuildFactory {
 	IBooleanParameterDefinition createBooleanParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>File Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>File Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>File Parameter Definition</em>'.
 	 * @generated
@@ -181,9 +149,7 @@ public interface IBuildFactory {
 	IFileParameterDefinition createFileParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Plan Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Plan Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Plan Parameter Definition</em>'.
 	 * @generated
@@ -191,9 +157,8 @@ public interface IBuildFactory {
 	IPlanParameterDefinition createPlanParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Password Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Password Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @return a new object of class '<em>Password Parameter Definition</em>'.
 	 * @generated
@@ -201,9 +166,7 @@ public interface IBuildFactory {
 	IPasswordParameterDefinition createPasswordParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Parameter Definition</em>'.
 	 * @generated
@@ -211,9 +174,8 @@ public interface IBuildFactory {
 	IBuildParameterDefinition createBuildParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>String Parameter Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>String Parameter Definition</em>'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @return a new object of class '<em>String Parameter Definition</em>'.
 	 * @generated
@@ -221,9 +183,7 @@ public interface IBuildFactory {
 	IStringParameterDefinition createStringParameterDefinition();
 
 	/**
-	 * Returns a new object of class '<em>Test Result</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Test Result</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Test Result</em>'.
 	 * @generated
@@ -231,9 +191,7 @@ public interface IBuildFactory {
 	ITestResult createTestResult();
 
 	/**
-	 * Returns a new object of class '<em>Test Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Test Element</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Test Element</em>'.
 	 * @generated
@@ -241,9 +199,7 @@ public interface IBuildFactory {
 	ITestElement createTestElement();
 
 	/**
-	 * Returns a new object of class '<em>Test Suite</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Test Suite</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Test Suite</em>'.
 	 * @generated
@@ -251,9 +207,7 @@ public interface IBuildFactory {
 	ITestSuite createTestSuite();
 
 	/**
-	 * Returns a new object of class '<em>Test Case</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns a new object of class '<em>Test Case</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Test Case</em>'.
 	 * @generated

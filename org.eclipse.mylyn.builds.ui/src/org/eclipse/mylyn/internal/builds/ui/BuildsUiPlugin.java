@@ -102,10 +102,9 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Performs a one-shot refresh of build server data regardless of the
-	 * automatic refresh preference setting. This method should be called when
-	 * build service settings has been changed in a way that require update
-	 * of the data. For instance when a new repository has been added.
+	 * Performs a one-shot refresh of build server data regardless of the automatic refresh preference setting. This
+	 * method should be called when build service settings has been changed in a way that require update of the data.
+	 * For instance when a new repository has been added.
 	 */
 	public void refreshBuilds() {
 		initializeRefresh();

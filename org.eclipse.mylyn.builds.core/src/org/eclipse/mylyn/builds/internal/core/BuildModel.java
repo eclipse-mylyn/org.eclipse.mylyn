@@ -25,9 +25,7 @@ import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Model</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Model</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -41,9 +39,8 @@ import org.eclipse.mylyn.commons.core.IOperationMonitor;
  */
 public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
-	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getServers()
 	 * @generated
@@ -52,8 +49,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	protected EList<IBuildServer> servers;
 
 	/**
-	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getPlans()
@@ -63,9 +59,8 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	protected EList<IBuildPlan> plans;
 
 	/**
-	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getBuilds()
 	 * @generated
@@ -76,8 +71,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	private BuildScheduler scheduler;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -86,8 +80,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -149,8 +142,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -168,8 +160,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -187,8 +178,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -213,8 +203,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -235,8 +224,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

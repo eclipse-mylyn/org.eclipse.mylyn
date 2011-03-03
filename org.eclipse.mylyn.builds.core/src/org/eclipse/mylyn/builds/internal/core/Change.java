@@ -25,9 +25,7 @@ import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IUser;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Change</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -43,9 +41,8 @@ import org.eclipse.mylyn.builds.core.IUser;
  */
 public class Change extends EObjectImpl implements IChange {
 	/**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getArtifacts()
 	 * @generated
@@ -54,8 +51,7 @@ public class Change extends EObjectImpl implements IChange {
 	protected EList<IChangeArtifact> artifacts;
 
 	/**
-	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' containment reference. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getAuthor()
@@ -65,9 +61,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected IUser author;
 
 	/**
-	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -76,9 +71,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected static final String MESSAGE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getMessage()
 	 * @generated
@@ -87,9 +81,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected String message = MESSAGE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getDate()
 	 * @generated
@@ -98,9 +91,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected static final long DATE_EDEFAULT = 0L;
 
 	/**
-	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getDate()
 	 * @generated
@@ -109,9 +101,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected long date = DATE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -120,9 +111,8 @@ public class Change extends EObjectImpl implements IChange {
 	protected static final String REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getRevision()
 	 * @generated
@@ -131,8 +121,7 @@ public class Change extends EObjectImpl implements IChange {
 	protected String revision = REVISION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -141,8 +130,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -152,8 +140,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -180,8 +167,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -200,8 +186,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -236,8 +221,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -262,8 +246,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -275,8 +258,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -285,8 +267,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -298,8 +279,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -315,8 +295,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -338,8 +317,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -368,8 +346,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -396,8 +373,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -419,8 +395,7 @@ public class Change extends EObjectImpl implements IChange {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

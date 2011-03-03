@@ -181,8 +181,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED.equals(event
-					.getProperty())) {
+			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED.equals(event.getProperty())) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						if (refreshAutomaticallyAction != null) {
@@ -395,8 +394,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			public void open(OpenEvent event) {
 				Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
 				if (element instanceof IBuildPlan && ((IBuildPlan) element).getLastBuild() != null) {
-					OpenHandler.openBuildElements(getSite().getPage(), Collections.singletonList(((IBuildPlan) element)
-							.getLastBuild()));
+					OpenHandler.openBuildElements(getSite().getPage(),
+							Collections.singletonList(((IBuildPlan) element).getLastBuild()));
 				}
 			}
 		});
@@ -661,9 +660,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	/**
-	 * Packs all columns so that they are able to display all content. If there
-	 * is any space left, the second column (summary) will be resized so that the
-	 * entire width of the control is used.
+	 * Packs all columns so that they are able to display all content. If there is any space left, the second column
+	 * (summary) will be resized so that the entire width of the control is used.
 	 * 
 	 * @param tree
 	 *            the tree to resize

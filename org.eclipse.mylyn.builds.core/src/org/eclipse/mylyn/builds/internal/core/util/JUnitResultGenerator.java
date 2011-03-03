@@ -68,10 +68,10 @@ public class JUnitResultGenerator {
 		attributes.clear();
 		attributes.addAttribute(null, null, NAME, null, result.getBuild().getLabel());
 		attributes.addAttribute(null, null, PROJECT, null, result.getBuild().getLabel());
-		attributes.addAttribute(null, null, TESTS, null, Integer
-				.toString(result.getFailCount() + result.getPassCount()));
-		attributes.addAttribute(null, null, STARTED, null, Integer.toString(result.getFailCount()
-				+ result.getPassCount()));
+		attributes.addAttribute(null, null, TESTS, null,
+				Integer.toString(result.getFailCount() + result.getPassCount()));
+		attributes.addAttribute(null, null, STARTED, null,
+				Integer.toString(result.getFailCount() + result.getPassCount()));
 		attributes.addAttribute(null, null, FAILURES, null, Integer.toString(result.getFailCount()));
 		attributes.addAttribute(null, null, ERRORS, null, Integer.toString(result.getErrorCount()));
 		attributes.addAttribute(null, null, IGNORED, null, Integer.toString(result.getIgnoredCount()));

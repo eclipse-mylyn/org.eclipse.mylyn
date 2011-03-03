@@ -14,9 +14,7 @@ package org.eclipse.mylyn.builds.core;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Build</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Build</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
@@ -43,8 +41,7 @@ import java.util.List;
  */
 public interface IBuild extends IBuildElement {
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
@@ -57,9 +54,8 @@ public interface IBuild extends IBuildElement {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
@@ -69,8 +65,7 @@ public interface IBuild extends IBuildElement {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Build Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Build Number</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -85,9 +80,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Build Number</em>' attribute.
@@ -97,8 +90,7 @@ public interface IBuild extends IBuildElement {
 	void setBuildNumber(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -113,8 +105,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getTimestamp <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Timestamp</em>' attribute.
@@ -124,8 +115,7 @@ public interface IBuild extends IBuildElement {
 	void setTimestamp(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Duration</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -140,8 +130,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getDuration <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Duration</em>' attribute.
@@ -151,8 +140,7 @@ public interface IBuild extends IBuildElement {
 	void setDuration(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Display Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -167,9 +155,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}'
-	 * attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Display Name</em>' attribute.
@@ -179,8 +165,7 @@ public interface IBuild extends IBuildElement {
 	void setDisplayName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>State</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>State</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -194,9 +179,8 @@ public interface IBuild extends IBuildElement {
 	BuildState getState();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>State</em>' attribute.
@@ -206,8 +190,7 @@ public interface IBuild extends IBuildElement {
 	void setState(BuildState value);
 
 	/**
-	 * Returns the value of the '<em><b>Status</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -221,9 +204,8 @@ public interface IBuild extends IBuildElement {
 	BuildStatus getStatus();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Status</em>' attribute.
@@ -233,9 +215,8 @@ public interface IBuild extends IBuildElement {
 	void setStatus(BuildStatus value);
 
 	/**
-	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IArtifact}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.builds.core.IArtifact}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a
 	 * description here...
@@ -248,8 +229,7 @@ public interface IBuild extends IBuildElement {
 	List<IArtifact> getArtifacts();
 
 	/**
-	 * Returns the value of the '<em><b>Change Set</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Change Set</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -264,9 +244,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change Set</em>}' containment
-	 * reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Change Set</em>' containment reference.
@@ -276,8 +254,7 @@ public interface IBuild extends IBuildElement {
 	void setChangeSet(IChangeSet value);
 
 	/**
-	 * Returns the value of the '<em><b>Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Plan</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
@@ -290,9 +267,8 @@ public interface IBuild extends IBuildElement {
 	IBuildPlan getPlan();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Plan</em>' reference.
@@ -302,8 +278,7 @@ public interface IBuild extends IBuildElement {
 	void setPlan(IBuildPlan value);
 
 	/**
-	 * Returns the value of the '<em><b>Label</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -317,9 +292,8 @@ public interface IBuild extends IBuildElement {
 	String getLabel();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Label</em>' attribute.
@@ -329,8 +303,7 @@ public interface IBuild extends IBuildElement {
 	void setLabel(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Server</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -344,9 +317,8 @@ public interface IBuild extends IBuildElement {
 	IBuildServer getServer();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Server</em>' reference.
@@ -356,10 +328,8 @@ public interface IBuild extends IBuildElement {
 	void setServer(IBuildServer value);
 
 	/**
-	 * Returns the value of the '<em><b>Test Result</b></em>' containment reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild
-	 * <em>Build</em>}'.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Test Result</b></em>' containment reference. It is bidirectional and its
+	 * opposite is '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Test Result</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -375,9 +345,7 @@ public interface IBuild extends IBuildElement {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult <em>Test Result</em>}'
-	 * containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Test Result</em>' containment reference.
@@ -387,9 +355,8 @@ public interface IBuild extends IBuildElement {
 	void setTestResult(ITestResult value);
 
 	/**
-	 * Returns the value of the '<em><b>Culprits</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IUser}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Culprits</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.builds.core.IUser}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Culprits</em>' containment reference isn't clear, there really should be more of a
 	 * description here...
@@ -402,8 +369,7 @@ public interface IBuild extends IBuildElement {
 	List<IUser> getCulprits();
 
 	/**
-	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Summary</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Summary</em>' attribute isn't clear, there really should be more of a description
 	 * here...
@@ -417,9 +383,8 @@ public interface IBuild extends IBuildElement {
 	String getSummary();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
 	 *            the new value of the '<em>Summary</em>' attribute.
@@ -429,9 +394,8 @@ public interface IBuild extends IBuildElement {
 	void setSummary(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Cause</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.builds.core.IBuildCause}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Cause</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.builds.core.IBuildCause}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Cause</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...

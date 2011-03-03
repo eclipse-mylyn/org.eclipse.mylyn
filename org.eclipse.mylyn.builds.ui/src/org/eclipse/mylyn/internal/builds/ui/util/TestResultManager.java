@@ -110,9 +110,9 @@ public class TestResultManager {
 		char[] typeName = (lastDot >= 0 ? className.substring(lastDot + 1) : className).toCharArray();
 		SearchEngine engine = new SearchEngine();
 		engine.searchAllTypeNames(packageName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, typeName,
-				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE, SearchEngine
-						.createWorkspaceScope(), nameMatchRequestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-				monitor);
+				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE,
+				SearchEngine.createWorkspaceScope(), nameMatchRequestor,
+				IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
 		return result[0];
 	}
 

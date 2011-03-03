@@ -102,14 +102,14 @@ public class BuildsUiInternal {
 			String connectorKind = server.getConnectorKind();
 			if (connectorKind == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. No connector kind was specified.", server
-								.getName())));
+						"Loading of connector for server ''{0}'' failed. No connector kind was specified.",
+						server.getName())));
 			}
 			BuildConnector connector = BuildsUi.getConnector(connectorKind);
 			if (connector == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.", server
-								.getName(), connectorKind)));
+						"Loading of connector for server ''{0}'' failed. Connector kind ''{1}'' is not known.",
+						server.getName(), connectorKind)));
 			}
 			BuildServerBehaviour behaviour;
 			try {

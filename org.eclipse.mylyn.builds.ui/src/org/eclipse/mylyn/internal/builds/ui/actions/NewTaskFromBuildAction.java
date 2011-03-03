@@ -88,8 +88,8 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 				}
 				if (build.getTestResult() != null) {
 					sb.append("= Tests Results =\n");
-					sb.append(NLS.bind("Duration: {0}", DateUtil.getFormattedDurationShort(build.getTestResult()
-							.getDuration())));
+					sb.append(NLS.bind("Duration: {0}",
+							DateUtil.getFormattedDurationShort(build.getTestResult().getDuration())));
 					sb.append("\n");
 					sb.append("Failed Tests:\n");
 					for (ITestSuite suite : build.getTestResult().getSuites()) {

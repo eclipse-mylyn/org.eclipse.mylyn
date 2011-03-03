@@ -112,16 +112,16 @@ public class BuildServerPart extends RepositoryLocationPart {
 				IBuildServer server = getServer();
 				IStatus result = ((BuildServer) server).validate(progress.newChild(1));
 				if (result.isOK()) {
-					RefreshConfigurationOperation op = new RefreshConfigurationOperation(Collections
-							.singletonList(server));
+					RefreshConfigurationOperation op = new RefreshConfigurationOperation(
+							Collections.singletonList(server));
 					op.doRefresh((BuildServer) server, progress.newChild(2));
 					result = op.getStatus();
 					configuration = server.getConfiguration();
 				}
 				return result;
 			} catch (CoreException e) {
-				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind("Server validation failed: {0}", e
-						.getMessage()), e);
+				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind("Server validation failed: {0}",
+						e.getMessage()), e);
 			}
 		}
 
@@ -321,8 +321,11 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(buttonComposite);
-		GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 0, 0).applyTo(
-				buttonComposite);
+		GridLayoutFactory.fillDefaults()
+				.numColumns(1)
+				.margins(0, 0)
+				.extendedMargins(0, 0, 0, 0)
+				.applyTo(buttonComposite);
 		createButtons(buttonComposite);
 
 		return section;

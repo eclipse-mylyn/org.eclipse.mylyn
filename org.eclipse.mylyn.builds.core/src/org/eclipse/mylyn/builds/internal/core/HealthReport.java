@@ -20,9 +20,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.builds.core.IHealthReport;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Health Report</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Health Report</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -35,9 +33,8 @@ import org.eclipse.mylyn.builds.core.IHealthReport;
  */
 public class HealthReport extends EObjectImpl implements IHealthReport {
 	/**
-	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -46,9 +43,8 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected static final int HEALTH_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getHealth()
 	 * @generated
@@ -57,9 +53,8 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected int health = HEALTH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -68,9 +63,8 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getDescription()
 	 * @generated
@@ -79,8 +73,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -89,8 +82,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -100,8 +92,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -110,8 +101,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -123,8 +113,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -133,8 +122,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -147,8 +135,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -164,8 +151,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -183,8 +169,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -202,8 +187,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -219,8 +203,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

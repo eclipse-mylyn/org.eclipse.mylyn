@@ -27,9 +27,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IOperation;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -45,9 +43,8 @@ import org.eclipse.mylyn.builds.core.IOperation;
  */
 public abstract class BuildElement extends EObjectImpl implements IBuildElement {
 	/**
-	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getUrl()
 	 * @generated
@@ -56,9 +53,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final String URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getUrl()
 	 * @generated
@@ -67,9 +62,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected String url = URL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -78,9 +72,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getName()
 	 * @generated
@@ -89,8 +82,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOperations() <em>Operations</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getOperations() <em>Operations</em>}' attribute list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getOperations()
@@ -100,8 +92,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected EList<IOperation> operations;
 
 	/**
-	 * The default value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getElementStatus()
@@ -111,8 +102,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final IStatus ELEMENT_STATUS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getElementStatus()
@@ -122,8 +112,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected IStatus elementStatus = ELEMENT_STATUS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getRefreshDate()
@@ -133,9 +122,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected static final Date REFRESH_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getRefreshDate()
 	 * @generated
@@ -144,8 +132,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	protected Date refreshDate = REFRESH_DATE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -154,8 +141,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -165,8 +151,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -175,8 +160,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -188,8 +172,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -198,8 +181,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -211,8 +193,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -225,8 +206,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -235,8 +215,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -249,8 +228,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -259,8 +237,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -277,8 +254,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	public abstract IBuildServer getServer();
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -300,8 +276,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -330,8 +305,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -358,8 +332,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -373,8 +346,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__OPERATIONS:
 			return operations != null && !operations.isEmpty();
 		case BuildPackage.BUILD_ELEMENT__ELEMENT_STATUS:
-			return ELEMENT_STATUS_EDEFAULT == null ? elementStatus != null : !ELEMENT_STATUS_EDEFAULT
-					.equals(elementStatus);
+			return ELEMENT_STATUS_EDEFAULT == null
+					? elementStatus != null
+					: !ELEMENT_STATUS_EDEFAULT.equals(elementStatus);
 		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
 			return REFRESH_DATE_EDEFAULT == null ? refreshDate != null : !REFRESH_DATE_EDEFAULT.equals(refreshDate);
 		}
@@ -382,8 +356,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

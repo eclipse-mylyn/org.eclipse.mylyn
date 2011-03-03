@@ -23,9 +23,7 @@ import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeSet;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Change Set</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Change Set</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -38,9 +36,8 @@ import org.eclipse.mylyn.builds.core.IChangeSet;
  */
 public class ChangeSet extends EObjectImpl implements IChangeSet {
 	/**
-	 * The cached value of the '{@link #getChanges() <em>Changes</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getChanges() <em>Changes</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getChanges()
 	 * @generated
@@ -49,9 +46,8 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	protected EList<IChange> changes;
 
 	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getKind()
 	 * @generated
@@ -60,9 +56,8 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	protected static final String KIND_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getKind()
 	 * @generated
@@ -71,8 +66,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	protected String kind = KIND_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -81,8 +75,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -122,8 +115,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -135,8 +127,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -150,8 +141,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -167,8 +157,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -188,8 +177,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -207,8 +195,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -224,8 +211,7 @@ public class ChangeSet extends EObjectImpl implements IChangeSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */

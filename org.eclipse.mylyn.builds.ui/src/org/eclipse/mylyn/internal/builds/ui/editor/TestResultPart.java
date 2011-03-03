@@ -177,20 +177,20 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			label = createLabel(composite, toolkit, "Passed:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, "");
-			bind(text, IBuild.class, FeaturePath
-					.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__PASS_COUNT));
+			bind(text, IBuild.class,
+					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__PASS_COUNT));
 
 			label = createLabel(composite, toolkit, "Failed:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, "");
-			bind(text, IBuild.class, FeaturePath
-					.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__FAIL_COUNT));
+			bind(text, IBuild.class,
+					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__FAIL_COUNT));
 
 			label = createLabel(composite, toolkit, "Ignored:");
 			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
 			text = createTextReadOnly(composite, toolkit, "");
-			bind(text, IBuild.class, FeaturePath.fromList(Literals.BUILD__TEST_RESULT,
-					Literals.TEST_RESULT__IGNORED_COUNT));
+			bind(text, IBuild.class,
+					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__IGNORED_COUNT));
 		}
 
 		viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));

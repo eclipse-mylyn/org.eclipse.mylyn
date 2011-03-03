@@ -16,9 +16,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Boolean Parameter Definition</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Boolean Parameter Definition</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -30,8 +29,7 @@ import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
  */
 public class BooleanParameterDefinition extends ParameterDefinition implements IBooleanParameterDefinition {
 	/**
-	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #isDefaultValue()
@@ -41,8 +39,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	protected static final boolean DEFAULT_VALUE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @see #isDefaultValue()
@@ -52,8 +49,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	protected boolean defaultValue = DEFAULT_VALUE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -62,8 +58,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -87,8 +82,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -101,8 +95,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -116,8 +109,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -132,8 +124,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -148,8 +139,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -163,8 +153,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
