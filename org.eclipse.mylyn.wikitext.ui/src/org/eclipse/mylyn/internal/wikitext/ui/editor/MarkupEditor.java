@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.AbstractAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -1145,13 +1146,22 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	@Override
 	public void setAction(String actionID, IAction action) {
-		if (action.getActionDefinitionId() != null && !action.getClass().getSimpleName().equals("CommandAction")) { //$NON-NLS-1$
+		if (action.getActionDefinitionId() != null && !isCommandAction(action)) {
 			// bug 336679: don't activate handlers for CommandAction.  
 			// We do this by class name so that we don't rely on internals
 			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 			handlerService.activateHandler(action.getActionDefinitionId(), new ActionHandler(action));
 		}
 		super.setAction(actionID, action);
+	}
+
+	private boolean isCommandAction(IAction action) {
+		for (Class<?> clazz = action.getClass(); clazz != Object.class && clazz != AbstractAction.class; clazz = clazz.getSuperclass()) {
+			if (clazz.getName().equals("org.eclipse.ui.internal.actions.CommandAction")) { //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
