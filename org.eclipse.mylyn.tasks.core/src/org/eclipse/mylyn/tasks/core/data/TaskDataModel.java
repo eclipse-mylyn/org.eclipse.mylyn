@@ -95,6 +95,22 @@ public class TaskDataModel {
 		}
 	}
 
+	/**
+	 * Returns the instance of <code>taskAttribute</code> that the user last read.
+	 * 
+	 * @param taskAttribute
+	 *            the attribute
+	 * @return the last read state; null, if <code>taskAttribute</code> has never been read
+	 * @since 3.5
+	 */
+	public TaskAttribute getLastReadAttribute(TaskAttribute taskAttribute) {
+		TaskData lastReadData = workingCopy.getLastReadData();
+		if (lastReadData == null) {
+			return null;
+		}
+		return lastReadData.getRoot().getMappedAttribute(taskAttribute.getPath());
+	}
+
 	public Set<TaskAttribute> getChangedAttributes() {
 		Set<TaskAttribute> changedAttributes = new LinkedHashSet<TaskAttribute>();
 		changedAttributes.addAll(workingCopy.getEditsData().getRoot().getAttributes().values());
