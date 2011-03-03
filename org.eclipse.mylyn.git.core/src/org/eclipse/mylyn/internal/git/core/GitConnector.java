@@ -140,8 +140,8 @@ public class GitConnector extends ScmConnector {
 	}
 
 	private ChangeSet changeSet(RevCommit r, ScmRepository repository, List<Change> changes) {
-		ChangeSet changeSet = new ChangeSet(getScmUser(r.getCommitterIdent()), new Date(r.getCommitTime() * 1000), r
-				.name(), r.getFullMessage(), repository, changes);
+		ChangeSet changeSet = new ChangeSet(getScmUser(r.getCommitterIdent()), new Date(r.getCommitTime() * 1000),
+				r.name(), r.getFullMessage(), repository, changes);
 		return changeSet;
 	}
 

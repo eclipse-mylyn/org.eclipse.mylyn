@@ -77,11 +77,12 @@ public class GitArtifact extends ScmArtifact {
 						public InputStream getContents() throws CoreException {
 							try {
 								return repository.getRepository()
-										.open(ObjectId.fromString(getId()), Constants.OBJ_BLOB).openStream();
+										.open(ObjectId.fromString(getId()), Constants.OBJ_BLOB)
+										.openStream();
 							} catch (Exception e) {
 								e.printStackTrace();
-								throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e
-										.getMessage()));
+								throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID,
+										e.getMessage()));
 							}
 						}
 					};

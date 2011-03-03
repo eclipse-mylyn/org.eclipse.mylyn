@@ -22,5 +22,5 @@ public class CvsArtifact extends ScmResourceArtifact {
 	public CvsArtifact(CvsConnector connector, IResource resource, String id) {
 		super(connector, resource, id);
 	}
-		
+
 }
