@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - Support image sizes in percent, bug 337405 
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
@@ -37,6 +38,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
  * @author David Green
+ * @author Torkild U. Resheim, MARINTEK
  * @since 1.1
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -762,11 +764,11 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			ImageAttributes imageAttributes = (ImageAttributes) attributes;
 			if (imageAttributes.getWidth() > 0) {
 				sizeSpecified = true;
-				writer.writeAttribute("width", String.format("%spx", imageAttributes.getWidth())); //$NON-NLS-1$ //$NON-NLS-2$
+				emitImageSize("width", imageAttributes.getWidth(), imageAttributes.isWidthPercentage()); //$NON-NLS-1$
 			}
 			if (imageAttributes.getHeight() > 0) {
 				sizeSpecified = true;
-				writer.writeAttribute("height", String.format("%spx", imageAttributes.getHeight())); //$NON-NLS-1$ //$NON-NLS-2$
+				emitImageSize("height", imageAttributes.getHeight(), imageAttributes.isHeightPercentage()); //$NON-NLS-1$
 			}
 		}
 		if (!sizeSpecified) {
@@ -777,6 +779,10 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("content-width", "scale-to-fit"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("scaling", "uniform"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private void emitImageSize(String attributeName, int units, boolean isPercentage) {
+		writer.writeAttribute(attributeName, String.format("%s%s", units, isPercentage ? "%" : "px")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
