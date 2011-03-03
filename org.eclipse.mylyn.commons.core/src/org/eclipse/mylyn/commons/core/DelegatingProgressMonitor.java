@@ -16,19 +16,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ProgressMonitorWrapper;
 
 /**
  * Delegates to all attached monitors.
  * 
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
+ * @author Robert Elves
  * @since 3.2
  */
 public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 
+	/**
+	 * Returns the parent delegating progress monitor of <code>monitor</code>.
+	 * 
+	 * @param monitor
+	 *            the child monitor
+	 * @return the monitor; null, if none
+	 * @since 3.5
+	 */
+	public static IDelegatingProgressMonitor getMonitorFrom(IProgressMonitor monitor) {
+		if (monitor == null) {
+			return null;
+		} else if (monitor instanceof IDelegatingProgressMonitor) {
+			return (IDelegatingProgressMonitor) monitor;
+		} else if (monitor instanceof ProgressMonitorWrapper) {
+			return getMonitorFrom(((ProgressMonitorWrapper) monitor).getWrappedProgressMonitor());
+		}
+		return null;
+	}
+
 	private boolean calledBeginTask;
 
 	private boolean canceled;
+
+	private Object data;
 
 	private boolean done;
 
@@ -96,6 +119,14 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 		}
 	}
 
+	/**
+	 * @see IDelegatingProgressMonitor#getData()
+	 * @since 3.5
+	 */
+	public Object getData() {
+		return data;
+	}
+
 	public void internalWorked(double work) {
 		this.internalWorked += work;
 		for (IProgressMonitor monitor : monitors) {
@@ -121,6 +152,14 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 		}
 	}
 
+	/**
+	 * @see IDelegatingProgressMonitor#setData()
+	 * @since 3.5
+	 */
+	public void setData(Object o) {
+		this.data = o;
+	}
+
 	public void setTaskName(String name) {
 		this.taskName = name;
 		for (IProgressMonitor monitor : monitors) {
@@ -141,4 +180,5 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 			monitor.worked(work);
 		}
 	}
+
 }

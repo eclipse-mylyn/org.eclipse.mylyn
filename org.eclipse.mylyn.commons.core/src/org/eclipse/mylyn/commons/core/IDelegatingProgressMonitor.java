@@ -40,4 +40,20 @@ public interface IDelegatingProgressMonitor extends IProgressMonitor {
 	 */
 	public void detach(IProgressMonitor monitor);
 
+	/**
+	 * Sets a user object.
+	 * 
+	 * @see #getData()
+	 * @since 3.5
+	 */
+	public void setData(Object data);
+
+	/***
+	 * Returns a user object.
+	 * 
+	 * @see #setData(Object)
+	 * @since 3.5
+	 */
+	public Object getData();
+
 }
