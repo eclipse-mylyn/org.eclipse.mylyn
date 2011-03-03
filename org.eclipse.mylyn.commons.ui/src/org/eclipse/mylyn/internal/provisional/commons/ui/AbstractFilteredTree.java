@@ -69,8 +69,9 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 
 		} catch (Exception e) {
-			CommonsUiPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
+			CommonsUiPlugin.getDefault()
+					.getLog()
+					.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
 		setInitialText(LABEL_FIND);
 	}
@@ -121,8 +122,12 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 		// let FilteredTree create the find and clear control
 		super.createFilterControls(parent);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).hint(FILTER_WIDTH_MIN,
-				SWT.DEFAULT).minSize(FILTER_WIDTH_MIN, SWT.DEFAULT).applyTo(parent);
+		GridDataFactory.fillDefaults()
+				.align(SWT.BEGINNING, SWT.CENTER)
+				.grab(false, false)
+				.hint(FILTER_WIDTH_MIN, SWT.DEFAULT)
+				.minSize(FILTER_WIDTH_MIN, SWT.DEFAULT)
+				.applyTo(parent);
 		filterComposite.addControlListener(new ControlAdapter() {
 			boolean handlingEvents;
 

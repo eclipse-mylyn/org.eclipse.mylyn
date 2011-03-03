@@ -24,10 +24,9 @@ import org.eclipse.mylyn.commons.net.Policy;
 /**
  * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a
  * high numAttempts should be specified, and the underlying stream should time out frequently on reads (every second or
- * so).
- * 
- * Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does. Check
- * the bytesTransferred field to determine how much of the operation completed; conversely, at what point to resume.
+ * so). Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does.
+ * Check the bytesTransferred field to determine how much of the operation completed; conversely, at what point to
+ * resume.
  */
 public class PollingInputStream extends FilterInputStream {
 	private static final boolean DEBUG = Policy.DEBUG_STREAMS;

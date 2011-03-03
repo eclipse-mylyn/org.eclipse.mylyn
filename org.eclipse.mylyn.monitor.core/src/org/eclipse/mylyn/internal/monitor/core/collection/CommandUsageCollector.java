@@ -32,8 +32,8 @@ public class CommandUsageCollector implements IUsageCollector {
 	public void consumeEvent(InteractionEvent event, int userId) {
 		userIdSet.add(userId);
 		if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
-			commands.setUserCount(userId, InteractionEventUtil.getCleanOriginId(event), commands.getUserCount(userId,
-					InteractionEventUtil.getCleanOriginId(event)) + 1);
+			commands.setUserCount(userId, InteractionEventUtil.getCleanOriginId(event),
+					commands.getUserCount(userId, InteractionEventUtil.getCleanOriginId(event)) + 1);
 		}
 	}
 

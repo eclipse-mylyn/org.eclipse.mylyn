@@ -95,7 +95,7 @@ public class TaskBarManager {
 				}
 			}
 			super.update(force, recursive);
-			if(menu != null && menu.getItemCount() == 0){
+			if (menu != null && menu.getItemCount() == 0) {
 				// clear the menu on the TaskItem if there are no items
 				menu = null;
 			}

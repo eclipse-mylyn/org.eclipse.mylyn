@@ -20,10 +20,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * Updates a progress monitor as bytes are read from the input stream. Also starts a background thread to provide
- * responsive cancellation on read().
- * 
- * Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does. Check
- * the bytesTransferred field to determine how much of the operation completed; conversely, at what point to resume.
+ * responsive cancellation on read(). Supports resuming partially completed operations after an InterruptedIOException
+ * if the underlying stream does. Check the bytesTransferred field to determine how much of the operation completed;
+ * conversely, at what point to resume.
  */
 public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	private final IProgressMonitor monitor;

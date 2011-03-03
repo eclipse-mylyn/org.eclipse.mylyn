@@ -17,7 +17,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * 
  * @author David Green
  */
 public class JarDiscoverySource extends AbstractDiscoverySource {

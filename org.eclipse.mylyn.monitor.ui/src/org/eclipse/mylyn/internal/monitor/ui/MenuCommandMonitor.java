@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * @author Mik Kersten
  * @author Leah Findlater
- * 
  */
 public class MenuCommandMonitor implements Listener {
 

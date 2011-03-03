@@ -52,8 +52,9 @@ public class EditorBusyIndicator {
 					PlatformUI.getWorkbench().getDisplay().timerExec(UPDATE_INTERVAL, this);
 				}
 			} catch (Exception e) {
-				CommonsUiPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Failed to update animation", e)); //$NON-NLS-1$
+				CommonsUiPlugin.getDefault()
+						.getLog()
+						.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Failed to update animation", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -102,8 +103,9 @@ public class EditorBusyIndicator {
 				animator.run();
 			}
 		} catch (SWTException e) {
-			CommonsUiPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Failed to start animation", e)); //$NON-NLS-1$
+			CommonsUiPlugin.getDefault()
+					.getLog()
+					.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Failed to start animation", e)); //$NON-NLS-1$
 		}
 	}
 

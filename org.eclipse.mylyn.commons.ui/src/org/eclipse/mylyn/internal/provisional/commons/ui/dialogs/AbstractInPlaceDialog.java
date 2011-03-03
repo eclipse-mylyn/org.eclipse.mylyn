@@ -217,8 +217,9 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 				}
 
 				public void handleException(Throwable exception) {
-					CommonsUiPlugin.getDefault().getLog().log(
-							new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
+					CommonsUiPlugin.getDefault()
+							.getLog()
+							.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
 									"Error while notifying IInPlaceCloseListener", exception)); //$NON-NLS-1$
 				}
 			});

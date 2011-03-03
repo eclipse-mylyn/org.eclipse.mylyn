@@ -1718,7 +1718,8 @@ public class ScreenshotViewer {
 	 */
 	public Image createImage() {
 		// use default display to support invocation from non UI thread
-		Image screenshot = new Image(Display.getDefault(), currentSelection != null ? currentSelection
+		Image screenshot = new Image(Display.getDefault(), currentSelection != null
+				? currentSelection
 				: workImage.getBounds());
 
 		GC gc = new GC(screenshot);

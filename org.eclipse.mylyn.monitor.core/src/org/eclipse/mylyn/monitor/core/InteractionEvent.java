@@ -261,7 +261,8 @@ public class InteractionEvent {
 				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
 				&& (kind == null ? event.kind == null : kind.equals(event.kind))
 				&& (structureKind == null ? event.structureKind == null : structureKind.equals(event.structureKind))
-				&& (structureHandle == null ? event.structureHandle == null
+				&& (structureHandle == null
+						? event.structureHandle == null
 						: structureHandle.equals(event.structureHandle))
 				&& (originId == null ? event.originId == null : originId.equals(event.originId))
 				&& (navigation == null ? event.navigation == null : navigation.equals(event.navigation))

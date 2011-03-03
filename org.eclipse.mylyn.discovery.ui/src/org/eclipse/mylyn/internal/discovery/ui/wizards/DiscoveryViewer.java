@@ -231,8 +231,9 @@ public class DiscoveryViewer {
 			configureLook(providerLabel, background);
 			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(providerLabel);
 			if (connector.getCertification() != null) {
-				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0, new String[] {
-						connector.getProvider(), connector.getLicense(), connector.getCertification().getName() }));
+				providerLabel.setText(NLS.bind(Messages.DiscoveryViewer_Certification_Label0,
+						new String[] { connector.getProvider(), connector.getLicense(),
+								connector.getCertification().getName() }));
 				if (connector.getCertification().getUrl() != null) {
 					providerLabel.addSelectionListener(new SelectionAdapter() {
 						@Override
@@ -315,8 +316,8 @@ public class DiscoveryViewer {
 			if (selected) {
 				if (connector.isInstalled()) {
 					MessageDialog.openWarning(shellProvider.getShell(),
-							Messages.DiscoveryViewer_Install_Connector_Title, NLS.bind(
-									Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
+							Messages.DiscoveryViewer_Install_Connector_Title,
+							NLS.bind(Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
 					return false;
 				}
 				if (connector.getAvailable() != null && !connector.getAvailable()) {
@@ -820,8 +821,9 @@ public class DiscoveryViewer {
 					}
 				}
 
-				GridLayoutFactory.fillDefaults().numColumns(filterContainer.getChildren().length).applyTo(
-						filterContainer);
+				GridLayoutFactory.fillDefaults()
+						.numColumns(filterContainer.getChildren().length)
+						.applyTo(filterContainer);
 			}
 
 		}
@@ -905,8 +907,11 @@ public class DiscoveryViewer {
 					categoryHeaderContainer.putColor(IFormColors.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
 
 					GridDataFactory.fillDefaults().span(2, 1).applyTo(categoryHeaderContainer);
-					GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).equalWidth(false).applyTo(
-							categoryHeaderContainer);
+					GridLayoutFactory.fillDefaults()
+							.numColumns(3)
+							.margins(5, 5)
+							.equalWidth(false)
+							.applyTo(categoryHeaderContainer);
 
 					Label iconLabel = new Label(categoryHeaderContainer, SWT.NULL);
 					if (category.getIcon() != null) {
@@ -937,8 +942,11 @@ public class DiscoveryViewer {
 						new Label(categoryHeaderContainer, SWT.NULL).setText(" "); //$NON-NLS-1$
 					}
 					Label description = new Label(categoryHeaderContainer, SWT.WRAP);
-					GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(100, SWT.DEFAULT).applyTo(
-							description);
+					GridDataFactory.fillDefaults()
+							.grab(true, false)
+							.span(2, 1)
+							.hint(100, SWT.DEFAULT)
+							.applyTo(description);
 					description.setBackground(null);
 					description.setText(category.getDescription());
 				}
@@ -1200,10 +1208,12 @@ public class DiscoveryViewer {
 			colorDisabled = colorRegistry.get(COLOR_DARK_GRAY);
 		}
 		if (colorCategoryGradientStart == null) {
-			colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-					CommonThemes.COLOR_CATEGORY_GRADIENT_START);
-			colorCategoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-					CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+			colorCategoryGradientStart = themeManager.getCurrentTheme()
+					.getColorRegistry()
+					.get(CommonThemes.COLOR_CATEGORY_GRADIENT_START);
+			colorCategoryGradientEnd = themeManager.getCurrentTheme()
+					.getColorRegistry()
+					.get(CommonThemes.COLOR_CATEGORY_GRADIENT_END);
 		}
 	}
 

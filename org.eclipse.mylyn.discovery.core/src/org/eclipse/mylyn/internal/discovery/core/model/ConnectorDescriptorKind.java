@@ -34,9 +34,7 @@ public enum ConnectorDescriptorKind {
 	 * 
 	 * @param value
 	 *            the string value, or null
-	 * 
 	 * @return the corresponding enum constant or null if the given value was null
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the given value does not correspond to any enum constant
 	 */

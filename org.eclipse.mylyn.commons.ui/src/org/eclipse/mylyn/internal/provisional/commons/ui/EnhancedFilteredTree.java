@@ -91,8 +91,10 @@ public class EnhancedFilteredTree extends FilteredTree {
 			if (listeners != null && listeners.length > 0) {
 				for (Listener listener : listeners) {
 					if (listener instanceof TypedListener
-							&& ((TypedListener) listener).getEventListener().getClass().getName().startsWith(
-									"org.eclipse.ui.dialogs.FilteredTree$") //$NON-NLS-1$
+							&& ((TypedListener) listener).getEventListener()
+									.getClass()
+									.getName()
+									.startsWith("org.eclipse.ui.dialogs.FilteredTree$") //$NON-NLS-1$
 							&& ((TypedListener) listener).getEventListener() instanceof KeyListener) {
 						downArrowListener = (KeyListener) ((TypedListener) listener).getEventListener();
 						break;

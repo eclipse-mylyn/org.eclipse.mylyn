@@ -151,8 +151,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 		if (tool == DRAWBOX_TOOLBAR) {
 			showSelection = true;
 			selectedItemID = DRAW_RBOX;
-			initBar(
-					tool,
+			initBar(tool,
 					new ToolActionItem[] {
 							new ToolActionItem(DRAW_BOX, Messages.SelectToolAction_Rectangle, ScreenshotImages.EDIT_BOX),
 							new ToolActionItem(DRAW_RBOX, Messages.SelectToolAction_Round_Rectangle,
@@ -353,7 +352,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 
 	private Image createFontImage(FontData fontData, RGB rgb, boolean select) {
 		Display display = parent.getDisplay();
-		Color ButtonFace = display.getSystemColor((select) ? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW
+		Color ButtonFace = display.getSystemColor((select)
+				? SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW
 				: SWT.COLOR_WIDGET_BACKGROUND);
 		int x = 16, y = 16;
 		Image image = new Image(display, x, y);
@@ -463,7 +463,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 					if (bMenu) {
 						if (Platform.getWS().equalsIgnoreCase(Platform.WS_WIN32)
 								|| Platform.getWS().equalsIgnoreCase(Platform.WS_WPF)) {
-							Color FOREGROUND = display.getSystemColor((getEnabled()) ? SWT.COLOR_WIDGET_FOREGROUND
+							Color FOREGROUND = display.getSystemColor((getEnabled())
+									? SWT.COLOR_WIDGET_FOREGROUND
 									: SWT.COLOR_WIDGET_DARK_SHADOW);
 							e.gc.setForeground(FOREGROUND);
 							int x = iconSize.x + G;
@@ -476,7 +477,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 								h -= 2;
 							}
 						} else {
-							Color FOREGROUND = display.getSystemColor((getEnabled()) ? SWT.COLOR_WIDGET_DARK_SHADOW
+							Color FOREGROUND = display.getSystemColor((getEnabled())
+									? SWT.COLOR_WIDGET_DARK_SHADOW
 									: SWT.COLOR_WIDGET_NORMAL_SHADOW);
 							e.gc.setForeground(FOREGROUND);
 							int x = iconSize.x + G;

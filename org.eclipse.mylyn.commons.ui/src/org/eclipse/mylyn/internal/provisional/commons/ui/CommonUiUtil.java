@@ -58,8 +58,9 @@ public class CommonUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				throw (CoreException) e.getCause();
 			} else {
-				CommonsUiPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
+				CommonsUiPlugin.getDefault()
+						.getLog()
+						.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
 			}
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();
@@ -86,8 +87,9 @@ public class CommonUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				throw (CoreException) e.getCause();
 			} else {
-				CommonsUiPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
+				CommonsUiPlugin.getDefault()
+						.getLog()
+						.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
 			}
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();
@@ -119,8 +121,9 @@ public class CommonUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				throw (CoreException) e.getCause();
 			} else {
-				CommonsUiPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
+				CommonsUiPlugin.getDefault()
+						.getLog()
+						.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Unexpected exception", e)); //$NON-NLS-1$
 			}
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();

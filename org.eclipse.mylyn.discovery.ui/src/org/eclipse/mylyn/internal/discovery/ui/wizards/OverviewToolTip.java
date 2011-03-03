@@ -95,12 +95,16 @@ class OverviewToolTip extends GradientToolTip {
 		final int containerWidthHintWithImage = 650;
 		final int containerWidthHintWithoutImage = 500;
 
-		GridDataFactory.fillDefaults().grab(true, true).hint(
-				image == null ? containerWidthHintWithoutImage : containerWidthHintWithImage, SWT.DEFAULT).applyTo(
-				container);
+		GridDataFactory.fillDefaults()
+				.grab(true, true)
+				.hint(image == null ? containerWidthHintWithoutImage : containerWidthHintWithImage, SWT.DEFAULT)
+				.applyTo(container);
 
-		GridLayoutFactory.fillDefaults().numColumns((leftImage != null) ? 3 : 2).margins(5, 5).spacing(3, 0).applyTo(
-				container);
+		GridLayoutFactory.fillDefaults()
+				.numColumns((leftImage != null) ? 3 : 2)
+				.margins(5, 5)
+				.spacing(3, 0)
+				.applyTo(container);
 
 		if (leftImage != null) {
 			Label imageLabel = new Label(container, SWT.NONE);
@@ -142,12 +146,17 @@ class OverviewToolTip extends GradientToolTip {
 			final Composite imageContainer = new Composite(container, SWT.BORDER);
 			GridLayoutFactory.fillDefaults().applyTo(imageContainer);
 
-			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.BEGINNING).hint(
-					widthHint + (borderWidth * 2), heightHint).applyTo(imageContainer);
+			GridDataFactory.fillDefaults()
+					.grab(false, false)
+					.align(SWT.CENTER, SWT.BEGINNING)
+					.hint(widthHint + (borderWidth * 2), heightHint)
+					.applyTo(imageContainer);
 
 			Label imageLabel = new Label(imageContainer, SWT.NULL);
-			GridDataFactory.fillDefaults().hint(widthHint, fixedImageHeight).indent(borderWidth, borderWidth).applyTo(
-					imageLabel);
+			GridDataFactory.fillDefaults()
+					.hint(widthHint, fixedImageHeight)
+					.indent(borderWidth, borderWidth)
+					.applyTo(imageLabel);
 			imageLabel.setImage(image);
 			imageLabel.setBackground(null);
 			imageLabel.setSize(widthHint, fixedImageHeight);

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.discovery.core;
 
 /**
- * 
  * @author David Green
  */
 public abstract class DiscoveryCore {

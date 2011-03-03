@@ -16,13 +16,11 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 
-
 /**
  * Wraps an output stream that blocks indefinitely to simulate timeouts on write(), flush(), and close(). The resulting
- * output stream is buffered and supports retrying operations that failed due to an InterruptedIOException.
- * 
- * Supports resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying
- * stream does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
+ * output stream is buffered and supports retrying operations that failed due to an InterruptedIOException. Supports
+ * resuming partially completed operations after an InterruptedIOException REGARDLESS of whether the underlying stream
+ * does unless the underlying stream itself generates InterruptedIOExceptions in which case it must also support
  * resuming. Check the bytesTransferred field to determine how much of the operation completed; conversely, at what
  * point to resume.
  */

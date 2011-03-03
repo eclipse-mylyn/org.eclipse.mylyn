@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbenchWindow;
  * 
  * @author Mik Kersten
  * @author Leah Findlater
- * 
  */
 public class WindowChangeMonitor implements IWindowListener {
 

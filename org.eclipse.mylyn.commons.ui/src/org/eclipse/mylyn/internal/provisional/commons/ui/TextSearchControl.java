@@ -153,11 +153,12 @@ public class TextSearchControl extends Composite {
 		textControl.setLayoutData(gridData);
 
 		if (useNativeSearchField == null || !useNativeSearchField) {
-			findControl = createLabelButtonControl(this, textControl, JFaceResources.getImageRegistry().getDescriptor(
-					FIND_ICON), Messages.TextControl_AccessibleListenerFindButton, Messages.TextControl_FindToolTip,
-					ICON_SEARCH);
-			clearControl = createLabelButtonControl(this, textControl, JFaceResources.getImageRegistry().getDescriptor(
-					CLEAR_ICON), WorkbenchMessages.FilteredTree_ClearToolTip,//FilteredTree_AccessibleListenerClearButton,
+			findControl = createLabelButtonControl(this, textControl,
+					JFaceResources.getImageRegistry().getDescriptor(FIND_ICON),
+					Messages.TextControl_AccessibleListenerFindButton, Messages.TextControl_FindToolTip, ICON_SEARCH);
+			clearControl = createLabelButtonControl(this, textControl,
+					JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON),
+					WorkbenchMessages.FilteredTree_ClearToolTip,//FilteredTree_AccessibleListenerClearButton,
 					WorkbenchMessages.FilteredTree_ClearToolTip, ICON_CANCEL);
 			addModifyListener(new ModifyListener() {
 

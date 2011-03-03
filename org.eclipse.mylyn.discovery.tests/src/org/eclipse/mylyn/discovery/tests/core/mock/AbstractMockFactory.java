@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.discovery.tests.core.mock;
 
 /**
- * 
  * @author David Green
  */
 public abstract class AbstractMockFactory<MockType> {

@@ -29,15 +29,14 @@ public class ShowConnectorDiscoveryWizardCommandHandler extends AbstractHandler 
 	private static final String ID_P2_INSTALL_UI = "org.eclipse.equinox.p2.ui.sdk/org.eclipse.equinox.p2.ui.sdk.install"; //$NON-NLS-1$
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
+
 		// check to make sure that the p2 install ui is enabled
 		if (WorkbenchUtil.allowUseOf(ID_P2_INSTALL_UI)) {
 			ConnectorDiscoveryWizard wizard = new ConnectorDiscoveryWizard();
 			WizardDialog dialog = new WizardDialog(DiscoveryUiUtil.getShell(), wizard);
 			dialog.open();
 		} else {
-			MessageDialog.openWarning(
-					DiscoveryUiUtil.getShell(),
+			MessageDialog.openWarning(DiscoveryUiUtil.getShell(),
 					Messages.ShowConnectorDiscoveryWizardCommandHandler_Install_Connectors,
 					Messages.ShowConnectorDiscoveryWizardCommandHandler_Unable_To_Install_No_P2);
 		}

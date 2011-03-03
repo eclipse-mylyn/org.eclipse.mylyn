@@ -59,7 +59,8 @@ public class SummaryCollector implements IUsageCollector {
 	public List<String> getReport() {
 		List<String> summaries = new ArrayList<String>();
 
-		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE + mostRecentDate + "<br>"); //$NON-NLS-1$
+		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE
+				+ mostRecentDate + "<br>"); //$NON-NLS-1$
 
 		summaries.add(Messages.SummaryCollector_Number_of_events_ + numUserEvents + "<br>"); //$NON-NLS-1$
 		summaries.add(Messages.SummaryCollector_Number_of_commands_ + numCommands + "<br>"); //$NON-NLS-1$
@@ -80,7 +81,8 @@ public class SummaryCollector implements IUsageCollector {
 	public List<String> getPlainTextReport() {
 		List<String> summaries = new ArrayList<String>();
 
-		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE + mostRecentDate);
+		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE
+				+ mostRecentDate);
 
 		summaries.add(Messages.SummaryCollector_Number_of_events_ + numUserEvents);
 		summaries.add(Messages.SummaryCollector_Number_of_commands_ + numCommands);
