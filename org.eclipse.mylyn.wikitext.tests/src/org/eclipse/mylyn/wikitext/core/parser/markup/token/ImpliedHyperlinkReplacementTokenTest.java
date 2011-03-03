@@ -20,7 +20,6 @@ import junit.framework.TestCase;
  * tests for {@link ImpliedHyperlinkReplacementToken}
  * 
  * @author David Green
- * 
  * @see ImpliedHyperlinkReplacementToken
  */
 public class ImpliedHyperlinkReplacementTokenTest extends TestCase {

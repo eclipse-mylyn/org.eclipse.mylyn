@@ -42,7 +42,6 @@ public class IdGenerator {
 	 * 
 	 * @param id
 	 *            the id to reserve
-	 * 
 	 * @return true if the id was reserved, otherwise false
 	 */
 	public boolean reserveId(String id) {
@@ -58,7 +57,6 @@ public class IdGenerator {
 	 *            'h2'. may be null.
 	 * @param text
 	 *            the label text for which the id is being produced. may be null.
-	 * 
 	 * @return a unique id
 	 */
 	public String newId(String type, String text) {

@@ -15,8 +15,6 @@ import org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TextileMarkupTaskEditorExtension extends MarkupTaskEditorExtension<TextileLanguage> {

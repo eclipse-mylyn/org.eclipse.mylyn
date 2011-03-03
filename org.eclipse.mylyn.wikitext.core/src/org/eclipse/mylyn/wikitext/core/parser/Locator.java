@@ -48,10 +48,9 @@ public interface Locator {
 	public int getLineCharacterOffset();
 
 	/**
-	 * Get the 0-based offset of the end of the current line segment being processed, exclusive.
-	 * 
-	 * Generally a phrase modifier starts at {@link #getLineCharacterOffset()} and ends on the character preceding this
-	 * offset, <code>[s,e)</code> where s is the start and e is the end.
+	 * Get the 0-based offset of the end of the current line segment being processed, exclusive. Generally a phrase
+	 * modifier starts at {@link #getLineCharacterOffset()} and ends on the character preceding this offset,
+	 * <code>[s,e)</code> where s is the start and e is the end.
 	 */
 	public int getLineSegmentEndOffset();
 }

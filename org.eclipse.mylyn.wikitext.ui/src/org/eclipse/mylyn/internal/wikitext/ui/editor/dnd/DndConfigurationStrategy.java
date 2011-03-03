@@ -21,7 +21,6 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * 
  * @author David Green
  */
 public class DndConfigurationStrategy {

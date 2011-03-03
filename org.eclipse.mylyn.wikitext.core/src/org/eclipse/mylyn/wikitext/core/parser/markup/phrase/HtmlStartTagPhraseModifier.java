@@ -18,7 +18,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * or unescaped text.
  * 
  * @see HtmlEndTagPhraseModifier
- * 
  * @author David Green
  * @since 1.0
  */

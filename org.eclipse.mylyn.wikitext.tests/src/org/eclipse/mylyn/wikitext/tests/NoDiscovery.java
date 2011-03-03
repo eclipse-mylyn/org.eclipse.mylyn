@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  * @author David Green
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE })
 public @interface NoDiscovery {
 
 }

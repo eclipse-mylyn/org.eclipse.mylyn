@@ -21,8 +21,6 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {

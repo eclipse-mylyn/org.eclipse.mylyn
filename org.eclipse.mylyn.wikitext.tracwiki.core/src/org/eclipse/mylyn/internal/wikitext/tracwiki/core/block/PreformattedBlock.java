@@ -22,7 +22,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * A preformatted block is delimited by tripple-curlies {{{ }}}
  * 
  * @author David Green
- * 
  * @see MonospacePhraseModifier
  */
 public class PreformattedBlock extends Block {

@@ -21,7 +21,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * 
  * @author David Green
  */
 public class WikiTextTasksUiPlugin extends AbstractUIPlugin {

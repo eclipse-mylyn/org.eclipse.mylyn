@@ -29,8 +29,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.ResourceMarkerMa
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupValidationReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {

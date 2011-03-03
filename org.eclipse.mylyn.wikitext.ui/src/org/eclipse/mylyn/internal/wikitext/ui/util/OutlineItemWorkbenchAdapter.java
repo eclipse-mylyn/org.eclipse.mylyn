@@ -19,7 +19,6 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * A workbench adapter for {@link OutlineItem}
  * 
  * @author David Green
- * 
  * @see OutlineItemAdapterFactory
  */
 public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {

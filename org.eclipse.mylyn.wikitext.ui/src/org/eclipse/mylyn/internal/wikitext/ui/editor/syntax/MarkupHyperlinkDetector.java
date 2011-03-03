@@ -234,8 +234,8 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 				IDE.openEditor(activePage, file);
 			} catch (PartInitException e) {
 				WikiTextUiPlugin.getDefault().log(e);
-				MessageDialog.openError(window.getShell(), Messages.MarkupHyperlinkDetector_unexpectedError, NLS.bind(
-						Messages.MarkupHyperlinkDetector_openException, file.getName(), e.getMessage()));
+				MessageDialog.openError(window.getShell(), Messages.MarkupHyperlinkDetector_unexpectedError,
+						NLS.bind(Messages.MarkupHyperlinkDetector_openException, file.getName(), e.getMessage()));
 			}
 		}
 	}

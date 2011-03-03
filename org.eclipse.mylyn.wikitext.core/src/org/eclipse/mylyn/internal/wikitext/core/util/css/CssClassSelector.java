@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.core.util.css;
  * a selector that selects elements based on their having a CSS class
  * 
  * @author David Green
- * 
  * @see ElementInfo#hasCssClass(String)
  */
 public class CssClassSelector extends Selector {

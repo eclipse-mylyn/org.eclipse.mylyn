@@ -29,7 +29,6 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
  * {@link MarkupValidator} and coordinates the translation of errors and warnings to the editor framework.
  * 
  * @author David Green
- * 
  * @see MarkupValidator
  */
 public abstract class DocumentRegionValidator {
@@ -51,7 +50,6 @@ public abstract class DocumentRegionValidator {
 	 *            the document representing the content of the resource
 	 * @param region
 	 *            the region of the document to validate
-	 * 
 	 * @throws CoreException
 	 */
 	public void validate(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
@@ -59,7 +57,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		final int totalWork = region.getLength() * 2;
-		monitor.beginTask(Messages.DocumentRegionValidator_validation, totalWork); 
+		monitor.beginTask(Messages.DocumentRegionValidator_validation, totalWork);
 		try {
 			clearProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
 			computeProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
@@ -73,7 +71,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		final int totalWork = Integer.MAX_VALUE / 2;
-		monitor.beginTask(Messages.DocumentRegionValidator_validating, totalWork); 
+		monitor.beginTask(Messages.DocumentRegionValidator_validating, totalWork);
 		try {
 			List<ValidationProblem> problems = delegate.validate(new SubProgressMonitor(monitor, totalWork / 2),
 					document.get(), region.getOffset(), region.getLength());
@@ -118,8 +116,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		this.markupLanguage = markupLanguage;
-		delegate = markupLanguage == null ? null : WikiText.getMarkupValidator(
-				markupLanguage.getName());
+		delegate = markupLanguage == null ? null : WikiText.getMarkupValidator(markupLanguage.getName());
 	}
 
 	public IResource getResource() {
@@ -144,7 +141,6 @@ public abstract class DocumentRegionValidator {
 	 * @param region
 	 * @param offset
 	 * @param length
-	 * 
 	 * @return true if they overlap, otherwise false.
 	 */
 	protected boolean overlaps(IRegion region, int offset, int length) {

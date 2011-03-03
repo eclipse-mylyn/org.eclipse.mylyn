@@ -15,8 +15,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 
 /**
- * 
- * 
  * @author David Green
  */
 @HeadRequired

@@ -211,7 +211,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * The DTD to emit, if {@link #isEmitDtd()} and {@link #isEmitAsDocument()}. The default value is
-	 * 
 	 * <code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</code>
 	 */
 	public String getHtmlDtd() {

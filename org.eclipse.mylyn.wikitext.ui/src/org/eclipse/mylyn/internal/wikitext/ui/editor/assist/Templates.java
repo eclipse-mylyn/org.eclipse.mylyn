@@ -19,8 +19,6 @@ import java.util.Set;
 import org.eclipse.jface.text.templates.Template;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class Templates {

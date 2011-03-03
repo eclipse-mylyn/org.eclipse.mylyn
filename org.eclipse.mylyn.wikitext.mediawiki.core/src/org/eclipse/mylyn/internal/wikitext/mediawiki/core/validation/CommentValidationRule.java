@@ -39,8 +39,7 @@ public class CommentValidationRule extends ValidationRule {
 		if (matcher.find()) {
 			int problemOffset = matcher.start();
 			int problemLength = Math.max(2, matcher.end() - problemOffset);
-			return new ValidationProblem(Severity.WARNING,
-					Messages.getString("CommentValidationRule.1"), //$NON-NLS-1$
+			return new ValidationProblem(Severity.WARNING, Messages.getString("CommentValidationRule.1"), //$NON-NLS-1$
 					problemOffset, problemLength);
 		}
 		return null;

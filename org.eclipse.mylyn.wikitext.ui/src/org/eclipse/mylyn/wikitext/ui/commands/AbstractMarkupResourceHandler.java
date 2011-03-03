@@ -27,13 +27,10 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-
-
 /**
  * An abstract base class for handlers that use the workbench selection to operate on resources
  * 
  * @author David Green
- * 
  */
 public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 

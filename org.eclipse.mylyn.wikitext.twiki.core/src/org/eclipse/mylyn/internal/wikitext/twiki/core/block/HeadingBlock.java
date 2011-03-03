@@ -17,8 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class HeadingBlock extends Block {
@@ -31,7 +29,7 @@ public class HeadingBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		offset = matcher.start(3);
 		int level = matcher.group(1).length();
-		
+
 		String bangEscape = matcher.group(2);
 		boolean omitFromToc = false;
 		if (bangEscape != null && bangEscape.length() > 0) {
@@ -42,12 +40,12 @@ public class HeadingBlock extends Block {
 			HeadingAttributes attributes = new HeadingAttributes();
 			attributes.setOmitFromTableOfContents(omitFromToc);
 			attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset))); //$NON-NLS-1$
-			
+
 			builder.beginHeading(level, attributes);
 			builder.characters(line.substring(offset).trim());
 			builder.endHeading();
 		}
-		
+
 		setClosed(true);
 		return -1;
 	}

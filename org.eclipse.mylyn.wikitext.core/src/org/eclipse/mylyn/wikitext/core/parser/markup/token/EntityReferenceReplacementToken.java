@@ -13,8 +13,6 @@ package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 import java.util.regex.Pattern;
 
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */

@@ -28,12 +28,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-
-
 /**
- * A command that can show a cheat-sheet (help content) for a specific markup language.
- * 
- * For the command to operate, the following conditions must be met:
+ * A command that can show a cheat-sheet (help content) for a specific markup language. For the command to operate, the
+ * following conditions must be met:
  * <ul>
  * <li>The {@link ExecutionEvent#getApplicationContext() application context} must be an {@link EvaluationContext}.</li>
  * <li>The {@link EvaluationContext} must have an <code>activeFocusControl</code>
@@ -103,8 +100,8 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				WikiTextUiPlugin.getDefault().log(e);
 			}
 		}
-		return NLS.bind(
-				Messages.ShowCheatSheetCommand_noCheatSheetContent,
-				new Object[] { markupLanguage == null ? Messages.ShowCheatSheetCommand_unknownLanguage : markupLanguage.getName() });
+		return NLS.bind(Messages.ShowCheatSheetCommand_noCheatSheetContent, new Object[] { markupLanguage == null
+				? Messages.ShowCheatSheetCommand_unknownLanguage
+				: markupLanguage.getName() });
 	}
 }

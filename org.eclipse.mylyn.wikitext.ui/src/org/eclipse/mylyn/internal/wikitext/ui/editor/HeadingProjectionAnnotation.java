@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 
 /**
- * 
  * @author David Green
  */
 class HeadingProjectionAnnotation extends ProjectionAnnotation {

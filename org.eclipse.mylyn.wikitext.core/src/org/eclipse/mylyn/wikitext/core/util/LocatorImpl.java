@@ -13,8 +13,6 @@ package org.eclipse.mylyn.wikitext.core.util;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */

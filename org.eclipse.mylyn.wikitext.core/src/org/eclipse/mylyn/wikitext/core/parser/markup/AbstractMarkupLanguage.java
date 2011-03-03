@@ -19,7 +19,6 @@ import java.util.List;
  * functionality.
  * 
  * @author David Green
- * 
  * @since 1.0
  */
 public abstract class AbstractMarkupLanguage extends MarkupLanguage {

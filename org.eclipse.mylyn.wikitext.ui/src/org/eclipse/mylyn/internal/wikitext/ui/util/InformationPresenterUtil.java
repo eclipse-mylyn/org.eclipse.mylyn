@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
  * @author David Green
  */
 public class InformationPresenterUtil {
@@ -113,7 +112,6 @@ public class InformationPresenterUtil {
 	 *            the tool bar manager, or null if there should be none
 	 * @param htmlContent
 	 *            the HTML content to be displayed by the information presenter.
-	 * 
 	 * @return the presenter
 	 */
 	public static InformationPresenter getHtmlInformationPresenter(ISourceViewer viewer, SizeConstraint constraint,

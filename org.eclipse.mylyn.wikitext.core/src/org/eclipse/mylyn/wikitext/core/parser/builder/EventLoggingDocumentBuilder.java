@@ -16,8 +16,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */

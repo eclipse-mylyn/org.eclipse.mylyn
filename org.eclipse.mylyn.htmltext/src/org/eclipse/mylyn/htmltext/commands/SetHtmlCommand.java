@@ -12,7 +12,6 @@
 
 package org.eclipse.mylyn.htmltext.commands;
 
-
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
  */
@@ -41,8 +40,7 @@ public class SetHtmlCommand extends Command {
 	}
 
 	public void setHtml(String htmlToSet) {
-		this.html = htmlToSet.replaceAll("\\'", "\\\\'").replaceAll("\\s",
-				" ");
+		this.html = htmlToSet.replaceAll("\\'", "\\\\'").replaceAll("\\s", " ");
 	}
 
 }

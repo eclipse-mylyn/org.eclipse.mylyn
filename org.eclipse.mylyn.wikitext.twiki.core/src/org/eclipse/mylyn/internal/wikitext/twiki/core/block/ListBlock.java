@@ -19,15 +19,15 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * List block, matches blocks that start with <code>   *</code>, <code>   1</code>, <code>   a</code>,
- * <code>   A</code> <code>   i</code> or  <code>   I</code>.  Note that preceding spaces must be
- * in multiples of 3.
+ * List block, matches blocks that start with <code>   *</code>, <code>   1</code>, <code>   a</code>, <code>   A</code>
+ * <code>   i</code> or <code>   I</code>. Note that preceding spaces must be in multiples of 3.
  * 
  * @author David Green
  */
 public class ListBlock extends Block {
 
 	static final Pattern startPattern = Pattern.compile("((?: {3})+)(\\*|(?:1|a|A|i|I)\\.)\\s(.*+)"); //$NON-NLS-1$
+
 	static final Pattern continuationPattern = Pattern.compile(" {3}\\s*(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
@@ -69,13 +69,13 @@ public class ListBlock extends Block {
 					return 0;
 				} else {
 					continuation = true;
-					offset = matcher.start(1)-1; // use -1 to get one whitespace character
+					offset = matcher.start(1) - 1; // use -1 to get one whitespace character
 				}
 			} else {
 				String listSpec = matcher.group(1);
 				int level = calculateLevel(listSpec);
 				String typeSpec = matcher.group(2);
-				
+
 				BlockType type = calculateType(typeSpec);
 				offset = matcher.start(3);
 
@@ -99,8 +99,7 @@ public class ListBlock extends Block {
 		return -1;
 	}
 
-	private void computeAttributes(Attributes attributes, BlockType type,
-			String typeSpec) {
+	private void computeAttributes(Attributes attributes, BlockType type, String typeSpec) {
 		if (type == BlockType.NUMERIC_LIST) {
 			switch (typeSpec.charAt(0)) {
 			case 'a':
@@ -119,7 +118,7 @@ public class ListBlock extends Block {
 		}
 	}
 
-	private void adjustLevel(BlockType type,String typeSpec, int level) {
+	private void adjustLevel(BlockType type, String typeSpec, int level) {
 		for (ListState previousState = listState.peek(); level != previousState.level || previousState.type != type; previousState = listState.peek()) {
 
 			if (level > previousState.level) {
@@ -151,7 +150,7 @@ public class ListBlock extends Block {
 	}
 
 	private BlockType calculateType(String listSpec) {
-		return listSpec.charAt(listSpec.length() - 1) == '*' ? BlockType.BULLETED_LIST: BlockType.NUMERIC_LIST;
+		return listSpec.charAt(listSpec.length() - 1) == '*' ? BlockType.BULLETED_LIST : BlockType.NUMERIC_LIST;
 	}
 
 	@Override

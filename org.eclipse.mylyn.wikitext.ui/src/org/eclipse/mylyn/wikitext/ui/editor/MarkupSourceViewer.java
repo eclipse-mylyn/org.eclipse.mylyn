@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
  * </pre>
  * 
  * @author David Green
- * 
  * @since 1.1
  */
 public class MarkupSourceViewer extends SourceViewer {

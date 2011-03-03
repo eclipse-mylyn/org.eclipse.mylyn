@@ -17,8 +17,6 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class LocationTrackingReaderTest extends TestCase {

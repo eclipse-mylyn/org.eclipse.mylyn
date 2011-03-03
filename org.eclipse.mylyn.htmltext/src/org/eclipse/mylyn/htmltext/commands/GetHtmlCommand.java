@@ -12,7 +12,6 @@
 
 package org.eclipse.mylyn.htmltext.commands;
 
-
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
  */

@@ -22,7 +22,6 @@ public abstract class IdGenerationStrategy {
 	 * 
 	 * @param headingText
 	 *            the text of the heading
-	 * 
 	 * @return an Id, or null if no Id could be computed from the given text
 	 */
 	public abstract String generateId(String headingText);

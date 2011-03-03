@@ -233,7 +233,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setPrependImagePrefix(prependImagePrefix);
 				builder.setXhtmlStrict(xhtmlStrict);
 
-				SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
+				SplittingStrategy splittingStrategy = multipleOutputFiles
+						? new DefaultSplittingStrategy()
 						: new NoSplittingStrategy();
 				SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 				outlineParser.setMarkupLanguage(markupLanguage.clone());

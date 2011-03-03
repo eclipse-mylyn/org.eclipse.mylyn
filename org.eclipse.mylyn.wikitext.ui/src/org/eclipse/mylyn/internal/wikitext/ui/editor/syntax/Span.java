@@ -14,8 +14,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class Span extends Segment<Span> {

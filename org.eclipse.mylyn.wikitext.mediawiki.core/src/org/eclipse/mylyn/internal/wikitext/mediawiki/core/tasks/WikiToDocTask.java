@@ -586,7 +586,8 @@ public class WikiToDocTask extends MarkupTask {
 
 	protected SplitOutlineItem computeOutline(Path path, MarkupLanguage markupLanguage, File defaultFile,
 			String markupContent) {
-		SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
+		SplittingStrategy splittingStrategy = multipleOutputFiles
+				? new DefaultSplittingStrategy()
 				: new NoSplittingStrategy();
 		SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 		outlineParser.setMarkupLanguage(markupLanguage);

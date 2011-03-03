@@ -37,8 +37,7 @@ public class SetSizeCommand extends Command {
 	}
 
 	public String[] getAvailableSizes() {
-		String sizeString = String.valueOf(composer
-				.evaluate("return integration.format.getAvailableSizes();"));
+		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableSizes();"));
 		String[] split = sizeString.split(";");
 		String[] returnValue = new String[split.length];
 		for (int i = 0, n = split.length; i < n; i++) {

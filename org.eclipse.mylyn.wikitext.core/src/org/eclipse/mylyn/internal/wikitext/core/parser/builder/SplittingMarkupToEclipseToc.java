@@ -14,7 +14,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 
 /**
- * 
  * @author David Green
  */
 public class SplittingMarkupToEclipseToc extends MarkupToEclipseToc {

@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Composite;
  * read-only display of markup.
  * 
  * @see MarkupViewerConfiguration
- * 
  * @author David Green
  * @since 1.0
  */
@@ -56,7 +55,7 @@ public class MarkupViewer extends HtmlViewer {
 			}
 			setDocumentNoMarkup(new Document(source), new AnnotationModel());
 			if (WikiTextUiPlugin.getDefault() != null) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupViewer_parseFailure, t); 
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupViewer_parseFailure, t);
 			} else {
 				t.printStackTrace();
 			}

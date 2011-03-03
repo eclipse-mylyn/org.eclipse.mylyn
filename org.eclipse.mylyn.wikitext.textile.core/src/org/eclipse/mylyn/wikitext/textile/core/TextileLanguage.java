@@ -146,8 +146,11 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new FootnoteReferenceReplacementToken());
 		if (configuration == null || !configuration.isOptimizeForRepositoryUsage()) {
-			ResourceBundle res = ResourceBundle.getBundle(BUNDLE_NAME, configuration == null
-					|| configuration.getLocale() == null ? Locale.ENGLISH : configuration.getLocale());
+			ResourceBundle res = ResourceBundle.getBundle(
+					BUNDLE_NAME,
+					configuration == null || configuration.getLocale() == null
+							? Locale.ENGLISH
+							: configuration.getLocale());
 
 			tokenSyntax.add(new EntityWrappingReplacementToken(
 					"\"", res.getString("quote_left"), res.getString("quote_right"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

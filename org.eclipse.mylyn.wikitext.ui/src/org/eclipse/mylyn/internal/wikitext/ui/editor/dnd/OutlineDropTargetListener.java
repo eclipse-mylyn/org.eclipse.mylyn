@@ -36,10 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
-
-
 /**
- * 
  * @author David Green
  */
 public class OutlineDropTargetListener implements TransferDropTargetListener {
@@ -99,7 +96,9 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 							WikiTextUiPlugin.getDefault().log(exception);
 							MessageDialog.openError(
 									PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									Messages.OutlineDropTargetListener_0, NLS.bind(Messages.OutlineDropTargetListener_1, new Object[] { exception.getMessage() }));  
+									Messages.OutlineDropTargetListener_0,
+									NLS.bind(Messages.OutlineDropTargetListener_1,
+											new Object[] { exception.getMessage() }));
 						}
 
 						public void run() throws Exception {
@@ -107,10 +106,9 @@ public class OutlineDropTargetListener implements TransferDropTargetListener {
 						}
 					});
 				} else {
-					MessageDialog.openInformation(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							Messages.OutlineDropTargetListener_2, NLS.bind(Messages.OutlineDropTargetListener_3,  
-									new Object[] { command.getProblemText() }));
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							Messages.OutlineDropTargetListener_2,
+							NLS.bind(Messages.OutlineDropTargetListener_3, new Object[] { command.getProblemText() }));
 				}
 			}
 		}

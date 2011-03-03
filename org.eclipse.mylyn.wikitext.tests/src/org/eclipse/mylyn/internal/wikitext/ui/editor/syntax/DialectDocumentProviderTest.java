@@ -19,8 +19,6 @@ import junit.framework.TestCase;
 import org.eclipse.jface.text.Document;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class DialectDocumentProviderTest extends TestCase {

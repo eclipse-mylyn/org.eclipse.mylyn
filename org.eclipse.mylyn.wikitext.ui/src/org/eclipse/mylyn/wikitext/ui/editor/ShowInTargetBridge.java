@@ -24,7 +24,6 @@ import org.eclipse.ui.part.ShowInContext;
  * A means of briding a {@link SourceViewer} with {@link IShowInTarget}.
  * 
  * @author David Green
- * 
  * @since 1.1
  */
 public class ShowInTargetBridge implements IShowInTarget {

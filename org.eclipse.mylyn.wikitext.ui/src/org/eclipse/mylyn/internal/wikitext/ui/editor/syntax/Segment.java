@@ -15,8 +15,6 @@ import java.util.Iterator;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class Segment<ChildType extends Segment<?>> {

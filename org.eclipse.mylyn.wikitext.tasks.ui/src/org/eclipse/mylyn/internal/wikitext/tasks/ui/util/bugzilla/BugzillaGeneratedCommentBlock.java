@@ -17,9 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * A block for detecting bugzilla-generated text such as:
- * 
- * *** This bug has been marked as a duplicate of bug 1234 ***
+ * A block for detecting bugzilla-generated text such as: *** This bug has been marked as a duplicate of bug 1234 ***
  * 
  * @author David Green
  */

@@ -831,7 +831,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 		ProjectionAnnotationModel projectionAnnotationModel = viewer.getProjectionAnnotationModel();
 		if (projectionAnnotationModel != null) {
-			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(projectionAnnotationById == null ? 10
+			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(projectionAnnotationById == null
+					? 10
 					: projectionAnnotationById.size() + 2);
 			Map<HeadingProjectionAnnotation, Position> annotationToPosition = new HashMap<HeadingProjectionAnnotation, Position>();
 

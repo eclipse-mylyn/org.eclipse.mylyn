@@ -15,8 +15,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class OutlineParserTest extends TestCase {

@@ -115,8 +115,9 @@ public class Textile {
 		}
 
 		if (attributes.getCssClass() != null || cssClass2 != null) {
-			attributes.setCssClass(attributes.getCssClass() == null ? cssClass2
-					: cssClass2 == null ? attributes.getCssClass() : attributes.getCssClass() + ' ' + cssClass2);
+			attributes.setCssClass(attributes.getCssClass() == null ? cssClass2 : cssClass2 == null
+					? attributes.getCssClass()
+					: attributes.getCssClass() + ' ' + cssClass2);
 		}
 		appendStyles(attributes, cssStyles2);
 

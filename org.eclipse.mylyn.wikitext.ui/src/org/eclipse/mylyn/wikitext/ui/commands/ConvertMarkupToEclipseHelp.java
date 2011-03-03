@@ -28,11 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
-
-
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */
@@ -45,7 +41,9 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToEclipseHelp_overwrite, NLS.bind(Messages.ConvertMarkupToEclipseHelp_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
+					Messages.ConvertMarkupToEclipseHelp_overwrite,
+					NLS.bind(Messages.ConvertMarkupToEclipseHelp_fileExistsOverwrite,
+							new Object[] { newFile.getFullPath() }))) {
 				return;
 			}
 		}
@@ -106,13 +104,13 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.ConvertMarkupToEclipseHelp_cannotConvert + e.getMessage()); 
-			out.println(Messages.ConvertMarkupToEclipseHelp_detailsFollow); 
+			out.println(Messages.ConvertMarkupToEclipseHelp_cannotConvert + e.getMessage());
+			out.println(Messages.ConvertMarkupToEclipseHelp_detailsFollow);
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToEclipseHelp_cannotCompleteOperation, message.toString()); 
+					Messages.ConvertMarkupToEclipseHelp_cannotCompleteOperation, message.toString());
 		}
 	}
 

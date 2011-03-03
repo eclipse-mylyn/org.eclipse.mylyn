@@ -201,8 +201,9 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		templates = markupLanguage == null ? null : WikiTextUiPlugin.getDefault().getTemplates().get(
-				markupLanguage.getName());
+		templates = markupLanguage == null ? null : WikiTextUiPlugin.getDefault()
+				.getTemplates()
+				.get(markupLanguage.getName());
 	}
 
 }

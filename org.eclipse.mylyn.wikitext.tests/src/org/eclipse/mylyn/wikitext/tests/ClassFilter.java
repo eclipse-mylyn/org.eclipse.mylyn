@@ -23,7 +23,6 @@ public interface ClassFilter {
 	 * 
 	 * @param clazz
 	 *            the class to test
-	 * 
 	 * @return true if the class should be filtered
 	 */
 	public boolean filter(Class<?> clazz);

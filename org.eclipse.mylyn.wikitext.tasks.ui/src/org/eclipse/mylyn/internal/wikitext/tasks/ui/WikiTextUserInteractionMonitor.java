@@ -19,7 +19,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * 
  * @author David Green
  */
 class WikiTextUserInteractionMonitor extends AbstractUserInteractionMonitor {

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css.editor;
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
 /**
- * 
  * @author David Green
  */
 public class CssWhitespaceDetector implements IWhitespaceDetector {

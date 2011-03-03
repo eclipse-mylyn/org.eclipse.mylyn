@@ -30,12 +30,10 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 
 /**
  * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as
- * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.core.validation.problem</code>.
- * 
- * NOTE: this implementation may change in the future to use an {@link IAnnotationModel} instead of resource markers
+ * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.core.validation.problem</code>. NOTE:
+ * this implementation may change in the future to use an {@link IAnnotationModel} instead of resource markers
  * 
  * @author David Green
- * 
  * @see ValidationRule
  * @see ValidationProblem
  */
@@ -43,7 +41,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
-		monitor.beginTask(Messages.ResourceMarkerMarkupValidator_clearingMarkers, 1); 
+		monitor.beginTask(Messages.ResourceMarkerMarkupValidator_clearingMarkers, 1);
 		// nothing to do: we do all of this in the createProblems method
 		monitor.done();
 	}
@@ -53,8 +51,8 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 			List<ValidationProblem> problems) throws CoreException {
 		final int findMarkersWorkSize = 100;
 		final int zeroProblemsStep = 10;
-		monitor.beginTask(
-				Messages.ResourceMarkerMarkupValidator_creatingMarkers, problems.size() + findMarkersWorkSize + zeroProblemsStep); 
+		monitor.beginTask(Messages.ResourceMarkerMarkupValidator_creatingMarkers, problems.size() + findMarkersWorkSize
+				+ zeroProblemsStep);
 
 		// find and remove any existing validation errors in the given region.
 		List<IMarker> markersInRegion = new ArrayList<IMarker>(5);

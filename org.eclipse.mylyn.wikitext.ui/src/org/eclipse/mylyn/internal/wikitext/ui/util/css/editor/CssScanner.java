@@ -19,7 +19,6 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 
 /**
- * 
  * @author David Green
  */
 public class CssScanner extends RuleBasedScanner {

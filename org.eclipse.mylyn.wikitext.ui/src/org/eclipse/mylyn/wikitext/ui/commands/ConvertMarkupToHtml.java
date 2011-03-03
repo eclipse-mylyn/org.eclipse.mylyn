@@ -30,11 +30,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
-
-
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */
@@ -44,9 +40,9 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 	protected void handleFile(IFile file, String name) {
 		final IFile newFile = file.getParent().getFile(new Path(name + ".html")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToHtml_overwrite, NLS.bind(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.ConvertMarkupToHtml_overwrite,
+					NLS.bind(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {
 				return;
 			}
 		}
@@ -103,13 +99,13 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.ConvertMarkupToHtml_cannotConvert + e.getMessage()); 
-			out.println(Messages.ConvertMarkupToHtml_detailsFollow); 
+			out.println(Messages.ConvertMarkupToHtml_cannotConvert + e.getMessage());
+			out.println(Messages.ConvertMarkupToHtml_detailsFollow);
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToHtml_cannotCompleteOperation, message.toString()); 
+					Messages.ConvertMarkupToHtml_cannotCompleteOperation, message.toString());
 		}
 	}
 

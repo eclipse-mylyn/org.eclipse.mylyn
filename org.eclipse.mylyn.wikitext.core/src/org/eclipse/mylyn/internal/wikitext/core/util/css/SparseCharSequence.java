@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
  * @author David Green
  */
 public class SparseCharSequence implements CharSequence {

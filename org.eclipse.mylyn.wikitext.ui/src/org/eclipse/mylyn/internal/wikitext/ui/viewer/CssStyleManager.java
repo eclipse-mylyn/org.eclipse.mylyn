@@ -245,7 +245,8 @@ public class CssStyleManager {
 		this.defaultFont = defaultFont;
 		this.defaultFontHeight = defaultFont.getFontData()[0].getHeight();
 		this.defaultMonospaceFont = defaultMonospaceFont;
-		this.defaultMonospaceFontHeight = defaultMonospaceFont == null ? defaultFontHeight
+		this.defaultMonospaceFontHeight = defaultMonospaceFont == null
+				? defaultFontHeight
 				: defaultMonospaceFont.getFontData()[0].getHeight();
 	}
 
@@ -285,8 +286,8 @@ public class CssStyleManager {
 		}
 		if (fontState.isFixedWidth()) {
 			String symbolicName = computeSymbolicName(fontState, "monospace", defaultMonospaceFont); //$NON-NLS-1$
-			Font monospaceFont = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
-					.get(symbolicName)
+			Font monospaceFont = JFaceResources.getFontRegistry().hasValueFor(symbolicName)
+					? JFaceResources.getFontRegistry().get(symbolicName)
 					: null;
 			if (monospaceFont == null) {
 				FontData[] fontData = null;

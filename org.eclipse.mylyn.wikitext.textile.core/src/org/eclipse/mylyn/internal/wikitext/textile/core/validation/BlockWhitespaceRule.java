@@ -18,8 +18,6 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class BlockWhitespaceRule extends ValidationRule {

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.operations;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * 
  * @author David Green
  */
 public interface CommandManager {

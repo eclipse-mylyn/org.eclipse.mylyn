@@ -17,8 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class HeadingBlock extends Block {

@@ -21,7 +21,6 @@ import org.osgi.framework.Bundle;
  * CSS styles.
  * 
  * @author David Green
- * 
  */
 public class CheatSheetContent extends HelpContent {
 

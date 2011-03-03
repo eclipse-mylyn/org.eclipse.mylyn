@@ -14,8 +14,6 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class ValidationProblemAnnotation extends Annotation {

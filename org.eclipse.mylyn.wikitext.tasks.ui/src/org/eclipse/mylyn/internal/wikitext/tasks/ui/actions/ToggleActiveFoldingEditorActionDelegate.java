@@ -27,13 +27,15 @@ public class ToggleActiveFoldingEditorActionDelegate implements IEditorActionDel
 	}
 
 	private boolean isActiveFoldingEnabled() {
-		return WikiTextTasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
+		return WikiTextTasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
 	}
 
 	public void run(IAction action) {
-		WikiTextTasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED, action.isChecked());
+		WikiTextTasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED, action.isChecked());
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

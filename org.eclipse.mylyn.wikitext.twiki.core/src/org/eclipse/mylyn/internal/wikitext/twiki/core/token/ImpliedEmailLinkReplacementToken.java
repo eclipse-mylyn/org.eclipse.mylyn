@@ -36,8 +36,8 @@ public class ImpliedEmailLinkReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String email = group(1);
-			builder.link(new LinkAttributes(), "mailto:"+email, email); //$NON-NLS-1$
+			builder.link(new LinkAttributes(), "mailto:" + email, email); //$NON-NLS-1$
 		}
-		
+
 	}
 }

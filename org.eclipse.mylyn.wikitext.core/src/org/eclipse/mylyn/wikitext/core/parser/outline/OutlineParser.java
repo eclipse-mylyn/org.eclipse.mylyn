@@ -22,7 +22,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * markup language} to determine where headings start and end.
  * 
  * @see OutlineItem
- * 
  * @author David Green
  * @since 1.0
  */

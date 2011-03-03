@@ -25,8 +25,6 @@ import org.eclipse.swt.graphics.FontData;
 import org.xml.sax.SAXException;
 
 /**
- * 
- * 
  * @author David Green
  */
 @HeadRequired

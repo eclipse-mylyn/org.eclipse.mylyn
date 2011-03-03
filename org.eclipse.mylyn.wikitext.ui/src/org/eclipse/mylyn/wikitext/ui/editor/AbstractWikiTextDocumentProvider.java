@@ -28,7 +28,8 @@ import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
  * @author David Green
  * @since 1.3
  */
-public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentProvider implements WikiTextDocumentProvider {
+public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentProvider implements
+		WikiTextDocumentProvider {
 
 	private MarkupLanguage markupLanguage;
 

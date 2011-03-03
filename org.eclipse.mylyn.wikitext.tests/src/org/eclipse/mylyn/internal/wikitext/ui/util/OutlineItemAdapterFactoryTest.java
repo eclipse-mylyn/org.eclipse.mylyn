@@ -19,7 +19,6 @@ import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
- * 
  * @author David Green
  */
 @EclipseRuntimeRequired

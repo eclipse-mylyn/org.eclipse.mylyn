@@ -27,11 +27,7 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
-
-
 /**
- * 
- * 
  * @author David Green
  * @since 1.0
  */
@@ -41,9 +37,10 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 	protected void handleFile(IFile file, String name) {
 		final IFile newFile = file.getParent().getFile(new Path(name + ".xml")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToDocbook_overwrite, NLS.bind(Messages.ConvertMarkupToDocbook_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {  
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.ConvertMarkupToDocbook_overwrite,
+					NLS.bind(Messages.ConvertMarkupToDocbook_fileExistsOverwrite,
+							new Object[] { newFile.getFullPath() }))) {
 				return;
 			}
 		}
@@ -91,13 +88,13 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.ConvertMarkupToDocbook_cannotConvert + e.getMessage()); 
-			out.println(Messages.ConvertMarkupToDocbook_detailsFollow); 
+			out.println(Messages.ConvertMarkupToDocbook_cannotConvert + e.getMessage());
+			out.println(Messages.ConvertMarkupToDocbook_detailsFollow);
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToDocbook_cannotCompleteOperation, message.toString()); 
+					Messages.ConvertMarkupToDocbook_cannotCompleteOperation, message.toString());
 		}
 	}
 

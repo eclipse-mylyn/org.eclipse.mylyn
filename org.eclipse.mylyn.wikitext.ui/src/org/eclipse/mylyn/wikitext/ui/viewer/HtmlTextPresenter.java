@@ -25,8 +25,7 @@ import org.eclipse.swt.widgets.Display;
  * the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
  * 
  * @author David Green
- * 
- * @since 1.0 
+ * @since 1.0
  */
 public class HtmlTextPresenter implements DefaultInformationControl.IInformationPresenter,
 		DefaultInformationControl.IInformationPresenterExtension {

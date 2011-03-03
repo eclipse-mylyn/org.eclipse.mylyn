@@ -19,7 +19,6 @@ import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 
 /**
- * 
  * @author David Green
  */
 public abstract class AbstractDocumentCommand {

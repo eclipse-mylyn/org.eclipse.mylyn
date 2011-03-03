@@ -72,9 +72,8 @@ public class HtmlComposer {
 	/**
 	 * A function which is called if the content of the editor has changed.
 	 * <p>
-	 * Unfortunately the underlying ckeditor cannot guarantee that every
-	 * modification will be notified to the appended listeners. There is an
-	 * additional polling mechanismus which tracks modifications.
+	 * Unfortunately the underlying ckeditor cannot guarantee that every modification will be notified to the appended
+	 * listeners. There is an additional polling mechanismus which tracks modifications.
 	 * </p>
 	 * 
 	 * @author Tom Seidel <tom.seidel@remus-software.org>
@@ -120,8 +119,7 @@ public class HtmlComposer {
 	}
 
 	/**
-	 * BrowserFunction that delegates the event from ckeditor that is thrown if
-	 * the selected dom-node changed.
+	 * BrowserFunction that delegates the event from ckeditor that is thrown if the selected dom-node changed.
 	 * 
 	 * @author Tom Seidel <tom.seidel@remus-software.org>
 	 */
@@ -137,8 +135,7 @@ public class HtmlComposer {
 			// future the construction of NodeSelectionEvent is not so cheap
 			// like at the moment.
 			if (selectionListenerList.size() > 0) {
-				NodeSelectionEvent nodeSelectionEvent = new NodeSelectionEvent(
-						null);
+				NodeSelectionEvent nodeSelectionEvent = new NodeSelectionEvent(null);
 				for (NodeSelectionChangeListener listener : selectionListenerList) {
 					listener.selectedNodeChanged(nodeSelectionEvent);
 				}
@@ -146,9 +143,8 @@ public class HtmlComposer {
 			if (trackedCommands.size() > 0) {
 				Set<String> keySet = trackedCommands.keySet();
 				for (String string : keySet) {
-					String valueOf = String
-							.valueOf(evaluate("return integration.editor.getCommand('"
-									+ string + "').state;"));
+					String valueOf = String.valueOf(evaluate("return integration.editor.getCommand('" + string
+							+ "').state;"));
 					TriState fromString = TriState.fromString(valueOf);
 					if (fromString != trackedCommands.get(string).getState()) {
 						trackedCommands.get(string).setState(fromString);
@@ -166,22 +162,19 @@ public class HtmlComposer {
 	private final Browser browser;
 
 	/**
-	 * A list of listeners which fire if the selected node within the html is
-	 * changed.
+	 * A list of listeners which fire if the selected node within the html is changed.
 	 */
 	private transient List<NodeSelectionChangeListener> selectionListenerList = new ArrayList<NodeSelectionChangeListener>();
 
 	private transient List<ModifyListener> modifyListenerList = new ArrayList<ModifyListener>();
 
 	/**
-	 * a temporary collection of commands that are executed before the ckeditor
-	 * was initialized. If the ckeditor finishes its initialization all commands
-	 * are executed.
+	 * a temporary collection of commands that are executed before the ckeditor was initialized. If the ckeditor
+	 * finishes its initialization all commands are executed.
 	 * 
 	 * @see HtmlComposer#initialize()
 	 */
-	private final List<Command> pendingCommands = Collections
-			.synchronizedList(new ArrayList<Command>());
+	private final List<Command> pendingCommands = Collections.synchronizedList(new ArrayList<Command>());
 
 	/**
 	 * Tracked {@link Command}s.
@@ -189,21 +182,17 @@ public class HtmlComposer {
 	private final Map<String, Command> trackedCommands = new HashMap<String, Command>();
 
 	/**
-	 * Flag if the ckeditor finishes its initialization and is ready for
-	 * receiving commands.
+	 * Flag if the ckeditor finishes its initialization and is ready for receiving commands.
 	 */
 	private boolean initialized;
 
 	/**
-	 * Constructs a new instance of a {@link Browser} and includes a ckeditor
-	 * instance.
+	 * Constructs a new instance of a {@link Browser} and includes a ckeditor instance.
 	 * 
 	 * @param parent
-	 *            a composite control which will be the parent of the new
-	 *            instance (cannot be null)
+	 *            a composite control which will be the parent of the new instance (cannot be null)
 	 * @param style
 	 *            the style of control to construct
-	 * 
 	 * @see Browser#Browser(Composite, int)
 	 */
 	public HtmlComposer(final Composite parent, final int style) {
@@ -212,8 +201,7 @@ public class HtmlComposer {
 		new RenderCompleteFunction(browser);
 		URL baseUrl;
 		try {
-			baseUrl = FileLocator.resolve(FileLocator.find(HtmlTextActivator
-					.getDefault().getBundle(), new Path(
+			baseUrl = FileLocator.resolve(FileLocator.find(HtmlTextActivator.getDefault().getBundle(), new Path(
 					"/eclipsebridge/base.html"), Collections.EMPTY_MAP));
 			browser.setUrl(baseUrl.toString());
 			browser.addProgressListener(new ProgressAdapter() {
@@ -264,8 +252,7 @@ public class HtmlComposer {
 		modifyListenerList.add(listener);
 	}
 
-	public void addNodeSelectionChangeListener(
-			NodeSelectionChangeListener listener) {
+	public void addNodeSelectionChangeListener(NodeSelectionChangeListener listener) {
 		selectionListenerList.add(listener);
 	}
 
@@ -302,8 +289,7 @@ public class HtmlComposer {
 	 * @return
 	 * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
 	 */
-	public Point computeSize(final int wHint, final int hHint,
-			final boolean changed) {
+	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		return browser.computeSize(wHint, hHint, changed);
 	}
 
@@ -315,13 +301,11 @@ public class HtmlComposer {
 	 * @return
 	 * @see org.eclipse.swt.widgets.Scrollable#computeTrim(int, int, int, int)
 	 */
-	public Rectangle computeTrim(final int x, final int y, final int width,
-			final int height) {
+	public Rectangle computeTrim(final int x, final int y, final int width, final int height) {
 		return browser.computeTrim(x, y, width, height);
 	}
 
 	/**
-	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
 	public void dispose() {
@@ -733,7 +717,6 @@ public class HtmlComposer {
 	}
 
 	/**
-	 * 
 	 * @see org.eclipse.swt.widgets.Composite#layout()
 	 */
 	public void layout() {
@@ -784,15 +767,13 @@ public class HtmlComposer {
 	/**
 	 * @param eventType
 	 * @param event
-	 * @see org.eclipse.swt.widgets.Widget#notifyListeners(int,
-	 *      org.eclipse.swt.widgets.Event)
+	 * @see org.eclipse.swt.widgets.Widget#notifyListeners(int, org.eclipse.swt.widgets.Event)
 	 */
 	public void notifyListeners(final int eventType, final Event event) {
 		browser.notifyListeners(eventType, event);
 	}
 
 	/**
-	 * 
 	 * @see org.eclipse.swt.widgets.Control#pack()
 	 */
 	public void pack() {
@@ -817,7 +798,6 @@ public class HtmlComposer {
 	}
 
 	/**
-	 * 
 	 * @see org.eclipse.swt.widgets.Control#redraw()
 	 */
 	public void redraw() {
@@ -832,13 +812,11 @@ public class HtmlComposer {
 	 * @param all
 	 * @see org.eclipse.swt.widgets.Control#redraw(int, int, int, int, boolean)
 	 */
-	public void redraw(final int x, final int y, final int width,
-			final int height, final boolean all) {
+	public void redraw(final int x, final int y, final int width, final int height, final boolean all) {
 		browser.redraw(x, y, width, height, all);
 	}
 
 	/**
-	 * 
 	 * @see org.eclipse.swt.browser.Browser#refresh()
 	 */
 	public void refresh() {
@@ -873,8 +851,7 @@ public class HtmlComposer {
 		modifyListenerList.remove(listener);
 	}
 
-	public void removeNodeSelectionChangeListener(
-			NodeSelectionChangeListener listener) {
+	public void removeNodeSelectionChangeListener(NodeSelectionChangeListener listener) {
 		selectionListenerList.remove(listener);
 	}
 
@@ -933,8 +910,7 @@ public class HtmlComposer {
 	 * @param height
 	 * @see org.eclipse.swt.widgets.Control#setBounds(int, int, int, int)
 	 */
-	public void setBounds(final int x, final int y, final int width,
-			final int height) {
+	public void setBounds(final int x, final int y, final int width, final int height) {
 		browser.setBounds(x, y, width, height);
 	}
 
@@ -973,8 +949,7 @@ public class HtmlComposer {
 	/**
 	 * @param key
 	 * @param value
-	 * @see org.eclipse.swt.widgets.Widget#setData(java.lang.String,
-	 *      java.lang.Object)
+	 * @see org.eclipse.swt.widgets.Widget#setData(java.lang.String, java.lang.Object)
 	 */
 	public void setData(final String key, final Object value) {
 		browser.setData(key, value);
@@ -1015,8 +990,7 @@ public class HtmlComposer {
 	}
 
 	/**
-	 * Replaces the current content of the widget with the given html. For
-	 * inserting html at the current selection use:
+	 * Replaces the current content of the widget with the given html. For inserting html at the current selection use:
 	 * 
 	 * <pre>
 	 * HtmlComposer.execute(&quot;integration.editor.insertHtml('myHtmlToInsert');&quot;);

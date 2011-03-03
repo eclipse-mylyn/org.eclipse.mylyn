@@ -25,8 +25,6 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupDocumentProvider extends TextFileDocumentProvider {

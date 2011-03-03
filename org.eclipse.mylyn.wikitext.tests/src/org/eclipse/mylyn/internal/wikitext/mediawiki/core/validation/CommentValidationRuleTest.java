@@ -16,7 +16,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
- * 
  * @author David Green
  */
 public class CommentValidationRuleTest extends TestCase {

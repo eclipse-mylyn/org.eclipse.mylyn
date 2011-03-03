@@ -21,8 +21,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 
 /**
- * 
- * 
  * @author David Green
  */
 public abstract class AbstractDocumentTest extends TestCase {

@@ -192,9 +192,9 @@ public class MarkupToDitaTask extends MarkupTask {
 
 					parser.parse(markupContent);
 				} else {
-					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(
-							formatting ? new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(writer))
-									: new DefaultXmlStreamWriter(writer));
+					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(formatting
+							? new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(writer))
+							: new DefaultXmlStreamWriter(writer));
 					try {
 						builder.setFormattingDependencies(formatting);
 

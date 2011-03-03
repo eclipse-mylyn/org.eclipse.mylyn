@@ -16,9 +16,7 @@ import java.util.Collection;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 
 /**
- * a means of controlling the folding structure
- * 
- * Obtain an instance of this interface as follows: <code>
+ * a means of controlling the folding structure Obtain an instance of this interface as follows: <code>
  * editor.getAdapter(IFoldingStructure.class)
  * </code>
  * 

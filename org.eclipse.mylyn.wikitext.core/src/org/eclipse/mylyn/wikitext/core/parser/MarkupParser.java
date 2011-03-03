@@ -21,7 +21,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * A markup processor that can process lightweight markup formats such as Textile.
  * 
  * @author David Green
- * 
  * @since 1.0
  */
 public class MarkupParser {
@@ -106,7 +105,6 @@ public class MarkupParser {
 	 * 
 	 * @param markupContent
 	 *            the content to parse
-	 * 
 	 * @return the HTML document text.
 	 */
 	public String parseToHtml(String markupContent) {

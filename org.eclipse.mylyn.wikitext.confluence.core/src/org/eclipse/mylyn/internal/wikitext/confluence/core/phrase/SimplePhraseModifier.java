@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class SimplePhraseModifier extends SimpleWrappedPhraseModifier {

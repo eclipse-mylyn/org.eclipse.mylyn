@@ -25,23 +25,18 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
-
-
 /**
  * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
  * locale-specific manner, much in the same way as resource bundles are. A resource path is used with the
- * {@link Locale#getDefault() default locale} to construct a search path.
- * 
- * For example, the resource may be specified as <code>help/cheatSheet.textile</code> and for the locale
- * <tt>no_NO_NY</tt> the following resource paths would be searched in the following order:
- * 
+ * {@link Locale#getDefault() default locale} to construct a search path. For example, the resource may be specified as
+ * <code>help/cheatSheet.textile</code> and for the locale <tt>no_NO_NY</tt> the following resource paths would be
+ * searched in the following order:
  * <ul>
  * <li><code>help/cheatSheet_no_NO_NY.textile</code></li>
  * <li><code>help/cheatSheet_no_NO.textile</code></li>
  * <li><code>help/cheatSheet_no.textile</code></li>
  * <li><code>help/cheatSheet.textile</code></li>
  * </ul>
- * 
  * In this way the user is presented with the most locale-specific help resource.
  * 
  * @author David Green
@@ -56,7 +51,6 @@ public class HelpContent {
 	private final String markupLanguageName;
 
 	/**
-	 * 
 	 * @param provider
 	 *            the bundle that provides the content
 	 * @param resourcePath
@@ -115,15 +109,14 @@ public class HelpContent {
 			}
 			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(NLS.bind(
-						Messages.HelpContent_noSuchMarkupLanguage, new Object[] { resourceContentLanguage })); 
+				throw new IOException(NLS.bind(Messages.HelpContent_noSuchMarkupLanguage,
+						new Object[] { resourceContentLanguage }));
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
-			throw new IOException(NLS.bind(
-					Messages.HelpContent_cannotAccessContent, new Object[] { provider.getSymbolicName(), 
-							resourcePath, e.getMessage() })) {
+			throw new IOException(NLS.bind(Messages.HelpContent_cannotAccessContent,
+					new Object[] { provider.getSymbolicName(), resourcePath, e.getMessage() })) {
 				@Override
 				public Throwable getCause() {
 					return e;
@@ -164,7 +157,7 @@ public class HelpContent {
 				return resource;
 			}
 		}
-		throw new Exception(NLS.bind(Messages.HelpContent_cannotFindResource, new Object[] { resourcePath, 
-				provider.getSymbolicName() }));
+		throw new Exception(NLS.bind(Messages.HelpContent_cannotFindResource,
+				new Object[] { resourcePath, provider.getSymbolicName() }));
 	}
 }

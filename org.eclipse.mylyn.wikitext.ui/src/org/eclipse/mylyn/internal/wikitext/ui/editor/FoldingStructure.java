@@ -28,7 +28,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * 
  * @author David Green
  */
 class FoldingStructure implements IFoldingStructure {

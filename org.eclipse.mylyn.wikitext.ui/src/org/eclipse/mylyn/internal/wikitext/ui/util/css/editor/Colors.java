@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * 
  * @author David Green
  */
 class Colors {

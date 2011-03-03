@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class HorizontalRuleBlock extends Block {

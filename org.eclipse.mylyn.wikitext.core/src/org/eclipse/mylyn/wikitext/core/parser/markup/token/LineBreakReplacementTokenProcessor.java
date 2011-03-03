@@ -17,7 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * A processor that emits a line break.
  * 
  * @see DocumentBuilder#lineBreak()
- * 
  * @author David Green
  * @since 1.0
  */

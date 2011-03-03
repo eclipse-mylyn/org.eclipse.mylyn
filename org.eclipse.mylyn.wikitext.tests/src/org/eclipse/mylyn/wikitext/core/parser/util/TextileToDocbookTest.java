@@ -19,8 +19,6 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
- * 
  * @author David Green
  * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  */

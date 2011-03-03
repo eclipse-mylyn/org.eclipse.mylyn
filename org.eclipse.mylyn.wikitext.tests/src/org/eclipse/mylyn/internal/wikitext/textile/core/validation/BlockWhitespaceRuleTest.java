@@ -20,8 +20,6 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class BlockWhitespaceRuleTest extends TestCase {

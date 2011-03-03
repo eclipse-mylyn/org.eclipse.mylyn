@@ -19,7 +19,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
  * A hyperlink that opens using the Eclipse platform preferences.
  * 
  * @see TasksUiUtil#openUrl(String)
- * 
  * @author David Green
  */
 public class PlatformUrlHyperlink extends URLHyperlink {

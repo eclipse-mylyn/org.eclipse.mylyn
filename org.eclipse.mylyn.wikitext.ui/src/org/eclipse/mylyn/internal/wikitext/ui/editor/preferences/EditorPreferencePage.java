@@ -45,7 +45,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 	public EditorPreferencePage() {
 		super(GRID);
 		setPreferenceStore(WikiTextUiPlugin.getDefault().getPreferenceStore());
-		setDescription(Messages.EditorPreferencePage_introInfo); 
+		setDescription(Messages.EditorPreferencePage_introInfo);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 
 		Group blockGroup = new Group(getFieldEditorParent(), SWT.NULL);
-		blockGroup.setText(Messages.EditorPreferencePage_blockModifiers); 
+		blockGroup.setText(Messages.EditorPreferencePage_blockModifiers);
 		blockGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		CssStyleManager cssStyleManager = new CssStyleManager(getFont());
@@ -103,7 +103,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 
 		Group phraseModifierGroup = new Group(getFieldEditorParent(), SWT.NULL);
-		phraseModifierGroup.setText(Messages.EditorPreferencePage_phraseModifiers); 
+		phraseModifierGroup.setText(Messages.EditorPreferencePage_phraseModifiers);
 		phraseModifierGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		for (Map.Entry<String, String> ent : prefs.getCssByPhraseModifierType().entrySet()) {
@@ -122,8 +122,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		blockGroup.setFont(getFieldEditorParent().getFont());
 		phraseModifierGroup.setFont(getFieldEditorParent().getFont());
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				"org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
+		PlatformUI.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(), "org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
 	}
 
 	/*

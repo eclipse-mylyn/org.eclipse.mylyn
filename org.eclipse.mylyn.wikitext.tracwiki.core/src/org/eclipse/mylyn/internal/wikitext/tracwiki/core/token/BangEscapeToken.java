@@ -19,7 +19,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifie
  * character
  * 
  * @author David Green
- * 
  */
 public class BangEscapeToken extends PatternBasedElement {
 

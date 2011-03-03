@@ -69,7 +69,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	private HtmlViewerConfiguration htmlViewerConfiguration;
 
 	public MarkupViewerPreferencePage() {
-		super(Messages.MarkupViewerPreferencePage_appearance); 
+		super(Messages.MarkupViewerPreferencePage_appearance);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(1).applyTo(composite);
 
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.MarkupViewerPreferencePage_appearanceInfo); 
+		label.setText(Messages.MarkupViewerPreferencePage_appearanceInfo);
 		GridDataFactory.fillDefaults().applyTo(label);
 
 		Preferences preferences = WikiTextUiPlugin.getDefault().getPreferences();
@@ -104,7 +104,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		}
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText(Messages.MarkupViewerPreferencePage_preview); 
+		label.setText(Messages.MarkupViewerPreferencePage_preview);
 		GridDataFactory.fillDefaults().applyTo(label);
 
 		applyDialogFont(composite);
@@ -146,7 +146,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	}
 
 	private String createPreviewHtml() {
-		return Messages.MarkupViewerPreferencePage_previewHtml; 
+		return Messages.MarkupViewerPreferencePage_previewHtml;
 	}
 
 	private void updatePreview() {
@@ -204,7 +204,7 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		if (previewUpdateJob != null) {
 			previewUpdateJob.cancel();
 		}
-		previewUpdateJob = new UIJob(Display.getCurrent(), Messages.MarkupViewerPreferencePage_updatePreview) { 
+		previewUpdateJob = new UIJob(Display.getCurrent(), Messages.MarkupViewerPreferencePage_updatePreview) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				previewUpdateJob = null;

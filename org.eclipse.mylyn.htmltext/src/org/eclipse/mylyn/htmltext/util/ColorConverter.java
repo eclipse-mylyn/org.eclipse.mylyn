@@ -24,13 +24,11 @@ import org.eclipse.swt.graphics.RGB;
 public final class ColorConverter {
 
 	public static String convertRgbToHex(RGB rgb) {
-		return new StringBuffer(toHex(rgb.red)).append(toHex(rgb.green))
-				.append(toHex(rgb.blue)).toString();
+		return new StringBuffer(toHex(rgb.red)).append(toHex(rgb.green)).append(toHex(rgb.blue)).toString();
 	}
 
 	private static String toHex(int color) {
-		return new String(new char[] {
-				"0123456789ABCDEF".charAt((color - color % 16) / 16), //$NON-NLS-1$
+		return new String(new char[] { "0123456789ABCDEF".charAt((color - color % 16) / 16), //$NON-NLS-1$
 				"0123456789ABCDEF".charAt(color % 16) }, 0, 2); //$NON-NLS-1$
 	}
 

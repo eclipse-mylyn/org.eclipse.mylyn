@@ -145,14 +145,16 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 		}
 
 		public void createPresentation(TextPresentation presentation, ITypedRegion damage) {
-			TextPresentation viewerPresentation = textPresentation == null ? viewer.getTextPresentation()
+			TextPresentation viewerPresentation = textPresentation == null
+					? viewer.getTextPresentation()
 					: textPresentation;
 			presentation.clear();
 			if (viewerPresentation == null) {
 				return;
 			}
 			StyleRange defaultStyleRange = viewerPresentation.getDefaultStyleRange();
-			presentation.setDefaultStyleRange((StyleRange) (defaultStyleRange == null ? null
+			presentation.setDefaultStyleRange((StyleRange) (defaultStyleRange == null
+					? null
 					: defaultStyleRange.clone()));
 			List<StyleRange> ranges = new ArrayList<StyleRange>();
 
@@ -168,7 +170,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 			for (int x = 0; x < ranges.size(); ++x) {
 				StyleRange range = ranges.get(x);
 				if (range.start > start) {
-					StyleRange newRange = defaultStyleRange == null ? new StyleRange()
+					StyleRange newRange = defaultStyleRange == null
+							? new StyleRange()
 							: (StyleRange) defaultStyleRange.clone();
 					newRange.start = start;
 					newRange.length = range.start - start;
@@ -179,7 +182,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 				start = range.start + range.length + 1;
 			}
 			if (start < (damage.getOffset() + damage.getLength())) {
-				StyleRange newRange = defaultStyleRange == null ? new StyleRange()
+				StyleRange newRange = defaultStyleRange == null
+						? new StyleRange()
 						: (StyleRange) defaultStyleRange.clone();
 				newRange.start = start;
 				newRange.length = (damage.getOffset() + damage.getLength()) - start;
@@ -195,7 +199,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	public void setTextPresentation(TextPresentation textPresentation) {
 		if (textPresentation != null) {
 			TextPresentation textPresentationCopy = new TextPresentation();
-			textPresentationCopy.setDefaultStyleRange((StyleRange) (textPresentation.getDefaultStyleRange() == null ? null
+			textPresentationCopy.setDefaultStyleRange((StyleRange) (textPresentation.getDefaultStyleRange() == null
+					? null
 					: textPresentation.getDefaultStyleRange().clone()));
 			Iterator<StyleRange> iterator = textPresentation.getAllStyleRangeIterator();
 			while (iterator.hasNext()) {

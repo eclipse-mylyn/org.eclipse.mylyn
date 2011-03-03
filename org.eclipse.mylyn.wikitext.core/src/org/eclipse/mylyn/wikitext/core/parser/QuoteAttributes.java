@@ -14,8 +14,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * Attributes for block quotes.
  * 
  * @author David Green
- * 
- * @since 1.0 
+ * @since 1.0
  */
 public class QuoteAttributes extends Attributes {
 	private String citation;

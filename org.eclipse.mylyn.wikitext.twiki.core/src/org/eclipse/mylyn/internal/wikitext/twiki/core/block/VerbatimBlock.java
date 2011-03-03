@@ -21,7 +21,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * A block where all wiki text and html tags are disabled.
  * 
  * @see LiteralBlock
- * 
  * @author David Green
  */
 public class VerbatimBlock extends Block {

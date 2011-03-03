@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
- * 
  * based on implementation of ActiveFoldingEditorTracker in org.eclipse.mylyn.java.ui
  * 
  * @author David Green

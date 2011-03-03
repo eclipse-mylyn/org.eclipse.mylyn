@@ -28,7 +28,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem.Visitor;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * 
  * based on implementation of ActiveFoldingListener in org.eclipse.mylyn.java.ui
  * 
  * @author David Green

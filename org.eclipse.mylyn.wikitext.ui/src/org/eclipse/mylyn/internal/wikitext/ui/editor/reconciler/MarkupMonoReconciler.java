@@ -14,8 +14,6 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupMonoReconciler extends MonoReconciler {

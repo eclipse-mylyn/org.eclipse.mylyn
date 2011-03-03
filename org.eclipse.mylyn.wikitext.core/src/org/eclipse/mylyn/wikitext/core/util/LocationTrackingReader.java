@@ -94,7 +94,6 @@ public class LocationTrackingReader extends Reader {
 	 * Read a line of text, omitting the line delimiters.
 	 * 
 	 * @return the text or null if the end of input has been reached
-	 * 
 	 * @see #getLineOffset()
 	 */
 	public String readLine() throws IOException {

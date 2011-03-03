@@ -24,7 +24,6 @@ import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.swt.custom.StyleRange;
 
 /**
- * 
  * based on the XML editor example
  * 
  * @author David Green

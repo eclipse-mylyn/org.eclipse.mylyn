@@ -17,8 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class EscapeTextilePhraseModifier extends PatternBasedElement {

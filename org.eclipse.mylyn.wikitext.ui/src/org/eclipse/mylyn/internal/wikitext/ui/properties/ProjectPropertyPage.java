@@ -98,8 +98,9 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 	@Override
 	protected void setControl(Control newControl) {
 		super.setControl(newControl);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newControl,
-				"org.eclipse.mylyn.wikitext.help.ui.projectSettings"); //$NON-NLS-1$
+		PlatformUI.getWorkbench()
+				.getHelpSystem()
+				.setHelp(newControl, "org.eclipse.mylyn.wikitext.help.ui.projectSettings"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -126,8 +127,8 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		} catch (InvocationTargetException e) {
 			String message = Messages.ProjectPropertyPage_operationError;
 			String title = Messages.ProjectPropertyPage_unexpectedError;
-			ErrorDialog.openError(getShell(), title, message, WikiTextUiPlugin.getDefault().createStatus(IStatus.ERROR,
-					e.getCause()));
+			ErrorDialog.openError(getShell(), title, message,
+					WikiTextUiPlugin.getDefault().createStatus(IStatus.ERROR, e.getCause()));
 		} catch (InterruptedException e) {
 			// Do nothing. Operation has been canceled by user.
 		}

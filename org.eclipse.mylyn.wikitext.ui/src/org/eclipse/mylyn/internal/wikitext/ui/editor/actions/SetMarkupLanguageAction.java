@@ -16,8 +16,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.core.WikiText;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class SetMarkupLanguageAction extends Action {

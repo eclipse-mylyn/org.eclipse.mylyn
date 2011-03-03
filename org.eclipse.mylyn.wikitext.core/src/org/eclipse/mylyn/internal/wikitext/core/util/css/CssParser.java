@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
  * object model.
  * 
  * @author David Green
- * 
  * @see Stylesheet
  * @see CssRule
  */
@@ -101,7 +100,6 @@ public class CssParser {
 	 * 
 	 * @param content
 	 *            the content of the block
-	 * 
 	 * @return a list of rules, or an empty list if there are none
 	 */
 	public List<CssRule> parseBlockContent(String content) {

@@ -12,9 +12,8 @@ package org.eclipse.mylyn.wikitext.core.validation;
 
 /**
  * A validation problem is an indication of an error or warning that occurred while validating a document. A problem has
- * a marker id, severity, message, and optional offset and length.
- * 
- * Default comparison semantics order problems by increasing offset.
+ * a marker id, severity, message, and optional offset and length. Default comparison semantics order problems by
+ * increasing offset.
  * 
  * @author David Green
  * @since 1.0
@@ -50,7 +49,6 @@ public class ValidationProblem implements Comparable<ValidationProblem> {
 	 *            the offset into the document that the problem starts
 	 * @param length
 	 *            the length of the problem, which may be 0
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the severity is invalid, the offset is < 0, the length is < 0, or if no message is provided
 	 */

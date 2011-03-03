@@ -17,13 +17,12 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
- * 
  * @author David Green
  */
 public class WikiWordReplacementToken extends PatternBasedElement {
 
 	private static final Pattern replacementPattern = Pattern.compile("\\W"); //$NON-NLS-1$
-	
+
 	@Override
 	protected String getPattern(int groupOffset) {
 		return "(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)"; //$NON-NLS-1$
@@ -44,13 +43,13 @@ public class WikiWordReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String escaped = group(1);
 			String word = group(2);
-			TWikiLanguage twikiLanguage = (TWikiLanguage)markupLanguage;
+			TWikiLanguage twikiLanguage = (TWikiLanguage) markupLanguage;
 			if (escaped != null || !twikiLanguage.isAutoLinking()) {
 				builder.characters(word);
 			} else {
 				String target = replacementPattern.matcher(word).replaceAll(""); //$NON-NLS-1$
 				boolean exists = twikiLanguage.computeInternalLinkExists(target);
-				
+
 				String internalHref = twikiLanguage.toInternalHref(target);
 				if (!exists) {
 					builder.characters(word);
@@ -61,6 +60,5 @@ public class WikiWordReplacementToken extends PatternBasedElement {
 			}
 		}
 	}
-
 
 }

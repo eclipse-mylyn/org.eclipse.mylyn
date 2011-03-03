@@ -18,7 +18,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * is passed through to the builder unescaped.
  * 
  * @see LimitedHtmlStartTagPhraseModifier
- * 
  * @author David Green
  * @since 1.0
  */

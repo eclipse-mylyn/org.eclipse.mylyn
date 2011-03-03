@@ -17,7 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * A token processor that emits a specified XML entity reference.
  * 
  * @see DocumentBuilder#entityReference(String)
- * 
  * @author David Green
  * @since 1.0
  */

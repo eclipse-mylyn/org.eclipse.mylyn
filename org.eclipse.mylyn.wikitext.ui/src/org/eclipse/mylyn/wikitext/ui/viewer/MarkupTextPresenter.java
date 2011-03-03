@@ -20,8 +20,7 @@ import org.eclipse.swt.graphics.Drawable;
  * the HTML to the superclass.
  * 
  * @author David Green
- * 
- * @since 1.0 
+ * @since 1.0
  */
 public class MarkupTextPresenter extends HtmlTextPresenter {
 

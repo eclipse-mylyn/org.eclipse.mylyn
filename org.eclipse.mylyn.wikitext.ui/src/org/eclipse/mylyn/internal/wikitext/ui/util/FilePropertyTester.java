@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class FilePropertyTester extends PropertyTester {

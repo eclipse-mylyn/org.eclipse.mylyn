@@ -226,8 +226,9 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	 */
 	private void validate(ValidationInfo file, IProgressMonitor monitor) throws CoreException {
 		int totalWork = 1000;
-		monitor.beginTask(NLS.bind(Messages.ValidationProjectBuilder_validatingFileTask,
-				new Object[] { file.file.getName() }), totalWork);
+		monitor.beginTask(
+				NLS.bind(Messages.ValidationProjectBuilder_validatingFileTask, new Object[] { file.file.getName() }),
+				totalWork);
 		ResourceMarkerMarkupValidator validator = new ResourceMarkerMarkupValidator();
 		validator.setMarkupLanguage(WikiText.getMarkupLanguage(file.languageName));
 		validator.setResource(file.file);
@@ -252,8 +253,8 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			}
 			monitor.worked(totalWork / 2);
 			IDocument document = new Document(writer.toString());
-			validator.validate(new SubProgressMonitor(monitor, totalWork / 2), document, new Region(0,
-					document.getLength()));
+			validator.validate(new SubProgressMonitor(monitor, totalWork / 2), document,
+					new Region(0, document.getLength()));
 		}
 		monitor.done();
 	}

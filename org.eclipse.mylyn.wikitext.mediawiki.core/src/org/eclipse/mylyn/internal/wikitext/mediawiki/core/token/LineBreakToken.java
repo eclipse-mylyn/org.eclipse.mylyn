@@ -14,8 +14,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class LineBreakToken extends PatternBasedElement {

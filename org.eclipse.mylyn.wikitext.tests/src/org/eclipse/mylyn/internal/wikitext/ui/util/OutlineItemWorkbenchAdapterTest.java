@@ -17,7 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 
 /**
- * 
  * @author David Green
  */
 @EclipseRuntimeRequired

@@ -75,7 +75,6 @@ public class SplitOutlineItem extends OutlineItem {
 	 * 
 	 * @param id
 	 *            the id for which the outline item should be returned
-	 * 
 	 * @return the outline item, or null if the given id is unknown
 	 */
 	public SplitOutlineItem getOutlineItemById(String id) {

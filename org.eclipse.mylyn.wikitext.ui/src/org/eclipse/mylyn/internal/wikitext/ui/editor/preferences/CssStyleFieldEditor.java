@@ -20,8 +20,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 
-
-
 /**
  * A field editor for CSS styles. Adds validation to CSS rule input.
  * 
@@ -54,8 +52,8 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 				if (rule.offset > offset) {
 					String gap = value.substring(offset, rule.offset);
 					if (gap.trim().length() != 0) {
-						setErrorMessage(NLS.bind(
-								Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(), offset })); 
+						setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unexpectedToken,
+								new Object[] { gap.trim(), offset }));
 						return false;
 					}
 				}
@@ -65,20 +63,19 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 					StringBuilder recognizedNames = new StringBuilder();
 					for (String recognizedName : cssStyleManager.getRecognizedRuleNames()) {
 						if (recognizedNames.length() > 0) {
-							recognizedNames.append(Messages.CssStyleFieldEditor_1); 
+							recognizedNames.append(Messages.CssStyleFieldEditor_1);
 						}
 						recognizedNames.append(recognizedName);
 					}
-					setErrorMessage(NLS.bind(
-							Messages.CssStyleFieldEditor_unsupportedRule, new Object[] { rule.name, recognizedNames })); 
+					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unsupportedRule, new Object[] { rule.name,
+							recognizedNames }));
 					return false;
 				}
 				if (CssStyleManager.RULE_COLOR.equals(rule.name)
 						|| CssStyleManager.RULE_BACKGROUND_COLOR.equals(rule.name)) {
 					Integer rgb = CssStyleManager.cssColorRgb(rule.value);
 					if (rgb == null) {
-						setErrorMessage(NLS.bind(
-								Messages.CssStyleFieldEditor_invalidColor, new Object[] { rule.value })); 
+						setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_invalidColor, new Object[] { rule.value }));
 						return false;
 					}
 				}
@@ -87,8 +84,8 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 			if (offset < value.length() - 1) {
 				String gap = value.substring(offset, value.length());
 				if (gap.trim().length() != 0) {
-					setErrorMessage(NLS.bind(
-							Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(), offset })); 
+					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(),
+							offset }));
 					return false;
 				}
 			}

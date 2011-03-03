@@ -22,7 +22,8 @@ import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * A conversion utility targeting the <a href="http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_help_toc.html"
+ * A conversion utility targeting the <a href=
+ * "http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_help_toc.html"
  * >Eclipse help table of contents format</a>.
  * 
  * @author David Green

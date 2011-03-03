@@ -17,8 +17,6 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupDamagerRepairer extends DefaultDamagerRepairer {

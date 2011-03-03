@@ -18,7 +18,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * 
  * @see DocumentBuilder#characters(String)
  * @see DocumentBuilder#charactersUnescaped(String)
- * 
  * @author David Green
  * @since 1.0
  */

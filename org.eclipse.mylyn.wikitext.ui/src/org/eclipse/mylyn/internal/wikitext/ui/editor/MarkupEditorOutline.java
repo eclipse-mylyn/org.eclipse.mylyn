@@ -46,7 +46,6 @@ import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
- * 
  * @author David Green
  */
 public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSource, IShowInTarget {

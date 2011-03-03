@@ -102,9 +102,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 	 * 
 	 * @param pageName
 	 *            the name of the page to target, usually a WikiWord with whitespace removed
-	 * 
 	 * @return the href to access the page
-	 * 
 	 * @see #getInternalPageHrefPrefix()
 	 */
 	public String toInternalHref(String pageName) {

@@ -29,7 +29,6 @@ public class Options {
 		 *            the key of the option
 		 * @param value
 		 *            the value of the option
-		 * 
 		 * @see #setOption(String)
 		 */
 		public void setOption(String key, String value);
@@ -39,7 +38,6 @@ public class Options {
 		 * 
 		 * @param option
 		 *            the option to set
-		 * 
 		 * @see #setOption(String, String)
 		 */
 		public void setOption(String option);

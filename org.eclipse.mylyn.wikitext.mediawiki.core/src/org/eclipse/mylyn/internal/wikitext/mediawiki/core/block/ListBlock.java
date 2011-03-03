@@ -131,10 +131,8 @@ public class ListBlock extends Block {
 	}
 
 	/**
-	 * 
 	 * @param lastChar
 	 *            the last character of the list specification, or ' ' if unknown
-	 * 
 	 * @return true if the item is a continuation
 	 */
 	private boolean adjustLevel(char lastChar, int lineLevel, BlockType type, BlockType itemType) {

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
- * implements the %TOC% variable of TWiki syntax 
+ * implements the %TOC% variable of TWiki syntax
  * 
  * @author David Green
  */
@@ -41,7 +41,7 @@ public class TableOfContentsBlock extends Block {
 		}
 
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
-			
+
 			OutlineParser outlineParser = new OutlineParser(new TWikiLanguage());
 			OutlineItem rootItem = outlineParser.parse(state.getMarkupContent());
 

@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.GlossaryBlock;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TextileGlossaryBlock extends GlossaryBlock {

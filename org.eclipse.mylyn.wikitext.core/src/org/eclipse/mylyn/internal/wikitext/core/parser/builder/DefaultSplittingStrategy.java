@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
  * @author David Green
  */
 public class DefaultSplittingStrategy extends SplittingStrategy {

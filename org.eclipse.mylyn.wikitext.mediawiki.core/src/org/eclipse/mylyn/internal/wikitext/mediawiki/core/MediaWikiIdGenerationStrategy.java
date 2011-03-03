@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 
 /**
- * 
  * @author David Green
  */
 public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {

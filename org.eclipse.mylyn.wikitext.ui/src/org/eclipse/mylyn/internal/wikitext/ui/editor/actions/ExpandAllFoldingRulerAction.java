@@ -20,7 +20,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
 /**
- * 
  * @author David Green
  */
 public class ExpandAllFoldingRulerAction extends AbstractRulerActionDelegate {

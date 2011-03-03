@@ -13,9 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 /**
- * A markup block that may span multiple lines.
- * 
- * Implements {@link Cloneable} for the template design pattern.
+ * A markup block that may span multiple lines. Implements {@link Cloneable} for the template design pattern.
  * 
  * @author David Green
  */
@@ -32,7 +30,6 @@ public abstract class Block extends Processor implements Cloneable {
 	 *            the markup line to process
 	 * @param offset
 	 *            the offset at which to start processing
-	 * 
 	 * @return a non-negative integer to indicate that processing of the block completed before the end of the line, or
 	 *         -1 if the entire line was processed.
 	 */
@@ -48,7 +45,6 @@ public abstract class Block extends Processor implements Cloneable {
 	 *            the markup line to process
 	 * @param offset
 	 *            the offset at which to start processing
-	 * 
 	 * @return a non-negative integer to indicate that processing of the block completed before the end of the line, or
 	 *         -1 if the entire line was processed.
 	 */
@@ -58,16 +54,13 @@ public abstract class Block extends Processor implements Cloneable {
 	 * Indicate if the block can start with the given markup line at the provided offset. Calling this method may cause
 	 * the block to have state which is propagated when {@link #clone() cloning} and consumed in
 	 * {@link #processLine(String, int, int)}. Calling this method must cause any previous state to be reset. Note that
-	 * it is valid for block implementations to refuse to start at non-zero offsets.
-	 * 
-	 * Implementations must be able to handle this method without having the {@link Processor processor state}
-	 * initialized.
+	 * it is valid for block implementations to refuse to start at non-zero offsets. Implementations must be able to
+	 * handle this method without having the {@link Processor processor state} initialized.
 	 * 
 	 * @param line
 	 *            the line of markup to test
 	 * @param lineOffset
 	 *            the offset at which the block should start processing
-	 * 
 	 * @return true if the provided markup consists of a valid starting point for the block
 	 */
 	public abstract boolean canStart(String line, int lineOffset);
@@ -76,7 +69,6 @@ public abstract class Block extends Processor implements Cloneable {
 	 * Indicate if block nesting should begin. Called after {@link #processLineContent(String, int)}.
 	 * 
 	 * @return true if nesting should start, otherwise false.
-	 * 
 	 * @see #findCloseOffset(String, int)
 	 * @since 1.1
 	 */
@@ -92,9 +84,7 @@ public abstract class Block extends Processor implements Cloneable {
 	 *            the line of content
 	 * @param lineOffset
 	 *            the 0-based offset into the line
-	 * 
 	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
-	 * 
 	 * @see #beginNesting()
 	 * @since 1.1
 	 */

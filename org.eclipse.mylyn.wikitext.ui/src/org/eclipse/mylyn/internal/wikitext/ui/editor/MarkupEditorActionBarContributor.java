@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class MarkupEditorActionBarContributor extends TextEditorActionContributor {

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author David Green
  */
 class Messages extends NLS {

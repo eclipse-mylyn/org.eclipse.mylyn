@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
- * 
  * @author David Green
  */
 public class CssParserTest extends TestCase {

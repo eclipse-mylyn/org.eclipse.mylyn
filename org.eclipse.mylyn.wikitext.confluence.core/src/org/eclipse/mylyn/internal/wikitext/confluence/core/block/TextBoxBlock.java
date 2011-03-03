@@ -17,8 +17,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TextBoxBlock extends ParameterizedBlock {

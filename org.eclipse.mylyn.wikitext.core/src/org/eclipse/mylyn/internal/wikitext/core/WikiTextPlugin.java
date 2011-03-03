@@ -36,12 +36,10 @@ import org.osgi.framework.BundleContext;
 /**
  * The WikiText plug-in class. Use only in an Eclipse runtime environment. Programs should use the
  * {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those programs that do not
- * run in an Eclipse runtime) must not use this class.
- * 
- * Should not be instantiated directly, instead use {@link #getDefault()}.
+ * run in an Eclipse runtime) must not use this class. Should not be instantiated directly, instead use
+ * {@link #getDefault()}.
  * 
  * @author David Green
- * 
  * @see #getDefault()
  * @see ServiceLocator
  */
@@ -90,9 +88,7 @@ public class WikiTextPlugin extends Plugin {
 	 * 
 	 * @param name
 	 *            the name of the markup language to retrieve
-	 * 
 	 * @return the markup language or null if there is no markup language known by the given name
-	 * 
 	 * @see #getMarkupLanguageNames()
 	 */
 	public MarkupLanguage getMarkupLanguage(String name) {
@@ -134,9 +130,7 @@ public class WikiTextPlugin extends Plugin {
 	 * 
 	 * @param name
 	 *            the name of the file for which a markup language is desired
-	 * 
 	 * @return the markup language name, or null if no markup language is registered for the specified file name
-	 * 
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
 	public String getMarkupLanguageNameForFilename(String name) {
@@ -169,9 +163,7 @@ public class WikiTextPlugin extends Plugin {
 	 * 
 	 * @param name
 	 *            the name of the file for which a markup language is desired
-	 * 
 	 * @return the markup language, or null if no markup language is registered for the specified file name
-	 * 
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
 	public MarkupLanguage getMarkupLanguageForFilename(String name) {
@@ -211,9 +203,7 @@ public class WikiTextPlugin extends Plugin {
 	 * 
 	 * @param name
 	 *            the name of the markup language for which a validator is desired
-	 * 
 	 * @return the markup validator
-	 * 
 	 * @see #getMarkupLanguageNames()
 	 */
 	public MarkupValidator getMarkupValidator(String name) {
@@ -319,10 +309,11 @@ public class WikiTextPlugin extends Plugin {
 					for (IConfigurationElement element : configurationElements) {
 						String name = element.getAttribute("name"); //$NON-NLS-1$
 						if (name == null || name.length() == 0) {
-							log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
-									+ Messages.getString("WikiTextPlugin.10"), element.getDeclaringExtension() //$NON-NLS-1$
-									.getContributor()
-									.getName()));
+							log(IStatus.ERROR,
+									MessageFormat.format(
+											EXTENSION_MARKUP_LANGUAGE + Messages.getString("WikiTextPlugin.10"), element.getDeclaringExtension() //$NON-NLS-1$
+													.getContributor()
+													.getName()));
 							continue;
 						}
 						String extendsLanguage = element.getAttribute("extends"); //$NON-NLS-1$
@@ -343,9 +334,10 @@ public class WikiTextPlugin extends Plugin {
 						{
 							Class<? extends MarkupLanguage> previous = markupLanguageByName.put(name, d.getClass());
 							if (previous != null) {
-								log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
-										+ Messages.getString("WikiTextPlugin.14"), //$NON-NLS-1$
-										name, element.getDeclaringExtension().getContributor().getName(), name));
+								log(IStatus.ERROR,
+										MessageFormat.format(
+												EXTENSION_MARKUP_LANGUAGE + Messages.getString("WikiTextPlugin.14"), //$NON-NLS-1$
+												name, element.getDeclaringExtension().getContributor().getName(), name));
 								markupLanguageByName.put(name, previous);
 								continue;
 							} else {
@@ -363,9 +355,13 @@ public class WikiTextPlugin extends Plugin {
 									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part,
 											d.getClass());
 									if (previous != null) {
-										log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
-												+ Messages.getString("WikiTextPlugin.17"), //$NON-NLS-1$
-												part, element.getDeclaringExtension().getContributor().getName(), part));
+										log(IStatus.ERROR,
+												MessageFormat.format(
+														EXTENSION_MARKUP_LANGUAGE
+																+ Messages.getString("WikiTextPlugin.17"), //$NON-NLS-1$
+														part, element.getDeclaringExtension()
+																.getContributor()
+																.getName(), part));
 										languageByFileExtension.put(part, previous);
 										continue;
 									}

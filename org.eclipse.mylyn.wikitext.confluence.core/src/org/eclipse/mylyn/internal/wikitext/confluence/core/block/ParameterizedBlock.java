@@ -14,8 +14,6 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * 
- * 
  * @author David Green
  */
 public abstract class ParameterizedBlock extends Block {
@@ -40,7 +38,6 @@ public abstract class ParameterizedBlock extends Block {
 	 * 
 	 * @param option
 	 *            the option to set
-	 * 
 	 * @see #setOption(String, String)
 	 */
 	protected void setOption(String option) {
@@ -53,7 +50,6 @@ public abstract class ParameterizedBlock extends Block {
 	 *            the key of the option
 	 * @param value
 	 *            the value of the option
-	 * 
 	 * @see #setOption(String)
 	 */
 	protected abstract void setOption(String key, String value);

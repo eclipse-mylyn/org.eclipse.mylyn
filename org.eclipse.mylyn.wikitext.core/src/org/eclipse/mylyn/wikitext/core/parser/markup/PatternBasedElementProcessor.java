@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
  * A processor that is capable of processing a specific type of markup element
  * 
  * @author David Green
- * 
  */
 public abstract class PatternBasedElementProcessor extends Processor implements
 		org.eclipse.mylyn.wikitext.core.parser.util.Matcher {
@@ -50,7 +49,6 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 	 *            the 1-based group
 	 * @param capturedText
 	 *            the text that was captured
-	 * 
 	 * @see #group(int)
 	 */
 	public void setGroup(int group, String capturedText, int start, int end) {
@@ -91,9 +89,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 	 * 
 	 * @param groupNumber
 	 *            the 1-based group
-	 * 
 	 * @return the text, or null if the group did not match any text
-	 * 
 	 * @see Matcher#group(int)
 	 */
 	public String group(int groupNumber) {
@@ -109,9 +105,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 	 * 
 	 * @param groupNumber
 	 *            the 1-based group
-	 * 
 	 * @return the start offset, or -1 if the group did not match any text
-	 * 
 	 * @see Matcher#start(int)
 	 */
 	public int start(int groupNumber) {
@@ -127,9 +121,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 	 * 
 	 * @param groupNumber
 	 *            the 1-based group
-	 * 
 	 * @return the end offset, or -1 if the group did not match any text
-	 * 
 	 * @see Matcher#start(int)
 	 */
 	public int end(int groupNumber) {

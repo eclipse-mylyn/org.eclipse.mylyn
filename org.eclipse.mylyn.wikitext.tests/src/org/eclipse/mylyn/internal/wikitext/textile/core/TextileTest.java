@@ -19,8 +19,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class TextileTest extends TestCase {

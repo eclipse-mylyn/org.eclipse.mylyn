@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A validation rule.
- * 
- * Validation rules must not be stateful, as they may be used concurrently on different threads.
+ * A validation rule. Validation rules must not be stateful, as they may be used concurrently on different threads.
  * 
  * @author David Green
  */
@@ -32,7 +30,6 @@ public abstract class ValidationRule {
 	 *            the offset at which to start looking for problems
 	 * @param length
 	 *            the length at which to stop looking for problems
-	 * 
 	 * @return the validation problem if found, or null if no validation problem was detected
 	 */
 	public abstract ValidationProblem findProblem(String markup, int offset, int length);
@@ -46,7 +43,6 @@ public abstract class ValidationRule {
 	 *            the offset at which to start looking for problems
 	 * @param length
 	 *            the length at which to stop looking for problems
-	 * 
 	 * @return the problems, or an empty list if there are none
 	 */
 	public List<ValidationProblem> findProblems(String markup, int offset, int length) {

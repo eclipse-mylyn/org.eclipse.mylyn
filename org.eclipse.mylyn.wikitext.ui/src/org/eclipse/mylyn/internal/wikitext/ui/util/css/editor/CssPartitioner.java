@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.util.css.editor;
 import org.eclipse.jface.text.rules.FastPartitioner;
 
 /**
- * 
  * @author David Green
  */
 public class CssPartitioner extends FastPartitioner {

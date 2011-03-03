@@ -16,8 +16,7 @@ import org.eclipse.jface.text.source.Annotation;
  * An annotation for "title" or tooltip text.
  * 
  * @author David Green
- * 
- * @since 1.0 
+ * @since 1.0
  */
 public class TitleAnnotation extends Annotation {
 	private final String titleType;

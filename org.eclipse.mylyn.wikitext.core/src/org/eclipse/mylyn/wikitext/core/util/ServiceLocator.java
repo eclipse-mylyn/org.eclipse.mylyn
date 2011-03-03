@@ -49,7 +49,6 @@ public class ServiceLocator {
 	 * 
 	 * @param classLoader
 	 *            the class loader to use when looking up services
-	 * 
 	 * @see #getInstance()
 	 */
 	public static ServiceLocator getInstance(ClassLoader classLoader) {
@@ -82,9 +81,7 @@ public class ServiceLocator {
 	 * @param languageName
 	 *            the {@link MarkupLanguage#getName() name} of the markup language, or the fully qualified name of the
 	 *            class that implements the language
-	 * 
 	 * @return the language implementation
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
@@ -123,8 +120,7 @@ public class ServiceLocator {
 									} catch (Exception e) {
 										// very unusual, but inform the user in a stand-alone way
 										Logger.getLogger(ServiceLocator.class.getName())
-												.log(
-														Level.WARNING,
+												.log(Level.WARNING,
 														MessageFormat.format(
 																Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 									}

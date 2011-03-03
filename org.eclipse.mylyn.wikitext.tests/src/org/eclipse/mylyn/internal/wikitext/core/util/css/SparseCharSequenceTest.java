@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 /**
- * 
  * @author David Green
  */
 public class SparseCharSequenceTest extends TestCase {

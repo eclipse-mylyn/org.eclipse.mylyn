@@ -40,8 +40,7 @@ public class SetFontFamilyCommand extends Command {
 	}
 
 	public Map<String, String> getAvailableFontfamilies() {
-		String sizeString = String.valueOf(composer
-				.evaluate("return integration.format.getAvailableFonts();"));
+		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableFonts();"));
 		String[] split = sizeString.split(";");
 		Map<String, String> returnValue = new HashMap<String, String>();
 		for (int i = 0, n = split.length; i < n; i++) {

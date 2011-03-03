@@ -18,7 +18,6 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.Transfer;
 
 /**
- * 
  * @author David Green
  */
 public class OutlineDragSourceListener implements TransferDragSourceListener {

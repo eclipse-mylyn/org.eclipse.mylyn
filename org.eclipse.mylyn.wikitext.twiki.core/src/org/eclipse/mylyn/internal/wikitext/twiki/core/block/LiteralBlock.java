@@ -22,7 +22,6 @@ import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
  * A literal block disables wiki text but allows for nested HTML tags.
  * 
  * @see VerbatimBlock
- * 
  * @author David Green
  */
 public class LiteralBlock extends Block {
@@ -39,7 +38,7 @@ public class LiteralBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount++ == 0) {
 			offset = matcher.start(1);
-			((TWikiLanguage)markupLanguage).setLiteralMode(true);
+			((TWikiLanguage) markupLanguage).setLiteralMode(true);
 			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		} else {
 			Matcher endMatcher = endPattern.matcher(line);
@@ -57,7 +56,7 @@ public class LiteralBlock extends Block {
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
 			builder.endBlock();
-			((TWikiLanguage)markupLanguage).setLiteralMode(false);
+			((TWikiLanguage) markupLanguage).setLiteralMode(false);
 		}
 		super.setClosed(closed);
 	}

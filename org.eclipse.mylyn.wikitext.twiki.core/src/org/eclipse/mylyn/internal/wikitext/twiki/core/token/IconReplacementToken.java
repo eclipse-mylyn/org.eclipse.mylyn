@@ -16,15 +16,15 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
- * Token that replaces <code>%ICON{"<icon type>"}%</code> with the appropriate image tag.
- * Supports %ICON{"help"}%, %ICON{"tip"}%, and %ICON{"warning"}%
- *  
+ * Token that replaces <code>%ICON{"<icon type>"}%</code> with the appropriate image tag. Supports %ICON{"help"}%,
+ * %ICON{"tip"}%, and %ICON{"warning"}%
+ * 
  * @author David Green
  */
 public class IconReplacementToken extends PatternBasedElement {
 
 	// TODO: check http://twiki.org/cgi-bin/view/TWiki04x02/TWikiDocGraphics to see if this covers all graphics
-	
+
 	@Override
 	protected String getPattern(int groupOffset) {
 		return "%ICON\\{\"([a-zA-Z]+)\"\\}%"; //$NON-NLS-1$
@@ -44,7 +44,7 @@ public class IconReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String iconType = group(1);
-			String iconUrl = ((TWikiLanguage)markupLanguage).toIconUrl(iconType);
+			String iconUrl = ((TWikiLanguage) markupLanguage).toIconUrl(iconType);
 			builder.image(new ImageAttributes(), iconUrl);
 		}
 	}

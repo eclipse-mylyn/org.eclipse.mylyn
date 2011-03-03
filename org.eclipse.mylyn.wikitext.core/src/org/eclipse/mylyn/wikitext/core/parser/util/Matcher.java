@@ -14,7 +14,6 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
  * An interface that defines a matcher, much the same as a {@link java.util.regex.Matcher}.
  * 
  * @see MatcherAdaper
- * 
  * @author David Green
  */
 public interface Matcher {

@@ -37,8 +37,9 @@ public abstract class AbstractTestInWorkspace extends TestCase {
 	public AbstractTestInWorkspace() {
 		if (!init) {
 			try {
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
-						new NullProgressMonitor());
+				ResourcesPlugin.getWorkspace()
+						.getRoot()
+						.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 			} catch (CoreException e) {
 				throw new IllegalStateException(e);
 			}

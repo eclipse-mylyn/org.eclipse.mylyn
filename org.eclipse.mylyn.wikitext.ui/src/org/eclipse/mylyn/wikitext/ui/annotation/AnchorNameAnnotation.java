@@ -16,8 +16,7 @@ import org.eclipse.jface.text.source.Annotation;
  * An annotation that marks the location of an <code>a/@name</code>.
  * 
  * @author David Green
- * 
- * @since 1.0 
+ * @since 1.0
  */
 public class AnchorNameAnnotation extends Annotation {
 
