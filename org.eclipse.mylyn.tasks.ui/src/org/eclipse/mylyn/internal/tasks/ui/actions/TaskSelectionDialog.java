@@ -112,8 +112,9 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public void run() {
-			IWorkingSetEditWizard wizard = PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetEditWizard(
-					selectedWorkingSet);
+			IWorkingSetEditWizard wizard = PlatformUI.getWorkbench()
+					.getWorkingSetManager()
+					.createWorkingSetEditWizard(selectedWorkingSet);
 			if (wizard != null) {
 				WizardDialog dlg = new WizardDialog(getShell(), wizard);
 				dlg.open();

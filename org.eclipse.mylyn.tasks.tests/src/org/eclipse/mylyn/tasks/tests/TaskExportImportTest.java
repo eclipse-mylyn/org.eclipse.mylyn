@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tasks.tests;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 
 /**
- * 
  * @author Jevgeni Holodkov
  */
 //FIXME fix test

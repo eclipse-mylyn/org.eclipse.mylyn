@@ -26,13 +26,15 @@ public class SynchronizeAutomaticallyAction extends Action {
 		setText(Messages.SynchronizeAutomaticallyAction_Synchronize_Automatically);
 		setToolTipText(Messages.SynchronizeAutomaticallyAction_Synchronize_Automatically);
 		setId(ID);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		setChecked(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, isChecked());
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, isChecked());
 	}
 }

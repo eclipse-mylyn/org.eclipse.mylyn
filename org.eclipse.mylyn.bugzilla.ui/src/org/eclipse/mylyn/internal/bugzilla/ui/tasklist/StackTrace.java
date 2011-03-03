@@ -93,7 +93,6 @@ public class StackTrace {
 	/**
 	 * Find a standard java stack trace in the given string
 	 * 
-	 * 
 	 * @param s
 	 *            The string to search for stack traces
 	 * @param comment

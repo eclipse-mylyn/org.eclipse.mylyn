@@ -261,7 +261,8 @@ public class TaskEditorOutlineNode {
 	}
 
 	public TaskEditorOutlineNode[] getChildren() {
-		return (children == null) ? new TaskEditorOutlineNode[0]
+		return (children == null)
+				? new TaskEditorOutlineNode[0]
 				: children.toArray(new TaskEditorOutlineNode[children.size()]);
 	}
 

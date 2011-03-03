@@ -103,9 +103,11 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).hint(
-				convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT).grab(true,
-				false).applyTo(link);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.CENTER)
+				.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
+				.grab(true, false)
+				.applyTo(link);
 	}
 
 	private void createCenterArea(Composite parent) {
@@ -119,8 +121,11 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
 			labelComposite.setLayout(layout);
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(
-					labelComposite);
+			GridDataFactory.fillDefaults()
+					.align(SWT.FILL, SWT.CENTER)
+					.grab(true, false)
+					.span(2, 1)
+					.applyTo(labelComposite);
 
 			Label label = new Label(labelComposite, SWT.NONE);
 			label.setImage(TasksUiPlugin.getDefault().getBrandingIcon(taskRepository.getConnectorKind()));
@@ -243,9 +248,11 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.TaskRepositoryCredentialsDialog_Saved_passwords_are_stored_that_is_difficult);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).hint(
-				convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT).grab(true,
-				false).applyTo(label);
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.CENTER)
+				.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
+				.grab(true, false)
+				.applyTo(label);
 	}
 
 	public String getMessage() {

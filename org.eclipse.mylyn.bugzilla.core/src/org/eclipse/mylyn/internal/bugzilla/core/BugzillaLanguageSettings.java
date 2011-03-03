@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class describing the html response of Bugzilla requests which are used within Mylyn.
- * 
- * Strings should be in the language which is the default for an Bugzilla instance.
+ * Class describing the html response of Bugzilla requests which are used within Mylyn. Strings should be in the
+ * language which is the default for an Bugzilla instance.
  * 
  * @author Frank Becker
  */

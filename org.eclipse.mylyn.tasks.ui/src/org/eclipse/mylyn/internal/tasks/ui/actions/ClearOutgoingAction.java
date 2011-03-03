@@ -76,10 +76,9 @@ public class ClearOutgoingAction extends Action {
 		}
 		if (toClear.size() > 0) {
 			AbstractTask task = toClear.get(0);
-			boolean confirm = MessageDialog.openConfirm(
-					null,
-					Messages.ClearOutgoingAction_Confirm_discard, Messages.ClearOutgoingAction_Discard_all_outgoing_changes_ + "\n\n" //$NON-NLS-1$
-					+ task.getSummary());
+			boolean confirm = MessageDialog.openConfirm(null, Messages.ClearOutgoingAction_Confirm_discard,
+					Messages.ClearOutgoingAction_Discard_all_outgoing_changes_ + "\n\n" //$NON-NLS-1$
+							+ task.getSummary());
 			if (confirm) {
 				if (taskEditorPage != null) {
 					taskEditorPage.doSave(null);
@@ -87,8 +86,7 @@ public class ClearOutgoingAction extends Action {
 				try {
 					TasksUi.getTaskDataManager().discardEdits(task);
 				} catch (CoreException e) {
-					TasksUiInternal.displayStatus(
-							Messages.ClearOutgoingAction_Clear_outgoing_failed, e.getStatus());
+					TasksUiInternal.displayStatus(Messages.ClearOutgoingAction_Clear_outgoing_failed, e.getStatus());
 				}
 			}
 		}

@@ -22,8 +22,10 @@ import java.util.Locale;
  * This formatter tries to use the most applicable measure unit based on size magnitude, i.e.:
  * <p>
  * <ul>
- * <li>< 1 KB - byte based: 1 byte, 100 bytes, etc. <li>>= 1 KB and < 1 MB - KB based: 2.00 KB, 100.76 KB <li>>= 1 MB
- * and < 1 GB - MB based: 1.00 MB, 33.33 MB <li>>= 1 GB - GB based: 2.00 GB
+ * <li>< 1 KB - byte based: 1 byte, 100 bytes, etc.
+ * <li>>=1 KB and < 1 MB - KB based: 2.00 KB, 100.76 KB
+ * <li>>=1 MB and < 1 GB - MB based: 1.00 MB, 33.33 MB
+ * <li>>=1 GB - GB based: 2.00 GB
  * </ul>
  * <p>
  * This formatter assumes 1 KB == 1024 bytes, <strong>NOT</strong> 1000 bytes.

@@ -117,7 +117,8 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		case 3:
 			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
 		case 4:
-			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
+			return (attachment.getCreationDate() != null)
+					? EditorUtil.formatDateTime(attachment.getCreationDate())
 					: ""; //$NON-NLS-1$
 		case 5:
 			// FIXME add id to ITaskAttachment

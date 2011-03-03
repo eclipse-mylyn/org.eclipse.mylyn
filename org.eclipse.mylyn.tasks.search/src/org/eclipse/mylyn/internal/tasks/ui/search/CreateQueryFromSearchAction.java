@@ -75,7 +75,8 @@ public class CreateQueryFromSearchAction extends Action {
 					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), Messages.CreateQueryFromSearchAction_CLEAR_QUERY, MessageFormat.format(
-							Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X, TaskListView.LABEL_VIEW)
+							Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X,
+							TaskListView.LABEL_VIEW)
 							+ ": ", "", null); //$NON-NLS-1$ //$NON-NLS-2$
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {

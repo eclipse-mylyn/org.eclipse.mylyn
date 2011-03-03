@@ -38,16 +38,19 @@ public class ContextPerspectiveManagerTest extends TestCase {
 		ContextTestUtil.triggerContextUiLazyStart();
 
 		TaskTestUtil.resetTaskListAndRepositories();
-		previousSetting = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES);
-		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-				IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
+		previousSetting = ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES);
+		ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-				IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
+		ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
 		TaskTestUtil.resetTaskListAndRepositories();
 	}
 

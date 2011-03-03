@@ -220,7 +220,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		String email = "tests%40mylyn.eclipse.org";
 		String bug_status = BugzillaFixture.current()
 				.getBugzillaVersion()
-				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0 ? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
+				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
+				? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
 				: "&bug_status=UNCONFIRMED&bug_status=CONFIRMED";
 		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?priority=" + priority
 				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="

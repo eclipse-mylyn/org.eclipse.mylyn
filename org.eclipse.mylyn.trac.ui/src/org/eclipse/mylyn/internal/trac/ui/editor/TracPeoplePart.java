@@ -40,13 +40,17 @@ public class TracPeoplePart extends AbstractTaskEditorPart {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
-			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(COLUMN_MARGIN, 0).applyTo(
-					editor.getLabelControl());
+			GridDataFactory.defaultsFor(editor.getLabelControl())
+					.indent(COLUMN_MARGIN, 0)
+					.applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 			if (editor instanceof TracCcAttributeEditor) {
-				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95).applyTo(
-						editor.getControl());
+				GridDataFactory.fillDefaults()
+						.grab(true, true)
+						.align(SWT.FILL, SWT.FILL)
+						.hint(130, 95)
+						.applyTo(editor.getControl());
 			} else {
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
 			}

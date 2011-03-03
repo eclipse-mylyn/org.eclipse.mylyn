@@ -79,8 +79,8 @@ public class SubmitTaskJob extends SubmitJob {
 				// post task data
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 				monitor.subTask(Messages.SubmitTaskJob_Sending_data);
-				response = taskDataHandler.postTaskData(taskRepository, taskData, oldAttributes, Policy.subMonitorFor(
-						monitor, 100));
+				response = taskDataHandler.postTaskData(taskRepository, taskData, oldAttributes,
+						Policy.subMonitorFor(monitor, 100));
 				if (response == null || response.getTaskId() == null) {
 					throw new CoreException(new RepositoryStatus(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL,
@@ -91,8 +91,8 @@ public class SubmitTaskJob extends SubmitJob {
 				// update task in task list
 				String taskId = response.getTaskId();
 				monitor.subTask(Messages.SubmitTaskJob_Receiving_data);
-				TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId, Policy.subMonitorFor(monitor,
-						100));
+				TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId,
+						Policy.subMonitorFor(monitor, 100));
 				task = createTask(monitor, updatedTaskData);
 				taskDataManager.putSubmittedTaskData(task, updatedTaskData);
 				fireTaskSynchronized(monitor);

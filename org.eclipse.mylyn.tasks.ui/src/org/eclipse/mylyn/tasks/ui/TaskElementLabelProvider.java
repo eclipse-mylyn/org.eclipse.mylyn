@@ -124,7 +124,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (element instanceof UnmatchedTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY_UNMATCHED;
 				} else if (element instanceof RepositoryQuery) {
-					compositeDescriptor.icon = ((RepositoryQuery) element).getAutoUpdate() ? TasksUiImages.QUERY
+					compositeDescriptor.icon = ((RepositoryQuery) element).getAutoUpdate()
+							? TasksUiImages.QUERY
 							: TasksUiImages.QUERY_OFFLINE;
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;

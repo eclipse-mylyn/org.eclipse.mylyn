@@ -216,8 +216,10 @@ public class CommentGroupStrategyTest extends TestCase {
 			comments.add(mockComment(i + 1, MOCK_CURRENT_PERSON_ID, new Date(i + 1)));
 		}
 
-		boolean isCurrent = strategy.isCurrent(comments, mockComment(CommentGroupStrategy.MAX_CURRENT + 1,
-				MOCK_CURRENT_PERSON_ID, new Date(CommentGroupStrategy.MAX_CURRENT + 1)), MOCK_CURRENT_PERSON_ID);
+		boolean isCurrent = strategy.isCurrent(
+				comments,
+				mockComment(CommentGroupStrategy.MAX_CURRENT + 1, MOCK_CURRENT_PERSON_ID, new Date(
+						CommentGroupStrategy.MAX_CURRENT + 1)), MOCK_CURRENT_PERSON_ID);
 		assertEquals(false, isCurrent);
 	}
 

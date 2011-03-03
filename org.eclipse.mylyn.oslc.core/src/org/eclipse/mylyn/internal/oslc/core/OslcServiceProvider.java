@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.oslc.core;
 
 /**
  * @see http://open-services.net/bin/view/Main/OslcServiceProviderCatalogV1
- * 
  * @author Robert Elves
  */
 public class OslcServiceProvider {

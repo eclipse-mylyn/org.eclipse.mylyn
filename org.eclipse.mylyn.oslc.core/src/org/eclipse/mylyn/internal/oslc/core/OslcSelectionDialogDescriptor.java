@@ -15,7 +15,6 @@ import java.io.Serializable;
 
 /**
  * @see http://open-services.net/bin/view/Main/CmServiceDescriptionV1
- * 
  * @author Robert Elves
  */
 public class OslcSelectionDialogDescriptor implements Serializable {

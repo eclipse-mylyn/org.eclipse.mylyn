@@ -28,7 +28,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 public class LocalRepositorySettingsPage extends AbstractTaskRepositoryPage {
 
 	public LocalRepositorySettingsPage(TaskRepository taskRepository) {
-		super(Messages.LocalRepositorySettingsPage_Local_Repository_Settings, Messages.LocalRepositorySettingsPage_Configure_the_local_repository, taskRepository);
+		super(Messages.LocalRepositorySettingsPage_Local_Repository_Settings,
+				Messages.LocalRepositorySettingsPage_Configure_the_local_repository, taskRepository);
 	}
 
 	@Override

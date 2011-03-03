@@ -50,11 +50,8 @@ public interface ITaskList {
 	public abstract void deleteQuery(RepositoryQuery query);
 
 	/**
-	 * TODO: refactor around querying containers for their tasks
-	 * 
-	 * Task is removed from all containers: root, archive, category, and orphan bin
-	 * 
-	 * Currently subtasks are not deleted but rather are rather potentially orphaned
+	 * TODO: refactor around querying containers for their tasks Task is removed from all containers: root, archive,
+	 * category, and orphan bin Currently subtasks are not deleted but rather are rather potentially orphaned
 	 */
 	public abstract void deleteTask(ITask task);
 

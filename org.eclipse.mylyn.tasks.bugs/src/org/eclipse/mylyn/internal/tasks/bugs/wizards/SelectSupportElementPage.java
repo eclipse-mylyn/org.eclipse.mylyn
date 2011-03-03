@@ -92,10 +92,12 @@ public class SelectSupportElementPage extends WizardPage {
 
 			if (gradientBackground) {
 				IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-				Color colorCategoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-						CommonThemes.COLOR_CATEGORY_GRADIENT_START);
-				Color colorCategoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-						CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+				Color colorCategoryGradientStart = themeManager.getCurrentTheme()
+						.getColorRegistry()
+						.get(CommonThemes.COLOR_CATEGORY_GRADIENT_START);
+				Color colorCategoryGradientEnd = themeManager.getCurrentTheme()
+						.getColorRegistry()
+						.get(CommonThemes.COLOR_CATEGORY_GRADIENT_END);
 
 				canvas.setSeparatorVisible(true);
 				canvas.setSeparatorAlignment(SWT.TOP);

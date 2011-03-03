@@ -886,7 +886,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 //		toolBarManager.update(true);
 
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+		final TaskRepository taskRepository = (outgoingNewRepository != null)
+				? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
 			@Override
@@ -1051,7 +1052,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		menuService = (IMenuService) getSite().getService(IMenuService.class);
 		if (menuService != null && leftToolBarManager instanceof ContributionManager) {
 			TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-			TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+			TaskRepository taskRepository = (outgoingNewRepository != null)
+					? outgoingNewRepository
 					: taskEditorInput.getTaskRepository();
 			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepository.getConnectorKind());
@@ -1145,7 +1147,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private void updateHeaderLabel() {
 		TaskRepository outgoingNewRepository = TasksUiUtil.getOutgoingNewTaskRepository(task);
-		final TaskRepository taskRepository = (outgoingNewRepository != null) ? outgoingNewRepository
+		final TaskRepository taskRepository = (outgoingNewRepository != null)
+				? outgoingNewRepository
 				: taskEditorInput.getTaskRepository();
 
 //		if (taskRepository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {

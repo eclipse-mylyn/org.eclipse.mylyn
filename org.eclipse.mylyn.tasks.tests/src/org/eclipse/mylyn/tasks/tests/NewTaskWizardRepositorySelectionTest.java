@@ -82,8 +82,10 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		dialog.open();
 
 		SelectRepositoryPage page = (SelectRepositoryPage) wizard.getPages()[0];
-		TaskRepository localRepository = TasksUiPlugin.getRepositoryManager().getRepositories(
-				LocalRepositoryConnector.CONNECTOR_KIND).iterator().next();
+		TaskRepository localRepository = TasksUiPlugin.getRepositoryManager()
+				.getRepositories(LocalRepositoryConnector.CONNECTOR_KIND)
+				.iterator()
+				.next();
 		assertEquals(localRepository, ((IStructuredSelection) page.getViewer().getSelection()).getFirstElement());
 
 		wizard.dispose();

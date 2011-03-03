@@ -145,7 +145,7 @@ public class SaxRepositoriesWriter {
 			return errorHandler;
 		}
 
-		@SuppressWarnings( { "deprecation", "restriction" })
+		@SuppressWarnings({ "deprecation", "restriction" })
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof TaskRepositoriesInputSource)) {
 				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$

@@ -1160,13 +1160,15 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public String getDuplicateStatus() {
-		return validTransitions == null ? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
+		return validTransitions == null
+				? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
 				: validTransitions.getDuplicateStatus();
 	}
 
 	public String getStartStatus() {
 		if (validTransitions == null) {
-			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0 ? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
+			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
+					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
 					: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
 			return validTransitions.getStartStatus();

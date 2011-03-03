@@ -188,8 +188,8 @@ public interface ITracClient {
 
 	InputStream getAttachmentData(int ticketId, String filename, IProgressMonitor monitor) throws TracException;
 
-	void putAttachmentData(int ticketId, String name, String description, InputStream source, IProgressMonitor monitor, boolean replace)
-			throws TracException;
+	void putAttachmentData(int ticketId, String name, String description, InputStream source, IProgressMonitor monitor,
+			boolean replace) throws TracException;
 
 	void deleteAttachment(int ticketId, String filename, IProgressMonitor monitor) throws TracException;
 

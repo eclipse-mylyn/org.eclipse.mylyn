@@ -22,7 +22,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 
 /**
- * 
  * @author Xiaoyang Guan
  * @since 2.1
  */

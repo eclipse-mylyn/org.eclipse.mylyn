@@ -30,7 +30,7 @@ public class SaxRepositoriesContentHandler extends DefaultHandler {
 
 	private final Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();
 
-	@SuppressWarnings( { "deprecation", "restriction" })
+	@SuppressWarnings({ "deprecation", "restriction" })
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {

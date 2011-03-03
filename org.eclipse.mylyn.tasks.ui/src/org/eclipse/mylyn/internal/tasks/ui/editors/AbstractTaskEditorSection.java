@@ -117,8 +117,10 @@ public abstract class AbstractTaskEditorSection extends AbstractTaskEditorPart {
 					public void run() throws Exception {
 						part.createControl(sectionClient, toolkit);
 						if (part.getControl() != null) {
-							GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(
-									part.getControl());
+							GridDataFactory.fillDefaults()
+									.align(SWT.FILL, SWT.TOP)
+									.grab(true, false)
+									.applyTo(part.getControl());
 						}
 					}
 				});

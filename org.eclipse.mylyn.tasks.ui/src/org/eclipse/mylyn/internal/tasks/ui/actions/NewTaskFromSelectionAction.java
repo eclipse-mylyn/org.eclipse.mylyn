@@ -53,7 +53,8 @@ public class NewTaskFromSelectionAction extends Action {
 	@Override
 	public void run() {
 		if (taskMapping == null) {
-			MessageDialog.openError(null, Messages.NewTaskFromSelectionAction_New_Task_from_Selection, Messages.NewTaskFromSelectionAction_Nothing_selected_to_create_task_from);
+			MessageDialog.openError(null, Messages.NewTaskFromSelectionAction_New_Task_from_Selection,
+					Messages.NewTaskFromSelectionAction_Nothing_selected_to_create_task_from);
 			return;
 		}
 

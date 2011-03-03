@@ -81,8 +81,9 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		priority1 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
-						PriorityLevel.P1.toString());
+				TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P1.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
 			}
 		};
@@ -95,8 +96,9 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		priority2 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
-						PriorityLevel.P2.toString());
+				TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P2.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
 			}
 		};
@@ -109,8 +111,9 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		priority3 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
-						PriorityLevel.P3.toString());
+				TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P3.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
 			}
 		};
@@ -123,8 +126,9 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		priority4 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
-						PriorityLevel.P4.toString());
+				TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P4.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
 			}
 		};
@@ -137,8 +141,9 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		priority5 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
-						PriorityLevel.P5.toString());
+				TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
 			}
 		};

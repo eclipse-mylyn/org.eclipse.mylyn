@@ -37,7 +37,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor {
 
 	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
-		final MenuManager subMenuManager = new MenuManager(Messages.MoveToCategoryMenuContributor_Set_Category_Menu_Item);
+		final MenuManager subMenuManager = new MenuManager(
+				Messages.MoveToCategoryMenuContributor_Set_Category_Menu_Item);
 
 		// Compute selected tasks
 		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());

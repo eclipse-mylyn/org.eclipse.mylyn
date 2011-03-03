@@ -140,8 +140,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void startNotification(long initialStartupTime) {
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+		if (TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			if (!openJob.cancel()) {
 				try {
 					openJob.join();

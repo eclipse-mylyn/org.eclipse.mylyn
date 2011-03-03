@@ -249,8 +249,9 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
 		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 
-		MonitorUiPlugin.getDefault().getActivityContextManager().removeActivityTime(task1.getHandleIdentifier(),
-				start.getTimeInMillis(), end.getTimeInMillis());
+		MonitorUiPlugin.getDefault()
+				.getActivityContextManager()
+				.removeActivityTime(task1.getHandleIdentifier(), start.getTimeInMillis(), end.getTimeInMillis());
 		// Half gone since end date is exclusive (removes up to but not including hour)
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
@@ -260,8 +261,9 @@ public class TaskActivityTimingTest extends TestCase {
 
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
-		MonitorUiPlugin.getDefault().getActivityContextManager().removeActivityTime(task1.getHandleIdentifier(),
-				start2.getTimeInMillis(), end2.getTimeInMillis());
+		MonitorUiPlugin.getDefault()
+				.getActivityContextManager()
+				.removeActivityTime(task1.getHandleIdentifier(), start2.getTimeInMillis(), end2.getTimeInMillis());
 
 		assertEquals(0, activityManager.getElapsedTime(task1));
 	}

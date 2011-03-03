@@ -54,8 +54,9 @@ public class TaskListExternalizationTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 
 		TaskTestUtil.resetTaskListAndRepositories();
 

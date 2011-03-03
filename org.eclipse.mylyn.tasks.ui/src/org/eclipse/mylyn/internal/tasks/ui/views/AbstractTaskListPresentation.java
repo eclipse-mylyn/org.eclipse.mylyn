@@ -49,9 +49,8 @@ public abstract class AbstractTaskListPresentation implements IPluginContributio
 	}
 
 	/**
-	 * Creates a new instance of a content provider for a particular instance of the Task List
-	 * 
-	 * TODO: change view parameter to be the viewer
+	 * Creates a new instance of a content provider for a particular instance of the Task List TODO: change view
+	 * parameter to be the viewer
 	 */
 	protected abstract AbstractTaskListContentProvider createContentProvider(TaskListView taskListView);
 

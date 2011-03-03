@@ -63,8 +63,8 @@ public class TracTaskListMigrator extends AbstractTaskListMigrator {
 		task.setModificationDate(TracUtil.parseDate(lastModDate));
 		task.setAttribute(TracRepositoryConnector.TASK_KEY_UPDATE_DATE, lastModDate);
 		if (element.hasAttribute(KEY_SUPPORTS_SUBTASKS)) {
-			task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.valueOf(
-					element.getAttribute(KEY_SUPPORTS_SUBTASKS)).toString());
+			task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS,
+					Boolean.valueOf(element.getAttribute(KEY_SUPPORTS_SUBTASKS)).toString());
 		}
 	}
 

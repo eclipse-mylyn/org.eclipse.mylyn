@@ -25,9 +25,7 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * A contribution to a {@link ITaskRepositoryPage}, which enables plug-ins to contribute UI to the task repository
- * settings.
- * 
- * subclasses must have a default public constructor.
+ * settings. subclasses must have a default public constructor.
  * 
  * @author David Green
  * @since 3.1
@@ -47,7 +45,6 @@ public abstract class AbstractTaskRepositoryPageContribution {
 		 * 
 		 * @param contribution
 		 *            the contribution that changed
-		 * 
 		 * @see ITaskRepositoryPageContribution#validate(IProgressMonitor)
 		 */
 		public void validationRequired(AbstractTaskRepositoryPageContribution contribution);
@@ -67,7 +64,6 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	private String id;
 
 	/**
-	 * 
 	 * @param title
 	 *            the title of the contribution, as displayed to the user, usually used as a section heading
 	 * @param description
@@ -164,7 +160,6 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	 * 
 	 * @param repository
 	 *            the repository to which settings should be applied
-	 * 
 	 * @see ITaskRepositoryPage#applyTo(TaskRepository)
 	 * @since 3.1
 	 */
@@ -214,9 +209,8 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Indicate if this contribution is enabled. Subclasses may override to programatically disable the contribution
-	 * when needed. This method is called early in the contributor's lifecycle, before any controls are created.
-	 * 
-	 * the default implementation returns true.
+	 * when needed. This method is called early in the contributor's lifecycle, before any controls are created. the
+	 * default implementation returns true.
 	 */
 	public boolean isEnabled() {
 		return true;

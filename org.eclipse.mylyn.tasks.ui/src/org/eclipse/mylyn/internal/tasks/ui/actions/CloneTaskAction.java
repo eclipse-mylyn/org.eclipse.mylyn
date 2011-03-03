@@ -92,8 +92,9 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n" //$NON-NLS-1$
 								+ mapping.getDescription());
 
-						TaskAttribute attrDescription = mapping.getTaskData().getRoot().getMappedAttribute(
-								TaskAttribute.DESCRIPTION);
+						TaskAttribute attrDescription = mapping.getTaskData()
+								.getRoot()
+								.getMappedAttribute(TaskAttribute.DESCRIPTION);
 						if (attrDescription != null) {
 							attrDescription.getMetaData().setReadOnly(false);
 						}

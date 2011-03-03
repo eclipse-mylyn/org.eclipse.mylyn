@@ -87,7 +87,8 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 
 					@Override
 					public String getTitle() {
-						return Messages.CompareAttachmentsAction_Compare__ + attachment1.getFileName() + " - " + attachment2.getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+						return Messages.CompareAttachmentsAction_Compare__ + attachment1.getFileName()
+								+ " - " + attachment2.getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					@Override

@@ -63,8 +63,9 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 			if (showLabel && !isPriority) {
 				editor.createLabelControl(composite, toolkit);
-				GridDataFactory.defaultsFor(editor.getLabelControl()).indent(indent, 0).applyTo(
-						editor.getLabelControl());
+				GridDataFactory.defaultsFor(editor.getLabelControl())
+						.indent(indent, 0)
+						.applyTo(editor.getLabelControl());
 			}
 
 			if (isPriority) {
@@ -131,13 +132,18 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				EditorUtil.setHeaderFontSizeAndStyle(summaryEditor.getControl());
 			} else {
 				final Composite border = toolkit.createComposite(composite);
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(EditorUtil.MAXIMUM_WIDTH,
-						SWT.DEFAULT).grab(true, false).applyTo(border);
+				GridDataFactory.fillDefaults()
+						.align(SWT.FILL, SWT.BEGINNING)
+						.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
+						.grab(true, false)
+						.applyTo(border);
 				// leave some padding for the border of the attribute editor
 				border.setLayout(GridLayoutFactory.fillDefaults().margins(1, 4).create());
 				summaryEditor.createControl(border, toolkit);
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(
-						summaryEditor.getControl());
+				GridDataFactory.fillDefaults()
+						.align(SWT.FILL, SWT.CENTER)
+						.grab(true, false)
+						.applyTo(summaryEditor.getControl());
 				toolkit.paintBordersFor(border);
 			}
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);

@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.oslc.core.cm;
 
 /**
  * @see http://open-services.net/bin/view/Main/CmResourceDefinitionsV1
- * 
  * @author Robert Elves
  */
 public abstract class AbstractChangeRequest {

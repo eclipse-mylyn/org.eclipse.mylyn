@@ -219,8 +219,9 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 			editedWorkingSets.remove(editWorkingSet);
 		}
 		dialog.create();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
-				IWorkbenchHelpContextIds.WORKING_SET_EDIT_WIZARD);
+		PlatformUI.getWorkbench()
+				.getHelpSystem()
+				.setHelp(dialog.getShell(), IWorkbenchHelpContextIds.WORKING_SET_EDIT_WIZARD);
 		if (dialog.open() == Window.OK) {
 			editWorkingSet = wizard.getSelection();
 			availableWorkingSetsChanged();
@@ -247,8 +248,9 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 		WizardDialog dialog = new WizardDialog(getShell(), wizard);
 
 		dialog.create();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
-				IWorkbenchHelpContextIds.WORKING_SET_NEW_WIZARD);
+		PlatformUI.getWorkbench()
+				.getHelpSystem()
+				.setHelp(dialog.getShell(), IWorkbenchHelpContextIds.WORKING_SET_NEW_WIZARD);
 		if (dialog.open() == Window.OK) {
 			IWorkingSet workingSet = wizard.getSelection();
 			manager.addWorkingSet(workingSet);

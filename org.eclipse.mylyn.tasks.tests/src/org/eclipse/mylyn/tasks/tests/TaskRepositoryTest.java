@@ -33,8 +33,8 @@ public class TaskRepositoryTest extends TestCase {
 	public void testPlatformAuthHandlerAvailable() throws Exception {
 		URL url = new URL("http://mylyn");
 		Platform.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
-		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth", Platform.getAuthorizationInfo(url,
-				"", ""));
+		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",
+				Platform.getAuthorizationInfo(url, "", ""));
 	}
 
 	public void testLabel() {

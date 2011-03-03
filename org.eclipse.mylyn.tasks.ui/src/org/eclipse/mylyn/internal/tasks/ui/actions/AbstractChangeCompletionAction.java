@@ -39,8 +39,8 @@ public class AbstractChangeCompletionAction extends Action {
 	}
 
 	protected String generateMessage(List<AbstractTask> toComplete, String status) {
-		String message = MessageFormat.format(Messages.AbstractChangeCompletionAction_Mark_selected_local_tasks_X, status)
-				+ "\n\n"; //$NON-NLS-1$
+		String message = MessageFormat.format(Messages.AbstractChangeCompletionAction_Mark_selected_local_tasks_X,
+				status) + "\n\n"; //$NON-NLS-1$
 		int i = 0;
 		for (ITask task : toComplete) {
 			i++;

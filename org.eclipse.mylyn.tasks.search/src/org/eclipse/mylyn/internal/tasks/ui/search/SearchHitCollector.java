@@ -116,9 +116,11 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 				if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_returned_maximum_number_of_hits,
+							TasksUiInternal.displayStatus(
+									Messages.SearchHitCollector_Search_returned_maximum_number_of_hits,
 									RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-											TasksUiPlugin.ID_PLUGIN, Messages.SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded));
+											TasksUiPlugin.ID_PLUGIN,
+											Messages.SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded));
 						}
 					});
 				}

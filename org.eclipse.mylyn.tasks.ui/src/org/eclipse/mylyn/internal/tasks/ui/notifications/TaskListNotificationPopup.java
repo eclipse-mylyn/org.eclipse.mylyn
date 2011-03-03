@@ -101,7 +101,8 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					}
 				}
 
-				final TaskScalingHyperlink itemLink = new TaskScalingHyperlink(notificationComposite, SWT.BEGINNING | SWT.NO_FOCUS);
+				final TaskScalingHyperlink itemLink = new TaskScalingHyperlink(notificationComposite, SWT.BEGINNING
+						| SWT.NO_FOCUS);
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
 
 				itemLink.setText(CommonUiUtil.toLabel(notification.getLabel()));

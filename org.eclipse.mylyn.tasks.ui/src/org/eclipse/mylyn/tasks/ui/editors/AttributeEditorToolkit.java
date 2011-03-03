@@ -83,7 +83,8 @@ public class AttributeEditorToolkit {
 	public void adapt(AbstractAttributeEditor editor) {
 		if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
 				|| editor instanceof PersonAttributeEditor) {
-			Control control = (editor instanceof PersonAttributeEditor) ? ((PersonAttributeEditor) editor).getText()
+			Control control = (editor instanceof PersonAttributeEditor)
+					? ((PersonAttributeEditor) editor).getText()
 					: editor.getControl();
 			if (control == null) {
 				// fall back in case getText() returns null

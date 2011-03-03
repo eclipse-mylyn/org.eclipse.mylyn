@@ -85,7 +85,6 @@ public class TaskEditorExtensions {
 	 * 
 	 * @param taskRepository
 	 * @return the extension, or null if there is none
-	 * 
 	 * @see #getDefaultTaskEditorExtension(TaskRepository)
 	 */
 	public static AbstractTaskEditorExtension getTaskEditorExtension(TaskRepository taskRepository) {
@@ -126,7 +125,6 @@ public class TaskEditorExtensions {
 	 * 
 	 * @param connectorKind
 	 *            the kind of connector
-	 * 
 	 * @return the default task editor extension id or null if there is no default
 	 */
 	public static String getDefaultTaskEditorExtensionId(String connectorKind) {
@@ -139,7 +137,6 @@ public class TaskEditorExtensions {
 	 * 
 	 * @param taskRepository
 	 * @return the extension, or null if there is none
-	 * 
 	 * @see #getTaskEditorExtension(TaskRepository)
 	 */
 	public static AbstractTaskEditorExtension getDefaultTaskEditorExtension(TaskRepository taskRepository) {

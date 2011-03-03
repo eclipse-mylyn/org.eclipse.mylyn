@@ -95,7 +95,6 @@ public class TracHyperlinkUtil {
 
 	/**
 	 * Detects Trac hyperlinks.
-	 * 
 	 * <ul>
 	 * <li>Ticket comments: comment:ticket:1:2
 	 * <li>Reports: {1} or report:1

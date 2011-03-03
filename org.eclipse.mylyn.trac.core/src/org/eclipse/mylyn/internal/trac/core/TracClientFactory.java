@@ -40,7 +40,6 @@ public class TracClientFactory {
 	/**
 	 * Tries all supported access types for <code>location</code> and returns the corresponding version if successful;
 	 * throws an exception otherwise.
-	 * 
 	 * <p>
 	 * Order of the tried access types: XML-RPC, Trac 0.9
 	 */

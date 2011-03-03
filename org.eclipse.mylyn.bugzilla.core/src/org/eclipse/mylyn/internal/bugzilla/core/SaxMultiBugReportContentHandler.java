@@ -307,7 +307,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		}
 
-			// Comment attributes
+		// Comment attributes
 		case WHO:
 			if (taskComment != null) {
 				taskComment.author = parsedText;

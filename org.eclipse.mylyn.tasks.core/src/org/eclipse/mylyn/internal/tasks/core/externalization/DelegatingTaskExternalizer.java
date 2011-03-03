@@ -63,14 +63,10 @@ import org.w3c.dom.NodeList;
 
 /**
  * Subclass externalizers must override the get*TagName() methods for the types of externalized items they support to
- * ensure that their externalizer does not externalize tasks from other connectors incorrectly.
- * 
- * These tag names uniquely identify the externalizer to be used to read the task from externalized form on disk.
- * 
- * The canCreateElementFor methods specify which tasks the externalizer should write to disk.
- * 
- * The TaskList is read on startup, so externalizers extending this should not perform any slow (i.e., network)
- * operations when overriding methods.
+ * ensure that their externalizer does not externalize tasks from other connectors incorrectly. These tag names uniquely
+ * identify the externalizer to be used to read the task from externalized form on disk. The canCreateElementFor methods
+ * specify which tasks the externalizer should write to disk. The TaskList is read on startup, so externalizers
+ * extending this should not perform any slow (i.e., network) operations when overriding methods.
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -339,7 +335,7 @@ public final class DelegatingTaskExternalizer {
 		}
 	}
 
-	@SuppressWarnings( { "restriction" })
+	@SuppressWarnings({ "restriction" })
 	private String stripControlCharacters(String text) {
 		if (text == null) {
 			return ""; //$NON-NLS-1$

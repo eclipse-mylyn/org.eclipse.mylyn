@@ -80,7 +80,8 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 		parent.setLayout(layout);
 
 		String defaultExtensionId = TaskEditorExtensions.getDefaultTaskEditorExtensionId(getConnectorKind());
-		selectedExtensionId = getRepository() == null ? defaultExtensionId
+		selectedExtensionId = getRepository() == null
+				? defaultExtensionId
 				: TaskEditorExtensions.getTaskEditorExtensionId(getRepository());
 
 		// configure a 'Plain Text' (none) button

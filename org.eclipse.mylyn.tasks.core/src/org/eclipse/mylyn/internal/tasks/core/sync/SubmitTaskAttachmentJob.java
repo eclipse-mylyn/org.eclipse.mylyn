@@ -96,8 +96,8 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 					Policy.subMonitorFor(monitor, 100));
 			fireTaskSubmitted(monitor);
 			monitor.subTask(Messages.SubmitTaskAttachmentJob_Updating_task);
-			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(), Policy.subMonitorFor(monitor,
-					100));
+			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(),
+					Policy.subMonitorFor(monitor, 100));
 			taskDataManager.putUpdatedTaskData(task, taskData, true);
 			fireTaskSynchronized(monitor);
 		} catch (CoreException e) {

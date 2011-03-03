@@ -45,7 +45,8 @@ public class DialogErrorReporter extends AbstractErrorReporter {
 								if (!errorDialogOpen) {
 									errorDialogOpen = true;
 									Shell shell = Display.getDefault().getActiveShell();
-									ErrorDialog.openError(shell, Messages.DialogErrorReporter_Mylyn_Error, Messages.DialogErrorReporter_Please_report_the_following_error_at, status);
+									ErrorDialog.openError(shell, Messages.DialogErrorReporter_Mylyn_Error,
+											Messages.DialogErrorReporter_Please_report_the_following_error_at, status);
 								}
 							} finally {
 								errorDialogOpen = false;

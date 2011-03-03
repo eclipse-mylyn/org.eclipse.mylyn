@@ -34,8 +34,8 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 	public void testStackTraceWithAppendedText() throws Exception {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
-		assertEquals(stackTrace + "\n", StackTraceDuplicateDetector.getStackTraceFromDescription(extraText + "\n"
-				+ stackTrace + "\n"));
+		assertEquals(stackTrace + "\n",
+				StackTraceDuplicateDetector.getStackTraceFromDescription(extraText + "\n" + stackTrace + "\n"));
 	}
 
 	public void testStackTraceMisaligned() throws Exception {

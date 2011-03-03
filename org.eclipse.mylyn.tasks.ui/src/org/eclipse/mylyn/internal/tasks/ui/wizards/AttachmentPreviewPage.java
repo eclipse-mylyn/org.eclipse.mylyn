@@ -204,8 +204,11 @@ public class AttachmentPreviewPage extends WizardPage {
 		canvasComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 		Canvas canvas = new Canvas(canvasComposite, SWT.NO_BACKGROUND);
 		final Rectangle imgSize = bufferedImage.getBounds();
-		canvas.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).hint(
-				imgSize.width, imgSize.height).create());
+		canvas.setLayoutData(GridDataFactory.fillDefaults()
+				.align(SWT.CENTER, SWT.CENTER)
+				.grab(true, true)
+				.hint(imgSize.width, imgSize.height)
+				.create());
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent event) {
 				event.gc.drawImage(bufferedImage, 0, 0);

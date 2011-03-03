@@ -47,7 +47,8 @@ public class ExportAction implements IViewActionDelegate {
 
 	public void run(IAction action) {
 		if (selection.isEmpty() || !(selection instanceof StructuredSelection)) {
-			MessageDialog.openError(WorkbenchUtil.getShell(), Messages.ExportAction_Dialog_Title, Messages.ExportAction_Nothing_selected);
+			MessageDialog.openError(WorkbenchUtil.getShell(), Messages.ExportAction_Dialog_Title,
+					Messages.ExportAction_Nothing_selected);
 			return;
 		}
 
@@ -60,8 +61,8 @@ public class ExportAction implements IViewActionDelegate {
 			File file = new File(path);
 			// Prompt the user to confirm if save operation will cause an overwrite
 			if (file.exists()) {
-				if (!MessageDialog.openConfirm(WorkbenchUtil.getShell(), Messages.ExportAction_Dialog_Title, NLS.bind(
-						Messages.ExportAction_X_exists_Do_you_wish_to_overwrite, file.getPath()))) {
+				if (!MessageDialog.openConfirm(WorkbenchUtil.getShell(), Messages.ExportAction_Dialog_Title,
+						NLS.bind(Messages.ExportAction_X_exists_Do_you_wish_to_overwrite, file.getPath()))) {
 					return;
 				}
 			}
@@ -70,8 +71,8 @@ public class ExportAction implements IViewActionDelegate {
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Problems encountered during export", e)); //$NON-NLS-1$
-				TasksUiInternal.displayStatus(Messages.ExportAction_Dialog_Title, new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
-						new IStatus[] { e.getStatus() },
+				TasksUiInternal.displayStatus(Messages.ExportAction_Dialog_Title, new MultiStatus(
+						ITasksCoreConstants.ID_PLUGIN, 0, new IStatus[] { e.getStatus() },
 						Messages.ExportAction_Problems_encountered, e));
 			}
 		}

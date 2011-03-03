@@ -67,8 +67,9 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 
 		TaskTestUtil.resetTaskListAndRepositories();
 		repository = TaskTestUtil.createMockRepository();

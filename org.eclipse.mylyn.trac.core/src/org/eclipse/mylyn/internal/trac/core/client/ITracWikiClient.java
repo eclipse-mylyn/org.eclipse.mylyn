@@ -45,7 +45,6 @@ public interface ITracWikiClient {
 	 * 
 	 * @param monitor
 	 *            TODO
-	 * 
 	 * @throws TracException
 	 */
 	public void validateWikiRpcApi(IProgressMonitor monitor) throws TracException;
@@ -55,7 +54,6 @@ public interface ITracWikiClient {
 	 * 
 	 * @param monitor
 	 *            TODO
-	 * 
 	 * @return The array of the names of all Wiki pages
 	 * @throws TracException
 	 */

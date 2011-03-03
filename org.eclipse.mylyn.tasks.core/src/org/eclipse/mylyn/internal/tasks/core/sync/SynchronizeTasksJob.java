@@ -169,7 +169,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 							try {
 								task = synchronizeTask(monitor, relation.getTaskId());
 							} catch (CoreException e) {
-								String taskKey = (task != null && task.getTaskKey() != null) ? task.getTaskKey()
+								String taskKey = (task != null && task.getTaskKey() != null)
+										? task.getTaskKey()
 										: relation.getTaskId();
 								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
 										Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,

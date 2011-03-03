@@ -134,8 +134,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					TasksUi.getTaskActivityManager().removeActivityListener(taskProgressBarActivityListener);
 				}
 				if (taskProgressBarWorkingSetListener != null) {
-					PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(
-							taskProgressBarWorkingSetListener);
+					PlatformUI.getWorkbench()
+							.getWorkingSetManager()
+							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();

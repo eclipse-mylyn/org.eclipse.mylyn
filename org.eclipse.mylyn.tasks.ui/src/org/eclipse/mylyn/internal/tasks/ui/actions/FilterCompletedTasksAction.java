@@ -32,14 +32,16 @@ public class FilterCompletedTasksAction extends Action {
 		setToolTipText(Messages.FilterCompletedTasksAction_Filter_Completed_Tasks);
 		setId(ID);
 		setImageDescriptor(CommonImages.FILTER_COMPLETE);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(
-				ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
+		setChecked(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE,
-				isChecked());
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE, isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());
 		} else {

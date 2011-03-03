@@ -137,7 +137,8 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 						if (regions == null) {
 							regions = new ArrayList<IRegion>();
 						}
-						regions.add(hyperlink instanceof IHighlightingHyperlink ? ((IHighlightingHyperlink) hyperlink).getHighlightingRegion()
+						regions.add(hyperlink instanceof IHighlightingHyperlink
+								? ((IHighlightingHyperlink) hyperlink).getHighlightingRegion()
 								: hyperlink.getHyperlinkRegion());
 					}
 				}

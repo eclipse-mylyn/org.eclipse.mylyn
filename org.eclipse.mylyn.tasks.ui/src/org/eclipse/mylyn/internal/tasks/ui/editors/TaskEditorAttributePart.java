@@ -79,7 +79,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 		int currentColumn = 1;
 		int currentPriority = 0;
 		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
-			int priority = (attributeEditor.getLayoutHint() != null) ? attributeEditor.getLayoutHint().getPriority()
+			int priority = (attributeEditor.getLayoutHint() != null)
+					? attributeEditor.getLayoutHint().getPriority()
 					: LayoutHint.DEFAULT_PRIORITY;
 			if (priority != currentPriority) {
 				currentPriority = priority;

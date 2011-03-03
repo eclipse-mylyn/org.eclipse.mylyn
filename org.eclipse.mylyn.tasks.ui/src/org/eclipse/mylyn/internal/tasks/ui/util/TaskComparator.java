@@ -191,9 +191,11 @@ public class TaskComparator implements Comparator<ITask> {
 				String rankString1 = element1.getAttribute(TaskAttribute.RANK);
 				String rankString2 = element2.getAttribute(TaskAttribute.RANK);
 				try {
-					Double rank1 = rankString1 == null || rankString1.length() == 0 ? Double.valueOf(0)
+					Double rank1 = rankString1 == null || rankString1.length() == 0
+							? Double.valueOf(0)
 							: Double.valueOf(rankString1);
-					Double rank2 = rankString2 == null || rankString2.length() == 0 ? Double.valueOf(0)
+					Double rank2 = rankString2 == null || rankString2.length() == 0
+							? Double.valueOf(0)
 							: Double.valueOf(rankString2);
 					return compare(rank1, rank2, sortDirection);
 				} catch (NumberFormatException e) {
