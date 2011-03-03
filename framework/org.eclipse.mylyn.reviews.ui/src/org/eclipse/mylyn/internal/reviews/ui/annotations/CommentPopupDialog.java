@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-
 /**
  * Popup to show the information about the annotation in
  * 
