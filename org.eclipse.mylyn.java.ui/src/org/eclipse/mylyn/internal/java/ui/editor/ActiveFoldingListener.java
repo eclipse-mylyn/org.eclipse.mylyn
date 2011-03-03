@@ -62,8 +62,9 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		ContextCore.getContextManager().addListener(this);
 		JavaUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
 
-		enabled = JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-				JavaUiBridgePlugin.AUTO_FOLDING_ENABLED);
+		enabled = JavaUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED);
 		try {
 			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
@@ -185,8 +186,9 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			break;
 		case CLEARED:
 			if (event.isActiveContext()) {
-				if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-						JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+				if (JavaUiBridgePlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 					updateFolding();
 				}
 			}

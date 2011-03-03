@@ -43,8 +43,7 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 	 * Only public for testing
 	 */
 	@Override
-	public void handleWorkbenchPartSelection(IWorkbenchPart part,
-			ISelection selection, boolean contributeToContext) {
+	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		try {
 			ICElement selectedElement = null;
 			if (selection instanceof StructuredSelection) {
@@ -57,8 +56,7 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 
 				// Object selectedObject =
 				// structuredSelection.getFirstElement();
-				for (Iterator<?> iterator = structuredSelection.iterator(); iterator
-						.hasNext();) {
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 					Object selectedObject = iterator.next();
 					if (selectedObject instanceof ICElement) {
 						ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((ICElement) selectedObject);
@@ -69,25 +67,21 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 					if (selectedElement != null) {
-						super.handleElementSelection(part, selectedElement,
-								contributeToContext);
+						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
 				}
 			} else {
 				if (part instanceof CEditor) {
 					currentEditor = (CEditor) part;
-					selectedElement = SelectionConverter
-							.getElementAtOffset(currentEditor);
+					selectedElement = SelectionConverter.getElementAtOffset(currentEditor);
 					if (selectedElement == null)
 						return; // nothing selected
 
 					if (selectedElement != null) {
 						if (selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement,
-									contributeToContext);
+							super.handleElementEdit(part, selectedElement, contributeToContext);
 						} else if (!selectedElement.equals(lastSelectedElement)) {
-							super.handleElementSelection(part, selectedElement,
-									contributeToContext);
+							super.handleElementSelection(part, selectedElement, contributeToContext);
 						}
 					}
 

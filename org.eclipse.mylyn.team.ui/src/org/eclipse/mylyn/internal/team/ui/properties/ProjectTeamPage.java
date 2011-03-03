@@ -198,8 +198,9 @@ public class ProjectTeamPage extends PropertyPage {
 			if (template == null) {
 				useProjectSettings.setSelection(false);
 				setPropertiesEnabled(false);
-				commitTemplateText.setText(FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-						FocusedTeamUiPlugin.COMMIT_TEMPLATE));
+				commitTemplateText.setText(FocusedTeamUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getString(FocusedTeamUiPlugin.COMMIT_TEMPLATE));
 			} else {
 				useProjectSettings.setSelection(true);
 				setPropertiesEnabled(true);

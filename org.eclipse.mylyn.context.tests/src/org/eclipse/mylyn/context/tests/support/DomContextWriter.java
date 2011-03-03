@@ -92,7 +92,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	private void writeInteractionEvent(InteractionEvent e) {
 		Element node = doc.createElement("InteractionEvent");
 		String f = "yyyy-MM-dd HH:mm:ss.S z";
@@ -119,7 +119,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		root.appendChild(node);
 	}
 
-	@SuppressWarnings( { "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public void writeEventToStream(InteractionEvent e) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");

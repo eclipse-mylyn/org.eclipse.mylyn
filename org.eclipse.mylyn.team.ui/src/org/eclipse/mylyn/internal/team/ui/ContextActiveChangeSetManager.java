@@ -194,7 +194,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings( { "restriction", "deprecation" })
+	@SuppressWarnings({ "restriction", "deprecation" })
 	@Override
 	public void contextActivated(IInteractionContext context) {
 		try {
@@ -258,7 +258,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings( { "restriction", "deprecation" })
+	@SuppressWarnings({ "restriction", "deprecation" })
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {

@@ -86,9 +86,8 @@ public class TypeHistoryManager extends AbstractContextListener {
 	}
 
 	/**
-	 * HACK: to avoid adding AspectJ types, for example:
-	 * 
-	 * class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo
+	 * HACK: to avoid adding AspectJ types, for example: class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP
+	 * Example/src<tjp*GetInfo.aj}GetInfo
 	 */
 	private boolean isAspectjType(IType type) {
 		if (type.getHandleIdentifier().indexOf('}') != -1) {

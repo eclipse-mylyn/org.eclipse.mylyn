@@ -51,8 +51,9 @@ public class CommitTemplateManager {
 
 	public String getTaskIdFromCommentOrLabel(String comment) {
 		try {
-			String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-					FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+			String template = FocusedTeamUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getString(FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 			int templateNewline = template.indexOf('\n');
 			String templateFirstLineIndex = template;
 			if (templateNewline != -1) {

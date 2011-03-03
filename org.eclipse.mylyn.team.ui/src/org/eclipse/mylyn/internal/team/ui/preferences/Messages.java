@@ -26,6 +26,8 @@ public class Messages extends NLS {
 	}
 
 	public static String FocusedTeamPreferencePage_Automatically_create_and_manage_with_task_context;
+
 	public static String FocusedTeamPreferencePage_Change_Set_Management;
+
 	public static String FocusedTeamPreferencePage_Commit_Comment_Template;
 }

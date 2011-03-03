@@ -99,8 +99,9 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE,
 				mapCloseToRemoveButton.getSelection());
 
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST,
-				manageExpansionButton.getSelection());
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, manageExpansionButton.getSelection());
 
 		return true;
 	}

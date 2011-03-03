@@ -81,7 +81,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
+	@SuppressWarnings({ "deprecation", "restriction" })
 	private InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
 		String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
 		String endDate = attributes.getValue(InteractionContextExternalizer.ATR_END_DATE);

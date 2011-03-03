@@ -42,7 +42,7 @@ import com.ibm.icu.text.DateFormat;
  * @author Rob Elves
  * @author Mik Kersten
  */
-@SuppressWarnings( { "restriction" })
+@SuppressWarnings({ "restriction" })
 public class ContextRetrieveWizardPage extends WizardPage {
 
 	private final TaskRepository repository;

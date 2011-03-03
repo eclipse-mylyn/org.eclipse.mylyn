@@ -33,7 +33,8 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		return new ContextEditorFormPage(parentEditor, ContextUi.ID_CONTEXT_PAGE_FACTORY, Messages.ContextPageFactory_Context);
+		return new ContextEditorFormPage(parentEditor, ContextUi.ID_CONTEXT_PAGE_FACTORY,
+				Messages.ContextPageFactory_Context);
 	}
 
 	@Override

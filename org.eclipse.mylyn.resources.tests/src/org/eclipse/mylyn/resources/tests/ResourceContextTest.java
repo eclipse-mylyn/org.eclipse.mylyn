@@ -41,8 +41,9 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 		ContextTestUtil.triggerContextUiLazyStart();
 		// disable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
 	@Override
@@ -50,8 +51,9 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		super.tearDown();
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 		// re-enable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testResourceSelect() throws CoreException {

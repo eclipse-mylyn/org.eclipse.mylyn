@@ -26,6 +26,8 @@ public class Messages extends NLS {
 	}
 
 	public static String ProjectTeamPage_Commit_Comment_Template;
+
 	public static String ProjectTeamPage_Configure_workspace;
+
 	public static String ProjectTeamPage_Enable_project_specific_settings;
 }

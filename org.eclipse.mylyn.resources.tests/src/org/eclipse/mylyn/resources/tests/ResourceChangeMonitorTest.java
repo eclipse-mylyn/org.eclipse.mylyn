@@ -113,8 +113,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 		ContextCore.getContextManager().setContextCapturePaused(false);
 		// disable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 
 	}
 
@@ -123,8 +124,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 		super.tearDown();
 		// re-enable ResourceModifiedDateExclusionStrategy
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
 	public void testCreatedFile() throws CoreException {
@@ -275,9 +277,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(), null,
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 
-		MockResourceDelta child = MockResourceDelta.createMockDelta("/" + project.getProject().getName() + "/"
-				+ folder.getName(), new String[] { "/" + folder.getName() + "/test.txt" },
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
+		MockResourceDelta child = MockResourceDelta.createMockDelta(
+				"/" + project.getProject().getName() + "/" + folder.getName(), new String[] { "/" + folder.getName()
+						+ "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
 
 		delta.setChildren(new ResourceDelta[] { child });
 

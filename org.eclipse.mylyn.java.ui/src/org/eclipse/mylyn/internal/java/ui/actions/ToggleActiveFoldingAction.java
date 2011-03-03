@@ -73,8 +73,10 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 
 	public void init(IAction action) {
 		this.parentAction = action;
-		valueChanged(action, JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-				JavaUiBridgePlugin.AUTO_FOLDING_ENABLED));
+		valueChanged(action,
+				JavaUiBridgePlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED));
 	}
 
 	public void dispose() {

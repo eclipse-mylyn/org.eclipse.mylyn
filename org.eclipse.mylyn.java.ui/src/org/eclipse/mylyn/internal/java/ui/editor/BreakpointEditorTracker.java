@@ -40,7 +40,7 @@ public class BreakpointEditorTracker extends AbstractEditorTracker {
 	protected void editorOpened(IEditorPart part) {
 		if (part instanceof JavaEditor) {
 			IAnnotationModel model = ((JavaEditor) part).getViewer().getAnnotationModel();
-			if(model != null){
+			if (model != null) {
 				model.addAnnotationModelListener(new BreakpointListener(part, model));
 			}
 		}

@@ -35,9 +35,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Mik Kersten
- * 
- * TODO: merge into a single externalizer
+ * @author Mik Kersten TODO: merge into a single externalizer
  */
 public class DomContextReader implements IInteractionContextReader {
 
@@ -87,7 +85,7 @@ public class DomContextReader implements IInteractionContextReader {
 		return document;
 	}
 
-	@SuppressWarnings( { "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public InteractionEvent readInteractionEvent(Node n) {
 		try {
 			Element e = (Element) n;

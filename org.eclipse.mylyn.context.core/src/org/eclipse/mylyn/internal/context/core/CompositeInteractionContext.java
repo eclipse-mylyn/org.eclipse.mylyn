@@ -25,9 +25,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
- * Delegates to contained contexts.
- * 
- * TODO: should info be propagated proportionally to number of taskscapes?
+ * Delegates to contained contexts. TODO: should info be propagated proportionally to number of taskscapes?
  * 
  * @author Mik Kersten
  * @author Shawn Minto

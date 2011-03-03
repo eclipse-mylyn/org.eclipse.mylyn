@@ -39,9 +39,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	/**
 	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never
-	 * explicitly removed.
-	 * 
-	 * TODO: consider clearing on each re-launch
+	 * explicitly removed. TODO: consider clearing on each re-launch
 	 */
 	private final Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
 

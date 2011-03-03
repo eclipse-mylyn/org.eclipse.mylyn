@@ -55,13 +55,15 @@ public final class ContextUi {
 	}
 
 	public static boolean isEditorAutoCloseEnabled() {
-		return ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE);
+		return ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE);
 	}
 
 	public static boolean isEditorAutoManageEnabled() {
-		return ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
+		return ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
 	}
 
 	/**

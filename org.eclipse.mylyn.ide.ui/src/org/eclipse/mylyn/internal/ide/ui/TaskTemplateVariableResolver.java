@@ -27,7 +27,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * </p>
  * <h4>You want more variable? That's easy :D.</h4>
  * <p>
- * First add another template-resolver (for detail information see <a href="http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_ui_editors_templates.html"
+ * First add another template-resolver (for detail information see <a href=
+ * "http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_ui_editors_templates.html"
  * >here</a>) for the <code>org.eclipse.mylyn.internal.ide.ui.editors.templates</code>.
  * 
  * <pre>

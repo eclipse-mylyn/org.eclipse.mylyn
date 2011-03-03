@@ -74,8 +74,9 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		};
 		resources.add(project1);
 
-		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
-				"${task.key}: ${task.description}");
+		FocusedTeamUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "${task.key}: ${task.description}");
 		assertEquals("1: summary", changeSet.getComment());
 
 		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();
@@ -118,8 +119,9 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 		resources.add(project1);
 
-		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
-				"global template: ${task.key}");
+		FocusedTeamUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "global template: ${task.key}");
 
 		// only set template on project 2
 		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();

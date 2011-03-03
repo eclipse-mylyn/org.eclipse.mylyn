@@ -89,8 +89,9 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void addProposal(String proposal, String keyword) {
-			String description = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getHandlerDescription(
-					keyword);
+			String description = FocusedTeamUiPlugin.getDefault()
+					.getCommitTemplateManager()
+					.getHandlerDescription(keyword);
 			result.add(new Proposal(proposal, keyword, description));
 		}
 

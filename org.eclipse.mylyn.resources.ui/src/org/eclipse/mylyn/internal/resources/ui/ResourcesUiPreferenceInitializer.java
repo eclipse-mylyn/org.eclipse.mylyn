@@ -82,8 +82,9 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		defaultPatterns.addAll(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCE_MONITOR_ENABLED, true);
-		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED_ANT,
-				createResourceExclusionMemento(defaultPatterns));
+		ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.setDefault(PREF_RESOURCES_IGNORED_ANT, createResourceExclusionMemento(defaultPatterns));
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setDefault(PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
@@ -167,11 +168,13 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 		cachedExclusionPatterns = new HashSet<String>(exclusions);
 
-		if (!RESOURCE_PATTERN_VERSION.equals(ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(
-				PREF_RESOURCE_PATTERNS_VERSION))) {
+		if (!RESOURCE_PATTERN_VERSION.equals(ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.getString(PREF_RESOURCE_PATTERNS_VERSION))) {
 			cachedExclusionPatterns.addAll(ADDED_PATTERNS_1_0);
-			ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCE_PATTERNS_VERSION,
-					RESOURCE_PATTERN_VERSION);
+			ResourcesUiBridgePlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(PREF_RESOURCE_PATTERNS_VERSION, RESOURCE_PATTERN_VERSION);
 			// make sure to save the new value
 			setExcludedResourcePatterns(cachedExclusionPatterns);
 		}

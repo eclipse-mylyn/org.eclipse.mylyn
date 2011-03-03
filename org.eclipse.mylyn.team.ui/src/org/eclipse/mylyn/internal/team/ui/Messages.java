@@ -26,5 +26,6 @@ public class Messages extends NLS {
 	}
 
 	public static String ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE;
+
 	public static String ContextChangeSet_Mylyn_Change_Set_Management;
 }

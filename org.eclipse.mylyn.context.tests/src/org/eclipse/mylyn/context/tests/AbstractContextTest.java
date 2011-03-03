@@ -35,8 +35,9 @@ public abstract class AbstractContextTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (ContextCore.getContextManager() != null) {
-			assertFalse("Unexpected context active: "
-					+ ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
+			assertFalse(
+					"Unexpected context active: "
+							+ ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
 					ContextCore.getContextManager().isContextActive());
 		}
 	}

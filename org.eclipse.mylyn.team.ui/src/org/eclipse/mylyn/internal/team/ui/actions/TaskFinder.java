@@ -152,10 +152,12 @@ public class TaskFinder {
 
 		// XXX: clean up and remove break to label
 		if (taskId == null && comment != null) {
-			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections.singletonList(connector)
+			Collection<AbstractRepositoryConnector> connectors = connector != null
+					? Collections.singletonList(connector)
 					: TasksUi.getRepositoryManager().getRepositoryConnectors();
 			REPOSITORIES: for (AbstractRepositoryConnector c : connectors) {
-				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
+				Collection<TaskRepository> repositories = repository != null
+						? Collections.singletonList(repository)
 						: TasksUi.getRepositoryManager().getRepositories(c.getConnectorKind());
 				for (TaskRepository r : repositories) {
 					String[] ids = c.getTaskIdsFromComment(r, comment);

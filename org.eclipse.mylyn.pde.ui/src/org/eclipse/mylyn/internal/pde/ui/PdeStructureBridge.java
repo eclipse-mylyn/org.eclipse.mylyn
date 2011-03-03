@@ -42,7 +42,6 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
- * 
  */
 @SuppressWarnings("restriction")
 public class PdeStructureBridge extends AbstractContextStructureBridge {

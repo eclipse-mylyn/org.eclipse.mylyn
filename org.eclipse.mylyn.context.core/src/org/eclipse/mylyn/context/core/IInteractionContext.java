@@ -48,7 +48,6 @@ public interface IInteractionContext {
 	 * 
 	 * @param elementHandle
 	 *            the {@link IInteractionElement#getHandleIdentifier() handle identifier}
-	 * 
 	 * @return true if an {@link #getInteresting() interesting} interaction element exists with the given handle
 	 * @since 3.2
 	 */
@@ -69,19 +68,16 @@ public interface IInteractionContext {
 	public List<IInteractionElement> getLandmarks();
 
 	/**
-	 * 
 	 * @since 2.0
 	 */
 	public abstract IInteractionElement get(String element);
 
 	/**
-	 * 
 	 * @since 2.0
 	 */
 	public abstract IInteractionElement getActiveNode();
 
 	/**
-	 * 
 	 * @since 2.0
 	 */
 	public abstract void delete(IInteractionElement element);

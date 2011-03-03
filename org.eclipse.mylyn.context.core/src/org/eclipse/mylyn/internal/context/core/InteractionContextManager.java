@@ -804,8 +804,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 				if (activityMetaContext == null) {
 					resetActivityMetaContext();
-				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
-						PREFERENCE_ATTENTION_MIGRATED)) {
+				} else if (!ContextCorePlugin.getDefault()
+						.getPluginPreferences()
+						.getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
 					activityMetaContext = migrateLegacyActivity(activityMetaContext);
 					saveActivityMetaContext();
 					ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);

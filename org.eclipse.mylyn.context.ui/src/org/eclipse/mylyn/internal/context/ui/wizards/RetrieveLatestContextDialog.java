@@ -55,7 +55,8 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 			ITaskAttachment attachment = contextAttachments.get(0);
 			String author = null;
 			if (attachment.getAuthor() != null) {
-				author = (attachment.getAuthor().getName()) != null ? attachment.getAuthor().getName()
+				author = (attachment.getAuthor().getName()) != null
+						? attachment.getAuthor().getName()
 						: attachment.getAuthor().getPersonId();
 			}
 			if (author == null) {
@@ -69,15 +70,13 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 			if (dateString == null) {
 				dateString = Messages.RetrieveLatestContextDialog_Unknown;
 			}
-			String message = NLS.bind(
-					Messages.RetrieveLatestContextDialog_No_local_context_exists, author,
-					dateString);
+			String message = NLS.bind(Messages.RetrieveLatestContextDialog_No_local_context_exists, author, dateString);
 			int kind = QUESTION;
 			int style = SWT.NONE;
 
-			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell, Messages.RetrieveLatestContextDialog_Dialog_Title, null, message,
-					kind, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task,
-					attachment);
+			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell,
+					Messages.RetrieveLatestContextDialog_Dialog_Title, null, message, kind, new String[] {
+							IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task, attachment);
 			style &= TasksUiInternal.SWT_SHEET;
 			dialog.setShellStyle(dialog.getShellStyle() | style);
 			return dialog.open() == 0;

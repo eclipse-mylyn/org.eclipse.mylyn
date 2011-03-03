@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-@SuppressWarnings( { "restriction" })
+@SuppressWarnings({ "restriction" })
 public class ContextAttachWizard extends Wizard {
 
 	private final TaskRepository repository;

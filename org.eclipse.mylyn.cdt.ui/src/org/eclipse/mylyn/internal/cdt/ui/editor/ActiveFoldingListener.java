@@ -258,8 +258,9 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			break;
 		case CLEARED:
 			if (event.isActiveContext()) {
-				if (CDTUIBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-						CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
+				if (CDTUIBridgePlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 					updateFolding();
 				}
 			}

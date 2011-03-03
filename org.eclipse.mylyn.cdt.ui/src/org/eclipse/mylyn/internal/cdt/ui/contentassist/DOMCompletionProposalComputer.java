@@ -448,7 +448,8 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		repStringBuff.append(')');
 		String repString = repStringBuff.toString();
 
-		final int relevance = function instanceof ICPPMethod ? RelevanceConstants.METHOD_TYPE_RELEVANCE
+		final int relevance = function instanceof ICPPMethod
+				? RelevanceConstants.METHOD_TYPE_RELEVANCE
 				: RelevanceConstants.FUNCTION_TYPE_RELEVANCE;
 		CCompletionProposal proposal = createProposal(repString, dispString, idString, context.getCompletionNode()
 				.getLength(), image, baseRelevance + relevance, context, getCElement(function), function.getName());
@@ -492,8 +493,10 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 		String repString = repStringBuff.toString();
 
 		Image image = getImage(variable);
-		final int relevance = isLocalVariable(variable) ? RelevanceConstants.LOCAL_VARIABLE_TYPE_RELEVANCE
-				: isField(variable) ? RelevanceConstants.FIELD_TYPE_RELEVANCE
+		final int relevance = isLocalVariable(variable)
+				? RelevanceConstants.LOCAL_VARIABLE_TYPE_RELEVANCE
+				: isField(variable)
+						? RelevanceConstants.FIELD_TYPE_RELEVANCE
 						: RelevanceConstants.VARIABLE_TYPE_RELEVANCE;
 		CCompletionProposal proposal = createProposal(repString, dispString, idString, context.getCompletionNode()
 				.getLength(), image, baseRelevance + relevance, context, getCElement(variable), variable.getName());

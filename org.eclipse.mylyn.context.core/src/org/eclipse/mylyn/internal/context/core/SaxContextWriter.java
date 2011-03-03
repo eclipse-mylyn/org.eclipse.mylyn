@@ -174,7 +174,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
+	@SuppressWarnings({ "deprecation", "restriction" })
 	private Attributes createEventAttributes(InteractionEvent ie) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
 				Locale.ENGLISH);

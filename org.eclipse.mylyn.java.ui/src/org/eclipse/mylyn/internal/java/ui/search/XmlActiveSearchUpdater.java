@@ -30,7 +30,6 @@ import org.eclipse.search.ui.text.Match;
  * COPIED FROM: org.eclipse.search.internal.ui.text.SearchResultUpdater
  * 
  * @author Shawn Minto
- * 
  */
 public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryListener {
 	private final FileSearchResult fResult;

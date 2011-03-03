@@ -38,8 +38,9 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 
 	public void init() {
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
-		isEnabled = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-				ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
+		isEnabled = ResourcesUiBridgePlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS);
 		ContextCore.getContextManager().addListener(this);
 		if (ContextCore.getContextManager().isContextActive()) {
 			lastActivatedDate = new Date();
