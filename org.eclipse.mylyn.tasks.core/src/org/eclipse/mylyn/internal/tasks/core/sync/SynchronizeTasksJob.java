@@ -194,6 +194,9 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void runInternal(Set<ITask> tasks, IProgressMonitor monitor) {
+		if (!isUser()) {
+			monitor = Policy.backgroundMonitorFor(monitor);
+		}
 		try {
 			monitor.beginTask(Messages.SynchronizeTasksJob_Processing, tasks.size() * 100);
 			if (canGetMultiTaskData(taskRepository)) {
@@ -241,7 +244,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		String taskId = task.getTaskId();
 		TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
 		if (taskData != null) {
-			updateFromTaskData(taskRepository, task, taskData);
+			updateFromTaskData(taskRepository, task, taskData, monitor);
 			return;
 		}
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -256,7 +259,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
 		if (taskData != null) {
-			return createFromTaskData(taskRepository, taskId, taskData);
+			return createFromTaskData(taskRepository, taskId, taskData, monitor);
 		}
 
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -270,7 +273,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)
+	private void synchronizeTasks(final IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)
 			throws CoreException {
 		monitor.subTask(MessageFormat.format(Messages.SynchronizeTasksJob_Receiving_X_tasks_from_X, tasks.size(),
 				repository.getRepositoryLabel()));
@@ -285,7 +288,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			public void accept(TaskData taskData) {
 				ITask task = idToTask.remove(taskData.getTaskId());
 				if (task != null) {
-					updateFromTaskData(repository, task, taskData);
+					updateFromTaskData(repository, task, taskData, monitor);
 				}
 			}
 
@@ -298,16 +301,15 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			}
 		};
 
-		if (!isUser()) {
-			monitor = Policy.backgroundMonitorFor(monitor);
-		}
 		Set<String> taskIds = Collections.unmodifiableSet(new HashSet<String>(idToTask.keySet()));
 		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, monitor);
 	}
 
-	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData,
+			IProgressMonitor monitor) {
 		try {
-			taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession());
+
+			taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession(), monitor);
 			if (updateRelations) {
 				Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 				if (relations != null) {
@@ -319,11 +321,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
-	private ITask createFromTaskData(TaskRepository taskRepository, String taskId, TaskData taskData)
-			throws CoreException {
+	private ITask createFromTaskData(TaskRepository taskRepository, String taskId, TaskData taskData,
+			IProgressMonitor monitor) throws CoreException {
 		ITask task = tasksModel.createTask(taskRepository, taskData.getTaskId());
 		((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING_NEW);
-		taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession());
+		taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession(), monitor);
 		return task;
 	}
 

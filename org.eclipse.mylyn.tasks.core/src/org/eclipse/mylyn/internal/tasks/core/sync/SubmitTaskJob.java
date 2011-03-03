@@ -94,7 +94,7 @@ public class SubmitTaskJob extends SubmitJob {
 				TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId,
 						Policy.subMonitorFor(monitor, 100));
 				task = createTask(monitor, updatedTaskData);
-				taskDataManager.putSubmittedTaskData(task, updatedTaskData);
+				taskDataManager.putSubmittedTaskData(task, updatedTaskData, monitor);
 				fireTaskSynchronized(monitor);
 			} catch (CoreException e) {
 				errorStatus = e.getStatus();

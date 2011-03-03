@@ -37,6 +37,7 @@ public abstract class SynchronizationJob extends Job {
 	public SynchronizationJob(String name) {
 		super(name);
 		this.monitor = new DelegatingProgressMonitor();
+		this.monitor.setData(this);
 	}
 
 //	public boolean isChangedTasksSynchronization() {

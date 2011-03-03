@@ -173,7 +173,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 						@Override
 						public void putTaskData(ITask task, TaskData taskData) throws CoreException {
 							boolean changed = connector.hasTaskChanged(repository, task, taskData);
-							taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
+							taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this, monitor);
 							if (taskData.isPartial()) {
 								if (changed && connector.canSynchronizeTask(repository, task)) {
 									markStale(task);

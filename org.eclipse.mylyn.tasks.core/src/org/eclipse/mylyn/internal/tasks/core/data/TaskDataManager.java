@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
@@ -178,6 +180,11 @@ public class TaskDataManager implements ITaskDataManager {
 
 	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user, Object token)
 			throws CoreException {
+		putUpdatedTaskData(itask, taskData, user, null, null);
+	}
+
+	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user, Object token,
+			IProgressMonitor monitor) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
@@ -187,6 +194,10 @@ public class TaskDataManager implements ITaskDataManager {
 		final boolean taskDataChanged = connector.hasTaskChanged(repository, task, taskData);
 		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, token);
 		event.setTaskDataChanged(taskDataChanged);
+		IDelegatingProgressMonitor delegatingMonitor = DelegatingProgressMonitor.getMonitorFrom(monitor);
+		if (delegatingMonitor != null) {
+			event.setData(delegatingMonitor.getData());
+		}
 		final boolean[] synchronizationStateChanged = new boolean[1];
 		if (taskDataChanged || user) {
 			taskList.run(new ITaskListRunnable() {
@@ -407,7 +418,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return findFile(task, kind).exists();
 	}
 
-	public void putSubmittedTaskData(final ITask itask, final TaskData taskData) throws CoreException {
+	public void putSubmittedTaskData(final ITask itask, final TaskData taskData, IDelegatingProgressMonitor monitor)
+			throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
@@ -416,6 +428,7 @@ public class TaskDataManager implements ITaskDataManager {
 				task.getRepositoryUrl());
 		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, null);
 		event.setTaskDataChanged(true);
+		event.setData(((DelegatingProgressMonitor) monitor).getData());
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				if (!taskData.isPartial()) {

@@ -25,6 +25,8 @@ public class TaskDataManagerEvent extends EventObject {
 
 	private static final long serialVersionUID = 1L;
 
+	private Object data;
+
 	private final ITask task;
 
 	private boolean taskChanged;
@@ -37,6 +39,14 @@ public class TaskDataManagerEvent extends EventObject {
 
 	private final Object token;
 
+	public TaskDataManagerEvent(ITaskDataManager source, ITask task) {
+		super(source);
+		Assert.isNotNull(task);
+		this.task = task;
+		this.taskData = null;
+		this.token = null;
+	}
+
 	public TaskDataManagerEvent(ITaskDataManager source, ITask task, TaskData taskData, Object token) {
 		super(source);
 		Assert.isNotNull(task);
@@ -46,12 +56,8 @@ public class TaskDataManagerEvent extends EventObject {
 		this.token = token;
 	}
 
-	public TaskDataManagerEvent(ITaskDataManager source, ITask task) {
-		super(source);
-		Assert.isNotNull(task);
-		this.task = task;
-		this.taskData = null;
-		this.token = null;
+	public Object getData() {
+		return data;
 	}
 
 	public ITask getTask() {
@@ -76,6 +82,10 @@ public class TaskDataManagerEvent extends EventObject {
 
 	public Object getToken() {
 		return token;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 	public void setTaskChanged(boolean taskChanged) {
