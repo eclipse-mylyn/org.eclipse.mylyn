@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Shawn Minto
  */
 public class CommentInformationControlCreator implements IInformationControlCreator {
-	
+
 	public IInformationControl createInformationControl(Shell parent) {
 		return new CommentInformationControl(parent, this);
 	}
-	
+
 }

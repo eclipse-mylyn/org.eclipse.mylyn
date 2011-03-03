@@ -128,7 +128,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			TaskCommentMapper mapper = new TaskCommentMapper();
 			if (message.getAuthor() != null) {
 				AccountInfo author = changeDetail.getAccounts().get(message.getAuthor());
-				IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null) ? author.getPreferredEmail()
+				IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null)
+						? author.getPreferredEmail()
 						: author.getId() + ""); //$NON-NLS-1$
 				person.setName(author.getFullName());
 				mapper.setAuthor(person);

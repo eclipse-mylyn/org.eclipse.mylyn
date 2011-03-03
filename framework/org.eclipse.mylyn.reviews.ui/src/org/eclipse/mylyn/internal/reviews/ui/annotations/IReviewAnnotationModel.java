@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 import org.eclipse.jface.text.IDocument;
 
 public interface IReviewAnnotationModel {
-	
+
 	void setEditorDocument(IDocument editorDocument);
 
 }
