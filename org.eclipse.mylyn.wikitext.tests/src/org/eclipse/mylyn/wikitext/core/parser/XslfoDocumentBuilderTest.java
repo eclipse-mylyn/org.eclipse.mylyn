@@ -17,7 +17,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.wikitext.core.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-import org.junit.Assert;
 
 /**
  * @author David Green
@@ -45,7 +44,7 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		builder.image(attributes, "some/image.png");
 		String generatedContent = out.toString();
 		TestUtil.println("OUT: \n" + generatedContent);
-		Assert.assertTrue(generatedContent.contains("width=\"10px\""));
+		assertTrue(generatedContent.contains("width=\"10px\""));
 	}
 
 	public void testImageWithWidthInPct() {
@@ -55,7 +54,7 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		builder.image(attributes, "some/image.png");
 		String generatedContent = out.toString();
 		TestUtil.println("OUT: \n" + generatedContent);
-		Assert.assertTrue(generatedContent.contains("width=\"10%\""));
+		assertTrue(generatedContent.contains("width=\"10%\""));
 	}
 
 	public void testImageWithHeightInPx() {
@@ -64,7 +63,7 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		builder.image(attributes, "some/image.png");
 		String generatedContent = out.toString();
 		TestUtil.println("OUT: \n" + generatedContent);
-		Assert.assertTrue(generatedContent.contains("height=\"10px\""));
+		assertTrue(generatedContent.contains("height=\"10px\""));
 	}
 
 	public void testImageWithHeightInPct() {
@@ -74,6 +73,6 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		builder.image(attributes, "some/image.png");
 		String generatedContent = out.toString();
 		TestUtil.println("OUT: \n" + generatedContent);
-		Assert.assertTrue(generatedContent.contains("height=\"10%\""));
+		assertTrue(generatedContent.contains("height=\"10%\""));
 	}
 }
