@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
@@ -70,16 +69,13 @@ public class PresentationFilter extends AbstractTaskListFilter {
 			if (!filterSubtasks) {
 				return true;
 			}
-			if (((ITask) element).getTaskId().equals("20196")) {
-				System.err.println();
-			}
 			for (AbstractTaskContainer container : ((AbstractTask) element).getParentContainers()) {
 				// categories are always visible
 				if (container instanceof AbstractTaskCategory) {
 					return true;
 				}
 				// show task if is contained in a query
-				if (container instanceof IRepositoryQuery && isQueryVisible(container)) {
+				if (container instanceof IRepositoryQuery && (!filterHiddenQueries || isQueryVisible(container))) {
 					return true;
 				}
 			}
