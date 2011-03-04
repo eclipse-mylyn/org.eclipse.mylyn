@@ -437,7 +437,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 				if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
 					component = repositoryConfiguration.getComponents(product).get(0);
-				} else {
+				}
+				if (component == null) {
 					if (repositoryConfiguration.getProducts().size() > 0) {
 						product = repositoryConfiguration.getProducts().get(0);
 					}
@@ -717,23 +718,26 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeSubTaskData(TaskRepository repository, TaskData subTaskData, TaskData parentTaskData,
 			IProgressMonitor monitor) throws CoreException {
 		TaskMapper mapper = new TaskMapper(parentTaskData);
-		initializeTaskData(repository, subTaskData, mapper, monitor);
-		new TaskMapper(subTaskData).merge(mapper);
-		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue(""); //$NON-NLS-1$
-		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(""); //$NON-NLS-1$
-		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(""); //$NON-NLS-1$
-		TaskAttribute keywords = subTaskData.getRoot().getMappedAttribute(TaskAttribute.KEYWORDS);
-		if (keywords != null) {
-			// only if the repository has keywords this attribut exists		
-			keywords.setValue(""); //$NON-NLS-1$
+		if (initializeTaskData(repository, subTaskData, mapper, monitor)) {
+			new TaskMapper(subTaskData).merge(mapper);
+			subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue(""); //$NON-NLS-1$
+			subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(""); //$NON-NLS-1$
+			subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(""); //$NON-NLS-1$
+			TaskAttribute keywords = subTaskData.getRoot().getMappedAttribute(TaskAttribute.KEYWORDS);
+			if (keywords != null) {
+				// only if the repository has keywords this attribut exists		
+				keywords.setValue(""); //$NON-NLS-1$
+			}
+			subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
+			TaskAttribute parentAttributeAssigned = parentTaskData.getRoot().getMappedAttribute(
+					TaskAttribute.USER_ASSIGNED);
+			subTaskData.getRoot()
+					.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
+					.setValue(parentAttributeAssigned.getValue());
+			return true;
+		} else {
+			return false;
 		}
-		subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
-		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
-				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-		subTaskData.getRoot()
-				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
-				.setValue(parentAttributeAssigned.getValue());
-		return true;
 	}
 
 	@Override
