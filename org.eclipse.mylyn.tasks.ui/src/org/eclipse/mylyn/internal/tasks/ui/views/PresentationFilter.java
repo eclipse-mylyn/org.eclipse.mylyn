@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -28,19 +29,19 @@ public class PresentationFilter extends AbstractTaskListFilter {
 
 	private boolean filterHiddenQueries;
 
-	private boolean filterSubtasks;
+	private boolean filterNonMatching;
 
 	private PresentationFilter() {
 		setFilterHiddenQueries(true);
-		setFilterSubtasks(true);
+		setFilterNonMatching(true);
 	}
 
 	public static PresentationFilter getInstance() {
 		return instance;
 	}
 
-	public boolean isFilterSubtasks() {
-		return filterSubtasks;
+	public boolean isFilterNonMatching() {
+		return filterNonMatching;
 	}
 
 	public boolean isFilterHiddenQueries() {
@@ -51,8 +52,8 @@ public class PresentationFilter extends AbstractTaskListFilter {
 		this.filterHiddenQueries = enabled;
 	}
 
-	public void setFilterSubtasks(boolean filterSubtasks) {
-		this.filterSubtasks = filterSubtasks;
+	public void setFilterNonMatching(boolean filterSubtasks) {
+		this.filterNonMatching = filterSubtasks;
 	}
 
 	@Override
@@ -64,13 +65,13 @@ public class PresentationFilter extends AbstractTaskListFilter {
 			}
 			return isQueryVisible(element);
 		}
-		// filter sub-tasks not connected to queries or categories
-		if (element instanceof AbstractTask) {
-			if (!filterSubtasks) {
+		// filter repository sub-tasks not connected to queries or categories
+		if (element instanceof TaskTask) {
+			if (!filterNonMatching) {
 				return true;
 			}
 			for (AbstractTaskContainer container : ((AbstractTask) element).getParentContainers()) {
-				// categories are always visible
+				// categories and local subtasks are always visible
 				if (container instanceof AbstractTaskCategory) {
 					return true;
 				}

@@ -702,7 +702,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		filterPresentation.setFilterHiddenQueries(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
-		filterPresentation.setFilterSubtasks(TasksUiPlugin.getDefault()
+		filterPresentation.setFilterNonMatching(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}

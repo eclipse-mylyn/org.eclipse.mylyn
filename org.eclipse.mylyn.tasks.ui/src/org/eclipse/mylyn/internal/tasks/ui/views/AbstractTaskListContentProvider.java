@@ -13,16 +13,18 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ITreePathContentProvider;
 
 /**
  * @author Eugene Kuleshov
  * @author Mik Kersten
  */
-public abstract class AbstractTaskListContentProvider implements ITreeContentProvider {
+public abstract class AbstractTaskListContentProvider implements ITreeContentProvider, ITreePathContentProvider {
 
 	protected TaskListView taskListView;
 
 	public AbstractTaskListContentProvider(TaskListView view) {
 		this.taskListView = view;
 	}
+
 }

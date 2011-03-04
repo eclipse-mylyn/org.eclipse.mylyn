@@ -15,6 +15,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -38,6 +39,10 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
  * @author Rob Elves
  */
 public class TaskListInterestFilter extends AbstractTaskListFilter {
+
+	public boolean select(TreePath path, Object child) {
+		return select(path.getLastSegment(), child);
+	}
 
 	@Override
 	public boolean select(Object parent, Object child) {

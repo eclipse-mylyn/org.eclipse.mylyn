@@ -19,14 +19,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
@@ -38,6 +42,8 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
  * @author Rob Elves
  */
 public class TaskListContentProvider extends AbstractTaskListContentProvider {
+
+	protected static Object[] EMPTY_ARRRY = new Object[0];
 
 	public TaskListContentProvider(TaskListView taskListView) {
 		super(taskListView);
@@ -189,19 +195,69 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	protected boolean filter(Object parent, Object object) {
 		boolean emptyFilterText = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (emptyFilterText) {
+			if (emptyFilterText || filter.applyToFilteredText()) {
 				if (!filter.select(parent, object)) {
 					return true;
-				}
-			} else {
-				if (filter.applyToFilteredText()) {
-					if (!filter.select(parent, object)) {
-						return true;
-					}
 				}
 			}
 		}
 		return false;
+	}
+
+	protected boolean filter(TreePath path, Object parent, Object object) {
+		boolean emptyFilterText = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
+		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
+			if (emptyFilterText || filter.applyToFilteredText()) {
+				if (filter instanceof TaskListInterestFilter) {
+					if (!((TaskListInterestFilter) filter).select(path, object)) {
+						return true;
+					}
+				} else if (!filter.select(parent, object)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean isSearching() {
+		return !containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
+	}
+
+	public Object[] getChildren(TreePath parentPath) {
+		Object parent = parentPath.getLastSegment();
+		if (PresentationFilter.getInstance().isFilterNonMatching()) {
+			ITaskContainer container = (ITaskContainer) parentPath.getFirstSegment();
+			if (container instanceof IRepositoryQuery || container instanceof UnmatchedTaskContainer) {
+				if (parent instanceof ITask) {
+					if (container instanceof RepositoryQuery && !TasksUiPlugin.getDefault().groupSubtasks(container)) {
+						return EMPTY_ARRRY;
+					}
+				}
+				List<IRepositoryElement> children = getFilteredChildrenFor(parent);
+				if (!isSearching()) {
+					if (parent instanceof ITask) {
+						// scope subtasks by query results
+						for (Iterator<IRepositoryElement> it = children.iterator(); it.hasNext();) {
+							IRepositoryElement element = it.next();
+							if (!container.getChildren().contains(element)) {
+								it.remove();
+							}
+						}
+					}
+				}
+				return children.toArray();
+			}
+		}
+		return getFilteredChildrenFor(parent).toArray();
+	}
+
+	public boolean hasChildren(TreePath path) {
+		return getChildren(path).length > 0;
+	}
+
+	public TreePath[] getParents(Object element) {
+		return new TreePath[0];
 	}
 
 }
