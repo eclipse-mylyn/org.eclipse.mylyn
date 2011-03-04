@@ -1216,7 +1216,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(sortDialogAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
-		IMenuManager advancedMenu = new MenuManager("Advanced Filters");
+		IMenuManager advancedMenu = new MenuManager(Messages.TaskListView_Advanced_Filters_Label);
 		advancedMenu.add(new ShowAllQueriesAction());
 		advancedMenu.add(new ShowNonMatchingSubtasksAction());
 		advancedMenu.add(new Separator());

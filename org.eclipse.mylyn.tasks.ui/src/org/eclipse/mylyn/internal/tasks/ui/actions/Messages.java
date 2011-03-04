@@ -149,6 +149,8 @@ public class Messages extends NLS {
 
 	public static String GroupSubTasksAction_Group_Subtasks;
 
+	public static String HideQueryAction_Hidden_Label;
+
 	public static String ImportAction_Dialog_Title;
 
 	public static String ImportAction_Problems_encountered;

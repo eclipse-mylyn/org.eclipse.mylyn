@@ -32,39 +32,45 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class HideQueryAction extends BaseSelectionListenerAction {
 
 	public HideQueryAction() {
-		super("Hidden");
+		super(Messages.HideQueryAction_Hidden_Label);
 		setChecked(false);
 		setEnabled(false);
 	}
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		if (selection.size() == 1) {
-			Object element = selection.getFirstElement();
+		if (selection.isEmpty()) {
+			return false;
+		}
+		boolean hidden = true;
+		for (Object element : selection.toList()) {
 			if (element instanceof IRepositoryQuery) {
-				setChecked(Boolean.parseBoolean((((IRepositoryQuery) element).getAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN))));
-				return true;
+				hidden &= Boolean.parseBoolean((((IRepositoryQuery) element).getAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN)));
+			} else {
+				return false;
 			}
 		}
-		setChecked(false);
-		return false;
+		setChecked(hidden);
+		return true;
 	}
 
 	@Override
 	public void run() {
-		final Object element = getStructuredSelection().getFirstElement();
-		if (element instanceof IRepositoryQuery) {
-			try {
-				final IRepositoryQuery query = ((IRepositoryQuery) element);
-				TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
-					public void execute(IProgressMonitor monitor) throws CoreException {
-						query.setAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN, Boolean.toString(isChecked()));
-					}
-				});
-				TasksUiPlugin.getTaskList().notifyElementsChanged(Collections.singleton((IRepositoryElement) query));
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to set hidden status for query", e)); //$NON-NLS-1$
+		for (Object element : getStructuredSelection().toList()) {
+			if (element instanceof IRepositoryQuery) {
+				try {
+					final IRepositoryQuery query = ((IRepositoryQuery) element);
+					TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
+						public void execute(IProgressMonitor monitor) throws CoreException {
+							query.setAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN, Boolean.toString(isChecked()));
+						}
+					});
+					TasksUiPlugin.getTaskList()
+							.notifyElementsChanged(Collections.singleton((IRepositoryElement) query));
+				} catch (CoreException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Failed to set hidden status for query", e)); //$NON-NLS-1$
+				}
 			}
 		}
 	}

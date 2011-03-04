@@ -85,6 +85,8 @@ public class Messages extends NLS {
 
 	public static String TaskListView__paused_;
 
+	public static String TaskListView_Advanced_Filters_Label;
+
 	public static String TaskListView_Repository;
 
 	public static String TaskListView_Summary;
