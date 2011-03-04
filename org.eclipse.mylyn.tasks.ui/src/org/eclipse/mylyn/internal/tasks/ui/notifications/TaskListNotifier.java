@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -98,14 +99,16 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			}
 		}
 		if (event.getToken() != null && event.getTaskDataChanged()) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
-					.getConnectorKind());
-			if (!connectorUi.hasCustomNotifications()) {
-				TaskListNotification notification = getNotification(event.getTask(), event.getToken());
-				if (notification != null) {
-					synchronized (notificationQueue) {
-						if (enabled) {
-							notificationQueue.add(notification);
+			if (PresentationFilter.getInstance().select(event.getTask())) {
+				AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
+						.getConnectorKind());
+				if (!connectorUi.hasCustomNotifications()) {
+					TaskListNotification notification = getNotification(event.getTask(), event.getToken());
+					if (notification != null) {
+						synchronized (notificationQueue) {
+							if (enabled) {
+								notificationQueue.add(notification);
+							}
 						}
 					}
 				}

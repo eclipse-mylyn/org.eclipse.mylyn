@@ -543,7 +543,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_HIDDEN)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_NON_MATCHING)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.GROUP_SUBTASKS)) {
-				updatePresentationFilter();
+				filterPresentation.updateSettings();
 				refresh(true);
 			}
 		}
@@ -680,7 +680,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 			addFilter(filterComplete);
 		}
-		updatePresentationFilter();
 		addFilter(filterPresentation);
 		addFilter(filterArchive);
 
@@ -696,15 +695,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 
 		getViewer().refresh();
-	}
-
-	public void updatePresentationFilter() {
-		filterPresentation.setFilterHiddenQueries(TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
-		filterPresentation.setFilterNonMatching(TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}
 
 	/**

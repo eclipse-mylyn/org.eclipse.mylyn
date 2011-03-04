@@ -17,6 +17,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 
@@ -27,37 +29,27 @@ public class PresentationFilter extends AbstractTaskListFilter {
 
 	private static PresentationFilter instance = new PresentationFilter();
 
+	public static PresentationFilter getInstance() {
+		return instance;
+	}
+
 	private boolean filterHiddenQueries;
 
 	private boolean filterNonMatching;
 
 	private PresentationFilter() {
-		setFilterHiddenQueries(true);
-		setFilterNonMatching(true);
-	}
-
-	public static PresentationFilter getInstance() {
-		return instance;
-	}
-
-	public boolean isFilterNonMatching() {
-		return filterNonMatching;
+		updateSettings();
 	}
 
 	public boolean isFilterHiddenQueries() {
 		return filterHiddenQueries;
 	}
 
-	public void setFilterHiddenQueries(boolean enabled) {
-		this.filterHiddenQueries = enabled;
+	public boolean isFilterNonMatching() {
+		return filterNonMatching;
 	}
 
-	public void setFilterNonMatching(boolean filterSubtasks) {
-		this.filterNonMatching = filterSubtasks;
-	}
-
-	@Override
-	public boolean select(Object parent, Object element) {
+	public boolean select(Object element) {
 		// filter hidden queries
 		if (element instanceof IRepositoryQuery) {
 			if (!filterHiddenQueries) {
@@ -83,6 +75,28 @@ public class PresentationFilter extends AbstractTaskListFilter {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean select(Object parent, Object element) {
+		return select(element);
+	}
+
+	public void setFilterHiddenQueries(boolean enabled) {
+		this.filterHiddenQueries = enabled;
+	}
+
+	public void setFilterNonMatching(boolean filterSubtasks) {
+		this.filterNonMatching = filterSubtasks;
+	}
+
+	public void updateSettings() {
+		setFilterHiddenQueries(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
+		setFilterNonMatching(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}
 
 	private boolean isQueryVisible(Object element) {
