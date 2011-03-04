@@ -47,18 +47,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
 			if (child instanceof ITask) {
-				AbstractTask task = null;
-				if (child instanceof ITask) {
-					task = (AbstractTask) child;
-				}
-				if (task != null) {
-					if (isInteresting(parent, task)) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-			} else if (child instanceof ITaskContainer) {
+				AbstractTask task = (AbstractTask) child;
+				return isInteresting(parent, task);
+			}
+			if (child instanceof ITaskContainer) {
 				Collection<ITask> children = ((ITaskContainer) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
@@ -70,7 +62,6 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						return true;
 					}
 				}
-
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Interest filter failed", t)); //$NON-NLS-1$
@@ -84,7 +75,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 		if (scheduleContainer instanceof TaskScheduleContentProvider.Incoming
 				|| scheduleContainer instanceof TaskScheduleContentProvider.Outgoing) {
-			return (scheduleContainer.getChildren().size() > 0);
+			return hasChildren(scheduleContainer, scheduleContainer.getChildren());
 		}
 		if (TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(scheduleContainer.getDateRange())) {
 			if (scheduleContainer.isPresent() || scheduleContainer.isFuture()) {
@@ -96,13 +87,24 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
+	private boolean hasChildren(Object parent, Collection<ITask> children) {
+		for (ITask task : children) {
+			if (PresentationFilter.getInstance().select(parent, task)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, AbstractTask task) {
 		return shouldAlwaysShow(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
-
+		if (!PresentationFilter.getInstance().select(parent, task)) {
+			return false;
+		}
 		return task.isActive() || TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
 				|| hasChanges(parent, task)
 				|| hasInterestingSubTasks(parent, task, depth)
@@ -182,7 +184,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 		if (task instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) task).getChildren()) {
-				if (hasChangesHelper(parent, child)) {
+				if (PresentationFilter.getInstance().select(task, child) && hasChangesHelper(parent, child)) {
 					return true;
 				}
 			}

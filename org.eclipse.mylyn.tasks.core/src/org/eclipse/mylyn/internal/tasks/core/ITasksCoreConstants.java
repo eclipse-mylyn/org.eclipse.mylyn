@@ -59,6 +59,8 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_HIDDEN = "task.common.hidden"; //$NON-NLS-1$
+
 	public static final String ATTRIBUTE_TASK_EXTENDED_TOOLTIP = "task.common.extended.tooltip"; //$NON-NLS-1$
 
 	public static final String ATTRIBUTE_TASK_SUPPRESS_INCOMING = "task.common.suppress.incoming"; //$NON-NLS-1$

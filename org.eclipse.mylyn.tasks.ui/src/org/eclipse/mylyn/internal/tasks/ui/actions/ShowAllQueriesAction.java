@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,27 +16,21 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
- * @author Rob Elves
- * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class GroupSubTasksAction extends Action {
+public class ShowAllQueriesAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.subtasks"; //$NON-NLS-1$
-
-	public GroupSubTasksAction() {
-		setText(Messages.GroupSubTasksAction_Group_Subtasks);
-		setToolTipText(Messages.GroupSubTasksAction_Group_Subtasks);
-		setId(ID);
-		setChecked(TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS));
+	public ShowAllQueriesAction() {
+		setText("Show All Queries");
+		setToolTipText("Show All Queries Including Hidden Queries");
+		setChecked(!TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
 	}
 
 	@Override
 	public void run() {
 		TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.GROUP_SUBTASKS, isChecked());
+				.setValue(ITasksUiPreferenceConstants.FILTER_HIDDEN, !isChecked());
 	}
 
 }

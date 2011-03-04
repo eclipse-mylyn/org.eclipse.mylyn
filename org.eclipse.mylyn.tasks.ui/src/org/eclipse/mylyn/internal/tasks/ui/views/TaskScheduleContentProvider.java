@@ -184,7 +184,6 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 					result.add(child);
 				}
 			}
-
 		} else if (parent instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) parent).getChildren()) {
 				result.add(child);

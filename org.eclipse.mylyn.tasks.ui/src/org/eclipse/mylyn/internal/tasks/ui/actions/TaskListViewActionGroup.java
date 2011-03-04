@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -61,6 +62,10 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 	@Override
 	public void fillContextMenu(final IMenuManager manager) {
 		super.fillContextMenu(manager);
+
+		if (hideQueryAction.isEnabled() && !PresentationFilter.getInstance().isFilterHiddenQueries()) {
+			manager.appendToGroup(ID_SEPARATOR_NAVIGATE, hideQueryAction);
+		}
 
 		updateDrillDownActions();
 

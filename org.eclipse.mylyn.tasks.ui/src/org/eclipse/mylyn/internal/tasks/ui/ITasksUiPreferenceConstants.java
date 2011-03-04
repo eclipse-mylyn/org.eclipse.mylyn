@@ -44,6 +44,10 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylyn.tasks.ui.filters.complete"; //$NON-NLS-1$
 
+	public static final String FILTER_HIDDEN = "org.eclipse.mylyn.tasks.ui.filters.hidden"; //$NON-NLS-1$
+
+	public static final String FILTER_NON_MATCHING = "org.eclipse.mylyn.tasks.ui.filters.nonmatching"; //$NON-NLS-1$
+
 	public static final String FILTER_PRIORITY = "org.eclipse.mylyn.tasks.ui.filters.priority"; //$NON-NLS-1$
 
 	public static final String GROUP_SUBTASKS = "org.eclipse.mylyn.tasks.ui.group.subtasks"; //$NON-NLS-1$

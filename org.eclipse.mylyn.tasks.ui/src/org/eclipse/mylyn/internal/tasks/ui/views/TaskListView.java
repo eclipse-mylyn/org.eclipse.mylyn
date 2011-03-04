@@ -90,6 +90,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ShowAllQueriesAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ShowNonMatchingSubtasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
@@ -357,7 +359,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
-	private GroupSubTasksAction filterSubTasksAction;
+	private GroupSubTasksAction groupSubTasksAction;
 
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
@@ -379,6 +381,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private final TaskCompletionFilter filterComplete = new TaskCompletionFilter();
 
 	private final TaskArchiveFilter filterArchive = new TaskArchiveFilter();
+
+	private final PresentationFilter filterPresentation = PresentationFilter.getInstance();
 
 	private TaskWorkingSetFilter filterWorkingSet;
 
@@ -536,6 +540,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT)) {
 				refreshJob.refresh();
 			}
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_HIDDEN)
+					|| event.getProperty().equals(ITasksUiPreferenceConstants.FILTER_NON_MATCHING)
+					|| event.getProperty().equals(ITasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+				updatePresentationFilter();
+				refresh(true);
+			}
 		}
 	};
 
@@ -670,10 +680,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 			addFilter(filterComplete);
 		}
-
-		//if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE)) {
+		updatePresentationFilter();
+		addFilter(filterPresentation);
 		addFilter(filterArchive);
-		//}
 
 		// Restore "link with editor" value; by default true
 		boolean linkValue = true;
@@ -687,6 +696,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 
 		getViewer().refresh();
+	}
+
+	public void updatePresentationFilter() {
+		filterPresentation.setFilterHiddenQueries(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
+		filterPresentation.setFilterSubtasks(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}
 
 	/**
@@ -1198,7 +1216,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(sortDialogAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
-		manager.add(filterSubTasksAction);
+		IMenuManager advancedMenu = new MenuManager("Advanced Filters");
+		advancedMenu.add(new ShowAllQueriesAction());
+		advancedMenu.add(new ShowNonMatchingSubtasksAction());
+		advancedMenu.add(new Separator());
+		advancedMenu.add(groupSubTasksAction);
+		manager.add(advancedMenu);
 
 		manager.add(new Separator(ID_SEPARATOR_SEARCH));
 		manager.add(new GroupMarker(ID_SEPARATOR_TASKS));
@@ -1262,7 +1285,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
 		filterCompleteTask = new FilterCompletedTasksAction(this);
-		filterSubTasksAction = new GroupSubTasksAction(this);
+		groupSubTasksAction = new GroupSubTasksAction();
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		//filterArchiveCategory = new FilterArchiveContainerAction(this);
@@ -1346,6 +1369,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		filters.clear();
 		filters.add(filterArchive);
 		filters.add(filterWorkingSet);
+		filters.add(filterPresentation);
 	}
 
 	public void removeFilter(AbstractTaskListFilter filter) {

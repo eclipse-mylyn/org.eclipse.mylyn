@@ -15,6 +15,7 @@ import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
@@ -52,8 +53,12 @@ public abstract class AbstractTaskListFilter {
 			return false;
 		}
 
+		if (!PresentationFilter.getInstance().select(null, container)) {
+			return false;
+		}
+
 		for (ITask task : children) {
-			if (task != null) {
+			if (task != null && PresentationFilter.getInstance().select(container, task)) {
 				ITask containedRepositoryTask = task;
 				if (TasksUiInternal.shouldShowIncoming(containedRepositoryTask)) {
 					return true;

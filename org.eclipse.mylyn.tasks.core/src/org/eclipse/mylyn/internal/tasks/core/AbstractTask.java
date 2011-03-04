@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -52,7 +52,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean reminded = false;
 
-	private final Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+	private final Set<AbstractTaskContainer> containers = new CopyOnWriteArraySet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
 
@@ -317,7 +317,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public Set<AbstractTaskContainer> getParentContainers() {
-		return new HashSet<AbstractTaskContainer>(containers);
+		//return new HashSet<AbstractTaskContainer>(containers);
+		return containers;
 	}
 
 	@Override
