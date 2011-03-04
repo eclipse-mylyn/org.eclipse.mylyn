@@ -58,7 +58,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	private Map<String, RepositoryQuery> queries;
 
-	private Map<String, UnmatchedTaskContainer> repositoryOrphansMap;
+	private Map<String, UnmatchedTaskContainer> unmatchedMap;
 
 	private Map<String, UnsubmittedTaskContainer> unsubmittedTasksMap;
 
@@ -94,7 +94,7 @@ public class TaskList implements ITaskList, ITransferList {
 	/**
 	 * precondition: task must not be null and must exist in the task list
 	 */
-	private void addOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
+	private void addToUnmatched(AbstractTask task, Set<TaskContainerDelta> delta) {
 		if (!task.getParentContainers().isEmpty()) {
 			// Current policy is not to archive/orphan if the task exists in some other container
 			return;
@@ -177,7 +177,7 @@ public class TaskList implements ITaskList, ITransferList {
 				}
 			}
 
-			removeOrphan(task, delta);
+			removeFromUnmatched(task, delta);
 
 			(task).addParentContainer(container);
 			container.internalAddChild(task);
@@ -190,7 +190,7 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	public void addUnmatchedContainer(UnmatchedTaskContainer orphanedTasksContainer) {
-		repositoryOrphansMap.put(orphanedTasksContainer.getRepositoryUrl(), orphanedTasksContainer);
+		unmatchedMap.put(orphanedTasksContainer.getRepositoryUrl(), orphanedTasksContainer);
 		unsubmittedTasksMap.put(orphanedTasksContainer.getRepositoryUrl(), new UnsubmittedTaskContainer(
 				orphanedTasksContainer.getConnectorKind(), orphanedTasksContainer.getRepositoryUrl()));
 	}
@@ -201,7 +201,7 @@ public class TaskList implements ITaskList, ITransferList {
 			categories.remove(category.getHandleIdentifier());
 			for (ITask task : category.getChildren()) {
 				((AbstractTask) task).removeParentContainer(category);
-				addOrphan((AbstractTask) task, delta);
+				addToUnmatched((AbstractTask) task, delta);
 			}
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.DELETED));
@@ -216,7 +216,7 @@ public class TaskList implements ITaskList, ITransferList {
 			queries.remove(query.getHandleIdentifier());
 			for (ITask task : query.getChildren()) {
 				((AbstractTask) task).removeParentContainer(query);
-				addOrphan((AbstractTask) task, delta);
+				addToUnmatched((AbstractTask) task, delta);
 			}
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.DELETED));
@@ -243,7 +243,7 @@ public class TaskList implements ITaskList, ITransferList {
 			// remove this task as a parent for all subtasks
 			for (ITask child : task.getChildren()) {
 				removeFromContainerInternal(task, child, delta);
-				addOrphan((AbstractTask) child, delta);
+				addToUnmatched((AbstractTask) child, delta);
 			}
 
 			tasks.remove(task.getHandleIdentifier());
@@ -354,7 +354,7 @@ public class TaskList implements ITaskList, ITransferList {
 		for (RepositoryQuery query : queries.values()) {
 			roots.add(query);
 		}
-		for (UnmatchedTaskContainer orphanContainer : repositoryOrphansMap.values()) {
+		for (UnmatchedTaskContainer orphanContainer : unmatchedMap.values()) {
 			roots.add(orphanContainer);
 		}
 		for (UnsubmittedTaskContainer unsubmitedTaskContainer : unsubmittedTasksMap.values()) {
@@ -425,17 +425,17 @@ public class TaskList implements ITaskList, ITransferList {
 		if (LocalRepositoryConnector.REPOSITORY_URL.equals(repositoryUrl)) {
 			return defaultCategory;
 		} else {
-			UnmatchedTaskContainer orphans = repositoryOrphansMap.get(repositoryUrl);
-			if (orphans == null) {
+			UnmatchedTaskContainer unmatched = unmatchedMap.get(repositoryUrl);
+			if (unmatched == null) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 						"Failed to find unmatched container for repository \"" + repositoryUrl + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			return orphans;
+			return unmatched;
 		}
 	}
 
 	public Set<UnmatchedTaskContainer> getUnmatchedContainers() {
-		return Collections.unmodifiableSet(new HashSet<UnmatchedTaskContainer>(repositoryOrphansMap.values()));
+		return Collections.unmodifiableSet(new HashSet<UnmatchedTaskContainer>(unmatchedMap.values()));
 	}
 
 	/**
@@ -452,7 +452,7 @@ public class TaskList implements ITaskList, ITransferList {
 		} else if (taskListElement instanceof UncategorizedTaskContainer) {
 			result = defaultCategory;
 		} else if (taskListElement instanceof UnmatchedTaskContainer) {
-			result = repositoryOrphansMap.get(((UnmatchedTaskContainer) taskListElement).getRepositoryUrl());
+			result = unmatchedMap.get(((UnmatchedTaskContainer) taskListElement).getRepositoryUrl());
 		} else if (taskListElement instanceof UnsubmittedTaskContainer) {
 			result = unsubmittedTasksMap.get(((UnsubmittedTaskContainer) taskListElement).getRepositoryUrl());
 		} else if (taskListElement instanceof TaskCategory) {
@@ -531,14 +531,14 @@ public class TaskList implements ITaskList, ITransferList {
 				}
 			}
 
-			for (UnmatchedTaskContainer orphans : repositoryOrphansMap.values()) {
-				if (orphans.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					repositoryOrphansMap.remove(oldRepositoryUrl);
+			for (UnmatchedTaskContainer unmatched : unmatchedMap.values()) {
+				if (unmatched.getRepositoryUrl().equals(oldRepositoryUrl)) {
+					unmatchedMap.remove(oldRepositoryUrl);
 					//categories.remove(orphans.getHandleIdentifier());
-					orphans.setRepositoryUrl(newRepositoryUrl);
-					repositoryOrphansMap.put(newRepositoryUrl, orphans);
+					unmatched.setRepositoryUrl(newRepositoryUrl);
+					unmatchedMap.put(newRepositoryUrl, unmatched);
 					//categories.put(orphans.getHandleIdentifier(), orphans);
-					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CONTENT));
+					delta.add(new TaskContainerDelta(unmatched, TaskContainerDelta.Kind.CONTENT));
 				}
 			}
 			for (UnsubmittedTaskContainer unsubmitted : unsubmittedTasksMap.values()) {
@@ -572,7 +572,7 @@ public class TaskList implements ITaskList, ITransferList {
 			lock();
 			for (ITask task : tasks) {
 				removeFromContainerInternal(container, task, delta);
-				addOrphan((AbstractTask) task, delta);
+				addToUnmatched((AbstractTask) task, delta);
 			}
 		} finally {
 			unlock();
@@ -591,7 +591,7 @@ public class TaskList implements ITaskList, ITransferList {
 		delta.add(new TaskContainerDelta(task, container, TaskContainerDelta.Kind.REMOVED));
 	}
 
-	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
+	private void removeFromUnmatched(AbstractTask task, Set<TaskContainerDelta> delta) {
 		AbstractTaskContainer orphans = getUnmatchedContainer(task.getRepositoryUrl());
 		if (orphans != null) {
 			if (orphans.internalRemoveChild(task)) {
@@ -631,7 +631,7 @@ public class TaskList implements ITaskList, ITransferList {
 			lock();
 			tasks = new ConcurrentHashMap<String, AbstractTask>();
 
-			repositoryOrphansMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
+			unmatchedMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
 			unsubmittedTasksMap = new ConcurrentHashMap<String, UnsubmittedTaskContainer>();
 			categories = new ConcurrentHashMap<String, AbstractTaskCategory>();
 			queries = new ConcurrentHashMap<String, RepositoryQuery>();
@@ -720,7 +720,7 @@ public class TaskList implements ITaskList, ITransferList {
 				String handle = DEFAULT_HANDLE_PREFIX + nextHandle;
 				nextHandle++;
 				if (!categories.containsKey(handle) && !queries.containsKey(handle)
-						&& !repositoryOrphansMap.containsKey(handle) && !tasks.containsKey(handle)) {
+						&& !unmatchedMap.containsKey(handle) && !tasks.containsKey(handle)) {
 					return handle;
 				}
 			}
