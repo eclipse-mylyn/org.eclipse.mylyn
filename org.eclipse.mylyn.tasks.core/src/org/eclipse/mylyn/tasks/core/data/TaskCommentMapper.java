@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tasks.core.data;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 

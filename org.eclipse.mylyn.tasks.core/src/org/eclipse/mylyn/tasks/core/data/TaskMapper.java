@@ -15,10 +15,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.core.data.AbstractTaskSchema.Field;
-import org.eclipse.mylyn.internal.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 
 /**

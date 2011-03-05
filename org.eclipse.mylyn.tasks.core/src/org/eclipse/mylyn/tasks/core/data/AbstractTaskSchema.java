@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.core.data;
+package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,57 +19,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
+ * Base class for task schemas. Clients should subclass to define a specific schema.
+ * 
  * @author Steffen Pingel
+ * @since 3.5
  */
 public abstract class AbstractTaskSchema {
-
-	protected class FieldFactory {
-
-		private EnumSet<Flag> flags;
-
-		private String key;
-
-		private String label;
-
-		private String type;
-
-		public FieldFactory(Field source) {
-			this.flags = source.flags;
-			this.key = source.key;
-			this.label = source.label;
-			this.type = source.type;
-		}
-
-		public FieldFactory flags(Flag... flags) {
-			this.flags = EnumSet.copyOf(Arrays.asList(flags));
-			return this;
-		}
-
-		public FieldFactory key(String key) {
-			this.key = key;
-			return this;
-		}
-
-		public FieldFactory label(String label) {
-			this.label = label;
-			return this;
-		}
-
-		public FieldFactory type(String type) {
-			this.type = type;
-			return this;
-		}
-
-		public Field create() {
-			return createField(key, label, type, (!flags.isEmpty()) ? flags.toArray(new Flag[0]) : null);
-		}
-
-	}
 
 	public static class Field {
 
@@ -93,7 +50,7 @@ public abstract class AbstractTaskSchema {
 			this.label = label;
 			this.type = type;
 			if (flags == null) {
-				this.flags = NO_FLAGS;
+				this.flags = EnumSet.noneOf(Flag.class);
 			} else {
 				this.flags = EnumSet.copyOf(Arrays.asList(flags));
 			}
@@ -153,13 +110,64 @@ public abstract class AbstractTaskSchema {
 			return getLabel();
 		}
 
-	};
+	}
 
 	public enum Flag {
 		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY
-	}
+	};
 
-	public static final EnumSet<Flag> NO_FLAGS = EnumSet.noneOf(Flag.class);
+	protected class FieldFactory {
+
+		private EnumSet<Flag> flags;
+
+		private String key;
+
+		private String label;
+
+		private String type;
+
+		public FieldFactory(Field source) {
+			this.flags = EnumSet.copyOf(source.flags);
+			this.key = source.key;
+			this.label = source.label;
+			this.type = source.type;
+		}
+
+		public FieldFactory addFlags(Flag... flags) {
+			this.flags.addAll(Arrays.asList(flags));
+			return this;
+		}
+
+		public Field create() {
+			return createField(key, label, type, (!flags.isEmpty()) ? flags.toArray(new Flag[0]) : null);
+		}
+
+		public FieldFactory flags(Flag... flags) {
+			this.flags = EnumSet.copyOf(Arrays.asList(flags));
+			return this;
+		}
+
+		public FieldFactory key(String key) {
+			this.key = key;
+			return this;
+		}
+
+		public FieldFactory label(String label) {
+			this.label = label;
+			return this;
+		}
+
+		public FieldFactory removeFlags(Flag... flags) {
+			this.flags.removeAll(Arrays.asList(flags));
+			return this;
+		}
+
+		public FieldFactory type(String type) {
+			this.type = type;
+			return this;
+		}
+
+	}
 
 	private final Map<String, Field> fieldByKey = new LinkedHashMap<String, Field>();
 
@@ -167,8 +175,10 @@ public abstract class AbstractTaskSchema {
 		return fieldByKey.get(taskKey);
 	}
 
-	protected FieldFactory inheritFrom(Field source) {
-		return new FieldFactory(source);
+	public void initialize(TaskData taskData) {
+		for (Field field : fieldByKey.values()) {
+			field.createAttribute(taskData.getRoot());
+		}
 	}
 
 	protected Field createField(String key, String label, String type) {
@@ -181,10 +191,8 @@ public abstract class AbstractTaskSchema {
 		return field;
 	}
 
-	public void initialize(TaskData taskData) {
-		for (Field field : fieldByKey.values()) {
-			field.createAttribute(taskData.getRoot());
-		}
+	protected FieldFactory inheritFrom(Field source) {
+		return new FieldFactory(source);
 	}
 
 }
