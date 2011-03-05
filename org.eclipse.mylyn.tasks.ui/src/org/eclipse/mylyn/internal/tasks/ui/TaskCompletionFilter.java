@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -23,23 +24,20 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			boolean isComplete = task.isCompleted();
-			if (!isComplete) {
-				return true;
-			} else if (element instanceof AbstractTask) {
-				AbstractTask abstractTask = (AbstractTask) element;
-				Collection<ITask> children = abstractTask.getChildren();
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
+			if (task.isCompleted()) {
+				Collection<ITask> children = task.getChildren();
 				for (ITask child : children) {
-					if (select(abstractTask, child)) {
+					if (PresentationFilter.getInstance().select(element) && select(element, child)) {
 						return true;
 					}
 				}
+				// hide completed task 
 				return false;
 			}
-
 		}
 		return true;
 	}
+
 }
