@@ -209,7 +209,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
 			if (emptyFilterText || filter.applyToFilteredText()) {
 				if (filter instanceof TaskListInterestFilter) {
-					if (!((TaskListInterestFilter) filter).select(path, object)) {
+					if (!((TaskListInterestFilter) filter).select(path.getLastSegment(), object)) {
 						return true;
 					}
 				} else if (!filter.select(parent, object)) {
