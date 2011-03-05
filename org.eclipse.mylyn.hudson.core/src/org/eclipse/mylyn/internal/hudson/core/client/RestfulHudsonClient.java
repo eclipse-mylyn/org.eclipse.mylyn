@@ -142,7 +142,7 @@ public class RestfulHudsonClient {
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
 
-					HudsonModelProject project = unmarshal(parse(in), HudsonModelProject.class);
+					HudsonModelProject project = unmarshal(parse(in, url), HudsonModelProject.class);
 					return project.getBuild();
 				} finally {
 					method.releaseConnection(monitor);
@@ -156,12 +156,13 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<HudsonModelBuild>(client) {
 			@Override
 			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
-				CommonHttpMethod method = createGetMethod(getBuildUrl(job, build) + URL_API);
+				String url = getBuildUrl(job, build) + URL_API;
+				CommonHttpMethod method = createGetMethod(url);
 				try {
 					execute(method, monitor);
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
-					HudsonModelBuild hudsonBuild = unmarshal(parse(in), HudsonModelBuild.class);
+					HudsonModelBuild hudsonBuild = unmarshal(parse(in, url), HudsonModelBuild.class);
 					return hudsonBuild;
 				} finally {
 					method.releaseConnection(monitor);
@@ -189,7 +190,7 @@ public class RestfulHudsonClient {
 					execute(method, monitor);
 					checkResponse(method);
 					InputStream in = method.getResponseBodyAsStream(monitor);
-					Element element = parse(in);
+					Element element = parse(in, url);
 					if ("surefireAggregatedReport".equals(element.getNodeName())) {
 						HudsonMavenReportersSurefireAggregatedReport report = unmarshal(element,
 								HudsonMavenReportersSurefireAggregatedReport.class);
@@ -272,7 +273,7 @@ public class RestfulHudsonClient {
 
 					Map<String, String> jobNameById = new HashMap<String, String>();
 
-					HudsonModelHudson hudson = unmarshal(parse(in), HudsonModelHudson.class);
+					HudsonModelHudson hudson = unmarshal(parse(in, url), HudsonModelHudson.class);
 
 					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
 					List<Object> jobsNodes = hudson.getJob();
@@ -312,13 +313,13 @@ public class RestfulHudsonClient {
 		return client.getLocation().getUrl() + "/job/" + encodedJobname;
 	}
 
-	Element parse(InputStream in) throws HudsonException {
+	Element parse(InputStream in, String url) throws HudsonException {
 		try {
 			return getDocumentBuilder().parse(in).getDocumentElement();
 		} catch (SAXException e) {
-			throw new HudsonException(e);
+			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e);
 		} catch (Exception e) {
-			throw new HudsonException(e);
+			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e);
 		}
 	}
 
