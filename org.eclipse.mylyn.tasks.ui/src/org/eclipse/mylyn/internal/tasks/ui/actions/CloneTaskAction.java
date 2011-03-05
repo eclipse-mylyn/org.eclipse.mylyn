@@ -50,14 +50,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			super.selectionChanged((IStructuredSelection) selection);
-		}
-	}
-
-	public void run(IAction action) {
-		run();
+	public void init(IViewPart view) {
+		// ignore
 	}
 
 	@Override
@@ -113,8 +107,28 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		}
 	}
 
-	public void init(IViewPart view) {
-		// ignore
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			super.selectionChanged((IStructuredSelection) selection);
+		}
+	}
+
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		if (!selection.isEmpty()) {
+			for (Object element : (selection).toList()) {
+				if (!(element instanceof AbstractTask)) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
