@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
+import org.eclipse.mylyn.tasks.tests.core.DefaultTaskSchemaTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
@@ -56,6 +57,7 @@ public class AllHeadlessStandaloneTest {
 		//suite.addTest(AllDiscoveryTests.suite());
 
 		// tasks
+		suite.addTestSuite(DefaultTaskSchemaTest.class);
 		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(TaskListUnmatchedContainerTest.class);
 		suite.addTestSuite(TasksUtilTest.class);
