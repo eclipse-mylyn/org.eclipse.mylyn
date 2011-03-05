@@ -93,10 +93,10 @@ public class PresentationFilter extends AbstractTaskListFilter {
 	public void updateSettings() {
 		setFilterHiddenQueries(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN));
 		setFilterNonMatching(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}
 
 	private boolean isQueryVisible(Object element) {

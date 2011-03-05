@@ -23,7 +23,9 @@ public class ShowAllQueriesAction extends Action {
 	public ShowAllQueriesAction() {
 		setText("Show All Queries");
 		setToolTipText("Show All Queries Including Hidden Queries");
-		setChecked(!TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_HIDDEN));
+		setChecked(!TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN));
 	}
 
 	@Override

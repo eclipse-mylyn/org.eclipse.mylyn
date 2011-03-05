@@ -47,10 +47,12 @@ public class HideQueryAction extends BaseSelectionListenerAction {
 			if (element instanceof IRepositoryQuery) {
 				hidden &= Boolean.parseBoolean((((IRepositoryQuery) element).getAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN)));
 			} else {
+				System.err.println(element);
 				return false;
 			}
 		}
 		setChecked(hidden);
+		System.err.println(true);
 		return true;
 	}
 

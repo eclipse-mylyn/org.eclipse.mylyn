@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -34,20 +35,21 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 
 	private final DrillDownAdapter drillDownAdapter;
 
+	private final HideQueryAction hideQueryAction;
+
 	public TaskListViewActionGroup(TaskListView view, DrillDownAdapter drillDownAdapter) {
 		this.view = view;
 		this.drillDownAdapter = drillDownAdapter;
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
-		renameAction = new RenameAction(view);
-		view.getViewer().addSelectionChangedListener(renameAction);
+		renameAction = add(new RenameAction(view));
+		hideQueryAction = add(new HideQueryAction());
 
 		setSelectionProvider(view.getViewer());
 	}
 
 	public void dispose() {
-		view.getViewer().removeSelectionChangedListener(renameAction);
 		setSelectionProvider(null);
 	}
 
@@ -64,7 +66,8 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 		super.fillContextMenu(manager);
 
 		if (hideQueryAction.isEnabled() && !PresentationFilter.getInstance().isFilterHiddenQueries()) {
-			manager.appendToGroup(ID_SEPARATOR_NAVIGATE, hideQueryAction);
+			manager.appendToGroup(ID_SEPARATOR_REPOSITORY, new Separator());
+			manager.appendToGroup(ID_SEPARATOR_REPOSITORY, hideQueryAction);
 		}
 
 		updateDrillDownActions();

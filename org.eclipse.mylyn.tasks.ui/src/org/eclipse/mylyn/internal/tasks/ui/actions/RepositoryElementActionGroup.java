@@ -100,8 +100,6 @@ public class RepositoryElementActionGroup {
 
 	private final AutoUpdateQueryAction autoUpdateAction;
 
-	protected final HideQueryAction hideQueryAction;
-
 	private final NewSubTaskAction newSubTaskAction;
 
 	private final CloneTaskAction cloneTaskAction;
@@ -133,10 +131,9 @@ public class RepositoryElementActionGroup {
 		showInTaskListAction = add(new ShowInTaskListAction());
 
 		autoUpdateAction = add(new AutoUpdateQueryAction());
-		hideQueryAction = add(new HideQueryAction());
 	}
 
-	private <T extends ISelectionChangedListener> T add(T action) {
+	protected <T extends ISelectionChangedListener> T add(T action) {
 		actions.add(action);
 		return action;
 	}

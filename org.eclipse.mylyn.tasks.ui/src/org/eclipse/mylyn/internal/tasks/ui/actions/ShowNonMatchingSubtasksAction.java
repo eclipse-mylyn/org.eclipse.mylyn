@@ -25,7 +25,7 @@ public class ShowNonMatchingSubtasksAction extends Action {
 		setToolTipText("Show Non Matching Subtasks");
 		setChecked(!TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.contains(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
 	}
 
 	@Override

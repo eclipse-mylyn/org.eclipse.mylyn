@@ -958,6 +958,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
 
+		store.setDefault(ITasksUiPreferenceConstants.FILTER_HIDDEN, true);
 		store.setDefault(ITasksUiPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(ITasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 		store.setValue(ITasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
