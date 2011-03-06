@@ -105,13 +105,13 @@ public class BugzillaClientManager implements IRepositoryListener, IRepositoryCh
 			if (IBugzillaConstants.BUGZILLA_USE_XMLRPC.equals(key)
 					|| IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE.equals(key)) {
 				final TaskRepository repository = event.getRepository();
-				TaskJob updateJob = new TaskJob("Refreshing repository configuration") {
+				TaskJob updateJob = new TaskJob(Messages.BugzillaClientManager_Refreshing_repository_configuration) {
 					private IStatus error;
 
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						monitor = SubMonitor.convert(monitor);
-						monitor.beginTask("Receiving_configuration", IProgressMonitor.UNKNOWN);
+						monitor.beginTask(Messages.BugzillaClientManager_Receiving_configuration, IProgressMonitor.UNKNOWN);
 						try {
 							try {
 								connector.updateRepositoryConfiguration(repository, null, monitor);

@@ -1233,7 +1233,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					} else {
 						message = Messages.AbstractTaskEditorPage_Submit_failed;
 					}
-					message = message.replaceAll("\n", " ");
+					message = message.replaceAll("\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 					getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {

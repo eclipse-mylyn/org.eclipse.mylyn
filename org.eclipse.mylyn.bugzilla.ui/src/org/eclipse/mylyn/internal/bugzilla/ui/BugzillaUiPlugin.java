@@ -101,7 +101,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			public void done(IJobChangeEvent event) {
 				TaskJob taskJob = ((TaskJob) (event.getJob()));
 				if (taskJob.getStatus() != null) {
-					TasksUiInternal.asyncLogAndDisplayStatus("Configuration_Refresh_Failed", taskJob.getStatus());
+					TasksUiInternal.asyncLogAndDisplayStatus(Messages.BugzillaUiPlugin_Configuration_Refresh_Failed, taskJob.getStatus());
 				}
 			}
 		});

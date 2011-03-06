@@ -21,8 +21,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 public class ShowAllQueriesAction extends Action {
 
 	public ShowAllQueriesAction() {
-		setText("Show All Queries");
-		setToolTipText("Show All Queries Including Hidden Queries");
+		setText(Messages.ShowAllQueriesAction_Show_All_Queries);
+		setToolTipText(Messages.ShowAllQueriesAction_Show_All_Queries_Including_Hidden_Queries);
 		setChecked(!TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN));

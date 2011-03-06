@@ -231,9 +231,15 @@ public class Messages extends NLS {
 
 	public static String RenameAction_Rename;
 
+	public static String ShowAllQueriesAction_Show_All_Queries;
+
+	public static String ShowAllQueriesAction_Show_All_Queries_Including_Hidden_Queries;
+
 	public static String ShowInSearchViewAction_Open_in_Search_Label;
 
 	public static String ShowInTaskListAction_Show_In_Task_List;
+
+	public static String ShowNonMatchingSubtasksAction_Show_Non_Matching_Subtasks;
 
 	public static String SynchronizeAutomaticallyAction_Synchronize_Automatically;
 

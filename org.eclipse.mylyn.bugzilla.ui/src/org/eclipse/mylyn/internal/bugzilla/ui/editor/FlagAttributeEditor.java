@@ -139,7 +139,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 							setValue(values[index]);
 							if (requesteeText != null) {
 								requesteeText.setEnabled(values[index].equals("?")); //$NON-NLS-1$
-								selfLink.setEnabled(values[index].equals("?"));
+								selfLink.setEnabled(values[index].equals("?")); //$NON-NLS-1$
 							}
 						}
 					}

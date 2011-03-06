@@ -21,8 +21,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 public class ShowNonMatchingSubtasksAction extends Action {
 
 	public ShowNonMatchingSubtasksAction() {
-		setText("Show Non Matching Subtasks");
-		setToolTipText("Show Non Matching Subtasks");
+		setText(Messages.ShowNonMatchingSubtasksAction_Show_Non_Matching_Subtasks);
+		setToolTipText(Messages.ShowNonMatchingSubtasksAction_Show_Non_Matching_Subtasks);
 		setChecked(!TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));

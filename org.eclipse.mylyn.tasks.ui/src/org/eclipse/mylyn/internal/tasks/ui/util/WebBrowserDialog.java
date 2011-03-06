@@ -76,7 +76,7 @@ public class WebBrowserDialog extends MessageDialog {
 					file.delete();
 				}
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unexpected error while displaying error", e));
+						"Unexpected error while displaying error", e)); //$NON-NLS-1$
 				return Window.CANCEL;
 			}
 			WorkbenchUtil.openUrl(file.toURI().toString(), IWorkbenchBrowserSupport.AS_EXTERNAL);

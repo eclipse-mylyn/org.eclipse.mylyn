@@ -60,7 +60,6 @@ public class BugzillaFlagsTest extends TestCase {
 		client = BugzillaFixture.current().client();
 	}
 
-	@SuppressWarnings("null")
 	public void testFlags() throws Exception {
 		String taskNumber = "2";
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
