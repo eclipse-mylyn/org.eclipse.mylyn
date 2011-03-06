@@ -35,10 +35,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -205,14 +203,14 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	@Override
 	protected Control createContents(Composite parent) {
-		model = NotificationsPlugin.getDefault().getModel();
+		model = NotificationsPlugin.getDefault().createModelWorkingCopy();
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
 		enableNotificationsButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(enableNotificationsButton);
-		enableNotificationsButton.setText("&Enable notifications");
+		enableNotificationsButton.setText(Messages.NotificationsPreferencesPage_Enable_Notifications_Text);
 		enableNotificationsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -221,14 +219,14 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		});
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(" ");
+		label.setText(" "); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Events:");
+		label.setText(Messages.NotificationsPreferencesPage_Events_Label);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Notifiers:");
+		label.setText(Messages.NotificationsPreferencesPage_Notifiers_Label);
 		// Create the tree showing all the various notification types
 		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true);
 		eventsViewer = tree.getViewer();
@@ -295,7 +293,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		Group group = new Group(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, true).applyTo(group);
-		group.setText("Description");
+		group.setText(Messages.NotificationsPreferencesPage_Descriptions_Label);
 		FillLayout layout = new FillLayout();
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
@@ -329,48 +327,6 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		reset();
 		Dialog.applyDialogFont(composite);
 		return composite;
-	}
-
-	class TestNotification extends AbstractNotification {
-		private final NotificationEvent event;
-
-		public TestNotification(NotificationEvent event) {
-			super(event.getId());
-			this.event = event;
-		}
-
-		public int compareTo(AbstractNotification arg0) {
-			return -1;
-		}
-
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		@Override
-		public void open() {
-		}
-
-		@Override
-		public String getDescription() {
-			return event.getDescription();
-		}
-
-		@Override
-		public String getLabel() {
-			return NLS.bind("Testing {0}", event.getLabel());
-		}
-
-		@Override
-		public Image getNotificationImage() {
-			return null;
-		}
-
-		@Override
-		public Image getNotificationKindImage() {
-			return Dialog.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
-		}
-
 	}
 
 	@Override
@@ -431,7 +387,10 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 	public boolean performOk() {
 		getPreferenceStore().setValue(NotificationsPlugin.PREF_NOTICATIONS_ENABLED,
 				enableNotificationsButton.getSelection());
-		NotificationsPlugin.getDefault().saveModel();
+		if (model.isDirty()) {
+			NotificationsPlugin.getDefault().saveWorkingCopy(model);
+			model.setDirty(false);
+		}
 		return super.performOk();
 	}
 

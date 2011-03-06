@@ -37,7 +37,7 @@ public class NotificationSinkDescriptor extends NotificationElement {
 		}
 
 		try {
-			Object object = element.createExecutableExtension("class");
+			Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
 			if (object instanceof NotificationSink) {
 				sink = (NotificationSink) object;
 				return sink;

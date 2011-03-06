@@ -31,9 +31,13 @@ public class NotificationModel {
 
 	private boolean dirty;
 
-	private final Map<String, NotificationHandler> handlerByEventId;
+	private Map<String, NotificationHandler> handlerByEventId;
 
 	public NotificationModel(IMemento memento) {
+		initialize(memento);
+	}
+
+	void initialize(IMemento memento) {
 		this.handlerByEventId = new HashMap<String, NotificationHandler>();
 		// We need the handlerByEventId map to be populated early
 		for (NotificationCategory category : getCategories()) {

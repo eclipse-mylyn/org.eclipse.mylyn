@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.commons.ui.notifications;
 import org.eclipse.core.runtime.Assert;
 
 /**
+ * Describes how to handle a {@link NotificationEvent}.
+ * 
  * @author Steffen Pingel
  */
 public class NotificationAction {

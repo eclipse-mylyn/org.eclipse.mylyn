@@ -49,7 +49,7 @@ public class PopupNotificationSink extends NotificationSink {
 
 	private final Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
-	private final Job openJob = new Job("Popup Notifier") {
+	private final Job openJob = new Job(Messages.PopupNotificationSink_Popup_Noifier_Job_Label) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {

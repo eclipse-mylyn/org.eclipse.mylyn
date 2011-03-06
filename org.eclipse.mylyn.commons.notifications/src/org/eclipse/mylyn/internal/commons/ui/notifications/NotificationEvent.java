@@ -18,8 +18,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
 
 /**
+ * Describes an event that is handled through a notification. The handling of event is stored in
+ * {@link NotificationAction} objects that delegate to {@link NotificationSink} objects for the handling of actual
+ * events.
+ * 
  * @author Steffen Pingel
  * @author Torkild U. Resheim
  */
@@ -96,15 +101,15 @@ public class NotificationEvent extends NotificationElement {
 	}
 
 	public String getCategoryId() {
-		return element.getAttribute("categoryId");
+		return element.getAttribute("categoryId"); //$NON-NLS-1$
 	}
 
 	public String getDescription() {
-		IConfigurationElement[] children = element.getChildren("description");
+		IConfigurationElement[] children = element.getChildren("description"); //$NON-NLS-1$
 		if (children.length > 0) {
 			return children[0].getValue();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public void setCategory(NotificationCategory category) {

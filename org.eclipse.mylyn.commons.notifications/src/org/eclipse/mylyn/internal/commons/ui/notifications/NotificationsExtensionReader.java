@@ -59,12 +59,12 @@ public class NotificationsExtensionReader {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(NotificationsPlugin.ID_PLUGIN
-				+ ".notifications");
+				+ ".notifications"); //$NON-NLS-1$
 		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if ("category".equals(element.getName())) {
+				if ("category".equals(element.getName())) { //$NON-NLS-1$
 					NotificationCategory category = new NotificationCategory(element);
 					IStatus status = category.validate();
 					if (status.isOK()) {
@@ -75,7 +75,7 @@ public class NotificationsExtensionReader {
 				}
 			}
 			for (IConfigurationElement element : elements) {
-				if ("event".equals(element.getName())) {
+				if ("event".equals(element.getName())) { //$NON-NLS-1$
 					NotificationEvent event = new NotificationEvent(element);
 					IStatus status = event.validate();
 					if (status.isOK()) {
@@ -87,7 +87,7 @@ public class NotificationsExtensionReader {
 									IStatus.ERROR,
 									NotificationsPlugin.ID_PLUGIN,
 									NLS.bind(
-											"Extension {0} contributed by {1} specify unknown category ''{2}''", new String[] { element.getNamespaceIdentifier(), element.getContributor().getName(), event.getCategoryId() }))); //$NON-NLS-1
+											"Extension {0} contributed by {1} specify unknown category ''{2}''", new String[] { element.getNamespaceIdentifier(), element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$ //$NON-NLS-1$
 						}
 					} else {
 						result.add(status);
@@ -117,12 +117,12 @@ public class NotificationsExtensionReader {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(NotificationsPlugin.ID_PLUGIN
-				+ ".notifications");
+				+ ".notifications"); //$NON-NLS-1$
 		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if ("sink".equals(element.getName())) {
+				if ("sink".equals(element.getName())) { //$NON-NLS-1$
 					NotificationSinkDescriptor descriptor = new NotificationSinkDescriptor(element);
 					IStatus status = descriptor.validate();
 					if (status.isOK()) {

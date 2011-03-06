@@ -45,35 +45,31 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 
 	private NotificationService service;
 
-	public NotificationModel getModel() {
-		if (model == null) {
-			IMemento memento = null;
-			File file = getModelFile().toFile();
-			if (file.exists()) {
+	public NotificationModel createModelWorkingCopy() {
+		IMemento memento = null;
+		File file = getModelFile().toFile();
+		if (file.exists()) {
+			try {
+				FileReader reader = new FileReader(file);
 				try {
-					FileReader reader = new FileReader(file);
-					try {
-						memento = XMLMemento.createReadRoot(reader);
-					} finally {
-						reader.close();
-					}
-				} catch (IOException e) {
-					getLog().log(
-							new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e));
-				} catch (WorkbenchException e) {
-					getLog().log(
-							new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e));
+					memento = XMLMemento.createReadRoot(reader);
+				} finally {
+					reader.close();
 				}
+			} catch (IOException e) {
+				getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e)); //$NON-NLS-1$
+			} catch (WorkbenchException e) {
+				getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error restoring notification state", e)); //$NON-NLS-1$
 			}
-			model = new NotificationModel(memento);
 		}
-		return model;
+		return new NotificationModel(memento);
 	}
 
-	protected IPath getModelFile() {
-		IPath stateLocation = Platform.getStateLocation(getBundle());
-		IPath cacheFile = stateLocation.append("notifications.xml"); //$NON-NLS-1$
-		return cacheFile;
+	public NotificationModel getModel() {
+		if (model == null) {
+			model = createModelWorkingCopy();
+		}
+		return model;
 	}
 
 	public NotificationService getService() {
@@ -85,19 +81,18 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 
 	public void saveModel() {
 		if (model != null && model.isDirty()) {
-			XMLMemento memento = XMLMemento.createWriteRoot("notifications");
-			model.save(memento);
-			FileWriter writer;
-			try {
-				writer = new FileWriter(getModelFile().toFile());
-				try {
-					memento.save(writer);
-				} finally {
-					writer.close();
-				}
-			} catch (IOException e) {
-				getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error saving notification state", e));
-			}
+			save(model);
+		}
+	}
+
+	public void saveWorkingCopy(NotificationModel workingCopy) {
+		if (this.model != null) {
+			// persist working copy to temporary memento and reload model
+			XMLMemento memento = XMLMemento.createWriteRoot("notifications"); //$NON-NLS-1$
+			workingCopy.save(memento);
+			this.model.initialize(memento);
+		} else {
+			save(workingCopy);
 		}
 	}
 
@@ -111,6 +106,28 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		instance = null;
+	}
+
+	private void save(NotificationModel model) {
+		XMLMemento memento = XMLMemento.createWriteRoot("notifications"); //$NON-NLS-1$
+		model.save(memento);
+		FileWriter writer;
+		try {
+			writer = new FileWriter(getModelFile().toFile());
+			try {
+				memento.save(writer);
+			} finally {
+				writer.close();
+			}
+		} catch (IOException e) {
+			getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error saving notification state", e)); //$NON-NLS-1$
+		}
+	}
+
+	protected IPath getModelFile() {
+		IPath stateLocation = Platform.getStateLocation(getBundle());
+		IPath cacheFile = stateLocation.append("notifications.xml"); //$NON-NLS-1$
+		return cacheFile;
 	}
 
 }
