@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -34,7 +35,11 @@ public class MylynPreferencePage extends PreferencePage implements IWorkbenchPre
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new FillLayout());
+
+//		Label label = new Label(composite, SWT.NONE);
+//		label.setText("See sub-pages for settings.");
+
 		return composite;
 	}
-
 }

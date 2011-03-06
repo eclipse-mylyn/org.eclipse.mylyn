@@ -25,17 +25,9 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String Friday;
-
-	public static String Monday;
-
 	public static String MylynPreferencePage_General_settings_Description;
 
 	public static String MylynPreferencePage_Mylyn_Title;
-
-	public static String Saturday;
-
-	public static String Sunday;
 
 	public static String TasksUiPreferencePage_Advanced;
 
@@ -110,11 +102,5 @@ public class Messages extends NLS {
 	public static String TasksUiPreferencePage_Web_Browser;
 
 	public static String TasksUiPreferencePage_Week_Start;
-
-	public static String Thursday;
-
-	public static String Tuesday;
-
-	public static String Wednesday;
 
 }
