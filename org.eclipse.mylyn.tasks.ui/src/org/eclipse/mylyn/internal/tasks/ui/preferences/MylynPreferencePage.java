@@ -24,7 +24,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class MylynPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public MylynPreferencePage() {
-		super("Mylyn");
+		super(Messages.MylynPreferencePage_Mylyn_Title);
+		setDescription(Messages.MylynPreferencePage_General_settings_Description);
 	}
 
 	public void init(IWorkbench workbench) {

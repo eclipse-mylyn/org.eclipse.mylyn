@@ -29,6 +29,10 @@ public class Messages extends NLS {
 
 	public static String Monday;
 
+	public static String MylynPreferencePage_General_settings_Description;
+
+	public static String MylynPreferencePage_Mylyn_Title;
+
 	public static String Saturday;
 
 	public static String Sunday;
