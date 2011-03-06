@@ -178,12 +178,12 @@ public class DateUtil {
 
 	private enum Period {
 
-		MONTH(MILLIS_MONTH, "{0} month", "{0} month"), //
-		WEEK(MILLIS_WEEK, "{0} week", "{0} weeks"), // 
-		DAY(MILLIS_DAY, "{0} day", "{0} days"), //
-		HOUR(MILLIS_HOUR, "{0} hr", "{0} hrs"), //
-		MINUTE(MILLIS_MINUTE, "{0} min", "{0} mins"), //
-		SECOND(MILLIS_SECOND, "{0} sec", "{0} secs");
+		MONTH(MILLIS_MONTH, Messages.DateUtil_month_single, Messages.DateUtil_month_multi), //
+		WEEK(MILLIS_WEEK, Messages.DateUtil_week, Messages.DateUtil_weeks), // 
+		DAY(MILLIS_DAY, Messages.DateUtil_day, Messages.DateUtil_days), //
+		HOUR(MILLIS_HOUR, Messages.DateUtil_hour, Messages.DateUtil_hours), //
+		MINUTE(MILLIS_MINUTE, Messages.DateUtil_minute, Messages.DateUtil_minutes), //
+		SECOND(MILLIS_SECOND, Messages.DateUtil_second, Messages.DateUtil_seconds);
 
 		private final long duration;
 
@@ -241,12 +241,12 @@ public class DateUtil {
 		String duration = getRelativeDuration(Math.abs(diff));
 		if (duration.length() > 0) {
 			if (diff > 0) {
-				return NLS.bind("{0} ago", duration);
+				return NLS.bind(Messages.DateUtil_ago, duration);
 			} else {
-				return NLS.bind("in {0}", duration);
+				return NLS.bind(Messages.DateUtil_in, duration);
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**

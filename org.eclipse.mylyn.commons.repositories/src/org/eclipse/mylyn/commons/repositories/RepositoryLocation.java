@@ -42,7 +42,7 @@ public class RepositoryLocation extends PlatformObject {
 
 	private static final String ENABLED = ".enabled"; //$NON-NLS-1$
 
-	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository";
+	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository"; //$NON-NLS-1$
 
 	public static final String PROPERTY_CATEGORY = "category"; //$NON-NLS-1$
 

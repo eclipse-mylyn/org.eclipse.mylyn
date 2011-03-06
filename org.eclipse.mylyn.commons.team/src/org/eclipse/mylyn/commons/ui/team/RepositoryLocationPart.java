@@ -69,7 +69,8 @@ public class RepositoryLocationPart {
 
 		public IStatus validate(Object value) {
 			if (!isValidUrl(value.toString())) {
-				return new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN, "Enter a valid server url.");
+				return new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN,
+						Messages.RepositoryLocationPart_Enter_a_valid_server_url);
 			}
 			return Status.OK_STATUS;
 		}
@@ -146,8 +147,8 @@ public class RepositoryLocationPart {
 					savePasswordButton.setSelection(true);
 				} else {
 					enabledButton.setSelection(isEnablementReversed());
-					userText.setText("");
-					passwordText.setText("");
+					userText.setText(""); //$NON-NLS-1$
+					passwordText.setText(""); //$NON-NLS-1$
 					savePasswordButton.setSelection(true);
 				}
 			} finally {
@@ -218,7 +219,7 @@ public class RepositoryLocationPart {
 //				if (getUserName().length() > 0) {
 //					message = "Credentials are valid.";
 //				} else {
-				message = "Repository is valid.";
+				message = Messages.RepositoryLocationPart_Repository_is_valid;
 //				}
 			}
 			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
@@ -334,7 +335,7 @@ public class RepositoryLocationPart {
 		if (getWorkingCopy().getCredentials(AuthenticationType.HTTP, UsernamePasswordCredentials.class) != null) {
 			style |= ExpandableComposite.EXPANDED;
 		}
-		ExpandableComposite section = parent.createSection("HTTP Authentication", style);
+		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_HTTP_Authentication, style);
 		section.clientVerticalSpacing = 5;
 
 		Composite composite = new Composite(section, SWT.NONE);
@@ -345,28 +346,28 @@ public class RepositoryLocationPart {
 
 		Button enableButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
-		enableButton.setText("Enable HTTP Authentication");
+		enableButton.setText(Messages.RepositoryLocationPart_Enable_HTTP_Authentication);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("&User:");
+		label.setText(Messages.RepositoryLocationPart_User);
 
 		Text userText = new Text(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("&Password:");
+		label.setText(Messages.RepositoryLocationPart_Password);
 
 		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
 
 		Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText("Save Password");
+		savePasswordButton.setText(Messages.RepositoryLocationPart_Save_Password);
 
 		bind(AuthenticationType.HTTP, enableButton, userText, passwordText, savePasswordButton, false);
 	}
 
 	private void createProxySection(final SectionComposite parent) {
-		ExpandableComposite section = parent.createSection("Proxy Server Configuration");
+		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_Proxy_Server_Configuration);
 
 		Composite composite = new Composite(section, SWT.NONE);
 		section.setClient(composite);
@@ -376,7 +377,7 @@ public class RepositoryLocationPart {
 
 		Button systemProxyButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(systemProxyButton);
-		systemProxyButton.setText("Use global Network Connections preferences");
+		systemProxyButton.setText(Messages.RepositoryLocationPart_Use_global_Network_Connections_preferences);
 //		systemProxyButton.addSelectionListener(new SelectionAdapter() {
 //			@Override
 //			public void widgetSelected(SelectionEvent e) {
@@ -386,7 +387,7 @@ public class RepositoryLocationPart {
 		bind(systemProxyButton, RepositoryLocation.PROPERTY_PROXY_USEDEFAULT);
 
 		Link changeProxySettingsLink = new Link(composite, SWT.NONE);
-		changeProxySettingsLink.setText("<a>Change Settings</a>");
+		changeProxySettingsLink.setText(Messages.RepositoryLocationPart_Change_Settings);
 		changeProxySettingsLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -397,14 +398,14 @@ public class RepositoryLocationPart {
 		});
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Proxy &Host:");
+		label.setText(Messages.RepositoryLocationPart_Proxy_Host);
 
 		Text proxyHostText = new Text(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(proxyHostText);
 		bind(proxyHostText, RepositoryLocation.PROPERTY_PROXY_HOST);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Proxy &Port:");
+		label.setText(Messages.RepositoryLocationPart_Proxy_Port);
 
 		Text proxyPortText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(proxyPortText);
@@ -414,22 +415,22 @@ public class RepositoryLocationPart {
 
 		Button enableButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
-		enableButton.setText("Enable Proxy Authentication");
+		enableButton.setText(Messages.RepositoryLocationPart_Enable_Proxy_Authentication);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("&User:");
+		label.setText(Messages.RepositoryLocationPart_User);
 
 		Text userText = new Text(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("&Password:");
+		label.setText(Messages.RepositoryLocationPart_Password);
 
 		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
 
 		Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText("Save Password");
+		savePasswordButton.setText(Messages.RepositoryLocationPart_Save_Password);
 
 		bind(AuthenticationType.PROXY, enableButton, userText, passwordText, savePasswordButton, false);
 	}
@@ -441,21 +442,21 @@ public class RepositoryLocationPart {
 		Label label;
 
 		label = new Label(parent, SWT.NONE);
-		label.setText("&Server:");
+		label.setText(Messages.RepositoryLocationPart_Server);
 
 		Text urlText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(urlText);
 		bind(urlText, RepositoryLocation.PROPERTY_URL, getUrlUpdateValueStrategy(), null);
 
 		label = new Label(parent, SWT.NONE);
-		label.setText("&Label:");
+		label.setText(Messages.RepositoryLocationPart_Label);
 
 		Text labelText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(labelText);
 		bind(labelText, RepositoryLocation.PROPERTY_LABEL);
 
 		Button disconnectedButton = new Button(parent, SWT.CHECK);
-		disconnectedButton.setText("Disconnected");
+		disconnectedButton.setText(Messages.RepositoryLocationPart_Disconnected);
 		bind(disconnectedButton, RepositoryLocation.PROPERTY_OFFLINE);
 	}
 
@@ -467,23 +468,23 @@ public class RepositoryLocationPart {
 		Label label;
 
 		label = new Label(parent, SWT.NONE);
-		label.setText("&User:");
+		label.setText(Messages.RepositoryLocationPart_User);
 
 		Text userText = new Text(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
 		bind(userText, RepositoryLocation.PROPERTY_USERNAME);
 
 		Button anonymousButton = new Button(parent, SWT.CHECK);
-		anonymousButton.setText("Anonymous");
+		anonymousButton.setText(Messages.RepositoryLocationPart_Anonymous);
 
 		label = new Label(parent, SWT.NONE);
-		label.setText("&Password:");
+		label.setText(Messages.RepositoryLocationPart_Password);
 
 		Text passwordText = new Text(parent, SWT.BORDER | SWT.PASSWORD);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
 
 		Button savePasswordButton = new Button(parent, SWT.CHECK);
-		savePasswordButton.setText("Save Password");
+		savePasswordButton.setText(Messages.RepositoryLocationPart_Save_Password);
 
 		bind(AuthenticationType.REPOSITORY, anonymousButton, userText, passwordText, savePasswordButton, true);
 	}
@@ -577,7 +578,7 @@ public class RepositoryLocationPart {
 		try {
 			getContainer(IPartContainer.class).run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Validating repository", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.RepositoryLocationPart_Validating_repository, IProgressMonitor.UNKNOWN);
 					try {
 						result.set(validator.run(monitor));
 					} catch (OperationCanceledException e) {
@@ -592,8 +593,9 @@ public class RepositoryLocationPart {
 			});
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN, "Unexpected error during repository validation.",
-							e), StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+					new Status(IStatus.ERROR, TeamUiPlugin.ID_PLUGIN,
+							Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
+					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled

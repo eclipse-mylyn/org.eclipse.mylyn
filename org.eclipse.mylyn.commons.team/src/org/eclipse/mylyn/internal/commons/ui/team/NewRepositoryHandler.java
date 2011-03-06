@@ -53,7 +53,7 @@ public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 	public static int openDialog(IWorkbenchWindow workbenchWindow, String categoryId) {
 		NewRepositoryWizard wizard = new NewRepositoryWizard();
 		wizard.setCategoryId(categoryId);
-		wizard.setWindowTitle("New Repository");
+		wizard.setWindowTitle(Messages.NewRepositoryHandler_New_Repository);
 
 		ISelection selection = workbenchWindow.getSelectionService().getSelection();
 		IStructuredSelection selectionToPass = StructuredSelection.EMPTY;

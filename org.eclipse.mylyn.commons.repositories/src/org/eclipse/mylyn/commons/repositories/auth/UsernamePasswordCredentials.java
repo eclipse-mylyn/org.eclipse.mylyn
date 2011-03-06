@@ -91,14 +91,15 @@ public class UsernamePasswordCredentials extends AuthenticationCredentials {
 	}
 
 	public static UsernamePasswordCredentials create(ICredentialsStore store, String prefix) throws StorageException {
-		String userName = store.get(prefix + ".user", "");
-		String password = store.get(prefix + ".password", "");
+		String userName = store.get(prefix + ".user", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String password = store.get(prefix + ".password", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		return new UsernamePasswordCredentials(userName, password);
 	}
 
+	@Override
 	public void save(ICredentialsStore store, String prefix) throws StorageException {
-		store.put(prefix + ".user", userName, false);
-		store.put(prefix + ".password", password, true);
+		store.put(prefix + ".user", userName, false); //$NON-NLS-1$ 
+		store.put(prefix + ".password", password, true); //$NON-NLS-1$ 
 	}
 
 }

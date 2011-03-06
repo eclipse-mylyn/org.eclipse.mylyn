@@ -31,7 +31,7 @@ import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
  */
 public class LocationService implements ILocationService {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository"; //$NON-NLS-1$
 
 	private static LocationService instance = new LocationService(null, null, new PlatformProxyProvider());
 

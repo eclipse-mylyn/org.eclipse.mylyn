@@ -27,7 +27,7 @@ public class RepositoriesView extends CommonNavigator {
 	private final RepositoryCategory rootCategory;
 
 	public RepositoriesView() {
-		rootCategory = new RepositoryCategory(RepositoryCategory.ID_CATEGORY_ROOT, "Root", 0);
+		rootCategory = new RepositoryCategory(RepositoryCategory.ID_CATEGORY_ROOT, Messages.RepositoriesView_Root, 0);
 	}
 
 	@Override
