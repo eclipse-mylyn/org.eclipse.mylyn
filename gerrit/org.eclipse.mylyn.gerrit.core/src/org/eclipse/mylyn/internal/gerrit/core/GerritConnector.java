@@ -39,6 +39,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.ChangeInfo;
+import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * The Gerrit connector core.
@@ -62,6 +63,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	 * Label for the connector.
 	 */
 	public static final String CONNECTOR_LABEL = "Gerrit Code Review";
+
+	private static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config";
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 
@@ -160,6 +163,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("Executing query", IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
+			client.refreshConfigOnce(monitor);
 			List<ChangeInfo> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);
@@ -196,7 +200,11 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		// ignore
+		try {
+			getClient(repository).refreshConfig(monitor);
+		} catch (GerritException e) {
+			throw toCoreException(repository, e);
+		}
 	}
 
 	@Override
@@ -209,8 +217,14 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return createClient(repository);
 	}
 
-	private GerritClient createClient(TaskRepository repository) {
-		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository));
+	private GerritClient createClient(final TaskRepository repository) {
+		GerritConfig config = GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
+		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config) {
+			@Override
+			protected void configurationChanged(GerritConfig config) {
+				repository.setProperty(KEY_REPOSITORY_CONFIG, GerritClient.configToString(config));
+			}
+		};
 	}
 
 	CoreException toCoreException(TaskRepository repository, GerritException e) {

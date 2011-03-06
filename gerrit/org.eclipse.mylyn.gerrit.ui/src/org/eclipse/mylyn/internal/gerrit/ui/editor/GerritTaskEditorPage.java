@@ -14,8 +14,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -32,6 +39,21 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 	}
 
 	@Override
+	protected AttributeEditorFactory createAttributeEditorFactory() {
+		return new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite()) {
+			@Override
+			public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
+				if (taskAttribute.getId().equals(GerritTaskSchema.getDefault().CHANGE_ID.getKey())) {
+					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
+					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
+					return editor;
+				}
+				return super.createEditor(type, taskAttribute);
+			}
+		};
+	}
+
+	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
@@ -39,11 +61,20 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 			if (PATH_ACTIONS.equals(descriptor.getPath())) {
 				it.remove();
 			}
+			if (PATH_PEOPLE.equals(descriptor.getPath())) {
+				it.remove();
+			}
 		}
-		descriptors.add(new TaskEditorPartDescriptor("review") { //$NON-NLS-1$
+		descriptors.add(new TaskEditorPartDescriptor(ReviewSection.class.getName()) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new ReviewSection();
+			}
+		});
+		descriptors.add(new TaskEditorPartDescriptor(PatchSetSection.class.getName()) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new PatchSetSection();
 			}
 		});
 		return descriptors;

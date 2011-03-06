@@ -1,4 +1,5 @@
 package org.eclipse.mylyn.internal.reviews.ui;
+
 /*******************************************************************************
  * Copyright (c) 2009 Atlassian and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +10,6 @@ package org.eclipse.mylyn.internal.reviews.ui;
  * Contributors:
  *     Atlassian - initial API and implementation
  ******************************************************************************/
-
 
 import org.eclipse.jface.action.Action;
 

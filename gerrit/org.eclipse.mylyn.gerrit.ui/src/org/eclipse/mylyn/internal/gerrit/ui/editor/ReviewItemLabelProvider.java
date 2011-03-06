@@ -58,11 +58,14 @@ public class ReviewItemLabelProvider extends LabelProvider implements IStyledLab
 		if (text != null) {
 			StyledString styledString = new StyledString(text);
 			if (element instanceof IFileItem) {
-				int i = ((IFileItem) element).getTopics().size();
-				i += ((IFileItem) element).getBase().getTopics().size();
-				i += ((IFileItem) element).getTarget().getTopics().size();
-				if (i > 0) {
-					styledString.append(NLS.bind("  [{0} comments]", i), StyledString.DECORATIONS_STYLER);
+				IFileItem fileItem = (IFileItem) element;
+				if (fileItem.getBase() != null && fileItem.getTarget() != null) {
+					int i = fileItem.getTopics().size();
+					i += fileItem.getBase().getTopics().size();
+					i += fileItem.getTarget().getTopics().size();
+					if (i > 0) {
+						styledString.append(NLS.bind("  [{0} comments]", i), StyledString.DECORATIONS_STYLER);
+					}
 				}
 			}
 			return styledString;

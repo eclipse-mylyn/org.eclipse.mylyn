@@ -128,7 +128,7 @@ public class GerritHttpClient {
 
 	private PostMethod postJsonRequestInternal(String serviceUri, JsonEntity entity, IProgressMonitor monitor)
 			throws IOException {
-		PostMethod method = new PostMethod(location.getUrl() + serviceUri);
+		PostMethod method = new PostMethod(getUrl() + serviceUri);
 		method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
 		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
 
@@ -147,6 +147,29 @@ public class GerritHttpClient {
 			throw e;
 		}
 
+	}
+
+	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
+		GetMethod method = new GetMethod(getUrl() + serviceUri);
+		try {
+			// Execute the method.
+			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			return method;
+		} catch (IOException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		}
+	}
+
+	private String getUrl() {
+		String url = location.getUrl();
+		if (url.endsWith("/")) { //$NON-NLS-1$
+			url = url.substring(0, url.length() - 1);
+		}
+		return url;
 	}
 
 	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
@@ -216,7 +239,7 @@ public class GerritHttpClient {
 
 	private int authenticateTestMode(AuthenticationCredentials credentials, IProgressMonitor monitor)
 			throws IOException, GerritException {
-		String repositoryUrl = location.getUrl();
+		String repositoryUrl = getUrl();
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
 				+ credentials.getUserName()));
 		method.setFollowRedirects(false);
@@ -238,7 +261,7 @@ public class GerritHttpClient {
 	private int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
 			GerritException {
 		// try standard basic/digest/ntlm authentication first
-		String repositoryUrl = location.getUrl();
+		String repositoryUrl = getUrl();
 		AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,
 				AuthScope.ANY_SCHEME);
 		Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));

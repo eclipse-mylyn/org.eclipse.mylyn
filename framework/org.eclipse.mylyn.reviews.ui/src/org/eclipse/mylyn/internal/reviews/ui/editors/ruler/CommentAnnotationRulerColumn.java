@@ -47,7 +47,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.rulers.IContributedRulerColumn;
 import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
 
-
 public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements IContributedRulerColumn {
 
 	/** The contribution descriptor. */

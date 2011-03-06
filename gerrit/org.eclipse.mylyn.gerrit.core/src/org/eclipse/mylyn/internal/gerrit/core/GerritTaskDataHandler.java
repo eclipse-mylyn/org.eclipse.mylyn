@@ -16,8 +16,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -25,9 +27,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -41,28 +43,6 @@ import com.google.gerrit.reviewdb.ChangeMessage;
  * @author Steffen Pingel
  */
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
-
-	public static TaskAttribute createAttribute(TaskData data, GerritAttribute gerritAttribute) {
-		TaskAttribute attr = data.getRoot().createAttribute(gerritAttribute.getGerritKey());
-		TaskAttributeMetaData metaData = attr.getMetaData();
-		metaData.setType(gerritAttribute.getType());
-		metaData.setKind(gerritAttribute.getKind());
-		metaData.setLabel(gerritAttribute.toString());
-		metaData.setReadOnly(gerritAttribute.isReadOnly());
-		return attr;
-	}
-
-	public static void createDefaultAttributes(TaskData data) {
-		createAttribute(data, GerritAttribute.ID);
-		createAttribute(data, GerritAttribute.OWNER);
-		createAttribute(data, GerritAttribute.PROJECT);
-		createAttribute(data, GerritAttribute.SUMMARY);
-		createAttribute(data, GerritAttribute.STATUS);
-		createAttribute(data, GerritAttribute.URL);
-		createAttribute(data, GerritAttribute.UPDATED);
-		createAttribute(data, GerritAttribute.UPLOADED);
-		createAttribute(data, GerritAttribute.DESCRIPTION);
-	}
 
 	public static String dateToString(Date date) {
 		if (date == null) {
@@ -81,13 +61,13 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	public TaskData createTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) {
 		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
 				repository.getRepositoryUrl(), taskId);
-		createDefaultAttributes(data);
+		initializeTaskData(repository, data, null, monitor);
 		return data;
 	}
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
-		return new GerritTaskAttributeMapper(repository);
+		return new TaskAttributeMapper(repository);
 	}
 
 	/**
@@ -97,9 +77,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			GerritClient client = connector.getClient(repository);
-			ChangeDetail changeDetail = client.getChangeDetail(client.id(taskId), monitor);
+			client.refreshConfigOnce(monitor);
+			GerritChange review = client.getChange(taskId, monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
-			updateTaskData(repository, taskData, changeDetail);
+			updateTaskData(repository, taskData, review, !client.isAnonymous());
 			return taskData;
 		} catch (GerritException e) {
 			throw connector.toCoreException(repository, e);
@@ -108,8 +89,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData taskData, ITaskMapping initializationData,
-			IProgressMonitor monitor) throws CoreException {
-		createDefaultAttributes(taskData);
+			IProgressMonitor monitor) {
+		GerritTaskSchema.getDefault().initialize(taskData);
 		return true;
 	}
 
@@ -119,29 +100,36 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		throw new UnsupportedOperationException();
 	}
 
-	public void updateTaskData(TaskRepository repository, TaskData data, ChangeDetail changeDetail) {
+	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange review, boolean canPublish) {
+		GerritTaskSchema schema = GerritTaskSchema.getDefault();
+
+		ChangeDetail changeDetail = review.getChangeDetail();
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
-		setAttributeValue(data, GerritAttribute.ID, change.getChangeId() + ""); //$NON-NLS-1$
-		setAttributeValue(data, GerritAttribute.OWNER, owner.getFullName());
-		setAttributeValue(data, GerritAttribute.PROJECT, change.getProject().get());
-		setAttributeValue(data, GerritAttribute.SUMMARY, change.getSubject());
-		setAttributeValue(data, GerritAttribute.STATUS, change.getStatus().toString());
+
+		setAttributeValue(data, schema.KEY, change.getId().toString());
+		//setAttributeValue(data, schema.KEY, change.getKey().abbreviate());
+		setAttributeValue(data, schema.CHANGE_ID, change.getKey().get());
+		setAttributeValue(data, schema.BRANCH, change.getDest().get());
+		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
+		setAttributeValue(data, schema.PROJECT, change.getProject().get());
+		setAttributeValue(data, schema.SUMMARY, change.getSubject());
+		setAttributeValue(data, schema.STATUS, change.getStatus().toString());
 		//setAttributeValue(data, GerritAttribute.URL, change.getUrl());
-		setAttributeValue(data, GerritAttribute.UPDATED, dateToString(change.getLastUpdatedOn()));
-		setAttributeValue(data, GerritAttribute.UPLOADED, dateToString(change.getCreatedOn()));
-		setAttributeValue(data, GerritAttribute.DESCRIPTION, changeDetail.getDescription());
-		setAttributeValue(data, GerritAttribute.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
+		setAttributeValue(data, schema.UPDATED, dateToString(change.getLastUpdatedOn()));
+		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
+		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
+		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
 		if (change.getStatus() != null && change.getStatus().isClosed()) {
-			createAttribute(data, GerritAttribute.COMPLETED);
-			setAttributeValue(data, GerritAttribute.COMPLETED, dateToString(change.getLastUpdatedOn()));
+			setAttributeValue(data, schema.COMPLETED, dateToString(change.getLastUpdatedOn()));
 		}
 		int i = 1;
 		for (ChangeMessage message : changeDetail.getMessages()) {
 			TaskCommentMapper mapper = new TaskCommentMapper();
 			if (message.getAuthor() != null) {
 				AccountInfo author = changeDetail.getAccounts().get(message.getAuthor());
-				IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null) ? author.getPreferredEmail()
+				IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null)
+						? author.getPreferredEmail()
 						: author.getId() + ""); //$NON-NLS-1$
 				person.setName(author.getFullName());
 				mapper.setAuthor(person);
@@ -153,23 +141,28 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			mapper.applyTo(attribute);
 			i++;
 		}
+
+		JSonSupport json = new JSonSupport();
+		setAttributeValue(data, schema.OBJ_REVIEW, json.getGson().toJson(review));
+		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
 	}
 
 	public void updateTaskData(TaskData data, ChangeInfo changeInfo) {
-		setAttributeValue(data, GerritAttribute.ID, changeInfo.getId() + ""); //$NON-NLS-1$
-		setAttributeValue(data, GerritAttribute.OWNER, changeInfo.getOwner().toString());
-		setAttributeValue(data, GerritAttribute.PROJECT, changeInfo.getProject().getName());
-		setAttributeValue(data, GerritAttribute.SUMMARY, changeInfo.getSubject());
-		setAttributeValue(data, GerritAttribute.STATUS, changeInfo.getStatus().toString());
+		GerritTaskSchema schema = GerritTaskSchema.getDefault();
+		setAttributeValue(data, schema.KEY, changeInfo.getId() + ""); //$NON-NLS-1$
+		setAttributeValue(data, schema.OWNER, changeInfo.getOwner().toString());
+		setAttributeValue(data, schema.PROJECT, changeInfo.getProject().getName());
+		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
+		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
 		//setAttributeValue(data, GerritAttribute.URL, change.getUrl());
-		setAttributeValue(data, GerritAttribute.UPDATED, dateToString(changeInfo.getLastUpdatedOn()));
+		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getLastUpdatedOn()));
 	}
 
 	/**
 	 * Convenience method to set the value of a given Attribute in the given {@link TaskData}.
 	 */
-	private TaskAttribute setAttributeValue(TaskData data, GerritAttribute gerritAttribut, String value) {
-		TaskAttribute attribute = data.getRoot().getAttribute(gerritAttribut.getGerritKey());
+	private TaskAttribute setAttributeValue(TaskData data, Field gerritAttribut, String value) {
+		TaskAttribute attribute = data.getRoot().getAttribute(gerritAttribut.getKey());
 		if (value != null) {
 			attribute.setValue(value);
 		}

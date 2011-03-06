@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.eclipse.jgit.diff.Edit;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -85,6 +87,20 @@ public class JSonSupport {
 	private Gson gson;
 
 	public JSonSupport() {
+		ExclusionStrategy exclustionStrategy = new ExclusionStrategy() {
+
+			public boolean shouldSkipField(FieldAttributes f) {
+				// commentLinks requires instantiation of com.google.gwtexpui.safehtml.client.RegexFindReplace which is not on classpath
+				if (f.getDeclaredClass() == List.class && f.getName().equals("commentLinks")) { //$NON-NLS-1$
+					return true;
+				}
+				return false;
+			}
+
+			public boolean shouldSkipClass(Class<?> clazz) {
+				return false;
+			}
+		};
 		gson = JsonServlet.defaultGsonBuilder()
 				.registerTypeAdapter(JSonResponse.class, new JSonResponseDeserializer())
 				.registerTypeAdapter(Edit.class, new JsonDeserializer<Edit>() {
@@ -100,7 +116,12 @@ public class JSonSupport {
 						return new Edit(0, 0);
 					}
 				})
+				.setExclusionStrategies(exclustionStrategy)
 				.create();
+	}
+
+	public Gson getGson() {
+		return gson;
 	}
 
 	String createRequest(int id, String xsrfKey, String methodName, Collection<Object> args) {

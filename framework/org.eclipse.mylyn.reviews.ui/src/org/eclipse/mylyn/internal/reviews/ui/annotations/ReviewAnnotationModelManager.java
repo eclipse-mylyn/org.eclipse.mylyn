@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * Class to manage the annotation model for the open editors
  * 
@@ -49,8 +48,7 @@ public final class ReviewAnnotationModelManager {
 	private static void update(CompareEditor editor, Review activeReview) {
 		IEditorInput editorInput = editor.getEditorInput();
 		if (editorInput instanceof ReviewCompareEditorInput) {
-			((ReviewCompareEditorInput) editorInput).getAnnotationModelToAttach().updateCrucibleFile(
-					activeReview);
+			((ReviewCompareEditorInput) editorInput).getAnnotationModelToAttach().updateCrucibleFile(activeReview);
 		}
 	}
 

@@ -1,0 +1,80 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Tasktop Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.gerrit.ui.operations;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.gerrit.core.operations.AddReviewersRequest;
+import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
+
+import com.google.gerrit.common.data.ReviewerResult;
+
+/**
+ * @author Steffen Pingel
+ */
+public class AddReviewersDialog extends GerritOperationDialog {
+
+	private RichTextEditor messageEditor;
+
+	public AddReviewersDialog(Shell parentShell, ITask task) {
+		super(parentShell, task);
+	}
+
+	@Override
+	public GerritOperation createOperation() {
+		AddReviewersRequest request = new AddReviewersRequest(task.getTaskId(), getReviewers());
+		return GerritUiPlugin.getDefault().getOperationFactory().createAddReviewersOperation(task, request);
+	}
+
+	private List<String> getReviewers() {
+		String[] reviewers = messageEditor.getText().split(",");
+		return Arrays.asList(reviewers);
+	}
+
+	@Override
+	protected Control createPageControls(Composite parent) {
+		setTitle("Add Reviewers");
+		setMessage("Enter a comma separated list of names or email addresses.");
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+
+		messageEditor = createRichTextEditor(composite, "");
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor.getControl());
+
+		return composite;
+	}
+
+	@Override
+	protected boolean processOperationResult(GerritOperation<?> operation) {
+		Object result = operation.getOperationResult();
+		if (result instanceof ReviewerResult) {
+			ReviewerResult reviewerResult = (ReviewerResult) result;
+			if (reviewerResult.getErrors() != null && reviewerResult.getErrors().size() > 0) {
+				setErrorMessage(reviewerResult.getErrors().toString());
+				return false;
+			}
+		}
+		return super.processOperationResult(operation);
+	}
+
+}
