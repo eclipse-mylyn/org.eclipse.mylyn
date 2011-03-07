@@ -60,7 +60,8 @@ public class ChangeSetReviewFile implements IReviewFile {
 				new CompareItem(change.getBase()), new CompareItem(change.getTarget()));
 		return ci;
 	}
-	class CompareItem implements IStreamContentAccessor, ITypedElement {
+	
+	static class CompareItem implements IStreamContentAccessor, ITypedElement {
 		private final ScmArtifact artifact;
 
 		public CompareItem(ScmArtifact artifact) {
@@ -68,8 +69,8 @@ public class ChangeSetReviewFile implements IReviewFile {
 		}
 
 		public InputStream getContents() throws CoreException {
-			// FIXME
 			if (artifact==null) return new ByteArrayInputStream(new byte[0]);
+			// FIXME
 			return artifact.getFileRevision(new NullProgressMonitor()).getStorage(new NullProgressMonitor()).getContents();
 		}
 		public Image getImage() {

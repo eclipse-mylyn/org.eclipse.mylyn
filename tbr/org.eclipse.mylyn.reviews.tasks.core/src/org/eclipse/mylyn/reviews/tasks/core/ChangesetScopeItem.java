@@ -50,7 +50,7 @@ public class ChangesetScopeItem implements IReviewScopeItem {
 			for (ScmRepository repository : connector
 					.getRepositories(new NullProgressMonitor())) {
 				if (repositoryUrl.equals(repository.getUrl())) {
-					ChangeSet changeset = connector.getChangeset(repository,
+					ChangeSet changeset = connector.getChangeSet(repository,
 							new IFileRevision() {
 
 								@Override
