@@ -13,7 +13,8 @@ package org.eclipse.mylyn.commons.ui.team;
 
 import org.eclipse.osgi.util.NLS;
 
-public class Messages extends NLS {
+class Messages extends NLS {
+
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.commons.ui.team.messages"; //$NON-NLS-1$
 
 	public static String RepositoryLocationPart_Anonymous;
@@ -53,6 +54,7 @@ public class Messages extends NLS {
 	public static String RepositoryLocationPart_User;
 
 	public static String RepositoryLocationPart_Validating_repository;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -60,4 +62,5 @@ public class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }
