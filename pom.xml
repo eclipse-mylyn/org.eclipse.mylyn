@@ -277,7 +277,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-            <skip>true</skip>
+            <skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>
@@ -297,7 +297,7 @@
             <targetJdk>1.5</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
-            <skip>true</skip>
+            <skip>${mylyn-skip-source-check}</skip>
           </configuration>
           <executions>
             <execution>
