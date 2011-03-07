@@ -3,13 +3,6 @@
 
 <plugin>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.eclipse.org/mylyn/reviews/tasks/dsl/ReviewDsl" 
-       class = "org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewDslPackage"
-       genModel = "org/eclipse/mylyn/reviews/tasks/dsl/ReviewDsl.genmodel" /> 
-	
-  </extension>
 
 
 

@@ -29,7 +29,7 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static ReviewsUiPlugin plugin;
 
-	private static ReviewTaskMapper mapper;
+	private static IReviewMapper mapper;
 
 	/**
 	 * The constructor

@@ -18,14 +18,6 @@
     </resources>
     <plugins>
       <plugin>
-	<groupId>org.fornax.toolsupport</groupId>
-	<artifactId>fornax-oaw-m2-plugin</artifactId>
-	  <configuration>
-	    <workflowEngine>mwe2</workflowEngine>
-	    <workflowDescriptor>${project.basedir}/src/org/eclipse/mylyn/reviews/tasks/dsl/GenerateReviewDsl.mwe2</workflowDescriptor>
-	  </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-source-plugin</artifactId>
       </plugin>
@@ -38,41 +30,5 @@
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-	<plugin>
-	  <groupId>org.fornax.toolsupport</groupId>
-	  <artifactId>fornax-oaw-m2-plugin</artifactId>
-	  <version>3.2.0-SNAPSHOT</version>
-	  <configuration>
-	    <workflowEngine>mwe2</workflowEngine>
-          </configuration>
-	  <executions>
-	    <execution>
-	      <phase>generate-sources</phase>
-	      <goals>
-	        <goal>run-workflow</goal>
-	      </goals>
-	    </execution>
-	  </executions>
-	</plugin>
-      </plugins>
-    </pluginManagement>
   </build>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>fornax-snapshots</id>
-      <url>http://fornax.itemis.de/nexus/content/repositories/snapshots</url>
-      <releases>
-	<enabled>false</enabled>
-      </releases>
-      <snapshots>
-	<enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>fornax-releases</id>
-      <url>http://fornax.itemis.de/nexus/content/repositories/releases/</url>
-    </pluginRepository>
-  </pluginRepositories>
 </project>
