@@ -54,7 +54,7 @@ class Messages extends NLS {
 	public static String RepositoryLocationPart_User;
 
 	public static String RepositoryLocationPart_Validating_repository;
-
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -62,5 +62,5 @@ class Messages extends NLS {
 
 	private Messages() {
 	}
-
+	
 }

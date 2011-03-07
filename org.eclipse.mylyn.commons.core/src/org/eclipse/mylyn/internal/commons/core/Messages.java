@@ -9,15 +9,13 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.core;
+package org.eclipse.mylyn.internal.commons.core;
 
 import org.eclipse.osgi.util.NLS;
 
-/**
- * @since 3.5
- */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.commons.core.messages"; //$NON-NLS-1$
+
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.core.messages"; //$NON-NLS-1$
 
 	public static String DateUtil_ago;
 
@@ -46,6 +44,7 @@ public class Messages extends NLS {
 	public static String DateUtil_week;
 
 	public static String DateUtil_weeks;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -53,4 +52,5 @@ public class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }

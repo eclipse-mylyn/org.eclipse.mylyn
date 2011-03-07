@@ -14,6 +14,7 @@ package org.eclipse.mylyn.commons.core;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.commons.core.Messages;
 import org.eclipse.osgi.util.NLS;
 
 /**
