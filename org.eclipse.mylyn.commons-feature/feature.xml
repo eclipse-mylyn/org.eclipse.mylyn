@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <requires>
+      <import plugin="org.apache.commons.lang" version="2.3.0" match="equivalent"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.commons.core"
          download-size="0"
