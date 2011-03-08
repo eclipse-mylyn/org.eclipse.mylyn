@@ -309,5 +309,13 @@
         </plugin>
       </plugins>
     </pluginManagement>
+	<extensions>
+		<extension>
+			<!--  webdav support, see http://maven.apache.org/wagon/wagon-providers/wagon-webdav-jackrabbit/ -->
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-webdav-jackrabbit</artifactId>
+			<version>1.0-beta-6</version>
+		</extension>
+	</extensions>
   </build>
 </project>
