@@ -28,9 +28,6 @@
       %license
    </license>
 
-   <requires>
-   </requires>
-
    <plugin
          id="org.eclipse.mylyn.commons.core"
          download-size="0"
