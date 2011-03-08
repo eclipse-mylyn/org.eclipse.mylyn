@@ -29,42 +29,21 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.context.core" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.4.0.I20100101" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.context.core" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.5.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.5.0" match="compatible"/>
    </requires>
          
-   <plugin
-         id="org.eclipse.mylyn.trac.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
    <plugin
          id="org.eclipse.mylyn.trac.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+         
    <plugin
-         id="org.apache.xmlrpc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.ws.commons.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.xml.bind"
+         id="org.eclipse.mylyn.trac.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

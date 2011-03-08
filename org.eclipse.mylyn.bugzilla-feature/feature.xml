@@ -29,7 +29,11 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.commons.xmlrpc" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.xmlrpc" version="3.5.0" match="compatible"/>
+      <import plugin="org.apache.xmlrpc" version="3.0.0" match="compatible"/>
+      <import plugin="org.apache.ws.commons.util" version="1.0.1" match="compatible"/>
+      <import plugin="javax.xml.bind" version="2.0.0" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.5.0" match="equivalent"/>
    </requires>
 
@@ -42,27 +46,6 @@
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xmlrpc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.ws.commons.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.xml.bind"
          download-size="0"
          install-size="0"
          version="0.0.0"
