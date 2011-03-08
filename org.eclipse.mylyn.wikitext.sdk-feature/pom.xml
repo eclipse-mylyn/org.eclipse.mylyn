@@ -11,20 +11,4 @@
   <artifactId>org.eclipse.mylyn.wikitext.sdk</artifactId>
   <version>1.4.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
