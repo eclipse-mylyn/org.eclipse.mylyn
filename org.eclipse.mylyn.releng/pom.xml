@@ -161,7 +161,7 @@
       </modules>
     </profile>
     <profile>
-      <id>promote</id>
+      <id>publish</id>
       <activation>
 		<property>
           <name>env.PUBLISH</name>
