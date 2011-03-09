@@ -19,14 +19,13 @@ import org.antlr.runtime.tree.TreeAdaptor;
 import org.eclipse.mylyn.reviews.tasks.dsl.IReviewDslMapper;
 import org.eclipse.mylyn.reviews.tasks.dsl.ParseException;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslAttachmentScopeItem;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslAttachmentScopeItem.Type;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslChangesetScopeItem;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult;
-import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslAttachmentScopeItem.Type;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult.FileComment;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult.LineComment;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult.Rating;
 import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslScope;
-import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslScopeItem;
 import org.eclipse.mylyn.reviews.tasks.dsl.internal.ReviewDslParser.attachmentSource_return;
 import org.eclipse.mylyn.reviews.tasks.dsl.internal.ReviewDslParser.changesetDef_return;
 import org.eclipse.mylyn.reviews.tasks.dsl.internal.ReviewDslParser.fileComment_return;
@@ -39,12 +38,15 @@ import org.eclipse.mylyn.reviews.tasks.dsl.internal.ReviewDslParser.reviewScope_
 /**
  * 
  * @author mattk
- *
+ * 
  */
 public class ReviewDslMapper implements IReviewDslMapper {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#parseReviewResult(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#
+	 * parseReviewResult(java.lang.String)
 	 */
 	@Override
 	public ReviewDslResult parseReviewResult(String text) throws ParseException {
@@ -52,25 +54,30 @@ public class ReviewDslMapper implements IReviewDslMapper {
 		TokenStream input = new CommonTokenStream(lexer);
 		ReviewDslParser parser = new ReviewDslParser(input);
 		try {
-			return mapResult(parser.reviewResult(), parser.getTreeAdaptor());
-		} catch (RecognitionException e) {
+			return mapResult(parser.reviewResult());
+		} catch (Exception e) {
 			throw new ParseException(e.getMessage());
 		}
 
 	}
 
-	private ReviewDslResult mapResult(reviewResult_return reviewResult,
-			TreeAdaptor treeAdaptor) {
-		ReviewDslResult result = new ReviewDslResult();
-
-		result.setRating(Rating.valueOf(reviewResult.result));
-		result.setComment(convertStr(reviewResult.comment));
-		if (reviewResult.fileComments != null) {
-			for (int i = 0; i < reviewResult.fileComments.size(); i++) {
-				fileComment_return fc = (fileComment_return) reviewResult.fileComments
-						.get(i);
-				result.getFileComments().add(map(fc));
+	private ReviewDslResult mapResult(reviewResult_return reviewResult) {
+		ReviewDslResult result = null;
+		try {
+			result = new ReviewDslResult();
+			result.setRating(Rating.valueOf(reviewResult.result));
+			result.setComment(convertStr(reviewResult.comment));
+			if (reviewResult.fileComments != null) {
+				for (int i = 0; i < reviewResult.fileComments.size(); i++) {
+					fileComment_return fc = (fileComment_return) reviewResult.fileComments
+							.get(i);
+					result.getFileComments().add(map(fc));
+				}
 			}
+			if(result.getRating()==null && result.getComment()==null && result.getFileComments().size()==0) {
+				return null;
+			}
+		} catch (Exception ex) {
 		}
 		return result;
 	}
@@ -114,8 +121,11 @@ public class ReviewDslMapper implements IReviewDslMapper {
 		return string.substring(startIdx, endIdx);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#parseReviewScope(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#
+	 * parseReviewScope(java.lang.String)
 	 */
 	@Override
 	public ReviewDslScope parseReviewScope(String text) throws ParseException {
@@ -161,27 +171,24 @@ public class ReviewDslMapper implements IReviewDslMapper {
 
 	private ReviewDslAttachmentScopeItem parseResource(
 			resourceDef_return child, TreeAdaptor treeAdaptor) {
-		AttachmentSource source = parseAttachmentSource(
-				(attachmentSource_return) child.source);
+		AttachmentSource source = parseAttachmentSource((attachmentSource_return) child.source);
 		return new ReviewDslAttachmentScopeItem(Type.RESOURCE, source.fileName,
 				source.author, source.createdDate, source.taskId);
 	}
 
 	private ReviewDslAttachmentScopeItem parsePatch(patchDef_return child,
 			TreeAdaptor treeAdaptor) {
-	
-		AttachmentSource source = parseAttachmentSource(
-				(attachmentSource_return) 	child.source);
+
+		AttachmentSource source = parseAttachmentSource((attachmentSource_return) child.source);
 		return new ReviewDslAttachmentScopeItem(Type.PATCH, source.fileName,
 				source.author, source.createdDate, source.taskId);
 	}
 
-	private AttachmentSource parseAttachmentSource(
-			attachmentSource_return child) {
+	private AttachmentSource parseAttachmentSource(attachmentSource_return child) {
 		AttachmentSource source = new AttachmentSource();
 		source.fileName = convertStr(child.filename);
 		source.author = convertStr(child.author);
-		source.createdDate =convertStr(child.createdDate);
+		source.createdDate = convertStr(child.createdDate);
 		source.taskId = convertStr(child.taskId);
 		return source;
 	}
@@ -191,20 +198,6 @@ public class ReviewDslMapper implements IReviewDslMapper {
 		public String author;
 		public String createdDate;
 		public String taskId;
-	}
-
-	public static void main(String[] args) throws Exception {
-		// String text = "Review result: TODO Comment: \"test\"";
-		String text = "Review scope: Patch from Attachment \"0001-Extension-point-for-scm-connector-defined-jaxb-model.patch\" by \"Jane@inso.tuwien.ac.at\" on \"2010-06-25 17:42:00\" of task 85";
-		IReviewDslMapper reviewDslMapper = new ReviewDslMapper();
-		ReviewDslScope parseReviewScope = reviewDslMapper
-				.parseReviewScope(text);
-
-		if (parseReviewScope != null) {
-			for (ReviewDslScopeItem item : parseReviewScope.getItems()) {
-				System.err.println(item);
-			}
-		}
 	}
 
 	@Override

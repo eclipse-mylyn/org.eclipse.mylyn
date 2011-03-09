@@ -1151,4 +1151,8 @@ public class ReviewDslParser extends Parser {
 	public static final BitSet FOLLOW_set_in_taskIdDef0 = new BitSet(
 			new long[] { 0x0000000000000002L });
 
+	@Override
+	public void reportError(RecognitionException arg0) {
+		/* */
+	}
 }

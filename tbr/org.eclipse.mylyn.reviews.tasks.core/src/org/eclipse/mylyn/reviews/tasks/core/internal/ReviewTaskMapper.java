@@ -114,15 +114,15 @@ public class ReviewTaskMapper implements IReviewMapper {
 	public org.eclipse.mylyn.reviews.tasks.core.ReviewResult mapCurrentReviewResult(
 			ITaskProperties taskProperties) {
 		Assert.isNotNull(taskProperties);
-		if (taskProperties.getNewCommentText() == null)
+		if (taskProperties.getNewCommentText() == null || taskProperties.getNewCommentText().isEmpty())
 			return null;
 		ReviewResult result = null;
 		try {
 			ReviewDslResult res = parser.parseReviewResult(taskProperties
 					.getNewCommentText());
-			result = new ReviewResult();
 			if (res == null)
 				return null;
+			result = new ReviewResult();
 			result.setComment(res.getComment());
 			result.setRating(mapRating(res.getRating()));
 			// FIXME filecomment, linecomment

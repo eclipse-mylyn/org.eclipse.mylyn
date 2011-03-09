@@ -61,6 +61,11 @@ public class ReviewDslLexer extends Lexer {
         super(input);
     }
     public String getGrammarFileName() { return "ReviewDsl.g"; }
+@Override
+
+	public void reportError(RecognitionException arg0) {
+		/* ignore */
+	}
 
     // $ANTLR start T12
     public final void mT12() throws RecognitionException {
