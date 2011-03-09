@@ -89,7 +89,7 @@ public abstract class DiscoveryUi {
 			}
 			sb.append(descriptor.getId());
 		}
-		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, ID_PLUGIN);
+		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(), ID_PLUGIN);
 		store.putValue(PREF_LAST_INSTALLED, sb.toString());
 		try {
 			store.save();
