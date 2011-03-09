@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.versions.tasks.ui;
 
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -28,7 +30,8 @@ public class ChangeSetPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		return true;
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(input.getTask().getConnectorKind());
+		return connector != null && connector.isUserManaged();
 	}
 
 	@Override

@@ -12,21 +12,23 @@ package org.eclipse.mylyn.reviews.tasks.ui.internal.editors;
 
 import org.eclipse.mylyn.reviews.tasks.ui.internal.Images;
 import org.eclipse.mylyn.reviews.tasks.ui.internal.Messages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
-/*
+/**
  * @author Kilian Matt
  */
 public class ReviewTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		// TODO restrict reviews to non-new and non-local tasks
-		return true;
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(input.getTask().getConnectorKind());
+		return connector != null && connector.isUserManaged();
 	}
 
 	@Override
