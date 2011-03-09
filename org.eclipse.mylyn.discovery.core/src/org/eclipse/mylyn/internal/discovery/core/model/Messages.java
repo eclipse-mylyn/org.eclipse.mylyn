@@ -79,6 +79,8 @@ class Messages extends NLS {
 
 	public static String DirectoryParser_unexpected_element;
 
+	public static String DiscoveryFeedbackJob_Job_Label;
+
 	public static String DiscoveryRegistryStrategy_cannot_load_bundle;
 
 	public static String DiscoveryRegistryStrategy_missing_pluginxml;

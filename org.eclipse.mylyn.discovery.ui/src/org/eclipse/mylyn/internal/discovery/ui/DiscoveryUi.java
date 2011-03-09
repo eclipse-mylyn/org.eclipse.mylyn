@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.ui;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +18,15 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
+import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryFeedbackJob;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.Bundle;
 
@@ -32,6 +36,8 @@ import org.osgi.framework.Bundle;
 public abstract class DiscoveryUi {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.discovery.ui"; //$NON-NLS-1$
+
+	public static final String PREF_LAST_INSTALLED = "lastInstalled"; //$NON-NLS-1$
 
 	private DiscoveryUi() {
 	}
@@ -58,6 +64,10 @@ public abstract class DiscoveryUi {
 		try {
 			IRunnableWithProgress runner = createInstallJob(descriptors);
 			context.run(true, true, runner);
+
+			// update stats
+			new DiscoveryFeedbackJob(descriptors).schedule();
+			recordInstalled(descriptors);
 		} catch (InvocationTargetException e) {
 			IStatus status = new Status(IStatus.ERROR, DiscoveryUi.ID_PLUGIN, NLS.bind(
 					Messages.ConnectorDiscoveryWizard_installProblems, new Object[] { e.getCause().getMessage() }),
@@ -69,6 +79,23 @@ public abstract class DiscoveryUi {
 			return false;
 		}
 		return true;
+	}
+
+	private static void recordInstalled(List<ConnectorDescriptor> descriptors) {
+		StringBuilder sb = new StringBuilder();
+		for (ConnectorDescriptor descriptor : descriptors) {
+			if (sb.length() > 0) {
+				sb.append(","); //$NON-NLS-1$
+			}
+			sb.append(descriptor.getId());
+		}
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, ID_PLUGIN);
+		store.putValue(PREF_LAST_INSTALLED, sb.toString());
+		try {
+			store.save();
+		} catch (IOException e) {
+			// ignore
+		}
 	}
 
 }

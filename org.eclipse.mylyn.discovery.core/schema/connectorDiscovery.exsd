@@ -162,6 +162,13 @@ Only the first 162 characters of the description are displayed in the UI and lin
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="statsUrl" type="string">
+            <annotation>
+               <documentation>
+                  A URL that is requested on successful installs.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

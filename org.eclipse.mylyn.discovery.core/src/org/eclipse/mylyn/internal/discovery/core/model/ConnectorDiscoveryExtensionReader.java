@@ -72,6 +72,7 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.setCertificationId(element.getAttribute("certificationId")); //$NON-NLS-1$
 		connectorDescriptor.setPlatformFilter(element.getAttribute("platformFilter")); //$NON-NLS-1$
 		connectorDescriptor.setGroupId(element.getAttribute("groupId")); //$NON-NLS-1$
+		connectorDescriptor.setStatsUrl(element.getAttribute("statsUrl")); //$NON-NLS-1$
 
 		IConfigurationElement[] children = element.getChildren("iu"); //$NON-NLS-1$
 		if (children.length > 0) {

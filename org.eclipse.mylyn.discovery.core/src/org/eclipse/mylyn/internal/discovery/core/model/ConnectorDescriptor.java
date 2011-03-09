@@ -40,6 +40,8 @@ public class ConnectorDescriptor {
 
 	protected String groupId;
 
+	protected String statsUrl;
+
 	protected java.util.List<FeatureFilter> featureFilter = new java.util.ArrayList<FeatureFilter>();
 
 	protected java.util.List<String> installableUnits = new java.util.ArrayList<String>();
@@ -253,6 +255,14 @@ public class ConnectorDescriptor {
 
 	public void setInstalled(boolean installed) {
 		this.installed = installed;
+	}
+
+	public String getStatsUrl() {
+		return statsUrl;
+	}
+
+	public void setStatsUrl(String statsUrl) {
+		this.statsUrl = statsUrl;
 	}
 
 }
