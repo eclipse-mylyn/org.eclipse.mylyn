@@ -9,7 +9,9 @@
 
   <modules>
     <module>releng/reviews-target-definition</module>
+<!--
     <module>tbr</module>
+-->
     <module>versions</module>
     <module>gerrit</module>
     <module>r4e</module>
