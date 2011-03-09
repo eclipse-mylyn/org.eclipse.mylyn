@@ -10,7 +10,7 @@
          Tasktop Technologies - initial API and implementation
  -->
 <feature
-      id="org.eclipse.mylyn.versions.tasks.sdk"
+      id="org.eclipse.mylyn.versions.tasks-sdk"
       label="%featureName"
       version="0.7.0.qualifier"
       provider-name="%providerName"
@@ -29,7 +29,7 @@
    </license>
 
    <includes
-         id="org.eclipse.mylyn.tasks.versions"
+         id="org.eclipse.mylyn.versions.tasks-feature"
          version="0.0.0"/>
 
    <plugin
