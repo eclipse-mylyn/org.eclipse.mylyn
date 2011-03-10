@@ -19,6 +19,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -35,18 +36,23 @@ public class AddTaskRepositoryHandler extends AbstractHandler {
 		Shell shell = HandlerUtil.getActiveShell(event);
 		if (shell != null && !shell.isDisposed()) {
 			String connectorKind = event.getParameter("connectorKind"); //$NON-NLS-1$
-			NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(connectorKind);
-
-			WizardDialog repositoryDialog = new TaskRepositoryWizardDialog(shell, repositoryWizard);
-			repositoryDialog.create();
-			repositoryDialog.getShell().setText(Messages.AddTaskRepositoryHandler_Add_Task_Repository);
-			repositoryDialog.setBlockOnOpen(true);
-			repositoryDialog.open();
-			if (repositoryDialog.getReturnCode() == Window.OK) {
-				return repositoryWizard.getTaskRepository();
-			}
+			return showWizard(shell, connectorKind);
 		}
 
+		return null;
+	}
+
+	public static TaskRepository showWizard(Shell shell, String connectorKind) {
+		NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(connectorKind);
+
+		WizardDialog repositoryDialog = new TaskRepositoryWizardDialog(shell, repositoryWizard);
+		repositoryDialog.create();
+		repositoryDialog.getShell().setText(Messages.AddTaskRepositoryHandler_Add_Task_Repository);
+		repositoryDialog.setBlockOnOpen(true);
+		repositoryDialog.open();
+		if (repositoryDialog.getReturnCode() == Window.OK) {
+			return repositoryWizard.getTaskRepository();
+		}
 		return null;
 	}
 

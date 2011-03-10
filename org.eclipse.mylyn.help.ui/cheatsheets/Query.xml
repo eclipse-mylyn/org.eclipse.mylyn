@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
     Copyright (c) 2009 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -8,7 +9,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-
 <cheatsheet title="Create a query from bugs.eclipse.org">
    <intro>
       <description>
@@ -26,7 +26,7 @@
       <description>
          In this step you can learn how to setup your Bugzilla account, but you can skip it.
 <br/><br/>
-If the Task Repositories view isn&apos;t opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Tasks &gt; Task Repository</b>.
+If the Task Repositories view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Tasks &gt; Task Repository</b>.
 <br/><br/>
 In the Task Repositories view you can see <b>Eclipse.org</b>. Right click on it and select <b>Properties</b>.<br/>
 Check out the <b>Anonymous Access</b> checkbox.<br/>
@@ -38,7 +38,7 @@ Click on the <b>Finish</b> button to save the values and close the dialog.
    </item>
    <item title="Create a new Query" dialog="true" skip="false">
       <description>
-         In the Task List view, click on the right mouse button then select <b>New &gt; Query</b> or click on the &quot;Click to Perform&quot; link below.
+         In the Task List view, click the right mouse button then select <b>New &gt; Query</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
       <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylyn.tasks.ui.wizards.new.query)" confirm="true">
       </command>
@@ -47,8 +47,8 @@ Click on the <b>Finish</b> button to save the values and close the dialog.
       <description>
          Select <b>Eclipse.org</b> then click on the <b>Next</b> button.<br/>
  Select <b>Create a query using form</b> then click on the <b>Next</b> button.<br/>
- Enter <b>Mylyn bugs</b> for the query&apos;s title.
- Select <b>Mylyn</b> from the Product and <b>P1, P2</b> from the Priority then click on the <b>Finish</b> button.
+ Enter <b>Mylyn Bugs</b> for the query&apos;s title.
+ Select <b>Mylyn</b> from the Product and <b>P1, P2</b> from the Priority then click the <b>Finish</b> button.
       </description>
    </item>
 </cheatsheet>

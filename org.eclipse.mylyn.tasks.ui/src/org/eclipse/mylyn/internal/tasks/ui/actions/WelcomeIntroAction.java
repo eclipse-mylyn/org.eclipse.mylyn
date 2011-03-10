@@ -13,17 +13,14 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.tasks.ui.commands.AddTaskRepositoryHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 
@@ -37,6 +34,10 @@ public class WelcomeIntroAction implements IWorkbenchWindowActionDelegate, IView
 
 	public void dispose() {
 		// ignore
+	}
+
+	public void init(IViewPart view) {
+		wbWindow = view.getViewSite().getWorkbenchWindow();
 	}
 
 	public void init(IWorkbenchWindow window) {
@@ -56,19 +57,15 @@ public class WelcomeIntroAction implements IWorkbenchWindowActionDelegate, IView
 
 		TasksUiUtil.openTasksViewInActivePerspective();
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		MultiRepositoryAwareWizard wizard = TasksUiInternal.createNewTaskWizard(new TaskMapping());
-		WizardDialog dialog = null;
-		dialog = new WizardDialog(shell, wizard);
-		dialog.setBlockOnOpen(false);
-		dialog.open();
+		AddTaskRepositoryHandler.showWizard(getShell(), null);
+	}
+
+	private Shell getShell() {
+		return (wbWindow != null) ? wbWindow.getShell() : WorkbenchUtil.getShell();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}
 
-	public void init(IViewPart view) {
-		wbWindow = view.getViewSite().getWorkbenchWindow();
-	}
 }

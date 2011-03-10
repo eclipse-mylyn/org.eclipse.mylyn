@@ -9,12 +9,12 @@
          Tasktop Technologies - initial API and implementation
  -->
 
-<cheatsheet title="Use Task-Focused UI">
+<cheatsheet title="Use the Task-Focused UI">
    <intro>
       <description>
-         This cheat sheet introduces the task lifecycle and shows how to use the task-focused user interface.
+     This cheat sheet introduces the task life-cycle and shows how to use the task-focused user interface.
 <br/>
-You need an existing project for this sheet.
+You need an existing Java project for this sheet.eet.
       </description>
    </intro>
    <item title="Open the Task List view" dialog="true" skip="false">
@@ -26,18 +26,18 @@ You need an existing project for this sheet.
    </item>
    <item title="Create and activate a task" dialog="true" skip="false">
       <description>
-         In the Task List view, click on the right mouse button, then select <b>New &gt; Category</b>. Enter <b>Tutorials</b> for the category&apos;s name.
+In the Task List view, click the right mouse button, then select <b>New &gt; Category</b>. Enter <b>Tutorials</b> for the category&apos;s name.
 <br/><br/>
-Then right click on the <b>Tutorials</b> category and select <b>New &gt; Task</b>. In the <b>New Task</b> dialog select <b>Local</b> then click on the <b>Finish</b> button.
- Enter <b>Learn task-focus</b>  for the task&apos;s title and change the priority to <b>High</b> using the drop down to the left of the summary. Feel free to add some notes as well.
+Then right click on the <b>Tutorials</b> category and select <b>New &gt; Task</b>. In the <b>New Task</b> dialog select <b>Local</b> then click the <b>Finish</b> button.
+ Enter <b>Explore Mylyn</b>  for the task&apos;s title and change the priority to <b>High</b> using the drop down to the left of the summary. You can add some notes as well.
 <br/><br/>
-Right click on the new task and select <b>Activate</b> to activate the task.
+Right click the new task and select <b>Activate</b> to start working on the task.
       </description>
    </item>
    <item title="Focus on the task" dialog="true" skip="false">
       <description>
-         In the <b>Package Explorer</b> the task-focus turns on automatically if you activate a task.<br/> 
-You can turn on or off this function if you click on the  <b>Focus on  Active Task</b> toogle button in the view&apos;s toolbar.<br/>
+         In the <b>Package Explorer</b> the task-In the <b>Package Explorer</b> the task-focus turns on automatically if you activate a task that has a context.<br/> 
+You can turn on or off this function if you click on the  <b>Focus on  Active Task</b> toggle button in the view&apos;s toolbar.<br/>
 You can use this function in the <b>Outline</b> view too. Turn it on in this view as well.
       </description>
    </item>
@@ -45,7 +45,7 @@ You can use this function in the <b>Outline</b> view too. Turn it on in this vie
       <description>
          Press down the <b>Alt</b> button and click on the <b>left</b> mouse button on the <b>Package Explorer</b> view. Now you can see all of your projects in the view.
 <br/><br/>
-Next <b>Alt+click</b> on an arbitrary project and you can see the files wich are in the project.
+Next <b>Alt+click</b> on an arbitrary project and you can see the files which are in the project.
 <br/><br/>
 With this method, select a class from the project.<br/>
 After the file is opened you can see the class both  in the <b>Package Explorer</b> and in the <b>Outline</b> view.
@@ -56,7 +56,7 @@ After the file is opened you can see the class both  in the <b>Package Explorer<
          Select a method within the editor will result in this method appearing in other focused views including the <b>Outline</b> and <b>Package Explorer</b> views.
 <br/><br/>
 Next press the Alt button and click on the class in the <b>Outline</b> view.<br/> 
-Now you can see all methods. Methods which aren&apos;t in the task context appear in <b>gray</b> color. Select another method from the list. After selecting, all methods that are not part of the the active task&apos;s context will no longer be revealed.
+Now you can see all methods. Methods which are not in the task context appear in <b>gray</b> color. Select another method from the list. After selecting, all methods that are not part of the the active task&apos;s context will no longer be revealed.
       </description>
    </item>
    <item title="Landmark" dialog="true" skip="false">
@@ -73,7 +73,7 @@ You can manually promote an element to landmark status by right clicking on the 
    </item>
    <item title="Open another file" dialog="true" skip="false">
       <description>
-         Press down the <b>Alt</b> button and <b>click</b> on the <b>project</b>. Select an arbitrary file from the list with <b>Alt+click</b>. After you open the new file you can see it in the focus and all files will disappear which aren&apos;t in the focus.
+         Press down the <b>Alt</b> button and <b>click</b> on the <b>project</b>. Select an arbitrary file from the list with <b>Alt+click</b>. After you open the new file you can see it in the focus and all files will disappear which are not in the focus.
 <br/>
       </description>
    </item>
