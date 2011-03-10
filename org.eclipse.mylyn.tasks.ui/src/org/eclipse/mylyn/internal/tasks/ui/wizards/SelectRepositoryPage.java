@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -122,8 +121,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		super(Messages.SelectRepositoryPage_Select_a_repository);
 
 		setTitle(Messages.SelectRepositoryPage_Select_a_repository);
-		setDescription(MessageFormat.format(Messages.SelectRepositoryPage_Add_new_repositories_using_the_X_view,
-				org.eclipse.mylyn.internal.tasks.ui.Messages.TasksUiPlugin_Task_Repositories));
+		setDescription(Messages.SelectRepositoryPage_Add_new_repositories_using_the_X_view);
 
 		this.taskRepositoryFilter = taskRepositoryFilter;
 		this.repositories = getTaskRepositories();
