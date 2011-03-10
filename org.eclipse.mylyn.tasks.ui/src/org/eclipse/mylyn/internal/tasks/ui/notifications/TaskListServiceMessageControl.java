@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ServiceMessageControl;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.notifications.IServiceMessageListener;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,6 +49,7 @@ import org.osgi.framework.Version;
  * @author Torkild U. Resheim
  */
 public class TaskListServiceMessageControl extends ServiceMessageControl implements IServiceMessageListener {
+
 	private ServiceMessage currentMessage;
 
 	public TaskListServiceMessageControl(Composite parent) {
@@ -102,7 +105,7 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 
 		try {
 			VersionRange version = new VersionRange(message.getVersion());
-			String versionString = (String) TasksUiPlugin.getDefault().getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			String versionString = TasksUiPlugin.getDefault().getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 			return version.isIncluded(new Version(versionString));
 		} catch (IllegalArgumentException e) {
 			// invalid version range
@@ -134,10 +137,15 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.text != null) {
-					if (e.text.toLowerCase().equals("connect")) { //$NON-NLS-1$
+					String action = e.text.toLowerCase();
+					if ("create-local-task".equals(action)) { //$NON-NLS-1$
+						closeMessage();
+						LocalTask task = TasksUiInternal.createNewLocalTask(null);
+						TasksUiUtil.openTask(task);
+					} else if ("connect".equals(action)) { //$NON-NLS-1$
 						closeMessage();
 						new AddRepositoryAction().run();
-					} else if (e.text.toLowerCase().equals("discovery")) { //$NON-NLS-1$
+					} else if ("discovery".equals(action)) { //$NON-NLS-1$
 						closeMessage();
 						final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
 						if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {

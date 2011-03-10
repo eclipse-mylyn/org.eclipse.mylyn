@@ -113,4 +113,19 @@ public final class TaskContainerDelta {
 		return isTransient;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TaskContainerDelta [parent="); //$NON-NLS-1$
+		builder.append(parent);
+		builder.append(", element="); //$NON-NLS-1$
+		builder.append(element);
+		builder.append(", kind="); //$NON-NLS-1$
+		builder.append(kind);
+		builder.append(", isTransient="); //$NON-NLS-1$
+		builder.append(isTransient);
+		builder.append("]"); //$NON-NLS-1$
+		return builder.toString();
+	}
+
 }

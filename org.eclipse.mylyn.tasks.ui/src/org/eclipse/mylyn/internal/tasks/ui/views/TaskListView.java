@@ -70,6 +70,9 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
@@ -498,14 +501,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 								break;
 							case ADDED:
 							case REMOVED:
-								if (taskContainerDelta.getElement() != null) {
-									refreshJob.refreshElement(taskContainerDelta.getElement());
-								}
-								if (taskContainerDelta.getParent() != null) {
-									refreshJob.refreshElement(taskContainerDelta.getParent());
-								} else {
-									// element was added/removed from the root
+								if (isFilteredContainer(taskContainerDelta)) {
+									// container may have changed visibility, refresh root
 									refreshJob.refresh();
+								} else {
+									if (taskContainerDelta.getElement() != null) {
+										refreshJob.refreshElement(taskContainerDelta.getElement());
+									}
+									if (taskContainerDelta.getParent() != null) {
+										refreshJob.refreshElement(taskContainerDelta.getParent());
+									} else {
+										// element was added/removed from the root
+										refreshJob.refresh();
+									}
 								}
 								break;
 							case CONTENT:
@@ -514,6 +522,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 						}
 					}
+				}
+
+				private boolean isFilteredContainer(TaskContainerDelta taskContainerDelta) {
+					ITaskContainer parent = taskContainerDelta.getParent();
+					return parent instanceof UnsubmittedTaskContainer || parent instanceof UnmatchedTaskContainer
+							|| parent instanceof UncategorizedTaskContainer;
 				}
 			});
 		}
@@ -1000,7 +1014,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
 			ServiceMessage message = new ServiceMessage();
-			message.setDescription("<a href=\"connect\">Connect</a> to your task and ALM tools."); //$NON-NLS-1$
+			message.setDescription("<a href=\"connect\">Connect</a> to your task and ALM tools or, <a href=\"create-local-task\">Create</a> a local task."); //$NON-NLS-1$
 			message.setTitle("Connect Mylyn"); //$NON-NLS-1$
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			message.setId("0"); //$NON-NLS-1$

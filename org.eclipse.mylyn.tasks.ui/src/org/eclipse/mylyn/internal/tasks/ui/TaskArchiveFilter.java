@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 
@@ -21,17 +22,20 @@ public class TaskArchiveFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-
 		if (element instanceof UnmatchedTaskContainer) {
 			if (((UnmatchedTaskContainer) element).isEmpty()) {
 				return false;
 			}
-		}
-		if (element instanceof UnsubmittedTaskContainer) {
+		} else if (element instanceof UnsubmittedTaskContainer) {
 			if (((UnsubmittedTaskContainer) element).isEmpty()) {
+				return false;
+			}
+		} else if (element instanceof UncategorizedTaskContainer) {
+			if (((UncategorizedTaskContainer) element).isEmpty()) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 }
