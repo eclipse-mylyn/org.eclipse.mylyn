@@ -59,11 +59,11 @@ public abstract class AbstractTaskListFilter {
 
 		for (ITask task : children) {
 			if (task != null && PresentationFilter.getInstance().select(container, task)) {
-				ITask containedRepositoryTask = task;
-				if (TasksUiInternal.shouldShowIncoming(containedRepositoryTask)) {
+				if (TasksUiInternal.shouldShowIncoming(task)) {
 					return true;
-				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer
-						&& hasDescendantIncoming((ITaskContainer) task, depth - 1)) {
+				} else if (!PresentationFilter.getInstance().isFilterNonMatching()
+						&& (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer && hasDescendantIncoming(
+								(ITaskContainer) task, depth - 1))) {
 					return true;
 				}
 			}
