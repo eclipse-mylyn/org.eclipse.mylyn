@@ -58,12 +58,12 @@ public abstract class AbstractTaskListFilter {
 		}
 
 		for (ITask task : children) {
+			// FIXME this does not take the patch of container into account and hence may show an incoming although there is none
 			if (task != null && PresentationFilter.getInstance().select(container, task)) {
 				if (TasksUiInternal.shouldShowIncoming(task)) {
 					return true;
-				} else if (!PresentationFilter.getInstance().isFilterNonMatching()
-						&& (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer && hasDescendantIncoming(
-								(ITaskContainer) task, depth - 1))) {
+				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer
+						&& hasDescendantIncoming((ITaskContainer) task, depth - 1)) {
 					return true;
 				}
 			}
