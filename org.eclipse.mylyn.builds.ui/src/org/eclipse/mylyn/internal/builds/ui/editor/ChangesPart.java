@@ -184,13 +184,13 @@ public class ChangesPart extends AbstractBuildEditorPart {
 		final IResource resource = ScmCore.findResource(changeArtifact.getFile());
 		if (resource == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"The selected file is not available in the workspace", null, IMessageProvider.ERROR);
+					"The selected file is not available in the workspace", null, IMessageProvider.WARNING);
 			return;
 		}
 		final ScmConnector connector = ScmCore.getConnector(resource);
 		if (connector == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"No extension available to open the selected file", null, IMessageProvider.ERROR);
+					"No extension available to open the selected file", null, IMessageProvider.WARNING);
 			return;
 		}
 
@@ -200,7 +200,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 				: ((IChange) ((ChangeArtifact) changeArtifact).eContainer()).getRevision();
 		if (revision == null) {
 			getMessageManager().addMessage(ChangesPart.class.getName(),
-					"Could not determine change revisions for the selected file", null, IMessageProvider.ERROR);
+					"Could not determine change revisions for the selected file", null, IMessageProvider.WARNING);
 		}
 
 		try {
@@ -237,7 +237,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 				ScmUi.openCompareEditor(getPage().getSite().getPage(), left.get(), right.get());
 			} else {
 				getMessageManager().addMessage(ChangesPart.class.getName(),
-						"Could not determine change revisions for the selected file", null, IMessageProvider.ERROR);
+						"Could not determine change revisions for the selected file", null, IMessageProvider.WARNING);
 			}
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
