@@ -5,26 +5,28 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylyn.commons.core;bundle-version="3.3.0",
- org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
- org.eclipse.mylyn.reviews.core,
  org.apache.commons.httpclient;bundle-version="3.1.0",
- org.eclipse.mylyn.commons.net;bundle-version="3.5.0",
- com.google.gwt.user;bundle-version="2.0.4",
- com.google.gerrit.common;bundle-version="2.1.5",
- com.google.gerrit.reviewdb;bundle-version="2.1.5",
- com.google.gwtorm;bundle-version="1.1.4",
- com.google.gwtjsonrpc;bundle-version="1.2.2",
  org.eclipse.emf.common;bundle-version="2.5.0",
  org.eclipse.emf.ecore;bundle-version="2.5.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
  org.eclipse.jgit,
- com.google.gerrit.prettify;bundle-version="2.1.5"
+ org.eclipse.mylyn.commons.core;bundle-version="3.3.0",
+ org.eclipse.mylyn.commons.net;bundle-version="3.5.0",
+ org.eclipse.mylyn.reviews.core,
+ org.eclipse.mylyn.tasks.core;bundle-version="3.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.client;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.operations;x-friends:="org.eclipse.mylyn.gerrit.ui"
 Bundle-Vendor: Eclipse Mylyn
-Import-Package: com.google.gson;version="1.4.0",
- com.google.gson.reflect;version="1.4.0"
+Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
+ com.google.gerrit.common.data;version="2.1.5",
+ com.google.gerrit.prettify.common;version="2.1.5",
+ com.google.gerrit.reviewdb;version="2.1.5",
+ com.google.gson;version="1.6.0",
+ com.google.gson.reflect;version="1.6.0",
+ com.google.gwt.user.client.rpc,
+ com.google.gwtjsonrpc.client;version="1.2.2",
+ com.google.gwtjsonrpc.server;version="1.2.2",
+ com.google.gwtorm.client;version="1.1.4"

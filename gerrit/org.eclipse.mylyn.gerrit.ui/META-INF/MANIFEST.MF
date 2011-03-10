@@ -4,18 +4,18 @@ Bundle-Name: Mylyn Gerrit Connector (Incubation)
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core;bundle-version="3.3.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.3.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.3.0",
- org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
  org.eclipse.mylyn.gerrit.core;bundle-version="0.1.0",
  org.eclipse.mylyn.reviews.core,
  org.eclipse.mylyn.reviews.ui,
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.3.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="3.3.0",
  org.eclipse.jface, 
  org.eclipse.jface.text,
  org.eclipse.compare,
+ org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.ui.forms,
  org.eclipse.ui.workbench.texteditor,
