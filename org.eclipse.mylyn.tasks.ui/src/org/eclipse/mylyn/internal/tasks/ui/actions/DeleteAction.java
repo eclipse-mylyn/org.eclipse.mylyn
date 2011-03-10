@@ -269,7 +269,13 @@ public class DeleteAction extends BaseSelectionListenerAction {
 				// support both the unmatched and the unsubmitted
 				if (toDelete.size() == 1) {
 					// loop to ensure that all subtasks are deleted as well
-					performDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
+					for (int i = 0; i < 5; i++) {
+						Collection<ITask> children = ((AutomaticRepositoryTaskContainer) selectedObject).getChildren();
+						if (children.isEmpty()) {
+							break;
+						}
+						performDeletion(children);
+					}
 				}
 			}
 		}
