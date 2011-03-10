@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,10 +34,10 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -174,23 +177,46 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 	}
 
 	@Override
-	public Object[] getChildren(Object parent) {
-		Set<ITask> result = new HashSet<ITask>();
+	protected List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
 		if (parent instanceof ITask) {
 			// flat presentation (no subtasks revealed in Scheduled mode)
+			return Collections.emptyList();
 		} else if (parent instanceof ScheduledTaskContainer) {
-			for (ITask child : ((ScheduledTaskContainer) parent).getChildren()) {
+			// always apply working set filter
+			Collection<ITask> children = ((ScheduledTaskContainer) parent).getChildren();
+			List<IRepositoryElement> result = new ArrayList<IRepositoryElement>(children.size());
+			for (ITask child : children) {
 				if (!filter(parent, child)) {
 					result.add(child);
 				}
 			}
-		} else if (parent instanceof ITaskContainer) {
-			for (ITask child : ((ITaskContainer) parent).getChildren()) {
-				result.add(child);
-			}
+			return result;
 		}
-		return result.toArray();
+		return super.getFilteredChildrenFor(parent);
 	}
+
+//	@Override
+//	public Object[] getChildren(Object parent) {
+//		Set<ITask> result = new HashSet<ITask>();
+//		if (parent instanceof ITask) {
+//			// flat presentation (no subtasks revealed in Scheduled mode)
+//		} else if (parent instanceof ScheduledTaskContainer) {
+//			for (ITask child : ((ScheduledTaskContainer) parent).getChildren()) {
+//
+//				if (!filter(parent, child)) {
+//					if (((AbstractTask) child).getTaskId().equals("143577")) {
+//						System.err.println();
+//					}
+//					result.add(child);
+//				}
+//			}
+//		} else if (parent instanceof ITaskContainer) {
+//			for (ITask child : ((ITaskContainer) parent).getChildren()) {
+//				result.add(child);
+//			}
+//		}
+//		return result.toArray();
+//	}
 
 	private void refresh() {
 		if (Platform.isRunning() && PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {

@@ -135,7 +135,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return true;
 	}
 
-	private List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
+	protected List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText(this.taskListView.getFilteredTree().getFilterString())) {
 			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
 			if (parent instanceof ITask) {
@@ -193,9 +193,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected boolean filter(Object parent, Object object) {
-		boolean emptyFilterText = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
+		boolean notSearching = containsNoFilterText(this.taskListView.getFilteredTree().getFilterString());
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (emptyFilterText || filter.applyToFilteredText()) {
+			if (notSearching || filter.applyToFilteredText()) {
 				if (!filter.select(parent, object)) {
 					return true;
 				}
