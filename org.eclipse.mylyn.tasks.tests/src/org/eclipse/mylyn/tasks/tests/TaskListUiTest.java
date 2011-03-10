@@ -313,7 +313,7 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
-		assertEquals(3, items.length);
+		assertEquals(2, items.length);
 		int count = 0;
 		for (TreeItem item : items) {
 			if (item.getData() instanceof TaskCategory) {
@@ -330,12 +330,12 @@ public class TaskListUiTest extends TestCase {
 				}
 			}
 		}
-		assertTrue(count == 5);
+		assertEquals(5, count);
 		return true;
 	}
 
 	public boolean checkPriorityFilter(TreeItem[] items) {
-		assertTrue(items.length == 3);
+		assertEquals(2, items.length);
 		int p2Count = 0;
 		int p1Count = 0;
 		for (TreeItem item : items) {
