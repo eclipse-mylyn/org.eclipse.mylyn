@@ -46,24 +46,59 @@
 			<repository kind="bugzilla" url="https://bugs.eclipse.org/bugs">
 			</repository>
 		</mapping>
+		<!-- Mylyn -->
 		<product featureId="org.eclipse.mylyn_feature" id="org.eclipse.mylyn"
 			pluginId="org.eclipse.mylyn" providerId="org.eclipse" url="http://eclipse.org/mylyn/support/" />
 		<mapping namespace="org.eclipse.mylyn" productId="org.eclipse.mylyn">
-			<property name="product" value="Mylyn">
-			</property>
+			<property name="product" value="Mylyn"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.bugzilla" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Bugzilla Connector"/>
+		</mapping>
+		<mapping namespace="org.eclipse.cdt.mylyn" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="C/C++"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.commons" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Commons"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.context" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.java" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Java"/>
 		</mapping>
 		<mapping namespace="org.eclipse.mylyn.tasks" productId="org.eclipse.mylyn">
-			<property name="component" value="Tasks"/>
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.team" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Context"/>
+			<property name="component" value="Framework"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.trac" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Tasks"/>
+			<property name="component" value="Trac Connector"/>
+		</mapping>
+		<mapping namespace="org.eclipse.mylyn.versions" productId="org.eclipse.mylyn">
+			<property name="product" value="Mylyn Versions"/>
+			<property name="component" value="Framework"/>
 		</mapping>
 		<mapping namespace="org.eclipse.mylyn.wikitext" productId="org.eclipse.mylyn">
-			<property name="component" value="WikiText"/>
+			<property name="product" value="Mylyn Docs"/>
+			<property name="component" value="Wikitext"/>
 		</mapping>
+		<!-- PDE -->
 		<product featureId="org.eclipse.pde" id="org.eclipse.pde"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.pde" productId="org.eclipse.pde">
 			<property name="product" value="PDE">
 			</property>
 		</mapping>
+		<!-- Platform -->
 		<product featureId="org.eclipse.platform" id="org.eclipse.platform"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.platform" productId="org.eclipse.platform">
@@ -74,17 +109,17 @@
 			providerId="org.eclipse">
 		</product>
 		<mapping namespace="org.eclipse.team.cvs" productId="org.eclipse.cvs">
-			<property name="product" value="Platform">
-			</property>
-			<property name="component" value="CVS">
-			</property>
+			<property name="product" value="Platform"/>
+			<property name="component" value="CVS"/>
 		</mapping>
+		<!-- JDT -->
 		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.jdt" productId="org.eclipse.jdt">
 			<property name="product" value="JDT">
 			</property>
 		</mapping>
+		<!-- EPP -->
 		<!--
 		<product id="org.eclipse.epp.package.java" providerId="org.eclipse" featureId="org.eclipse.epp.package.java.feature" />
 		<mapping namespace="org.eclipse.epp.package.java" productId="org.eclipse.epp.package.java">
@@ -97,6 +132,7 @@
 			<property name="component" value="Usage Data Collector"/>
 		</mapping>
 		-->
+		<!-- Webtools -->
 		<product id="org.eclipse.wst.xml_ui" providerId="org.eclipse" featureId="org.eclipse.wst.xml_ui.feature" />
 		<mapping namespace="org.eclipse.wst" productId="org.eclipse.wst.xml_ui">
 			<property name="product" value="Web Tools"/>
