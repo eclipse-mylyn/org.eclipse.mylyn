@@ -145,6 +145,21 @@
 	  </repositories>
     </profile>
     <profile>
+      <id>e4.1</id>
+      <properties>
+        <target-version>4.1</target-version>
+        <target-platform>mylyn-e4.1</target-platform>
+        <platform-version>[4.1.0,4.2.0)</platform-version>
+      </properties>
+	  <repositories>
+		<repository>
+		  <id>indigo</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/releases/indigo/</url>
+		</repository>
+	  </repositories>
+    </profile>
+    <profile>
       <id>hudson.eclipse.org</id>
       <activation>
 		<property>
