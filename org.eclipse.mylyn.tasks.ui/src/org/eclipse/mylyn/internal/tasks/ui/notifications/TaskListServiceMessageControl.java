@@ -105,7 +105,7 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 
 		try {
 			VersionRange version = new VersionRange(message.getVersion());
-			String versionString = TasksUiPlugin.getDefault().getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			String versionString = (String) TasksUiPlugin.getDefault().getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 			return version.isIncluded(new Version(versionString));
 		} catch (IllegalArgumentException e) {
 			// invalid version range
