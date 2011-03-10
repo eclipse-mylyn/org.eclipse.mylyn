@@ -29,13 +29,17 @@
 		</type>
 		<type name="org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.bullet"/>
 	</extension>
-	
-	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester
-			class="org.eclipse.mylyn.internal.wikitext.ui.util.FilePropertyTester"
-			id="org.eclipse.mylyn.wikitext.ui.filePropertyTester" namespace="org.eclipse.mylyn.wikitext"
-			properties="contentTypeClassification" type="org.eclipse.core.resources.IFile">
-		</propertyTester>
+	<extension
+	      point="org.eclipse.core.expressions.definitions">
+	    <definition
+	          id="org.eclipse.mylyn.wikitext.ui.wikitextFile">
+			<adapt type="org.eclipse.core.resources.IFile">
+				<test
+	                args="kindOf"
+	                property="org.eclipse.core.resources.contentTypeId"
+	                value="org.eclipse.mylyn.wikitext"/>
+			</adapt>
+	    </definition>
 	</extension>
 	
 	<extension point="org.eclipse.ui.menus">
@@ -56,19 +60,13 @@
 							<and>
 								<count value="+"/>
 								<iterate>
-									<adapt type="org.eclipse.core.resources.IFile">
-										<test property="org.eclipse.mylyn.wikitext.contentTypeClassification"
-											value="org.eclipse.mylyn.wikitext" />
-									</adapt>
+									<reference definitionId="org.eclipse.mylyn.wikitext.ui.wikitextFile"/>
 								</iterate>
 							</and>
 						</with>
 						<with variable="activeMenuEditorInput">
-							<iterate>
-								<adapt type="org.eclipse.core.resources.IFile">
-									<test property="org.eclipse.mylyn.wikitext.contentTypeClassification"
-										value="org.eclipse.mylyn.wikitext" />
-								</adapt>
+							<iterate ifEmpty="false">
+								<reference definitionId="org.eclipse.mylyn.wikitext.ui.wikitextFile"/>
 							</iterate>
 						</with>
 					</or>
