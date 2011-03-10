@@ -230,13 +230,14 @@ public class TaskDataManager implements ITaskDataManager {
 						switch (task.getSynchronizationState()) {
 						case OUTGOING:
 							task.setSynchronizationState(SynchronizationState.CONFLICT);
-							task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
 							break;
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
-							task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
 							break;
 						}
+
+						// if an incoming was previously suppressed it may need to show now
+						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, suppressIncoming);
 					}
 					if (task.isSynchronizing()) {
 						task.setSynchronizing(false);
