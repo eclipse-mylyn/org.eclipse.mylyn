@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.reviews.feature" version="3.5.0.I20110304" match="compatible"/>
+      <import feature="org.eclipse.mylyn.reviews.feature" version="0.7.0" match="compatible"/>
    </requires>
 
    <plugin
