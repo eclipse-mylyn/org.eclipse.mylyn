@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/org.eclipse.mylyn.reviews_0.0.1.jar" id="org.eclipse.mylyn.reviews" version="0.0.1">
-      <category name="mylyn.reviews"/>
-   </feature>
-   <category-def name="mylyn.reviews" label="Mylyn Reviews (Incubation)"/>
-</site>

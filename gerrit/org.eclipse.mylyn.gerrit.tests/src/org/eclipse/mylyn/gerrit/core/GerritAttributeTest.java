@@ -13,8 +13,8 @@ package org.eclipse.mylyn.gerrit.core;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
-import org.eclipse.mylyn.internal.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 
 /**
  * @author Mikael Kober

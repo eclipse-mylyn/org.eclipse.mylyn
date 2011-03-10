@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 
 /**
- * @author mattk
+ * @author Kilian Matt
  *
  */
 public abstract class AbstractTreeNode implements ITreeNode {

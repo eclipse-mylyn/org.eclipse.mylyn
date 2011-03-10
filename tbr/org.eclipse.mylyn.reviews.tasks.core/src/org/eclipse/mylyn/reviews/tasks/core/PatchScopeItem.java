@@ -49,7 +49,6 @@ public class PatchScopeItem implements IReviewScopeItem {
 			@Override
 			public Reader createReader() throws CoreException {
 				try {
-					System.err.println(attachment.getUrl());
 					return new InputStreamReader(
 							new URL(attachment.getUrl()).openStream());
 				} catch (Exception e) {

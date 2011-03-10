@@ -9,12 +9,12 @@
 
   <modules>
     <module>releng/reviews-target-definition</module>
+<!--
+    <module>tbr</module>
+-->
     <module>gerrit</module>
-    <!--
-       <module>tbr</module>
-    -->
-    <module>framework</module>
     <module>r4e</module>
+    <module>framework</module>
     <module>releng/reviews-site</module>
   </modules>
 

@@ -50,21 +50,13 @@ import com.google.gerrit.common.data.GerritConfig;
 public class GerritConnector extends AbstractRepositoryConnector {
 
 	/**
-	 * prefix for taskid in a task-url: http://[gerrit-repository]/#change,[task.id]
+	 * Prefix for task id in a task-url: http://[gerrit-repository]/#change,[task.id].
 	 */
-	public static final String CHANGE_PREFIX = "/#change,";
+	public static final String CHANGE_PREFIX = "/#change,"; //$NON-NLS-1$
 
-	/**
-	 * Connector kind
-	 */
-	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gerrit";
+	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gerrit"; //$NON-NLS-1$
 
-	/**
-	 * Label for the connector.
-	 */
-	public static final String CONNECTOR_LABEL = "Gerrit Code Review";
-
-	private static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config";
+	private static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 
@@ -89,6 +81,10 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
+	public GerritClient getClient(TaskRepository repository) {
+		return createClient(repository);
+	}
+
 	@Override
 	public String getConnectorKind() {
 		return CONNECTOR_KIND;
@@ -96,7 +92,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return CONNECTOR_LABEL;
+		return "Gerrit Code Review (supports 2.1.5 and later)";
 	}
 
 	/**
@@ -186,6 +182,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknows query type: {0}",
 						query.getAttribute(GerritQuery.PROJECT)));
 			}
+		} catch (UnsupportedClassVersionError e) {
+			return toStatus(repository, e);
 		} catch (GerritException e) {
 			return toStatus(repository, e);
 		} finally {
@@ -213,8 +211,14 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		mapper.applyTo(task);
 	}
 
-	public GerritClient getClient(TaskRepository repository) {
-		return createClient(repository);
+	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		try {
+			return createClient(repository).getInfo(Policy.backgroundMonitorFor(monitor));
+		} catch (UnsupportedClassVersionError e) {
+			throw toCoreException(repository, e);
+		} catch (GerritException e) {
+			throw toCoreException(repository, e);
+		}
 	}
 
 	private GerritClient createClient(final TaskRepository repository) {
@@ -225,9 +229,14 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				repository.setProperty(KEY_REPOSITORY_CONFIG, GerritClient.configToString(config));
 			}
 		};
+
 	}
 
 	CoreException toCoreException(TaskRepository repository, GerritException e) {
+		return new CoreException(toStatus(repository, e));
+	}
+
+	CoreException toCoreException(TaskRepository repository, UnsupportedClassVersionError e) {
 		return new CoreException(toStatus(repository, e));
 	}
 
@@ -246,12 +255,10 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
 	}
 
-	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		try {
-			return createClient(repository).getInfo(Policy.backgroundMonitorFor(monitor));
-		} catch (GerritException e) {
-			throw toCoreException(repository, e);
-		}
+	Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {
+		String message = NLS.bind("The Gerrit Connector requires at Java 1.6 or higer (installed version: {0})",
+				System.getProperty("java.version"));
+		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
 	}
 
 }

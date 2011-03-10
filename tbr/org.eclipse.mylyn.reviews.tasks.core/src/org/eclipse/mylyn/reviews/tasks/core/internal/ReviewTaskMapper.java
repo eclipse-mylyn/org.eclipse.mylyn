@@ -16,52 +16,210 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.reviews.tasks.core.Attachment;
+import org.eclipse.mylyn.reviews.tasks.core.ChangesetScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.PatchScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ResourceScopeItem;
+import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.TaskComment;
-import org.eclipse.mylyn.reviews.tasks.dsl.parser.antlr.ReviewDslParser;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.AttachmentSource;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.PatchDef;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResourceDef;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ResultEnum;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewDslFactory;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult;
-import org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.Source;
-import org.eclipse.xtext.parser.IParseResult;
-import org.eclipse.xtext.parsetree.reconstr.Serializer;
+import org.eclipse.mylyn.reviews.tasks.dsl.IReviewDslMapper;
+import org.eclipse.mylyn.reviews.tasks.dsl.IReviewDslSerializer;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslAttachmentScopeItem;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslAttachmentScopeItem.Type;
+import org.eclipse.mylyn.reviews.tasks.dsl.ParseException;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslChangesetScopeItem;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslScope;
+import org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslScopeItem;
+
 /**
  * @author mattk
- *
+ * 
  */
 public class ReviewTaskMapper implements IReviewMapper {
-	private ReviewDslParser parser;
-	private Serializer serializer;
+	private IReviewDslMapper parser;
+	private IReviewDslSerializer serializer;
 
-	public ReviewTaskMapper(ReviewDslParser parser, Serializer serializer) {
+	public ReviewTaskMapper(IReviewDslMapper parser,
+			IReviewDslSerializer serializer) {
 		this.parser = parser;
 		this.serializer = serializer;
 	}
 
-	private org.eclipse.mylyn.reviews.tasks.core.ReviewResult mapResult(
-			org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult parsed,
-			TaskComment comment) {
-		if (parsed == null)
-			return null;
+	@Override
+	public ReviewScope mapTaskToScope(ITaskProperties properties)
+			throws CoreException {
+		Assert.isNotNull(properties);
+		try {
+			ReviewDslScope parsedReviewScope = parser
+					.parseReviewScope(properties.getDescription());
+			ReviewScope originalScope = mapReviewScope(properties,
+					parsedReviewScope);
+			// FIXME changed review scope
+			// for (TaskComment comment : properties.getComments()) {
+			// if (properties.getReporter().equals(comment.getAuthor())) {
+			// ChangedReviewScope changedScope =
+			// parser.parseChangedReviewScope(comment.getText());
+			// applyChangedScope(properties, originalScope, changedScope);
+			// }
+			// }
+			// }
+			return originalScope;
+		} catch (ParseException ex) {
+			// ignore
+		}
+		return null;
 
-		org.eclipse.mylyn.reviews.tasks.core.ReviewResult result = new org.eclipse.mylyn.reviews.tasks.core.ReviewResult();
-		result.setReviewer(comment.getAuthor());
-		result.setDate(comment.getDate());
-		result.setRating(mapRating(parsed.getResult()));
-		result.setComment(comment.getText());
+	}
+
+	@Override
+	public void mapScopeToTask(ReviewScope scope, ITaskProperties taskProperties) {
+		ReviewDslScope scope2 = mapScope(scope);
+
+		taskProperties.setDescription(serializer.serialize(scope2));
+	}
+
+	@Override
+	public void mapResultToTask(
+			org.eclipse.mylyn.reviews.tasks.core.ReviewResult res,
+			ITaskProperties taskProperties) {
+		ReviewDslResult result = new ReviewDslResult();
+		ReviewDslResult.Rating rating = ReviewDslResult.Rating.WARNING;
+		switch (res.getRating()) {
+		case FAIL:
+			rating = ReviewDslResult.Rating.FAILED;
+			break;
+		case PASSED:
+			rating = ReviewDslResult.Rating.PASSED;
+			break;
+		case TODO:
+			rating = ReviewDslResult.Rating.TODO;
+			break;
+		case WARNING:
+			rating = ReviewDslResult.Rating.WARNING;
+			break;
+		}
+		result.setRating(rating);
+		result.setComment(res.getComment());
+
+		String resultAsText = serializer.serialize(result);
+		taskProperties.setNewCommentText(resultAsText);
+	}
+
+	@Override
+	public org.eclipse.mylyn.reviews.tasks.core.ReviewResult mapCurrentReviewResult(
+			ITaskProperties taskProperties) {
+		Assert.isNotNull(taskProperties);
+		if (taskProperties.getNewCommentText() == null || taskProperties.getNewCommentText().isEmpty())
+			return null;
+		ReviewResult result = null;
+		try {
+			ReviewDslResult res = parser.parseReviewResult(taskProperties
+					.getNewCommentText());
+			if (res == null)
+				return null;
+			result = new ReviewResult();
+			result.setComment(res.getComment());
+			result.setRating(mapRating(res.getRating()));
+			// FIXME filecomment, linecomment
+			// FIXME author is current
+			// result.setReviewer()
+			// result.setDate()
+		} catch (ParseException ex) {
+			/* ignore */
+		}
 		return result;
 	}
 
-	private Rating mapRating(ResultEnum result) {
+	@Override
+	public List<ReviewResult> mapTaskToResults(ITaskProperties taskProperties) {
+		List<ReviewResult> results = new ArrayList<ReviewResult>();
+		for (TaskComment comment : taskProperties.getComments()) {
+			try {
+				ReviewDslResult parsed = parser.parseReviewResult(comment
+						.getText());
+				if (parsed != null) {
+					results.add(mapResult(parsed, comment));
+				}
+			} catch (ParseException ex) {
+				// ignore
+			}
+		}
+		return results;
+	}
+
+	// FIXME Changed Review scope
+	// private void applyChangedScope(ITaskProperties properties,
+	// ReviewScope originalScope, ChangedReviewScope changedScope)
+	// throws CoreException {
+	// for (ReviewScopeItem scope : changedScope.getScope()) {
+	// IReviewScopeItem item = mapReviewScopeItem(properties, scope);
+	// originalScope.addScope(item);
+	// }
+	// }
+
+	private ReviewScope mapReviewScope(ITaskProperties properties,
+			ReviewDslScope scope) throws CoreException {
+		if (scope == null)
+			return null;
+
+		ReviewScope mappedScope = new ReviewScope();
+		mappedScope.setCreator(properties.getReporter());
+		for (ReviewDslScopeItem s : scope.getItems()) {
+			IReviewScopeItem item = mapReviewScopeItem(properties, s);
+			if (item != null) {
+				mappedScope.addScope(item);
+			}
+		}
+		return mappedScope;
+	}
+
+	private IReviewScopeItem mapReviewScopeItem(ITaskProperties properties,
+			ReviewDslScopeItem s) throws CoreException {
+		IReviewScopeItem item = null;
+		if (s instanceof ReviewDslAttachmentScopeItem) {
+			item = mapPatchDef(properties, (ReviewDslAttachmentScopeItem) s);
+		} else if (s instanceof ReviewDslChangesetScopeItem) {
+			item = mapChangesetDef(properties, (ReviewDslChangesetScopeItem) s);
+		}
+		return item;
+	}
+
+	private ChangesetScopeItem mapChangesetDef(ITaskProperties properties,
+			ReviewDslChangesetScopeItem cs) throws CoreException {
+		return new ChangesetScopeItem(cs.getRevision(), cs.getRepoUrl());
+	}
+
+	private IReviewScopeItem mapPatchDef(ITaskProperties properties,
+			ReviewDslAttachmentScopeItem scopeItem) throws CoreException {
+
+		Attachment att = ReviewsUtil.findAttachment(scopeItem.getFileName(),
+				scopeItem.getAuthor(), scopeItem.getCreatedDate(),
+				properties.loadFor(scopeItem.getTaskId()));
+		if (scopeItem.getType() == Type.PATCH) {
+			return new PatchScopeItem(att);
+		} else {
+			return new ResourceScopeItem(att);
+		}
+	}
+
+	private ReviewResult mapResult(ReviewDslResult parsed, TaskComment comment) {
+		if (parsed == null)
+			return null;
+
+		ReviewResult result = new ReviewResult();
+		result.setReviewer(comment.getAuthor());
+		result.setDate(comment.getDate());
+		result.setRating(mapRating(parsed.getRating()));
+		result.setComment(parsed.getComment());
+		return result;
+	}
+
+	private Rating mapRating(ReviewDslResult.Rating result) {
 		switch (result) {
 		case PASSED:
 			return Rating.PASSED;
@@ -75,181 +233,39 @@ public class ReviewTaskMapper implements IReviewMapper {
 		throw new IllegalArgumentException();
 	}
 
-	@Override
-	public ReviewScope mapTaskToScope(ITaskProperties properties)
-			throws CoreException {
-		Assert.isNotNull(properties);
-		IParseResult parsed = parser.doParse(properties.getDescription());
+	private ReviewDslScope mapScope(ReviewScope scope) {
+		ReviewDslScope scope2 = new ReviewDslScope();
 
-		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope = (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope) parsed
-				.getRootASTElement();
-		return mapReviewScope(properties, scope);
-	}
-
-	private ReviewScope mapReviewScope(ITaskProperties properties,
-			org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope)
-			throws CoreException {
-		if (scope == null)
-			return null;
-
-		ReviewScope mappedScope = new ReviewScope();
-		mappedScope.setCreator(properties.getReporter());
-		for (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem s : scope
-				.getScope()) {
-			if (s instanceof PatchDef) {
-				PatchScopeItem item = mapPatchDef(properties, mappedScope, (PatchDef) s);
-				mappedScope.addScope(item);
-			} else if (s instanceof ResourceDef) {
-				ResourceDef res = (ResourceDef) s;
-				ResourceScopeItem item = mapResourceDef(properties, res);
-				mappedScope.addScope(item);
-			}
-		}
-		return mappedScope;
-	}
-
-	private ResourceScopeItem mapResourceDef(ITaskProperties properties,
-			ResourceDef res) throws CoreException {
-		Source source = res.getSource();
-		Attachment att = null;
-		if (source instanceof AttachmentSource) {
-			att = parseAttachmenSource(properties, source);
-		}
-		return new ResourceScopeItem(att);
-	}
-
-	private PatchScopeItem mapPatchDef(ITaskProperties properties,
-			ReviewScope mappedScope, PatchDef patch) throws CoreException {
-		Source source = patch.getSource();
-		Attachment att = null;
-		if (source instanceof AttachmentSource) {
-			att = parseAttachmenSource(properties, source);
-		}
-		return new PatchScopeItem(att);
-	}
-
-	private Attachment parseAttachmenSource(ITaskProperties properties,
-			Source source) throws CoreException {
-		AttachmentSource attachment = (AttachmentSource) source;
-
-		Attachment att = ReviewsUtil.findAttachment(attachment.getFilename(),
-				attachment.getAuthor(), attachment.getCreatedDate(),
-				properties.loadFor(attachment.getTaskId()));
-		return att;
-	}
-
-	@Override
-	public void mapScopeToTask(ReviewScope scope, ITaskProperties taskProperties) {
-		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope2 = mapScope(scope);
-
-		taskProperties.setDescription(serializer.serialize(scope2));
-	}
-
-	private org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope mapScope(
-			ReviewScope scope) {
-		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScope scope2 = ReviewDslFactory.eINSTANCE
-				.createReviewScope();
 		for (IReviewScopeItem item : scope.getItems()) {
-			scope2.getScope().add(mapScopeItem(item));
+			scope2.getItems().add(mapScopeItem(item));
 		}
 		return scope2;
 	}
 
-	private org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewScopeItem mapScopeItem(
-			IReviewScopeItem item) {
+	private ReviewDslScopeItem mapScopeItem(IReviewScopeItem item) {
 		if (item instanceof PatchScopeItem) {
 			PatchScopeItem patchItem = (PatchScopeItem) item;
-			PatchDef patch = ReviewDslFactory.eINSTANCE.createPatchDef();
-			Attachment attachment = patchItem.getAttachment();
-			AttachmentSource source = mapAttachment(attachment);
-			patch.setSource(source);
-
-			return patch;
+			return createAttachmentScopeItem(Type.PATCH,
+					patchItem.getAttachment());
 		} else if (item instanceof ResourceScopeItem) {
 			ResourceScopeItem resourceItem = (ResourceScopeItem) item;
-			ResourceDef resource = ReviewDslFactory.eINSTANCE
-					.createResourceDef();
-			Attachment attachment = resourceItem.getAttachment();
-			AttachmentSource source = mapAttachment(attachment);
-			resource.setSource(source);
-			return resource;
+			return createAttachmentScopeItem(Type.RESOURCE,
+					resourceItem.getAttachment());
+		} else if (item instanceof ChangesetScopeItem) {
+			ChangesetScopeItem changesetItem = (ChangesetScopeItem) item;
+			ReviewDslChangesetScopeItem changeset = new ReviewDslChangesetScopeItem();
+			changeset.setRevision(changesetItem.getRevisionId());
+			changeset.setRepoUrl(changesetItem.getRepositoryUrl());
+			return changeset;
 		}
 		return null;
 	}
 
-	private AttachmentSource mapAttachment(Attachment attachment) {
-		AttachmentSource source = ReviewDslFactory.eINSTANCE
-				.createAttachmentSource();
-		source.setAuthor(attachment.getAuthor());
-		source.setCreatedDate(attachment.getDate());
-		source.setFilename(attachment.getFileName());
-		source.setTaskId(attachment.getTask().getTaskId());
-		return source;
-	}
-
-	@Override
-	public void mapResultToTask(
-			org.eclipse.mylyn.reviews.tasks.core.ReviewResult res,
-			ITaskProperties taskProperties) {
-		ReviewResult result = ReviewDslFactory.eINSTANCE.createReviewResult();
-		ResultEnum rating = ResultEnum.WARNING;
-		switch (res.getRating()) {
-		case FAIL:
-			rating = ResultEnum.FAILED;
-			break;
-		case PASSED:
-			rating = ResultEnum.PASSED;
-			break;
-		case TODO:
-			rating = ResultEnum.TODO;
-			break;
-		case WARNING:
-			rating = ResultEnum.WARNING;
-			break;
-		}
-		result.setResult(rating);
-		result.setComment(res.getComment());
-
-		String resultAsText = serializer.serialize(result);
-		System.err.println(resultAsText);
-		taskProperties.setNewCommentText(resultAsText);
-	}
-
-	@Override
-	public org.eclipse.mylyn.reviews.tasks.core.ReviewResult mapCurrentReviewResult(
-			ITaskProperties taskProperties) {
-		Assert.isNotNull(taskProperties);
-		if (taskProperties.getNewCommentText() == null)
-			return null;
-		IParseResult parsed = parser
-				.doParse(taskProperties.getNewCommentText());
-
-		org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult res = (org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult) parsed
-				.getRootASTElement();
-		org.eclipse.mylyn.reviews.tasks.core.ReviewResult result = new org.eclipse.mylyn.reviews.tasks.core.ReviewResult();
-		if (res == null)
-			return null;
-		result.setComment(res.getComment());
-		result.setRating(mapRating(res.getResult()));
-		// FIXME author is current
-		// result.setReviewer()
-		// result.setDate()
-		return result;
-	}
-
-	@Override
-	public List<org.eclipse.mylyn.reviews.tasks.core.ReviewResult> mapTaskToResults(
-			ITaskProperties taskProperties) {
-		List<org.eclipse.mylyn.reviews.tasks.core.ReviewResult> results = new ArrayList<org.eclipse.mylyn.reviews.tasks.core.ReviewResult>();
-		for (TaskComment comment : taskProperties.getComments()) {
-			IParseResult parsed = parser.doParse(comment.getText());
-			if (parsed.getRootASTElement() != null) {
-				results.add(mapResult(
-						(org.eclipse.mylyn.reviews.tasks.dsl.reviewDsl.ReviewResult) parsed
-								.getRootASTElement(), comment));
-			}
-		}
-		return results;
+	private ReviewDslAttachmentScopeItem createAttachmentScopeItem(Type type,
+			Attachment attachment) {
+		return new ReviewDslAttachmentScopeItem(type, attachment.getFileName(),
+				attachment.getAuthor(), attachment.getDate(), attachment
+						.getTask().getTaskId());
 	}
 
 }

@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jgit,
  com.google.gerrit.prettify;bundle-version="2.1.5"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.client;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.operations;x-friends:="org.eclipse.mylyn.gerrit.ui"

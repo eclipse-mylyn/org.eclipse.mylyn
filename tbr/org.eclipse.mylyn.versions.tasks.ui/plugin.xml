@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.versions.tasks.ui.ChangeSetPageFactory"
+            id="org.eclipse.mylyn.versions.tasks.pageFactory1">
+      </pageFactory>
+   </extension>
+
+</plugin>
