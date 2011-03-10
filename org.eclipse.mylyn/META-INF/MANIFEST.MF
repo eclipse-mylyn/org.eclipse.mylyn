@@ -5,3 +5,4 @@ Bundle-SymbolicName: org.eclipse.mylyn;singleton:=true
 Bundle-Version: 3.5.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
+Eclipse-SourceReferences: scm:cvs:pserver:dev.eclipse.org:/cvsroot/mylyn:org.eclipse.mylyn.commons/org.eclipse.mylyn
