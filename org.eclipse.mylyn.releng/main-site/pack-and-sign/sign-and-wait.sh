@@ -46,8 +46,8 @@ cd $SRC
 tail -f $LOG | grep -E \(Extracting\|Finished\) &
 
 I=0
-while [ $I -lt 60 ] && [ ! -e $OUT/site.zip ]; do
-  echo Waiting for $OUT/site.zip
+while [ $I -lt 120 ] && [ ! -e $OUT/site.zip ]; do
+  echo Waiting for $OUT/site.zip... $1 / 120
   sleep 30
   let I=I+1
 done
