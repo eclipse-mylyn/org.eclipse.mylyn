@@ -32,6 +32,8 @@ public class ScmResourceArtifact extends ScmArtifact {
 		super(id, path);
 		this.connector = connector;
 		this.resource = resource;
+		setProjectName(resource.getProject().getName());
+		setProjectRelativePath(resource.getProjectRelativePath().toPortableString());
 	}
 
 	public ScmResourceArtifact(ScmConnector connector, IResource resource, String id) {

@@ -14,14 +14,20 @@ package org.eclipse.mylyn.versions.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.eclipse.mylyn.versions.core.spi.ScmInfoAttributes;
 
 /**
  * @author Steffen Pingel
  */
-public class ChangeSet {
+public class ChangeSet implements ScmInfoAttributes {
 
 	private final List<Change> changes;
+
+	private final Map<String, String> fAtrributes = new HashMap<String, String>();
 
 	private final ScmUser author;
 
@@ -94,6 +100,10 @@ public class ChangeSet {
 	@Deprecated
 	public void setRepository(ScmRepository repository) {
 		this.repository = repository;
+	}
+
+	public Map<String, String> getInfoAtrributes() {
+		return fAtrributes;
 	}
 
 }

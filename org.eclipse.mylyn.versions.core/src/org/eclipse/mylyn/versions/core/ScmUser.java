@@ -69,4 +69,21 @@ public class ScmUser {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (id != null) {
+			sb.append(id);
+		} else {
+			if (name != null) {
+				sb.append(name);
+			}
+		}
+		if (email != null) {
+			sb.append(" <" + email + ">");
+		}
+
+		return sb.toString();
+	}
+
 }

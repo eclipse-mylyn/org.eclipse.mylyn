@@ -11,15 +11,22 @@
 
 package org.eclipse.mylyn.versions.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.mylyn.versions.core.spi.ScmInfoAttributes;
+
 /**
  * @author mattk
  */
-public class Change {
+public class Change implements ScmInfoAttributes {
 	private final ScmArtifact base;
 
 	private final ScmArtifact target;
 
 	private final ChangeType changeType;
+
+	private final Map<String, String> fAtrributes = new HashMap<String, String>();
 
 	public Change(ScmArtifact base, ScmArtifact target, ChangeType changeType) {
 		super();
@@ -38,6 +45,10 @@ public class Change {
 
 	public ChangeType getChangeType() {
 		return changeType;
+	}
+
+	public Map<String, String> getInfoAtrributes() {
+		return fAtrributes;
 	}
 
 }
