@@ -291,7 +291,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			}
 		});
 
-		Group group = new Group(composite, SWT.BORDER);
+		Group group = new Group(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, true).applyTo(group);
 		group.setText(Messages.NotificationsPreferencesPage_Descriptions_Label);
 		FillLayout layout = new FillLayout();
