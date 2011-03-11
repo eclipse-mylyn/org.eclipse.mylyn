@@ -67,11 +67,8 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -82,7 +79,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
@@ -313,7 +309,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	/**
-	 * Initialises automatic resize of the tree control columns. The size of these will be adjusted when a node is
+	 * Initializes automatic resize of the tree control columns. The size of these will be adjusted when a node is
 	 * expanded or collapsed and when the tree changes size.
 	 * 
 	 * @param tree
@@ -322,20 +318,27 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private void installAutomaticResize(final Tree tree) {
 		Listener listener = new Listener() {
 			public void handleEvent(Event e) {
-				tree.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						doResize(tree);
-					}
-				});
+				packColumnsAsync(tree);
 			}
+
 		};
 		// Automatically resize columns when we expand tree nodes.
 		tree.addListener(SWT.Collapse, listener);
 		tree.addListener(SWT.Expand, listener);
-		// Automatically resize columns when tree size changes
-		tree.addControlListener(new ControlAdapter() {
-			public void controlResized(ControlEvent e) {
-				doResize(tree);
+		tree.getParent().addListener(SWT.Resize, listener);
+	}
+
+	void packColumnsAsync(final Tree tree) {
+		tree.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (!tree.isDisposed()) {
+					try {
+						tree.setRedraw(false);
+						packColumns(tree);
+					} finally {
+						tree.setRedraw(true);
+					}
+				}
 			}
 		});
 	}
@@ -362,6 +365,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	protected void createViewer(Composite parent) {
+//		Composite composite = new Composite(parent, SWT.NONE);
+//		TreeColumnLayout treeColumnLayout = new TreeColumnLayout();
+//		composite.setLayout(treeColumnLayout);
+
 		viewer = new TreeViewer(parent, SWT.FULL_SELECTION);
 		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
@@ -373,18 +380,21 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		buildColumn.setText("Build");
 		buildColumn.setWidth(220);
 		buildColumn.setData(AbstractColumnViewerSupport.KEY_COLUMN_CAN_HIDE, false);
+		//treeColumnLayout.setColumnData(buildColumn, new ColumnWeightData(20, 50));
 
 		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
 		TreeColumn summaryColumn = summaryViewerColumn.getColumn();
 		summaryColumn.setText("Summary");
 		summaryColumn.setWidth(220);
+		//treeColumnLayout.setColumnData(summaryColumn, new ColumnWeightData(60, 200));
 
 		TreeViewerColumn lastBuiltViewerColumn = new TreeViewerColumn(viewer, SWT.RIGHT);
 		lastBuiltViewerColumn.setLabelProvider(new RelativeBuildTimeLabelProvider());
 		TreeColumn lastBuiltColumn = lastBuiltViewerColumn.getColumn();
 		lastBuiltColumn.setText("Last Built");
 		lastBuiltColumn.setWidth(50);
+		//treeColumnLayout.setColumnData(lastBuiltColumn, new ColumnWeightData(20, 50));
 
 		contentProvider = new BuildContentProvider();
 		contentProvider.setSelectedOnly(true);
@@ -588,6 +598,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	private void updateContents(IStatus status) {
+		boolean isShowingViewer = (stackLayout.topControl == viewer.getControl());
 		boolean hasContents = false;
 		if (contentProvider != null) {
 			if (model.getPlans().size() > 0 || model.getServers().size() > 0) {
@@ -596,6 +607,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		}
 		if (hasContents) {
 			setTopControl(viewer.getControl());
+			if (!isShowingViewer) {
+				// initial flip
+				packColumnsAsync(viewer.getTree());
+			}
 		} else {
 			setTopControl(messageComposite);
 		}
@@ -666,29 +681,22 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	 * @param tree
 	 *            the tree to resize
 	 */
-	private void doResize(final Tree tree) {
-		Rectangle area = tree.getClientArea();
-		ScrollBar vBar = tree.getVerticalBar();
-		int ac = 0;
+	private void packColumns(final Tree tree) {
+		int totalColumnWidth = 0;
 		for (TreeColumn tc : tree.getColumns()) {
 			if (tc.getResizable()) {
 				tc.pack();
-				ac += tc.getWidth();
+				totalColumnWidth += tc.getWidth() + 1;
 			} else {
-				ac += 1; // TODO: Determine the exact width of the column separator
+				totalColumnWidth += 1; // TODO: Determine the exact width of the column separator
 			}
 		}
-		int width = area.width - tree.computeTrim(0, 0, 0, 0).width + vBar.getSize().x;
-		if (width > ac) {
-			// Adjust the width of the "Summary" column unless it's not resizeable 
-			// which case we adjust the width of the "Build" column instead.
-			if (tree.getColumn(1).getResizable()) {
-				int nw = tree.getColumn(1).getWidth() + width - ac;
-				tree.getColumn(1).setWidth(nw);
-			} else {
-				int nw = tree.getColumn(0).getWidth() + width - ac;
-				tree.getColumn(0).setWidth(nw);
-			}
-		}
+
+		// Adjust the width of the "Summary" column unless it's not resizeable 
+		// which case we adjust the width of the "Build" column instead.
+		TreeColumn column = (tree.getColumn(1).getResizable()) ? tree.getColumn(1) : tree.getColumn(0);
+		int nw = column.getWidth() + tree.getClientArea().width - totalColumnWidth;
+		column.setWidth(nw);
 	}
+
 }
