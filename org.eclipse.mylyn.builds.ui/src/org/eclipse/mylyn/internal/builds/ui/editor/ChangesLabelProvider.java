@@ -72,12 +72,20 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IChange) {
-			return ((IChange) element).getMessage();
+			return trim(((IChange) element).getMessage());
 		}
 		if (element instanceof IChangeArtifact) {
 			return ((IChangeArtifact) element).getFile();
 		}
 		return super.getText(element);
+	}
+
+	private String trim(String message) {
+		int i = message.indexOf("\n"); //$NON-NLS-1$
+		if (i != -1) {
+			return message.substring(0, i);
+		}
+		return message;
 	}
 
 }
