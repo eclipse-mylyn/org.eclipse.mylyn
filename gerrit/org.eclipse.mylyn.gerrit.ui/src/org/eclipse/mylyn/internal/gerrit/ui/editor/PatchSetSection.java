@@ -263,7 +263,7 @@ public class PatchSetSection extends AbstractGerritSection {
 								}
 							}
 
-							progressLabel.setText(getTextClientText(patchSetDetail));
+							progressLabel.setText("  " + getTextClientText(patchSetDetail));
 							progressLabel.setVisible(!composite.isExpanded());
 							getTaskEditorPage().reflow();
 						}
