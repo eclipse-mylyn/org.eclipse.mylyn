@@ -7,20 +7,27 @@
  *
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
+ *     Alvaro Sanchez-Leon - Resolve IResource information in generated artifacts
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.git.core;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.filesystem.URIUtil;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.RepositoryCache;
@@ -42,6 +49,7 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.ScmUser;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.core.spi.ScmResourceArtifact;
+import org.eclipse.mylyn.versions.core.spi.ScmResourceUtils;
 import org.eclipse.team.core.history.IFileRevision;
 
 /**
@@ -87,6 +95,11 @@ public class GitConnector extends ScmConnector {
 
 			List<DiffEntry> entries = DiffEntry.scan(treeWalk);
 			List<Change> changes = new ArrayList<Change>();
+			File repoDir = repository2.getWorkTree().getAbsoluteFile();
+
+			//define working area repo URI
+			IPath repoWorkAreaPath = new Path(repoDir.getAbsolutePath()).addTrailingSeparator();
+
 			for (DiffEntry d : entries) {
 				// FIXME - could not work for renaming
 				if (!d.getChangeType().equals(org.eclipse.jgit.diff.DiffEntry.ChangeType.RENAME)
@@ -94,18 +107,62 @@ public class GitConnector extends ScmConnector {
 					continue;
 				}
 
-				changes.add(new Change(
-						new GitArtifact(d.getOldId().name(), d.getOldPath(), (GitRepository) repository),
-						new GitArtifact(d.getNewId().name(), d.getNewPath(), (GitRepository) repository),
-						mapChangeType(d.getChangeType())));
+				//Create old and new artifacts with IResource information if available from the current workspace
+				ScmArtifact newArtifact = getArtifact(repository, d, false, repoWorkAreaPath);
+				ScmArtifact oldArtifact = getArtifact(repository, d, true, repoWorkAreaPath);
 
+				changes.add(new Change(newArtifact, oldArtifact, mapChangeType(d.getChangeType())));
 			}
+
 			return changeSet(commit, repository, changes);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
 		}
 
+	}
+
+	/**
+	 * @param repository
+	 * @param d
+	 * @param old
+	 *            - true => old entry, false => new entry
+	 * @param repoWorkAreaPath
+	 * @return
+	 */
+	private ScmArtifact getArtifact(ScmRepository repository, DiffEntry d, boolean old, IPath repoWorkAreaPath) {
+		ScmArtifact artifact = null;
+		String id = null;
+		String path = null;
+
+		if (old) {
+			id = d.getOldId().name();
+			path = d.getOldPath();
+		} else { /* new */
+			id = d.getNewId().name();
+			path = d.getNewPath();
+		}
+
+		artifact = new GitArtifact(id, path, (GitRepository) repository);
+
+		//Resolve path to workspace IFile
+		IFile ifile = null;
+
+		//resolve absolute path to artifact i.e. repo abs path + relative to resource
+		IPath absPath = repoWorkAreaPath.append(path);
+		URI absURI = URIUtil.toURI(absPath.toPortableString());
+		IFile[] files = ScmResourceUtils.getWorkSpaceFiles(absURI);
+		if (files != null && files.length > 0) {
+			//if more than one project referring to the same file, pick the first one
+			ifile = files[0];
+
+			//Fill in the artifact with corresponding IResource information
+			artifact.setProjectName(ifile.getProject().getName());
+			artifact.setProjectRelativePath(ifile.getProjectRelativePath().toPortableString());
+		}
+
+		return artifact;
 	}
 
 	private ChangeType mapChangeType(org.eclipse.jgit.diff.DiffEntry.ChangeType change) {
