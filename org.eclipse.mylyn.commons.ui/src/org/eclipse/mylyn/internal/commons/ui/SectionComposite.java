@@ -88,8 +88,8 @@ public class SectionComposite extends SharedScrolledComposite {
 					g.grabExcessVerticalSpace = false;
 					section.setLayoutData(g);
 				}
+				layout(true);
 				reflow(true);
-				section.getShell().pack();
 			}
 		});
 		section.setText(title);
