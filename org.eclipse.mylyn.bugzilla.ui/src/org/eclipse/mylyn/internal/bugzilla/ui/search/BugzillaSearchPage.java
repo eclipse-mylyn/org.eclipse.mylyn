@@ -539,12 +539,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		setControl(control);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				scrolledComposite.reflow(true);
-				scrolledComposite.getShell().pack(true);
-			}
-		});
 	}
 
 	private void createButtons(Composite control) {
@@ -2556,5 +2550,4 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		refreshChartControls();
 		Dialog.applyDialogFont(chartSection);
 	}
-
 }
