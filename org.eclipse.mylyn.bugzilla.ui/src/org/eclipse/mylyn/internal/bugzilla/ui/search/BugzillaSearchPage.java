@@ -2264,7 +2264,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					priority.getSelection().length > 0 || resolution.getSelection().length > 0
 					|| version.getSelection().length > 0 || target.getSelection().length > 0
 					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
+				moreOptionsSection.setExpanded(true);
+				scrolledComposite.reflow(true);
+				refreshChartControls();
+			}
+			if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
 				chartSection.setExpanded(true);
+				scrolledComposite.reflow(true);
+				refreshChartControls();
 			}
 
 		} catch (IllegalArgumentException e) {
