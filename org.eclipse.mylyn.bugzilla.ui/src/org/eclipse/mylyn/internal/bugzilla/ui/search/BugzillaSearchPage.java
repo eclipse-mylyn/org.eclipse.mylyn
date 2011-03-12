@@ -12,6 +12,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
@@ -419,7 +424,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String STORE_WHITEBOARDMATCH_ID = PAGE_NAME + ".WHITEBOARDMATCH"; //$NON-NLS-1$
 
-	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
+	private static final String STORE_CHARTS_ID = PAGE_NAME + ".CHARTS"; //$NON-NLS-1$
 
 	private RepositoryConfiguration repositoryConfiguration;
 
@@ -431,166 +436,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private SectionComposite scrolledComposite;
 
-	protected class ChartExpression {
-		private int fieldName;
-
-		private int operation;
-
-		private String value;
-
-		public ChartExpression(int fieldName, int operation, String value) {
-			super();
-			this.fieldName = fieldName;
-			this.operation = operation;
-			this.value = value;
-		}
-
-		public int getFieldName() {
-			return fieldName;
-		}
-
-		public void setFieldName(int fieldName) {
-			this.fieldName = fieldName;
-		}
-
-		public int getOperation() {
-			return operation;
-		}
-
-		public void setOperation(int operation) {
-			this.operation = operation;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-	}
-
-	protected class Chart {
-		private final ArrayList<ArrayList<ChartExpression>> expressions;
-
-		private boolean negate;
-
-		public Chart() {
-			super();
-			ChartExpression expression = new ChartExpression(0, 0, ""); //$NON-NLS-1$
-			ArrayList<ChartExpression> column = new ArrayList<ChartExpression>(1);
-			column.add(expression);
-			expressions = new ArrayList<ArrayList<ChartExpression>>(1);
-			expressions.add(column);
-			negate = false;
-		}
-
-		public boolean isNegate() {
-			return negate;
-		}
-
-		public void setNegate(boolean negate) {
-			this.negate = negate;
-		}
-
-		public void addExpression(int rowIndex, int columnIndex) {
-			ChartExpression expression = new ChartExpression(0, 0, ""); //$NON-NLS-1$
-			int size = expressions.size();
-			if (rowIndex > size + 1) {
-				rowIndex = size + 1;
-			}
-			if (rowIndex < 0) {
-				rowIndex = 0;
-			}
-			ArrayList<ChartExpression> row;
-			if (rowIndex == size) {
-				row = new ArrayList<BugzillaSearchPage.ChartExpression>();
-				expressions.add(rowIndex, row);
-			} else {
-				row = expressions.get(rowIndex);
-			}
-			if (row != null) {
-				int size1 = expressions.size();
-				if (columnIndex > size1 + 1) {
-					columnIndex = size1 + 1;
-				}
-				if (columnIndex < 0) {
-					columnIndex = 0;
-				}
-				row.add(columnIndex, expression);
-			}
-
-		}
-
-		public void addRow(int index) {
-			int size = expressions.size();
-			if (index > size) {
-				index = size;
-			}
-			if (index < 0) {
-				index = 0;
-			}
-			addRow(index);
-		}
-
-		public int getRowSize() {
-			return expressions.size();
-		}
-
-		public int getColumnSize(int row) {
-			int size = expressions.size();
-			if (row > size) {
-				row = size;
-			}
-			if (row < 0) {
-				row = 0;
-			}
-			return expressions.get(row).size();
-		}
-
-		public ChartExpression getChartExpression(int row, int column) {
-			int rowSize = expressions.size();
-			if (row > rowSize) {
-				row = rowSize;
-			}
-			if (row < 0) {
-				row = 0;
-			}
-
-			int columnSize = getColumnSize(row);
-			if (column > columnSize) {
-				column = columnSize;
-			}
-			if (column < 0) {
-				column = 0;
-			}
-			return expressions.get(row).get(column);
-		}
-
-		public void removeColumn(int row, int column) {
-			int rowSize = expressions.size();
-			if (row > rowSize) {
-				row = rowSize;
-			}
-			if (row < 0) {
-				row = 0;
-			}
-
-			int columnSize = getColumnSize(row);
-			if (column > columnSize) {
-				column = columnSize;
-			}
-			if (column < 0) {
-				column = 0;
-			}
-			expressions.get(row).remove(column);
-			if (column == 0) {
-				expressions.remove(row);
-			}
-		}
-	}
-
-	private final ArrayList<Chart> charts = new ArrayList<BugzillaSearchPage.Chart>(1);
+	private ArrayList<Chart> charts = new ArrayList<Chart>(1);
 
 	private class ChartControls {
 		private final Combo field;
@@ -2211,6 +2057,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		return value;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void restoreWidgetValues() {
 		try {
 			IDialogSettings settings = getDialogSettings();
@@ -2268,6 +2115,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				scrolledComposite.reflow(true);
 				refreshChartControls();
 			}
+
+			String chartString = settings.get(STORE_CHARTS_ID + repoId);
+			if (chartString != null) {
+				ObjectInputStream inputStream = null;
+				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chartString.getBytes());
+				try {
+					try {
+						inputStream = new ObjectInputStream(byteArrayInputStream);
+						charts = (ArrayList<Chart>) inputStream.readObject();
+					} catch (IOException e) {
+						throw e;
+					} finally {
+						if (inputStream != null) {
+							inputStream.close();
+						}
+					}
+				} catch (Exception e) {
+				}
+			}
 			if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
 				chartSection.setExpanded(true);
 				scrolledComposite.reflow(true);
@@ -2312,7 +2178,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		settings.put(STORE_KEYWORDSMATCH_ID + repoId, keywordsOperation.getSelectionIndex());
 		settings.put(STORE_WHITEBOARD_ID + repoId, whiteboardPattern.getText());
 		settings.put(STORE_WHITEBOARDMATCH_ID + repoId, whiteboardOperation.getSelectionIndex());
-		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
+
+		ObjectOutputStream outputStream = null;
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		try {
+			try {
+				outputStream = new ObjectOutputStream(byteArrayOutputStream);
+				outputStream.writeObject(charts);
+				outputStream.flush();
+				settings.put(STORE_CHARTS_ID + repoId, byteArrayOutputStream.toString());
+			} catch (IOException e) {
+				throw e;
+			} finally {
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			}
+		} catch (Exception e) {
+		}
+
 	}
 
 	/* Testing hook to see if any products are present */
