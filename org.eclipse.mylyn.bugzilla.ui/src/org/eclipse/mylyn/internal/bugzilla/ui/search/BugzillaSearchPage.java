@@ -2554,5 +2554,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		chartSection.layout(true);
 		scrolledComposite.reflow(true);
 		refreshChartControls();
+		Dialog.applyDialogFont(chartSection);
 	}
+
 }
