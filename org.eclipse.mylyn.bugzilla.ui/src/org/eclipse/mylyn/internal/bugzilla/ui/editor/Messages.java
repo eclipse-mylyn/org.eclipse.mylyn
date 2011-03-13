@@ -25,6 +25,22 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String BugzillaFlagPart_are;
+
+	public static String BugzillaFlagPart_Flags_PartName;
+
+	public static String BugzillaFlagPart_is;
+
+	public static String BugzillaFlagPart_numberof_unused_used_flags;
+
+	public static String BugzillaFlagPart_unused_flag;
+
+	public static String BugzillaFlagPart_unused_flags;
+
+	public static String BugzillaFlagPart_used_flag;
+
+	public static String BugzillaFlagPart_used_flags;
+
 	public static String BugzillaPeoplePart_People;
 
 	public static String BugzillaPeoplePart__Select_to_remove_;

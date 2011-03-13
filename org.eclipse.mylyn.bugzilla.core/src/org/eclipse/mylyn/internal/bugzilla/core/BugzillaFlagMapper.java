@@ -109,7 +109,7 @@ public class BugzillaFlagMapper {
 		}
 
 		if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_2) >= 0) {
-			meta.setKind(TaskAttribute.KIND_DEFAULT);
+			meta.setKind(BugzillaAttribute.KIND_FLAG);
 		}
 		meta.setReadOnly(false);
 

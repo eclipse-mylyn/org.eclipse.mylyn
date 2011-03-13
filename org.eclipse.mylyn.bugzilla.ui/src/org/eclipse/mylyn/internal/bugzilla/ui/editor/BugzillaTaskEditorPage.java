@@ -66,6 +66,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	public static final String ID_PART_BUGZILLA_FLAGS = "org.eclipse.mylyn.bugzilla.ui.editors.part.flags"; //$NON-NLS-1$
 
+	public static final String PATH_FLAGS = "flags"; //$NON-NLS-1$
+
 	private final Map<TaskAttribute, AbstractAttributeEditor> attributeEditorMap;
 
 	private TaskDataModelListener productListener;
@@ -98,6 +100,14 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				break;
 			}
 		}
+
+		// Add Bugzilla Flag part
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new BugzillaFlagPart();
+			}
+		}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_FLAGS)); //$NON-NLS-1$
 
 		// Add Bugzilla Planning part
 		try {
