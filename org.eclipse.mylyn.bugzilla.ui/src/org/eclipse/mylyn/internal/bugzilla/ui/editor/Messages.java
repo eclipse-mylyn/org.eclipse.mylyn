@@ -31,6 +31,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaFlagPart_is;
 
+	public static String BugzillaFlagPart_no_flags_defined;
+
 	public static String BugzillaFlagPart_numberof_unused_used_flags;
 
 	public static String BugzillaFlagPart_unused_flag;

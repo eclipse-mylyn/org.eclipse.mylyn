@@ -146,13 +146,16 @@ public class BugzillaFlagPart extends AbstractTaskEditorPart {
 		if (attributeSorter != null) {
 			Collections.sort(flagEditors, attributeSorter);
 		}
-		if (used > 0 && unused > 0) {
+		if (used == 0 && unused == 0) {
+			infoOverlayText = Messages.BugzillaFlagPart_no_flags_defined;
+		} else if (used > 0 && unused > 0) {
 			infoOverlayText = NLS.bind(Messages.BugzillaFlagPart_numberof_unused_used_flags, "" + unused, "" + used); //$NON-NLS-1$ //$NON-NLS-2$ 
 		} else {
-			infoOverlayText = NLS.bind("{0} {1}", used > 0 ? "" + used : "" + unused, used > 0 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					? used == 1 ? "used flag" : "used flags" //$NON-NLS-1$ //$NON-NLS-2$
-					: unused == 1 ? "unused flag" : "unused flags"); //$NON-NLS-1$ //$NON-NLS-2$
+			infoOverlayText = NLS.bind("{0} {1}", unused > 0 ? "" + unused : "" + used, unused > 0 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					? unused == 1 ? Messages.BugzillaFlagPart_unused_flag : Messages.BugzillaFlagPart_unused_flags
+					: used == 1 ? Messages.BugzillaFlagPart_used_flag : Messages.BugzillaFlagPart_used_flags);
 		}
+
 		usedDetail = NLS.bind(
 				"{0} {1}", used == 1 ? Messages.BugzillaFlagPart_used_flag + Messages.BugzillaFlagPart_is : Messages.BugzillaFlagPart_used_flags + Messages.BugzillaFlagPart_are, usedDetail); //$NON-NLS-1$
 		unusedDetail = NLS.bind(
