@@ -101,18 +101,24 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			}
 		}
 
-		// Add Bugzilla Flag part
-		descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new BugzillaFlagPart();
-			}
-		}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_FLAGS)); //$NON-NLS-1$
-
 		// Add Bugzilla Planning part
 		try {
 			TaskData data = TasksUi.getTaskDataManager().getTaskData(getTask());
 			if (data != null) {
+				// Add Bugzilla Flag part
+				Map<String, TaskAttribute> attributes = data.getRoot().getAttributes();
+				for (TaskAttribute attribute : attributes.values()) {
+					if (BugzillaAttribute.KIND_FLAG.equals(attribute.getMetaData().getKind())) {
+						descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
+							@Override
+							public AbstractTaskEditorPart createPart() {
+								return new BugzillaFlagPart();
+							}
+						}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_FLAGS)); //$NON-NLS-1$
+						break;
+					}
+				}
+
 				TaskAttribute attrEstimatedTime = data.getRoot().getMappedAttribute(
 						BugzillaAttribute.ESTIMATED_TIME.getKey());
 				if (attrEstimatedTime != null) {
