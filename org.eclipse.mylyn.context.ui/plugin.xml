@@ -183,13 +183,16 @@
             name="%commands.interest.increment.name"
             description="%commands.interest.increment.description"
             id="org.eclipse.mylyn.context.ui.commands.interest.increment"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.actions.MarkAsLandmarkCommandHandler"
             categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
             name="%commands.interest.decrement.name"
             description="%commands.interest.decrement.description"
             id="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextCommandHandler"
             categoryId="org.eclipse.mylyn.context.ui.commands">
+            
       </command>
       <command
             name="%commands.open.context.dialog.name"
