@@ -17,7 +17,7 @@ then
   exit 1
 fi
 
-set -v
+set -x
 
 SRC=$1
 DST=/home/data/httpd/download-staging.priv/$2
