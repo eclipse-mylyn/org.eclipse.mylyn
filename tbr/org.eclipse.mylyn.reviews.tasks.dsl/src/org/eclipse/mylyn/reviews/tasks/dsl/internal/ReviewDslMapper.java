@@ -48,7 +48,6 @@ public class ReviewDslMapper implements IReviewDslMapper {
 	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#
 	 * parseReviewResult(java.lang.String)
 	 */
-	@Override
 	public ReviewDslResult parseReviewResult(String text) throws ParseException {
 		ReviewDslLexer lexer = new ReviewDslLexer(new ANTLRStringStream(text));
 		TokenStream input = new CommonTokenStream(lexer);
@@ -127,7 +126,6 @@ public class ReviewDslMapper implements IReviewDslMapper {
 	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslMapper#
 	 * parseReviewScope(java.lang.String)
 	 */
-	@Override
 	public ReviewDslScope parseReviewScope(String text) throws ParseException {
 		ReviewDslLexer lexer = new ReviewDslLexer(new ANTLRStringStream(text));
 		TokenStream input = new CommonTokenStream(lexer);
@@ -200,7 +198,6 @@ public class ReviewDslMapper implements IReviewDslMapper {
 		public String taskId;
 	}
 
-	@Override
 	public ReviewDslResult parseChangedReviewScope(String text) {
 		// TODO Auto-generated method stub
 		return null;

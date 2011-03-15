@@ -25,14 +25,12 @@ public class ReviewDslSerializer implements IReviewDslSerializer {
 	/* (non-Javadoc)
 	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslSerializer#serialize(org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslScope)
 	 */
-	@Override
 	public String serialize(ReviewDslScope scope) {
 		return scope.serialize(new StringBuilder()).toString();
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.mylyn.reviews.tasks.dsl.internal.IReviewDslSerializer#serialize(org.eclipse.mylyn.reviews.tasks.dsl.ReviewDslResult)
 	 */
-	@Override
 	public String serialize(ReviewDslResult result) {
 		return result.serialize(new StringBuilder()).toString();
 	}
