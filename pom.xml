@@ -77,6 +77,18 @@
         <platform-version>[3.7.0,3.8.0)</platform-version>
       </properties>
     </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+		<property>
+          <name>env.TYPE</name>
+          <value>release</value>
+		</property>
+      </activation>
+      <properties>
+		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
+	  </properties>
+	</profile>
   </profiles>
 
   <pluginRepositories>
