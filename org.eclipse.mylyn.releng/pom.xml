@@ -194,7 +194,7 @@
 		</property>
       </activation>
       <properties>
-		<mylyn-qualifier-format>'v'yyyyMMdd-HH00</mylyn-qualifier-format>
+		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
 		<mylyn-skip-sign>false</mylyn-skip-sign>
 		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</mylyn-site>
 	  </properties>
