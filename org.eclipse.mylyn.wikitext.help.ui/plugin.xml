@@ -12,9 +12,9 @@
  -->
 <plugin>
 	<extension point="org.eclipse.help.toc">
-		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="true"/>
+		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="false"/>
 		<toc file="help/devguide/WikiText Developer Guide-toc.xml" primary="false"/>
-		<toc file="toc-sdk.xml" primary="true"/>
+		<toc file="toc-sdk.xml" primary="false" />
 		<toc file="toc.xml" primary="true"/>
 	</extension>
 	<extension
