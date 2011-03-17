@@ -46,7 +46,7 @@ class TestResultSession extends TestRunSession {
 		final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
 		CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				IType type = TestResultManager.findType(className, monitor);
+				IType type = TestResultManager.Runner.findType(className, monitor);
 				if (type == null) {
 					return;
 				}

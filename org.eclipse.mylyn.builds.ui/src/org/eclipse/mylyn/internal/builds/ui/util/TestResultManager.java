@@ -60,7 +60,90 @@ public class TestResultManager {
 	/**
 	 * Encapsulates JUnit dependencies to avoid ClassNotFoundException when JUnit is not available.
 	 */
-	private static class Runner {
+	static class Runner {
+
+		private static volatile JUnitModel junitModel;
+
+		/**
+		 * @see {@link org.eclipse.jdt.internal.junit.ui.OpenTestAction}
+		 */
+		static IType findType(String className, IProgressMonitor monitor) throws CoreException {
+			final IType[] result = { null };
+			TypeNameMatchRequestor nameMatchRequestor = new TypeNameMatchRequestor() {
+				@Override
+				public void acceptTypeNameMatch(TypeNameMatch match) {
+					result[0] = match.getType();
+				}
+			};
+			int lastDot = className.lastIndexOf('.');
+			char[] packageName = lastDot >= 0 ? className.substring(0, lastDot).toCharArray() : null;
+			char[] typeName = (lastDot >= 0 ? className.substring(lastDot + 1) : className).toCharArray();
+			SearchEngine engine = new SearchEngine();
+			engine.searchAllTypeNames(packageName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE,
+					typeName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE,
+					SearchEngine.createWorkspaceScope(), nameMatchRequestor,
+					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
+			return result[0];
+		}
+
+		static JUnitModel getJUnitModel() {
+			if (junitModel == null) {
+				try {
+					// Eclipse 3.6 or later
+					Class<?> clazz;
+					try {
+						clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin");
+					} catch (ClassNotFoundException e) {
+						// Eclipse 3.5 and earlier
+						clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin");
+					}
+
+					Method method = clazz.getDeclaredMethod("getModel");
+					junitModel = (JUnitModel) method.invoke(null);
+				} catch (Exception e) {
+					NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel");
+					error.initCause(e);
+					throw error;
+				}
+			}
+			return junitModel;
+		}
+
+		public static void openInEditor(final String className, final String testName) {
+			final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
+			try {
+				CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+					public void run(IProgressMonitor monitor) throws CoreException {
+						IType type = findType(className, monitor);
+						if (type == null) {
+							return;
+						}
+						result.set(type);
+						if (testName != null) {
+							IMethod method = type.getMethod(testName, new String[0]);
+							if (method != null && method.exists()) {
+								result.set(method);
+							}
+						}
+					}
+				});
+				if (result.get() == null) {
+					StatusManager.getManager().handle(
+							new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace."),
+							StatusManager.SHOW | StatusManager.BLOCK);
+					return;
+				}
+				JavaUI.openInEditor(result.get(), true, true);
+			} catch (OperationCanceledException e) {
+				return;
+			} catch (Exception e) {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace.", e),
+						StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+				return;
+			}
+		}
+
 		static void showInJUnitViewInternal(final IBuild build) {
 			final TestRunSession testRunSession = new TestResultSession(build);
 			try {
@@ -90,53 +173,7 @@ public class TestResultManager {
 			WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
 			getJUnitModel().addTestRunSession(testRunSession);
 		}
-	}
 
-	private static volatile JUnitModel junitModel;
-
-	/**
-	 * @see {@link org.eclipse.jdt.internal.junit.ui.OpenTestAction}
-	 */
-	static IType findType(String className, IProgressMonitor monitor) throws CoreException {
-		final IType[] result = { null };
-		TypeNameMatchRequestor nameMatchRequestor = new TypeNameMatchRequestor() {
-			@Override
-			public void acceptTypeNameMatch(TypeNameMatch match) {
-				result[0] = match.getType();
-			}
-		};
-		int lastDot = className.lastIndexOf('.');
-		char[] packageName = lastDot >= 0 ? className.substring(0, lastDot).toCharArray() : null;
-		char[] typeName = (lastDot >= 0 ? className.substring(lastDot + 1) : className).toCharArray();
-		SearchEngine engine = new SearchEngine();
-		engine.searchAllTypeNames(packageName, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, typeName,
-				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE,
-				SearchEngine.createWorkspaceScope(), nameMatchRequestor,
-				IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
-		return result[0];
-	}
-
-	static JUnitModel getJUnitModel() {
-		if (junitModel == null) {
-			try {
-				// Eclipse 3.6 or later
-				Class<?> clazz;
-				try {
-					clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin");
-				} catch (ClassNotFoundException e) {
-					// Eclipse 3.5 and earlier
-					clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin");
-				}
-
-				Method method = clazz.getDeclaredMethod("getModel");
-				junitModel = (JUnitModel) method.invoke(null);
-			} catch (Exception e) {
-				NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel");
-				error.initCause(e);
-				throw error;
-			}
-		}
-		return junitModel;
 	}
 
 	public static boolean isJUnitAvailable() {
@@ -144,46 +181,19 @@ public class TestResultManager {
 	}
 
 	public static void openInEditor(ITestCase testCase) {
-		openInEditor(testCase.getClassName(), testCase.getLabel());
+		if (!isJUnitAvailable()) {
+			return;
+		}
+
+		Runner.openInEditor(testCase.getClassName(), testCase.getLabel());
 	}
 
 	public static void openInEditor(ITestSuite suite) {
-		openInEditor(suite.getLabel(), null);
-	}
-
-	public static void openInEditor(final String className, final String testName) {
-		final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
-		try {
-			CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					IType type = findType(className, monitor);
-					if (type == null) {
-						return;
-					}
-					result.set(type);
-					if (testName != null) {
-						IMethod method = type.getMethod(testName, new String[0]);
-						if (method != null && method.exists()) {
-							result.set(method);
-						}
-					}
-				}
-			});
-			if (result.get() == null) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace."),
-						StatusManager.SHOW | StatusManager.BLOCK);
-				return;
-			}
-			JavaUI.openInEditor(result.get(), true, true);
-		} catch (OperationCanceledException e) {
-			return;
-		} catch (Exception e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace.", e),
-					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+		if (!isJUnitAvailable()) {
 			return;
 		}
+
+		Runner.openInEditor(suite.getLabel(), null);
 	}
 
 	public static void showInJUnitView(final IBuild build) {

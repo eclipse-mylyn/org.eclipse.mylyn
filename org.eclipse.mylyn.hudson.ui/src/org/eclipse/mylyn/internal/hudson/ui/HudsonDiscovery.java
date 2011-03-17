@@ -115,10 +115,10 @@ public class HudsonDiscovery extends BuildsUiStartup {
 			container.connect(null, null);
 
 		} catch (ContainerCreateException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, HudsonConnectorUi.ID_PLUGIN,
 					Messages.HudsonDiscovery_CouldNotStartService, e));
 		} catch (ContainerConnectException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, HudsonConnectorUi.ID_PLUGIN,
 					Messages.HudsonDiscovery_CouldNotStartService, e));
 		}
 	}
