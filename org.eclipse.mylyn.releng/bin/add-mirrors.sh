@@ -19,7 +19,7 @@ LOCATION=$(readlink -f .)
 PREFIX=/home/data/httpd/download.eclipse.org
 RELATIVE=${LOCATION:${#PREFIX}}
 
-if [ "$LOCATION" != ${LOCATION:0:${#PREFIX}} ]; then
+if [ "$PREFIX" != ${LOCATION:0:${#PREFIX}} ]; then
  echo "$LOCATION must be subdirectory of $PREFIX"
  exit 1
 fi
@@ -30,10 +30,10 @@ if [ -z "$RELATIVE" ]; then
 fi
 
 # escape slashes
-RELATIVE=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
+MIRROR_PATH=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
 
 echo "Updated mirrorsURL in site.xml to $RELATIVE"
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=$PATH\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
+sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
 
 echo "Updated mirrorsURL in category.xml to $RELATIVE"
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=$PATH\/\&amp;protocol=http\&amp;format=xml">/' category.xml
+sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/\&amp;protocol=http\&amp;format=xml">/' category.xml

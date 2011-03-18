@@ -11,7 +11,7 @@
 #!/bin/bash -e
 
 if [ $# -lt 1 ]; then
- ROOT=.
+ ROOT=$PWD
 else
  ROOT=$1
 fi
@@ -32,22 +32,32 @@ fi
 
 pack() {
 DIR=$1
-echo Processing $DIR
+SITEXML=$DIR/category.xml
+if [ ! -e $SITEXML ]; then
+ SITEXML=$DIR/site.xml
+fi
+if [ ! -e $SITEXML ]; then
+ echo "$SITEXML not found"
+ exit 1
+fi
+
+echo Processing $DIR using $SITEXML
+
 rm -f $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 
-$JAVA_HOME/bin/java \
- -Xmx512m \
- -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
- -application org.eclipse.update.core.siteOptimizer \
- -verbose -processAll \
- -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml || true
+#$JAVA_HOME/bin/java \
+# -Xmx512m \
+# -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
+# -application org.eclipse.update.core.siteOptimizer \
+# -verbose -processAll \
+# -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml || true
  
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
  -application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator \
  -updateSite $DIR \
- -site file:$DIR/categories.xml \
+ -site file:$SITEXML \
  -metadataRepository file:$DIR \
  -metadataRepositoryName "$2 "\
  -artifactRepository file:$DIR \
@@ -56,7 +66,7 @@ $JAVA_HOME/bin/java \
  -reusePack200Files \
  -noDefaultIUs
 
-chmod 664 $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
+chmod 664 $DIR/artifacts.jar $DIR/content.jar #$DIR/digest.zip
 }
 
 pack "$ROOT" "$NAME"
