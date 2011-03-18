@@ -56,7 +56,7 @@ unzip -p content.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringpa
 zip content.jar content.xml
 rm content.xml
 
-echo "Updating p2.mirrorsURL"
+echo "Updating artifacts.jar"
 unzip -p artifacts.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringparam statsURI "$STATS_URI" $BASE/p2.xsl - > artifacts.xml
 zip artifacts.jar artifacts.xml
 rm artifacts.xml
