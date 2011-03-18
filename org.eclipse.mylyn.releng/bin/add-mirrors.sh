@@ -8,16 +8,32 @@
 # Contributors:
 #      Tasktop Technologies - initial API and implementation
 #*******************************************************************************
-#!/bin/sh -e
+#!/bin/bash -e
 
-ROOT=$HOME/downloads/tools/mylyn/update
+if [ ! -e site.xml ]; then
+ echo "missing site.xml"
+ exit 1
+fi
 
-echo "Updating site mirrors"
-#sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/e3.3\/site.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/e3.3/site.xml
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/e3.4\/site.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/e3.4/site.xml
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/e3.4\/categories.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/e3.4/categories.xml
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/incubator\/site.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/incubator/site.xml
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/incubator\/categories.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/incubator/categories.xml
+LOCATION=$(readlink -f .)
+PREFIX=/home/data/httpd/download.eclipse.org
+RELATIVE=${LOCATION:${#PREFIX}}
 
-echo
-echo "Done"
+if [ "$LOCATION" != ${LOCATION:0:${#PREFIX}} ]; then
+ echo "$LOCATION must be subdirectory of $PREFIX"
+ exit 1
+fi
+
+if [ -z "$RELATIVE" ]; then
+ echo "failed to compute path for $LOCATION"
+ exit 1
+fi
+
+# escape slashes
+RELATIVE=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
+
+echo "Updated mirrorsURL in site.xml to $RELATIVE"
+sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=$PATH\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
+
+echo "Updated mirrorsURL in category.xml to $RELATIVE"
+sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=$PATH\/\&amp;protocol=http\&amp;format=xml">/' category.xml

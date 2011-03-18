@@ -10,18 +10,28 @@
 #*******************************************************************************
 #!/bin/bash -e
 
-if [ $# -lt 1 ]
-then
- ROOT=$HOME/downloads/tools/mylyn/update 
+if [ $# -lt 1 ]; then
+ ROOT=.
 else
  ROOT=$1
 fi
+if [ $# -lt 2 ]; then
+ NAME="Mylyn for Eclipse 3.5, 3.6 and 3.7"
+else
+ NAME="$2"
+fi
 
-JAVA_HOME=/opt/ibm/java2-ppc-50
-ECLIPSE_HOME=/shared/tools/mylyn/eclipse
+if [ -z "$JAVA_HOME" ]; then
+ echo "JAVA_HOME is not set"
+ exit 1
+fi
+if [ -z "$ECLIPSE_HOME" ]; then
+ echo "ECLIPSE_HOME is not set"
+ exit 1
+fi
 
 pack() {
-DIR=$ROOT/$1
+DIR=$1
 echo Processing $DIR
 rm -f $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 
@@ -30,7 +40,7 @@ $JAVA_HOME/bin/java \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
  -application org.eclipse.update.core.siteOptimizer \
  -verbose -processAll \
- -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml
+ -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml || true
  
 $JAVA_HOME/bin/java \
  -Xmx512m \
@@ -49,9 +59,4 @@ $JAVA_HOME/bin/java \
 chmod 664 $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 }
 
-#pack e3.3 "Mylyn for Eclipse 3.3"
-pack e3.4 "Mylyn for Eclipse 3.4, 3.5 and 3.6"
-#pack extras "Mylyn Extras"
-pack incubator "Mylyn Incubator"
-
-echo Done
+pack "$ROOT" "$NAME"
