@@ -37,8 +37,13 @@ fi
 
 # escape slashes
 MIRROR_PATH=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
+MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$RELATIVE/&amp;protocol=http&amp;format=xml"
+STATS_URI="http://mylyn.eclipse.org/stats/$1"
 
-echo "Updating mirrorsURL in site.xml to $RELATIVE"
+echo "p2.mirrorsURL: $MIRRORS_URL"
+echo "p2.statsURI  : $STATS_URI"
+
+echo "Updating site.xml"
 sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
 
 if [ -e category.xml ]; then
@@ -46,15 +51,12 @@ echo "Updating mirrorsURL in category.xml to $RELATIVE"
 sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/\&amp;protocol=http\&amp;format=xml">/' category.xml
 fi
 
-MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$MIRROR_PATH/&amp;protocol=http&amp;format=xml"
-STATS_URI="http://mylyn.eclipse.org/stats/$1"
-
-echo "Updating p2.mirrorsURL in content.jar to $MIRRORS_URL and p2.statsURI to $STATS_URI"
+echo "Updating content.jar"
 unzip -p content.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringparam statsURI "$STATS_URI" $BASE/p2.xsl - > content.xml
 zip content.jar content.xml
 rm content.xml
 
-echo "Updating p2.mirrorsURL in artifacts.jar to $MIRRORS_URL and p2.statsURI to $STATS_URI"
+echo "Updating p2.mirrorsURL"
 unzip -p artifacts.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringparam statsURI "$STATS_URI" $BASE/p2.xsl - > artifacts.xml
 zip artifacts.jar artifacts.xml
 rm artifacts.xml
