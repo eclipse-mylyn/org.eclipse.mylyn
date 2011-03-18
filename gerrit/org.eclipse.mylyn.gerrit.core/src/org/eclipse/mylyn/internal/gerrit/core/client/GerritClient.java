@@ -224,6 +224,20 @@ public class GerritClient {
 		this.config = config;
 	}
 
+	public PatchLineComment saveDraft(Patch.Key patchKey, String message, int line, short side, String parentUuid,
+			IProgressMonitor monitor) throws GerritException {
+		PatchLineComment.Key id = new PatchLineComment.Key(patchKey, null);
+		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), parentUuid);
+		comment.setMessage(message);
+		comment.setSide(side);
+		return execute(monitor, new Operation<PatchLineComment>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getPatchDetailService().saveDraft(comment, this);
+			}
+		});
+	}
+
 	public ChangeDetail abondon(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);

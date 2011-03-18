@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.google.gerrit.common.data.ApprovalType;
@@ -54,9 +55,14 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private final List<Button> approvalButtons;
 
-	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail patchSet) {
+	private Label statusLabel;
+
+	private final int addedDrafts;
+
+	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail patchSet, int addedDrafts) {
 		super(parentShell, task);
 		this.publishDetail = patchSet;
+		this.addedDrafts = addedDrafts;
 		this.approvalButtons = new ArrayList<Button>();
 		setNeedsConfig(true);
 	}
@@ -99,6 +105,9 @@ public class PublishDialog extends GerritOperationDialog {
 		messageEditor = createRichTextEditor(composite, "");
 		GridDataFactory.fillDefaults().grab(true, true).minSize(400, 150).applyTo(messageEditor.getControl());
 		messageEditor.getControl().setFocus();
+
+		statusLabel = new Label(composite, SWT.NONE);
+		statusLabel.setText(NLS.bind("Publishes {0} draft(s).", publishDetail.getDrafts().size() + addedDrafts));
 
 		return composite;
 	}

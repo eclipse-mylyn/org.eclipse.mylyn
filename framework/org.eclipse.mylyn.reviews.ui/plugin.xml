@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-	<!--
-	<extension id="com.atlassian.connector.eclipse.crucible.ui.popup" name="Crucible Review Actions" point="org.eclipse.ui.popupMenus">
-		<objectContribution id="com.atlassian.connector.eclipse.crucible.ui.objectContribution1" objectClass="org.eclipse.ui.IEditorInput">
-			<action class="com.atlassian.connector.eclipse.internal.crucible.ui.actions.AddLineCommentToFileAction" 
-				enablesFor="1" icon="icons/obj16/pin_addcomment.png" id="com.atlassian.connector.eclipse.crucible.ui.action.add.line.comment" 
+			<!--
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution id="org.eclipse.mylyn.reviews.ui.popupMenu.AddCommentMenu" objectClass="org.eclipse.ui.IEditorInput">
+			<action class="org.eclipse.mylyn.internal.reviews.ui.actions.AddLineCommentToFileAction" 
+				enablesFor="1" id="org.eclipse.mylyn.reviews.ui.action.AddLineComment" 
 				label="Comment on Selected Lines..." menubarPath="group.undo" tooltip="Add Line Comment to Active Review">
 			</action>
 			<action class="com.atlassian.connector.eclipse.internal.crucible.ui.actions.AddGeneralCommentToFileAction" 
@@ -13,12 +13,11 @@
 				label="Add General File Comment..." menubarPath="group.undo" tooltip="Add Comment to Active Review">
 			</action>
 			<visibility>
-				<systemProperty name="com.atlassian.connector.eclipse.crucible.ui.review.active" value="true"/>
+				<systemProperty name="org.eclipse.mylyn.reviews.ui.review.Active" value="true"/>
 			</visibility>
-		</objectContribution>
-		
+		</objectContribution>		
 	</extension>
-	-->
+			-->
 	
 	<extension point="org.eclipse.ui.editors.annotationTypes">
 		<type name="org.eclipse.mylyn.reviews.ui.comment.Annotation"/>

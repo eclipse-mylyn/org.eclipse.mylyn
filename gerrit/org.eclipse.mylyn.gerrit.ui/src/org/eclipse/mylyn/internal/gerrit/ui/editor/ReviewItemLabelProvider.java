@@ -11,12 +11,15 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
@@ -60,17 +63,40 @@ public class ReviewItemLabelProvider extends LabelProvider implements IStyledLab
 			if (element instanceof IFileItem) {
 				IFileItem fileItem = (IFileItem) element;
 				if (fileItem.getBase() != null && fileItem.getTarget() != null) {
-					int i = fileItem.getTopics().size();
-					i += fileItem.getBase().getTopics().size();
-					i += fileItem.getTarget().getTopics().size();
-					if (i > 0) {
-						styledString.append(NLS.bind("  [{0} comments]", i), StyledString.DECORATIONS_STYLER);
+					Stats stats = new Stats();
+					count(stats, fileItem.getTopics());
+					count(stats, fileItem.getBase().getTopics());
+					count(stats, fileItem.getTarget().getTopics());
+					if (stats.comments > 0 && stats.drafts > 0) {
+						styledString.append(NLS.bind("  [{0} comments, {1} drafts]", stats.comments, stats.drafts),
+								StyledString.DECORATIONS_STYLER);
+					} else if (stats.comments > 0) {
+						styledString.append(NLS.bind("  [{0} comments]", stats.comments),
+								StyledString.DECORATIONS_STYLER);
+					} else if (stats.drafts > 0) {
+						styledString.append(NLS.bind("  [{0} drafts]", stats.drafts), StyledString.DECORATIONS_STYLER);
 					}
 				}
 			}
 			return styledString;
 		}
 		return new StyledString();
+	}
+
+	private class Stats {
+		int drafts;
+
+		int comments;
+	}
+
+	private void count(Stats stats, List<ITopic> topics) {
+		for (ITopic topic : topics) {
+			if (topic.isDraft()) {
+				stats.drafts++;
+			} else {
+				stats.comments++;
+			}
+		}
 	}
 
 }

@@ -33,7 +33,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getItems <em>Items</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
@@ -42,26 +41,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  * @generated
  */
 public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
-	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String ID_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
-	protected String id = ID_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -109,27 +88,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	@Override
 	protected EClass eStaticClass() {
 		return ReviewsPackage.Literals.REVIEW_ITEM_SET;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setId(String newId) {
-		String oldId = id;
-		id = newId;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__ID, oldId, id));
 	}
 
 	/**
@@ -189,8 +147,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM_SET__ID:
-			return getId();
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return getItems();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
@@ -208,9 +164,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM_SET__ID:
-			setId((String) newValue);
-			return;
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			getItems().clear();
 			getItems().addAll((Collection<? extends IReviewItem>) newValue);
@@ -230,9 +183,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM_SET__ID:
-			setId(ID_EDEFAULT);
-			return;
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			getItems().clear();
 			return;
@@ -251,8 +201,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM_SET__ID:
-			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return items != null && !items.isEmpty();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
@@ -272,9 +220,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (id: "); //$NON-NLS-1$
-		result.append(id);
-		result.append(", revision: "); //$NON-NLS-1$
+		result.append(" (revision: "); //$NON-NLS-1$
 		result.append(revision);
 		result.append(')');
 		return result.toString();

@@ -11,54 +11,18 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ITextInputListener;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.text.source.AnnotationBarHoverManager;
-import org.eclipse.jface.text.source.CompositeRuler;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.jface.text.source.ISharedTextColors;
-import org.eclipse.jface.text.source.LineRange;
-import org.eclipse.jface.text.source.OverviewRuler;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
-import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.ILineLocation;
-import org.eclipse.mylyn.reviews.core.model.ILocation;
-import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.swt.custom.LineBackgroundEvent;
-import org.eclipse.swt.custom.LineBackgroundListener;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.internal.editors.text.EditorsPlugin;
-import org.eclipse.ui.internal.texteditor.AnnotationColumn;
-import org.eclipse.ui.internal.texteditor.PropertyEventDispatcher;
-import org.eclipse.ui.texteditor.AnnotationPreference;
-import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
-import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 
 /**
  * Model for annotations in the diff view.
@@ -68,7 +32,7 @@ import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 @SuppressWarnings("restriction")
 public class ReviewCompareAnnotationModel {
 
-	private static SourceViewer getSourceViewer(MergeSourceViewer sourceViewer) {
+	static SourceViewer getSourceViewer(MergeSourceViewer sourceViewer) {
 		if (SourceViewer.class.isInstance(sourceViewer)) {
 			return SourceViewer.class.cast(sourceViewer);
 		} else {
@@ -87,365 +51,13 @@ public class ReviewCompareAnnotationModel {
 		return null;
 	}
 
-	private final class CrucibleViewerTextInputListener implements ITextInputListener, IReviewCompareSourceViewer {
-		private final class ColoringLineBackgroundListener implements LineBackgroundListener {
-			private final StyledText styledText;
-
-			private Color colorCommented;
-
-			private PropertyEventDispatcher fDispatcher;
-
-			private ColoringLineBackgroundListener(StyledText styledText) {
-				this.styledText = styledText;
-				initialize();
-			}
-
-			private void updateCommentedColor(AnnotationPreference pref, IPreferenceStore store) {
-				if (pref != null) {
-					RGB rgb = CommentAnnotationRulerColumn.getColorFromAnnotationPreference(store, pref);
-					colorCommented = getSharedColors().getColor(rgb);
-				}
-			}
-
-			private void initialize() {
-				final IPreferenceStore store = EditorsUI.getPreferenceStore();
-				if (store == null) {
-					return;
-				}
-
-				AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-				final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
-
-				updateCommentedColor(commentedPref, store);
-
-				fDispatcher = new PropertyEventDispatcher(store);
-
-				if (commentedPref != null) {
-					fDispatcher.addPropertyChangeListener(commentedPref.getColorPreferenceKey(),
-							new IPropertyChangeListener() {
-								public void propertyChange(PropertyChangeEvent event) {
-									updateCommentedColor(commentedPref, store);
-								}
-							});
-				}
-			}
-
-			public void lineGetBackground(LineBackgroundEvent event) {
-				int documentOffset = 0;
-				documentOffset = getDocumentOffset(event);
-				int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1 + documentOffset;
-				Iterator<CommentAnnotation> it = crucibleAnnotationModel.getAnnotationIterator();
-				while (it.hasNext()) {
-					CommentAnnotation annotation = it.next();
-					int startLine;
-					int endLine;
-					ITopic comment = annotation.getTopic();
-					startLine = ((ILineLocation) comment.getLocation()).getTotalMin();
-					endLine = ((ILineLocation) comment.getLocation()).getTotalMax();
-					if (lineNr >= startLine && lineNr <= endLine) {
-						AnnotationPreference pref = new AnnotationPreferenceLookup().getAnnotationPreference(annotation);
-						if (pref.getHighlightPreferenceValue()) {
-							event.lineBackground = colorCommented;
-						}
-					}
-				}
-			}
-
-			/**
-			 * Galileo hack to deal with slaveDocuments (when clicking on java structure elements). The styledText will
-			 * not contain the whole text anymore, so our line numbering is off
-			 * 
-			 * @param event
-			 * @return
-			 */
-			private int getDocumentOffset(LineBackgroundEvent event) {
-				/*
-				 * there is no access to DefaultDocumentAdapter and thus the (master or slave) document.. so we have to assume
-				 * that on first call this event actually has the full text. this text, and the text of the current styled text
-				 * will be used to calculate the offset
-				 */
-				if (event.widget instanceof StyledText) {
-					String currentText = ((StyledText) event.widget).getText();
-					if (initialText == null) {
-						initialText = currentText;
-						// since it is initial call, offset should be 0 anyway
-						return 0;
-					}
-					// if text is unchanged, offset it 0
-					if (currentText.equals(initialText)) {
-						return 0;
-					}
-					// current text is different, check if it is contained in initialText
-					if (initialText.contains(currentText)) {
-						// calculate the offset
-						int charoffset = initialText.indexOf(currentText);
-						int lineOffset = 0;
-						String delimiter = ((StyledText) event.widget).getLineDelimiter();
-						for (String line : initialText.split(delimiter)) {
-							if (charoffset > 0) {
-								charoffset -= (line.length() + delimiter.length());
-								lineOffset++;
-							} else {
-								break;
-							}
-						}
-						return lineOffset;
-					} else {
-						// log error since we assume the initial text contains all slaveTexts.
-						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Could not find text offset for annotation highlighting"
-										+ " - current text not contained in initial text."));
-					}
-				}
-				return 0;
-			}
-		}
-
-		private final SourceViewer sourceViewer;
-
-		private final ReviewAnnotationModel crucibleAnnotationModel;
-
-		private final boolean oldFile;
-
-		private final MergeSourceViewer mergeSourceViewer;
-
-//		private AddLineCommentToFileAction addLineCommentAction;
-//
-//		private AddGeneralCommentToFileAction addGeneralCommentAction;
-
-		private String initialText;
-
-		private CrucibleViewerTextInputListener(MergeSourceViewer sourceViewer,
-				ReviewAnnotationModel crucibleAnnotationModel, boolean oldFile) {
-			this.sourceViewer = getSourceViewer(sourceViewer);
-			this.mergeSourceViewer = sourceViewer;
-			this.crucibleAnnotationModel = crucibleAnnotationModel;
-			this.oldFile = oldFile;
-		}
-
-		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-			// ignore
-		}
-
-		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-			if (oldInput != null) {
-				crucibleAnnotationModel.disconnect(oldInput);
-			}
-			if (newInput != null && sourceViewer != null) {
-				IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
-				if (annotationModel instanceof IAnnotationModelExtension) {
-					IAnnotationModelExtension annotationModelExtension = (IAnnotationModelExtension) annotationModel;
-					annotationModelExtension.addAnnotationModel("test", crucibleAnnotationModel);
-					crucibleAnnotationModel.setEditorDocument(sourceViewer.getDocument());
-				} else {
-					try {
-						Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
-						Field declaredField2 = sourceViewerClazz.getDeclaredField("fVisualAnnotationModel");
-						declaredField2.setAccessible(true);
-						Method declaredMethod = sourceViewerClazz.getDeclaredMethod("createVisualAnnotationModel",
-								IAnnotationModel.class);
-						declaredMethod.setAccessible(true);
-						annotationModel = (IAnnotationModel) declaredMethod.invoke(sourceViewer,
-								crucibleAnnotationModel);
-						declaredField2.set(sourceViewer, annotationModel);
-						annotationModel.connect(newInput);
-						sourceViewer.showAnnotations(true);
-
-						crucibleAnnotationModel.setEditorDocument(sourceViewer.getDocument());
-						createVerticalRuler(newInput, sourceViewerClazz);
-						// createOverviewRuler(newInput, sourceViewerClazz);
-						createHighlighting(sourceViewerClazz);
-					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Error attaching Crucible annotation model", t));
-					}
-				}
-			}
-		}
-
-		private void createHighlighting(Class<SourceViewer> sourceViewerClazz) throws IllegalArgumentException,
-				IllegalAccessException, SecurityException, NoSuchFieldException {
-			// TODO this could use some performance tweaks
-			final StyledText styledText = sourceViewer.getTextWidget();
-			styledText.addLineBackgroundListener(new ColoringLineBackgroundListener(styledText));
-		}
-
-		/*
-		 * overview ruler problem: displayed in both viewers. the diff editor ruler is actually custom drawn (see
-		 * TextMergeViewer.fBirdsEyeCanvas) the ruler that gets created in this method is longer than the editor, meaning its
-		 * not an overview (not next to the scrollbar)
-		 */
-		@SuppressWarnings("unused")
-		private void createOverviewRuler(IDocument newInput, Class<SourceViewer> sourceViewerClazz)
-				throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException,
-				IllegalAccessException, InvocationTargetException {
-
-			sourceViewer.setOverviewRulerAnnotationHover(new CommentAnnotationHover(null));
-
-			OverviewRuler ruler = new OverviewRuler(new DefaultMarkerAnnotationAccess(), 15, EditorsPlugin.getDefault()
-					.getSharedTextColors());
-			Field compositeField = sourceViewerClazz.getDeclaredField("fComposite");
-			compositeField.setAccessible(true);
-
-			ruler.createControl((Composite) compositeField.get(sourceViewer), sourceViewer);
-			ruler.setModel(leftAnnotationModel);
-			ruler.update();
-
-			Field overViewRulerField = sourceViewerClazz.getDeclaredField("fOverviewRuler");
-			overViewRulerField.setAccessible(true);
-
-			if (overViewRulerField.get(sourceViewer) == null) {
-				overViewRulerField.set(sourceViewer, ruler);
-			}
-
-			Method declareMethod = sourceViewerClazz.getDeclaredMethod("ensureOverviewHoverManagerInstalled");
-			declareMethod.setAccessible(true);
-			declareMethod.invoke(sourceViewer);
-			// overviewRuler is null
-
-			Field hoverManager = sourceViewerClazz.getDeclaredField("fOverviewRulerHoveringController");
-			hoverManager.setAccessible(true);
-			AnnotationBarHoverManager manager = (AnnotationBarHoverManager) hoverManager.get(sourceViewer);
-			if (manager != null) {
-				Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
-				annotationHover.setAccessible(true);
-				IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
-				annotationHover.set(manager, new CommentAnnotationHover(null));
-			}
-			sourceViewer.showAnnotations(true);
-			sourceViewer.showAnnotationsOverview(true);
-
-			declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", new Class[] { Boolean.TYPE });
-			declareMethod.setAccessible(true);
-		}
-
-		private void createVerticalRuler(IDocument newInput, Class<SourceViewer> sourceViewerClazz)
-				throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException,
-				InvocationTargetException, NoSuchFieldException {
-
-			forceCustomAnnotationHover();
-
-			Method declaredMethod2 = sourceViewerClazz.getDeclaredMethod("getVerticalRuler");
-			declaredMethod2.setAccessible(true);
-			CompositeRuler ruler = (CompositeRuler) declaredMethod2.invoke(sourceViewer);
-			boolean hasDecorator = false;
-
-			Iterator<?> iter = (ruler).getDecoratorIterator();
-			while (iter.hasNext()) {
-				Object obj = iter.next();
-				if (obj instanceof AnnotationColumn) {
-					hasDecorator = true;
-				}
-			}
-
-			if (!hasDecorator) {
-				AnnotationColumn annotationColumn = new AnnotationColumn();
-				annotationColumn.createControl(ruler, ruler.getControl().getParent());
-				ruler.addDecorator(0, annotationColumn);
-			}
-		}
-
-		public void forceCustomAnnotationHover() throws NoSuchFieldException, IllegalAccessException {
-			Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
-			sourceViewer.setAnnotationHover(new CommentAnnotationHover(null));
-
-			// FIXME: hack for e3.5
-			try {
-				Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator");
-				hoverControlCreator.setAccessible(true);
-				hoverControlCreator.set(sourceViewer, new CommentInformationControlCreator());
-			} catch (Throwable t) {
-				// ignore as it may not exist in other versions
-			}
-
-			// FIXME: hack for e3.5
-			try {
-				Method ensureMethod = sourceViewerClazz.getDeclaredMethod("ensureAnnotationHoverManagerInstalled");
-				ensureMethod.setAccessible(true);
-				ensureMethod.invoke(sourceViewer);
-			} catch (Throwable t) {
-				// ignore as it may not exist in other versions
-			}
-
-			Field hoverManager = SourceViewer.class.getDeclaredField("fVerticalRulerHoveringController");
-			hoverManager.setAccessible(true);
-			AnnotationBarHoverManager manager = (AnnotationBarHoverManager) hoverManager.get(sourceViewer);
-			if (manager != null) {
-				Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
-				annotationHover.setAccessible(true);
-				IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
-				annotationHover.set(manager, new CommentAnnotationHover(hover));
-			}
-			sourceViewer.showAnnotations(true);
-			sourceViewer.showAnnotationsOverview(true);
-		}
-
-		public void focusOnLines(ILocation range) {
-			if (range instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) range;
-				// editors count lines from 0, Crucible counts from 1
-				final int startLine = lineLocation.getTotalMin() - 1;
-				final int endLine = lineLocation.getTotalMax() - 1;
-				if (sourceViewer != null) {
-					IDocument document = sourceViewer.getDocument();
-					if (document != null) {
-						try {
-							int offset = document.getLineOffset(startLine);
-							int length = document.getLineOffset(endLine) - offset;
-							StyledText widget = sourceViewer.getTextWidget();
-							try {
-								widget.setRedraw(false);
-								//sourceViewer.revealRange(offset, length);
-								//sourceViewer.setSelectedRange(offset, 0);
-								sourceViewer.setSelection(new TextSelection(offset, length), true);
-							} finally {
-								widget.setRedraw(true);
-							}
-						} catch (BadLocationException e) {
-							StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, e.getMessage(), e));
-						}
-					}
-				}
-			}
-		}
-
-		public void registerContextMenu() {
-			// FIXME
-//			if (CrucibleUtil.canAddCommentToReview(review) && addLineCommentAction == null
-//					&& addGeneralCommentAction == null) {
-//				addLineCommentAction = new AddLineCommentToFileAction(this, crucibleAnnotationModel.getCrucibleFile());
-//				addLineCommentAction.setImageDescriptor(CrucibleImages.ADD_COMMENT);
-//				addGeneralCommentAction = new AddGeneralCommentToFileAction(crucibleAnnotationModel.getCrucibleFile());
-//
-//				if (sourceViewer != null) {
-//					sourceViewer.addSelectionChangedListener(addLineCommentAction);
-//					sourceViewer.addSelectionChangedListener(addGeneralCommentAction);
-//				}
-//				mergeSourceViewer.addTextAction(addLineCommentAction);
-//				mergeSourceViewer.addTextAction(addGeneralCommentAction);
-//			}
-		}
-
-		public LineRange getSelection() {
-			if (sourceViewer != null) {
-				TextSelection selection = (TextSelection) sourceViewer.getSelection();
-				return new LineRange(selection.getStartLine() + 1, selection.getEndLine() - selection.getStartLine());
-			}
-			return null;
-		}
-
-		public boolean isListenerFor(MergeSourceViewer viewer, ReviewAnnotationModel annotationModel) {
-			return this.mergeSourceViewer == viewer && this.crucibleAnnotationModel == annotationModel;
-		}
-	}
-
-	private final ReviewAnnotationModel leftAnnotationModel;
+	final ReviewAnnotationModel leftAnnotationModel;
 
 	private final ReviewAnnotationModel rightAnnotationModel;
 
-	private CrucibleViewerTextInputListener leftViewerListener;
+	private ReviewCompareInputListener leftViewerListener;
 
-	private CrucibleViewerTextInputListener rightViewerListener;
+	private ReviewCompareInputListener rightViewerListener;
 
 	private final ITopic commentToFocus;
 
@@ -456,7 +68,6 @@ public class ReviewCompareAnnotationModel {
 	private MergeSourceViewer fLeftSourceViewer;
 
 	public ReviewCompareAnnotationModel(IFileItem crucibleFile, ITopic commentToFocus) {
-		super();
 		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase());
 		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getTarget());
 		this.commentToFocus = commentToFocus;
@@ -488,7 +99,7 @@ public class ReviewCompareAnnotationModel {
 						leftViewerListener.forceCustomAnnotationHover();
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Error attaching Crucible annotation hover", e));
+								"Error attaching annotation hover", e));
 					}
 				}
 			});
@@ -503,14 +114,14 @@ public class ReviewCompareAnnotationModel {
 						rightViewerListener.forceCustomAnnotationHover();
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Error attaching Crucible annotation hover", e));
+								"Error attaching annotation hover", e));
 					}
 				}
 			});
 		}
 	}
 
-	private boolean isListenerFor(CrucibleViewerTextInputListener listener, MergeSourceViewer viewer,
+	private boolean isListenerFor(ReviewCompareInputListener listener, MergeSourceViewer viewer,
 			ReviewAnnotationModel annotationModel) {
 		if (listener == null) {
 			return false;
@@ -518,29 +129,15 @@ public class ReviewCompareAnnotationModel {
 		return listener.isListenerFor(viewer, annotationModel);
 	}
 
-	private CrucibleViewerTextInputListener addTextInputListener(final MergeSourceViewer sourceViewer,
+	private ReviewCompareInputListener addTextInputListener(final MergeSourceViewer sourceViewer,
 			final ReviewAnnotationModel crucibleAnnotationModel, boolean oldFile) {
-		CrucibleViewerTextInputListener listener = new CrucibleViewerTextInputListener(sourceViewer,
-				crucibleAnnotationModel, oldFile);
+		ReviewCompareInputListener listener = new ReviewCompareInputListener(sourceViewer, crucibleAnnotationModel,
+				oldFile);
 		SourceViewer viewer = getSourceViewer(sourceViewer);
 		if (viewer != null) {
 			viewer.addTextInputListener(listener);
 		}
 		return listener;
-	}
-
-	public void updateCrucibleFile(IReview newReview) {
-		// FIXME
-//		CrucibleFile leftOldFile = leftAnnotationModel.getCrucibleFile();
-//		CrucibleFile rightOldFile = rightAnnotationModel.getCrucibleFile();
-//		CrucibleFileInfo newLeftFileInfo = newReview.getFileByPermId(leftOldFile.getCrucibleFileInfo().getPermId());
-//		CrucibleFileInfo newRightFileInfo = newReview.getFileByPermId(rightOldFile.getCrucibleFileInfo().getPermId());
-//		if (newLeftFileInfo != null && newRightFileInfo != null) {
-//			leftAnnotationModel.updateCrucibleFile(new CrucibleFile(newLeftFileInfo, leftOldFile.isOldFile()),
-//					newReview);
-//			rightAnnotationModel.updateCrucibleFile(new CrucibleFile(newRightFileInfo, rightOldFile.isOldFile()),
-//					newReview);
-//		}
 	}
 
 	public void focusOnComment() {
@@ -625,10 +222,6 @@ public class ReviewCompareAnnotationModel {
 			return false;
 		}
 		return true;
-	}
-
-	private ISharedTextColors getSharedColors() {
-		return EditorsUI.getSharedTextColors();
 	}
 
 }

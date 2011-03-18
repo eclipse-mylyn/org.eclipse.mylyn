@@ -18,10 +18,13 @@ import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.PublishRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RestoreRequest;
+import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SubmitRequest;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
  * @author Steffen Pingel
@@ -32,6 +35,10 @@ public class GerritOperationFactory {
 
 	public GerritOperationFactory(IRepositoryManager repositoryManager) {
 		this.repositoryManager = repositoryManager;
+	}
+
+	public GerritOperation<PatchLineComment> createSaveDraftOperation(ITask review, SaveDraftRequest request) {
+		return new GerritOperation<PatchLineComment>("Saving Draft", getClient(review), request);
 	}
 
 	public GerritOperation createAbandonOperation(ITask review, AbandonRequest request) {

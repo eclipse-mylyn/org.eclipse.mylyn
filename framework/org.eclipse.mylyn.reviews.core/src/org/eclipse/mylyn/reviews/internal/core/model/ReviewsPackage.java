@@ -332,13 +332,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM__TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM__ID = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Review Item</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+	public static final int REVIEW_ITEM_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Location <em>Location</em>}' class.
@@ -745,6 +754,15 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__TOPICS = REVIEW_ITEM__TOPICS;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_ITEM__ID = REVIEW_ITEM__ID;
+
+	/**
 	 * The feature id for the '<em><b>Base</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -833,7 +851,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET__ID = REVIEW_ITEM_FEATURE_COUNT + 0;
+	public static final int REVIEW_ITEM_SET__ID = REVIEW_ITEM__ID;
 
 	/**
 	 * The feature id for the '<em><b>Items</b></em>' containment reference list.
@@ -842,7 +860,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 1;
+	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Revision</b></em>' attribute.
@@ -851,7 +869,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET__REVISION = REVIEW_ITEM_FEATURE_COUNT + 2;
+	public static final int REVIEW_ITEM_SET__REVISION = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Review Item Set</em>' class.
@@ -860,7 +878,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation <em>Line Location</em>}' class.
@@ -981,6 +999,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int FILE_REVISION__TOPICS = REVIEW_ITEM__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__ID = REVIEW_ITEM__ID;
 
 	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute.
@@ -1437,6 +1464,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getId()
+	 * @see #getReviewItem()
+	 * @generated
+	 */
+	public EAttribute getReviewItem_Id() {
+		return (EAttribute) reviewItemEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ILocation <em>Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1765,19 +1805,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getId <em>Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getId()
-	 * @see #getReviewItemSet()
-	 * @generated
-	 */
-	public EAttribute getReviewItemSet_Id() {
-		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1787,7 +1814,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getReviewItemSet_Items() {
-		return (EReference) reviewItemSetEClass.getEStructuralFeatures().get(1);
+		return (EReference) reviewItemSetEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1800,7 +1827,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getReviewItemSet_Revision() {
-		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(2);
+		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1969,6 +1996,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(reviewItemEClass, REVIEW_ITEM__REVIEW);
 		createEAttribute(reviewItemEClass, REVIEW_ITEM__NAME);
 		createEReference(reviewItemEClass, REVIEW_ITEM__TOPICS);
+		createEAttribute(reviewItemEClass, REVIEW_ITEM__ID);
 
 		locationEClass = createEClass(LOCATION);
 
@@ -2005,7 +2033,6 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(fileItemEClass, FILE_ITEM__TARGET);
 
 		reviewItemSetEClass = createEClass(REVIEW_ITEM_SET);
-		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__ID);
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__ITEMS);
 		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__REVISION);
 
@@ -2144,6 +2171,10 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getTopic(),
 				this.getTopic_Item(),
 				"topics", null, 0, -1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getReviewItem_Id(),
+				ecorePackage.getEString(),
+				"id", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(locationEClass, ILocation.class, "Location", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
@@ -2244,10 +2275,6 @@ public class ReviewsPackage extends EPackageImpl {
 
 		initEClass(reviewItemSetEClass, IReviewItemSet.class,
 				"ReviewItemSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getReviewItemSet_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getReviewItemSet_Items(),
 				this.getReviewItem(),
@@ -2486,6 +2513,14 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference REVIEW_ITEM__TOPICS = eINSTANCE.getReviewItem_Topics();
 
 		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute REVIEW_ITEM__ID = eINSTANCE.getReviewItem_Id();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Location <em>Location</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2712,14 +2747,6 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass REVIEW_ITEM_SET = eINSTANCE.getReviewItemSet();
-
-		/**
-		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		public static final EAttribute REVIEW_ITEM_SET__ID = eINSTANCE.getReviewItemSet_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Items</b></em>' containment reference list feature.
