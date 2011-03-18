@@ -63,6 +63,7 @@ TIMESTAMP=$(date +%s)000
 if [ "$1" == "-r" ]; then
  for i in $(find -name composite.index); do
   (cd $(dirname $i); update)
+  setfacl -m u:55011:rwx $(dirname $i)/*.xml || true
  done
 elif [ -e composite.index ]; then
  update

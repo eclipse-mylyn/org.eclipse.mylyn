@@ -37,8 +37,8 @@ fi
 
 # escape slashes
 MIRROR_PATH=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
-MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$RELATIVE/&amp;protocol=http&amp;format=xml"
-STATS_URI="http://mylyn.eclipse.org/stats/$1"
+MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$RELATIVE/&protocol=http&format=xml"
+STATS_URI="http://download.eclipse.org/mylyn/stats/$1"
 
 echo "p2.mirrorsURL: $MIRRORS_URL"
 echo "p2.statsURI  : $STATS_URI"
