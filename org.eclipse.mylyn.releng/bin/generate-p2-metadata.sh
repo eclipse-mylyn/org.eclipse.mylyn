@@ -55,16 +55,24 @@ rm -f $DIR/artifacts.jar $DIR/content.jar $DIR/digest.zip
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
- -application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator \
- -updateSite $DIR \
- -site file:$SITEXML \
+ -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+ -source $DIR \
  -metadataRepository file:$DIR \
  -metadataRepositoryName "$2 "\
  -artifactRepository file:$DIR \
  -artifactRepositoryName "$2" \
  -compress \
  -reusePack200Files \
- -noDefaultIUs
+ -publishArtifacts
+
+$JAVA_HOME/bin/java \
+ -Xmx512m \
+ -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
+ -application org.eclipse.equinox.p2.publisher.CategoryPublisher \
+ -metadataRepository file:$DIR \
+ -categoryDefinition file:$SITEXML \
+ -compress \
+ -categoryQualifier
 
 chmod 664 $DIR/artifacts.jar $DIR/content.jar #$DIR/digest.zip
 }

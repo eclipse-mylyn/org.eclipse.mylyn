@@ -3,6 +3,7 @@
   <dirname property="scriptdir" file="${ant.file.pack-and-sign}"/>
   <property name="pack200" value="${java.home}/bin"/>
   <property name="filter" value=""/>
+  <property name="mirrorsUrl" value=""/>
 
   <target name="pack-and-sign">
 	<fail unless="localRepository">Required property localRepository not set</fail>
@@ -57,6 +58,8 @@
 	  <param name="args" value="-pack"/>
 	  <param name="site" value="${projectDir}/site"/>
 	</antcall>
+
+	<antcall target="add-mirrors-url"/>
 
 	<antcall target="publish"/>
 
@@ -127,6 +130,13 @@
 	-->
   </target>
 
+  <target name="add-mirrors-url" unless="promote.skip">	
+	<replace file="${projectDir}/../site.xml">
+	  <replacetoken><![CDATA[<site pack200="true">]]></replacetoken>
+	  <replacevalue><![CDATA[<site pack200="true" mirrorsURL="${mirrorsUrl}">]]></replacevalue>
+	</replace>	
+  </target>
+
   <target name="publish">	
 	<delete file="${projectDir}/site/content.jar" />
 	<delete file="${projectDir}/site/artifacts.jar" />
@@ -162,4 +172,3 @@
   </target>
 
 </project>
-

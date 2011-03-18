@@ -24,6 +24,7 @@
   <properties>
     <qualifier>${project.unqualifiedVersion}</qualifier>
     <sign-dir>tools/mylyn/hudson/signing/mylyn</sign-dir>
+    <mirrors-url>http://www.eclipse.org/downloads/download.php?file=/mylyn/archive/${unqualifiedVersion}/${buildQualifier}/site.xml&amp;amp;protocol=http&amp;amp;format=xml</mirrors-url>
   </properties>
   <build>
     <plugins>
@@ -86,7 +87,9 @@
 				  <property name="signDir" value="${sign-dir}"/>
 				  <property name="archiveDir" value="${mylyn-archive}"/>
 				  <property name="siteDir" value="${mylyn-site}"/>
-				  
+
+				  <property name="mirrorsUrl" value="${mirrors-url}"/>				  
+
 				  <property name="dist" value="mylyn"/>
 				  <property name="filter" value="mylyn"/>
 				  <property name="repositoryName" value="${mylyn-main-repository}"/>
