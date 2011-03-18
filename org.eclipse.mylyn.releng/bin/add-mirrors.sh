@@ -20,6 +20,7 @@ if [ ! -e site.xml ]; then
  exit 1
 fi
 
+BASE=$(dirname $0)
 LOCATION=$(readlink -f .)
 PREFIX=/home/data/httpd/download.eclipse.org
 RELATIVE=${LOCATION:${#PREFIX}}
@@ -46,14 +47,14 @@ sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\
 fi
 
 MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$MIRROR_PATH/&amp;protocol=http&amp;format=xml"
-STATS_URI="http://mylyn.eclipse.org/stats/$1
+STATS_URI="http://mylyn.eclipse.org/stats/$1"
 
 echo "Updating p2.mirrorsURL in content.jar to $MIRRORS_URL and p2.statsURI to $STATS_URI"
-unzip -p content.jar | xsltproc -stringparam mirrorsURL http://foo/bar -stringparam statsURI http://stats/ /home/spingel/mylyn/src/org.eclipse.mylyn/org.eclipse.mylyn.releng/scripts/p2.xsl - > content.xml
+unzip -p content.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringparam statsURI "$STATS_URI" $BASE/p2.xsl - > content.xml
 zip content.jar content.xml
 rm content.xml
 
 echo "Updating p2.mirrorsURL in artifacts.jar to $MIRRORS_URL and p2.statsURI to $STATS_URI"
-unzip -p artifacts.jar | xsltproc -stringparam mirrorsURL http://foo/bar -stringparam statsURI http://stats/ /home/spingel/mylyn/src/org.eclipse.mylyn/org.eclipse.mylyn.releng/scripts/p2.xsl - > artifacts.xml
+unzip -p artifacts.jar | xsltproc -stringparam mirrorsURL "$MIRRORS_URL" -stringparam statsURI "$STATS_URI" $BASE/p2.xsl - > artifacts.xml
 zip artifacts.jar artifacts.xml
 rm artifacts.xml
