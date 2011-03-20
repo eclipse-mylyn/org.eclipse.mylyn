@@ -17,6 +17,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -88,8 +89,14 @@ public class SectionComposite extends SharedScrolledComposite {
 					g.grabExcessVerticalSpace = false;
 					section.setLayoutData(g);
 				}
-				layout(true);
-				reflow(true);
+				Point newSize = getDisplay().getActiveShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				Point currentSize = getDisplay().getActiveShell().getSize();
+				if (newSize.x > currentSize.x || newSize.y > currentSize.y) {
+					getDisplay().getActiveShell().setSize(newSize);
+				} else {
+					layout(true);
+					reflow(true);
+				}
 			}
 		});
 		section.setText(title);
