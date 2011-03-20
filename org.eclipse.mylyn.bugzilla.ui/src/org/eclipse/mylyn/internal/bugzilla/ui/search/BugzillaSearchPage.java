@@ -618,6 +618,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+
 		scrolledBodyComposite.setLayout(layout);
 
 		basicCompositeCreate(scrolledBodyComposite);
