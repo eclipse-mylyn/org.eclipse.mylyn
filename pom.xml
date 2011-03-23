@@ -9,9 +9,7 @@
 
   <modules>
     <module>releng/reviews-target-definition</module>
-<!--
     <module>tbr</module>
--->
     <module>gerrit</module>
     <module>r4e</module>
     <module>framework</module>
