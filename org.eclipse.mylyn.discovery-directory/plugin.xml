@@ -90,7 +90,7 @@
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
             siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
-            statsUrl="http://download.eclipse.org/mylyn/stats/discovery/org.eclipse.mylyn.trac">
+            statsUrl="http://download.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.trac">
          <icon
                image32="images/trac32.png"
                image64="images/trac64.png">
@@ -111,7 +111,7 @@
             name="%connectorDescriptor.name.mantis"
             provider="%connectorDescriptor.provider.mantis"
             siteUrl="http://mylyn-mantis.sourceforge.net/eclipse/update/"
-            statsUrl="http://download.eclipse.org/mylyn/stats/discovery/com.itsolut.mantis">
+            statsUrl="http://download.eclipse.org/stats/mylyn/discovery/com.itsolut.mantis">
          <icon
                image32="images/mantis-32.png"></icon>
          <overview
@@ -130,7 +130,7 @@
             name="%connectorDescriptor.name.foglyn"
             provider="%connectorDescriptor.provider.foglyn"
             siteUrl="http://update.foglyn.com/stable"
-            statsUrl="http://download.eclipse.org/mylyn/stats/discovery/com.foglyn">
+            statsUrl="http://download.eclipse.org/stats/mylyn/discovery/com.foglyn">
          <icon
                image128="images/foglyn-128.png"
                image32="images/foglyn-32.png"
