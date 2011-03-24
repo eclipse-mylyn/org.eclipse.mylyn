@@ -73,6 +73,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, GitHubTaskAttributes.CREATION_DATE, toLocalDate(issue.getCreated_at()));
 		createAttribute(data, GitHubTaskAttributes.MODIFICATION_DATE, toLocalDate(issue.getCreated_at()));
 		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE, toLocalDate(issue.getClosed_at()));
+		createAttribute(data, GitHubTaskAttributes.REPORTER, issue.getUser());
 		
 		if (isPartial(data)) {
 			data.setPartial(true);

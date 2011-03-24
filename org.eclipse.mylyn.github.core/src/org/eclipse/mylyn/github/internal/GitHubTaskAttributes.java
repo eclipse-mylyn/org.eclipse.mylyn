@@ -24,7 +24,9 @@ public enum GitHubTaskAttributes {
 	MODIFICATION_DATE("Modified:",TaskAttribute.DATE_MODIFICATION,TaskAttribute.TYPE_DATETIME,true,true,false),
 	CLOSED_DATE("Closed:",TaskAttribute.DATE_COMPLETION,TaskAttribute.TYPE_DATETIME,false,true,false),
 
-	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true);
+	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true),
+	REPORTER("Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, true, false)
+	;
 
 	private final String id;
 	private final String label;
