@@ -20,13 +20,11 @@ public enum GitHubTaskAttributes {
 	TITLE("Summary",TaskAttribute.SUMMARY,TaskAttribute.TYPE_SHORT_TEXT,true,false,true), 
 	BODY("Description",TaskAttribute.DESCRIPTION,TaskAttribute.TYPE_LONG_RICH_TEXT,true,false,true),
 	
-	CREATION_DATE("Created",TaskAttribute.DATE_CREATION,TaskAttribute.TYPE_DATETIME,true,true,false),
-	MODIFICATION_DATE("Modified",TaskAttribute.DATE_MODIFICATION,TaskAttribute.TYPE_DATETIME,true,true,false),
-	CLOSED_DATE("Closed",TaskAttribute.DATE_COMPLETION,TaskAttribute.TYPE_DATETIME,false,true,false),
-	
-	STATUS("Status",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true)
-	;
-	
+	CREATION_DATE("Created:",TaskAttribute.DATE_CREATION,TaskAttribute.TYPE_DATETIME,true,true,false),
+	MODIFICATION_DATE("Modified:",TaskAttribute.DATE_MODIFICATION,TaskAttribute.TYPE_DATETIME,true,true,false),
+	CLOSED_DATE("Closed:",TaskAttribute.DATE_COMPLETION,TaskAttribute.TYPE_DATETIME,false,true,false),
+
+	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true);
 
 	private final String id;
 	private final String label;
