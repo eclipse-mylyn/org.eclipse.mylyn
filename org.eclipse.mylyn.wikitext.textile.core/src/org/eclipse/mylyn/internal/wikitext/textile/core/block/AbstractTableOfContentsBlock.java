@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 		}
 		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null)); //$NON-NLS-1$ //$NON-NLS-2$
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, "toc", "list-style: " + style + ";", null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
 			builder.link('#' + child.getId(), child.getLabel());
