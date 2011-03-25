@@ -25,6 +25,7 @@ import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubCredentials;
 import org.eclipse.mylyn.github.internal.GitHubService;
 import org.eclipse.mylyn.github.internal.GitHubServiceException;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.graphics.Point;
@@ -145,6 +146,15 @@ public class GitHubRepositorySettingsPage extends
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
+	 */
+	public void applyTo(TaskRepository repository) {
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
+				IRepositoryConstants.CATEGORY_BUGS);
+		super.applyTo(repository);
 	}
 
 }
