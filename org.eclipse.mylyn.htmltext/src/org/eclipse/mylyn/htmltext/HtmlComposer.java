@@ -85,15 +85,27 @@ public class HtmlComposer {
 
 		@Override
 		public Object function(Object[] arguments) {
-			if (modifyListenerList.size() > 0) {
+			if (arguments.length > 0) {
+				String identifier = (String) arguments[0];
 				Event event = new Event();
 				event.widget = getBrowser();
 				event.data = this;
 				ModifyEvent modifyEvent = new ModifyEvent(event);
-				for (ModifyListener listener : modifyListenerList) {
-					listener.modifyText(modifyEvent);
+				if (pendingListenerCallBackMap.get(identifier) != null) {
+					List<ModifyListener> list = pendingListenerCallBackMap.get(identifier);
+					for (ModifyListener modifyListener : list) {
+						modifyListener.modifyText(modifyEvent);
+					}
+				} else {
+					if (modifyListenerList.size() > 0) {
+						for (ModifyListener listener : modifyListenerList) {
+							listener.modifyText(modifyEvent);
+						}
+					}
 				}
+				pendingListenerCallBackMap.remove(identifier);
 			}
+			
 			return null;
 		}
 
@@ -175,6 +187,17 @@ public class HtmlComposer {
 	 * @see HtmlComposer#initialize()
 	 */
 	private final List<Command> pendingCommands = Collections.synchronizedList(new ArrayList<Command>());
+	
+	/**
+	 * A map of commands that were executed before the widget was initialized and their appending listeners which are still
+	 * waiting for an event. 
+	 */
+	private Map<Command, List<ModifyListener>> pendingListeners = new HashMap<Command, List<ModifyListener>>();
+	
+	/**
+	 * A map of callback-Ids and their appended Listeners. This is 
+	 */
+	private Map<String, List<ModifyListener>> pendingListenerCallBackMap = new HashMap<String, List<ModifyListener>>();
 
 	/**
 	 * Tracked {@link Command}s.
@@ -343,8 +366,22 @@ public class HtmlComposer {
 	 */
 	public void execute(Command command) {
 		if (initialized) {
-			execute(command.getCommand());
+			/*
+			 * if the command was executed while the ckeditor was not initialized yet.
+			 * this is required to keep track of the listeners that needs to be notified
+			 * if a command is executed before the widget was initialized but also to
+			 * filter the listeners that were added to the widget after the originating
+			 * command was scheduled.
+			 */
+			if (pendingListeners.get(command) != null) {
+				String nanoTime = String.valueOf(System.nanoTime());
+				pendingListenerCallBackMap.put(nanoTime, pendingListeners.get(command));
+				execute("integration.pendingCommandIdentifier = \'" + nanoTime+"\';");
+				execute(command.getCommand());
+				pendingListeners.remove(command);
+			}
 		} else {
+			pendingListeners.put(command, new ArrayList<ModifyListener>(modifyListenerList));
 			pendingCommands.add(command);
 		}
 	}

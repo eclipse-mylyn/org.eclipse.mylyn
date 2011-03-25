@@ -15,7 +15,7 @@
 	 this.eclipseRunning = false;
 	 this.pollingInterval = 250;
 	 this.format = new EclipseStyles();
-	 
+	 this.pendingCommandIdentifier = "";
 	 
  }
  
@@ -44,7 +44,7 @@
  EclipseIntegration.prototype.checkModifications = function() {
 	 if (this.data != this.editor.getData()) {
 		 if (this.eclipseRunning) {
-			 _delegate_modified();
+			 _delegate_modified(this.pendingCommandIdentifier);
 		 }
 		 this.data = this.editor.getData();
 	 }
@@ -59,7 +59,7 @@
  EclipseIntegration.prototype.modified = function(event) {
 	 this.currentModifiedEvent = event;
 	 if (this.eclipseRunning) {
-		 _delegate_modified();
+		 _delegate_modified(this.pendingCommandIdentifier);
 	 }
  }
  EclipseIntegration.prototype.focusGained = function(event) {
