@@ -21,16 +21,20 @@ import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 
 /**
- * @author alvsan09
+ * @author alvaro
  */
 public interface ScmUiConnector {
 	/**
-	 * Derive changes for a given repository and narrow down the selection to the ones related to the option resource provided.
-	 * This method is suitable to open a UI Wizard to reduce the focus even more, driven by user selection.
+	 * Derive changes for a given repository and narrow down the selection to the ones related to the option resource
+	 * provided. This method is suitable to open a UI Wizard to reduce the selection focus, driven by the user.
+	 * 
 	 * @param repo
 	 * @param resource
 	 * @param monitor
 	 * @return
+	 * @throws ScmUiException
 	 */
-	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, ProgressMonitor monitor);
+	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, ProgressMonitor monitor)
+			throws ScmUiException;
+
 }
