@@ -46,7 +46,8 @@ public class GitHubServiceTest {
 	public void searchIssues() throws Exception {
 		final GitHubService service = new GitHubService();
 		final GitHubIssues issues = service.searchIssues(TEST_USER,
-				TEST_PROJECT, "open", "test");
+				TEST_PROJECT, "open", "test", new GitHubCredentials(TEST_USER,
+						API_KEY));
 		assertEquals(0, issues.getIssues().length);
 	}
 
