@@ -5,9 +5,9 @@
   <parent>
     <artifactId>mylyn-docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.docs.sdk</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
