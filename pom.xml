@@ -8,10 +8,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>releng/reviews-target-definition</module>
-<!--
     <module>tbr</module>
--->
     <module>gerrit</module>
     <module>r4e</module>
     <module>framework</module>
@@ -52,20 +49,50 @@
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
   </properties>
 
+  <repositories>
+	<repository>
+	  <id>eclipse-mylyn</id>
+	  <layout>p2</layout>
+	  <url>http://download.eclipse.org/mylyn/snapshots/weekly/</url>
+	</repository>
+	<repository>
+	  <id>eclipse-orbit</id>
+	  <layout>p2</layout>
+	  <url>http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository/</url>
+	</repository>
+	<repository>
+	  <id>egit</id>
+	  <layout>p2</layout>
+	  <url>http://download.eclipse.org/egit/updates/</url>
+	</repository>
+  </repositories>
+
   <profiles>
     <profile>
       <id>galileo</id>
       <properties>
-        <target-platform>mylyn-reviews-e3.5</target-platform>
         <platform-version>[3.5.0,3.6.0)</platform-version>
       </properties>
+	  <repositories>
+		<repository>
+		  <id>galileo</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/releases/galileo/</url>
+		</repository>
+	  </repositories>
     </profile>
     <profile>
       <id>helios</id>
       <properties>
-        <target-platform>mylyn-reviews-e3.6</target-platform>
         <platform-version>[3.6.0,3.7.0)</platform-version>
       </properties>
+	  <repositories>
+		<repository>
+		  <id>helios</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/releases/helios/</url>
+		</repository>
+	  </repositories>
     </profile>
     <profile>
       <id>indigo</id>
@@ -73,9 +100,28 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <target-platform>mylyn-reviews-e3.7</target-platform>
         <platform-version>[3.7.0,3.8.0)</platform-version>
       </properties>
+	  <repositories>
+		<repository>
+		  <id>indigo</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/releases/indigo/</url>
+		</repository>
+	  </repositories>
+    </profile>
+    <profile>
+      <id>e4.1</id>
+      <properties>
+        <platform-version>[4.1.0,4.2.0)</platform-version>
+      </properties>
+	  <repositories>
+		<repository>
+		  <id>indigo</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/releases/indigo/</url>
+		</repository>
+	  </repositories>
     </profile>
     <profile>
       <id>release</id>
@@ -115,15 +161,6 @@
         <version>${tycho-version}</version>
         <configuration>
           <resolver>p2</resolver>
-          <target>
-            <artifact>
-              <groupId>org.eclipse.mylyn.reviews</groupId>
-              <artifactId>reviews-target-definition</artifactId>
-              <version>0.8.0-SNAPSHOT</version>
-              <classifier>${target-platform}</classifier>
-            </artifact>
-          </target>
-          <ignoreTychoRepositories>true</ignoreTychoRepositories>
           <environments>
             <environment>
               <os>win32</os>
