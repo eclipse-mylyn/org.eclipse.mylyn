@@ -8,9 +8,11 @@ for i in $(find -name site.xml); do
  (
  cd $(dirname $i)
  DIR=$(pwd)
- DIR=${DIR#*/archive/}
- DIR=${DIR%/*}
+ DIR=${DIR##*archive/}
+ DIR=${DIR%%/*}
+ echo Version: $DIR 
  $BASE/generate-p2-metadata.sh 
  $BASE/add-mirrors.sh $DIR
+ echo 
  )
 done

@@ -472,7 +472,7 @@
 	</target>
 	
 	<target name="discovery">
-		<cvs cvsRoot=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" 
+		<cvs cvsRoot="/cvsroot/mylyn" 
 				package="org.eclipse.mylyn/org.eclipse.mylyn.discovery-directory"
 				dest="${build.home}" />
 		<property name="discovery.dir" value="${build.home}/org.eclipse.mylyn/org.eclipse.mylyn.discovery-directory"/>
