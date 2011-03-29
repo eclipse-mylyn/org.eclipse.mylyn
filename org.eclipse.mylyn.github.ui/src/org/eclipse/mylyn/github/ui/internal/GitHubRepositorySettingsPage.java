@@ -108,20 +108,23 @@ public class GitHubRepositorySettingsPage extends
 	
 					monitor.subTask("Contacting server...");
 					try {
-						// verify the repo
-						service.searchIssues(user, repo, new String("open"),"");
-						monitor.worked(400);
-						
 						// verify the credentials
 						if (auth == null) {
 							setStatus(GitHubUi.createErrorStatus("Credentials are required.  Please specify username and API Token."));
 							return;
 						}
+						monitor.worked(250);
+						
 						GitHubCredentials credentials = new GitHubCredentials(auth.getUserName(), auth.getPassword());
 						if (!service.verifyCredentials(credentials)) {
 							setStatus(GitHubUi.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and API Token.\nYou can find your API Token on your GitHub account settings page."));
 							return;	
 						}
+						monitor.worked(250);
+						
+						// verify the repo
+						service.searchIssues(user, repo, new String("open"),"", credentials);
+						monitor.worked(400);
 					} catch (GitHubServiceException e) {
 						setStatus(GitHubUi.createErrorStatus("Repository Test failed:"+ e.getMessage()));
 						return;
