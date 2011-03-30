@@ -78,7 +78,6 @@ public class ReviewScopeNode extends AbstractTreeNode {
 		return sb.toString();
 	}
 
-	@Override
 	public Rating getResult() {
 		Rating rating = null;
 		for (ReviewResult res : results) {
@@ -90,7 +89,6 @@ public class ReviewScopeNode extends AbstractTreeNode {
 		return rating;
 	}
 
-	@Override
 	public String getPerson() {
 		// TODO
 		return scope.getCreator();

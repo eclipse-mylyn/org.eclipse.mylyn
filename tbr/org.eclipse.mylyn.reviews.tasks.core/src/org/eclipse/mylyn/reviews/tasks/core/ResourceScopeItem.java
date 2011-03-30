@@ -43,7 +43,6 @@ public class ResourceScopeItem implements IReviewScopeItem {
 		return attachment;
 	}
 
-	@Override
 	public List<IReviewFile> getReviewFiles(NullProgressMonitor monitor)
 			throws CoreException {
 
@@ -92,17 +91,14 @@ public class ResourceScopeItem implements IReviewScopeItem {
 
 		}
 
-		@Override
 		public String getFileName() {
 			return fileName;
 		}
 
-		@Override
 		public boolean isNewFile() {
 			return true;
 		}
 
-		@Override
 		public boolean canReview() {
 			return true;
 
@@ -134,12 +130,10 @@ public class ResourceScopeItem implements IReviewScopeItem {
 
 	}
 
-	@Override
 	public String getDescription() {
 		return "Attachment "+attachment.getFileName();
 	}
 
-	@Override
 	public String getType(int count) {
 		return count==1?"resource":"resources";
 	}

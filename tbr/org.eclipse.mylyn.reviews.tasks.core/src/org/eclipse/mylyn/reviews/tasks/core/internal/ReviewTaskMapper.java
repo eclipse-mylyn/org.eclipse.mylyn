@@ -50,7 +50,6 @@ public class ReviewTaskMapper implements IReviewMapper {
 		this.serializer = serializer;
 	}
 
-	@Override
 	public ReviewScope mapTaskToScope(ITaskProperties properties)
 			throws CoreException {
 		Assert.isNotNull(properties);
@@ -76,14 +75,12 @@ public class ReviewTaskMapper implements IReviewMapper {
 
 	}
 
-	@Override
 	public void mapScopeToTask(ReviewScope scope, ITaskProperties taskProperties) {
 		ReviewDslScope scope2 = mapScope(scope);
 
 		taskProperties.setDescription(serializer.serialize(scope2));
 	}
 
-	@Override
 	public void mapResultToTask(
 			org.eclipse.mylyn.reviews.tasks.core.ReviewResult res,
 			ITaskProperties taskProperties) {
@@ -110,7 +107,6 @@ public class ReviewTaskMapper implements IReviewMapper {
 		taskProperties.setNewCommentText(resultAsText);
 	}
 
-	@Override
 	public org.eclipse.mylyn.reviews.tasks.core.ReviewResult mapCurrentReviewResult(
 			ITaskProperties taskProperties) {
 		Assert.isNotNull(taskProperties);
@@ -135,7 +131,6 @@ public class ReviewTaskMapper implements IReviewMapper {
 		return result;
 	}
 
-	@Override
 	public List<ReviewResult> mapTaskToResults(ITaskProperties taskProperties) {
 		List<ReviewResult> results = new ArrayList<ReviewResult>();
 		for (TaskComment comment : taskProperties.getComments()) {

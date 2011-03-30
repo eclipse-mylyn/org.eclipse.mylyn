@@ -24,7 +24,6 @@ public class TaskNode extends AbstractTreeNode {
 		super(task);
 	}
 
-	@Override
 	public String getDescription() {
 		int patchCount=0;
 		int otherCount=0;
@@ -56,13 +55,11 @@ public class TaskNode extends AbstractTreeNode {
 		return sb.toString();
 	}
 
-	@Override
 	public Rating getResult() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String getPerson() {
 		//TODO
 		return "FIXME";

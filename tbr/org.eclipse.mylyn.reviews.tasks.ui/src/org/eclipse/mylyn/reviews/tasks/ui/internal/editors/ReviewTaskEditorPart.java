@@ -239,7 +239,6 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 
 		SafeRunner.run(new ISafeRunnable() {
 
-			@Override
 			public void run() throws Exception {
 
 				ReviewScope reviewScope = getReviewScope();
@@ -266,7 +265,6 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 				}
 
 				Display.getCurrent().asyncExec(new Runnable() {
-					@Override
 					public void run() {
 						fileList.setInput(rootNodes);
 						if (rootNodes.length == 0) {
@@ -277,7 +275,6 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 
 			}
 
-			@Override
 			public void handleException(Throwable exception) {
 				exception.printStackTrace();
 			}
@@ -374,7 +371,6 @@ public class ReviewTaskEditorPart extends AbstractReviewTaskEditorPart {
 		final IReviewMapper mapper = ReviewsUiPlugin.getMapper();
 		PropertyChangeListener listener = new PropertyChangeListener() {
 
-			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
 				ReviewResult result = (ReviewResult) arg0.getSource();
 

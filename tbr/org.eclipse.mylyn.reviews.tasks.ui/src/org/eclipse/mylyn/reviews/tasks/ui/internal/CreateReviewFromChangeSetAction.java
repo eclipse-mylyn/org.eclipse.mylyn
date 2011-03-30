@@ -48,7 +48,6 @@ public class CreateReviewFromChangeSetAction extends Action implements
 
 	private IStructuredSelection selection;
 
-	@Override
 	public void run(IAction action) {
 		try {
 			ITask task = ((TaskChangeSet)selection.getFirstElement()).getTask();
@@ -112,7 +111,6 @@ public class CreateReviewFromChangeSetAction extends Action implements
 		return cs;
 	}
 
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		setEnabled(selection.isEmpty()
 				&& selection instanceof IStructuredSelection);

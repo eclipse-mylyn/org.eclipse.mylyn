@@ -102,17 +102,14 @@ public class PatchReviewFile implements IReviewFile {
 		return true;
 	}
 
-	@Override
 	public String getFileName() {
 		return patch.getTargetPath(configuration).lastSegment();
 	}
 
-	@Override
 	public boolean isNewFile() {
 		return patchAddsFile();
 	}
 
-	@Override
 	public boolean canReview() {
 		return sourceFileExists() || patchAddsFile();
 

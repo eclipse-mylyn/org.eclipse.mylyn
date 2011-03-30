@@ -203,33 +203,27 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 	private static class ReviewResultContentProvider implements
 			ITreeContentProvider {
 
-		@Override
 		public Object[] getChildren(Object parentElement) {
 			return ((ITreeNode) parentElement).getChildren().toArray();
 		}
 
-		@Override
 		public Object getParent(Object element) {
 			return ((ITreeNode) element).getParent();
 		}
 
-		@Override
 		public boolean hasChildren(Object element) {
 			return !((ITreeNode) element).getChildren().isEmpty();
 		}
 
-		@Override
 		public void dispose() {
 			// nothing to do
 
 		}
 
-		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// nothing to do
 		}
 
-		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof Object[]) {
 				return (Object[]) inputElement;

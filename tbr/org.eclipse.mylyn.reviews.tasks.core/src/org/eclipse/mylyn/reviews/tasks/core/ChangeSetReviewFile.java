@@ -39,22 +39,18 @@ public class ChangeSetReviewFile implements IReviewFile {
 		this.change = change;
 	}
 
-	@Override
 	public String getFileName() {
 		return change.getTarget().getPath();
 	}
 
-	@Override
 	public boolean isNewFile() {
 		return change.getChangeType().equals(ChangeType.ADDED);
 	}
 
-	@Override
 	public boolean canReview() {
 		return true;
 	}
 
-	@Override
 	public ICompareInput getCompareInput() {
 		ICompareInput ci = new DiffNode(Differencer.CHANGE, null,
 				new CompareItem(change.getBase()), new CompareItem(change.getTarget()));

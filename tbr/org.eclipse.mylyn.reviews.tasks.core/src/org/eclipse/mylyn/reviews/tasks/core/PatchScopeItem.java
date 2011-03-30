@@ -60,7 +60,6 @@ public class PatchScopeItem implements IReviewScopeItem {
 		};
 	}
 
-	@Override
 	public List<IReviewFile> getReviewFiles(
 			NullProgressMonitor nullProgressMonitor) throws CoreException {
 		IFilePatch2[] parsedPatch = PatchParser.parsePatch(getPatch());
@@ -71,12 +70,10 @@ public class PatchScopeItem implements IReviewScopeItem {
 		return files;
 	}
 
-	@Override
 	public String getDescription() {
 		return "Patch "+attachment.getFileName();
 	}
 
-	@Override
 	public String getType(int count) {
 		return count ==1? "patch":"patches";
 	}

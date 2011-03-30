@@ -43,7 +43,6 @@ public class ChangesetScopeItem implements IReviewScopeItem {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	@Override
 	public List<IReviewFile> getReviewFiles(NullProgressMonitor monitor)
 			throws CoreException {
 		for (ScmConnector connector : ScmCore.getAllRegisteredConnectors()) {
@@ -53,62 +52,51 @@ public class ChangesetScopeItem implements IReviewScopeItem {
 					ChangeSet changeset = connector.getChangeSet(repository,
 							new IFileRevision() {
 
-								@Override
 								public IStorage getStorage(
 										IProgressMonitor monitor)
 										throws CoreException {
 									return null;
 								}
 
-								@Override
 								public String getName() {
 									return null;
 								}
 
-								@Override
 								public URI getURI() {
 									return null;
 								}
 
-								@Override
 								public long getTimestamp() {
 									return 0;
 								}
 
-								@Override
 								public boolean exists() {
 									return false;
 								}
 
-								@Override
 								public String getContentIdentifier() {
 									return revisionId;
 								}
 
-								@Override
 								public String getAuthor() {
 									return null;
 								}
 
-								@Override
 								public String getComment() {
 									// TODO Auto-generated method stub
 									return null;
 								}
 
-								@Override
 								public ITag[] getTags() {
 									// TODO Auto-generated method stub
 									return null;
 								}
 
-								@Override
 								public boolean isPropertyMissing() {
 									// TODO Auto-generated method stub
 									return false;
 								}
 
-								@Override
 								public IFileRevision withAllProperties(
 										IProgressMonitor monitor)
 										throws CoreException {
@@ -137,12 +125,10 @@ public class ChangesetScopeItem implements IReviewScopeItem {
 		return revisionId;
 	}
 
-	@Override
 	public String getDescription() {
 		return "Changeset " + revisionId;
 	}
 
-	@Override
 	public String getType(int count) {
 		return count == 1 ? "changeset" : "changesets";
 	}

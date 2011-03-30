@@ -29,12 +29,10 @@ public abstract class AbstractTreeNode implements ITreeNode {
 		this.task=task;
 	}
 
-	@Override
 	public List<ITreeNode> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
 
-	@Override
 	public ITreeNode getParent() {
 		return parent;
 	}
@@ -44,17 +42,14 @@ public abstract class AbstractTreeNode implements ITreeNode {
 		child.setParent(this);
 	}
 
-	@Override
 	public void setParent(ITreeNode parent) {
 		this.parent = parent;
 	}
 
-	@Override
 	public String getTaskId() {
 		return task!=null? task.getTaskId():null;
 	}
 
-	@Override
 	public ITaskProperties getTask() {
 		return task;
 	}

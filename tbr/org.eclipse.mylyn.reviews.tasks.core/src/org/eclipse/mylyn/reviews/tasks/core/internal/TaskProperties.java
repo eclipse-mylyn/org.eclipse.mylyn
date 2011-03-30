@@ -41,19 +41,16 @@ public class TaskProperties implements ITaskProperties {
 		this.manager = manager;
 	}
 
-	@Override
 	public String getDescription() {
 		return taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION)
 				.getValue();
 	}
 
-	@Override
 	public String getAssignedTo() {
 		return taskData.getRoot()
 				.getMappedAttribute(TaskAttribute.USER_ASSIGNED).getValue();
 	}
 
-	@Override
 	public List<Attachment> getAttachments() {
 		List<TaskAttribute> attachments = taskData.getAttributeMapper()
 				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
@@ -76,7 +73,6 @@ public class TaskProperties implements ITaskProperties {
 		return parent.getMappedAttribute(attribute).getValue();
 	}
 
-	@Override
 	public List<TaskComment> getComments() {
 		List<TaskComment> comments = new ArrayList<TaskComment>();
 		for (TaskAttribute attr : taskData.getRoot().getAttributes().values()) {
@@ -99,7 +95,6 @@ public class TaskProperties implements ITaskProperties {
 		return comments;
 	}
 
-	@Override
 	public String getNewCommentText() {
 		TaskAttribute attribute = this.taskData.getRoot().getMappedAttribute(
 				TaskAttribute.COMMENT_NEW);
@@ -109,7 +104,6 @@ public class TaskProperties implements ITaskProperties {
 		return attribute.getValue();
 	}
 
-	@Override
 	public void setNewCommentText(String value) {
 		TaskAttribute attribute = this.taskData.getRoot().getMappedAttribute(
 				TaskAttribute.COMMENT_NEW);
@@ -129,7 +123,6 @@ public class TaskProperties implements ITaskProperties {
 		return new TaskProperties(manager, taskData);
 	}
 
-	@Override
 	public ITaskProperties loadFor(String taskId) throws CoreException {
 		TaskData td = manager.getTaskData(
 				new TaskRepository(taskData.getConnectorKind(), taskData
@@ -137,12 +130,10 @@ public class TaskProperties implements ITaskProperties {
 		return new TaskProperties(manager, td);
 	}
 
-	@Override
 	public String getTaskId() {
 		return taskData.getTaskId();
 	}
 
-	@Override
 	public void setDescription(String description) {
 		setValue(TaskAttribute.DESCRIPTION, description);
 	}
@@ -157,24 +148,20 @@ public class TaskProperties implements ITaskProperties {
 		attribute.setValue(value);
 	}
 
-	@Override
 	public void setSummary(String summary) {
 		taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY)
 				.setValue(summary);
 	}
 
-	@Override
 	public void setAssignedTo(String assignee) {
 		taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED)
 				.setValue(assignee);
 	}
 
-	@Override
 	public String getRepositoryUrl() {
 		return taskData.getRepositoryUrl();
 	}
 
-	@Override
 	public String getReporter() {
 		return attributeValue(taskData.getRoot(),TaskAttribute.USER_REPORTER);
 	}

@@ -29,12 +29,10 @@ public class ReviewResultNode extends AbstractTreeNode {
 		return result.getComment();
 	}
 
-	@Override
 	public Rating getResult() {
 		return result.getRating();
 	}
 
-	@Override
 	public String getPerson() {
 		return result.getReviewer();
 	}
