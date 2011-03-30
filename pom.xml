@@ -63,7 +63,7 @@
 	<repository>
 	  <id>egit</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/egit/updates/</url>
+	  <url>https://hudson.eclipse.org/hudson/job/egit/lastSuccessfulBuild/artifact/org.eclipse.egit-updatesite/target/site/</url>
 	</repository>
   </repositories>
 
