@@ -10,7 +10,9 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -54,6 +56,14 @@ public class GerritCorePlugin extends Plugin {
 
 	public GerritConnector getConnector() {
 		return connector;
+	}
+
+	public static void logError(final String message, final Throwable throwable) {
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable));
+	}
+
+	public static void logWarning(final String message, final Throwable throwable) {
+		getDefault().getLog().log(new Status(IStatus.WARNING, PLUGIN_ID, 0, message, throwable));
 	}
 
 }

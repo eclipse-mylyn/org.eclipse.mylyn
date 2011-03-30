@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
 Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.core
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.junit,
- org.eclipse.mylyn.tests.util;bundle-version="3.5.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.mylyn.tests.util;bundle-version="3.5.0",
+ org.junit4;bundle-version="[4.8.1,5.0.0)"
 Export-Package: org.eclipse.mylyn.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.gerrit.core.support;x-internal:=true

@@ -7,10 +7,14 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +27,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -35,13 +41,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.core.egit.GerritProjectToGitRepositoryMapping;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
@@ -181,6 +191,14 @@ public class PatchSetSection extends AbstractGerritSection {
 			});
 		}
 
+		Button fetchButton = toolkit.createButton(buttonComposite, "Fetch...", SWT.PUSH);
+		fetchButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				doFetch(changeDetail, patchSetDetail);
+			}
+		});
+
 		if (canSubmit) {
 			Button submitButton = toolkit.createButton(buttonComposite, "Submit", SWT.PUSH);
 			submitButton.addSelectionListener(new SelectionAdapter() {
@@ -310,6 +328,56 @@ public class PatchSetSection extends AbstractGerritSection {
 	protected void doPublish(PatchSetPublishDetail publishDetail) {
 		PublishDialog dialog = new PublishDialog(getShell(), getTask(), publishDetail, addedDrafts);
 		openOperationDialog(dialog);
+	}
+
+	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {
+		String gerritHost = getGerritHost(getGerritUrl());
+		String gerritProject = getGerritProject(changeDetail);
+		Repository repository = findGitRepository(gerritHost, gerritProject);
+		if (repository != null) {
+			String refName = patchSetDetail.getPatchSet().getRefName();
+			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(repository, refName);
+			WizardDialog wizardDialog = new WizardDialog(getShell(), wizard);
+			wizardDialog.setHelpAvailable(false);
+			wizardDialog.open();
+		} else {
+			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
+			String reason = "No remote config found that has fetch URL with host '" + gerritHost
+					+ "' and path matching '" + gerritProject + "'";
+			GerritCorePlugin.logError(message, null);
+			ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
+					GerritCorePlugin.PLUGIN_ID, reason));
+		}
+	}
+
+	protected Repository findGitRepository(String gerritHost, String gerritProject) {
+		try {
+			if (gerritHost != null && gerritProject != null) {
+				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritHost,
+						gerritProject);
+				return mapper.findRepository();
+			}
+		} catch (IOException e) {
+			GerritCorePlugin.logWarning("Error accessing Git repository", e);
+		}
+		return null;
+	}
+
+	private String getGerritProject(ChangeDetail changeDetail) {
+		return changeDetail.getChange().getProject().get();
+	}
+
+	private String getGerritUrl() {
+		return getTaskEditorPage().getTaskRepository().getRepositoryUrl();
+	}
+
+	private String getGerritHost(String gerritUrl) {
+		try {
+			return new URL(gerritUrl).getHost();
+		} catch (MalformedURLException e) {
+			GerritCorePlugin.logWarning("Error in task repository URL " + gerritUrl, e);
+			return null;
+		}
 	}
 
 	protected void doRestore(PatchSet patchSet) {
