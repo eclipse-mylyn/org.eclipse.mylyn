@@ -14,14 +14,14 @@
 
 package org.eclipse.mylyn.versions.ui.spi;
 
-import javax.swing.ProgressMonitor;
-
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 
 /**
- * @author alvaro
+ * @author Alvaro Sanchez-Leon
  */
 public interface ScmUiConnector {
 	/**
@@ -32,9 +32,9 @@ public interface ScmUiConnector {
 	 * @param resource
 	 * @param monitor
 	 * @return
-	 * @throws ScmUiException
+	 * @throws CoreException
 	 */
-	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, ProgressMonitor monitor)
-			throws ScmUiException;
+	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, IProgressMonitor monitor)
+			throws CoreException;
 
 }
