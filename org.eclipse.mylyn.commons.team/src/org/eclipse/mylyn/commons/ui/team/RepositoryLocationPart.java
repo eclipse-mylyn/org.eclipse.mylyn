@@ -302,7 +302,7 @@ public class RepositoryLocationPart {
 
 		Control control = createAdditionalContents(composite);
 		if (control != null) {
-			GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(control);
+			GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(control);
 		}
 
 		if (needsHttpAuth() || needsProxy() || needsAdditionalSections()) {
