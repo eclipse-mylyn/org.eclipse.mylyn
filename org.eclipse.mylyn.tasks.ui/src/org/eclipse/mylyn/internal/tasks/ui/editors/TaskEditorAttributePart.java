@@ -117,21 +117,24 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 			attributeEditor.createControl(attributesComposite, toolkit);
 			LayoutHint layoutHint = attributeEditor.getLayoutHint();
 			GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-			if (layoutHint != null
-					&& !(layoutHint.rowSpan == RowSpan.SINGLE && layoutHint.columnSpan == ColumnSpan.SINGLE)) {
-				if (layoutHint.rowSpan == RowSpan.MULTIPLE) {
+			RowSpan rowSpan = (layoutHint != null && layoutHint.rowSpan != null) ? layoutHint.rowSpan : RowSpan.SINGLE;
+			ColumnSpan columnSpan = (layoutHint != null && layoutHint.columnSpan != null)
+					? layoutHint.columnSpan
+					: ColumnSpan.SINGLE;
+			if (rowSpan == RowSpan.SINGLE && columnSpan == ColumnSpan.SINGLE) {
+				gd.widthHint = COLUMN_WIDTH;
+				gd.horizontalSpan = 1;
+			} else {
+				if (rowSpan == RowSpan.MULTIPLE) {
 					gd.heightHint = MULTI_ROW_HEIGHT;
 				}
-				if (layoutHint.columnSpan == ColumnSpan.SINGLE) {
+				if (columnSpan == ColumnSpan.SINGLE) {
 					gd.widthHint = COLUMN_WIDTH;
 					gd.horizontalSpan = 1;
 				} else {
 					gd.widthHint = MULTI_COLUMN_WIDTH;
 					gd.horizontalSpan = columnCount - currentColumn + 1;
 				}
-			} else {
-				gd.widthHint = COLUMN_WIDTH;
-				gd.horizontalSpan = 1;
 			}
 			attributeEditor.getControl().setLayoutData(gd);
 
