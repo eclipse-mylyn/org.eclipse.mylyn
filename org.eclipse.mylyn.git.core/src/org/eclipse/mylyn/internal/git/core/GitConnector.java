@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.git.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +36,15 @@ import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.mylyn.versions.core.Change;
 import org.eclipse.mylyn.versions.core.ChangeSet;
@@ -68,7 +73,28 @@ public class GitConnector extends ScmConnector {
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource) throws CoreException {
-		return getArtifact(resource, null);
+		//resolve revision associated to head
+		FileRepository fileRepo = getFileRepository(resource);
+		String resRepoRelPath = resolveRepoRelativePath(fileRepo, resource);
+		String revision = null;
+		try {
+			revision = resolveObject(fileRepo, resRepoRelPath);
+		} catch (Exception e) {
+			//Not able to resolve revision
+		}
+
+		//Avoiding ScmResourceArtifact, see Bug 341733
+		ScmArtifact artifact = null;
+		if (revision != null) {
+			GitRepository repo = getRepository(resource);
+			artifact = new GitArtifact(revision, resRepoRelPath, repo);
+			artifact.setProjectName(resource.getProject().getName());
+			artifact.setProjectRelativePath(resource.getProjectRelativePath().toPortableString());
+		} else {
+			artifact = getArtifact(resource, null);
+		}
+
+		return artifact;
 	}
 
 	@Override
@@ -151,7 +177,7 @@ public class GitConnector extends ScmConnector {
 
 		//resolve absolute path to artifact i.e. repo abs path + relative to resource
 		IPath absPath = repoWorkAreaPath.append(path);
-		URI absURI = URIUtil.toURI(absPath.toPortableString());
+		URI absURI = URIUtil.toURI(absPath);
 		IFile[] files = ScmResourceUtils.getWorkSpaceFiles(absURI);
 		if (files != null && files.length > 0) {
 			//if more than one project referring to the same file, pick the first one
@@ -234,6 +260,70 @@ public class GitConnector extends ScmConnector {
 
 	protected RepositoryCache getRepositoryCache() {
 		return org.eclipse.egit.core.Activator.getDefault().getRepositoryCache();
+	}
+
+	private FileRepository getFileRepository(IResource resource) {
+		if (resource == null) {
+			return null;
+		}
+		//Obtain repository path
+		RepositoryMapping m = RepositoryMapping.getMapping(resource);
+		try {
+			return new FileRepository(m.getGitDirAbsolutePath().toFile());
+		} catch (IOException e) {
+			//Can not resolve id
+		}
+
+		return null;
+	}
+
+	private String resolveRepoRelativePath(FileRepository repo, IResource resource) {
+		if (repo == null || resource == null) {
+			return null;
+		}
+		//Obtain repository path
+		IProject project = resource.getProject();
+		RepositoryMapping m = RepositoryMapping.getMapping(resource);
+
+		try {
+			repo = new FileRepository(m.getGitDirAbsolutePath().toFile());
+			File workTree = repo.getWorkTree();
+			IPath workTreePath = Path.fromOSString(workTree.getAbsolutePath());
+			if (workTreePath.isPrefixOf(project.getLocation())) {
+				IPath makeRelativeTo = resource.getLocation().makeRelativeTo(workTreePath);
+				String repoRelativePath = makeRelativeTo.toPortableString();
+				return repoRelativePath;
+			}
+		} catch (IOException e) {
+			//Can not resolve id
+		}
+
+		return null;
+	}
+
+	private String resolveObject(FileRepository repo, String repoRelativePath) throws AmbiguousObjectException,
+			IOException {
+		//Validate
+		if (repo == null || repoRelativePath == null) {
+			return null;
+		}
+
+		ObjectId headCommitId = repo.resolve(Constants.HEAD);
+		String id = null;
+		if (headCommitId != null) {
+			// Not an empty repo
+			RevWalk revWalk = new RevWalk(repo);
+			RevCommit headCommit = revWalk.parseCommit(headCommitId);
+			RevTree headTree = headCommit.getTree();
+			TreeWalk resourceInRepo = TreeWalk.forPath(repo, repoRelativePath, headTree);
+			if (resourceInRepo != null) {
+				ObjectId objId = resourceInRepo.getObjectId(0);
+				id = objId.getName();
+			}
+			revWalk.dispose();
+		}
+
+		return id;
 	}
 
 }
