@@ -26,6 +26,8 @@ public class GitHubIssue {
 
 	private String body;
 
+	private String comment_new;
+
 	/**
 	 * open, closed
 	 */
@@ -53,6 +55,7 @@ public class GitHubIssue {
 		this.user = user;
 		this.title = title;
 		this.body = body;
+		this.comment_new = null;
 	}
 
 	/**
@@ -63,6 +66,7 @@ public class GitHubIssue {
 		this.user = "";
 		this.title = "";
 		this.body = "";
+		this.comment_new = null;
 	}
 
 	/**
@@ -169,4 +173,12 @@ public class GitHubIssue {
 	public void setClosed_at(String closed_at) {
 		this.closed_at = closed_at;
 	}	
+
+	public String getComment_new() {
+		return comment_new;
+	}
+
+	public void setComment_new(String comment_new) {
+		this.comment_new = comment_new;
+	}
 }

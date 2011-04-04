@@ -56,6 +56,7 @@ public class GitHubService {
 	private static final String REOPEN = "reopen/";
 	private final static String CLOSE = "close/";
 	private final static String EDIT = "edit/"; // Implemented
+	private final static String COMMENT = "comment/";
 	// private final static String VIEW = "view/";
 	private final static String SHOW = "show/"; // :user/:repo/:number
 	private final static String LIST = "list/"; // Implemented
@@ -440,7 +441,6 @@ public class GitHubService {
 		}
 	}
 
-
 	public GitHubIssue showIssue(final String user, final String repo,final String issueNumber) throws GitHubServiceException {
 		GetMethod method = null;
 		try {
@@ -568,6 +568,40 @@ public class GitHubService {
 			}
 			return showIssue.getIssue();
 		} catch (final RuntimeException runTimeException) {
+			throw runTimeException;
+		} catch (final Exception e) {
+			throw new GitHubServiceException(e);
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+	}
+
+	/**
+	 * Add comment on issues.
+	 *
+	 * @param user
+	 *            - The user the repository is owned by
+	 * @param repo
+	 *            - The git repository where the issue tracker is hosted
+	 * @param issue
+	 * @param credentials
+	 * @throws GitHubServiceException
+	 */
+	public void addComment(final String user, final String repo,
+			final GitHubIssue issue,final GitHubCredentials credentials)
+	throws GitHubServiceException {
+		PostMethod method = null;
+		try {
+			method = new PostMethod(gitURLBase + gitIssueRoot + COMMENT + user
+					+ "/" + repo + "/" + issue.getNumber());
+			final NameValuePair comment = new NameValuePair("comment", issue
+					.getComment_new());
+			method.setRequestBody(new NameValuePair[] { comment });
+			setCredentials(credentials);
+			executeMethod(method);
+		}catch (final RuntimeException runTimeException) {
 			throw runTimeException;
 		} catch (final Exception e) {
 			throw new GitHubServiceException(e);
