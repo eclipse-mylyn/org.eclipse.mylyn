@@ -9,7 +9,7 @@
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
-package org.eclipse.mylyn.gerrit.core;
+package org.eclipse.mylyn.internal.gerrit.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

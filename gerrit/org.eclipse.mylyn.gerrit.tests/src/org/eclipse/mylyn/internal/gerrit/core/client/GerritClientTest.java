@@ -10,13 +10,13 @@
  *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.gerrit.core.client;
+package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.mylyn.gerrit.core.support.GerritFixture;
-import org.eclipse.mylyn.gerrit.core.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.support.GerritFixture;
+import org.eclipse.mylyn.internal.gerrit.core.support.GerritHarness;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

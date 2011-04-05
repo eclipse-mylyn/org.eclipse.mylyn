@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gerrit.core.support;
+package org.eclipse.mylyn.internal.gerrit.core.support;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tests.util.TestFixture;
