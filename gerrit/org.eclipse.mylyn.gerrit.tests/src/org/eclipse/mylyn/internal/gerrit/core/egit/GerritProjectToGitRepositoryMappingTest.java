@@ -11,18 +11,15 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.egit;
 
-// TODO uncomment everything when easymock 3.0 is available in Orbit
-/*
-import static org.easymock.EasyMock.anyBoolean;
-import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.matches;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,25 +27,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.easymock.EasyMockSupport;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.URIish;
-import org.junit.After;
 import org.junit.Test;
-*/
-public class GerritProjectToGitRepositoryMappingTest /*extends EasyMockSupport*/{
-/*
+
+public class GerritProjectToGitRepositoryMappingTest {
 	private static final String GERRIT_HOST = "egit.eclipse.org"; //$NON-NLS-1$
 
 	private static final String GERRIT_PROJECT = "jgit"; //$NON-NLS-1$
-
-	@After
-	public void verifyAllMocks() {
-		verifyAll();
-	}
 
 	@Test
 	public void testFindNoMatchingEmptyList() throws Exception {
@@ -77,39 +66,30 @@ public class GerritProjectToGitRepositoryMappingTest /*extends EasyMockSupport*/
 	}
 
 	private Repository createRepository(String project) {
-		StoredConfig config = createMock(StoredConfig.class);
+		StoredConfig config = mock(StoredConfig.class);
 		Set<String> configSubSections = new HashSet<String>();
 		String remoteName = "remotename"; //$NON-NLS-1$
 		configSubSections.add(remoteName);
 		String remoteSection = "remote"; //$NON-NLS-1$
-		expect(config.getSubsections(remoteSection)).andReturn(configSubSections);
-		expect(config.getStringList(remoteSection, remoteName, "url")).andReturn( //$NON-NLS-1$
-				new String[] { "git://" + GERRIT_HOST + "/" + project }); //$NON-NLS-1$ //$NON-NLS-2$
-		expect(config.getStringList(eq(remoteSection), eq(remoteName), anyObject(String.class))).andReturn(
-				new String[0]).anyTimes();
-		expect(config.getString(eq(remoteSection), eq(remoteName), anyObject(String.class))).andReturn(null).anyTimes();
-		expect(config.getBoolean(eq(remoteSection), eq(remoteName), anyObject(String.class), anyBoolean())).andReturn(
-				false).anyTimes();
-		expect(config.getInt(eq(remoteSection), eq(remoteName), anyObject(String.class), anyInt())).andReturn(0)
-				.anyTimes();
-		Repository repo = createMock(Repository.class);
-		expect(repo.getConfig()).andReturn(config);
-		replay(repo, config);
+		when(config.getSubsections(remoteSection)).thenReturn(configSubSections);
+		when(config.getStringList(eq(remoteSection), eq(remoteName), anyString())).thenReturn(new String[0]);
+		when(config.getStringList(eq(remoteSection), eq(remoteName), matches("url"))).thenReturn( //$NON-NLS-1$
+				new String[] { "git://" + GERRIT_HOST + "/" + project }); //$NON-NLS-1$//$NON-NLS-2$
+		Repository repo = mock(Repository.class);
+		when(repo.getConfig()).thenReturn(config);
 		return repo;
 	}
 
 	private GerritProjectToGitRepositoryMapping createTestMapping(Repository[] repositories) throws Exception {
 		List<String> repoDirList = createRepositoryDirList(repositories.length);
 
-		final RepositoryUtil util = createMock(RepositoryUtil.class);
-		expect(util.getConfiguredRepositories()).andReturn(repoDirList);
-		replay(util);
+		final RepositoryUtil util = mock(RepositoryUtil.class);
+		when(util.getConfiguredRepositories()).thenReturn(repoDirList);
 
-		final RepositoryCache cache = createMock(RepositoryCache.class);
+		final RepositoryCache cache = mock(RepositoryCache.class);
 		for (String dir : repoDirList) {
-			expect(cache.lookupRepository(new File(dir))).andReturn(repositories[Integer.parseInt(dir)]);
+			when(cache.lookupRepository(new File(dir))).thenReturn(repositories[Integer.parseInt(dir)]);
 		}
-		replay(cache);
 		return new GerritProjectToGitRepositoryMapping(GERRIT_HOST, GERRIT_PROJECT) {
 
 			@Override
@@ -203,5 +183,5 @@ public class GerritProjectToGitRepositoryMappingTest /*extends EasyMockSupport*/
 	public void testCalcUnknownProtocol() throws Exception {
 		URIish uri = new URIish("xyz://user@egit.eclipse.org:29418/jgit"); //$NON-NLS-1$
 		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
-	}*/
+	}
 }
