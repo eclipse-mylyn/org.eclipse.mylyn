@@ -7,25 +7,29 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
 package org.eclipse.mylyn.gerrit.core;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.junit.Test;
 
 /**
  * @author Mikael Kober
  */
-public class GerritAttributeTest extends TestCase {
+public class GerritAttributeTest {
 
+	@Test
 	public void testGetters() {
 		final Field id = GerritTaskSchema.getDefault().KEY;
-		assertTrue("should be read only", id.isReadOnly());
-		assertEquals("wrong task key", TaskAttribute.TASK_KEY, id.getKey());
-		assertEquals("wrong type", TaskAttribute.TYPE_SHORT_TEXT, id.getType());
+		assertTrue(id.isReadOnly());
+		assertEquals(TaskAttribute.TASK_KEY, id.getKey());
+		assertEquals(TaskAttribute.TYPE_SHORT_TEXT, id.getType());
 	}
 
 }
