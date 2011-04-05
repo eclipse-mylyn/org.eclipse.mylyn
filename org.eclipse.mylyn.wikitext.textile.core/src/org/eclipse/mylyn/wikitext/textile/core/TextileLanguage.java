@@ -31,10 +31,11 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.HyperlinkPhraseMo
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.ImageTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier.Mode;
+import org.eclipse.mylyn.internal.wikitext.textile.core.token.EntityReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
@@ -165,6 +166,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		if (configuration == null || !configuration.isOptimizeForRepositoryUsage()) {
 			tokenSyntax.add(new AcronymReplacementToken());
 		}
+		tokenSyntax.add(new EntityReplacementToken());
 	}
 
 	@Override

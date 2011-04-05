@@ -1405,4 +1405,15 @@ public class TextileLanguageTest extends TestCase {
 		TestUtil.println(html);
 		assertTrue(html.contains("&lt;![CDATA[123 456]]&gt;"));
 	}
+
+	public void testEntityReferences() {
+		String[] entities = new String[] { "copy", "amp", "foobar" };
+		for (String entity : entities) {
+			String markup = "text &" + entity + ";";
+			String html = parser.parseToHtml(markup);
+			TestUtil.println(html);
+			assertTrue(html.contains("&" + entity + ";"));
+
+		}
+	}
 }
