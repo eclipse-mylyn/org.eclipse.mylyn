@@ -1333,6 +1333,29 @@ public class TextileLanguageTest extends TestCase {
 		fail("expected to find superscript span");
 	}
 
+	public void testLinkWithItalicStyle() {
+		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		parser.setBuilder(builder);
+		parser.parse("\"_text_\":http://example.com");
+		List<Event> events = builder.getEvents();
+		TestUtil.println(events);
+		boolean emphasisFound = false;
+		boolean textFound = false;
+		for (Event event : events) {
+			if (event.spanType == SpanType.EMPHASIS) {
+				assertEquals(1, event.locator.getLineCharacterOffset());
+				assertEquals(7, event.locator.getLineSegmentEndOffset());
+				emphasisFound = true;
+			} else if (event.text != null) {
+				assertEquals(2, event.locator.getLineCharacterOffset());
+				assertEquals(6, event.locator.getLineSegmentEndOffset());
+				textFound = true;
+			}
+		}
+		assertTrue("expected to find emphasis span", emphasisFound);
+		assertTrue("expected to find text", textFound);
+	}
+
 	public void testBoldItalicsBold() {
 		String html = parser.parseToHtml("*bold _ital ics_ bold*");
 		TestUtil.println(html);

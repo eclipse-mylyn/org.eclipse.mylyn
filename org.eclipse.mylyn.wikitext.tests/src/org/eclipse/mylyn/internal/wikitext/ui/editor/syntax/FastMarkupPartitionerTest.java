@@ -200,4 +200,23 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		}
 	}
 
+	public void testTextileLinkWithStyle() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new TextileLanguage());
+
+		String markup = "\"_text_\":http://example.com";
+		document.set(markup);
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+
+		int[][] expected = new int[][] { //
+		{ 0, markup.length() }, //
+		};
+
+		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
+		assertPartitioningAsExpected(expected, partitioning);
+	}
+
 }

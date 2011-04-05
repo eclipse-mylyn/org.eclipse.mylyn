@@ -58,7 +58,11 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 				attributes.setHref(href);
 				Textile.configureAttributes(this, attributes, ATTRIBUTES_OFFSET, false);
 				builder.beginSpan(SpanType.LINK, attributes);
-				getMarkupLanguage().emitMarkupLine(parser, state, start(2), hyperlinkSrc, 0);
+				int textOffset = start(2);
+				if (textOffset == -1) {
+					textOffset = start(2 + Textile.ATTRIBUTES_GROUP_COUNT);
+				}
+				getMarkupLanguage().emitMarkupLine(parser, state, textOffset, hyperlinkSrc, 0);
 				builder.endSpan();
 			} else {
 				final ImageAttributes attributes = new ImageAttributes();
