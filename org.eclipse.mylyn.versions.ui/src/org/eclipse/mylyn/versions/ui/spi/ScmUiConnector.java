@@ -1,15 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011 Ericsson
- * 
+ * Copyright (c) 2011 Ericsson and others.
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 
  * Contributors:
- *   Alvaro Sanchez-Leon - Initial API and Implementation
+ *   Ericsson - Initial API and Implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.versions.ui.spi;
@@ -31,7 +28,7 @@ public interface ScmUiConnector {
 	 * @param repo
 	 * @param resource
 	 * @param monitor
-	 * @return
+	 * @return ChnageSet
 	 * @throws CoreException
 	 */
 	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, IProgressMonitor monitor)

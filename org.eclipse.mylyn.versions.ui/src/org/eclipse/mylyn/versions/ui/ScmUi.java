@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Alvaro Sanchez-Leon - Extended to include resolution of ui connectors
  *******************************************************************************/
 
 package org.eclipse.mylyn.versions.ui;
