@@ -217,8 +217,9 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 			TreeViewer treeViewer = (TreeViewer) viewer;
 			FilteredChildrenDecorationDrawer filteredViewDrawer = new FilteredChildrenDecorationDrawer(treeViewer,
 					listener);
-			decorationMap.put(treeViewer, filteredViewDrawer);
-			filteredViewDrawer.applyToTreeViewer();
+			if (filteredViewDrawer.applyToTreeViewer()) {
+				decorationMap.put(treeViewer, filteredViewDrawer);
+			}
 
 		}
 	}
@@ -398,9 +399,8 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		if (viewer instanceof TreeViewer
 				&& filteredViewers.contains(viewer)
 				&& hasInterestFilter(viewer, true)
-				&& ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;
 
 			// HACK to fix bug 278569: [context] errors with Markers view and active Mylyn task

@@ -242,21 +242,28 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 		this.browseFilteredListener = browseFilteredListener;
 	}
 
-	public void applyToTreeViewer() {
-		if (treeViewer.getTree() != null && !treeViewer.getTree().isDisposed()) {
-			treeViewer.getTree().addListener(SWT.PaintItem, this);
+	public boolean applyToTreeViewer() {
+		Object data = treeViewer.getData(FilteredChildrenDecorationDrawer.class.getName());
+		if (data == null || Boolean.FALSE.equals(data)) {
+			treeViewer.setData(FilteredChildrenDecorationDrawer.class.getName(), Boolean.TRUE);
+			if (treeViewer.getTree() != null && !treeViewer.getTree().isDisposed()) {
+				treeViewer.getTree().addListener(SWT.PaintItem, this);
 
-			listener = new MoveListener(treeViewer, browseFilteredListener);
-			treeViewer.getTree().addMouseMoveListener(listener);
-			treeViewer.getTree().addMouseListener(listener);
-			treeViewer.getTree().addMouseTrackListener(listener);
+				listener = new MoveListener(treeViewer, browseFilteredListener);
+				treeViewer.getTree().addMouseMoveListener(listener);
+				treeViewer.getTree().addMouseListener(listener);
+				treeViewer.getTree().addMouseTrackListener(listener);
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void dispose() {
 		if (treeViewer.getTree() == null || treeViewer.getTree().isDisposed()) {
 			return;
 		}
+		treeViewer.setData(FilteredChildrenDecorationDrawer.class.getName(), Boolean.FALSE);
 		treeViewer.getTree().removeListener(SWT.PaintItem, this);
 
 		if (listener != null) {
