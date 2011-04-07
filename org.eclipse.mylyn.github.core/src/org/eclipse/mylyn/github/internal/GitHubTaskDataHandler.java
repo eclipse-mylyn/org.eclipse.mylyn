@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
@@ -158,10 +160,30 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project,
-			GitHubIssue issue) {
-		TaskData taskData = createPartialTaskData(repository, monitor, user, project, issue);
+			GitHubIssue issue, List<GitHubIssueComment> comments) {
+		TaskData taskData = createPartialTaskData(repository, monitor, user,
+				project, issue);
 		taskData.setPartial(false);
 		
+		if (comments != null && !comments.isEmpty()) {
+			int count = 1;
+			TaskAttribute root = taskData.getRoot();
+			for (GitHubIssueComment comment : comments) {
+				TaskCommentMapper commentMapper = new TaskCommentMapper();
+				commentMapper.setAuthor(repository.createPerson(comment
+						.getUser()));
+				commentMapper.setCreationDate(comment.getCreatedAt());
+				commentMapper.setText(comment.getBody());
+				commentMapper.setCommentId(comment.getId());
+				commentMapper.setNumber(count);
+
+				TaskAttribute attribute = root
+						.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
+				commentMapper.applyTo(attribute);
+				count++;
+			}
+		}
+
 		return taskData;
 	}
 

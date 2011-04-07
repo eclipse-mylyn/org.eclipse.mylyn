@@ -28,6 +28,8 @@ public class GitHubIssue {
 
 	private String comment_new;
 
+	private int comments;
+
 	/**
 	 * open, closed
 	 */
@@ -181,4 +183,23 @@ public class GitHubIssue {
 	public void setComment_new(String comment_new) {
 		this.comment_new = comment_new;
 	}
+
+	/**
+	 * Get number of comments issue has
+	 *
+	 * @return comments
+	 */
+	public int getComments() {
+		return this.comments;
+	}
+
+	/**
+	 * Set number of comments that issue has
+	 *
+	 * @param comments
+	 */
+	public void setComments(int comments) {
+		this.comments = comments;
+	}
+
 }

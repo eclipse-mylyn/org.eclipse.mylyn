@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -156,7 +157,13 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			GitHubCredentials credentials = GitHubCredentials.create(repository);
 			GitHubIssue issue = service.showIssue(user, project, taskId, credentials);
-			TaskData taskData = taskDataHandler.createTaskData(repository, monitor, user, project, issue);
+			List<GitHubIssueComment> comments = null;
+			if (issue.getComments() > 0) {
+				comments = service.getComments(user, project, issue,
+						credentials);
+			}
+			TaskData taskData = taskDataHandler.createTaskData(repository,
+					monitor, user, project, issue, comments);
 			
 			return taskData;
 		} catch (GitHubServiceException e) {

@@ -13,7 +13,9 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -62,6 +64,7 @@ public class GitHubService {
 	private final static String CLOSE = "close/";
 	private final static String EDIT = "edit/"; // Implemented
 	private final static String COMMENT = "comment/";
+	private final static String COMMENTS = "comments/";
 	// private final static String VIEW = "view/";
 	private final static String SHOW = "show/"; // :user/:repo/:number
 	private final static String LIST = "list/"; // Implemented
@@ -658,4 +661,36 @@ public class GitHubService {
 			}
 		}
 	}
+
+	/**
+	 * Get comments associated with issue
+	 *
+	 * @param user
+	 * @param repo
+	 * @param issue
+	 * @param credentials
+	 * @return collection of comments
+	 * @throws GitHubServiceException
+	 */
+	public List<GitHubIssueComment> getComments(final String user,
+			final String repo, final GitHubIssue issue,
+			final GitHubCredentials credentials) throws GitHubServiceException {
+		GetMethod method = null;
+		try {
+			method = new GetMethod(gitURLBase + gitIssueRoot + COMMENTS + user
+					+ "/" + repo + "/" + issue.getNumber());
+			setCredentials(credentials);
+			executeMethod(method);
+			return this.gson.fromJson(
+					new InputStreamReader(method.getResponseBodyAsStream()),
+					GitHubIssueComments.class).getComments();
+		} catch (IOException e) {
+			throw new GitHubServiceException(e);
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+	}
+
 }
