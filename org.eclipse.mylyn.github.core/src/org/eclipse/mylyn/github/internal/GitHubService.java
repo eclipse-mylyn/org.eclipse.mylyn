@@ -32,6 +32,8 @@ import com.google.gson.Gson;
 
 /**
  * Facility to perform API operations on a GitHub issue tracker.
+ *
+ * TODO: This class needs to be refactored
  */
 public class GitHubService {
 
@@ -41,6 +43,7 @@ public class GitHubService {
 	 * GitHub Issues API Documentation: http://develop.github.com/p/issues.html
 	 */
 	private final String gitURLBase = "https://github.com/api/v2/json/";
+	private final String gistPostURL = "https://gist.github.com/gists";
 
 	private final String gitIssueRoot = "issues/";
 	private final String gitUserRoot = "user/";
@@ -379,6 +382,42 @@ public class GitHubService {
 	}
 
 	/**
+	 * Create a new gist
+	 *
+	 * @return the url of the gist that was created
+	 *
+	 * @throws GitHubServiceException
+	 * @throws IOException
+	 */
+	public String createGist(final String title, final String extension, final String gist, final GitHubCredentials credentials)
+			throws GitHubServiceException, IOException {
+
+		PostMethod method = null;
+		try {
+			// Create the HTTP POST method
+			setCredentials(credentials);
+			method = new PostMethod(gistPostURL);
+			final NameValuePair name = new NameValuePair("file_name[gistfile1]", title);
+			final NameValuePair ext = new NameValuePair("file_ext[gistfile1]", extension);
+			final NameValuePair content = new NameValuePair("file_contents[gistfile1]", gist);
+			method.addParameters(new NameValuePair[] { name, ext, content });
+			executeMethod(method);
+
+			return method.getResponseHeader("Location").getValue();
+		} catch (GitHubServiceException e) {
+			throw e;
+		} catch (final RuntimeException runTimeException) {
+			throw runTimeException;
+		} catch (final Exception e) {
+			throw new GitHubServiceException(e);
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+	}
+
+	/**
 	 * Edit an existing issue using the GitHub Issues API.
 	 * 
 	 * @param user
@@ -481,6 +520,7 @@ public class GitHubService {
 		if (status != HttpStatus.SC_OK) {
 			switch (status) {
 			case HttpStatus.SC_CREATED:
+			case HttpStatus.SC_MOVED_TEMPORARILY:
 				break;
 			case HttpStatus.SC_UNAUTHORIZED:
 			case HttpStatus.SC_FORBIDDEN:

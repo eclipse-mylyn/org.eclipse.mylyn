@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
-class GitHubUi {
+public class GitHubUi {
 	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.ui";
 	
 	public static IStatus createStatus(int severity,String message) {
