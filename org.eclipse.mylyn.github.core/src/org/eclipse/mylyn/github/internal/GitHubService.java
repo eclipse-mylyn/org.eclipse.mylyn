@@ -480,13 +480,16 @@ public class GitHubService {
 		}
 	}
 
-	public GitHubIssue showIssue(final String user, final String repo,final String issueNumber) throws GitHubServiceException {
+	public GitHubIssue showIssue(final String user, final String repo,
+			final String issueNumber, final GitHubCredentials credentials)
+			throws GitHubServiceException {
 		GetMethod method = null;
 		try {
 			// build HTTP GET method
 			method = new GetMethod(gitURLBase + gitIssueRoot + SHOW 
             + user + "/" + repo + "/" + issueNumber);
 			
+			setCredentials(credentials);
 			// execute HTTP GET method
 			executeMethod(method);
 			// transform JSON to Java object

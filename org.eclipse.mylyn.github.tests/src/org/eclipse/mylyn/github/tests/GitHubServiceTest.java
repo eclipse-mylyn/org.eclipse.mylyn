@@ -88,7 +88,8 @@ public class GitHubServiceTest {
 		
 		service.editIssue(TEST_USER, TEST_PROJECT, issue, new GitHubCredentials(TEST_USER,API_KEY));
 		
-		GitHubIssue showIssue = service.showIssue(TEST_USER, TEST_PROJECT, issue.getNumber());
+		GitHubIssue showIssue = service.showIssue(TEST_USER, TEST_PROJECT,
+				issue.getNumber(), new GitHubCredentials(TEST_USER, API_KEY));
 		
 		assertTrue(showIssue != null);
 		assertEquals(newIssue.getTitle(),showIssue.getTitle());

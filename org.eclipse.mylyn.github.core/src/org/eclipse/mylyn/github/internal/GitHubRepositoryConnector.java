@@ -154,7 +154,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		String project = GitHub.computeTaskRepositoryProject(repository.getUrl());
 		
 		try {
-			GitHubIssue issue = service.showIssue(user, project, taskId);
+			GitHubCredentials credentials = GitHubCredentials.create(repository);
+			GitHubIssue issue = service.showIssue(user, project, taskId, credentials);
 			TaskData taskData = taskDataHandler.createTaskData(repository, monitor, user, project, issue);
 			
 			return taskData;
