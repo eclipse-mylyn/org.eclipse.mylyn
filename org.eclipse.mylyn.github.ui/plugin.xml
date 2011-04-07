@@ -9,11 +9,11 @@
             name="%org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnector">
       </connectorCore>
       <connectorUi
-            brandingIcon="images/git-logo.png"
+            brandingIcon="icons/obj16/github.png"
             class="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             id="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             name="%org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
-            overlayIcon="images/git-logo.png">
+            overlayIcon="icons/obj16/github.png">
       </connectorUi>
    </extension>
    <extension
