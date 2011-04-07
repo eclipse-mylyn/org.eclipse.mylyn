@@ -41,7 +41,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	private final GitHubRepositoryConnector connector;
 	private DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
 	
-	private DateFormat githubDateFormat = new SimpleDateFormat("yyyy/mm/dd HH:MM:ss Z");
+	private DateFormat githubDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss Z");
 
 	public GitHubTaskDataHandler(GitHubRepositoryConnector connector) {
 		this.connector = connector;
