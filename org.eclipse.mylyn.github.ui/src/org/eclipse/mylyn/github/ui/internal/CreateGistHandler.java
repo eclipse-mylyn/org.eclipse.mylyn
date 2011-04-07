@@ -73,10 +73,11 @@ public class CreateGistHandler extends AbstractHandler {
 	}
 
 	private void createGistJob(IFile file) {
+		BufferedReader br = null;
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(file.getContents()));
+			br = new BufferedReader(new InputStreamReader(file.getContents()));
 			String line;
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			while ((line = br.readLine()) != null) {
 			result.append(line);
 			result.append('\n');
@@ -87,6 +88,13 @@ public class CreateGistHandler extends AbstractHandler {
 			GitHubUi.logError(e);
 		} catch (IOException e) {
 			GitHubUi.logError(e);
+		} finally {
+			if (br != null)
+				try {
+					br.close();
+				} catch (IOException e) {
+					GitHubUi.logError(e);
+				}
 		}
 	}
 
