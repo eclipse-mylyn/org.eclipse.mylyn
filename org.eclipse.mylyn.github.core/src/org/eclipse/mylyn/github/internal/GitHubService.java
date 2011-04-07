@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -29,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Facility to perform API operations on a GitHub issue tracker.
@@ -78,7 +80,9 @@ public class GitHubService {
 	 */
 	public GitHubService() {
 		httpClient = new HttpClient();
-		gson = new Gson();
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Date.class, new DateFormatter());
+		gson = builder.create();
 	}
 
 	/**
