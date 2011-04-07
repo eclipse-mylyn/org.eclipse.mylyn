@@ -30,8 +30,7 @@ import org.eclipse.swt.graphics.Image;
 public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	public CDTContextLabelProvider() {
-		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
-				| CElementImageProvider.SMALL_ICONS);
+		super();
 	}
 
 	@Override
