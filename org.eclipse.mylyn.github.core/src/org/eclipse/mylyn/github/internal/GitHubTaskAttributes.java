@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 public enum GitHubTaskAttributes {
 
 	KEY("Key",TaskAttribute.TASK_KEY,TaskAttribute.TYPE_SHORT_TEXT,true,true,true),
-	TITLE("Summary",TaskAttribute.SUMMARY,TaskAttribute.TYPE_SHORT_TEXT,true,false,true), 
+	TITLE("Summary",TaskAttribute.SUMMARY,TaskAttribute.TYPE_SHORT_RICH_TEXT,true,false,true), 
 	BODY("Description",TaskAttribute.DESCRIPTION,TaskAttribute.TYPE_LONG_RICH_TEXT,true,false,true),
 	
 	CREATION_DATE("Created:",TaskAttribute.DATE_CREATION,TaskAttribute.TYPE_DATETIME,true,true,false),
