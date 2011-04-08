@@ -38,9 +38,7 @@ public class CreateGistHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		IStructuredSelection menuSelection = (IStructuredSelection) HandlerUtil
-		.getActiveMenuSelection(event);
-		if(selection != null && menuSelection == null) {
+		if(selection != null) {
 			if(selection instanceof ITextSelection) {
 				ITextSelection text = (ITextSelection) selection;
 				IEditorInput input = editor.getEditorInput();
@@ -50,13 +48,14 @@ public class CreateGistHandler extends AbstractHandler {
 					IFile file = fileInput.getFile();
 					createGistJob(file.getName(), file.getFileExtension(), text.getText());
 				}
-			}
-		}
-		if(menuSelection != null) {
-			Object obj = menuSelection.getFirstElement();
-			if(obj instanceof IFile) {
-				IFile file = (IFile) obj;
-				createGistJob(file);
+			} else
+			if(selection instanceof IStructuredSelection) {
+				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+				Object obj = structuredSelection.getFirstElement();
+				if(obj instanceof IFile) {
+					IFile file = (IFile) obj;
+					createGistJob(file);
+				}
 			}
 		}
 		return null;
