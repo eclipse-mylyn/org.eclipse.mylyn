@@ -26,7 +26,8 @@ public enum GitHubTaskAttributes {
 
 	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true),
 	REPORTER("Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, true, false),
-	COMMENT_NEW("Comment:", TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT, false, false, false)
+	COMMENT_NEW("Comment:", TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT, false, false, false),
+	LABELS("Labels:", "github.issue.labels", TaskAttribute.TYPE_MULTI_SELECT, true, true, false)
 	;
 
 	private final String id;

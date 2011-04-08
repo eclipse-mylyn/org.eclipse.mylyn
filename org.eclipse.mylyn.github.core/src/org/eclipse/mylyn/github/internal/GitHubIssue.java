@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import java.util.List;
+
 
 /**
  * GitHub Issue object to hold all the properties of an individual issue.
@@ -29,6 +31,8 @@ public class GitHubIssue {
 	private String comment_new;
 
 	private int comments;
+
+	private List<String> labels;
 
 	/**
 	 * open, closed
@@ -200,6 +204,24 @@ public class GitHubIssue {
 	 */
 	public void setComments(int comments) {
 		this.comments = comments;
+	}
+
+	/**
+	 * Get labels applied to issue
+	 *
+	 * @return labels
+	 */
+	public List<String> getLabels() {
+		return this.labels;
+	}
+
+	/**
+	 * Set labels applied to issue
+	 *
+	 * @param labels
+	 */
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
 	}
 
 }

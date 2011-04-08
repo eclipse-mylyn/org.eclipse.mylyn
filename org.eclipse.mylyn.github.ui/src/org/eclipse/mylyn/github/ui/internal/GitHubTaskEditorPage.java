@@ -19,6 +19,7 @@ import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
@@ -50,6 +51,12 @@ public class GitHubTaskEditorPage extends AbstractTaskEditorPage {
 				descriptorIt.remove();
 			}
 		}
+		partDescriptors.add(new TaskEditorPartDescriptor("labels") {
+
+			public AbstractTaskEditorPart createPart() {
+				return new GitHubIssueLabelPart();
+			}
+		}.setPath(PATH_ATTRIBUTES));
 		return partDescriptors;
 	}
 	

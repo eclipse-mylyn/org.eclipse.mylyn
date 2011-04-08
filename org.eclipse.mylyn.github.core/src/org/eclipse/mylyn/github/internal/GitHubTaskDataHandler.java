@@ -15,6 +15,7 @@ package org.eclipse.mylyn.github.internal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -77,6 +78,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE, toLocalDate(issue.getClosed_at()));
 		createAttribute(data, GitHubTaskAttributes.REPORTER, issue.getUser());
 		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW, "");
+		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
 		
 		if (isPartial(data)) {
 			data.setPartial(true);
@@ -208,17 +210,31 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return attribute==null?null:attribute.getValue();
 	}
 
-	private void createAttribute(TaskData data, GitHubTaskAttributes attribute, String value) {
+	private TaskAttribute createAttribute(TaskData data,
+			GitHubTaskAttributes attribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(attribute.getId());
 		TaskAttributeMetaData metaData = attr.getMetaData();
-		metaData.defaults()
-			.setType(attribute.getType())
-			.setKind(attribute.getKind())
-			.setLabel(attribute.getLabel())
-			.setReadOnly(attribute.isReadOnly());
+		metaData.defaults().setType(attribute.getType())
+				.setKind(attribute.getKind()).setLabel(attribute.getLabel())
+				.setReadOnly(attribute.isReadOnly());
+		return attr;
+	}
 
+	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
+			String value) {
+		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
 			attr.addValue(value);
+		}
+	}
+
+	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
+			Collection<String> values) {
+		TaskAttribute attr = createAttribute(data, attribute);
+		if (values != null) {
+			for (String value : values) {
+				attr.addValue(value);
+			}
 		}
 	}
 
@@ -231,7 +247,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 		for (GitHubTaskAttributes attr: GitHubTaskAttributes.values()) {
 			if (attr.isInitTask()) {
-				createAttribute(data, attr,null);		
+				createAttribute(data, attr, (String) null);
 			}
 		}
 		
