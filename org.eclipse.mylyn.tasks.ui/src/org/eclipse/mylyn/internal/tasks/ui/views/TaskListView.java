@@ -867,7 +867,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().getTree().addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent event) {
 				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion 
-				if (System.currentTimeMillis() - lastExpansionTime < 150) {
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) {
 					return;
 				}
 				if (event.button == 3) {
