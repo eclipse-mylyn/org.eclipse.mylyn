@@ -169,6 +169,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositoryQueryPage_A_query_with_this_name_already_exists;
 
+	public static String AbstractRepositorySettingsPage_A_repository_with_this_name_already_exists;
+
 	public static String AbstractRepositorySettingsPage_Additional_Settings;
 
 	public static String AbstractRepositorySettingsPage_Anonymous_Access;

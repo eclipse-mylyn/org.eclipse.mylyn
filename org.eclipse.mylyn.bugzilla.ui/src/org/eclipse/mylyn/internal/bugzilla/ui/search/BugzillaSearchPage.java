@@ -513,12 +513,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository);
 
 		toolkit = new FormToolkit(Display.getCurrent());
+		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
 		originalQuery = origQuery;
 		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
+		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
 		toolkit = new FormToolkit(Display.getCurrent());
 	}
 
@@ -1377,7 +1379,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (canQuery()) {
 					return true;
 				}
-				setMessage(Messages.BugzillaSearchPage_Enter_search_option);
 			}
 			return false;
 		}

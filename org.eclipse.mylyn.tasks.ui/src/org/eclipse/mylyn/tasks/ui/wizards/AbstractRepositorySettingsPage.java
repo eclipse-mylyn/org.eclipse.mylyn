@@ -1321,6 +1321,14 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		// check for errors
 		errorMessage = isUniqueUrl(url);
 		if (errorMessage == null) {
+			for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
+				if (!repository.equals(getRepository()) && getRepositoryLabel().equals(repository.getRepositoryLabel())) {
+					errorMessage = Messages.AbstractRepositorySettingsPage_A_repository_with_this_name_already_exists;
+					break;
+				}
+			}
+		}
+		if (errorMessage == null) {
 			// check for messages
 			if (!isValidUrl(url)) {
 				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
