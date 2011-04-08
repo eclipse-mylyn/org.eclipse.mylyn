@@ -13,7 +13,7 @@
             class="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             id="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             name="%org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
-            overlayIcon="icons/obj16/github.png">
+            overlayIcon="icons/obj16/github_8x8.png">
       </connectorUi>
    </extension>
    <extension
