@@ -1514,7 +1514,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		selected = hardware.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&ref_platform=", hardware.getItem(element)); //$NON-NLS-1$
+			appendToBuffer(sb, "&rep_platform=", hardware.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = os.getSelectionIndices();
@@ -1820,7 +1820,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				selList.add(value);
 				sel = new String[selList.size()];
 				priority.setSelection(selList.toArray(sel));
-			} else if (key.equals("ref_platform")) { //$NON-NLS-1$
+			} else if (key.equals("rep_platform")) { //$NON-NLS-1$
 				String[] sel = hardware.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
