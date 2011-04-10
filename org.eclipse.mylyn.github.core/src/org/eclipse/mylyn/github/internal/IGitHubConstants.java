@@ -42,4 +42,9 @@ public interface IGitHubConstants {
 	 */
 	String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
 
+	/**
+	 * DATE_FORMAT
+	 */
+	String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
+
 }
