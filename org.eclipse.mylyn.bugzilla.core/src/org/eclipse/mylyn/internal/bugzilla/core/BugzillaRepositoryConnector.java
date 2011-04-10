@@ -56,8 +56,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskHistory;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.core.data.TaskRevision;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
@@ -1069,4 +1071,33 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	@Override
+	public boolean canGetTaskHistory(TaskRepository repository, ITask task) {
+		return Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
+	}
+
+	@Override
+	public TaskHistory getTaskHistory(TaskRepository repository, ITask task, IProgressMonitor monitor)
+			throws CoreException {
+		BugzillaClient client = getClientManager().getClient(repository, monitor);
+		BugHistory bugHistory = client.getBugHistory(task.getTaskId(), monitor).get(0);
+		TaskHistory history = new TaskHistory(repository, task);
+		for (BugHistory.Revision bugRevision : bugHistory.getRevisions()) {
+			TaskRevision revision = new TaskRevision(Long.toString(bugRevision.getWhen().getTime()),
+					bugRevision.getWhen(), repository.createPerson(bugRevision.getWho()));
+			history.add(revision);
+			for (BugHistory.Change bugChange : bugRevision.getChanges()) {
+				String attributeId;
+				if (bugChange.getAttachmentId() > 0) {
+					attributeId = TaskAttribute.PREFIX_ATTACHMENT + bugChange.getAttachmentId();
+				} else {
+					attributeId = bugChange.getFieldName();
+				}
+				TaskRevision.Change change = new TaskRevision.Change(attributeId, bugChange.getFieldName(),
+						bugChange.getRemoved(), bugChange.getAdded());
+				revision.add(change);
+			}
+		}
+		return history;
+	}
 }

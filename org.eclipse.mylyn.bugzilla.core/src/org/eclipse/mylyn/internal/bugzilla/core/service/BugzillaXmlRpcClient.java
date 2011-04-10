@@ -11,8 +11,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
@@ -23,6 +26,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.BugHistory;
+import org.eclipse.mylyn.internal.bugzilla.core.BugHistory.Revision;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
@@ -39,6 +44,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public static final String XML_USER_GET = "User.get"; //$NON-NLS-1$
 
 	public static final String XML_BUG_FIELDS = "Bug.fields"; //$NON-NLS-1$
+
+	public static final String XML_BUG_HISTORY = "Bug.history"; //$NON-NLS-1$
 
 	public static final String XML_PRODUCT_GET_SELECTABLE = "Product.get_selectable_products"; //$NON-NLS-1$
 
@@ -402,6 +409,46 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public int getUserID() {
 		return userID;
+	}
+
+	public List<BugHistory> getHistory(final Integer[] ids, final IProgressMonitor monitor) throws XmlRpcException {
+		return (new BugzillaXmlRpcOperation<List<BugHistory>>(this) {
+			@Override
+			public List<BugHistory> execute() throws XmlRpcException {
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("ids", ids); //$NON-NLS-1$
+				Map<?, ?> response = (HashMap<?, ?>) call(monitor, XML_BUG_HISTORY, params);
+				if (response != null) {
+					List<BugHistory> result = new ArrayList<BugHistory>(ids.length);
+					for (Object item : (Object[]) response.get("bugs")) { //$NON-NLS-1$
+						Map<?, ?> map = (Map<?, ?>) item;
+						Integer id = (Integer) map.get("id");
+						BugHistory history = new BugHistory(id);
+						Object[] historyItems = (Object[]) map.get("history");
+						for (Object historyItem : historyItems) {
+							Map<?, ?> historyItemMap = (Map<?, ?>) historyItem;
+							Revision revision = history.createRevision((Date) historyItemMap.get("when"),
+									(String) historyItemMap.get("who"));
+							Object[] changeItems = (Object[]) historyItemMap.get("changes");
+							if (changeItems != null) {
+								for (Object changeItem : changeItems) {
+									Map<?, ?> changeItemMap = (Map<?, ?>) changeItem;
+									int attachmentId = (changeItemMap.get("attachment_id") != null)
+											? Integer.parseInt((String) changeItemMap.get("attachment_id"))
+											: -1;
+									revision.addChange((String) changeItemMap.get("field_name"),
+											(String) changeItemMap.get("added"), (String) changeItemMap.get("removed"),
+											attachmentId);
+								}
+							}
+						}
+						result.add(history);
+					}
+					return result;
+				}
+				return null;
+			}
+		}).execute();
 	}
 
 }

@@ -2342,4 +2342,20 @@ public class BugzillaClient {
 		}
 		return xmlRpcClient;
 	}
+
+	public List<BugHistory> getBugHistory(String id, IProgressMonitor monitor) throws CoreException {
+		int bugId = Integer.parseInt(id);
+		try {
+			BugzillaXmlRpcClient client = getXmlRpcClient();
+			if (client == null) {
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+						"XMLRPC is not available")); //$NON-NLS-1$				
+			}
+			return client.getHistory(new Integer[] { bugId }, monitor);
+		} catch (XmlRpcException e) {
+			throw new CoreException(
+					new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "XMLRPC is not installed")); //$NON-NLS-1$
+		}
+	}
+
 }
