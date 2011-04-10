@@ -167,6 +167,19 @@ public class GitHubClient {
 	 *
 	 * @param <V>
 	 * @param uri
+	 * @param type
+	 * @return V
+	 * @throws IOException
+	 */
+	public <V> V get(String uri, Type type) throws IOException {
+		return get(uri, null, type);
+	}
+
+	/**
+	 * Get response from uri and bind to specified type
+	 *
+	 * @param <V>
+	 * @param uri
 	 * @param params
 	 * @param type
 	 * @return V
