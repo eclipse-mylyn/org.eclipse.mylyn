@@ -27,7 +27,9 @@ public enum GitHubTaskAttributes {
 	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true),
 	REPORTER("Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, true, false),
 	COMMENT_NEW("Comment:", TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT, false, false, false),
-	LABELS("Labels:", "github.issue.labels", TaskAttribute.TYPE_MULTI_SELECT, true, true, false)
+	LABELS("Labels:", "github.issue.labels", TaskAttribute.TYPE_MULTI_SELECT, true, true, false),
+	ASSIGNEE("Assignee:", TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, true, false, true),
+	MILESTONE("Milestone:", "github.issue.milestone", TaskAttribute.TYPE_SINGLE_SELECT, true, false, true)
 	;
 
 	private final String id;
