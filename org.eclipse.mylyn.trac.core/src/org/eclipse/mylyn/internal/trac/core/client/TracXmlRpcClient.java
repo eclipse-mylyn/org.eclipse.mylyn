@@ -569,6 +569,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return info.isApiVersionOrHigher(epoch, major, minor);
 	}
 
+	public List<TracComment> getComments(int id, IProgressMonitor monitor) throws TracException {
+		Object[] result = (Object[]) call(monitor, "ticket.changeLog", id, 0); //$NON-NLS-1$
+		List<TracComment> comments = new ArrayList<TracComment>(result.length);
+		for (Object item : result) {
+			comments.add(parseChangeLogEntry((Object[]) item));
+		}
+		return comments;
+	}
+
 	public TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException {
 		Object[] result = (Object[]) call(monitor, "ticket.get", id); //$NON-NLS-1$
 		TracTicket ticket = parseTicket(result);

@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.trac.core.client.AbstractWikiHandler;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.ITracWikiClient;
+import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -49,8 +50,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskHistory;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.core.data.TaskRevision;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
@@ -710,4 +713,41 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return new TracTaskMapper(taskData, client);
 	}
 
+	@Override
+	public boolean canGetTaskHistory(TaskRepository repository, ITask task) {
+		return Version.XML_RPC.name().equals(repository.getVersion());
+	}
+
+	@Override
+	public TaskHistory getTaskHistory(TaskRepository repository, ITask task, IProgressMonitor monitor)
+			throws CoreException {
+		try {
+			ITracClient client = getClientManager().getTracClient(repository);
+			List<TracComment> comments = client.getComments(getTicketId(task.getTaskId()), monitor);
+			TaskHistory history = new TaskHistory(repository, task);
+			TaskRevision revision = null;
+			for (TracComment comment : comments) {
+				String id = comment.getCreated().getTime() + ""; //$NON-NLS-1$
+				if (revision == null || !id.equals(revision.getId())) {
+					revision = new TaskRevision(id, comment.getCreated(), repository.createPerson(comment.getAuthor()));
+					history.add(revision);
+				}
+				TracAttribute attribute = TracAttribute.getByTracKey(comment.getField());
+				if (attribute != null) {
+					String fieldName = attribute.toString();
+					if (fieldName.endsWith(":")) { //$NON-NLS-1$
+						fieldName = fieldName.substring(0, fieldName.length() - 1);
+					}
+					TaskRevision.Change change = new TaskRevision.Change(attribute.getTracKey(), fieldName,
+							comment.getOldValue(), comment.getNewValue());
+					revision.add(change);
+				}
+			}
+			return history;
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		}
+	}
 }

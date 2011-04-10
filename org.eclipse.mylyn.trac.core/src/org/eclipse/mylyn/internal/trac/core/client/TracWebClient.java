@@ -51,6 +51,7 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -780,6 +781,10 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	public void deleteTicket(int ticketId, IProgressMonitor monitor) throws TracException {
+		throw new UnsupportedOperationException();
+	}
+
+	public List<TracComment> getComments(int id, IProgressMonitor monitor) throws TracException {
 		throw new UnsupportedOperationException();
 	}
 

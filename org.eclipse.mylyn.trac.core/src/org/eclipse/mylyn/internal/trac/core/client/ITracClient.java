@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -213,5 +214,7 @@ public interface ITracClient {
 	Date getTicketLastChanged(Integer id, IProgressMonitor monitor) throws TracException;
 
 	void deleteTicket(int ticketId, IProgressMonitor monitor) throws TracException;
+
+	List<TracComment> getComments(int id, IProgressMonitor monitor) throws TracException;
 
 }
