@@ -273,5 +273,51 @@
          </enabledWhen>
       </page>
    </extension>
+
+   <!--
+   <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="popup:org.eclipse.mylyn.tasks.ui.views.tasks?after=showIn">
+       <command
+             commandId="org.eclipse.ui.navigate.showIn"
+             label="History"
+             style="push">
+          <parameter
+                name="org.eclipse.ui.navigate.showIn.targetId"
+                value="org.eclipse.team.ui.GenericHistoryView">
+          </parameter>
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+             </iterate>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+   </extension>
+   -->
+   
+   <extension
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
+          class="org.eclipse.mylyn.internal.team.ui.history.TaskHistoryAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.ITask"
+          class="org.eclipse.mylyn.internal.team.ui.history.TaskHistoryAdapterFactory">
+       <adapter
+             type="org.eclipse.team.ui.history.IHistoryPageSource">
+       </adapter>
+    </factory>
+ </extension>
 	
 </plugin>
