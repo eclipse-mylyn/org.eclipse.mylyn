@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskHistory;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -56,6 +57,16 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 2.0
 	 */
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
+
+	/**
+	 * Returns true, if the connector supports retrieval of task history for <code>task</code>.
+	 * 
+	 * @see #getHistory(TaskRepository, ITask, IProgressMonitor)
+	 * @since 3.6
+	 */
+	public boolean canGetTaskHistory(TaskRepository repository, ITask task) {
+		return false;
+	}
 
 	/**
 	 * @since 3.0
@@ -385,5 +396,41 @@ public abstract class AbstractRepositoryConnector {
 		}
 		return false;
 	}
+
+	/**
+	 * Retrieves the history for <code>task</code>. Throws {@link UnsupportedOperationException} by default.
+	 * 
+	 * @param repository
+	 *            the repository
+	 * @param task
+	 *            the task to retrieve history for
+	 * @param monitor
+	 *            a progress monitor
+	 * @return the history for <code>task</code>
+	 * @throws CoreException
+	 *             thrown in case retrieval fails
+	 * @see #canGetHistory(TaskRepository, ITask)
+	 * @since 3.6
+	 */
+	public TaskHistory getTaskHistory(TaskRepository repository, ITask task, IProgressMonitor monitor)
+			throws CoreException {
+		throw new UnsupportedOperationException();
+	}
+
+//	/**
+//	 * Returns a specific revision of a task. Sub-classes may override. 
+//	 * 
+//	 * @return null, if the revision is not found
+//	 * @since 3.6
+//	 * @see TaskHistory
+//	 * @see #getTaskHistory(TaskRepository, ITask, IProgressMonitor)
+//	 */
+//	public TaskData getTaskData(TaskRepository repository, ITask task, String revisionId, IProgressMonitor monitor)
+//			throws CoreException {
+//		Assert.isNotNull(repository);
+//		Assert.isNotNull(task);
+//		Assert.isNotNull(revisionId);
+//		return null;
+//	}
 
 }

@@ -189,12 +189,12 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		setRepositoryData(createCopy(oldState.getRepositoryData()));
 	}
 
-	private TaskData createCopy(TaskData oldData) {
+	public static TaskData createCopy(TaskData oldData) {
 		if (oldData == null) {
 			return null;
 		}
-		TaskData newData = new TaskData(oldData.getAttributeMapper(), getConnectorKind(), getRepositoryUrl(),
-				getTaskId());
+		TaskData newData = new TaskData(oldData.getAttributeMapper(), oldData.getConnectorKind(),
+				oldData.getRepositoryUrl(), oldData.getTaskId());
 		newData.setVersion(oldData.getVersion());
 		for (TaskAttribute child : oldData.getRoot().getAttributes().values()) {
 			newData.getRoot().deepAddCopy(child);

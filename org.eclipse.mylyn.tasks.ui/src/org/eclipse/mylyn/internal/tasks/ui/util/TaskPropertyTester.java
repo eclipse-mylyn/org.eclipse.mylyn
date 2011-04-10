@@ -23,6 +23,8 @@ public class TaskPropertyTester extends PropertyTester {
 
 	private static final String PROPERTY_CAN_GET_ATTACHMENT = "canGetAttachment"; //$NON-NLS-1$
 
+	private static final String PROPERTY_CAN_GET_HISTORY = "canGetHistory"; //$NON-NLS-1$
+
 	private static final String PROPERTY_CAN_POST_ATTACHMENT = "canPostAttachment"; //$NON-NLS-1$
 
 	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind"; //$NON-NLS-1$
@@ -55,6 +57,8 @@ public class TaskPropertyTester extends PropertyTester {
 				return equals(AttachmentUtil.canUploadAttachment(task), expectedValue);
 			} else if (PROPERTY_CAN_GET_ATTACHMENT.equals(property)) {
 				return equals(AttachmentUtil.canDownloadAttachment(task), expectedValue);
+			} else if (PROPERTY_CAN_GET_HISTORY.equals(property)) {
+				return TasksUiInternal.canGetTaskHistory(task);
 			} else if (PROPERTY_HAS_ACTIVE_TIME.equals(property)) {
 				return equals(TasksUiInternal.getActiveTime(task) > 0, expectedValue);
 			} else if (PROPERTY_HAS_EDITS.equals(property)) {

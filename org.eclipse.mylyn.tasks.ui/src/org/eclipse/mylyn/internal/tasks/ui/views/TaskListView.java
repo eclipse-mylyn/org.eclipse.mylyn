@@ -177,7 +177,9 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.CollapseAllHandler;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -1757,6 +1759,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 						}
 					}
 					return preferredResult;
+				}
+			};
+		} else if (adapter == IShowInTargetList.class) {
+			return new IShowInTargetList() {
+				public String[] getShowInTargetIds() {
+					return new String[] { "org.eclipse.team.ui.GenericHistoryView" }; //$NON-NLS-1$
+				}
+			};
+		} else if (adapter == IShowInSource.class) {
+			return new IShowInSource() {
+				public ShowInContext getShowInContext() {
+					return new ShowInContext(getViewer().getInput(), getViewer().getSelection());
 				}
 			};
 		}

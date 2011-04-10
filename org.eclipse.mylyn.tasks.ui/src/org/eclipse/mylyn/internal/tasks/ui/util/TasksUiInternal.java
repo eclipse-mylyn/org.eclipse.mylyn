@@ -77,6 +77,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler.Synchronizer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -100,9 +101,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskHistory;
+import org.eclipse.mylyn.tasks.core.data.TaskRevision;
+import org.eclipse.mylyn.tasks.core.data.TaskRevision.Change;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -1366,6 +1372,57 @@ public class TasksUiInternal {
 			return true;
 		}
 		return false;
+	}
+
+	public static TaskData computeTaskData(TaskData taskData, TaskHistory history, String revisionId,
+			IProgressMonitor monitor) throws CoreException {
+		TaskData newTaskData = TaskDataState.createCopy(taskData);
+		List<TaskRevision> revisions = history.getRevisions();
+		Collections.reverse(revisions);
+		TaskRevision lastRevision = null;
+		for (TaskRevision revision : revisions) {
+			for (Change change : revision.getChanges()) {
+				TaskAttribute attribute = newTaskData.getRoot().getAttribute(change.getAttributeId());
+				if (attribute != null) {
+					attribute.setValue(change.getRemoved());
+				}
+			}
+			// only apply changes up to this revision
+			if (revisionId.equals(revision.getId())) {
+				lastRevision = revision;
+				break;
+			}
+		}
+
+		if (lastRevision != null && lastRevision.getDate() != null) {
+			// remove attachments and comments that are newer than lastRevision
+			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(newTaskData.getRoot()
+					.getAttributes()
+					.values());
+			for (TaskAttribute attribute : attributes) {
+				if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
+					TaskCommentMapper mapper = TaskCommentMapper.createFrom(attribute);
+					if (mapper.getCreationDate() != null && mapper.getCreationDate().after(lastRevision.getDate())) {
+						newTaskData.getRoot().removeAttribute(attribute.getId());
+					}
+				} else if (TaskAttribute.TYPE_ATTACHMENT.equals(attribute.getMetaData().getType())) {
+					TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attribute);
+					if (mapper.getCreationDate() != null && mapper.getCreationDate().after(lastRevision.getDate())) {
+						newTaskData.getRoot().removeAttribute(attribute.getId());
+					}
+				}
+			}
+		}
+
+		return newTaskData;
+	}
+
+	public static boolean canGetTaskHistory(ITask task) {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		return connector.canGetTaskHistory(repository, task);
 	}
 
 }

@@ -68,6 +68,8 @@ public class RepositoryElementActionGroup {
 
 	private static final String ID_SEPARATOR_OPEN = "open"; //$NON-NLS-1$
 
+	private static final String ID_SEPARATOR_SHOW_IN = "showIn"; //$NON-NLS-1$
+
 	protected static final String ID_SEPARATOR_EDIT = "edit"; //$NON-NLS-1$
 
 	private final CopyTaskDetailsAction copyUrlAction;
@@ -161,6 +163,7 @@ public class RepositoryElementActionGroup {
 		manager.add(new Separator(ID_SEPARATOR_NEW)); // new, schedule
 		manager.add(new GroupMarker(ID_SEPARATOR_NAVIGATE)); // mark, go into, go up
 		manager.add(new Separator(ID_SEPARATOR_OPEN)); // open, activate
+		manager.add(new GroupMarker(ID_SEPARATOR_SHOW_IN)); // open, activate
 		manager.add(new Separator(ID_SEPARATOR_EDIT)); // cut, copy paste, delete, rename
 		manager.add(new Separator(ID_SEPARATOR_TASKS)); // move to
 		manager.add(new GroupMarker(ID_SEPARATOR_OPERATIONS)); // repository properties, import/export, context
@@ -210,9 +213,9 @@ public class RepositoryElementActionGroup {
 		}
 		if (task != null) {
 			if (task.isActive()) {
-				manager.appendToGroup(ID_SEPARATOR_OPEN, deactivateAction);
+				manager.appendToGroup(ID_SEPARATOR_SHOW_IN, deactivateAction);
 			} else {
-				manager.appendToGroup(ID_SEPARATOR_OPEN, activateAction);
+				manager.appendToGroup(ID_SEPARATOR_SHOW_IN, activateAction);
 			}
 		}
 
