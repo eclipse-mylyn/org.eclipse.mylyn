@@ -39,8 +39,6 @@ public class GitHubRepositorySettingsPage extends
 
 	static final String URL = "http://github.com";
 
-	private static final String PASS_LABEL_TEXT = "GitHub API Token:";
-
 	/**
 	 * Populate taskRepository with repository settings.
 	 * 
@@ -51,7 +49,7 @@ public class GitHubRepositorySettingsPage extends
 		super("GitHub Repository Settings", "", taskRepository);
 		this.setHttpAuth(false);
 		this.setNeedsAdvanced(false);
-		this.setNeedsAnonymousLogin(false);
+		this.setNeedsAnonymousLogin(true);
 		this.setNeedsTimeZone(false);
 		this.setNeedsHttpAuth(false);
 	}
@@ -78,10 +76,7 @@ public class GitHubRepositorySettingsPage extends
 			repositoryUserNameEditor.setLabelText("GitHub " + text);
 		}
 
-		// Use the password field for the API Token Key
-		if (repositoryPasswordEditor != null) {
-			repositoryPasswordEditor.setLabelText(PASS_LABEL_TEXT);
-		}
+		this.setAnonymous(false);
 	}
 
 	@Override
