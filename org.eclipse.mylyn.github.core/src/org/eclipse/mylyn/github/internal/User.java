@@ -85,6 +85,15 @@ public class User {
 	}
 
 	/**
+	 * @param name
+	 * @return this user
+	 */
+	public User setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	/**
 	 * @return type
 	 */
 	public String getType() {

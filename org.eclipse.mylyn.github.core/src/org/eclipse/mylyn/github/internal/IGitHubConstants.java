@@ -52,4 +52,14 @@ public interface IGitHubConstants {
 	 */
 	String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
 
+	/**
+	 * CONTENT_TYPE_JSON
+	 */
+	String CONTENT_TYPE_JSON = "application/json"; //$NON-NLS-1$
+
+	/**
+	 * CHARSET_UTF8
+	 */
+	String CHARSET_UTF8 = "UTF-8"; //$NON-NLS-1$
+
 }

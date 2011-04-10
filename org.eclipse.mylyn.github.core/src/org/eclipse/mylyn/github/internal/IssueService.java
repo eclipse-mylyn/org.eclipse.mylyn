@@ -13,6 +13,7 @@ package org.eclipse.mylyn.github.internal;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,16 @@ public class IssueService {
 	 * Issue closed state filter value
 	 */
 	public static final String STATE_CLOSED = "closed";
+
+	/**
+	 * Issue body field name
+	 */
+	public static final String FIELD_BODY = "body";
+
+	/**
+	 * Issue title field name
+	 */
+	public static final String FIELD_TITLE = "title";
 
 	private GitHubClient client;
 
@@ -136,6 +147,38 @@ public class IssueService {
 		};
 		return this.client.get(builder.toString(), filterData,
 				issueToken.getType());
+	}
+
+	/**
+	 * Create issue
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Issue createIssue(String user, String repository, Issue issue)
+			throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES).append(
+				IGitHubConstants.SUFFIX_JSON);
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(FIELD_BODY, issue.getBody());
+		params.put(FIELD_TITLE, issue.getTitle());
+		User assignee = issue.getAssignee();
+		if (assignee != null) {
+			params.put(FILTER_ASSIGNEE, assignee.getName());
+		}
+		Milestone milestone = issue.getMilestone();
+		if (milestone != null) {
+			params.put(FILTER_MILESTONE,
+					Integer.toString(milestone.getNumber()));
+		}
+
+		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
 }

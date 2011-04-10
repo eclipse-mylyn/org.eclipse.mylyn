@@ -68,6 +68,15 @@ public class Milestone {
 	}
 
 	/**
+	 * @param number
+	 * @return this milestone
+	 */
+	public Milestone setNumber(int number) {
+		this.number = number;
+		return this;
+	}
+
+	/**
 	 * @return openIssues
 	 */
 	public int getOpenIssues() {

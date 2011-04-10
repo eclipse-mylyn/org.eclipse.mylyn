@@ -33,6 +33,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.BasicScheme;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
 
 /**
@@ -196,6 +197,7 @@ public class GitHubClient {
 			switch (status) {
 			case 200:
 				return parseJson(method, type);
+			case 400:
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
@@ -223,9 +225,13 @@ public class GitHubClient {
 	public <V> V post(String uri, Map<String, String> params, Type type)
 			throws IOException {
 		PostMethod method = createPost(uri);
-		if (params != null && !params.isEmpty())
-			for (Entry<String, String> entry : params.entrySet())
-				method.addParameter(entry.getKey(), entry.getValue());
+		if (params != null && !params.isEmpty()) {
+			StringBuilder payload = new StringBuilder();
+			this.gson.toJson(params, payload);
+			method.setRequestEntity(new StringRequestEntity(payload.toString(),
+					IGitHubConstants.CONTENT_TYPE_JSON,
+					IGitHubConstants.CHARSET_UTF8));
+		}
 
 		try {
 			int status = this.client.executeMethod(this.hostConfig, method);
@@ -235,6 +241,7 @@ public class GitHubClient {
 				if (type != null)
 					return parseJson(method, type);
 				break;
+			case 400:
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);

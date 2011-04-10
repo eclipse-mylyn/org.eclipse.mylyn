@@ -98,10 +98,28 @@ public class Issue {
 	}
 
 	/**
+	 * @param milestone
+	 * @return this issue
+	 */
+	public Issue setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+		return this;
+	}
+
+	/**
 	 * @return body
 	 */
 	public String getBody() {
 		return this.body;
+	}
+
+	/**
+	 * @param body
+	 * @return this issue
+	 */
+	public Issue setBody(String body) {
+		this.body = body;
+		return this;
 	}
 
 	/**
@@ -126,6 +144,15 @@ public class Issue {
 	}
 
 	/**
+	 * @param title
+	 * @return this issue
+	 */
+	public Issue setTitle(String title) {
+		this.title = title;
+		return this;
+	}
+
+	/**
 	 * @return url
 	 */
 	public String getUrl() {
@@ -137,6 +164,15 @@ public class Issue {
 	 */
 	public User getAssignee() {
 		return this.assignee;
+	}
+
+	/**
+	 * @param assignee
+	 * @return this issue
+	 */
+	public Issue setAssignee(User assignee) {
+		this.assignee = assignee;
+		return this;
 	}
 
 	/**
