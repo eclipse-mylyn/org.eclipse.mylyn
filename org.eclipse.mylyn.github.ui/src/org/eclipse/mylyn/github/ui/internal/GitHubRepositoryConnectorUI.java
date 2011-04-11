@@ -22,6 +22,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -39,7 +40,17 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 
 	private final Pattern issuePattern = Pattern.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)");
-	
+
+	/**
+	 * Get core repository connector
+	 * 
+	 * @return connector
+	 */
+	public static GitHubRepositoryConnector getCoreConnector() {
+		return (GitHubRepositoryConnector) TasksUi
+				.getRepositoryConnector(GitHub.CONNECTOR_KIND);
+	}
+
 	/**
 	 * 
 	 * 
