@@ -14,6 +14,7 @@ package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -62,6 +64,9 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	private final Map<TaskRepository, List<Milestone>> repositoryMilestones = Collections
 			.synchronizedMap(new HashMap<TaskRepository, List<Milestone>>());
 
+	/**
+	 * Create GitHub issue repository connector
+	 */
 	public GitHubRepositoryConnector() {
 		taskDataHandler = new GitHubTaskDataHandler(this);
 	}
@@ -237,18 +242,10 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	public IStatus performQuery(TaskRepository repository,
 			IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
-
 		IStatus result = Status.OK_STATUS;
-		String queryStatus = query.getAttribute("status");
+		List<String> statuses = QueryUtils.getAttributes(IssueService.FILTER_STATE, query);
 
-		String[] statuses;
-		if (queryStatus.equals("all")) {
-			statuses = new String[] { "open", "closed" };
-		} else {
-			statuses = new String[] { queryStatus };
-		}
-
-		monitor.beginTask("Querying repository ...", statuses.length);
+		monitor.beginTask("Querying repository...", statuses.size());
 		try {
 			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 			String project = GitHub.computeTaskRepositoryProject(repository
@@ -257,12 +254,32 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 
-			// perform query
+			Map<String, String> filterData = new HashMap<String, String>();
+			String mentions = query.getAttribute(IssueService.FILTER_MENTIONED);
+			if (mentions != null)
+				filterData.put(IssueService.FILTER_MENTIONED, mentions);
+
+			String assignee = query.getAttribute(IssueService.FILTER_ASSIGNEE);
+			if (assignee != null)
+				filterData.put(IssueService.FILTER_ASSIGNEE, assignee);
+
+			String milestone = query
+					.getAttribute(IssueService.FILTER_MILESTONE);
+			if (milestone != null)
+				filterData.put(IssueService.FILTER_MILESTONE, milestone);
+
+			List<String> labels = QueryUtils.getAttributes(
+					IssueService.FILTER_LABELS, query);
+			if (!labels.isEmpty()) {
+				StringBuilder labelsQuery = new StringBuilder();
+				for (String label : labels)
+					labelsQuery.append(label).append(',');
+				filterData.put(IssueService.FILTER_LABELS,
+						labelsQuery.toString());
+			}
 
 			for (String status : statuses) {
-				Map<String, String> filterData = new HashMap<String, String>();
 				filterData.put(IssueService.FILTER_STATE, status);
-
 				List<Issue> issues = service.getIssues(user, project,
 						filterData);
 
@@ -344,7 +361,23 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasTaskChanged(TaskRepository repository, ITask task,
 			TaskData taskData) {
-		return new TaskMapper(taskData).hasChanges(task);
+		if (taskData.isPartial())
+			return new TaskMapper(taskData).hasChanges(task);
+
+		TaskAttribute modAttribute = taskData.getRoot().getAttribute(
+				TaskAttribute.DATE_MODIFICATION);
+		if (modAttribute == null)
+			return false;
+
+		boolean changed = true;
+		Date modDate = task.getModificationDate();
+		if (modDate != null) {
+			Date updateDate = taskData.getAttributeMapper().getDateValue(
+					modAttribute);
+			if (updateDate != null)
+				changed = updateDate.after(modDate);
+		}
+		return changed;
 	}
 
 	@Override
