@@ -13,12 +13,15 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -53,8 +56,135 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	private final GitHubTaskDataHandler taskDataHandler;
 
+	private final Map<TaskRepository, List<Label>> repositoryLabels = Collections
+			.synchronizedMap(new HashMap<TaskRepository, List<Label>>());
+
+	private final Map<TaskRepository, List<Milestone>> repositoryMilestones = Collections
+			.synchronizedMap(new HashMap<TaskRepository, List<Milestone>>());
+
 	public GitHubRepositoryConnector() {
 		taskDataHandler = new GitHubTaskDataHandler(this);
+	}
+
+	/**
+	 * Create client for repository
+	 * 
+	 * @param repository
+	 * @return client
+	 */
+	protected GitHubClient createClient(TaskRepository repository) {
+		GitHubClient client = new GitHubClient();
+		GitHubCredentials credentials = GitHubCredentials.create(repository);
+		client.setCredentials(credentials.getUsername(),
+				credentials.getPassword());
+		return client;
+	}
+
+	/**
+	 * Refresh labels for repository
+	 * 
+	 * @param repository
+	 * @return labels
+	 * @throws CoreException
+	 */
+	public List<Label> refreshLabels(TaskRepository repository)
+			throws CoreException {
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		String user = GitHub.computeTaskRepositoryUser(repository
+				.getRepositoryUrl());
+		String project = GitHub.computeTaskRepositoryProject(repository
+				.getRepositoryUrl());
+		GitHubClient client = createClient(repository);
+		LabelService service = new LabelService(client);
+		try {
+			List<Label> labels = service.getLabels(user, project);
+			this.repositoryLabels.put(repository, labels);
+			return labels;
+		} catch (IOException e) {
+			throw new CoreException(GitHub.createErrorStatus(e));
+		}
+	}
+
+	/**
+	 * Get labels for task repository.
+	 * 
+	 * @param repository
+	 * @return non-null but possibly empty list of labels
+	 */
+	public List<Label> getLabels(TaskRepository repository) {
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		List<Label> labels = new LinkedList<Label>();
+		List<Label> cached = this.repositoryLabels.get(repository);
+		if (cached != null) {
+			labels.addAll(cached);
+		}
+		return labels;
+	}
+
+	/**
+	 * Are there cached labels for the specified task repository?
+	 * 
+	 * @param repository
+	 * @return true if contains labels, false otherwise
+	 */
+	public boolean hasCachedLabels(TaskRepository repository) {
+		return this.repositoryLabels.containsKey(repository);
+	}
+
+	/**
+	 * Refresh milestones for repository
+	 * 
+	 * @param repository
+	 * @return milestones
+	 * @throws CoreException
+	 */
+	public List<Milestone> refreshMilestones(TaskRepository repository)
+			throws CoreException {
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		String user = GitHub.computeTaskRepositoryUser(repository
+				.getRepositoryUrl());
+		String project = GitHub.computeTaskRepositoryProject(repository
+				.getRepositoryUrl());
+		GitHubClient client = createClient(repository);
+		GitHubCredentials.create(repository);
+		MilestoneService service = new MilestoneService(client);
+		try {
+			List<Milestone> milestones = new LinkedList<Milestone>();
+			milestones.addAll(service.getMilestones(user, project,
+					IssueService.STATE_OPEN));
+			milestones.addAll(service.getMilestones(user, project,
+					IssueService.STATE_CLOSED));
+			this.repositoryMilestones.put(repository, milestones);
+			return milestones;
+		} catch (IOException e) {
+			throw new CoreException(GitHub.createErrorStatus(e));
+		}
+	}
+
+	/**
+	 * Get milestones for task repository.
+	 * 
+	 * @param repository
+	 * @return non-null but possibly empty list of milestones
+	 */
+	public List<Milestone> getMilestones(TaskRepository repository) {
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		List<Milestone> milestones = new LinkedList<Milestone>();
+		List<Milestone> cached = this.repositoryMilestones.get(repository);
+		if (cached != null) {
+			milestones.addAll(cached);
+		}
+		return milestones;
+	}
+
+	/**
+	 * Are there cached milestones for the specified task repository?
+	 * 
+	 * @param repository
+	 * @return true if contains milestones, false otherwise
+	 */
+	public boolean hasCachedMilestones(TaskRepository repository) {
+		return this.repositoryMilestones.containsKey(repository);
 	}
 
 	/**
@@ -123,12 +253,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 			String project = GitHub.computeTaskRepositoryProject(repository
 					.getUrl());
-			GitHubCredentials credentials = GitHubCredentials
-					.create(repository);
 
-			GitHubClient client = new GitHubClient();
-			client.setCredentials(credentials.getUsername(),
-					credentials.getPassword());
+			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 
 			// perform query
@@ -167,11 +293,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 				.getUrl());
 
 		try {
-			GitHubCredentials credentials = GitHubCredentials
-					.create(repository);
-			GitHubClient client = new GitHubClient();
-			client.setCredentials(credentials.getUsername(),
-					credentials.getPassword());
+			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 			Issue issue = service.getIssue(user, project, taskId);
 			List<Comment> comments = null;
