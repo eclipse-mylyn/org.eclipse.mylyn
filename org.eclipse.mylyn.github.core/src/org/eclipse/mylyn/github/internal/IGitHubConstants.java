@@ -33,6 +33,11 @@ public interface IGitHubConstants {
 	String SEGMENT_COMMENTS = "/comments"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_LABELS
+	 */
+	String SEGMENT_LABELS = "/labels"; //$NON-NLS-1$
+
+	/**
 	 * SUFFIX_JSON
 	 */
 	String SUFFIX_JSON = ".json"; //$NON-NLS-1$
