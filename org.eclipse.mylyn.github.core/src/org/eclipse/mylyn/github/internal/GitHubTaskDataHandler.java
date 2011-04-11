@@ -12,20 +12,18 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -42,14 +40,11 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	private GitHubTaskAttributeMapper taskAttributeMapper = null;
 	private final GitHubRepositoryConnector connector;
-	private DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
-	
-	private DateFormat githubDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss Z");
 
 	public GitHubTaskDataHandler(GitHubRepositoryConnector connector) {
 		this.connector = connector;
 	}
-	
+
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
 		if (this.taskAttributeMapper == null)
@@ -59,39 +54,45 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public TaskData createPartialTaskData(TaskRepository repository,
-			IProgressMonitor monitor,String user, String project, GitHubIssue issue) {
+			IProgressMonitor monitor, String user, String project, Issue issue) {
 
+		String key = Integer.toString(issue.getNumber());
 		TaskData data = new TaskData(getAttributeMapper(repository),
 				GitHubRepositoryConnector.KIND, repository.getRepositoryUrl(),
-				issue.getNumber());
+				key);
 		data.setVersion(DATA_VERSION);
-		
-		createOperations(data,issue);
-		
-		
-		createAttribute(data, GitHubTaskAttributes.KEY,issue.getNumber());
+
+		createOperations(data, issue);
+
+		createAttribute(data, GitHubTaskAttributes.KEY, key);
 		createAttribute(data, GitHubTaskAttributes.TITLE, issue.getTitle());
 		createAttribute(data, GitHubTaskAttributes.BODY, issue.getBody());
 		createAttribute(data, GitHubTaskAttributes.STATUS, issue.getState());
-		createAttribute(data, GitHubTaskAttributes.CREATION_DATE, toLocalDate(issue.getCreated_at()));
-		createAttribute(data, GitHubTaskAttributes.MODIFICATION_DATE, toLocalDate(issue.getCreated_at()));
-		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE, toLocalDate(issue.getClosed_at()));
-		createAttribute(data, GitHubTaskAttributes.REPORTER, issue.getUser());
+		createAttribute(data, GitHubTaskAttributes.CREATION_DATE,
+				issue.getCreatedAt());
+		createAttribute(data, GitHubTaskAttributes.MODIFICATION_DATE,
+				issue.getUpdatedAt());
+		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE,
+				issue.getClosedAt());
+		createAttribute(data, GitHubTaskAttributes.REPORTER, issue.getUser(),
+				repository);
+		createAttribute(data, GitHubTaskAttributes.ASSIGNEE,
+				issue.getAssignee(), repository);
 		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW, "");
 		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
-		
+
 		if (isPartial(data)) {
 			data.setPartial(true);
 		}
 
 		return data;
 	}
-	
-	
+
 	private boolean isPartial(TaskData data) {
-		for (GitHubTaskAttributes attribute: GitHubTaskAttributes.values()) {
+		for (GitHubTaskAttributes attribute : GitHubTaskAttributes.values()) {
 			if (attribute.isRequiredForFullTaskData()) {
-				TaskAttribute taskAttribute = data.getRoot().getAttribute(attribute.getId());
+				TaskAttribute taskAttribute = data.getRoot().getAttribute(
+						attribute.getId());
 				if (taskAttribute == null) {
 					return true;
 				}
@@ -100,83 +101,63 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return false;
 	}
 
-	private void createOperations(TaskData data, GitHubIssue issue) {
-		TaskAttribute operationAttribute = data.getRoot().createAttribute(TaskAttribute.OPERATION);
+	private void createOperations(TaskData data, Issue issue) {
+		TaskAttribute operationAttribute = data.getRoot().createAttribute(
+				TaskAttribute.OPERATION);
 		operationAttribute.getMetaData().setType(TaskAttribute.TYPE_OPERATION);
-		
+
 		if (!data.isNew()) {
 			if (issue.getState() != null) {
-				addOperation(data,issue,GitHubTaskOperation.LEAVE,true);
+				addOperation(data, issue, GitHubTaskOperation.LEAVE, true);
 				if (issue.getState().equals("open")) {
-					addOperation(data,issue,GitHubTaskOperation.CLOSE,false);
+					addOperation(data, issue, GitHubTaskOperation.CLOSE, false);
 				} else if (issue.getState().equals("closed")) {
-					addOperation(data,issue,GitHubTaskOperation.REOPEN,false);
+					addOperation(data, issue, GitHubTaskOperation.REOPEN, false);
 				}
 			}
 		}
 	}
 
-	private void addOperation(TaskData data, GitHubIssue issue, GitHubTaskOperation operation,boolean asDefault) {
-		TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + operation.getId());
+	private void addOperation(TaskData data, Issue issue,
+			GitHubTaskOperation operation, boolean asDefault) {
+		TaskAttribute attribute = data.getRoot().createAttribute(
+				TaskAttribute.PREFIX_OPERATION + operation.getId());
 		String label = createOperationLabel(issue, operation);
 		TaskOperation.applyTo(attribute, operation.getId(), label);
-		
+
 		if (asDefault) {
-			TaskAttribute operationAttribute = data.getRoot().getAttribute(TaskAttribute.OPERATION);
+			TaskAttribute operationAttribute = data.getRoot().getAttribute(
+					TaskAttribute.OPERATION);
 			TaskOperation.applyTo(operationAttribute, operation.getId(), label);
 		}
 	}
 
-	private String createOperationLabel(GitHubIssue issue,
+	private String createOperationLabel(Issue issue,
 			GitHubTaskOperation operation) {
-		return operation==GitHubTaskOperation.LEAVE?operation.getLabel()+issue.getState():operation.getLabel();
-	}
-
-	private String toLocalDate(String date) {
-		if (date != null && date.trim().length() > 0) {
-			// expect "2010/02/02 22:58:39 -0800"
-			try {
-				Date d = githubDateFormat.parse(date);
-				date = dateFormat.format(d);
-			} catch (ParseException e) {
-				// ignore
-			}
-		}
-		return date;
-	}
-
-	private String toGitHubDate(TaskData taskData,
-			GitHubTaskAttributes attr) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.name());
-		String value = attribute==null?null:attribute.getValue();
-		if (value != null) {
-			try {
-				Date d = dateFormat.parse(value);
-				value = githubDateFormat.format(d);
-			} catch (ParseException e) {
-				// ignore
-			}
-		}
-		return value;
+		return operation == GitHubTaskOperation.LEAVE ? operation.getLabel()
+				+ issue.getState() : operation.getLabel();
 	}
 
 	public TaskData createTaskData(TaskRepository repository,
-			IProgressMonitor monitor, String user, String project,
-			GitHubIssue issue, List<GitHubIssueComment> comments) {
+			IProgressMonitor monitor, String user, String project, Issue issue,
+			List<Comment> comments) {
 		TaskData taskData = createPartialTaskData(repository, monitor, user,
 				project, issue);
 		taskData.setPartial(false);
-		
+
 		if (comments != null && !comments.isEmpty()) {
 			int count = 1;
 			TaskAttribute root = taskData.getRoot();
-			for (GitHubIssueComment comment : comments) {
+			for (Comment comment : comments) {
 				TaskCommentMapper commentMapper = new TaskCommentMapper();
-				commentMapper.setAuthor(repository.createPerson(comment
-						.getUser()));
+				User author = comment.getUser();
+				IRepositoryPerson authorPerson = repository.createPerson(author
+						.getLogin());
+				authorPerson.setName(author.getName());
+				commentMapper.setAuthor(authorPerson);
 				commentMapper.setCreationDate(comment.getCreatedAt());
 				commentMapper.setText(comment.getBody());
-				commentMapper.setCommentId(comment.getId());
+				commentMapper.setCommentId(comment.getUrl());
 				commentMapper.setNumber(count);
 
 				TaskAttribute attribute = root
@@ -194,20 +175,18 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		if (!taskData.isNew()) {
 			issue.setNumber(taskData.getTaskId());
 		}
-		issue.setBody(getAttributeValue(taskData,GitHubTaskAttributes.BODY));
-		issue.setTitle(getAttributeValue(taskData,GitHubTaskAttributes.TITLE));
-		issue.setState(getAttributeValue(taskData,GitHubTaskAttributes.STATUS));
-		issue.setCreated_at(toGitHubDate(taskData,GitHubTaskAttributes.CREATION_DATE));
-		issue.setCreated_at(toGitHubDate(taskData,GitHubTaskAttributes.MODIFICATION_DATE));
-		issue.setCreated_at(toGitHubDate(taskData,GitHubTaskAttributes.CLOSED_DATE));
-		issue.setComment_new(getAttributeValue(taskData, GitHubTaskAttributes.COMMENT_NEW));
+		issue.setBody(getAttributeValue(taskData, GitHubTaskAttributes.BODY));
+		issue.setTitle(getAttributeValue(taskData, GitHubTaskAttributes.TITLE));
+		issue.setState(getAttributeValue(taskData, GitHubTaskAttributes.STATUS));
+		issue.setComment_new(getAttributeValue(taskData,
+				GitHubTaskAttributes.COMMENT_NEW));
 		return issue;
 	}
-	
+
 	private String getAttributeValue(TaskData taskData,
 			GitHubTaskAttributes attr) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.getId());
-		return attribute==null?null:attribute.getValue();
+		return attribute == null ? null : attribute.getValue();
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
@@ -224,17 +203,38 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			String value) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
-			attr.addValue(value);
+			data.getAttributeMapper().setValue(attr, value);
 		}
 	}
 
 	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
-			Collection<String> values) {
+			Date value) {
+		TaskAttribute attr = createAttribute(data, attribute);
+		if (value != null) {
+			data.getAttributeMapper().setDateValue(attr, value);
+		}
+	}
+
+	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
+			User value, TaskRepository repository) {
+		TaskAttribute attr = createAttribute(data, attribute);
+		if (value != null) {
+			IRepositoryPerson person = repository
+					.createPerson(value.getLogin());
+			person.setName(value.getName());
+			data.getAttributeMapper().setRepositoryPerson(attr, person);
+		}
+	}
+
+	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
+			List<Label> values) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (values != null) {
-			for (String value : values) {
-				attr.addValue(value);
+			List<String> labels = new LinkedList<String>();
+			for (Label label : values) {
+				labels.add(label.getName());
 			}
+			data.getAttributeMapper().setValues(attr, labels);
 		}
 	}
 
@@ -242,15 +242,15 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, TaskData data,
 			ITaskMapping initializationData, IProgressMonitor monitor)
 			throws CoreException {
-		
+
 		data.setVersion(DATA_VERSION);
 
-		for (GitHubTaskAttributes attr: GitHubTaskAttributes.values()) {
+		for (GitHubTaskAttributes attr : GitHubTaskAttributes.values()) {
 			if (attr.isInitTask()) {
 				createAttribute(data, attr, (String) null);
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -258,55 +258,59 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	public RepositoryResponse postTaskData(TaskRepository repository,
 			TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IProgressMonitor monitor) throws CoreException {
-		
+
 		GitHubIssue issue = createIssue(taskData);
 		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 		String repo = GitHub.computeTaskRepositoryProject(repository.getUrl());
 		try {
-			
+
 			GitHubService service = connector.getService();
-			GitHubCredentials credentials = GitHubCredentials.create(repository);
+			GitHubCredentials credentials = GitHubCredentials
+					.create(repository);
 			if (taskData.isNew()) {
-				issue = service.openIssue(user , repo, issue, credentials);
+				issue = service.openIssue(user, repo, issue, credentials);
 			} else {
 
 				// handle new comment
-				if(issue.getComment_new() != null) {
-					if(!"".equals(issue.getComment_new())) {
+				if (issue.getComment_new() != null) {
+					if (!"".equals(issue.getComment_new())) {
 						service.addComment(user, repo, issue, credentials);
 					}
 				}
 
-				TaskAttribute operationAttribute = taskData.getRoot().getAttribute(TaskAttribute.OPERATION);
+				TaskAttribute operationAttribute = taskData.getRoot()
+						.getAttribute(TaskAttribute.OPERATION);
 				GitHubTaskOperation operation = null;
 				if (operationAttribute != null) {
 					String opId = operationAttribute.getValue();
 					operation = GitHubTaskOperation.fromId(opId);
-					
+
 				}
-				if (operation != null && operation != GitHubTaskOperation.LEAVE) {
-					service.editIssue(user , repo, issue, credentials);
+				if (operation != GitHubTaskOperation.LEAVE) {
+					service.editIssue(user, repo, issue, credentials);
 					switch (operation) {
 					case REOPEN:
-						service.reopenIssue(user,repo,issue,credentials);
+						service.reopenIssue(user, repo, issue, credentials);
 						break;
 					case CLOSE:
-						service.closeIssue(user,repo,issue,credentials);
+						service.closeIssue(user, repo, issue, credentials);
 						break;
 					default:
-						throw new IllegalStateException("not implemented: "+operation);
+						throw new IllegalStateException("not implemented: "
+								+ operation);
 					}
 				} else {
-					service.editIssue(user , repo, issue, credentials);
+					service.editIssue(user, repo, issue, credentials);
 				}
 
 			}
-			return new RepositoryResponse(taskData.isNew()?ResponseKind.TASK_CREATED:ResponseKind.TASK_UPDATED,issue.getNumber());
+			return new RepositoryResponse(
+					taskData.isNew() ? ResponseKind.TASK_CREATED
+							: ResponseKind.TASK_UPDATED, issue.getNumber());
 		} catch (GitHubServiceException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}
 
 	}
-
 
 }

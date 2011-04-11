@@ -12,7 +12,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +38,6 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  */
 public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
-
 	/**
 	 * GitHub kind.
 	 */
@@ -54,7 +56,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	public GitHubRepositoryConnector() {
 		taskDataHandler = new GitHubTaskDataHandler(this);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -108,37 +110,47 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
 		IStatus result = Status.OK_STATUS;
 		String queryStatus = query.getAttribute("status");
-		
+
 		String[] statuses;
 		if (queryStatus.equals("all")) {
-			statuses = new String[] {"open","closed"};
+			statuses = new String[] { "open", "closed" };
 		} else {
 			statuses = new String[] { queryStatus };
 		}
-		
+
 		monitor.beginTask("Querying repository ...", statuses.length);
 		try {
 			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
-			String project = GitHub.computeTaskRepositoryProject(repository.getUrl());
-			GitHubCredentials credentials = GitHubCredentials.create(repository);
-			
+			String project = GitHub.computeTaskRepositoryProject(repository
+					.getUrl());
+			GitHubCredentials credentials = GitHubCredentials
+					.create(repository);
+
+			GitHubClient client = new GitHubClient();
+			client.setCredentials(credentials.getUsername(),
+					credentials.getPassword());
+			IssueService service = new IssueService(client);
+
 			// perform query
-			
-			for (String status: statuses) {
-				GitHubIssues issues = service.searchIssues(user, project,
-						status, query.getAttribute("queryText"), credentials);
-	
+
+			for (String status : statuses) {
+				Map<String, String> filterData = new HashMap<String, String>();
+				filterData.put(IssueService.FILTER_STATE, status);
+
+				List<Issue> issues = service.getIssues(user, project,
+						filterData);
+
 				// collect task data
-				for (GitHubIssue issue : issues.getIssues()) {
+				for (Issue issue : issues) {
 					TaskData taskData = taskDataHandler.createPartialTaskData(
-							repository, monitor,user, project, issue);
+							repository, monitor, user, project, issue);
 					collector.accept(taskData);
 				}
 				monitor.worked(1);
 			}
 
 			result = Status.OK_STATUS;
-		} catch (GitHubServiceException e) {
+		} catch (IOException e) {
 			result = GitHub.createErrorStatus(e);
 		}
 
@@ -146,31 +158,34 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		return result;
 	}
 
-
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
 
 		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
-		String project = GitHub.computeTaskRepositoryProject(repository.getUrl());
-		
+		String project = GitHub.computeTaskRepositoryProject(repository
+				.getUrl());
+
 		try {
-			GitHubCredentials credentials = GitHubCredentials.create(repository);
-			GitHubIssue issue = service.showIssue(user, project, taskId, credentials);
-			List<GitHubIssueComment> comments = null;
+			GitHubCredentials credentials = GitHubCredentials
+					.create(repository);
+			GitHubClient client = new GitHubClient();
+			client.setCredentials(credentials.getUsername(),
+					credentials.getPassword());
+			IssueService service = new IssueService(client);
+			Issue issue = service.getIssue(user, project, taskId);
+			List<Comment> comments = null;
 			if (issue.getComments() > 0) {
-				comments = service.getComments(user, project, issue,
-						credentials);
+				comments = service.getComments(user, project, taskId);
 			}
 			TaskData taskData = taskDataHandler.createTaskData(repository,
 					monitor, user, project, issue, comments);
-			
+
 			return taskData;
-		} catch (GitHubServiceException e) {
+		} catch (IOException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}
 	}
-
 
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
