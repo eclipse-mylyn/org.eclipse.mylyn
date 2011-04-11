@@ -11,9 +11,7 @@
 package org.eclipse.mylyn.github.internal;
 
 /**
- * GitHub constants.
- *
- * @author Kevin Sawicki (kevin@github.com)
+ * GitHub constants
  */
 public interface IGitHubConstants {
 
@@ -36,6 +34,11 @@ public interface IGitHubConstants {
 	 * SEGMENT_LABELS
 	 */
 	String SEGMENT_LABELS = "/labels"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_MILESTONES
+	 */
+	String SEGMENT_MILESTONES = "/milestones"; //$NON-NLS-1$
 
 	/**
 	 * SUFFIX_JSON
