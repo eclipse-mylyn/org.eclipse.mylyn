@@ -18,12 +18,12 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 public class GitHubCredentials {
 	private final String username;
-	private final String apiToken;
-	
-	
-	public GitHubCredentials(String username, String apiToken) {
+	private final String password;
+
+
+	public GitHubCredentials(String username, String password) {
 		this.username = username;
-		this.apiToken = apiToken;
+		this.password = password;
 	}
 	
 	public GitHubCredentials(AuthenticationCredentials credentials) {
@@ -37,8 +37,8 @@ public class GitHubCredentials {
 	public String getUsername() {
 		return username;
 	}
-	public String getApiToken() {
-		return apiToken;
+	public String getPassword() {
+		return password;
 	}
 	
 }

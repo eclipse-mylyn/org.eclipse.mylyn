@@ -73,7 +73,6 @@ public class GitHubService {
 	// private final static String COMMENT = "comment/";
 	private final static String ADD_LABEL = "label/add/"; // Implemented
 	private final static String REMOVE_LABEL = "label/remove/"; // Implemented
-	private final static String TOKEN = "/token";
 
 	private static final String EMAILS = "emails";
 
@@ -96,7 +95,7 @@ public class GitHubService {
 	 */
 	public GitHubService setCredentials(GitHubCredentials credentials) {
 		Credentials apiCredentials = new UsernamePasswordCredentials(
-				credentials.getUsername() + TOKEN, credentials.getApiToken());
+				credentials.getUsername(), credentials.getPassword());
 		this.httpClient.getState().setCredentials(AuthScope.ANY, apiCredentials);
 		return this;
 	}
