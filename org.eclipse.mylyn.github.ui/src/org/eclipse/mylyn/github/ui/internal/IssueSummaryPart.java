@@ -127,7 +127,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	private boolean addAvatarPart(Composite parent, FormToolkit toolkit,
 			TaskAttribute avatarAttribute, IRepositoryPerson person) {
-		if (avatarAttribute == null)
+		if (avatarAttribute == null || avatarAttribute.getValue().length() == 0)
 			return false;
 
 		AvatarLabel label = new AvatarLabel(GitHubUi.getDefault().getStore(),

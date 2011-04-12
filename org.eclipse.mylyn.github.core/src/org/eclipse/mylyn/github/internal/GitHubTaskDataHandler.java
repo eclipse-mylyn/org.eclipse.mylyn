@@ -75,10 +75,23 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 				issue.getUpdatedAt());
 		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE,
 				issue.getClosedAt());
-		createAttribute(data, GitHubTaskAttributes.REPORTER, issue.getUser(),
+
+		User reporter = issue.getUser();
+		createAttribute(data, GitHubTaskAttributes.REPORTER, reporter,
 				repository);
-		createAttribute(data, GitHubTaskAttributes.ASSIGNEE,
-				issue.getAssignee(), repository);
+		String reporterGravatar = reporter != null ? reporter.getGravatarUrl()
+				: null;
+		createAttribute(data, GitHubTaskAttributes.REPORTER_GRAVATAR,
+				reporterGravatar);
+
+		User assignee = issue.getAssignee();
+		createAttribute(data, GitHubTaskAttributes.ASSIGNEE, assignee,
+				repository);
+		String assigneeGravatar = assignee != null ? assignee.getGravatarUrl()
+				: null;
+		createAttribute(data, GitHubTaskAttributes.ASSIGNEE_GRAVATAR,
+				assigneeGravatar);
+
 		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW, "");
 		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
 
