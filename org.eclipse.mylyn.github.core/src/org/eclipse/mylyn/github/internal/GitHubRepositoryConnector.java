@@ -285,8 +285,9 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
 				// collect task data
 				for (Issue issue : issues) {
-					TaskData taskData = taskDataHandler.createPartialTaskData(
+					TaskData taskData = taskDataHandler.createTaskData(
 							repository, monitor, user, project, issue);
+					taskData.setPartial(true);
 					collector.accept(taskData);
 				}
 				monitor.worked(1);
@@ -361,9 +362,6 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasTaskChanged(TaskRepository repository, ITask task,
 			TaskData taskData) {
-		if (taskData.isPartial())
-			return new TaskMapper(taskData).hasChanges(task);
-
 		TaskAttribute modAttribute = taskData.getRoot().getAttribute(
 				TaskAttribute.DATE_MODIFICATION);
 		if (modAttribute == null)

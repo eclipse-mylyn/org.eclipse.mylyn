@@ -54,7 +54,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return this.taskAttributeMapper;
 	}
 
-	public TaskData createPartialTaskData(TaskRepository repository,
+	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project, Issue issue) {
 
 		String key = Integer.toString(issue.getNumber());
@@ -95,24 +95,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW, "");
 		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
 
-		if (isPartial(data)) {
-			data.setPartial(true);
-		}
-
 		return data;
-	}
-
-	private boolean isPartial(TaskData data) {
-		for (GitHubTaskAttributes attribute : GitHubTaskAttributes.values()) {
-			if (attribute.isRequiredForFullTaskData()) {
-				TaskAttribute taskAttribute = data.getRoot().getAttribute(
-						attribute.getId());
-				if (taskAttribute == null) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void createOperations(TaskData data, Issue issue) {
@@ -155,7 +138,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project, Issue issue,
 			List<Comment> comments) {
-		TaskData taskData = createPartialTaskData(repository, monitor, user,
+		TaskData taskData = createTaskData(repository, monitor, user,
 				project, issue);
 		taskData.setPartial(false);
 

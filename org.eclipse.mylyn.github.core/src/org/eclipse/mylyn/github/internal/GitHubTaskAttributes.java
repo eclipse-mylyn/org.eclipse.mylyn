@@ -14,64 +14,177 @@ package org.eclipse.mylyn.github.internal;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+/**
+ * GitHub issue task attributes
+ */
 public enum GitHubTaskAttributes {
 
-	KEY("Key",TaskAttribute.TASK_KEY,TaskAttribute.TYPE_SHORT_TEXT,true,true,true),
-	TITLE("Summary",TaskAttribute.SUMMARY,TaskAttribute.TYPE_SHORT_RICH_TEXT,true,false,true), 
-	BODY("Description",TaskAttribute.DESCRIPTION,TaskAttribute.TYPE_LONG_RICH_TEXT,true,false,true),
-	
-	CREATION_DATE("Created:",TaskAttribute.DATE_CREATION,TaskAttribute.TYPE_DATETIME,true,true,false),
-	MODIFICATION_DATE("Modified:",TaskAttribute.DATE_MODIFICATION,TaskAttribute.TYPE_DATETIME,true,true,false),
-	CLOSED_DATE("Closed:",TaskAttribute.DATE_COMPLETION,TaskAttribute.TYPE_DATETIME,false,true,false),
+	/**
+	 * Issue key
+	 */
+	KEY(Messages.GitHubTaskAttributes_LabelKey, TaskAttribute.TASK_KEY,
+			TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
-	STATUS("Status:",TaskAttribute.STATUS,TaskAttribute.TYPE_SHORT_TEXT,true,false,true),
-	REPORTER("Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, true, false),
-	COMMENT_NEW("Comment:", TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT, false, false, false),
-	LABELS("Labels:", "github.issue.labels", TaskAttribute.TYPE_MULTI_SELECT, true, true, false),
-	ASSIGNEE("Assignee:", TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, true, false, true),
-	MILESTONE("Milestone:", "github.issue.milestone", TaskAttribute.TYPE_SINGLE_SELECT, true, false, true),
-	ASSIGNEE_GRAVATAR("Assignee", "github.issue.assignee.gravatar", TaskAttribute.TYPE_URL, false, true, false),
-	REPORTER_GRAVATAR("Reporter", "github.issue.reporter.gravatar", TaskAttribute.TYPE_URL, false, true, false),
-	;
+	/**
+	 * Issue title
+	 */
+	TITLE(Messages.GitHubTaskAttributes_LabekSummary, TaskAttribute.SUMMARY,
+			TaskAttribute.TYPE_SHORT_RICH_TEXT, false, true),
+
+	/**
+	 * Issue description
+	 */
+	BODY(Messages.GitHubTaskAttributes_LabelDescription,
+			TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT,
+			false, true),
+
+	/**
+	 * Issue creation date
+	 */
+	CREATION_DATE(Messages.GitHubTaskAttributes_LabelCreated,
+			TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATETIME, true,
+			false),
+
+	/**
+	 * Issue modification date
+	 */
+	MODIFICATION_DATE(Messages.GitHubTaskAttributes_LabelModified,
+			TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATETIME, true,
+			false),
+
+	/**
+	 * Issue closed date
+	 */
+	CLOSED_DATE(Messages.GitHubTaskAttributes_LabelClosed,
+			TaskAttribute.DATE_COMPLETION, TaskAttribute.TYPE_DATETIME, true,
+			false),
+
+	/**
+	 * Issue status
+	 */
+	STATUS(Messages.GitHubTaskAttributes_LabelStatus, TaskAttribute.STATUS,
+			TaskAttribute.TYPE_SHORT_TEXT, false, true),
+
+	/**
+	 * Issue reporter
+	 */
+	REPORTER(Messages.GitHubTaskAttributes_LabelReporter,
+			TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, true, false),
+
+	/**
+	 * Comment being added to issue
+	 */
+	COMMENT_NEW(Messages.GitHubTaskAttributes_LabelComment,
+			TaskAttribute.COMMENT_NEW, TaskAttribute.TYPE_LONG_RICH_TEXT,
+			false, false),
+
+	/**
+	 * Labels applied to issue
+	 */
+	LABELS(Messages.GitHubTaskAttributes_LabelLabels, "github.issue.labels", //$NON-NLS-1$
+			TaskAttribute.TYPE_MULTI_SELECT, true, false),
+
+	/**
+	 * Issue assignee
+	 */
+	ASSIGNEE(Messages.GitHubTaskAttributes_LabelAssignee,
+			TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, false, true),
+
+	/**
+	 * Issue milestone
+	 */
+	MILESTONE(Messages.GitHubTaskAttributes_LabelMilestone,
+			"github.issue.milestone", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$
+			false, true),
+
+	/**
+	 * Issue assignee gravatar
+	 */
+	ASSIGNEE_GRAVATAR(Messages.GitHubTaskAttributes_LabelAssigneeGravatar,
+			"github.issue.assignee.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
+			true, false),
+
+	/**
+	 * Issue reporter gravatar
+	 */
+	REPORTER_GRAVATAR(Messages.GitHubTaskAttributes_LabelReporterGravatar,
+			"github.issue.reporter.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
+			true, false);
 
 	private final String id;
 	private final String label;
+	private final String kind;
 	private final boolean readOnly;
 	private final boolean initTask;
-	private final boolean requiredForFullTaskData;
 	private final String type;
-	
-	private GitHubTaskAttributes(String label, String id,String type,boolean requiredForFullTaskData, boolean readOnly, boolean initTask) {
+
+	private GitHubTaskAttributes(String label, String id, String type,
+			boolean readOnly, boolean initTask) {
+		this(label, id, type, TaskAttribute.KIND_DEFAULT, readOnly, initTask);
+	}
+
+	private GitHubTaskAttributes(String label, String id, String type,
+			String kind, boolean readOnly, boolean initTask) {
 		this.label = label;
-		this.requiredForFullTaskData = requiredForFullTaskData;
-		this.id = id==null?"github."+name():id;
+		this.id = id;
+		this.kind = kind;
 		this.type = type;
 		this.readOnly = readOnly;
 		this.initTask = initTask;
 	}
-	
+
+	/**
+	 * Get attribute label
+	 * 
+	 * @return label
+	 */
 	public String getLabel() {
 		return label;
 	}
+
+	/**
+	 * Get attribute id
+	 * 
+	 * @return id
+	 */
 	public String getId() {
 		return id;
 	}
+
+	/**
+	 * Get attribute type
+	 * 
+	 * @return type
+	 */
 	public String getType() {
 		return type;
 	}
+
+	/**
+	 * Is attribute read only?
+	 * 
+	 * @return true if read only, false otherwise
+	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
+	/**
+	 * Get attribute kind
+	 * 
+	 * @return kind
+	 */
 	public String getKind() {
-		return TaskAttribute.KIND_DEFAULT;
+		return this.kind;
 	}
-	
+
+	/**
+	 * Is this attribute created for new tasks?
+	 * 
+	 * @return true if needed for new tasks, false otherwise
+	 */
 	public boolean isInitTask() {
 		return initTask;
 	}
 
-	public boolean isRequiredForFullTaskData() {
-		return requiredForFullTaskData;
-	}
 }
