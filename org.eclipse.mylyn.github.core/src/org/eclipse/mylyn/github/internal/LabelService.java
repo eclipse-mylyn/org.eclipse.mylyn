@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.Assert;
 /**
  * Label service class for listing {@link Label} objects in use for a given user
  * and repository.
- * 
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class LabelService {
 
@@ -54,6 +52,47 @@ public class LabelService {
 		TypeToken<List<Label>> labelToken = new TypeToken<List<Label>>() {
 		};
 		return this.client.get(uri.toString(), labelToken.getType());
+	}
+
+	/**
+	 * Set the labels for an issue
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @param labels
+	 * @return list of labels
+	 * @throws IOException
+	 */
+	public List<Label> setLabels(String user, String repository,
+			String issueId, List<Label> labels) throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES).append('/').append(issueId);
+		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
+				IGitHubConstants.SUFFIX_JSON);
+
+		TypeToken<List<Label>> labelToken = new TypeToken<List<Label>>() {
+		};
+		return this.client.put(uri.toString(), labels, labelToken.getType());
+	}
+
+	/**
+	 * Create label
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param label
+	 * @return created label
+	 * @throws IOException
+	 */
+	public Label createLabel(String user, String repository, Label label)
+			throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
+				IGitHubConstants.SUFFIX_JSON);
+		return this.client.post(uri.toString(), label, Label.class);
 	}
 
 }

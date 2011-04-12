@@ -12,8 +12,6 @@ package org.eclipse.mylyn.github.internal;
 
 /**
  * GitHub issue label class.
- *
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class Label {
 
@@ -22,6 +20,17 @@ public class Label {
 	private String name;
 
 	private String url;
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+
+		return obj instanceof Label && this.name != null
+				&& this.name.equals(((Label) obj).name);
+	}
 
 	/**
 	 * @return color
@@ -35,6 +44,15 @@ public class Label {
 	 */
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * @param name
+	 * @return this label
+	 */
+	public Label setName(String name) {
+		this.name = name;
+		return this;
 	}
 
 	/**

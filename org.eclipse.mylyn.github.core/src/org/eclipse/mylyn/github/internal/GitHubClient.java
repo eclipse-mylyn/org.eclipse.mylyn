@@ -236,8 +236,8 @@ public class GitHubClient {
 	 * @throws IOException
 	 */
 	protected <V> V sendJson(EntityEnclosingMethod method,
-			Map<String, String> params, Type type) throws IOException {
-		if (params != null && !params.isEmpty()) {
+			Object params, Type type) throws IOException {
+		if (params != null) {
 			StringBuilder payload = new StringBuilder();
 			this.gson.toJson(params, payload);
 			method.setRequestEntity(new StringRequestEntity(payload.toString(),
@@ -278,8 +278,7 @@ public class GitHubClient {
 	 * @return response
 	 * @throws IOException
 	 */
-	public <V> V post(String uri, Map<String, String> params, Type type)
-			throws IOException {
+	public <V> V post(String uri, Object params, Type type) throws IOException {
 		PostMethod method = createPost(uri);
 		return sendJson(method, params, type);
 	}
@@ -294,8 +293,7 @@ public class GitHubClient {
 	 * @return response
 	 * @throws IOException
 	 */
-	public <V> V put(String uri, Map<String, String> params, Type type)
-			throws IOException {
+	public <V> V put(String uri, Object params, Type type) throws IOException {
 		PutMethod method = createPut(uri);
 		return sendJson(method, params, type);
 	}
