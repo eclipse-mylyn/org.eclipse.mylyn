@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target includeMode="feature" name="Mylyn GitHub Connector Target">
+<target includeMode="feature" name="Mylyn GitHub Connector Target" sequenceNumber="2">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="3.4.3.v20110131-0200-e3x-8j9F7_FXiI9jRBM4_bFl96vsIL"/>
@@ -12,8 +12,8 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.mockito" version="1.8.4.v201006030840"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository"/>
+<unit id="org.mockito" version="1.8.4.v201102171835"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
