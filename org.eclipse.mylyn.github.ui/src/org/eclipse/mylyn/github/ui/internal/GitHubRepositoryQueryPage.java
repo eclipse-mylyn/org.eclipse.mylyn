@@ -206,6 +206,20 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		if (query == null)
 			return;
 
+		String milestoneNumber = query
+				.getAttribute(IssueService.FILTER_MILESTONE);
+		if (milestoneNumber != null && this.milestones != null) {
+			int index = 0;
+			for (Milestone milestone : this.milestones) {
+				index++;
+				if (milestoneNumber.equals(Integer.toString(milestone
+						.getNumber()))) {
+					this.milestoneCombo.select(index);
+					break;
+				}
+			}
+		}
+
 		titleText.setText(query.getSummary());
 		labelsViewer.setCheckedElements(QueryUtils.getAttributes(
 				IssueService.FILTER_LABELS, query).toArray());
