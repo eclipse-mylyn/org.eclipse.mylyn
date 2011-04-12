@@ -55,22 +55,22 @@ public class IssueService {
 	/**
 	 * Issue open state filter value
 	 */
-	public static final String STATE_OPEN = "open";
+	public static final String STATE_OPEN = "open"; //$NON-NLS-1$
 
 	/**
 	 * Issue closed state filter value
 	 */
-	public static final String STATE_CLOSED = "closed";
+	public static final String STATE_CLOSED = "closed"; //$NON-NLS-1$
 
 	/**
 	 * Issue body field name
 	 */
-	public static final String FIELD_BODY = "body";
+	public static final String FIELD_BODY = "body"; //$NON-NLS-1$
 
 	/**
 	 * Issue title field name
 	 */
-	public static final String FIELD_TITLE = "title";
+	public static final String FIELD_TITLE = "title"; //$NON-NLS-1$
 
 	private GitHubClient client;
 
@@ -118,6 +118,9 @@ public class IssueService {
 	 */
 	public List<Comment> getComments(String user, String repository, String id)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(id, "Id cannot be null"); //$NON-NLS-1$
 		StringBuilder builder = new StringBuilder(
 				IGitHubConstants.SEGMENT_REPOS);
 		builder.append('/').append(user).append('/').append(repository);
@@ -141,6 +144,8 @@ public class IssueService {
 	 */
 	public List<Issue> getIssues(String user, String repository,
 			Map<String, String> filterData) throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder builder = new StringBuilder(
 				IGitHubConstants.SEGMENT_REPOS);
 		builder.append('/').append(user).append('/').append(repository);
@@ -188,12 +193,14 @@ public class IssueService {
 	 */
 	public Issue createIssue(String user, String repository, Issue issue)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES).append(
 				IGitHubConstants.SUFFIX_JSON);
 
-		Map<String, String> params = createIssueMap(issue);
+		Map<String, String> params = issue != null ? createIssueMap(issue) : null;
 		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
