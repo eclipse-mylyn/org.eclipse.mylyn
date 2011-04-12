@@ -96,6 +96,9 @@ public class IssueService {
 	 */
 	public Issue getIssue(String user, String repository, String id)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(id, "Id cannot be null"); //$NON-NLS-1$
 		StringBuilder builder = new StringBuilder(
 				IGitHubConstants.SEGMENT_REPOS);
 		builder.append('/').append(user).append('/').append(repository);
