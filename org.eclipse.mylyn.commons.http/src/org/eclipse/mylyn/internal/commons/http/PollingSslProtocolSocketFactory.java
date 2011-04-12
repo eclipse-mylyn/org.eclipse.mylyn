@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Tasktop EULA
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://tasktop.com/legal
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.http;
@@ -28,6 +31,13 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.eclipse.core.runtime.IStatus;
 
+/**
+ * Provides support for managing SSL connections.
+ * 
+ * @author Nathan Hapke
+ * @author Rob Elves
+ * @author Steffen Pingel
+ */
 public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 
 	private static final String KEY_STORE = "javax.net.ssl.keyStore"; //$NON-NLS-1$

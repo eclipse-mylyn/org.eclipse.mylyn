@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies.
+ * Copyright (c) 2004, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Tasktop EULA
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://tasktop.com/legal
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.http;
@@ -20,6 +23,9 @@ import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+/**
+ * @author Steffen Pingel
+ */
 public class PollingProtocolSocketFactory implements SchemeSocketFactory {
 
 	private final static SocketFactory factory = SocketFactory.getDefault();
