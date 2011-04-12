@@ -67,7 +67,7 @@ public class AvatarLabel implements IAvatarCallback {
 		if (!displayArea.isDisposed()) {
 			displayArea.setVisible(visible);
 			((GridData) displayArea.getLayoutData()).exclude = !visible;
-			displayArea.getParent().layout(true, true);
+			displayArea.getParent().getParent().layout(true, true);
 		}
 		return this;
 	}
