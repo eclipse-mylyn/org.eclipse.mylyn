@@ -20,53 +20,24 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Date formatter for multiple date formats present in the GitHub v2 API.
+ * Date formatter for date format present in the GitHub v3 API.
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class DateFormatter implements JsonDeserializer<Date> {
 
-	/**
-	 * DATE_FORMAT1
-	 */
-	public static final String DATE_FORMAT1 = "yyyy/MM/dd HH:mm:ss Z";
-
-	/**
-	 * DATE_FORMAT2
-	 */
-	public static final String DATE_FORMAT2 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
-	/**
-	 * DATE_FORMAT3
-	 */
-	public static final String DATE_FORMAT3 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
-	/**
-	 * DATE_FORMAT4
-	 */
-	public static final String DATE_FORMAT4 = "yyyy-MM-dd'T'HH:mm:ss";
-
-	private static final String[] FORMATS = new String[] { DATE_FORMAT1,
-			DATE_FORMAT2, DATE_FORMAT3, DATE_FORMAT4 };
-
-	private List<DateFormat> formats;
+	private DateFormat format;
 
 	/**
 	 * Create date formatter
 	 */
 	public DateFormatter() {
-		this.formats = new LinkedList<DateFormat>();
-		TimeZone timeZone = TimeZone.getTimeZone("Zulu");
-		for (String format : FORMATS) {
-			DateFormat dateFormat = new SimpleDateFormat(format);
-			dateFormat.setTimeZone(timeZone);
-			this.formats.add(dateFormat);
-		}
+		this.format = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT);
+		TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
+		this.format.setTimeZone(timeZone);
 	}
 
 	/**
@@ -75,18 +46,13 @@ public class DateFormatter implements JsonDeserializer<Date> {
 	 */
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
-		String string = json.getAsString();
-		Exception exception = null;
-		for (DateFormat format : this.formats) {
-			try {
-				synchronized (format) {
-					return format.parse(string);
-				}
-			} catch (ParseException e) {
-				exception = e;
+		try {
+			synchronized (this.format) {
+				return this.format.parse(json.getAsString());
 			}
+		} catch (ParseException e) {
+			throw new JsonParseException(e);
 		}
-		throw new JsonParseException(exception);
 	}
 
 }

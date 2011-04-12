@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -51,7 +52,7 @@ public class GitHubClient {
 	private HttpClient client = new HttpClient();
 
 	private Gson gson = new GsonBuilder()
-			.setDateFormat(IGitHubConstants.DATE_FORMAT)
+			.registerTypeAdapter(Date.class, new DateFormatter())
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 			.create();
 

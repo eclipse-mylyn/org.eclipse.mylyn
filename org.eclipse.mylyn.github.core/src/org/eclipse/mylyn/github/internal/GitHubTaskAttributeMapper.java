@@ -40,14 +40,16 @@ public class GitHubTaskAttributeMapper extends TaskAttributeMapper {
 	 * @see org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper#getValueLabels(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
 	public List<String> getValueLabels(TaskAttribute taskAttribute) {
-		if (TaskAttribute.TYPE_DATE.equals(taskAttribute.getMetaData()
-				.getType())) {
-			String date = taskAttribute.getValue();
-			if (date.length() > 0) {
+		String type = taskAttribute.getMetaData().getType();
+		if (TaskAttribute.TYPE_DATE.equals(type)
+				|| TaskAttribute.TYPE_DATETIME.equals(type)) {
+			String value = taskAttribute.getValue();
+			if (value.length() > 0) {
+				Date date = new Date(Long.parseLong(value));
 				synchronized (this.format) {
-					return Collections.singletonList(this.format
-							.format(new Date(Long.parseLong(date))));
+					value = this.format.format(date);
 				}
+				return Collections.singletonList(value);
 			}
 		}
 		return super.getValueLabels(taskAttribute);
