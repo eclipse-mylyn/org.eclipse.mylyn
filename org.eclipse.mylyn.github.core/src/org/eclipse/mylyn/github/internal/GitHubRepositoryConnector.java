@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -227,7 +228,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public String getLabel() {
-		return "GitHub Issues";
+		return Messages.GitHubRepositoryConnector_LabelConnector;
 	}
 
 	/**
@@ -245,7 +246,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		IStatus result = Status.OK_STATUS;
 		List<String> statuses = QueryUtils.getAttributes(IssueService.FILTER_STATE, query);
 
-		monitor.beginTask("Querying repository...", statuses.size());
+		monitor.beginTask(Messages.GitHubRepositoryConnector_TaskQuerying, statuses.size());
 		try {
 			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 			String project = GitHub.computeTaskRepositoryProject(repository
@@ -330,7 +331,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
 		if (taskFullUrl != null) {
-			Matcher matcher = Pattern.compile("(http://.+?)/issues/issue/([^/]+)").matcher(taskFullUrl);
+			Matcher matcher = Pattern.compile("(http://.+?)/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
 			if (matcher.matches()) {
 				return matcher.group(1);
 			}
@@ -341,7 +342,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getTaskIdFromTaskUrl(String taskFullUrl) {
 		if (taskFullUrl != null) {
-			Matcher matcher = Pattern.compile(".+?/issues/issue/([^/]+)").matcher(taskFullUrl);
+			Matcher matcher = Pattern.compile(".+?/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
 			if (matcher.matches()) {
 				return matcher.group(1);
 			}
@@ -351,12 +352,20 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return repositoryUrl+"/issues/issue/"+taskId;
+		return repositoryUrl+"/issues/issue/"+taskId; //$NON-NLS-1$
 	}
 
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository taskRepository,
 			IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		monitor.beginTask("", 2); //$NON-NLS-1$
+		monitor.setTaskName(Messages.GitHubRepositoryConnector_TaskUpdatingLabels);
+		refreshLabels(taskRepository);
+		monitor.worked(1);
+		monitor.setTaskName(Messages.GitHubRepositoryConnector_TaskUpdatingMilestones);
+		refreshMilestones(taskRepository);
+		monitor.done();
 	}
 
 	@Override

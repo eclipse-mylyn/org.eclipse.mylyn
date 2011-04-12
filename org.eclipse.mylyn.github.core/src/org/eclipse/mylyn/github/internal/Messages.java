@@ -20,6 +20,18 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.github.internal.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String GitHubRepositoryConnector_LabelConnector;
+
+	/** */
+	public static String GitHubRepositoryConnector_TaskQuerying;
+
+	/** */
+	public static String GitHubRepositoryConnector_TaskUpdatingLabels;
+
+	/** */
+	public static String GitHubRepositoryConnector_TaskUpdatingMilestones;
+
+	/** */
 	public static String GitHubTaskAttributes_LabekSummary;
 
 	/** */
