@@ -31,15 +31,15 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.BasicScheme;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
 
 /**
  * Client class for interacting with GitHub HTTP/JSON API.
- *
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class GitHubClient {
 
@@ -83,6 +83,18 @@ public class GitHubClient {
 	 */
 	protected PostMethod createPost(String uri) {
 		PostMethod method = new PostMethod(uri);
+		setMethodDefaults(method);
+		return method;
+	}
+
+	/**
+	 * Create standard post method
+	 * 
+	 * @param uri
+	 * @return post
+	 */
+	protected PutMethod createPut(String uri) {
+		PutMethod method = new PutMethod(uri);
 		setMethodDefaults(method);
 		return method;
 	}
@@ -213,18 +225,17 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Post data to uri
-	 *
+	 * Send json using specified method
+	 * 
 	 * @param <V>
-	 * @param uri
+	 * @param method
 	 * @param params
 	 * @param type
-	 * @return response
+	 * @return resource
 	 * @throws IOException
 	 */
-	public <V> V post(String uri, Map<String, String> params, Type type)
-			throws IOException {
-		PostMethod method = createPost(uri);
+	protected <V> V sendJson(EntityEnclosingMethod method,
+			Map<String, String> params, Type type) throws IOException {
 		if (params != null && !params.isEmpty()) {
 			StringBuilder payload = new StringBuilder();
 			this.gson.toJson(params, payload);
@@ -240,6 +251,7 @@ public class GitHubClient {
 			case 201:
 				if (type != null)
 					return parseJson(method, type);
+			case 204:
 				break;
 			case 400:
 			case 404:
@@ -253,6 +265,38 @@ public class GitHubClient {
 			method.releaseConnection();
 		}
 		return null;
+	}
+
+	/**
+	 * Post data to uri
+	 *
+	 * @param <V>
+	 * @param uri
+	 * @param params
+	 * @param type
+	 * @return response
+	 * @throws IOException
+	 */
+	public <V> V post(String uri, Map<String, String> params, Type type)
+			throws IOException {
+		PostMethod method = createPost(uri);
+		return sendJson(method, params, type);
+	}
+
+	/**
+	 * Put data to uri
+	 * 
+	 * @param <V>
+	 * @param uri
+	 * @param params
+	 * @param type
+	 * @return response
+	 * @throws IOException
+	 */
+	public <V> V put(String uri, Map<String, String> params, Type type)
+			throws IOException {
+		PutMethod method = createPut(uri);
+		return sendJson(method, params, type);
 	}
 
 }
