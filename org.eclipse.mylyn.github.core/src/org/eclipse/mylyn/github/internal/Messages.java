@@ -73,6 +73,9 @@ public class Messages extends NLS {
 	/** */
 	public static String GitHubTaskAttributes_LabelStatus;
 
+	/** */
+	public static String GitHubTaskDataHandler_MilestoneNone;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

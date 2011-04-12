@@ -163,13 +163,16 @@ public class IssueService {
 		params.put(FIELD_BODY, issue.getBody());
 		params.put(FIELD_TITLE, issue.getTitle());
 		User assignee = issue.getAssignee();
-		if (assignee != null) {
+		if (assignee != null)
 			params.put(FILTER_ASSIGNEE, assignee.getName());
-		}
+
 		Milestone milestone = issue.getMilestone();
 		if (milestone != null) {
-			params.put(FILTER_MILESTONE,
-					Integer.toString(milestone.getNumber()));
+			int number = milestone.getNumber();
+			if (number > 0)
+				params.put(FILTER_MILESTONE, Integer.toString(number));
+			else
+				params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
 		}
 		return params;
 	}

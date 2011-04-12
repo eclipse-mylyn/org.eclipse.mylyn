@@ -33,15 +33,21 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
+/**
+ * GitHub issue task data handler
+ */
 public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
-	private static final String DATA_VERSION = "1";
-	/**
-	 * 
-	 */
+	private static final String DATA_VERSION = "1"; //$NON-NLS-1$
+	private static final String MILESTONE_NONE_KEY = "0"; //$NON-NLS-1$
 	private GitHubTaskAttributeMapper taskAttributeMapper = null;
 	private final GitHubRepositoryConnector connector;
 
+	/**
+	 * Create GitHub issue task data handler for connector
+	 * 
+	 * @param connector
+	 */
 	public GitHubTaskDataHandler(GitHubRepositoryConnector connector) {
 		this.connector = connector;
 	}
@@ -92,10 +98,37 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, GitHubTaskAttributes.ASSIGNEE_GRAVATAR,
 				assigneeGravatar);
 
-		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW, "");
+		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW);
 		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
 
+		createMilestone(repository, data, issue);
+
 		return data;
+	}
+
+	private void createMilestone(TaskRepository repository, TaskData data,
+			Issue issue) {
+		Milestone current = issue.getMilestone();
+		String number = current != null ? Integer.toString(current.getNumber())
+				: MILESTONE_NONE_KEY;
+		TaskAttribute milestoneAttribute = createAttribute(data,
+				GitHubTaskAttributes.MILESTONE, number);
+
+		if (!this.connector.hasCachedMilestones(repository))
+			try {
+				this.connector.refreshMilestones(repository);
+			} catch (CoreException ignore) {
+				// Ignored
+			}
+
+		List<Milestone> cachedMilestones = this.connector
+				.getMilestones(repository);
+		milestoneAttribute.putOption(MILESTONE_NONE_KEY,
+				Messages.GitHubTaskDataHandler_MilestoneNone);
+		for (Milestone milestone : cachedMilestones)
+			milestoneAttribute.putOption(
+					Integer.toString(milestone.getNumber()),
+					milestone.getTitle());
 	}
 
 	private void createOperations(TaskData data, Issue issue) {
@@ -104,13 +137,13 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		operationAttribute.getMetaData().setType(TaskAttribute.TYPE_OPERATION);
 
 		if (!data.isNew()) {
-			if (issue.getState() != null) {
+			String state = issue.getState();
+			if (state != null) {
 				addOperation(data, issue, GitHubTaskOperation.LEAVE, true);
-				if (issue.getState().equals("open")) {
+				if (state.equals(IssueService.STATE_OPEN))
 					addOperation(data, issue, GitHubTaskOperation.CLOSE, false);
-				} else if (issue.getState().equals("closed")) {
+				else if (state.equals(IssueService.STATE_CLOSED))
 					addOperation(data, issue, GitHubTaskOperation.REOPEN, false);
-				}
 			}
 		}
 	}
@@ -138,8 +171,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project, Issue issue,
 			List<Comment> comments) {
-		TaskData taskData = createTaskData(repository, monitor, user,
-				project, issue);
+		TaskData taskData = createTaskData(repository, monitor, user, project,
+				issue);
 		taskData.setPartial(false);
 
 		if (comments != null && !comments.isEmpty()) {
@@ -181,6 +214,14 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			User assignee = new User().setName(assigneeValue);
 			issue.setAssignee(assignee);
 		}
+
+		String milestoneValue = getAttributeValue(taskData,
+				GitHubTaskAttributes.MILESTONE);
+		if (milestoneValue != null) {
+			Milestone milestone = new Milestone().setNumber(Integer
+					.parseInt(milestoneValue));
+			issue.setMilestone(milestone);
+		}
 		return issue;
 	}
 
@@ -200,20 +241,22 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return attr;
 	}
 
-	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
-			String value) {
+	private TaskAttribute createAttribute(TaskData data,
+			GitHubTaskAttributes attribute, String value) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
 			data.getAttributeMapper().setValue(attr, value);
 		}
+		return attr;
 	}
 
-	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
-			Date value) {
+	private TaskAttribute createAttribute(TaskData data,
+			GitHubTaskAttributes attribute, Date value) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
 			data.getAttributeMapper().setDateValue(attr, value);
 		}
+		return attr;
 	}
 
 	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
