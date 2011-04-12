@@ -29,9 +29,13 @@ public class GitHubImages {
 	private static ImageRegistry manager;
 
 	public static final String GITHUB_LOGO_OBJ = NAME_PREFIX + "OBJ_GITHUB_LOGO"; //$NON-NLS-1$
+	public static final String GITHUB_ISSUE_LABEL_OBJ = NAME_PREFIX + "OBJ_GITHUB_ISSUE_LABEL"; //$NON-NLS-1$
 
+	
 	public static final ImageDescriptor DESC_GITHUB_LOGO = create(PATH_OBJ, "github.png"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_GITHUB_ISSUE_LABEL = create(PATH_OBJ, "issue_label.png"); //$NON-NLS-1$
 
+	
 	private static ImageDescriptor create(String prefix, String name) {
 		return ImageDescriptor.createFromURL(makeImageURL(prefix, name));
 	}
@@ -45,6 +49,7 @@ public class GitHubImages {
 	private static final void initialize() {
 		manager = new ImageRegistry();
 		manage(GITHUB_LOGO_OBJ, DESC_GITHUB_LOGO);
+		manage(GITHUB_ISSUE_LABEL_OBJ, DESC_GITHUB_ISSUE_LABEL);
 	}
 
 	private static URL makeImageURL(String prefix, String name) {
