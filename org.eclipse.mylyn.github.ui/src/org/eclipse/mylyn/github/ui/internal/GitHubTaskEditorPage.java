@@ -16,11 +16,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.github.internal.GitHub;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
-import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -40,17 +37,25 @@ public class GitHubTaskEditorPage extends AbstractTaskEditorPage {
 		setNeedsPrivateSection(true);
 		setNeedsSubmitButton(true);
 	}
-	
+
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
-		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
+		Set<TaskEditorPartDescriptor> partDescriptors = super
+				.createPartDescriptors();
+		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors
+				.iterator();
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
-			if (partDescriptor.getId().equals(ID_PART_ATTRIBUTES)) {
+			String id = partDescriptor.getId();
+			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY))
 				descriptorIt.remove();
-			}
 		}
+		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
+
+			public AbstractTaskEditorPart createPart() {
+				return new IssueSummaryPart();
+			}
+		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor("labels") {
 
 			public AbstractTaskEditorPart createPart() {
@@ -59,17 +64,5 @@ public class GitHubTaskEditorPage extends AbstractTaskEditorPage {
 		}.setPath(PATH_ATTRIBUTES));
 		return partDescriptors;
 	}
-	
-	
-	@Override
-	protected AttributeEditorFactory createAttributeEditorFactory() {
-		return new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite()) {
-			@Override
-			public AbstractAttributeEditor createEditor(String type,
-					TaskAttribute taskAttribute) {
-				// TODO Auto-generated method stub
-				return super.createEditor(type, taskAttribute);
-			}
-		};
-	}
+
 }
