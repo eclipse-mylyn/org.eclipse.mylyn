@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
@@ -155,4 +157,14 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 	private Region createRegion(int textOffset, Matcher matcher) {
 		return new Region(matcher.start()+textOffset,matcher.end()-matcher.start());
 	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSearchPage(org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.eclipse.jface.viewers.IStructuredSelection)
+	 */
+	public ITaskSearchPage getSearchPage(TaskRepository repository,
+			IStructuredSelection selection) {
+		return new GitHubRepositoryQueryPage(repository, null);
+	}
+
 }
