@@ -29,8 +29,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class GitHubTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
-	private Image gitLogoImage = null;
-
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		if (GitHub.CONNECTOR_KIND.equals(
@@ -46,17 +44,7 @@ public class GitHubTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public Image getPageImage() {
-		if (gitLogoImage != null)
-			return gitLogoImage;
-		ImageDescriptor imageDescriptor = AbstractUIPlugin
-				.imageDescriptorFromPlugin("org.eclipse.mylyn.github.ui",
-						"images/git-logo.png");
-		if (imageDescriptor == null) {
-			return null;
-		}
-
-		return gitLogoImage = new Image(Display.getCurrent(), imageDescriptor
-				.getImageData());
+		return GitHubImages.get(GitHubImages.GITHUB_LOGO_OBJ);
 	}
 
 	@Override

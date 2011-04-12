@@ -227,7 +227,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public String getLabel() {
-		return "GitHub";
+		return "GitHub Issues";
 	}
 
 	/**
