@@ -99,7 +99,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 				assigneeGravatar);
 
 		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW);
-		createAttribute(data, GitHubTaskAttributes.LABELS, issue.getLabels());
+
+		createLabels(repository, data, issue);
 
 		createMilestone(repository, data, issue);
 
@@ -129,6 +130,23 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			milestoneAttribute.putOption(
 					Integer.toString(milestone.getNumber()),
 					milestone.getTitle());
+	}
+
+	private void createLabels(TaskRepository repository, TaskData data,
+			Issue issue) {
+		TaskAttribute labels = createAttribute(data,
+				GitHubTaskAttributes.LABELS, issue.getLabels());
+
+		if (!this.connector.hasCachedLabels(repository))
+			try {
+				this.connector.refreshLabels(repository);
+			} catch (CoreException ignore) {
+				// Ignored
+			}
+
+		List<Label> cachedLabels = this.connector.getLabels(repository);
+		for (Label label : cachedLabels)
+			labels.putOption(label.getName(), label.getName());
 	}
 
 	private void createOperations(TaskData data, Issue issue) {
@@ -270,8 +288,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
-			List<Label> values) {
+	private TaskAttribute createAttribute(TaskData data,
+			GitHubTaskAttributes attribute, List<Label> values) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (values != null) {
 			List<String> labels = new LinkedList<String>();
@@ -280,6 +298,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			data.getAttributeMapper().setValues(attr, labels);
 		}
+		return attr;
 	}
 
 	@Override
@@ -296,6 +315,60 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Update labels for issue
+	 * 
+	 * @param user
+	 * @param repo
+	 * @param client
+	 * @param repository
+	 * @param data
+	 * @param oldAttributes
+	 * @throws IOException
+	 */
+	protected void updateLabels(String user, String repo, GitHubClient client,
+			TaskRepository repository, TaskData data,
+			Set<TaskAttribute> oldAttributes) throws IOException {
+		// Update labels if changed
+		TaskAttribute labelsAttribute = data.getRoot().getAttribute(
+				GitHubTaskAttributes.LABELS.getId());
+		if (oldAttributes.contains(labelsAttribute)) {
+			LabelService labelService = new LabelService(client);
+
+			if (!this.connector.hasCachedLabels(repository))
+				try {
+					this.connector.refreshLabels(repository);
+				} catch (CoreException ignore) {
+					// Ignore
+				}
+			List<Label> currentLabels = this.connector.getLabels(repository);
+			List<Label> newLabels = new LinkedList<Label>();
+			List<Label> labels = new LinkedList<Label>();
+			for (String value : labelsAttribute.getValues()) {
+				Label label = new Label().setName(value);
+				if (!currentLabels.contains(label))
+					newLabels.add(label);
+				labels.add(label);
+			}
+			for (Label label : newLabels)
+				try {
+					labelService.createLabel(user, repo, label);
+				} catch (IOException e) {
+					// TODO detect failure and handle label already created
+				}
+
+			labelService.setLabels(user, repo, data.getTaskId(), labels);
+
+			if (!newLabels.isEmpty())
+				try {
+					this.connector.refreshLabels(repository);
+				} catch (CoreException ignore) {
+					// Ignore
+				}
+
+		}
 	}
 
 	@Override
@@ -324,8 +397,10 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 				String comment = getAttributeValue(taskData,
 						GitHubTaskAttributes.COMMENT_NEW);
 				if (comment != null && comment.length() > 0)
-					service.createComment(user, repo, taskData.getTaskId(),
-							comment);
+					service.createComment(user, repo, taskId, comment);
+
+				updateLabels(user, repo, client, repository, taskData,
+						oldAttributes);
 
 				// Handle state change
 				TaskAttribute operationAttribute = taskData.getRoot()
@@ -356,5 +431,4 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 	}
-
 }

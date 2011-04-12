@@ -104,6 +104,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		LabelService service = new LabelService(client);
 		try {
 			List<Label> labels = service.getLabels(user, project);
+			Collections.sort(labels, new LabelComparator());
 			this.repositoryLabels.put(repository, labels);
 			return labels;
 		} catch (IOException e) {
