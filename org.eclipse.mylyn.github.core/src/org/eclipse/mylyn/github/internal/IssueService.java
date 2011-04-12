@@ -153,6 +153,28 @@ public class IssueService {
 	}
 
 	/**
+	 * Create issue map for issue
+	 * 
+	 * @param issue
+	 * @return map
+	 */
+	protected Map<String, String> createIssueMap(Issue issue) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(FIELD_BODY, issue.getBody());
+		params.put(FIELD_TITLE, issue.getTitle());
+		User assignee = issue.getAssignee();
+		if (assignee != null) {
+			params.put(FILTER_ASSIGNEE, assignee.getName());
+		}
+		Milestone milestone = issue.getMilestone();
+		if (milestone != null) {
+			params.put(FILTER_MILESTONE,
+					Integer.toString(milestone.getNumber()));
+		}
+		return params;
+	}
+
+	/**
 	 * Create issue
 	 *
 	 * @param user
@@ -168,20 +190,58 @@ public class IssueService {
 		uri.append(IGitHubConstants.SEGMENT_ISSUES).append(
 				IGitHubConstants.SUFFIX_JSON);
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(FIELD_BODY, issue.getBody());
-		params.put(FIELD_TITLE, issue.getTitle());
-		User assignee = issue.getAssignee();
-		if (assignee != null) {
-			params.put(FILTER_ASSIGNEE, assignee.getName());
-		}
-		Milestone milestone = issue.getMilestone();
-		if (milestone != null) {
-			params.put(FILTER_MILESTONE,
-					Integer.toString(milestone.getNumber()));
-		}
-
+		Map<String, String> params = createIssueMap(issue);
 		return this.client.post(uri.toString(), params, Issue.class);
+	}
+
+	/**
+	 * Edit issue
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Issue editIssue(String user, String repository, Issue issue)
+			throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append('/').append(issue.getNumber())
+				.append(IGitHubConstants.SUFFIX_JSON);
+
+		Map<String, String> params = createIssueMap(issue);
+		String state = issue.getState();
+		if (state != null) {
+			params.put(FILTER_STATE, state);
+		}
+		return this.client.put(uri.toString(), params, Issue.class);
+	}
+
+	/**
+	 * Create comment on specified issue id
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Comment createComment(String user, String repository,
+			String issueId, String comment) throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append('/').append(issueId);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
+				IGitHubConstants.SUFFIX_JSON);
+
+		Map<String, String> params = new HashMap<String, String>(1, 1);
+		params.put(FIELD_BODY, comment);
+
+		return this.client.post(uri.toString(), params, Comment.class);
 	}
 
 }

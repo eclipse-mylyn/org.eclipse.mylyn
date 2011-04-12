@@ -84,6 +84,13 @@ public class Issue {
 	}
 
 	/**
+	 * @param number
+	 */
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	/**
 	 * @return labels
 	 */
 	public List<Label> getLabels() {
@@ -134,6 +141,13 @@ public class Issue {
 	 */
 	public String getState() {
 		return this.state;
+	}
+
+	/**
+	 * @param state
+	 */
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	/**

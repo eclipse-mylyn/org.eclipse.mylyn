@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -170,16 +171,20 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return taskData;
 	}
 
-	private GitHubIssue createIssue(TaskData taskData) {
-		GitHubIssue issue = new GitHubIssue();
+	private Issue createIssue(TaskData taskData) {
+		Issue issue = new Issue();
 		if (!taskData.isNew()) {
-			issue.setNumber(taskData.getTaskId());
+			issue.setNumber(Integer.parseInt(taskData.getTaskId()));
 		}
 		issue.setBody(getAttributeValue(taskData, GitHubTaskAttributes.BODY));
 		issue.setTitle(getAttributeValue(taskData, GitHubTaskAttributes.TITLE));
-		issue.setState(getAttributeValue(taskData, GitHubTaskAttributes.STATUS));
-		issue.setComment_new(getAttributeValue(taskData,
-				GitHubTaskAttributes.COMMENT_NEW));
+
+		String assigneeValue = getAttributeValue(taskData,
+				GitHubTaskAttributes.ASSIGNEE);
+		if (assigneeValue != null) {
+			User assignee = new User().setName(assigneeValue);
+			issue.setAssignee(assignee);
+		}
 		return issue;
 	}
 
@@ -258,56 +263,56 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	public RepositoryResponse postTaskData(TaskRepository repository,
 			TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IProgressMonitor monitor) throws CoreException {
-
-		GitHubIssue issue = createIssue(taskData);
+		String taskId = taskData.getTaskId();
+		Issue issue = createIssue(taskData);
 		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 		String repo = GitHub.computeTaskRepositoryProject(repository.getUrl());
 		try {
 
-			GitHubService service = connector.getService();
+			GitHubClient client = new GitHubClient();
 			GitHubCredentials credentials = GitHubCredentials
 					.create(repository);
+			client.setCredentials(credentials.getUsername(),
+					credentials.getPassword());
+			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
-				issue = service.openIssue(user, repo, issue, credentials);
+				issue.setState(IssueService.STATE_OPEN);
+				issue = service.createIssue(user, repo, issue);
+				taskId = Integer.toString(issue.getNumber());
 			} else {
 
-				// handle new comment
-				if (issue.getComment_new() != null) {
-					if (!"".equals(issue.getComment_new())) {
-						service.addComment(user, repo, issue, credentials);
-					}
-				}
+				// Handle new comment
+				String comment = getAttributeValue(taskData,
+						GitHubTaskAttributes.COMMENT_NEW);
+				if (comment != null && comment.length() > 0)
+					service.createComment(user, repo, taskData.getTaskId(),
+							comment);
 
+				// Handle state change
 				TaskAttribute operationAttribute = taskData.getRoot()
 						.getAttribute(TaskAttribute.OPERATION);
-				GitHubTaskOperation operation = null;
 				if (operationAttribute != null) {
-					String opId = operationAttribute.getValue();
-					operation = GitHubTaskOperation.fromId(opId);
-
-				}
-				if (operation != GitHubTaskOperation.LEAVE) {
-					service.editIssue(user, repo, issue, credentials);
-					switch (operation) {
-					case REOPEN:
-						service.reopenIssue(user, repo, issue, credentials);
-						break;
-					case CLOSE:
-						service.closeIssue(user, repo, issue, credentials);
-						break;
-					default:
-						throw new IllegalStateException("not implemented: "
-								+ operation);
-					}
-				} else {
-					service.editIssue(user, repo, issue, credentials);
+					GitHubTaskOperation operation = GitHubTaskOperation
+							.fromId(operationAttribute.getValue());
+					if (operation != GitHubTaskOperation.LEAVE)
+						switch (operation) {
+						case REOPEN:
+							issue.setState(IssueService.STATE_OPEN);
+							break;
+						case CLOSE:
+							issue.setState(IssueService.STATE_CLOSED);
+							break;
+						default:
+							break;
+						}
 				}
 
+				service.editIssue(user, repo, issue);
 			}
 			return new RepositoryResponse(
 					taskData.isNew() ? ResponseKind.TASK_CREATED
-							: ResponseKind.TASK_UPDATED, issue.getNumber());
-		} catch (GitHubServiceException e) {
+							: ResponseKind.TASK_UPDATED, taskId);
+		} catch (IOException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}
 
