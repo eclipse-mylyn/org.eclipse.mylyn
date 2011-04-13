@@ -22,11 +22,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
@@ -204,9 +202,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					IContextChangeSet contextChangeSet = getOrCreateSet(manager, task);
 					if (contextChangeSet instanceof ActiveChangeSet) {
 						ActiveChangeSet activeChangeSet = (ActiveChangeSet) contextChangeSet;
-						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
-								.getInterestingResources(context);
-						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
+//						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
+//								.getInterestingResources(context);
+//						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 						activeChangeSets.add(contextChangeSet);
 
 						// makeDefault() will add the change set 
@@ -261,38 +259,39 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	@SuppressWarnings({ "restriction", "deprecation" })
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
-		for (IInteractionElement element : elements) {
-			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
-			try {
-				if (bridge.isDocument(element.getHandleIdentifier())) {
-					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
-					if (resource != null && resource.exists()) {
-						for (IContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
-							if (activeContextChangeSet instanceof ActiveChangeSet) {
-								if (!((ActiveChangeSet) activeContextChangeSet).contains(resource)) {
-									if (element.getInterest().isInteresting()) {
-										((ActiveChangeSet) activeContextChangeSet).add(new IResource[] { resource });
-									}
-								}
-							}
-						}
-						if (shouldRemove(element)) {
-							for (ActiveChangeSetManager collector : changeSetManagers) {
-								ChangeSet[] sets = collector.getSets();
-								for (ChangeSet set : sets) {
-									if (set instanceof ActiveChangeSet) {
-										set.remove(resource);
-									}
-								}
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-						"Could not manipulate change set resources", e)); //$NON-NLS-1$
-			}
-		}
+		// disabled, see bug 162007
+		//		for (IInteractionElement element : elements) {
+//			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
+//			try {
+//				if (bridge.isDocument(element.getHandleIdentifier())) {
+//					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
+//					if (resource != null && resource.exists()) {
+//						for (IContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
+//							if (activeContextChangeSet instanceof ActiveChangeSet) {
+//								if (!((ActiveChangeSet) activeContextChangeSet).contains(resource)) {
+//									if (element.getInterest().isInteresting()) {
+//										((ActiveChangeSet) activeContextChangeSet).add(new IResource[] { resource });
+//									}
+//								}
+//							}
+//						}
+//						if (shouldRemove(element)) {
+//							for (ActiveChangeSetManager collector : changeSetManagers) {
+//								ChangeSet[] sets = collector.getSets();
+//								for (ChangeSet set : sets) {
+//									if (set instanceof ActiveChangeSet) {
+//										set.remove(resource);
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			} catch (Exception e) {
+//				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
+//						"Could not manipulate change set resources", e)); //$NON-NLS-1$
+//			}
+//		}
 	}
 
 	public List<IContextChangeSet> getActiveChangeSets() {
