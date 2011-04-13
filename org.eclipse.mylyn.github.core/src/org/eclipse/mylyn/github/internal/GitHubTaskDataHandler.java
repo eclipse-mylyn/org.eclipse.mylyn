@@ -236,8 +236,9 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		String milestoneValue = getAttributeValue(taskData,
 				GitHubTaskAttributes.MILESTONE);
 		if (milestoneValue != null) {
-			Milestone milestone = new Milestone().setNumber(Integer
-					.parseInt(milestoneValue));
+			Milestone milestone = new Milestone();
+			if (milestoneValue.length() > 0)
+				milestone.setNumber(Integer.parseInt(milestoneValue));
 			issue.setMilestone(milestone);
 		}
 		return issue;
