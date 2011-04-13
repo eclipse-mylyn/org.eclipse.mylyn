@@ -373,10 +373,8 @@ public class GetChangeSetDialog extends FormDialog {
 			String path = null;
 			if (change.getChangeType().equals(ChangeType.DELETED)) {
 				path = change.getBase().getPath();
-				System.err.println("base ");
 			} else {
 				path = change.getTarget().getPath();
-				System.err.println("target ");
 			}
 			fChangeList.add(path);
         }
@@ -446,8 +444,17 @@ public class GetChangeSetDialog extends FormDialog {
     	fRepositoryNameText.setText(fSelectedChangeSet.getRepository().getUrl());
     	fChangeList.removeAll();
         updateChangeSet(fSelectedChangeSet);
+
         for (Change change : fSelectedChangeSet.getChanges()) {
-        	fChangeList.add(change.getTarget().getPath());
+			String path = null;
+			ChangeType type = change.getChangeType();
+			if (type.equals(ChangeType.DELETED)) {
+				path = change.getBase().getPath();
+			} else {
+				path = change.getTarget().getPath();
+			}
+
+			fChangeList.add(path);
         }
     }
      
