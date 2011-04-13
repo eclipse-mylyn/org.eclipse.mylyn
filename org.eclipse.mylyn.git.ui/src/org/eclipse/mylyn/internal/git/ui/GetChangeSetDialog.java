@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.versions.core.Change;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ChangeType;
-import org.eclipse.mylyn.versions.core.ScmArtifact;
 import org.eclipse.mylyn.versions.core.ScmCore;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
@@ -371,7 +370,15 @@ public class GetChangeSetDialog extends FormDialog {
         fChangeList = new org.eclipse.swt.widgets.List(extraSectionClient, SWT.V_SCROLL | SWT.H_SCROLL);
         updateChangeSet(fSelectedChangeSet);
         for (Change change : fSelectedChangeSet.getChanges()) {
-        	fChangeList.add(change.getTarget().getPath());
+			String path = null;
+			if (change.getChangeType().equals(ChangeType.DELETED)) {
+				path = change.getBase().getPath();
+				System.err.println("base ");
+			} else {
+				path = change.getTarget().getPath();
+				System.err.println("target ");
+			}
+			fChangeList.add(path);
         }
         final GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
         fChangeList.setLayoutData(data);
