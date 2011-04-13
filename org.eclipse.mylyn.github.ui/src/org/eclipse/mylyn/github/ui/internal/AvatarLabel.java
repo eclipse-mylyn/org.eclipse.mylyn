@@ -20,7 +20,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
@@ -64,11 +63,8 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @return this label
 	 */
 	public AvatarLabel setVisible(boolean visible) {
-		if (!displayArea.isDisposed()) {
+		if (!displayArea.isDisposed())
 			displayArea.setVisible(visible);
-			((GridData) displayArea.getLayoutData()).exclude = !visible;
-			displayArea.getParent().getParent().layout(true, true);
-		}
 		return this;
 	}
 
@@ -79,7 +75,7 @@ public class AvatarLabel implements IAvatarCallback {
 	 */
 	public AvatarLabel layout() {
 		if (!displayArea.isDisposed())
-			displayArea.getParent().layout(true, true);
+			displayArea.getParent().getParent().layout(true, true);
 		return this;
 	}
 
