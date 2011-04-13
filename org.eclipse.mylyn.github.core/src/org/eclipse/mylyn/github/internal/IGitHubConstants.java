@@ -41,6 +41,16 @@ public interface IGitHubConstants {
 	String SEGMENT_MILESTONES = "/milestones"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_GISTS
+	 */
+	String SEGMENT_GISTS = "/gists"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_USERS
+	 */
+	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
+
+	/**
 	 * SUFFIX_JSON
 	 */
 	String SUFFIX_JSON = ".json"; //$NON-NLS-1$
