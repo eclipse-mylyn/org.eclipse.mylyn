@@ -37,6 +37,9 @@ public class Messages extends NLS {
 	/** */
 	public static String GistAttribute_LabelUrl;
 
+	/** */
+	public static String GistConnector_LabelConnector;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
