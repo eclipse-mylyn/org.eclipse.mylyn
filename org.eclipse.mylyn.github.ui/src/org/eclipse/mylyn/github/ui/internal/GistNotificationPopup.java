@@ -26,13 +26,13 @@ import org.eclipse.swt.widgets.Link;
 @SuppressWarnings("restriction")
 public class GistNotificationPopup extends AbstractNotificationPopup {
 
-	private String gistURL;
+	private String id;
 
 	private String title;
 
-	public GistNotificationPopup(Display display, String gistURL, String title) {
+	public GistNotificationPopup(Display display, String id, String title) {
 		super(display);
-		this.gistURL = gistURL;
+		this.id = id;
 		this.title = title;
 	}
 
@@ -42,15 +42,14 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Title: " + title);
 		Link link = new Link(composite, SWT.WRAP);
-		String number = gistURL.split("https://gist.github.com/")[1];
-		link.setText("Created Gist: <a>" + number + "</a>");
+		link.setText("Created Gist: <a>" + id + "</a>");
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setBackground(composite.getBackground());
 		link.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Program.launch(gistURL);
+				Program.launch("https://gist.github.com/" + id);
 			}
 		});
 	}

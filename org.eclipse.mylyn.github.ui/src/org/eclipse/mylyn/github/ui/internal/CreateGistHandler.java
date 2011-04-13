@@ -23,9 +23,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.github.internal.GistService;
 import org.eclipse.mylyn.github.internal.GitHub;
-import org.eclipse.mylyn.github.internal.GitHubCredentials;
-import org.eclipse.mylyn.github.internal.GitHubService;
+import org.eclipse.mylyn.github.internal.GitHubClient;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
@@ -62,11 +64,20 @@ public class CreateGistHandler extends AbstractHandler {
 	}
 
 	private void createGistJob(String name, String extension, String contents) {
-		Set<TaskRepository> repositories = TasksUi.getRepositoryManager().getRepositories(GitHub.CONNECTOR_KIND);
+		Set<TaskRepository> repositories = TasksUi.getRepositoryManager()
+				.getRepositories(GitHub.CONNECTOR_KIND);
 		TaskRepository repository = repositories.iterator().next();
-		GitHubService service = new GitHubService();
-		GitHubCredentials credentials = GitHubCredentials.create(repository);
-		CreateGistJob job = new CreateGistJob("Creating Gist", name, extension, contents, credentials, service);
+		GitHubClient client = new GitHubClient();
+		AuthenticationCredentials credentials = repository
+				.getCredentials(AuthenticationType.REPOSITORY);
+		String userName = null;
+		if (credentials != null) {
+			userName = credentials.getUserName();
+			client.setCredentials(userName, credentials.getPassword());
+		}
+		GistService service = new GistService(client);
+		CreateGistJob job = new CreateGistJob("Creating Gist", name, contents,
+				service, userName);
 		job.setSystem(true);
 		job.schedule();
 	}
@@ -77,10 +88,9 @@ public class CreateGistHandler extends AbstractHandler {
 			br = new BufferedReader(new InputStreamReader(file.getContents()));
 			String line;
 			StringBuilder result = new StringBuilder();
-			while ((line = br.readLine()) != null) {
-			result.append(line);
-			result.append('\n');
-			}
+			while ((line = br.readLine()) != null)
+				result.append(line).append('\n');
+
 			String contents = result.toString();
 			createGistJob(file.getName(), file.getFileExtension(), contents);
 		} catch (CoreException e) {
