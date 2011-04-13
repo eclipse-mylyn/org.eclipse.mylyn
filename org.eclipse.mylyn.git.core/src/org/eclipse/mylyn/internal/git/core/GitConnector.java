@@ -137,7 +137,7 @@ public class GitConnector extends ScmConnector {
 				ScmArtifact newArtifact = getArtifact(repository, d, false, repoWorkAreaPath);
 				ScmArtifact oldArtifact = getArtifact(repository, d, true, repoWorkAreaPath);
 
-				changes.add(new Change(newArtifact, oldArtifact, mapChangeType(d.getChangeType())));
+				changes.add(new Change(oldArtifact, newArtifact, mapChangeType(d.getChangeType())));
 			}
 
 			return changeSet(commit, repository, changes);
