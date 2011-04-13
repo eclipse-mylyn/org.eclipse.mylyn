@@ -89,10 +89,10 @@ public class SectionComposite extends SharedScrolledComposite {
 					g.grabExcessVerticalSpace = false;
 					section.setLayoutData(g);
 				}
-				Point newSize = getDisplay().getActiveShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				Point currentSize = getDisplay().getActiveShell().getSize();
+				Point newSize = section.getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				Point currentSize = section.getShell().getSize();
 				if (newSize.x > currentSize.x || newSize.y > currentSize.y) {
-					getDisplay().getActiveShell().setSize(newSize);
+					section.getShell().setSize(newSize);
 				} else {
 					layout(true);
 					reflow(true);
