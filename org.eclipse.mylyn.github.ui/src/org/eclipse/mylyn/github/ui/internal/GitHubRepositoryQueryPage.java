@@ -44,6 +44,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -103,7 +104,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 		labelsViewer = CheckboxTableViewer.newCheckList(labelsArea, SWT.BORDER
 				| SWT.V_SCROLL | SWT.H_SCROLL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 80)
+		GridDataFactory.fillDefaults().grab(true, true).hint(100, 80)
 				.applyTo(labelsViewer.getControl());
 		labelsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		labelsViewer.setLabelProvider(new LabelProvider() {
@@ -111,6 +112,10 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			public String getText(Object element) {
 				return ((org.eclipse.mylyn.github.internal.Label) element)
 						.getName();
+			}
+
+			public Image getImage(Object element) {
+				return GitHubImages.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
 			}
 
 		});
