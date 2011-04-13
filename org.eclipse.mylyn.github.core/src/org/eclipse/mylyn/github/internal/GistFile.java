@@ -17,6 +17,8 @@ public class GistFile {
 
 	private int size;
 
+	private String content;
+
 	private String filename;
 
 	private String rawUrl;
@@ -26,6 +28,22 @@ public class GistFile {
 	 */
 	public int getSize() {
 		return this.size;
+	}
+
+	/**
+	 * @return content
+	 */
+	public String getContent() {
+		return this.content;
+	}
+
+	/**
+	 * @param content
+	 * @return this gist file
+	 */
+	public GistFile setContent(String content) {
+		this.content = content;
+		return this;
 	}
 
 	/**

@@ -78,6 +78,15 @@ public class User {
 	}
 
 	/**
+	 * @param login
+	 * @return this user
+	 */
+	public User setLogin(String login) {
+		this.login = login;
+		return this;
+	}
+
+	/**
 	 * @return name
 	 */
 	public String getName() {

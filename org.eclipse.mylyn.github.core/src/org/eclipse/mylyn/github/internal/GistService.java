@@ -64,4 +64,23 @@ public class GistService {
 		return this.client.get(uri.toString(), gistToken.getType());
 	}
 
+	/**
+	 * Create a gist
+	 * 
+	 * @param gist
+	 * @return created gist
+	 * @throws IOException
+	 */
+	public Gist createGist(Gist gist) throws IOException {
+		StringBuilder uri = new StringBuilder();
+		User user = gist.getAuthor();
+		if (user != null) {
+			uri.append(IGitHubConstants.SEGMENT_USERS);
+			uri.append('/').append(user.getLogin());
+		}
+		uri.append(IGitHubConstants.SEGMENT_GISTS).append(
+				IGitHubConstants.SUFFIX_JSON);
+		return this.client.post(uri.toString(), gist, Gist.class);
+	}
+
 }
