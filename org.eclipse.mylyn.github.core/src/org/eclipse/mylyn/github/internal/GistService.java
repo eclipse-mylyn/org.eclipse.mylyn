@@ -11,7 +11,9 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -81,6 +83,44 @@ public class GistService {
 		uri.append(IGitHubConstants.SEGMENT_GISTS).append(
 				IGitHubConstants.SUFFIX_JSON);
 		return this.client.post(uri.toString(), gist, Gist.class);
+	}
+
+	/**
+	 * Create comment on specified gist id
+	 * 
+	 * @param gistId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Comment createComment(String gistId, String comment)
+			throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
+				IGitHubConstants.SUFFIX_JSON);
+
+		Map<String, String> params = new HashMap<String, String>(1, 1);
+		params.put(IssueService.FIELD_BODY, comment);
+		return this.client.post(uri.toString(), params, Comment.class);
+	}
+
+	/**
+	 * Get comments for specified gist id
+	 * 
+	 * @param gistId
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	public List<Comment> getComments(String gistId) throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
+				IGitHubConstants.SUFFIX_JSON);
+
+		TypeToken<List<Comment>> commentToken = new TypeToken<List<Comment>>() {
+		};
+		return this.client.get(uri.toString(), commentToken.getType());
 	}
 
 }
