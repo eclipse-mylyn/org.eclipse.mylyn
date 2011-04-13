@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
-import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -191,26 +190,16 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		GridDataFactory.fillDefaults().grab(true, false)
 				.applyTo(headerComposite);
 
-		TaskAttribute statusAtribute = getTaskData().getRoot()
-				.getMappedAttribute(TaskAttribute.STATUS);
-		addAttribute(headerComposite, toolkit, statusAtribute, 0);
+		TaskAttribute root = getTaskData().getRoot();
 
-		ITaskMapping mapping = getTaskEditorPage().getConnector()
-				.getTaskMapping(getTaskData());
-		if (mapping != null && mapping.getResolution() != null
-				&& mapping.getResolution().length() > 0) {
-			TaskAttribute resolutionAtribute = getTaskData().getRoot()
-					.getMappedAttribute(TaskAttribute.RESOLUTION);
-			addAttribute(headerComposite, toolkit, resolutionAtribute, 0, false);
-		}
+		addAttribute(headerComposite, toolkit,
+				root.getMappedAttribute(TaskAttribute.STATUS), 0);
 
-		TaskAttribute dateCreation = getTaskData().getRoot()
-				.getMappedAttribute(TaskAttribute.DATE_CREATION);
-		addAttribute(headerComposite, toolkit, dateCreation);
+		addAttribute(headerComposite, toolkit,
+				root.getMappedAttribute(TaskAttribute.DATE_CREATION));
 
-		TaskAttribute dateModified = getTaskData().getRoot()
-				.getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-		addAttribute(headerComposite, toolkit, dateModified);
+		addAttribute(headerComposite, toolkit,
+				root.getMappedAttribute(TaskAttribute.DATE_MODIFICATION));
 
 		// ensure layout does not wrap
 		layout.numColumns = headerComposite.getChildren().length;

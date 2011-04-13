@@ -56,10 +56,10 @@ public class GitHubTaskEditorPage extends AbstractTaskEditorPage {
 				return new IssueSummaryPart();
 			}
 		}.setPath(PATH_HEADER));
-		partDescriptors.add(new TaskEditorPartDescriptor("labels") {
+		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
 
 			public AbstractTaskEditorPart createPart() {
-				return new GitHubIssueLabelPart();
+				return new IssueAttributePart();
 			}
 		}.setPath(PATH_ATTRIBUTES));
 		return partDescriptors;
