@@ -86,6 +86,20 @@ public class GistService {
 	}
 
 	/**
+	 * Update a gist
+	 * 
+	 * @param gist
+	 * @return updated gist
+	 * @throws IOException
+	 */
+	public Gist updateGist(Gist gist) throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gist.getRepo())
+				.append(IGitHubConstants.SUFFIX_JSON);
+		return this.client.put(uri.toString(), gist, Gist.class);
+	}
+
+	/**
 	 * Create comment on specified gist id
 	 * 
 	 * @param gistId

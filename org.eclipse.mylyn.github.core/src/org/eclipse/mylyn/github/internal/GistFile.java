@@ -54,6 +54,13 @@ public class GistFile {
 	}
 
 	/**
+	 * @param filename
+	 */
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	/**
 	 * @return rawUrl
 	 */
 	public String getRawUrl() {

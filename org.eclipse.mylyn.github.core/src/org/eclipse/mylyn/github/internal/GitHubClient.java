@@ -190,6 +190,39 @@ public class GitHubClient {
 	}
 
 	/**
+	 * Get response stream from uri. It is the responsibility of the calling
+	 * method to close the returned stream.
+	 * 
+	 * @param uri
+	 * @param params
+	 * @return V
+	 * @throws IOException
+	 */
+	public InputStream getStream(String uri, Map<String, String> params)
+			throws IOException {
+		GetMethod method = createGet(uri);
+		if (params != null && !params.isEmpty())
+			method.setQueryString(getPairs(params));
+
+		try {
+			int status = this.client.executeMethod(this.hostConfig, method);
+			switch (status) {
+			case 200:
+				return method.getResponseBodyAsStream();
+			case 400:
+			case 404:
+			case 500:
+				RequestError error = parseJson(method, RequestError.class);
+				throw new RequestException(error);
+			default:
+				throw new IOException(method.getStatusText());
+			}
+		} catch (JsonParseException jpe) {
+			throw new IOException(jpe);
+		}
+	}
+
+	/**
 	 * Get response from uri and bind to specified type
 	 *
 	 * @param <V>

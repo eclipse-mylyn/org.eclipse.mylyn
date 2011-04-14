@@ -134,6 +134,15 @@ public class Gist {
 	}
 
 	/**
+	 * @param repo
+	 * @return this gist
+	 */
+	public Gist setRepo(String repo) {
+		this.repo = repo;
+		return this;
+	}
+
+	/**
 	 * @return url
 	 */
 	public String getUrl() {
