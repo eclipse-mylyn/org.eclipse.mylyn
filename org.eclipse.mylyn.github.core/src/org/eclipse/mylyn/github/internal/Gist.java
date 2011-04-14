@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
@@ -26,6 +27,8 @@ public class Gist {
 	private Date createdAt;
 
 	private int comments;
+
+	private List<GistRevision> history;
 
 	private Map<String, GistFile> files;
 
@@ -117,6 +120,13 @@ public class Gist {
 	 */
 	public String getGitPushUrl() {
 		return this.gitPushUrl;
+	}
+
+	/**
+	 * @return history
+	 */
+	public List<GistRevision> getHistory() {
+		return this.history;
 	}
 
 	/**
