@@ -56,8 +56,7 @@ public class CreateGistJob extends Job {
 				@SuppressWarnings("restriction")
 				public void run() {
 					GistNotificationPopup popup = new GistNotificationPopup(
-							PlatformUI.getWorkbench().getDisplay(), created
-									.getId(), title);
+							PlatformUI.getWorkbench().getDisplay(), created, title);
 					popup.create();
 					popup.open();
 				}

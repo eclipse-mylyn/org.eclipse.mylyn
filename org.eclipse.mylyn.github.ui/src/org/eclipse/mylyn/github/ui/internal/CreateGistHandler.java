@@ -26,8 +26,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GistService;
-import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubClient;
+import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
@@ -36,6 +36,14 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class CreateGistHandler extends AbstractHandler {
+
+	/**
+	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+	 */
+	public boolean isEnabled() {
+		return !TasksUi.getRepositoryManager()
+				.getRepositories(GistConnector.KIND).isEmpty();
+	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
@@ -65,7 +73,8 @@ public class CreateGistHandler extends AbstractHandler {
 
 	private void createGistJob(String name, String extension, String contents) {
 		Set<TaskRepository> repositories = TasksUi.getRepositoryManager()
-				.getRepositories(GitHub.CONNECTOR_KIND);
+				.getRepositories(GistConnector.KIND);
+
 		TaskRepository repository = repositories.iterator().next();
 		GitHubClient client = new GitHubClient();
 		AuthenticationCredentials credentials = repository
