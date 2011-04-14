@@ -53,11 +53,16 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
 			boolean showLabel) {
+		addAttribute(composite, toolkit, attribute, indent, true, false);
+	}
+
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
+			boolean showLabel, boolean decorationEnabled) {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			// having editable controls in the header looks odd
 			editor.setReadOnly(true);
-			editor.setDecorationEnabled(false);
+			editor.setDecorationEnabled(decorationEnabled);
 
 			boolean isPriority = isAttribute(attribute, TaskAttribute.PRIORITY);
 
@@ -224,7 +229,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 //			}
 //		}
 		TaskAttribute statusAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		addAttribute(headerComposite, toolkit, statusAtribute, 0);
+		addAttribute(headerComposite, toolkit, statusAtribute, 0, true, true);
 
 		ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
 		if (mapping != null && mapping.getResolution() != null && mapping.getResolution().length() > 0) {
