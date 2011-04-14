@@ -39,11 +39,20 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	private AbstractAttributeEditor summaryEditor;
 
+	private String reporterAvatarId;
+
+	private String assigneeAvatarId;
+
 	/**
 	 * Create issue summary part
+	 * 
+	 * @param reporterAvatarId
+	 * @param assigneeAvatarId
 	 */
-	public IssueSummaryPart() {
+	public IssueSummaryPart(String reporterAvatarId, String assigneeAvatarId) {
 		setPartName("Summary"); //$NON-NLS-1$
+		this.reporterAvatarId = reporterAvatarId;
+		this.assigneeAvatarId = assigneeAvatarId;
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit,
@@ -155,9 +164,9 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		if (reporter != null) {
 			IRepositoryPerson person = getTaskData().getAttributeMapper()
 					.getRepositoryPerson(reporter);
-			if (addAvatarPart(composite, toolkit,
-					getAttribute(GitHubTaskAttributes.REPORTER_GRAVATAR),
-					person))
+			if (this.reporterAvatarId != null
+					&& addAvatarPart(composite, toolkit,
+							getAttribute(this.reporterAvatarId), person))
 				layout.numColumns++;
 		}
 		addSummaryText(composite, toolkit);
@@ -166,9 +175,9 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		if (assignee != null) {
 			IRepositoryPerson person = getTaskData().getAttributeMapper()
 					.getRepositoryPerson(assignee);
-			if (addAvatarPart(composite, toolkit,
-					getAttribute(GitHubTaskAttributes.ASSIGNEE_GRAVATAR),
-					person))
+			if (this.assigneeAvatarId != null
+					&& addAvatarPart(composite, toolkit,
+							getAttribute(this.assigneeAvatarId), person))
 				layout.numColumns++;
 		}
 

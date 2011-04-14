@@ -34,6 +34,9 @@ public class Messages extends NLS {
 	/** */
 	public static String GistRepositorySettingsPage_Title;
 
+	/** */
+	public static String GistTaskEditorPageFactory_PageText;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

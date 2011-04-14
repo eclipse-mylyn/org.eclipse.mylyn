@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.internal.GitHubTaskAttributes;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -53,7 +54,9 @@ public class GitHubTaskEditorPage extends AbstractTaskEditorPage {
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
 			public AbstractTaskEditorPart createPart() {
-				return new IssueSummaryPart();
+				return new IssueSummaryPart(
+						GitHubTaskAttributes.REPORTER_GRAVATAR.getId(),
+						GitHubTaskAttributes.ASSIGNEE_GRAVATAR.getId());
 			}
 		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
