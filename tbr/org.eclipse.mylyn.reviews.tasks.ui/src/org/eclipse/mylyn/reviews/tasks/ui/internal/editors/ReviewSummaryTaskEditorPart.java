@@ -189,7 +189,7 @@ public class ReviewSummaryTaskEditorPart extends AbstractReviewTaskEditorPart {
 
 
 
-	private final class ScopeViewerFilter extends ViewerFilter {
+	private static final class ScopeViewerFilter extends ViewerFilter {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {

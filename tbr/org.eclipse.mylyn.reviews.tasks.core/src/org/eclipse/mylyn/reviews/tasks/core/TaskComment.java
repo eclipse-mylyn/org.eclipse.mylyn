@@ -39,11 +39,11 @@ public class TaskComment {
 	}
 
 	public Date getDate() {
-		return date;
+		return date!=null?new Date(date.getTime()):null;
 	}
 
 	public void setDate(Date date) {
-		this.date = date;
+		this.date = date!=null?new Date(date.getTime()):null;
 	}
 
 }

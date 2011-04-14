@@ -37,12 +37,12 @@ public class ReviewResult {
 	}
 
 	public Date getDate() {
-		return date;
+		return date!=null?new Date(date.getTime()):null;
 	}
 
 	public void setDate(Date date) {
 		Date old = this.date;
-		this.date = date;
+		this.date = date!=null?new Date( date.getTime()):null;
 		changeSupport.firePropertyChange("date", old, date);
 	}
 

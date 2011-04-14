@@ -12,6 +12,7 @@ package org.eclipse.mylyn.reviews.tasks.core.internal;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
@@ -63,7 +64,7 @@ public class ReviewScopeNode extends AbstractTreeNode {
 			counts.get(key).counter++;
 		}
 		boolean isFirstElement = true;
-		for (String type : counts.keySet()) {
+		for (Entry<String,Counter> type : counts.entrySet()) {
 			if (isFirstElement) {
 				isFirstElement = false;
 			} else {

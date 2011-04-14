@@ -36,7 +36,7 @@ import org.antlr.runtime.tree.TreeAdaptor;
  *
  */
 public class ReviewDslParser extends Parser {
-	public static final String[] tokenNames = new String[] { "<invalid>",
+	 static final String[] tokenNames = new String[] { "<invalid>",
 			"<EOR>", "<DOWN>", "<UP>", "STRING", "INT", "TASK_ID", "ESC_SEQ",
 			"UNICODE_ESC", "OCTAL_ESC", "HEX_DIGIT", "WS", "'Review'",
 			"'result:'", "'Comment:'", "'PASSED'", "'WARNING'", "'FAILED'",
@@ -68,7 +68,7 @@ public class ReviewDslParser extends Parser {
 	}
 
 	public String[] getTokenNames() {
-		return tokenNames;
+		return tokenNames.clone();
 	}
 
 	public String getGrammarFileName() {

@@ -21,7 +21,7 @@ public class ColumnLabelProvider<T> extends TableLabelProvider {
 	private IColumnSpec<T>[] specs;
 
 	public ColumnLabelProvider(IColumnSpec<T>[] specs) {
-		this.specs = specs;
+		this.specs = specs.clone();
 	}
 
 	@SuppressWarnings("unchecked")
