@@ -20,6 +20,9 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.github.ui.gist.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String GistConnectorUi_LabelTaskKind;
+
+	/** */
 	public static String GistRepositoryQueryPage_LabelTitle;
 
 	/** */
