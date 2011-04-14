@@ -47,7 +47,7 @@ public class CreateGistJob extends Job {
 		try {
 			Gist gist = new Gist().setPublic(true);
 			if (user != null)
-				gist.setAuthor(new User().setLogin(user));
+				gist.setUser(new User().setLogin(user));
 			gist.setDescription(title);
 			GistFile file = new GistFile().setContent(content);
 			gist.setFiles(Collections.singletonMap(title, file));

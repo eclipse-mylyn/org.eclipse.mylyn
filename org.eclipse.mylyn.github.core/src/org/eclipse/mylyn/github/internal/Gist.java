@@ -41,7 +41,7 @@ public class Gist {
 
 	private String url;
 
-	private User author;
+	private User user;
 
 	/**
 	 * @return isPublic
@@ -141,18 +141,18 @@ public class Gist {
 	}
 
 	/**
-	 * @return author
+	 * @return user
 	 */
-	public User getAuthor() {
-		return this.author;
+	public User getUser() {
+		return this.user;
 	}
 
 	/**
-	 * @param author
+	 * @param user
 	 * @return this gist
 	 */
-	public Gist setAuthor(User author) {
-		this.author = author;
+	public Gist setUser(User user) {
+		this.user = user;
 		return this;
 	}
 

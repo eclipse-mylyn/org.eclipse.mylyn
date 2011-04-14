@@ -23,6 +23,9 @@ public class Messages extends NLS {
 	public static String GistAttribute_LabelAuthor;
 
 	/** */
+	public static String GistAttribute_LabelAuthorGravatar;
+
+	/** */
 	public static String GistAttribute_LabelCreated;
 
 	/** */

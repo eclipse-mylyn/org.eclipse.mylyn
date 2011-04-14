@@ -118,7 +118,7 @@ public class GistConnector extends AbstractRepositoryConnector {
 			TaskData data = new TaskData(mapper, getConnectorKind(),
 					repository.getUrl(), gist.getRepo());
 			data.setPartial(false);
-			this.dataHandler.fillTaskData(data, gist);
+			this.dataHandler.fillTaskData(repository, data, gist);
 			if (gist.getComments() > 0)
 				this.dataHandler.fillComments(repository, data,
 						service.getComments(gist.getRepo()));
@@ -176,7 +176,7 @@ public class GistConnector extends AbstractRepositoryConnector {
 				TaskData data = new TaskData(mapper, getConnectorKind(),
 						repository.getUrl(), gist.getRepo());
 				data.setPartial(true);
-				this.dataHandler.fillTaskData(data, gist);
+				this.dataHandler.fillTaskData(repository, data, gist);
 				collector.accept(data);
 			}
 		} catch (IOException e) {

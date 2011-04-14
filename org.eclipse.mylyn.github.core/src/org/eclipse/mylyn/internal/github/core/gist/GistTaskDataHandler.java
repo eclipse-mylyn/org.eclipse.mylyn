@@ -85,11 +85,13 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 	/**
 	 * Fill task data with data from gist
 	 * 
+	 * @param repository
 	 * @param data
 	 * @param gist
 	 * @return specified task data
 	 */
-	public TaskData fillTaskData(TaskData data, Gist gist) {
+	public TaskData fillTaskData(TaskRepository repository, TaskData data,
+			Gist gist) {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
 		TaskAttribute key = GistAttribute.KEY.create(data);
@@ -103,6 +105,18 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 
 		TaskAttribute url = GistAttribute.URL.create(data);
 		url.setValue(getGistUrl(data.getRepositoryUrl(), gist));
+
+		User user = gist.getUser();
+		if (user != null) {
+			TaskAttribute reporter = GistAttribute.AUTHOR.create(data);
+			IRepositoryPerson reporterPerson = repository.createPerson(user
+					.getLogin());
+			reporterPerson.setName(user.getName());
+			mapper.setRepositoryPerson(reporter, reporterPerson);
+
+			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR.create(data);
+			mapper.setValue(gravatar, user.getGravatarUrl());
+		}
 
 		GistAttribute.COMMENT_NEW.create(data);
 

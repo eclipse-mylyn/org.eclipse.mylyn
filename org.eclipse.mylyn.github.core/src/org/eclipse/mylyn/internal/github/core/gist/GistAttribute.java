@@ -28,7 +28,15 @@ public enum GistAttribute {
 	 * Gist author
 	 */
 	AUTHOR(TaskAttribute.USER_REPORTER, Messages.GistAttribute_LabelAuthor,
-			TaskAttribute.TYPE_PERSON, TaskAttribute.KIND_PEOPLE, true),
+			TaskAttribute.TYPE_PERSON, true),
+
+	/**
+	 * Gist author gravatar url
+	 */
+	AUTHOR_GRAVATAR(
+			"github.gist.reporter.avatar", //$NON-NLS-1$
+			Messages.GistAttribute_LabelAuthorGravatar, TaskAttribute.TYPE_URL,
+			true),
 
 	/**
 	 * Gist created date

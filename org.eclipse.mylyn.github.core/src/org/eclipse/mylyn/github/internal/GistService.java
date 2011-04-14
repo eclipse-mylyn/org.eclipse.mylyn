@@ -75,7 +75,7 @@ public class GistService {
 	 */
 	public Gist createGist(Gist gist) throws IOException {
 		StringBuilder uri = new StringBuilder();
-		User user = gist.getAuthor();
+		User user = gist.getUser();
 		if (user != null) {
 			uri.append(IGitHubConstants.SEGMENT_USERS);
 			uri.append('/').append(user.getLogin());
