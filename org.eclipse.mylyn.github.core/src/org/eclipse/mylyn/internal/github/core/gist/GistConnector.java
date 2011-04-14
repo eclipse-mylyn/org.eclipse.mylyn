@@ -168,7 +168,7 @@ public class GistConnector extends AbstractRepositoryConnector {
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		GistService service = new GistService(createClient(repository));
-		String user = query.getAttribute("user"); //$NON-NLS-1$
+		String user = query.getAttribute(IGistQueryConstants.USER);
 		try {
 			TaskAttributeMapper mapper = this.dataHandler
 					.getAttributeMapper(repository);
