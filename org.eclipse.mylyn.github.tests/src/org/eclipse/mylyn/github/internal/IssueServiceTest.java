@@ -20,9 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link IssueService}.
- * 
- * @author Christian Trutz (christian.trutz@gmail.com)
+ * Unit tests for {@link IssueService}
  */
 @SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)

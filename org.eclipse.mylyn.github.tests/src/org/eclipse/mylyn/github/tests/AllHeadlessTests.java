@@ -12,13 +12,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.tests;
 
+import org.eclipse.mylyn.github.internal.IssueServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses( { // 
-	MarshalingTest.class
+	IssueServiceTest.class
 	})
 public class AllHeadlessTests {
 
