@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
-
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,9 +24,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.internal.GitHubClient;
 import org.eclipse.mylyn.github.internal.GitHubCredentials;
-import org.eclipse.mylyn.github.internal.GitHubService;
-import org.eclipse.mylyn.github.internal.GitHubServiceException;
+import org.eclipse.mylyn.github.internal.IssueService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -95,12 +97,7 @@ public class GitHubRepositorySettingsPage extends
 						return;
 					}
 					monitor.worked(100);
-					
-					String user = urlMatcher.group(1);
-					String repo = urlMatcher.group(2);
 					AuthenticationCredentials auth = repository.getCredentials(AuthenticationType.REPOSITORY);
-					
-					GitHubService service = new GitHubService();
 	
 					monitor.subTask("Contacting server...");
 					try {
@@ -112,18 +109,20 @@ public class GitHubRepositorySettingsPage extends
 						monitor.worked(250);
 						
 						GitHubCredentials credentials = new GitHubCredentials(auth.getUserName(), auth.getPassword());
-						if (!service.verifyCredentials(credentials)) {
-							setStatus(GitHubUi.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and API Token.\nYou can find your API Token on your GitHub account settings page."));
-							return;	
-						}
-						monitor.worked(250);
-						
-						// verify the repo
-						service.searchIssues(user, repo, new String("open"),"", credentials);
-						monitor.worked(400);
-					} catch (GitHubServiceException e) {
-						setStatus(GitHubUi.createErrorStatus("Repository Test failed:"+ e.getMessage()));
+						GitHubClient client = new GitHubClient();
+						client.setCredentials(credentials.getUsername(), credentials.getPassword());
+						IssueService service = new IssueService(client);
+						String u = GitHub.computeTaskRepositoryUser(repository.getUrl());
+						String p = GitHub.computeTaskRepositoryProject(repository
+								.getUrl());
+						Map<String, String> filterData = new HashMap<String, String>();
+						service.getIssues(u, p, filterData);
+
+					} catch (IOException e) {
+						setStatus(GitHubUi.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and Password."));
 						return;
+					} finally {
+						monitor.worked(650);
 					}
 					
 					setStatus(new Status(IStatus.OK,GitHubUi.BUNDLE_ID, "Success!"));

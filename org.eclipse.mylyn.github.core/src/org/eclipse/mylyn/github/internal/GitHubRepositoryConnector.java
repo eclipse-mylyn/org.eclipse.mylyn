@@ -50,11 +50,6 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	protected static final String KIND = GitHub.CONNECTOR_KIND;
 
 	/**
-	 * GitHub service which creates, lists, deletes, etc. GitHub tasks.
-	 */
-	private final GitHubService service = new GitHubService();
-
-	/**
 	 * GitHub specific {@link AbstractTaskDataHandler}.
 	 */
 	private final GitHubTaskDataHandler taskDataHandler;
@@ -397,7 +392,4 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		new TaskMapper(taskData).applyTo(task);
 	}
 
-	public GitHubService getService() {
-		return service;
-	}
 }
