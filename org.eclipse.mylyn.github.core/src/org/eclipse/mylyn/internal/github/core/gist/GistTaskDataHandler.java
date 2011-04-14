@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.internal.github.core.gist;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,9 +133,13 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		Map<String, GistFile> files = gist.getFiles();
+		int fileCount = 0;
+		long sizeCount = 0;
 		if (files != null && !files.isEmpty()) {
 			int count = 1;
 			for (GistFile file : files.values()) {
+				fileCount++;
+				sizeCount += file.getSize();
 				TaskAttachmentMapper attachmentMapper = new TaskAttachmentMapper();
 				attachmentMapper.setFileName(file.getFilename());
 				attachmentMapper.setReplaceExisting(true);
@@ -153,7 +159,39 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 
 		GistAttribute.COMMENT_NEW.create(data);
 
+		TaskAttribute summary = GistAttribute.SUMMARY.create(data);
+		mapper.setValue(summary, generateSummary(fileCount, sizeCount));
+
 		return data;
+	}
+
+	private String generateSummary(int files, long size) {
+		StringBuilder summaryText = new StringBuilder();
+		if (files != 1)
+			summaryText.append(MessageFormat.format(
+					Messages.GistTaskDataHandler_FilesMultiple, files));
+		else
+			summaryText.append(Messages.GistTaskDataHandler_FilesSingle);
+		summaryText.append(',').append(' ').append(formatSize(size));
+		return summaryText.toString();
+	}
+
+	private String formatSize(long size) {
+		if (size == 1) {
+			return Messages.GistTaskDataHandler_SizeByte;
+		} else if (size < 1024) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeBytes)
+					.format(size);
+		} else if (size >= 1024 && size <= 1048575) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeKilobytes)
+					.format(size / 1024.0);
+		} else if (size >= 1048576 && size <= 1073741823) {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeMegabytes)
+					.format(size / 1048576.0);
+		} else {
+			return new DecimalFormat(Messages.GistTaskDataHandler_SizeGigabytes)
+					.format(size / 1073741824.0);
+		}
 	}
 
 	/**
@@ -219,7 +257,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
 		TaskAttribute summary = GistAttribute.SUMMARY.create(data);
-		mapper.setValue(summary, "New Gist");
+		mapper.setValue(summary, Messages.GistTaskDataHandler_SummaryNewGist);
 		GistAttribute.DESCRIPTION.create(data);
 
 		return true;

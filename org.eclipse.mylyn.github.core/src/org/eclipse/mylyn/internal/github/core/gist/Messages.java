@@ -49,6 +49,30 @@ public class Messages extends NLS {
 	/** */
 	public static String GistConnector_LabelConnector;
 
+	/** */
+	public static String GistTaskDataHandler_FilesMultiple;
+
+	/** */
+	public static String GistTaskDataHandler_FilesSingle;
+
+	/** */
+	public static String GistTaskDataHandler_SizeByte;
+
+	/** */
+	public static String GistTaskDataHandler_SizeBytes;
+
+	/** */
+	public static String GistTaskDataHandler_SizeGigabytes;
+
+	/** */
+	public static String GistTaskDataHandler_SizeKilobytes;
+
+	/** */
+	public static String GistTaskDataHandler_SizeMegabytes;
+
+	/** */
+	public static String GistTaskDataHandler_SummaryNewGist;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
