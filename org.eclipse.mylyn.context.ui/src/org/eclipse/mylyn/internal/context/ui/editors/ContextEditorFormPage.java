@@ -16,10 +16,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -409,6 +411,7 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new FillLayout());
 		section.setClient(sectionClient);
+		createToolBar(section);
 
 		updateContentArea();
 
@@ -417,6 +420,30 @@ public class ContextEditorFormPage extends FormPage {
 		invisiblePart = new InvisibleContextElementsPart(commonViewer);
 		Control invisibleControl = invisiblePart.createControl(toolkit, composite);
 		GridDataFactory.fillDefaults().applyTo(invisibleControl);
+	}
+
+	private void createToolBar(Section section) {
+		Composite composite = toolkit.createComposite(section);
+		composite.setBackground(null);
+		section.setTextClient(composite);
+		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
+		manager.add(new Action(Messages.ContextEditorFormPage_Collapse_All, CommonImages.COLLAPSE_ALL_SMALL) {
+			@Override
+			public void run() {
+				if (commonViewer != null && commonViewer.getTree() != null && !commonViewer.getTree().isDisposed()) {
+					commonViewer.collapseAll();
+				}
+			}
+		});
+		manager.add(new Action(Messages.ContextEditorFormPage_Expand_All, CommonImages.EXPAND_ALL_SMALL) {
+			@Override
+			public void run() {
+				if (commonViewer != null && commonViewer.getTree() != null && !commonViewer.getTree().isDisposed()) {
+					commonViewer.expandAll();
+				}
+			}
+		});
+		manager.createControl(composite);
 	}
 
 	private void createActivateTaskHyperlink(Composite parent) {

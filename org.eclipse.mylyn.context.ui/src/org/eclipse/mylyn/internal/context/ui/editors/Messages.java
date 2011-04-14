@@ -37,11 +37,15 @@ public class Messages extends NLS {
 
 	public static String ContextEditorFormPage_Attach_context_;
 
+	public static String ContextEditorFormPage_Collapse_All;
+
 	public static String ContextEditorFormPage_Context_is_empty_Error;
 
 	public static String ContextEditorFormPage_Copy_Context_to_;
 
 	public static String ContextEditorFormPage_Elements;
+
+	public static String ContextEditorFormPage_Expand_All;
 
 	public static String ContextEditorFormPage_Remove_every_element_not_visible;
 
