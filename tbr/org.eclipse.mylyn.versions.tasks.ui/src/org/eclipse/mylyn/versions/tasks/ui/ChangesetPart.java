@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -24,9 +25,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.versions.core.ChangeSet;
-import org.eclipse.mylyn.versions.core.ScmCore;
-import org.eclipse.mylyn.versions.core.ScmRepository;
-import org.eclipse.mylyn.versions.core.spi.ScmConnector;
+import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.eclipse.mylyn.versions.tasks.core.TaskChangeSet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -42,6 +41,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Kilian Matt
  * 
  */
+@SuppressWarnings("restriction")
 public class ChangesetPart extends AbstractTaskEditorPart {
 	public ChangesetPart() {
 		setPartName("Changeset");
@@ -82,29 +82,23 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		table.setContentProvider(ArrayContentProvider.getInstance());
 		table.setLabelProvider(new ITableLabelProvider() {
 
-			
 			public void addListener(ILabelProviderListener listener) {
 			}
 
-			
 			public void dispose() {
 			}
 
-			
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
 
-			
 			public void removeListener(ILabelProviderListener listener) {
 			}
 
-			
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
 
-			
 			public String getColumnText(Object element, int columnIndex) {
 				TaskChangeSet cs = ((TaskChangeSet) element);
 				switch (columnIndex) {
@@ -133,37 +127,39 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	}
 
 	private List<TaskChangeSet> getInput() {
-		List<ScmConnector> connectors = ScmCore.getAllRegisteredConnectors();
-		for (ScmConnector c : connectors) {
-			try {
-				List<ScmRepository> repositories = c
-						.getRepositories(new NullProgressMonitor());
-				for (ScmRepository r : repositories) {
-					ITask task = getModel().getTask();
-					List<TaskChangeSet> changes = new ArrayList<TaskChangeSet>();
-					List<ChangeSet> changeSets = c.getChangeSets(r,
-							new NullProgressMonitor());
-					if (changeSets == null)
-						continue;
-					for (ChangeSet cs : changeSets) {
-						if (changeSetMatches(cs))
-							changes.add(new TaskChangeSet(task, cs));
-					}
-					if (!changes.isEmpty())
-						return changes;
-				}
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		int score = Integer.MIN_VALUE;
+		AbstractChangesetMappingProvider bestProvider = null;
+		final ITask task = getModel().getTask();
+
+		for (AbstractChangesetMappingProvider mappingProvider : TaskChangesetUtil
+				.getMappingProviders()) {
+			if (score < mappingProvider.getScoreFor(task))
+				;
+			{
+				bestProvider = mappingProvider;
 			}
-
 		}
-		return null;
-	}
+		final List<TaskChangeSet> changesets = new ArrayList<TaskChangeSet>();
+		try {
 
-	private boolean changeSetMatches(ChangeSet cs) {
-		return cs.getMessage().contains(getModel().getTask().getTaskKey())
-				|| cs.getMessage().contains(getModel().getTask().getUrl());
+			IChangeSetMapping changesetsMapping = new IChangeSetMapping() {
+
+				public ITask getTask() {
+					return task;
+				}
+
+				public void addChangeSet(ChangeSet changeset) {
+					changesets.add(new TaskChangeSet(task, changeset));
+				}
+			};
+			// FIXME progress monitor
+			bestProvider.getChangesetsForTask(changesetsMapping,
+					new NullProgressMonitor());
+		} catch (CoreException e) {
+			// FIXME Auto-generated catch block
+			e.printStackTrace();
+		}
+		return changesets;
 	}
 
 }
