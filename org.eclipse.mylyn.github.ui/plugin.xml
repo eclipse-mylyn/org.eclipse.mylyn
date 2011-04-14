@@ -22,6 +22,10 @@
             class="org.eclipse.mylyn.github.ui.internal.GitHubTaskEditorPageFactory"
             id="org.eclipse.mylyn.github.ui.internal.GitHubTaskEditorPageFactory">
       </pageFactory>
+      <pageFactory
+            class="org.eclipse.mylyn.internal.github.ui.gist.GistTaskEditorPageFactory"
+            id="org.eclipse.mylyn.internal.github.ui.gist.GistTaskEditorPageFactory">
+      </pageFactory>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -71,6 +75,21 @@
             class="org.eclipse.mylyn.github.ui.internal.CreateGistHandler"
             commandId="org.eclipse.mylyn.github.ui.command.createGist">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.internal.github.core.gist.GistConnector"
+            id="org.eclipse.mylyn.internal.github.core.gist.GistConnector"
+            name="%gistCoreConnectorName">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/obj16/github.png"
+            class="org.eclipse.mylyn.internal.github.ui.gist.GistConnectorUi"
+            id="org.eclipse.mylyn.internal.github.ui.gist.GistConnectorUi"
+            name="%gistUiConnectorName"
+            overlayIcon="icons/obj16/github_8x8.png">
+      </connectorUi>
    </extension>
 
 </plugin>
