@@ -58,6 +58,18 @@ public enum GistAttribute {
 			TaskAttribute.TYPE_URL, true),
 
 	/**
+	 * RAW_FILE_URL
+	 */
+	RAW_FILE_URL("github.gist.file.url", Messages.GistAttribute_LabelFileUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
+			true),
+
+	/**
+	 * SUMMARY
+	 */
+	SUMMARY(TaskAttribute.SUMMARY, Messages.GistAttribute_LabelSummary,
+			TaskAttribute.TYPE_SHORT_RICH_TEXT, true),
+
+	/**
 	 * Gist description
 	 */
 	DESCRIPTION(TaskAttribute.DESCRIPTION,

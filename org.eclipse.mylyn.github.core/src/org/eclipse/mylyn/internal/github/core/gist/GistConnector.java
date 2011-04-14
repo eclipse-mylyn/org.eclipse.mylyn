@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -45,11 +46,20 @@ public class GistConnector extends AbstractRepositoryConnector {
 
 	private GistTaskDataHandler dataHandler = new GistTaskDataHandler();
 
+	private GistAttachmentHandler attachmentHandler = new GistAttachmentHandler();
+
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskDataHandler()
 	 */
 	public AbstractTaskDataHandler getTaskDataHandler() {
 		return this.dataHandler;
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskAttachmentHandler()
+	 */
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return this.attachmentHandler;
 	}
 
 	/**

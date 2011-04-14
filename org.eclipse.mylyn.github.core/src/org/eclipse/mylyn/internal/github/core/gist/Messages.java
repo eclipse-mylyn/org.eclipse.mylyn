@@ -32,10 +32,16 @@ public class Messages extends NLS {
 	public static String GistAttribute_LabelDescription;
 
 	/** */
+	public static String GistAttribute_LabelFileUrl;
+
+	/** */
 	public static String GistAttribute_LabelKey;
 
 	/** */
 	public static String GistAttribute_LabelNewComment;
+
+	/** */
+	public static String GistAttribute_LabelSummary;
 
 	/** */
 	public static String GistAttribute_LabelUrl;
