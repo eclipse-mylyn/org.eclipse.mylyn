@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -87,11 +88,13 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
 			throws CoreException {
+		TaskAttachmentMapper mapper = TaskAttachmentMapper
+				.createFrom(attachmentAttribute);
 		Gist gist = new Gist().setRepo(task.getTaskId());
 		gist.setDescription(attachmentAttribute.getParentAttribute()
 				.getAttribute(GistAttribute.DESCRIPTION.getId()).getValue());
 		GistFile file = new GistFile();
-		file.setFilename(source.getName());
+		file.setFilename(mapper.getFileName());
 		gist.setFiles(Collections.singletonMap(file.getFilename(), file));
 
 		GitHubClient client = new GitHubClient();
