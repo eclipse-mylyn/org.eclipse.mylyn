@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.widgets.Shell;
@@ -263,9 +264,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		for (IRepositoryElement element : taskListElementsToSchedule) {
 			if (element instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) element;
-				if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-					TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
-				}
+				TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
 				if (dateContainer != null) {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
 				} else {

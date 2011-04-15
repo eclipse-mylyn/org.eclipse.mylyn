@@ -124,6 +124,17 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	/**
+	 * Add task to default category if it's not in the task list.
+	 */
+	public boolean addTaskIfAbsent(ITask task) {
+		if (getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+			addTask(task, getDefaultCategory());
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Add orphaned task to the task list
 	 */
 	public void addTask(ITask task) {

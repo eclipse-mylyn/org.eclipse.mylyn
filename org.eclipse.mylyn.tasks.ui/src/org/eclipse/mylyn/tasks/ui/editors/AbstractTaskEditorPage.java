@@ -332,10 +332,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		@Override
 		public void linkActivated(HyperlinkEvent e) {
-			if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-				TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
-				getTaskEditor().setMessage(null, IMessageProvider.NONE);
-			}
+			TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
+			getTaskEditor().setMessage(null, IMessageProvider.NONE);
 		}
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
@@ -954,9 +952,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}
 
-		if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-			TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
-		}
+		TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
 
 		updateHeaderMessage();
 		getManagedForm().dirtyStateChanged();
@@ -988,9 +984,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			throw e;
 		}
 
-		if (TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-			TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
-		}
+		TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
 	}
 
 	/**

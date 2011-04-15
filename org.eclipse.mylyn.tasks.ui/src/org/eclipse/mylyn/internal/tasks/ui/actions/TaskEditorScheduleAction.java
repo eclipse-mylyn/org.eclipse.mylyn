@@ -81,6 +81,7 @@ public class TaskEditorScheduleAction extends Action implements IMenuCreator {
 	@Override
 	public void run() {
 		if (((AbstractTask) task).getScheduledForDate() == null) {
+			TasksUiPlugin.getTaskList().addTaskIfAbsent(task);
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
 					TaskActivityUtil.getCurrentWeek().getToday());
 		} else {

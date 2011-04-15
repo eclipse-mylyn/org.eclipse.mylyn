@@ -405,9 +405,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 	public void activateTask(ITask task) {
 		deactivateActiveTask();
 
-		if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-			taskList.addTask(task, taskList.getDefaultCategory());
-		}
+		taskList.addTaskIfAbsent(task);
 
 		// notify that a task is about to be activated
 		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
