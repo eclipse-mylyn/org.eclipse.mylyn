@@ -46,10 +46,11 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		while (descriptorIt.hasNext()) {
 			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
 			String id = partDescriptor.getId();
-			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY))
+			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)
+					|| id.equals(ID_PART_ATTACHMENTS))
 				descriptorIt.remove();
 		}
-		if (!getModel().getTaskData().isNew())
+		if (!getModel().getTaskData().isNew()) {
 			partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
 				public AbstractTaskEditorPart createPart() {
@@ -57,6 +58,15 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 							.getId(), null);
 				}
 			}.setPath(PATH_HEADER));
+			partDescriptors.add(new TaskEditorPartDescriptor(
+					ID_PART_ATTACHMENTS) {
+
+				public AbstractTaskEditorPart createPart() {
+					return new GistAttachmentPart();
+				}
+			}.setPath(PATH_ATTACHMENTS));
+		}
+
 		return partDescriptors;
 	}
 }
