@@ -166,4 +166,31 @@ public class IssueServiceTest {
 				"/repos/test_user/test_repository/issues/1.json", params,
 				Issue.class);
 	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createComment_NullUser() throws IOException {
+		issueService.createComment(null, "not null", "not null", "not null");
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createComment_NullRepository() throws IOException {
+		issueService.createComment("not null", null, "not null", "not null");
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createComment_NullIssueId() throws IOException {
+		issueService.createComment("not null", "not null", null, "not null");
+	}
+
+	@Test
+	public void createComment_OK() throws IOException {
+		issueService.createComment("test_user", "test_repository", "1",
+				"test_comment");
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(IssueService.FIELD_BODY, "test_comment");
+		verify(gitHubClient).post(
+				"/repos/test_user/test_repository/issues/1/comments.json",
+				params, Comment.class);
+	}
 }
