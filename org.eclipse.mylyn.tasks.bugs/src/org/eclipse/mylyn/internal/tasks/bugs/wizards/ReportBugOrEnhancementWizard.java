@@ -109,6 +109,8 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 
 	private SupportContentProvider contentProvider;
 
+	private boolean inFinish;
+
 	public ReportBugOrEnhancementWizard() {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(true);
@@ -150,17 +152,28 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		if (!(product instanceof SupportProduct)) {
 			return false;
 		}
-
-		TaskErrorReporter reporter = TasksBugsPlugin.getTaskErrorReporter();
-		IStatus status = new ProductStatus((IProduct) product);
-		SupportRequest request = reporter.preProcess(status, ((ProductStatus) status).getProduct());
-		if (!((AttributeTaskMapper) request.getDefaultContribution()).isMappingComplete()) {
-			TasksUiInternal.displayStatus(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement, new Status(
-					IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
-					Messages.ReportBugOrEnhancementWizard_Support_request_faild_Information_incomplete_Error));
+		// bug 341886: avoid executing finish twice
+		if (inFinish) {
 			return false;
 		}
-		return reporter.process(request.getDefaultContribution(), getContainer());
+		try {
+			inFinish = true;
+			TaskErrorReporter reporter = TasksBugsPlugin.getTaskErrorReporter();
+			IStatus status = new ProductStatus((IProduct) product);
+			SupportRequest request = reporter.preProcess(status, ((ProductStatus) status).getProduct());
+			if (!((AttributeTaskMapper) request.getDefaultContribution()).isMappingComplete()) {
+				TasksUiInternal.displayStatus(
+						Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement,
+						new Status(
+								IStatus.ERROR,
+								TasksBugsPlugin.ID_PLUGIN,
+								Messages.ReportBugOrEnhancementWizard_Support_request_faild_Information_incomplete_Error));
+				return false;
+			}
+			return reporter.process(request.getDefaultContribution(), getContainer());
+		} finally {
+			inFinish = false;
+		}
 	}
 
 }
