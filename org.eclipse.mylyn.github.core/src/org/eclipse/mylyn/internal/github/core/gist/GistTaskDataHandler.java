@@ -146,6 +146,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 				attachmentMapper.setLength((long) file.getSize());
 				attachmentMapper.setPatch(false);
 				attachmentMapper.setAuthor(reporterPerson);
+				attachmentMapper.setAttachmentId(file.getFilename());
 				TaskAttribute attribute = data.getRoot().createAttribute(
 						TaskAttribute.PREFIX_ATTACHMENT + count);
 				attachmentMapper.applyTo(attribute);
