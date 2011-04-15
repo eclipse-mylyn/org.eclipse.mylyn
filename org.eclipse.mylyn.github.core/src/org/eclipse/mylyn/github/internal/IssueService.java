@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * Issue service class for listing, searching, and fetching {@link Issue}
  * objects using a {@link GitHubClient}.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class IssueService {
@@ -76,7 +76,7 @@ public class IssueService {
 
 	/**
 	 * Create issue service
-	 *
+	 * 
 	 * @param client
 	 *            cannot be null
 	 */
@@ -87,7 +87,7 @@ public class IssueService {
 
 	/**
 	 * Get issue
-	 *
+	 * 
 	 * @param user
 	 * @param repository
 	 * @param id
@@ -109,7 +109,7 @@ public class IssueService {
 
 	/**
 	 * Get an issue's comments
-	 *
+	 * 
 	 * @param user
 	 * @param repository
 	 * @param id
@@ -135,7 +135,7 @@ public class IssueService {
 
 	/**
 	 * Get a list of {@link Issue} objects that match the specified filter data
-	 *
+	 * 
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -165,26 +165,28 @@ public class IssueService {
 	 */
 	protected Map<String, String> createIssueMap(Issue issue) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(FIELD_BODY, issue.getBody());
-		params.put(FIELD_TITLE, issue.getTitle());
-		User assignee = issue.getAssignee();
-		if (assignee != null)
-			params.put(FILTER_ASSIGNEE, assignee.getName());
+		if (issue != null) {
+			params.put(FIELD_BODY, issue.getBody());
+			params.put(FIELD_TITLE, issue.getTitle());
+			User assignee = issue.getAssignee();
+			if (assignee != null)
+				params.put(FILTER_ASSIGNEE, assignee.getName());
 
-		Milestone milestone = issue.getMilestone();
-		if (milestone != null) {
-			int number = milestone.getNumber();
-			if (number > 0)
-				params.put(FILTER_MILESTONE, Integer.toString(number));
-			else
-				params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
+			Milestone milestone = issue.getMilestone();
+			if (milestone != null) {
+				int number = milestone.getNumber();
+				if (number > 0)
+					params.put(FILTER_MILESTONE, Integer.toString(number));
+				else
+					params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
+			}
 		}
 		return params;
 	}
 
 	/**
 	 * Create issue
-	 *
+	 * 
 	 * @param user
 	 * @param repository
 	 * @param issue
@@ -200,7 +202,7 @@ public class IssueService {
 		uri.append(IGitHubConstants.SEGMENT_ISSUES).append(
 				IGitHubConstants.SUFFIX_JSON);
 
-		Map<String, String> params = issue != null ? createIssueMap(issue) : null;
+		Map<String, String> params = createIssueMap(issue);
 		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
@@ -215,6 +217,9 @@ public class IssueService {
 	 */
 	public Issue editIssue(String user, String repository, Issue issue)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(issue, "Issue cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
