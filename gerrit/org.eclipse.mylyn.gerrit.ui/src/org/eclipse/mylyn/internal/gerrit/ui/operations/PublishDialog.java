@@ -143,7 +143,7 @@ public class PublishDialog extends GerritOperationDialog {
 				List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
 				Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
 					public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
-						return o1.get() - o2.get();
+						return o2.get() - o1.get();
 					}
 				});
 				for (ApprovalCategoryValue.Id valueId : allowedList) {
