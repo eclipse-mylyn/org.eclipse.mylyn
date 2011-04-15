@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import java.lang.reflect.Method;
 
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -31,7 +33,16 @@ public class CommonFormUtil {
 	public static void ensureVisible(Control control) {
 		ScrolledComposite form = FormUtil.getScrolledComposite(control);
 		if (form != null) {
-			FormUtil.ensureVisible(form, control);
+			if (control instanceof StyledText) {
+				// bug 299392: ensure that the caret is visible for styled text but avoid scrolling form if only a portion of the control is visible
+				Point origin = FormUtil.getControlLocation(form, control);
+				Point caretLocation = ((StyledText) control).getCaret().getLocation();
+				origin.x += caretLocation.x;
+				origin.y += caretLocation.y;
+				FormUtil.ensureVisible(form, origin, new Point(20, 20));
+			} else {
+				FormUtil.ensureVisible(form, control);
+			}
 		}
 	}
 
