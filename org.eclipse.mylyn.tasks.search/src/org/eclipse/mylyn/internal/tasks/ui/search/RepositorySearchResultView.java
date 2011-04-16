@@ -22,6 +22,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -32,6 +33,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DecoratingPatternStyledCellLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.EnhancedFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
@@ -173,22 +175,26 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		openSearchWithBrowserAction.setText(Messages.RepositorySearchResultView_Open_Search_with_Browser_Label);
 
 		groupingActions = new ArrayList<GroupingAction>();
-		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner, GroupBy.OWNER);
+		GroupingAction groupByOwnerAction = new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner,
+				GroupBy.OWNER);
+		groupByOwnerAction.setImageDescriptor(CommonImages.PRESENTATION);
 //		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Complete, GroupBy.COMPLETION);
 
 		filterActions = new ArrayList<FilteringAction>();
-		new FilteringAction(Messages.RepositorySearchResultView_Filter_Completed_Tasks, new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (element instanceof ITask) {
-					return !((ITask) element).isCompleted();
-				} else if (element instanceof TaskGroup) {
-					TaskGroup taskGroup = (TaskGroup) element;
-					return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete"); //$NON-NLS-1$
-				}
-				return true;
-			}
-		});
+		FilteringAction filterCompleteAction = new FilteringAction(
+				Messages.RepositorySearchResultView_Filter_Completed_Tasks, new ViewerFilter() {
+					@Override
+					public boolean select(Viewer viewer, Object parentElement, Object element) {
+						if (element instanceof ITask) {
+							return !((ITask) element).isCompleted();
+						} else if (element instanceof TaskGroup) {
+							TaskGroup taskGroup = (TaskGroup) element;
+							return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete"); //$NON-NLS-1$
+						}
+						return true;
+					}
+				});
+		filterCompleteAction.setImageDescriptor(CommonImages.FILTER_COMPLETE);
 
 		// construct early since to be ready when restoreState() is invoked
 		searchResultSorter = new SearchResultSorter();
@@ -369,13 +375,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, openSearchWithBrowserAction);
 
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortByDialogAction);
-		for (Action action : groupingActions) {
-			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
-		}
-		for (Action action : filterActions) {
-			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
-		}
-
+		addPresentationActions(menuManager);
 	}
 
 	private void moveToCategory(AbstractTaskCategory category) {
@@ -393,6 +393,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortByDialogAction);
+		addPresentationActions(menuManager);
+
+		addPresentationActions(getSite().getActionBars().getToolBarManager());
+	}
+
+	public void addPresentationActions(IContributionManager menuManager) {
 		for (Action action : groupingActions) {
 			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
