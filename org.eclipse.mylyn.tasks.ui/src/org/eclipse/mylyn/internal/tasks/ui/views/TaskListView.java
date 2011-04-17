@@ -137,8 +137,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -866,8 +866,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		getViewer().getTree().addListener(SWT.Expand, expandListener);
 		getViewer().getTree().addListener(SWT.Collapse, expandListener);
 
-		getViewer().getTree().addMouseListener(new MouseListener() {
-			public void mouseDown(MouseEvent event) {
+		getViewer().getTree().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent event) {
 				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion 
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) {
@@ -889,15 +890,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 					}
 				}
 			}
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseUp(MouseEvent e) {
-				// ignore
-			}
-
 		});
 
 		// TODO make these proper commands and move code into TaskListViewCommands
