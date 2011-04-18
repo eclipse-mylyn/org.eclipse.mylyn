@@ -147,7 +147,12 @@ public class BugzillaFlagPart extends AbstractTaskEditorPart {
 			Collections.sort(flagEditors, attributeSorter);
 		}
 
-		infoOverlayText = NLS.bind(" " + Messages.BugzillaFlagPart_Fleg_Section_Title, "" + (unused + used), "" + used); //$NON-NLS-1$ //$NON-NLS-3$ 
+		if (used > 0) {
+			infoOverlayText = NLS.bind(
+					" " + Messages.BugzillaFlagPart_Fleg_Section_Title, "" + (unused + used), "" + used); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+		} else {
+			infoOverlayText = NLS.bind(" " + Messages.BugzillaFlagPart_Fleg_Section_Title_Short, "" + (unused + used)); //$NON-NLS-1$ //$NON-NLS-2$ 
+		}
 
 		usedDetail = NLS.bind(
 				"{0} {1}", used == 1 ? Messages.BugzillaFlagPart_used_flag + Messages.BugzillaFlagPart_is : Messages.BugzillaFlagPart_used_flags + Messages.BugzillaFlagPart_are, usedDetail); //$NON-NLS-1$
