@@ -12,9 +12,17 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.mylyn.github.internal.GistService;
+import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.internal.GitHubClient;
+import org.eclipse.mylyn.github.ui.internal.GitHubUi;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -27,6 +35,11 @@ import org.eclipse.swt.widgets.Composite;
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
+
+	/**
+	 * URL
+	 */
+	public static final String URL = "https://gist.github.com"; //$NON-NLS-1$
 
 	/**
 	 * @param taskRepository
@@ -49,8 +62,9 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	 */
 	protected void createAdditionalControls(Composite parent) {
 		if (repository == null) {
-			setUrl("https://gist.github.com"); //$NON-NLS-1$
-			repositoryLabelEditor.setStringValue("Gists"); //$NON-NLS-1$
+			setUrl(URL);
+			repositoryLabelEditor
+					.setStringValue(Messages.GistRepositorySettingsPage_RepositoryLabelDefault);
 		}
 	}
 
@@ -58,14 +72,13 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isValidUrl(java.lang.String)
 	 */
 	protected boolean isValidUrl(String url) {
-		if (url.startsWith("http://") || url.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				new URL(url);
 				return true;
 			} catch (IOException e) {
 				return false;
 			}
-		}
 		return false;
 
 	}
@@ -73,11 +86,36 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getValidator(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
-	protected Validator getValidator(TaskRepository repository) {
+	protected Validator getValidator(final TaskRepository repository) {
 		return new Validator() {
 
 			public void run(IProgressMonitor monitor) throws CoreException {
-
+				monitor.beginTask(
+						Messages.GistRepositorySettingsPage_TaskValidating, 100);
+				try {
+					monitor.subTask(Messages.GistRepositorySettingsPage_TaskContacting);
+					try {
+						GitHubClient client = GistConnector
+								.createClient(repository);
+						GistService service = new GistService(client);
+						String user = GitHub
+								.computeTaskRepositoryUser(repository.getUrl());
+						monitor.worked(20);
+						service.getGists(user);
+					} catch (IOException e) {
+						String message = MessageFormat
+								.format(Messages.GistRepositorySettingsPage_StatusError,
+										e.getLocalizedMessage());
+						setStatus(GitHubUi.createErrorStatus(message));
+						return;
+					} finally {
+						monitor.done();
+					}
+					setStatus(new Status(IStatus.OK, GitHubUi.BUNDLE_ID,
+							Messages.GistRepositorySettingsPage_StatusSuccess));
+				} finally {
+					monitor.done();
+				}
 			}
 		};
 	}
@@ -89,6 +127,14 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 				IRepositoryConstants.CATEGORY_REVIEW);
 		super.applyTo(repository);
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
+	 */
+	public boolean canValidate() {
+		return isPageComplete()
+				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
 	}
 
 }

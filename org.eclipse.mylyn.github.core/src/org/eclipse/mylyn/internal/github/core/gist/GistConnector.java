@@ -44,6 +44,22 @@ public class GistConnector extends AbstractRepositoryConnector {
 	 */
 	public static final String KIND = "githubGists"; //$NON-NLS-1$
 
+	/**
+	 * Create client for repository
+	 * 
+	 * @param repository
+	 * @return client
+	 */
+	public static GitHubClient createClient(TaskRepository repository) {
+		GitHubClient client = new GitHubClient();
+		AuthenticationCredentials credentials = repository
+				.getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials != null)
+			client.setCredentials(credentials.getUserName(),
+					credentials.getPassword());
+		return client;
+	}
+
 	private GistTaskDataHandler dataHandler = new GistTaskDataHandler();
 
 	private GistAttachmentHandler attachmentHandler = new GistAttachmentHandler();
@@ -60,22 +76,6 @@ public class GistConnector extends AbstractRepositoryConnector {
 	 */
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
 		return this.attachmentHandler;
-	}
-
-	/**
-	 * Create client for repository
-	 * 
-	 * @param repository
-	 * @return client
-	 */
-	protected GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = new GitHubClient();
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
-		return client;
 	}
 
 	/**

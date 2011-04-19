@@ -35,6 +35,21 @@ public class Messages extends NLS {
 	public static String GistRepositorySettingsPage_Description;
 
 	/** */
+	public static String GistRepositorySettingsPage_RepositoryLabelDefault;
+
+	/** */
+	public static String GistRepositorySettingsPage_StatusError;
+
+	/** */
+	public static String GistRepositorySettingsPage_StatusSuccess;
+
+	/** */
+	public static String GistRepositorySettingsPage_TaskContacting;
+
+	/** */
+	public static String GistRepositorySettingsPage_TaskValidating;
+
+	/** */
 	public static String GistRepositorySettingsPage_Title;
 
 	/** */
