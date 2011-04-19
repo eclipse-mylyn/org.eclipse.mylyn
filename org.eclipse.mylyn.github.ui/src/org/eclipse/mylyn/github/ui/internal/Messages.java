@@ -83,6 +83,9 @@ public class Messages extends NLS {
 	public static String GitHubRepositorySettingsPage_Title;
 
 	/** */
+	public static String GitHubTaskEditorPageFactory_PageText;
+
+	/** */
 	public static String IssueLabelAttributeEditor_ActionNewLabel;
 
 	/** */
