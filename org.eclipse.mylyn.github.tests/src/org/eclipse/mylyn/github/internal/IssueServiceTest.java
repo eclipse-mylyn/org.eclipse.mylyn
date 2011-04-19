@@ -13,7 +13,9 @@ package org.eclipse.mylyn.github.internal;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Before;
@@ -128,7 +130,40 @@ public class IssueServiceTest {
 	public void createIssue_NullIssue() throws IOException {
 		issueService.createIssue("test_user", "test_repository", null);
 		verify(gitHubClient).post(
-				"/repos/test_user/test_repository/issues.json", null,
+				"/repos/test_user/test_repository/issues.json",
+				new HashMap<String, String>(), Issue.class);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void editIssue_NullUser() throws IOException {
+		issueService.editIssue(null, "not null", null);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void editIssue_NullRepository() throws IOException {
+		issueService.editIssue("not null", null, null);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void editIssue_NullIssue() throws IOException {
+		issueService.editIssue("not null", "not null", null);
+	}
+
+	@Test
+	public void editIssue_OK() throws IOException {
+		Issue issue = new Issue();
+		issue.setNumber(1);
+		issue.setTitle("test_title");
+		issue.setBody("test_body");
+		issue.setState("test_state");
+		issueService.editIssue("test_user", "test_repository", issue);
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(IssueService.FIELD_TITLE, "test_title");
+		params.put(IssueService.FIELD_BODY, "test_body");
+		params.put(IssueService.FILTER_STATE, "test_state");
+		verify(gitHubClient).put(
+				"/repos/test_user/test_repository/issues/1.json", params,
 				Issue.class);
 	}
 }
