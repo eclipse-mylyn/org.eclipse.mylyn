@@ -10,7 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
+import java.util.Set;
+
+import org.eclipse.mylyn.github.internal.Gist;
+import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,13 +33,13 @@ import org.eclipse.swt.widgets.Link;
 @SuppressWarnings("restriction")
 public class GistNotificationPopup extends AbstractNotificationPopup {
 
-	private String id;
+	private Gist gist;
 
 	private String title;
 
-	public GistNotificationPopup(Display display, String id, String title) {
+	public GistNotificationPopup(Display display, Gist gist, String title) {
 		super(display);
-		this.id = id;
+		this.gist = gist;
 		this.title = title;
 	}
 
@@ -42,14 +49,18 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Title: " + title);
 		Link link = new Link(composite, SWT.WRAP);
-		link.setText("Created Gist: <a>" + id + "</a>");
+		link.setText("Created Gist: <a>" + gist.getId() + "</a>");
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setBackground(composite.getBackground());
 		link.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Program.launch("https://gist.github.com/" + id);
+				Set<TaskRepository> repositories = TasksUi
+						.getRepositoryManager().getRepositories(
+								GistConnector.KIND);
+				if (!repositories.isEmpty())
+					TasksUiUtil.openTask(repositories.iterator().next(), gist.getId());
 			}
 		});
 	}
