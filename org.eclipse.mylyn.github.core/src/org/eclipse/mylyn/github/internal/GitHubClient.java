@@ -210,6 +210,8 @@ public class GitHubClient {
 			case 200:
 				return method.getResponseBodyAsStream();
 			case 400:
+			case 401:
+			case 403:
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
@@ -244,6 +246,8 @@ public class GitHubClient {
 			case 200:
 				return parseJson(method, type);
 			case 400:
+			case 401:
+			case 403:
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
@@ -288,6 +292,8 @@ public class GitHubClient {
 			case 204:
 				break;
 			case 400:
+			case 401:
+			case 403:
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
