@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * Request exception class that wraps an {@link RequestError} object.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class RequestException extends IOException {
@@ -25,23 +25,36 @@ public class RequestException extends IOException {
 	private static final long serialVersionUID = 1197051396535284852L;
 
 	private RequestError error;
+	private int status;
 
 	/**
 	 * Create request exception
-	 *
+	 * 
 	 * @param error
+	 * @param status
 	 */
-	public RequestException(RequestError error) {
+	public RequestException(RequestError error, int status) {
 		super(error.getMessage());
+		this.error = error;
+		this.status = status;
 	}
 
 	/**
 	 * Get error
-	 *
+	 * 
 	 * @return error
 	 */
 	public RequestError getError() {
 		return this.error;
+	}
+
+	/**
+	 * Get status
+	 * 
+	 * @return status
+	 */
+	public int getStatus() {
+		return this.status;
 	}
 
 }

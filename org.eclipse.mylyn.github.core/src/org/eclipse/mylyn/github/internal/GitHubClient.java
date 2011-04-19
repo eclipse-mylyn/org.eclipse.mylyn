@@ -69,7 +69,7 @@ public class GitHubClient {
 
 	/**
 	 * Create client for configuration
-	 *
+	 * 
 	 * @param configuration
 	 */
 	public GitHubClient(HostConfiguration configuration) {
@@ -78,7 +78,7 @@ public class GitHubClient {
 
 	/**
 	 * Create standard post method
-	 *
+	 * 
 	 * @param uri
 	 * @return post
 	 */
@@ -102,7 +102,7 @@ public class GitHubClient {
 
 	/**
 	 * Set method defaults
-	 *
+	 * 
 	 * @param method
 	 * @return method
 	 */
@@ -117,7 +117,7 @@ public class GitHubClient {
 
 	/**
 	 * Create get method
-	 *
+	 * 
 	 * @param uri
 	 * @return get method
 	 */
@@ -130,7 +130,7 @@ public class GitHubClient {
 
 	/**
 	 * Set credentials
-	 *
+	 * 
 	 * @param user
 	 * @param password
 	 */
@@ -144,7 +144,7 @@ public class GitHubClient {
 
 	/**
 	 * Parse json to specified type
-	 *
+	 * 
 	 * @param <V>
 	 * @param method
 	 * @param type
@@ -162,7 +162,7 @@ public class GitHubClient {
 
 	/**
 	 * Get name value pairs for data map.
-	 *
+	 * 
 	 * @param data
 	 * @return name value pair array
 	 */
@@ -178,7 +178,7 @@ public class GitHubClient {
 
 	/**
 	 * Get response from uri and bind to specified type
-	 *
+	 * 
 	 * @param <V>
 	 * @param uri
 	 * @param type
@@ -213,7 +213,7 @@ public class GitHubClient {
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
-				throw new RequestException(error);
+				throw new RequestException(error, status);
 			default:
 				throw new IOException(method.getStatusText());
 			}
@@ -224,7 +224,7 @@ public class GitHubClient {
 
 	/**
 	 * Get response from uri and bind to specified type
-	 *
+	 * 
 	 * @param <V>
 	 * @param uri
 	 * @param params
@@ -247,7 +247,7 @@ public class GitHubClient {
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
-				throw new RequestException(error);
+				throw new RequestException(error, status);
 			default:
 				throw new IOException(method.getStatusText());
 			}
@@ -268,8 +268,8 @@ public class GitHubClient {
 	 * @return resource
 	 * @throws IOException
 	 */
-	protected <V> V sendJson(EntityEnclosingMethod method,
-			Object params, Type type) throws IOException {
+	protected <V> V sendJson(EntityEnclosingMethod method, Object params,
+			Type type) throws IOException {
 		if (params != null) {
 			StringBuilder payload = new StringBuilder();
 			this.gson.toJson(params, payload);
@@ -291,7 +291,7 @@ public class GitHubClient {
 			case 404:
 			case 500:
 				RequestError error = parseJson(method, RequestError.class);
-				throw new RequestException(error);
+				throw new RequestException(error, status);
 			default:
 				throw new IOException(method.getStatusText());
 			}
@@ -303,7 +303,7 @@ public class GitHubClient {
 
 	/**
 	 * Post data to uri
-	 *
+	 * 
 	 * @param <V>
 	 * @param uri
 	 * @param params
