@@ -14,12 +14,14 @@ package org.eclipse.mylyn.github.ui.internal;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.regex.Matcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GitHub;
@@ -164,8 +166,10 @@ public class GitHubRepositorySettingsPage extends
 						monitor.worked(20);
 						service.getIssues(user, project, null);
 					} catch (IOException e) {
-						setStatus(GitHubUi
-								.createErrorStatus(Messages.GitHubRepositorySettingsPage_ErrorInvalidCredentials));
+						String message = MessageFormat
+								.format(Messages.GitHubRepositorySettingsPage_StatusError,
+										e.getLocalizedMessage());
+						setStatus(GitHubUi.createErrorStatus(message));
 						return;
 					} finally {
 						monitor.done();
@@ -200,6 +204,14 @@ public class GitHubRepositorySettingsPage extends
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 				IRepositoryConstants.CATEGORY_BUGS);
 		super.applyTo(repository);
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
+	 */
+	public boolean canValidate() {
+		return isPageComplete()
+				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
 	}
 
 }

@@ -65,10 +65,10 @@ public class Messages extends NLS {
 	public static String GitHubRepositorySettingsPage_Description;
 
 	/** */
-	public static String GitHubRepositorySettingsPage_ErrorInvalidCredentials;
+	public static String GitHubRepositorySettingsPage_ErrorMalformedUrl;
 
 	/** */
-	public static String GitHubRepositorySettingsPage_ErrorMalformedUrl;
+	public static String GitHubRepositorySettingsPage_StatusError;
 
 	/** */
 	public static String GitHubRepositorySettingsPage_StatusSuccess;
