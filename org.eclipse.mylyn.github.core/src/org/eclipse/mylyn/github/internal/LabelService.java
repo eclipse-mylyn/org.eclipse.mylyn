@@ -45,6 +45,8 @@ public class LabelService {
 	 */
 	public List<Label> getLabels(String user, String repository)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
@@ -66,6 +68,9 @@ public class LabelService {
 	 */
 	public List<Label> setLabels(String user, String repository,
 			String issueId, List<Label> labels) throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(issueId, "Issue id cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES).append('/').append(issueId);
@@ -88,6 +93,9 @@ public class LabelService {
 	 */
 	public Label createLabel(String user, String repository, Label label)
 			throws IOException {
+		Assert.isNotNull(user, "User cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
+		Assert.isNotNull(label, "Label cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
