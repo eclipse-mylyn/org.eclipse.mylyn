@@ -13,14 +13,14 @@
 package org.eclipse.mylyn.github.tests;
 
 import org.eclipse.mylyn.github.internal.IssueServiceTest;
+import org.eclipse.mylyn.github.internal.LabelServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses( { // 
-	IssueServiceTest.class
-	})
+@SuiteClasses({ //
+IssueServiceTest.class, LabelServiceTest.class })
 public class AllHeadlessTests {
 
 }
