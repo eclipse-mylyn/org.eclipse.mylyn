@@ -62,6 +62,27 @@ public class Messages extends NLS {
 	public static String GitHubRepositoryQueryPage_TitleLabel;
 
 	/** */
+	public static String GitHubRepositorySettingsPage_Description;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_ErrorInvalidCredentials;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_ErrorMalformedUrl;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_StatusSuccess;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_TaskContactingServer;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_TaskValidating;
+
+	/** */
+	public static String GitHubRepositorySettingsPage_Title;
+
+	/** */
 	public static String IssueLabelAttributeEditor_ActionNewLabel;
 
 	/** */

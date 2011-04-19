@@ -59,8 +59,9 @@ public class GitHubRepositorySettingsPage extends
 	 *            - Object to populate
 	 */
 	public GitHubRepositorySettingsPage(final TaskRepository taskRepository) {
-		super("GitHub Issue Repository Settings",
-				"Enter repository location and credentials", taskRepository);
+		super(Messages.GitHubRepositorySettingsPage_Title,
+				Messages.GitHubRepositorySettingsPage_Description,
+				taskRepository);
 		this.setHttpAuth(false);
 		this.setNeedsAdvanced(false);
 		this.setNeedsAnonymousLogin(true);
@@ -91,7 +92,7 @@ public class GitHubRepositorySettingsPage extends
 	protected void createAdditionalControls(Composite parent) {
 		// Set the URL now, because serverURL is definitely instantiated .
 		if (serverUrlCombo.getText().length() == 0) {
-			String fullUrlText = URL + "/user/project";
+			String fullUrlText = URL + DEFAULT_REPOSITORY;
 			serverUrlCombo.setText(fullUrlText);
 			serverUrlCombo.setFocus();
 			// select the user/project part of the URL so that the user can just
@@ -132,19 +133,21 @@ public class GitHubRepositorySettingsPage extends
 		Validator validator = new Validator() {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask("Validating settings", 100);
+				monitor.beginTask(
+						Messages.GitHubRepositorySettingsPage_TaskValidating,
+						100);
 				try {
 					String urlText = repository.getUrl();
 					Matcher urlMatcher = GitHub.URL_PATTERN
-							.matcher(urlText == null ? "" : urlText);
+							.matcher(urlText == null ? "" : urlText); //$NON-NLS-1$
 					if (!urlMatcher.matches()) {
 						setStatus(GitHubUi
-								.createErrorStatus("Server URL must be in the form http://github.com/user/project"));
+								.createErrorStatus(Messages.GitHubRepositorySettingsPage_ErrorMalformedUrl));
 						return;
 					}
 					monitor.worked(20);
 
-					monitor.subTask("Contacting server...");
+					monitor.subTask(Messages.GitHubRepositorySettingsPage_TaskContactingServer);
 					try {
 						AuthenticationCredentials auth = repository
 								.getCredentials(AuthenticationType.REPOSITORY);
@@ -162,14 +165,14 @@ public class GitHubRepositorySettingsPage extends
 						service.getIssues(user, project, null);
 					} catch (IOException e) {
 						setStatus(GitHubUi
-								.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and Password."));
+								.createErrorStatus(Messages.GitHubRepositorySettingsPage_ErrorInvalidCredentials));
 						return;
 					} finally {
 						monitor.done();
 					}
 
 					setStatus(new Status(IStatus.OK, GitHubUi.BUNDLE_ID,
-							"Success!"));
+							Messages.GitHubRepositorySettingsPage_StatusSuccess));
 				} finally {
 					monitor.done();
 				}
