@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -47,7 +49,23 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * GitHub kind.
 	 */
-	protected static final String KIND = GitHub.CONNECTOR_KIND;
+	public static final String KIND = GitHub.CONNECTOR_KIND;
+
+	/**
+	 * Create client for repository
+	 * 
+	 * @param repository
+	 * @return client
+	 */
+	public static GitHubClient createClient(TaskRepository repository) {
+		GitHubClient client = new GitHubClient();
+		AuthenticationCredentials credentials = repository
+				.getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials != null)
+			client.setCredentials(credentials.getUserName(),
+					credentials.getPassword());
+		return client;
+	}
 
 	/**
 	 * GitHub specific {@link AbstractTaskDataHandler}.
@@ -65,20 +83,6 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	public GitHubRepositoryConnector() {
 		taskDataHandler = new GitHubTaskDataHandler(this);
-	}
-
-	/**
-	 * Create client for repository
-	 * 
-	 * @param repository
-	 * @return client
-	 */
-	protected GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = new GitHubClient();
-		GitHubCredentials credentials = GitHubCredentials.create(repository);
-		client.setCredentials(credentials.getUsername(),
-				credentials.getPassword());
-		return client;
 	}
 
 	/**
@@ -148,7 +152,6 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		String project = GitHub.computeTaskRepositoryProject(repository
 				.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
-		GitHubCredentials.create(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
 			List<Milestone> milestones = new LinkedList<Milestone>();
@@ -240,9 +243,11 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 			IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus result = Status.OK_STATUS;
-		List<String> statuses = QueryUtils.getAttributes(IssueService.FILTER_STATE, query);
+		List<String> statuses = QueryUtils.getAttributes(
+				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.GitHubRepositoryConnector_TaskQuerying, statuses.size());
+		monitor.beginTask(Messages.GitHubRepositoryConnector_TaskQuerying,
+				statuses.size());
 		try {
 			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 			String project = GitHub.computeTaskRepositoryProject(repository

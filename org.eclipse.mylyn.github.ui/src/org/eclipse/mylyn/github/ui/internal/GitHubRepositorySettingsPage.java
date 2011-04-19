@@ -13,8 +13,7 @@
 package org.eclipse.mylyn.github.ui.internal;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
 import java.util.regex.Matcher;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,11 +24,12 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubClient;
-import org.eclipse.mylyn.github.internal.GitHubCredentials;
 import org.eclipse.mylyn.github.internal.IssueService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
@@ -39,7 +39,18 @@ import org.eclipse.swt.widgets.Composite;
 public class GitHubRepositorySettingsPage extends
 		AbstractRepositorySettingsPage {
 
-	static final String URL = "http://github.com";
+	/**
+	 * URL
+	 */
+	public static final String URL = "http://github.com"; //$NON-NLS-1$
+
+	/**
+	 * DEFAULT_REPOSITORY
+	 */
+	public static final String DEFAULT_REPOSITORY = "/user/repository"; //$NON-NLS-1$
+
+	private boolean syncLabel = true;
+	private boolean editingUrl = false;
 
 	/**
 	 * Populate taskRepository with repository settings.
@@ -48,7 +59,8 @@ public class GitHubRepositorySettingsPage extends
 	 *            - Object to populate
 	 */
 	public GitHubRepositorySettingsPage(final TaskRepository taskRepository) {
-		super("GitHub Repository Settings", "", taskRepository);
+		super("GitHub Issue Repository Settings",
+				"Enter repository location and credentials", taskRepository);
 		this.setHttpAuth(false);
 		this.setNeedsAdvanced(false);
 		this.setNeedsAnonymousLogin(true);
@@ -61,24 +73,58 @@ public class GitHubRepositorySettingsPage extends
 		return GitHub.CONNECTOR_KIND;
 	}
 
+	/**
+	 * Sync server url combo with repository label editor base on default label
+	 * format
+	 */
+	protected void syncRepositoryLabel() {
+		if (syncLabel) {
+			String url = serverUrlCombo.getText();
+			String user = GitHub.computeTaskRepositoryUser(url);
+			String repo = GitHub.computeTaskRepositoryProject(url);
+			if (user != null && repo != null)
+				repositoryLabelEditor.setStringValue(user + '/' + repo);
+		}
+	}
+
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		// Set the URL now, because serverURL is definitely instantiated .
-		if (serverUrlCombo != null && (serverUrlCombo.getText() == null || serverUrlCombo.getText().trim().length() == 0)) {
-			String fullUrlText = URL+"/user/project";
+		if (serverUrlCombo.getText().length() == 0) {
+			String fullUrlText = URL + "/user/project";
 			serverUrlCombo.setText(fullUrlText);
-			// select the user/project part of the URL so that the user can just start
-			// typing to replace the text.
-			serverUrlCombo.setSelection(new Point(URL.length()+1,fullUrlText.length()));
+			serverUrlCombo.setFocus();
+			// select the user/project part of the URL so that the user can just
+			// start typing to replace the text.
+			serverUrlCombo.setSelection(new Point(URL.length() + 1, fullUrlText
+					.length()));
+
+			syncRepositoryLabel();
+
+			serverUrlCombo.addModifyListener(new ModifyListener() {
+
+				public void modifyText(ModifyEvent e) {
+					editingUrl = true;
+					try {
+						syncRepositoryLabel();
+					} finally {
+						editingUrl = false;
+					}
+				}
+			});
+
+			repositoryLabelEditor.getTextControl(compositeContainer)
+					.addModifyListener(new ModifyListener() {
+
+						public void modifyText(ModifyEvent e) {
+							if (!editingUrl)
+								syncLabel = false;
+						}
+					});
 		}
 
-		// Specify that you need the GitHub User Name
-		if (repositoryUserNameEditor != null) {
-			String text = repositoryUserNameEditor.getLabelText();
-			repositoryUserNameEditor.setLabelText("GitHub " + text);
-		}
-
-		this.setAnonymous(false);
+		if (getRepository() == null)
+			setAnonymous(false);
 	}
 
 	@Override
@@ -86,46 +132,44 @@ public class GitHubRepositorySettingsPage extends
 		Validator validator = new Validator() {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
-				int totalWork = 1000;
-				monitor.beginTask("Validating settings", totalWork);
+				monitor.beginTask("Validating settings", 100);
 				try {
-					
 					String urlText = repository.getUrl();
-					Matcher urlMatcher = GitHub.URL_PATTERN.matcher(urlText==null?"":urlText);
+					Matcher urlMatcher = GitHub.URL_PATTERN
+							.matcher(urlText == null ? "" : urlText);
 					if (!urlMatcher.matches()) {
-						setStatus(GitHubUi.createErrorStatus("Server URL must be in the form http://github.com/user/project or\nhttp://www.github.org/user/project"));
+						setStatus(GitHubUi
+								.createErrorStatus("Server URL must be in the form http://github.com/user/project"));
 						return;
 					}
-					monitor.worked(100);
-					AuthenticationCredentials auth = repository.getCredentials(AuthenticationType.REPOSITORY);
-	
+					monitor.worked(20);
+
 					monitor.subTask("Contacting server...");
 					try {
-						// verify the credentials
-						if (auth == null) {
-							setStatus(GitHubUi.createErrorStatus("Credentials are required.  Please specify username and API Token."));
-							return;
-						}
-						monitor.worked(250);
-						
-						GitHubCredentials credentials = new GitHubCredentials(auth.getUserName(), auth.getPassword());
+						AuthenticationCredentials auth = repository
+								.getCredentials(AuthenticationType.REPOSITORY);
 						GitHubClient client = new GitHubClient();
-						client.setCredentials(credentials.getUsername(), credentials.getPassword());
+						if (auth != null)
+							client.setCredentials(auth.getUserName(),
+									auth.getPassword());
 						IssueService service = new IssueService(client);
-						String u = GitHub.computeTaskRepositoryUser(repository.getUrl());
-						String p = GitHub.computeTaskRepositoryProject(repository
-								.getUrl());
-						Map<String, String> filterData = new HashMap<String, String>();
-						service.getIssues(u, p, filterData);
-
+						String user = GitHub
+								.computeTaskRepositoryUser(repository.getUrl());
+						String project = GitHub
+								.computeTaskRepositoryProject(repository
+										.getUrl());
+						monitor.worked(20);
+						service.getIssues(user, project, null);
 					} catch (IOException e) {
-						setStatus(GitHubUi.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and Password."));
+						setStatus(GitHubUi
+								.createErrorStatus("Invalid credentials.  Please check your GitHub User ID and Password."));
 						return;
 					} finally {
-						monitor.worked(650);
+						monitor.done();
 					}
-					
-					setStatus(new Status(IStatus.OK,GitHubUi.BUNDLE_ID, "Success!"));
+
+					setStatus(new Status(IStatus.OK, GitHubUi.BUNDLE_ID,
+							"Success!"));
 				} finally {
 					monitor.done();
 				}
@@ -136,9 +180,13 @@ public class GitHubRepositorySettingsPage extends
 
 	@Override
 	protected boolean isValidUrl(final String url) {
-		if (url.contains("github")) {
-			return true;
-		}
+		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
+			try {
+				new URL(url);
+				return true;
+			} catch (IOException e) {
+				return false;
+			}
 		return false;
 	}
 

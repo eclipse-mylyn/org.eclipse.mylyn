@@ -381,12 +381,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
 		String repo = GitHub.computeTaskRepositoryProject(repository.getUrl());
 		try {
-
-			GitHubClient client = new GitHubClient();
-			GitHubCredentials credentials = GitHubCredentials
-					.create(repository);
-			client.setCredentials(credentials.getUsername(),
-					credentials.getPassword());
+			GitHubClient client = GitHubRepositoryConnector
+					.createClient(repository);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
 				issue.setState(IssueService.STATE_OPEN);
