@@ -378,15 +378,15 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		String taskId = taskData.getTaskId();
 		Issue issue = createIssue(taskData);
-		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
-		String repo = GitHub.computeTaskRepositoryProject(repository.getUrl());
+		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
 			GitHubClient client = GitHubRepositoryConnector
 					.createClient(repository);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
 				issue.setState(IssueService.STATE_OPEN);
-				issue = service.createIssue(user, repo, issue);
+				issue = service.createIssue(repo.getOwner(), repo.getName(),
+						issue);
 				taskId = Integer.toString(issue.getNumber());
 			} else {
 
@@ -394,10 +394,11 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 				String comment = getAttributeValue(taskData,
 						GitHubTaskAttributes.COMMENT_NEW);
 				if (comment != null && comment.length() > 0)
-					service.createComment(user, repo, taskId, comment);
+					service.createComment(repo.getOwner(), repo.getName(),
+							taskId, comment);
 
-				updateLabels(user, repo, client, repository, taskData,
-						oldAttributes);
+				updateLabels(repo.getOwner(), repo.getName(), client,
+						repository, taskData, oldAttributes);
 
 				// Handle state change
 				TaskAttribute operationAttribute = taskData.getRoot()
@@ -418,7 +419,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 						}
 				}
 
-				service.editIssue(user, repo, issue);
+				service.editIssue(repo.getOwner(), repo.getName(), issue);
 			}
 			return new RepositoryResponse(
 					taskData.isNew() ? ResponseKind.TASK_CREATED

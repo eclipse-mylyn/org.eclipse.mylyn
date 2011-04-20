@@ -95,14 +95,12 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	public List<Label> refreshLabels(TaskRepository repository)
 			throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		String user = GitHub.computeTaskRepositoryUser(repository
-				.getRepositoryUrl());
-		String project = GitHub.computeTaskRepositoryProject(repository
-				.getRepositoryUrl());
+		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		LabelService service = new LabelService(client);
 		try {
-			List<Label> labels = service.getLabels(user, project);
+			List<Label> labels = service.getLabels(repo.getOwner(),
+					repo.getName());
 			Collections.sort(labels, new LabelComparator());
 			this.repositoryLabels.put(repository, labels);
 			return labels;
@@ -147,18 +145,15 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	public List<Milestone> refreshMilestones(TaskRepository repository)
 			throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		String user = GitHub.computeTaskRepositoryUser(repository
-				.getRepositoryUrl());
-		String project = GitHub.computeTaskRepositoryProject(repository
-				.getRepositoryUrl());
+		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
 			List<Milestone> milestones = new LinkedList<Milestone>();
-			milestones.addAll(service.getMilestones(user, project,
-					IssueService.STATE_OPEN));
-			milestones.addAll(service.getMilestones(user, project,
-					IssueService.STATE_CLOSED));
+			milestones.addAll(service.getMilestones(repo.getOwner(),
+					repo.getName(), IssueService.STATE_OPEN));
+			milestones.addAll(service.getMilestones(repo.getOwner(),
+					repo.getName(), IssueService.STATE_CLOSED));
 			this.repositoryMilestones.put(repository, milestones);
 			return milestones;
 		} catch (IOException e) {
@@ -249,9 +244,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		monitor.beginTask(Messages.GitHubRepositoryConnector_TaskQuerying,
 				statuses.size());
 		try {
-			String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
-			String project = GitHub.computeTaskRepositoryProject(repository
-					.getUrl());
+			Repository repo = GitHub.getRepository(repository
+					.getRepositoryUrl());
 
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
@@ -282,13 +276,14 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
 			for (String status : statuses) {
 				filterData.put(IssueService.FILTER_STATE, status);
-				List<Issue> issues = service.getIssues(user, project,
-						filterData);
+				List<Issue> issues = service.getIssues(repo.getOwner(),
+						repo.getName(), filterData);
 
 				// collect task data
 				for (Issue issue : issues) {
 					TaskData taskData = taskDataHandler.createTaskData(
-							repository, monitor, user, project, issue);
+							repository, monitor, repo.getOwner(),
+							repo.getName(), issue);
 					taskData.setPartial(true);
 					collector.accept(taskData);
 				}
@@ -307,21 +302,20 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
-
-		String user = GitHub.computeTaskRepositoryUser(repository.getUrl());
-		String project = GitHub.computeTaskRepositoryProject(repository
-				.getUrl());
+		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 
 		try {
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
-			Issue issue = service.getIssue(user, project, taskId);
+			Issue issue = service.getIssue(repo.getOwner(), repo.getName(),
+					taskId);
 			List<Comment> comments = null;
 			if (issue.getComments() > 0) {
-				comments = service.getComments(user, project, taskId);
+				comments = service.getComments(repo.getOwner(), repo.getName(),
+						taskId);
 			}
 			TaskData taskData = taskDataHandler.createTaskData(repository,
-					monitor, user, project, issue, comments);
+					monitor, repo.getOwner(), repo.getName(), issue, comments);
 
 			return taskData;
 		} catch (IOException e) {
@@ -332,7 +326,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
 		if (taskFullUrl != null) {
-			Matcher matcher = Pattern.compile("(http://.+?)/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
+			Matcher matcher = Pattern.compile(
+					"(http://.+?)/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
 			if (matcher.matches()) {
 				return matcher.group(1);
 			}
@@ -343,7 +338,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getTaskIdFromTaskUrl(String taskFullUrl) {
 		if (taskFullUrl != null) {
-			Matcher matcher = Pattern.compile(".+?/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
+			Matcher matcher = Pattern
+					.compile(".+?/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
 			if (matcher.matches()) {
 				return matcher.group(1);
 			}
@@ -353,7 +349,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return repositoryUrl+"/issues/issue/"+taskId; //$NON-NLS-1$
+		return repositoryUrl + "/issues/issue/" + taskId; //$NON-NLS-1$
 	}
 
 	@Override
@@ -392,7 +388,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateTaskFromTaskData(TaskRepository taskRepository,
 			ITask task, TaskData taskData) {
 		if (!taskData.isNew()) {
-			task.setUrl(getTaskUrl(taskRepository.getUrl(), taskData.getTaskId()));
+			task.setUrl(getTaskUrl(taskRepository.getUrl(),
+					taskData.getTaskId()));
 		}
 		new TaskMapper(taskData).applyTo(task);
 	}

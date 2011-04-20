@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
+import org.eclipse.mylyn.github.internal.Repository;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -127,7 +128,9 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 				if (project == null && user != null) {
 					// same project name, different user
 					String url = repository.getUrl();
-					project = GitHub.computeTaskRepositoryProject(url);
+					Repository repo = GitHub.getRepository(url);
+					if (repo != null)
+						project = repo.getName();
 				}
 				
 				TaskRepository taskRepository = null;

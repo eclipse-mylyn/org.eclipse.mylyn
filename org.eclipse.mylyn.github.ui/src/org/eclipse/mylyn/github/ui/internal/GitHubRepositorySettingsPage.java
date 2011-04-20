@@ -15,7 +15,6 @@ package org.eclipse.mylyn.github.ui.internal;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.regex.Matcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,6 +26,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubClient;
 import org.eclipse.mylyn.github.internal.IssueService;
+import org.eclipse.mylyn.github.internal.Repository;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -83,10 +83,10 @@ public class GitHubRepositorySettingsPage extends
 	protected void syncRepositoryLabel() {
 		if (syncLabel) {
 			String url = serverUrlCombo.getText();
-			String user = GitHub.computeTaskRepositoryUser(url);
-			String repo = GitHub.computeTaskRepositoryProject(url);
-			if (user != null && repo != null)
-				repositoryLabelEditor.setStringValue(user + '/' + repo);
+			Repository repo = GitHub.getRepository(url);
+			if (repo != null)
+				repositoryLabelEditor.setStringValue(repo.getOwner() + '/'
+						+ repo.getName());
 		}
 	}
 
@@ -139,16 +139,6 @@ public class GitHubRepositorySettingsPage extends
 						Messages.GitHubRepositorySettingsPage_TaskValidating,
 						100);
 				try {
-					String urlText = repository.getUrl();
-					Matcher urlMatcher = GitHub.URL_PATTERN
-							.matcher(urlText == null ? "" : urlText); //$NON-NLS-1$
-					if (!urlMatcher.matches()) {
-						setStatus(GitHubUi
-								.createErrorStatus(Messages.GitHubRepositorySettingsPage_ErrorMalformedUrl));
-						return;
-					}
-					monitor.worked(20);
-
 					monitor.subTask(Messages.GitHubRepositorySettingsPage_TaskContactingServer);
 					try {
 						AuthenticationCredentials auth = repository
@@ -158,13 +148,10 @@ public class GitHubRepositorySettingsPage extends
 							client.setCredentials(auth.getUserName(),
 									auth.getPassword());
 						IssueService service = new IssueService(client);
-						String user = GitHub
-								.computeTaskRepositoryUser(repository.getUrl());
-						String project = GitHub
-								.computeTaskRepositoryProject(repository
-										.getUrl());
-						monitor.worked(20);
-						service.getIssues(user, project, null);
+						Repository repo = GitHub.getRepository(repository
+								.getRepositoryUrl());
+						monitor.worked(50);
+						service.getIssues(repo.getOwner(), repo.getName(), null);
 					} catch (IOException e) {
 						String message = MessageFormat
 								.format(Messages.GitHubRepositorySettingsPage_StatusError,
@@ -190,7 +177,7 @@ public class GitHubRepositorySettingsPage extends
 		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				new URL(url);
-				return true;
+				return GitHub.getRepository(url) != null;
 			} catch (IOException e) {
 				return false;
 			}

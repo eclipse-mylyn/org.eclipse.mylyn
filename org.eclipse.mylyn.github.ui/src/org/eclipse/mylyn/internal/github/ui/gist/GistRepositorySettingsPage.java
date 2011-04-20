@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GistService;
-import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubClient;
 import org.eclipse.mylyn.github.ui.internal.GitHubUi;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
@@ -98,8 +98,8 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						GitHubClient client = GistConnector
 								.createClient(repository);
 						GistService service = new GistService(client);
-						String user = GitHub
-								.computeTaskRepositoryUser(repository.getUrl());
+						String user = repository.getCredentials(
+								AuthenticationType.REPOSITORY).getUserName();
 						monitor.worked(20);
 						service.getGists(user);
 					} catch (IOException e) {
