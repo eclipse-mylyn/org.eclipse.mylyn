@@ -33,6 +33,20 @@ public class Label {
 	}
 
 	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return this.name;
+	}
+
+	/**
 	 * @return color
 	 */
 	public String getColor() {

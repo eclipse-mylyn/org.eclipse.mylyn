@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.github.ui.internal;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,11 +109,6 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 				.applyTo(labelsViewer.getControl());
 		labelsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		labelsViewer.setLabelProvider(new LabelProvider() {
-
-			public String getText(Object element) {
-				return ((org.eclipse.mylyn.github.internal.Label) element)
-						.getName();
-			}
 
 			public Image getImage(Object element) {
 				return GitHubImages.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
@@ -246,7 +242,10 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			List<org.eclipse.mylyn.github.internal.Label> labels = connector
 					.getLabels(repository);
 			Collections.sort(labels, new LabelComparator());
-			this.labelsViewer.setInput(labels);
+			List<String> labelNames = new ArrayList<String>(labels.size());
+			for (org.eclipse.mylyn.github.internal.Label label : labels)
+				labelNames.add(label.getName());
+			this.labelsViewer.setInput(labelNames);
 		}
 		return hasLabels;
 	}
