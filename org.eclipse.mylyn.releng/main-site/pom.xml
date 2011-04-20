@@ -18,7 +18,7 @@
     <version>3.5.1-SNAPSHOT</version>
   </parent>
   <artifactId>main-site</artifactId>
-  <version>3.5.0.v20110316-0100</version>
+  <version>3.5.1-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 3.5, 3.6 and 3.7</name>
   <properties>
