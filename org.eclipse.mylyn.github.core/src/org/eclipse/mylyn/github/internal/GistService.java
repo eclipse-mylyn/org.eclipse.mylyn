@@ -44,6 +44,7 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public Gist getGist(String id) throws IOException {
+		Assert.isNotNull(id, "Gist id cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(id).append(IGitHubConstants.SUFFIX_JSON);
 		return this.client.get(uri.toString(), Gist.class);
