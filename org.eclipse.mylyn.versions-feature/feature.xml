@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.mylyn.commons.core" version="3.5.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.versions.core"
          download-size="0"
