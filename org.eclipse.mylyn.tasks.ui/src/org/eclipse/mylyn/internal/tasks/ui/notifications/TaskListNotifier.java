@@ -99,7 +99,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			}
 		}
 		if (event.getToken() != null && event.getTaskDataChanged()) {
-			if (PresentationFilter.getInstance().select(event.getTask())) {
+			if (PresentationFilter.getInstance().isInVisibleQuery(event.getTask())) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
 						.getConnectorKind());
 				if (!connectorUi.hasCustomNotifications()) {
