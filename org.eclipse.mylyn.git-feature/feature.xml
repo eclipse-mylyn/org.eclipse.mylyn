@@ -30,6 +30,7 @@
 
    <requires>
       <import feature="org.eclipse.egit" version="0.10.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.versions" version="0.7.0" match="compatible"/>
    </requires>
 
    <plugin
