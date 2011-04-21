@@ -220,7 +220,7 @@ public class GitHubClient {
 				throw new IOException(method.getStatusText());
 			}
 		} catch (JsonParseException jpe) {
-			throw new IOException(jpe);
+			throw new IOException(jpe.getMessage());
 		}
 	}
 
@@ -256,7 +256,7 @@ public class GitHubClient {
 				throw new IOException(method.getStatusText());
 			}
 		} catch (JsonParseException jpe) {
-			throw new IOException(jpe);
+			throw new IOException(jpe.getMessage());
 		} finally {
 			method.releaseConnection();
 		}
