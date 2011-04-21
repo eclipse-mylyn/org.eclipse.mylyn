@@ -20,6 +20,18 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.github.ui.gist.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String GistAttachmentPage_Description;
+
+	/** */
+	public static String GistAttachmentPage_LabelBinaryWarning;
+
+	/** */
+	public static String GistAttachmentPage_LabelFile;
+
+	/** */
+	public static String GistAttachmentPage_Title;
+
+	/** */
 	public static String GistAttachmentPart_PartName;
 
 	/** */
