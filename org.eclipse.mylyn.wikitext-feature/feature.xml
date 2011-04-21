@@ -28,6 +28,11 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.mylyn_feature" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.5.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.wikitext.core"
          download-size="0"
