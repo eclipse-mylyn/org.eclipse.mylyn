@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.mylyn.versions" version="0.7.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.cvs.core"
          download-size="0"
