@@ -379,6 +379,9 @@ public class HtmlComposer {
 				execute("integration.pendingCommandIdentifier = \'" + nanoTime+"\';");
 				execute(command.getCommand());
 				pendingListeners.remove(command);
+			} else {
+				execute("integration.pendingCommandIdentifier = \'\';");
+				execute(command.getCommand());
 			}
 		} else {
 			pendingListeners.put(command, new ArrayList<ModifyListener>(modifyListenerList));
