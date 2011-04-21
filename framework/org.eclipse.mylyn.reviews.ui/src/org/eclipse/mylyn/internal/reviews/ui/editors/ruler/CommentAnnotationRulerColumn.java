@@ -186,6 +186,8 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 
 	@Override
 	public Control createControl(CompositeRuler parentRuler, Composite parentControl) {
+		Control control = super.createControl(parentRuler, parentControl);
+
 		ITextViewer viewer = parentRuler.getTextViewer();
 		Assert.isLegal(viewer instanceof ISourceViewer);
 		fViewer = (ISourceViewer) viewer;
@@ -209,7 +211,7 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		initialize();
 
 //		CrucibleUiPlugin.getDefault().getActiveReviewManager().addReviewActivationListener(this);
-		return super.createControl(parentRuler, parentControl);
+		return control;
 	}
 
 	public void reviewActivated(ITask task, Review review) {
