@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -186,6 +187,8 @@ public class TaskRepositoriesView extends ViewPart {
 				if (service != null) {
 					try {
 						service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
+					} catch (NotEnabledException e) {
+						// ignore
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Opening repository properties failed", e)); //$NON-NLS-1$
