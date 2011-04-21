@@ -13,7 +13,10 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.gist.IGistQueryConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -69,12 +72,15 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			}
 		};
 
-		new Label(displayArea, SWT.NONE).setText(Messages.GistRepositoryQueryPage_LabelTitle);
+		new Label(displayArea, SWT.NONE)
+				.setText(Messages.GistRepositoryQueryPage_LabelTitle);
 		titleText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 		titleText.addModifyListener(completeListener);
+		titleText.setFocus();
 
-		new Label(displayArea, SWT.NONE).setText(Messages.GistRepositoryQueryPage_LabelUser);
+		new Label(displayArea, SWT.NONE)
+				.setText(Messages.GistRepositoryQueryPage_LabelUser);
 		userText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(userText);
 		userText.addModifyListener(completeListener);
@@ -83,9 +89,16 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		if (query != null) {
 			if (query.getSummary() != null)
 				titleText.setText(query.getSummary());
-
 			if (query.getAttribute(IGistQueryConstants.USER) != null)
 				userText.setText(query.getAttribute(IGistQueryConstants.USER));
+		} else if (TasksUiPlugin.getTaskList()
+				.getRepositoryQueries(getTaskRepository().getRepositoryUrl())
+				.isEmpty()) {
+			titleText.setText(Messages.GistRepositoryQueryPage_TitleDefault);
+			AuthenticationCredentials credentials = getTaskRepository()
+					.getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials != null)
+				userText.setText(credentials.getUserName());
 		}
 
 		Dialog.applyDialogFont(displayArea);
