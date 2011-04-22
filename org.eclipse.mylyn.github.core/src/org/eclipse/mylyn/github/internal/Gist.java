@@ -38,6 +38,8 @@ public class Gist {
 
 	private String gitPushUrl;
 
+	private String htmlUrl;
+
 	private String id;
 
 	private String repo;
@@ -127,6 +129,13 @@ public class Gist {
 	 */
 	public List<GistRevision> getHistory() {
 		return this.history;
+	}
+
+	/**
+	 * @return htmlUrl
+	 */
+	public String getHtmlUrl() {
+		return this.htmlUrl;
 	}
 
 	/**
