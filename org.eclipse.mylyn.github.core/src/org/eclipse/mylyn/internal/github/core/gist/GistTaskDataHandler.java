@@ -120,6 +120,9 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute url = GistAttribute.URL.create(data);
 		url.setValue(gist.getHtmlUrl());
 
+		TaskAttribute pullUrl = GistAttribute.CLONE_URL.create(data);
+		pullUrl.setValue(gist.getGitPushUrl());
+
 		IRepositoryPerson reporterPerson = null;
 		User user = gist.getUser();
 		if (user != null) {

@@ -60,7 +60,14 @@ public enum GistAttribute {
 	/**
 	 * RAW_FILE_URL
 	 */
-	RAW_FILE_URL("github.gist.file.url", Messages.GistAttribute_LabelFileUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
+	RAW_FILE_URL(
+			"github.gist.file.url", Messages.GistAttribute_LabelFileUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
+			true),
+
+	/**
+	 * CLONE_URL
+	 */
+	CLONE_URL("github.gist.cloneUrl", Messages.GistAttribute_LabelCloneUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
 			true),
 
 	/**

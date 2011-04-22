@@ -26,6 +26,9 @@ public class Messages extends NLS {
 	public static String GistAttribute_LabelAuthorGravatar;
 
 	/** */
+	public static String GistAttribute_LabelCloneUrl;
+
+	/** */
 	public static String GistAttribute_LabelCreated;
 
 	/** */
