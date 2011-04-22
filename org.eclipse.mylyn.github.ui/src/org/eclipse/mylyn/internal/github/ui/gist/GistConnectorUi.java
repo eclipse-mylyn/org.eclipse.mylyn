@@ -12,11 +12,13 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
@@ -94,6 +96,13 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	public ITaskSearchPage getSearchPage(TaskRepository repository,
 			IStructuredSelection selection) {
 		return new GistRepositoryQueryPage(repository, null);
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskAttachmentPage(org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel)
+	 */
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+		return new GistAttachmentPage(model);
 	}
 
 }
