@@ -13,6 +13,18 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.egit.ui.UIIcons;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.github.ui.internal.IssueSummaryPart;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
@@ -21,7 +33,10 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * Gist task editor page class
@@ -36,6 +51,49 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		super(editor, connectorKind);
 		setNeedsPrivateSection(true);
 		setNeedsSubmitButton(true);
+	}
+
+	/**
+	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#fillToolBar(org.eclipse.jface.action.IToolBarManager)
+	 */
+	public void fillToolBar(IToolBarManager toolBarManager) {
+		super.fillToolBar(toolBarManager);
+
+		Action cloneGist = new Action(
+				Messages.GistTaskEditorPage_LabelCloneGistAction,
+				UIIcons.CLONEGIT) {
+
+			public void run() {
+				ICommandService srv = (ICommandService) getSite().getService(
+						ICommandService.class);
+				IHandlerService hsrv = (IHandlerService) getSite().getService(
+						IHandlerService.class);
+				Command command = srv.getCommand(CloneGistHandler.ID);
+
+				ExecutionEvent event = hsrv.createExecutionEvent(command, null);
+				if (event.getApplicationContext() instanceof IEvaluationContext) {
+					IEvaluationContext context = (IEvaluationContext) event
+							.getApplicationContext();
+					IStructuredSelection selection = new StructuredSelection(
+							getModel().getTaskData());
+					context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+							selection);
+					try {
+						command.executeWithChecks(event);
+					} catch (ExecutionException ignored) {
+						// Ignored
+					} catch (NotDefinedException ignored) {
+						// Ignored
+					} catch (NotEnabledException ignored) {
+						// Ignored
+					} catch (NotHandledException ignored) {
+						// Ignored
+					}
+				}
+			}
+
+		};
+		toolBarManager.prependToGroup("open", cloneGist); //$NON-NLS-1$
 	}
 
 	/**

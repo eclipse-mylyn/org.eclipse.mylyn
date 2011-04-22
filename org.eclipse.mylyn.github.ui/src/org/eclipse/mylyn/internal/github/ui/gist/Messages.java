@@ -89,6 +89,9 @@ public class Messages extends NLS {
 	public static String GistRepositorySettingsPage_Title;
 
 	/** */
+	public static String GistTaskEditorPage_LabelCloneGistAction;
+
+	/** */
 	public static String GistTaskEditorPageFactory_PageText;
 
 	static {
