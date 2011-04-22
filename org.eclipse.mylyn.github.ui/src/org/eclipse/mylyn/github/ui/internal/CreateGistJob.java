@@ -28,7 +28,6 @@ import org.eclipse.ui.PlatformUI;
 public class CreateGistJob extends Job {
 
 	private String title;
-	private String extension;
 	private String content;
 	private GistService service;
 	private String user;

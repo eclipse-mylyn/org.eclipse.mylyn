@@ -20,8 +20,6 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
  */
 public class GistAttachmentSorter extends TableSorter {
 
-	private TaskKeyComparator keyComparator = new TaskKeyComparator();
-
 	/**
 	 * @see org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSorter#compare(org.eclipse.jface.viewers.ColumnViewer,
 	 *      java.lang.Object, java.lang.Object, int)
