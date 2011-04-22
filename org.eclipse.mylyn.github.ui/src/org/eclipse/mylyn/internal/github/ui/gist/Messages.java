@@ -20,6 +20,27 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.github.ui.gist.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String CloneGistHandler_ErrorMessage;
+
+	/** */
+	public static String CloneGistHandler_ErrorRepoExists;
+
+	/** */
+	public static String CloneGistHandler_ErrorTitle;
+
+	/** */
+	public static String CloneGistHandler_TaskCloning;
+
+	/** */
+	public static String CloneGistHandler_TaskConnectingProject;
+
+	/** */
+	public static String CloneGistHandler_TaskCreatingProject;
+
+	/** */
+	public static String CloneGistHandler_TaskRegisteringRepository;
+
+	/** */
 	public static String GistAttachmentPage_Description;
 
 	/** */
