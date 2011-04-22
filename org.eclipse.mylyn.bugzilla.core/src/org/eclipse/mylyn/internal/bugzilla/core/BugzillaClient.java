@@ -14,6 +14,8 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -2355,6 +2357,63 @@ public class BugzillaClient {
 		} catch (XmlRpcException e) {
 			throw new CoreException(
 					new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "XMLRPC is not installed")); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Copies all bytes in the given source stream to the given destination stream. Neither streams are closed.
+	 * 
+	 * @param source
+	 *            the given source stream
+	 * @param destination
+	 *            the given destination stream
+	 * @throws IOException
+	 *             in case of error
+	 */
+	private static void transferData(InputStream in, OutputStream out) throws IOException {
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
+	}
+
+	/**
+	 * Returns the given file path with its separator character changed from the given old separator to the given new
+	 * separator.
+	 * 
+	 * @param path
+	 *            a file path
+	 * @param oldSeparator
+	 *            a path separator character
+	 * @param newSeparator
+	 *            a path separator character
+	 * @return the file path with its separator character changed from the given old separator to the given new
+	 *         separator
+	 */
+	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
+		return path.replace(oldSeparator, newSeparator);
+	}
+
+	public void downloadXMLTransFile(String transFile, IProgressMonitor monitor) throws IOException, CoreException {
+		monitor = Policy.monitorFor(monitor);
+		String loginUrl = repositoryUrl + "/xml_transition_file.mylyn"; //$NON-NLS-1$
+
+		GzipGetMethod method = null;
+		try {
+			method = getConnect(loginUrl, monitor);
+			InputStream input = null;
+
+			File file = new File(changeSeparator(transFile, '/', File.separatorChar));
+			file.getParentFile().mkdirs();
+
+			FileOutputStream output = new FileOutputStream(transFile);
+			input = getResponseStream(method, monitor);
+			transferData(input, output);
+		} finally {
+			if (method != null) {
+				WebUtil.releaseConnection(method, monitor);
+			}
 		}
 	}
 

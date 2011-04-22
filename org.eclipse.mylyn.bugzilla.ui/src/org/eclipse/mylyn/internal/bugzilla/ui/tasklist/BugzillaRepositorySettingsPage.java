@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -107,6 +108,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private Combo languageSettingCombo;
 
 	private Button useXMLRPCstatusTransitions;
+
+	private Button autodetectXMLRPCFile;
 
 	private Button useclassification;
 
@@ -254,17 +257,28 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		new Label(parent, SWT.NONE).setText(Messages.BugzillaRepositorySettingsPage_Language_);
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
-		Label xmlrpc = new Label(parent, SWT.NONE);
-		xmlrpc.setText(Messages.BugzillaRepositorySettingsPage_AutodetectWorkflow);
-		xmlrpc.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
-		useXMLRPCstatusTransitions = new Button(parent, SWT.CHECK | SWT.LEFT);
-		useXMLRPCstatusTransitions.setText(Messages.BugzillaRepositorySettingsPage_UseXmlRpc);
+		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaRepositoryConnector.getLanguageSettings()) {
+			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
+		}
 
-		Label descriptorLabel = new Label(parent, SWT.NONE);
+		Group workflowGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		workflowGroup.setLayout(new GridLayout(2, false));
+		workflowGroup.setText(Messages.BugzillaRepositorySettingsPage_Custom_Workflow);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(workflowGroup);
+
+		Label descriptorLabel = new Label(workflowGroup, SWT.NONE);
 		descriptorLabel.setText(Messages.BugzillaRepositorySettingsPage_descriptor_file);
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(descriptorLabel);
-
-		Composite descriptorComposite = new Composite(parent, SWT.NONE);
+		descriptorFile = new Text(workflowGroup, SWT.BORDER);
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.align(SWT.FILL, SWT.CENTER)
+				.hint(300, SWT.DEFAULT)
+				.applyTo(descriptorFile);
+		useXMLRPCstatusTransitions = new Button(workflowGroup, SWT.CHECK | SWT.LEFT);
+		useXMLRPCstatusTransitions.setText(Messages.BugzillaRepositorySettingsPage_UseXmlRpc);
+		useXMLRPCstatusTransitions.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		Composite descriptorComposite = new Composite(workflowGroup, SWT.NONE);
 		gridLayout = new GridLayout(2, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -272,15 +286,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		GridDataFactory.fillDefaults()
 				.grab(true, false)
 				.align(SWT.FILL, SWT.BEGINNING)
-				.hint(200, SWT.DEFAULT)
+				.hint(300, SWT.DEFAULT)
 				.applyTo(descriptorComposite);
-
-		descriptorFile = new Text(descriptorComposite, SWT.BORDER);
-		GridDataFactory.fillDefaults()
-				.grab(true, false)
-				.align(SWT.LEFT, SWT.CENTER)
-				.hint(200, SWT.DEFAULT)
-				.applyTo(descriptorFile);
 
 		Button browseDescriptor = new Button(descriptorComposite, SWT.PUSH);
 		browseDescriptor.setText(Messages.BugzillaRepositorySettingsPage_Browse_descriptor);
@@ -299,7 +306,55 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 			}
 		});
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(browseDescriptor);
+		browseDescriptor.setToolTipText(Messages.BugzillaRepositorySettingsPage_browseToolTip);
+		autodetectXMLRPCFile = new Button(descriptorComposite, SWT.PUSH);
+		autodetectXMLRPCFile.setText(Messages.BugzillaRepositorySettingsPage_DownloadText);
+		autodetectXMLRPCFile.setToolTipText(Messages.BugzillaRepositorySettingsPage_DownloadToolTip);
+		autodetectXMLRPCFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final String[] fileName = new String[1];
+				try {
+					getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor) throws InvocationTargetException,
+								InterruptedException {
+							if (monitor == null) {
+								monitor = new NullProgressMonitor();
+							}
+							String transFile = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
+									+ "/.metadata/.mylyn/bugzillaTrans/" + repository.getRepositoryLabel(); //$NON-NLS-1$
+							try {
+								BugzillaClient client = null;
+
+								BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+								client = BugzillaClientFactory.createClient(repository, connector);
+								client.downloadXMLTransFile(transFile, monitor);
+								fileName[0] = transFile;
+							} catch (MalformedURLException e) {
+								fileName[0] = null;
+							} catch (IOException e) {
+								fileName[0] = null;
+							} catch (CoreException e) {
+								fileName[0] = null;
+							} finally {
+								monitor.done();
+							}
+						}
+
+					});
+				} catch (InvocationTargetException e1) {
+					fileName[0] = null;
+				} catch (InterruptedException e1) {
+					fileName[0] = null;
+				}
+				if (fileName[0] != null) {
+					descriptorFile.setText(fileName[0]);
+				}
+			}
+		});
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(browseDescriptor);
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).grab(true, false).applyTo(autodetectXMLRPCFile);
+
 		descriptorFile.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
@@ -309,9 +364,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			}
 		});
 
-		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaRepositoryConnector.getLanguageSettings()) {
-			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
-		}
 		if (repository != null) {
 			//Set language selection
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
@@ -333,13 +385,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			}
 		}
 		Group adminGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		adminGroup.setLayout(new GridLayout(3, false));
+		adminGroup.setLayout(new GridLayout(3, true));
 		adminGroup.setText(Messages.BugzillaRepositorySettingsPage_admin_parameter);
-		GridDataFactory.fillDefaults()
-				.grab(true, false)
-				.align(SWT.BEGINNING, SWT.CENTER)
-				.span(2, 1)
-				.applyTo(adminGroup);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(adminGroup);
 
 		useclassification = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
 		useclassification.setText(Messages.BugzillaRepositorySettingsPage_useclassification);
@@ -353,6 +401,23 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		usebugaliases.setText(Messages.BugzillaRepositorySettingsPage_usebugaliases);
 		use_see_also = new Button(adminGroup, SWT.CHECK | SWT.LEFT);
 		use_see_also.setText(Messages.BugzillaRepositorySettingsPage_use_see_also);
+
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(useclassification);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(usestatuswhiteboard);
+
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(usetargetmilestone);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(usebugaliases);
+
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(useqacontact);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.LEFT, SWT.CENTER).applyTo(use_see_also);
+
+		useclassification.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+		usestatuswhiteboard.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+		usetargetmilestone.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+		usebugaliases.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+		useqacontact.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+		use_see_also.setToolTipText(Messages.BugzillaRepositorySettingsPage_suppressToolTip);
+
 		if (repository != null) {
 			RepositoryTemplate myTemplate = null;
 			if (repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION) == null) {
