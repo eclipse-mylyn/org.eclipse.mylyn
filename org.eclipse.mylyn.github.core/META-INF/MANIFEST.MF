@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
+Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
-Bundle-Name: EGit Mylyn GitHub Core Plug-in (Incubation)
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.mylyn.github.core;singleton:=true
 Bundle-Version: 0.1.0.qualifier
-Bundle-Vendor: Eclipse EGit
+Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.github.internal;x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.gist;x-friends:="org.eclipse.mylyn.github.ui"
