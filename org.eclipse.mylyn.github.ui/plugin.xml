@@ -34,6 +34,11 @@
             id="org.eclipse.mylyn.github.ui.command.createGist"
             name="Create Gist">
       </command>
+      <command
+            description="Clone Gist into Git repository"
+            id="org.eclipse.mylyn.github.ui.command.cloneGist"
+            name="Clone Gist">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -75,6 +80,10 @@
       <handler
             class="org.eclipse.mylyn.github.ui.internal.CreateGistHandler"
             commandId="org.eclipse.mylyn.github.ui.command.createGist">
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.github.ui.gist.CloneGistHandler"
+            commandId="org.eclipse.mylyn.github.ui.command.cloneGist">
       </handler>
    </extension>
    <extension
