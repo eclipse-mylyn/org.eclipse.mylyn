@@ -101,5 +101,15 @@
             overlayIcon="icons/obj16/github_8x8.png">
       </connectorUi>
    </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.mylyn.tasks.ui.wizards.import.category"
+            class="org.eclipse.mylyn.github.ui.internal.ImportRepositoriesWizard"
+            icon="icons/obj16/github.png"
+            id="org.eclipse.mylyn.github.ui.importRepositoriesWizard"
+            name="%importRepositoriesWizardName">
+      </wizard>
+   </extension>
 
 </plugin>
