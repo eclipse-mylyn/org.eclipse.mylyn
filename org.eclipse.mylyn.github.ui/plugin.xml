@@ -59,7 +59,8 @@
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
-                  <iterate>
+                  <iterate
+                        ifEmpty="false">
                      <adapt
                            type="org.eclipse.core.resources.IFile">
                      </adapt>
