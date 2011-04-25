@@ -228,6 +228,14 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 				IssueService.FILTER_STATE, query);
 		closedButton.setSelection(status.contains(IssueService.STATE_CLOSED));
 		openButton.setSelection(status.contains(IssueService.STATE_OPEN));
+
+		String assignee = query.getAttribute(IssueService.FILTER_ASSIGNEE);
+		if (assignee != null)
+			assigneeText.setText(assignee);
+
+		String mentioning = query.getAttribute(IssueService.FILTER_MENTIONED);
+		if (mentioning != null)
+			mentionText.setText(mentioning);
 	}
 
 	private boolean updateLabels() {
@@ -369,7 +377,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			query.setAttribute(IssueService.FILTER_ASSIGNEE, null);
 
 		String mentions = this.mentionText.getText().trim();
-		if (assignee.length() > 0)
+		if (mentions.length() > 0)
 			query.setAttribute(IssueService.FILTER_MENTIONED, mentions);
 		else
 			query.setAttribute(IssueService.FILTER_MENTIONED, null);
