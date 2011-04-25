@@ -21,6 +21,21 @@ public interface IGitHubConstants {
 	String SEGMENT_REPOS = "/repos"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_SHOW
+	 */
+	String SEGMENT_SHOW = "/show"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_ORGANIZATIONS
+	 */
+	String SEGMENT_ORGANIZATIONS = "/organizations"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_REPOSITORIES
+	 */
+	String SEGMENT_REPOSITORIES = "/repositories"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_ISSUES
 	 */
 	String SEGMENT_ISSUES = "/issues"; //$NON-NLS-1$
@@ -51,6 +66,11 @@ public interface IGitHubConstants {
 	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_V2_API
+	 */
+	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
+
+	/**
 	 * SUFFIX_JSON
 	 */
 	String SUFFIX_JSON = ".json"; //$NON-NLS-1$
@@ -61,6 +81,11 @@ public interface IGitHubConstants {
 	String HOST_API = "api.github.com"; //$NON-NLS-1$
 
 	/**
+	 * HOST_API_V2
+	 */
+	String HOST_API_V2 = "github.com"; //$NON-NLS-1$
+
+	/**
 	 * PROTOCOL_HTTPS
 	 */
 	String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
@@ -69,6 +94,11 @@ public interface IGitHubConstants {
 	 * DATE_FORMAT
 	 */
 	String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //$NON-NLS-1$
+
+	/**
+	 * DATE_FORMAT_V2_1
+	 */
+	String DATE_FORMAT_V2_1 = "yyyy/MM/dd HH:mm:ss Z"; //$NON-NLS-N$
 
 	/**
 	 * CONTENT_TYPE_JSON

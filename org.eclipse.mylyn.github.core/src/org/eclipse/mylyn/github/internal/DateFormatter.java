@@ -20,24 +20,30 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
  * Date formatter for date format present in the GitHub v3 API.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class DateFormatter implements JsonDeserializer<Date> {
 
-	private DateFormat format;
+	private List<DateFormat> formats;
 
 	/**
 	 * Create date formatter
 	 */
 	public DateFormatter() {
-		this.format = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT);
+		this.formats = new LinkedList<DateFormat>();
+		this.formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT));
+		this.formats
+				.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1));
 		TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
-		this.format.setTimeZone(timeZone);
+		for (DateFormat format : this.formats)
+			format.setTimeZone(timeZone);
 	}
 
 	/**
@@ -46,13 +52,16 @@ public class DateFormatter implements JsonDeserializer<Date> {
 	 */
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
-		try {
-			synchronized (this.format) {
-				return this.format.parse(json.getAsString());
+		JsonParseException exception = null;
+		for (DateFormat format : this.formats)
+			try {
+				synchronized (format) {
+					return format.parse(json.getAsString());
+				}
+			} catch (ParseException e) {
+				exception = new JsonParseException(e);
 			}
-		} catch (ParseException e) {
-			throw new JsonParseException(e);
-		}
+		throw exception;
 	}
 
 }
