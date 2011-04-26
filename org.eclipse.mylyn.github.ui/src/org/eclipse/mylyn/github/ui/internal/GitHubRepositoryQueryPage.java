@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -36,10 +36,15 @@ import org.eclipse.mylyn.github.internal.IssueService;
 import org.eclipse.mylyn.github.internal.LabelComparator;
 import org.eclipse.mylyn.github.internal.Milestone;
 import org.eclipse.mylyn.github.internal.QueryUtils;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,6 +57,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -124,12 +131,81 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 				});
 	}
 
+	private void createOptionsArea(Composite parent) {
+		Composite optionsArea = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(optionsArea);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(optionsArea);
+
+		Composite statusArea = new Composite(optionsArea, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(4).equalWidth(false)
+				.applyTo(statusArea);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
+				.applyTo(statusArea);
+
+		new Label(statusArea, SWT.NONE)
+				.setText(Messages.GitHubRepositoryQueryPage_StatusLabel);
+
+		openButton = new Button(statusArea, SWT.CHECK);
+		openButton.setSelection(true);
+		openButton.setText(Messages.GitHubRepositoryQueryPage_StatusOpen);
+		openButton.addSelectionListener(this.completeListener);
+
+		closedButton = new Button(statusArea, SWT.CHECK);
+		closedButton.setSelection(true);
+		closedButton.setText(Messages.GitHubRepositoryQueryPage_StatusClosed);
+		closedButton.addSelectionListener(this.completeListener);
+
+		ToolBar toolbar = new ToolBar(statusArea, SWT.FLAT);
+		ToolItem updateItem = new ToolItem(toolbar, SWT.PUSH);
+		final Image updateImage = TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION
+				.createImage();
+		toolbar.addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				updateImage.dispose();
+			}
+		});
+		updateItem.setImage(updateImage);
+		updateItem
+				.setToolTipText(Messages.GitHubRepositoryQueryPage_TooltipUpdateRepository);
+		GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL)
+				.grab(true, false).applyTo(toolbar);
+		updateItem.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				refreshRepository();
+			}
+
+		});
+
+		Label milestonesLabel = new Label(optionsArea, SWT.NONE);
+		milestonesLabel
+				.setText(Messages.GitHubRepositoryQueryPage_MilestoneLabel);
+
+		milestoneCombo = new Combo(optionsArea, SWT.DROP_DOWN | SWT.READ_ONLY);
+		GridDataFactory.fillDefaults().grab(true, false)
+				.applyTo(milestoneCombo);
+
+		Label assigneeLabel = new Label(optionsArea, SWT.NONE);
+		assigneeLabel.setText(Messages.GitHubRepositoryQueryPage_AssigneeLabel);
+
+		assigneeText = new Text(optionsArea, SWT.BORDER | SWT.SINGLE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(assigneeText);
+
+		Label mentionLabel = new Label(optionsArea, SWT.NONE);
+		mentionLabel.setText(Messages.GitHubRepositoryQueryPage_MentionsLabel);
+
+		mentionText = new Text(optionsArea, SWT.BORDER | SWT.SINGLE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(mentionText);
+
+	}
+
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false)
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
 				.applyTo(displayArea);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(displayArea);
 
@@ -151,48 +227,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			});
 		}
 
-		Composite leftArea = new Composite(displayArea, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(leftArea);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(leftArea);
-
-		Composite statusArea = new Composite(leftArea, SWT.NONE);
-		GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false)
-				.applyTo(statusArea);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
-				.applyTo(statusArea);
-
-		new Label(statusArea, SWT.NONE)
-				.setText(Messages.GitHubRepositoryQueryPage_StatusLabel);
-
-		openButton = new Button(statusArea, SWT.CHECK);
-		openButton.setSelection(true);
-		openButton.setText(Messages.GitHubRepositoryQueryPage_StatusOpen);
-		openButton.addSelectionListener(this.completeListener);
-
-		closedButton = new Button(statusArea, SWT.CHECK);
-		closedButton.setSelection(true);
-		closedButton.setText(Messages.GitHubRepositoryQueryPage_StatusClosed);
-		closedButton.addSelectionListener(this.completeListener);
-
-		Label milestonesLabel = new Label(leftArea, SWT.NONE);
-		milestonesLabel
-				.setText(Messages.GitHubRepositoryQueryPage_MilestoneLabel);
-
-		milestoneCombo = new Combo(leftArea, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridDataFactory.fillDefaults().grab(true, false)
-				.applyTo(milestoneCombo);
-
-		Label assigneeLabel = new Label(leftArea, SWT.NONE);
-		assigneeLabel.setText(Messages.GitHubRepositoryQueryPage_AssigneeLabel);
-
-		assigneeText = new Text(leftArea, SWT.BORDER | SWT.SINGLE);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(assigneeText);
-
-		Label mentionLabel = new Label(leftArea, SWT.NONE);
-		mentionLabel.setText(Messages.GitHubRepositoryQueryPage_MentionsLabel);
-
-		mentionText = new Text(leftArea, SWT.BORDER | SWT.SINGLE);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(mentionText);
+		createOptionsArea(displayArea);
 
 		createLabelsArea(displayArea);
 
@@ -271,6 +306,12 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			this.milestoneCombo.removeAll();
 			this.milestoneCombo
 					.add(Messages.GitHubRepositoryQueryPage_MilestoneNone);
+			Collections.sort(this.milestones, new Comparator<Milestone>() {
+
+				public int compare(Milestone m1, Milestone m2) {
+					return m1.getTitle().compareToIgnoreCase(m2.getTitle());
+				}
+			});
 			for (Milestone milestone : milestones)
 				this.milestoneCombo.add(milestone.getTitle());
 
@@ -281,49 +322,46 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 	private void refreshRepository() {
 		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
+			ICoreRunnable runnable = new ICoreRunnable() {
 
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
+				public void run(IProgressMonitor monitor) throws CoreException {
 					Policy.monitorFor(monitor);
 					monitor.beginTask("", 2); //$NON-NLS-1$
-					try {
-						GitHubRepositoryConnector connector = GitHubRepositoryConnectorUI
-								.getCoreConnector();
-						TaskRepository repository = getTaskRepository();
+					GitHubRepositoryConnector connector = GitHubRepositoryConnectorUI
+							.getCoreConnector();
+					TaskRepository repository = getTaskRepository();
 
-						monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingLabels);
-						connector.refreshLabels(repository);
-						monitor.worked(1);
+					monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingLabels);
+					connector.refreshLabels(repository);
+					monitor.worked(1);
 
-						monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingMilestones);
-						connector.refreshMilestones(repository);
-						monitor.done();
+					monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingMilestones);
+					connector.refreshMilestones(repository);
+					monitor.done();
 
-						PlatformUI.getWorkbench().getDisplay()
-								.asyncExec(new Runnable() {
+					PlatformUI.getWorkbench().getDisplay()
+							.asyncExec(new Runnable() {
 
-									public void run() {
-										updateLabels();
-										updateMilestones();
-										initialize();
-									}
-								});
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
+								public void run() {
+									updateLabels();
+									updateMilestones();
+									initialize();
+								}
+							});
 				}
-			});
-		} catch (InvocationTargetException e) {
-			Throwable target = e.getTargetException();
-			if (target instanceof CoreException) {
-				IStatus status = ((CoreException) target).getStatus();
-				ErrorDialog.openError(getShell(),
-						Messages.GitHubRepositoryQueryPage_ErrorLoading,
-						target.getLocalizedMessage(), status);
-			}
-		} catch (InterruptedException ignore) {
-			// Ignore
+			};
+			IRunnableContext context = getContainer();
+			if (context == null)
+				if (inSearchContainer())
+					context = getSearchContainer().getRunnableContext();
+				else
+					context = PlatformUI.getWorkbench().getProgressService();
+			CommonUiUtil.run(context, runnable);
+		} catch (CoreException e) {
+			IStatus status = e.getStatus();
+			ErrorDialog.openError(getShell(),
+					Messages.GitHubRepositoryQueryPage_ErrorLoading,
+					e.getLocalizedMessage(), status);
 		}
 	}
 

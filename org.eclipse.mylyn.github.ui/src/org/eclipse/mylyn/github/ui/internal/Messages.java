@@ -80,6 +80,9 @@ public class Messages extends NLS {
 	public static String GitHubRepositoryQueryPage_TitleLabel;
 
 	/** */
+	public static String GitHubRepositoryQueryPage_TooltipUpdateRepository;
+
+	/** */
 	public static String GitHubRepositorySettingsPage_Description;
 
 	/** */
