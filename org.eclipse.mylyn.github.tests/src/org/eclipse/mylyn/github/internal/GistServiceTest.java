@@ -13,7 +13,9 @@ package org.eclipse.mylyn.github.internal;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Before;
@@ -102,5 +104,61 @@ public class GistServiceTest {
 		user.setLogin(null);
 		gist.setUser(user);
 		gistService.createGist(gist);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void updateGist_NullGist() throws IOException {
+		gistService.updateGist(null);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void updateGist_NullRepository() throws IOException {
+		Gist gist = new Gist();
+		gist.setRepo(null);
+		gistService.updateGist(gist);
+	}
+
+	@Test
+	public void updateGist_OK() throws IOException {
+		Gist gist = new Gist();
+		gist.setRepo("test_repository");
+		gistService.updateGist(gist);
+		verify(gitHubClient).put("/gists/test_repository.json", gist,
+				Gist.class);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createComment_NullGistId() throws IOException {
+		gistService.createComment(null, "not null");
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createComment_NullComment() throws IOException {
+		gistService.createComment("not null", null);
+	}
+
+	@Test
+	public void createComment_OK() throws IOException {
+		gistService.createComment("1", "test_comment");
+
+		Map<String, String> params = new HashMap<String, String>(1, 1);
+		params.put(IssueService.FIELD_BODY, "test_comment");
+		verify(gitHubClient).post("/gists/1/comments.json", params,
+				Comment.class);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void getComments_NullGistId() throws IOException {
+		gistService.getComments(null);
+	}
+
+	@Test
+	public void getComments_OK() throws IOException {
+		gistService.getComments("1");
+
+		TypeToken<List<Comment>> commentsToken = new TypeToken<List<Comment>>() {
+		};
+		verify(gitHubClient).get("/gists/1/comments.json",
+				commentsToken.getType());
 	}
 }
