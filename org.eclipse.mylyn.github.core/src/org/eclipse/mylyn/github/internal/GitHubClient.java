@@ -44,6 +44,9 @@ import org.apache.commons.httpclient.protocol.Protocol;
  */
 public class GitHubClient {
 
+	private static final NameValuePair PER_PAGE_PARAM = new NameValuePair(
+			IGitHubConstants.PARAM_PER_PAGE, Integer.toString(100));
+
 	private static final AuthScope ANY_SCOPE = new AuthScope(
 			AuthScope.ANY_HOST, AuthScope.ANY_PORT);
 
@@ -167,12 +170,17 @@ public class GitHubClient {
 	 * @return name value pair array
 	 */
 	protected NameValuePair[] getPairs(Map<String, String> data) {
-		NameValuePair[] pairs = new NameValuePair[data.size()];
+		if (data == null || data.isEmpty())
+			return new NameValuePair[] { PER_PAGE_PARAM };
+
+		int size = data.containsKey(IGitHubConstants.PARAM_PER_PAGE) ? data
+				.size() : data.size() + 1;
+		NameValuePair[] pairs = new NameValuePair[size];
 		int i = 0;
-		for (Entry<String, String> entry : data.entrySet()) {
-			pairs[i] = new NameValuePair(entry.getKey(), entry.getValue());
-			i++;
-		}
+		for (Entry<String, String> entry : data.entrySet())
+			pairs[i++] = new NameValuePair(entry.getKey(), entry.getValue());
+		if (i < size)
+			pairs[i] = PER_PAGE_PARAM;
 		return pairs;
 	}
 
@@ -201,8 +209,7 @@ public class GitHubClient {
 	public InputStream getStream(String uri, Map<String, String> params)
 			throws IOException {
 		GetMethod method = createGet(uri);
-		if (params != null && !params.isEmpty())
-			method.setQueryString(getPairs(params));
+		method.setQueryString(getPairs(params));
 
 		try {
 			int status = this.client.executeMethod(this.hostConfig, method);
@@ -237,8 +244,7 @@ public class GitHubClient {
 	public <V> V get(String uri, Map<String, String> params, Type type)
 			throws IOException {
 		GetMethod method = createGet(uri);
-		if (params != null && !params.isEmpty())
-			method.setQueryString(getPairs(params));
+		method.setQueryString(getPairs(params));
 
 		try {
 			int status = this.client.executeMethod(this.hostConfig, method);

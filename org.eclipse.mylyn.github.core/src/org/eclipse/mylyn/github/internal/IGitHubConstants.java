@@ -120,4 +120,9 @@ public interface IGitHubConstants {
 	 */
 	String CHARSET_UTF8 = "UTF-8"; //$NON-NLS-1$
 
+	/**
+	 * PARAM_PER_PAGE
+	 */
+	String PARAM_PER_PAGE = "per_page"; //$NON-NLS-1$
+
 }
