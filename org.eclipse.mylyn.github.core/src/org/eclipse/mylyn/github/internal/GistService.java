@@ -58,6 +58,7 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public List<Gist> getGists(String user) throws IOException {
+		Assert.isNotNull(user, "User cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
 		uri.append('/').append(user);
 		uri.append(IGitHubConstants.SEGMENT_GISTS).append(
@@ -75,11 +76,14 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public Gist createGist(Gist gist) throws IOException {
+		Assert.isNotNull(gist, "Gist cannot be null");
 		StringBuilder uri = new StringBuilder();
 		User user = gist.getUser();
 		if (user != null) {
+			String login = user.getLogin();
+			Assert.isNotNull(login, "User login name cannot be null");
 			uri.append(IGitHubConstants.SEGMENT_USERS);
-			uri.append('/').append(user.getLogin());
+			uri.append('/').append(login);
 		}
 		uri.append(IGitHubConstants.SEGMENT_GISTS).append(
 				IGitHubConstants.SUFFIX_JSON);

@@ -13,6 +13,7 @@ package org.eclipse.mylyn.github.internal;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Before;
@@ -20,6 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Unit tests for {@link GistService}
@@ -54,4 +57,50 @@ public class GistServiceTest {
 		verify(gitHubClient).get("/gists/1.json", Gist.class);
 	}
 
+	@Test(expected = AssertionFailedException.class)
+	public void getGists_NullUser() throws IOException {
+		gistService.getGists(null);
+	}
+
+	@Test
+	public void getGists_OK() throws IOException {
+		gistService.getGists("test_user");
+		TypeToken<List<Gist>> gistsToken = new TypeToken<List<Gist>>() {
+		};
+		verify(gitHubClient).get("/users/test_user/gists.json",
+				gistsToken.getType());
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createGist_NullGist() throws IOException {
+		gistService.createGist(null);
+	}
+
+	@Test
+	public void createGist_NullUser() throws IOException {
+		Gist gist = new Gist();
+		gist.setUser(null);
+		gistService.createGist(gist);
+		verify(gitHubClient).post("/gists.json", gist, Gist.class);
+	}
+
+	@Test
+	public void createGist_NonNullUser() throws IOException {
+		Gist gist = new Gist();
+		User user = new User();
+		user.setLogin("test_user");
+		gist.setUser(user);
+		gistService.createGist(gist);
+		verify(gitHubClient).post("/users/test_user/gists.json", gist,
+				Gist.class);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void createGist_NonNullUser_NullLogin() throws IOException {
+		Gist gist = new Gist();
+		User user = new User();
+		user.setLogin(null);
+		gist.setUser(user);
+		gistService.createGist(gist);
+	}
 }
