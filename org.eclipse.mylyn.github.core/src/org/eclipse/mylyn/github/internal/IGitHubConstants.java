@@ -61,6 +61,11 @@ public interface IGitHubConstants {
 	String SEGMENT_GISTS = "/gists"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_PULLS
+	 */
+	String SEGMENT_PULLS = "/pulls"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_USERS
 	 */
 	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
@@ -99,6 +104,11 @@ public interface IGitHubConstants {
 	 * DATE_FORMAT_V2_1
 	 */
 	String DATE_FORMAT_V2_1 = "yyyy/MM/dd HH:mm:ss Z"; //$NON-NLS-N$
+
+	/**
+	 * DATE_FORMAT_V2_2
+	 */
+	String DATE_FORMAT_V2_2 = "yyyy-MM-dd'T'HH:mm:ss"; //$NON-NLS-1$
 
 	/**
 	 * CONTENT_TYPE_JSON

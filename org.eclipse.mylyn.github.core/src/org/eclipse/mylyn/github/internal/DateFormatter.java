@@ -41,6 +41,8 @@ public class DateFormatter implements JsonDeserializer<Date> {
 		this.formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT));
 		this.formats
 				.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1));
+		this.formats
+				.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2));
 		TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
 		for (DateFormat format : this.formats)
 			format.setTimeZone(timeZone);
