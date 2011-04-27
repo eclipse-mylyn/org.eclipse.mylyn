@@ -42,8 +42,6 @@ public class Gist {
 
 	private String id;
 
-	private String repo;
-
 	private String url;
 
 	private User user;
@@ -146,18 +144,11 @@ public class Gist {
 	}
 
 	/**
-	 * @return repo
-	 */
-	public String getRepo() {
-		return this.repo;
-	}
-
-	/**
-	 * @param repo
+	 * @param id
 	 * @return this gist
 	 */
-	public Gist setRepo(String repo) {
-		this.repo = repo;
+	public Gist setId(String id) {
+		this.id = id;
 		return this;
 	}
 

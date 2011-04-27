@@ -98,11 +98,11 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public Gist updateGist(Gist gist) throws IOException {
-		Assert.isNotNull(gist, "Gist cannot be null");
-		String repo = gist.getRepo();
-		Assert.isNotNull(repo, "Repository cannot be null");
+		Assert.isNotNull(gist, "Gist cannot be null"); //$NON-NLS-1$
+		String id = gist.getId();
+		Assert.isNotNull(id, "Gist id cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
-		uri.append('/').append(repo).append(IGitHubConstants.SUFFIX_JSON);
+		uri.append('/').append(id).append(IGitHubConstants.SUFFIX_JSON);
 		return this.client.put(uri.toString(), gist, Gist.class);
 	}
 

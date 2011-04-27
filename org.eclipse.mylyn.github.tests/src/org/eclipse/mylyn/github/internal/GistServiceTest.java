@@ -112,18 +112,18 @@ public class GistServiceTest {
 	}
 
 	@Test(expected = AssertionFailedException.class)
-	public void updateGist_NullRepository() throws IOException {
+	public void updateGist_NullId() throws IOException {
 		Gist gist = new Gist();
-		gist.setRepo(null);
+		gist.setId(null);
 		gistService.updateGist(gist);
 	}
 
 	@Test
 	public void updateGist_OK() throws IOException {
 		Gist gist = new Gist();
-		gist.setRepo("test_repository");
+		gist.setId("123");
 		gistService.updateGist(gist);
-		verify(gitHubClient).put("/gists/test_repository.json", gist,
+		verify(gitHubClient).put("/gists/123.json", gist,
 				Gist.class);
 	}
 

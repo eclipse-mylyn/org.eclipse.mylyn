@@ -91,7 +91,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 	 * @return url
 	 */
 	public String getGistUrl(String repositoryUrl, Gist gist) {
-		return repositoryUrl + '/' + gist.getRepo();
+		return repositoryUrl + '/' + gist.getId();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
 		TaskAttribute key = GistAttribute.KEY.create(data);
-		mapper.setValue(key, gist.getRepo());
+		mapper.setValue(key, gist.getId());
 
 		TaskAttribute description = GistAttribute.DESCRIPTION.create(data);
 		String gistDescription = gist.getDescription();
@@ -220,7 +220,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 
 		GistService service = new GistService(client);
 		TaskAttribute root = taskData.getRoot();
-		gist.setRepo(taskData.getTaskId());
+		gist.setId(taskData.getTaskId());
 		gist.setDescription(root
 				.getAttribute(GistAttribute.DESCRIPTION.getId()).getValue());
 
@@ -231,7 +231,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 				throw new CoreException(GitHub.createErrorStatus(e));
 			}
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED,
-					gist.getRepo());
+					gist.getId());
 		} else {
 			try {
 				String newComment = root.getAttribute(

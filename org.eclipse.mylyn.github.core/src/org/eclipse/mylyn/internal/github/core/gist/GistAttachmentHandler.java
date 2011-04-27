@@ -90,7 +90,7 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			throws CoreException {
 		TaskAttachmentMapper mapper = TaskAttachmentMapper
 				.createFrom(attachmentAttribute);
-		Gist gist = new Gist().setRepo(task.getTaskId());
+		Gist gist = new Gist().setId(task.getTaskId());
 		gist.setDescription(attachmentAttribute.getParentAttribute()
 				.getAttribute(GistAttribute.DESCRIPTION.getId()).getValue());
 		GistFile file = new GistFile();
