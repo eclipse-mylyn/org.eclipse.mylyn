@@ -98,9 +98,11 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public Gist updateGist(Gist gist) throws IOException {
+		Assert.isNotNull(gist, "Gist cannot be null");
+		String repo = gist.getRepo();
+		Assert.isNotNull(repo, "Repository cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
-		uri.append('/').append(gist.getRepo())
-				.append(IGitHubConstants.SUFFIX_JSON);
+		uri.append('/').append(repo).append(IGitHubConstants.SUFFIX_JSON);
 		return this.client.put(uri.toString(), gist, Gist.class);
 	}
 
@@ -114,6 +116,8 @@ public class GistService {
 	 */
 	public Comment createComment(String gistId, String comment)
 			throws IOException {
+		Assert.isNotNull(gistId, "Gist id cannot be null");
+		Assert.isNotNull(comment, "Gist comment cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
@@ -132,6 +136,7 @@ public class GistService {
 	 * @throws IOException
 	 */
 	public List<Comment> getComments(String gistId) throws IOException {
+		Assert.isNotNull(gistId, "Gist id cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
