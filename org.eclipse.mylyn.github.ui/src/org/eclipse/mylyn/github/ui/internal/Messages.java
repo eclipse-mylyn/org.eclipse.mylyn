@@ -20,6 +20,24 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.github.ui.internal.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String CredentialsWizardPage_Description;
+
+	/** */
+	public static String CredentialsWizardPage_ErrorPassword;
+
+	/** */
+	public static String CredentialsWizardPage_ErrorUser;
+
+	/** */
+	public static String CredentialsWizardPage_LabelPassword;
+
+	/** */
+	public static String CredentialsWizardPage_LabelUser;
+
+	/** */
+	public static String CredentialsWizardPage_Title;
+
+	/** */
 	public static String GitHubRepositoryQueryPage_ErrorLoading;
 
 	/** */
@@ -102,6 +120,36 @@ public class Messages extends NLS {
 
 	/** */
 	public static String IssueLabelAttributeEditor_TooltipAddLabel;
+
+	/** */
+	public static String RepositorySelectionWizardPage_Description;
+
+	/** */
+	public static String RepositorySelectionWizardPage_ErrorLoading;
+
+	/** */
+	public static String RepositorySelectionWizardPage_LabelAddGist;
+
+	/** */
+	public static String RepositorySelectionWizardPage_LabelRepos;
+
+	/** */
+	public static String RepositorySelectionWizardPage_LabelSelectionCount;
+
+	/** */
+	public static String RepositorySelectionWizardPage_TaskFetchingOrganizationRepositories;
+
+	/** */
+	public static String RepositorySelectionWizardPage_TaskFetchingRepositories;
+
+	/** */
+	public static String RepositorySelectionWizardPage_Title;
+
+	/** */
+	public static String RepositorySelectionWizardPage_TooltipCheckAll;
+
+	/** */
+	public static String RepositorySelectionWizardPage_TooltipUncheckAll;
 
 	static {
 		// initialize resource bundle
