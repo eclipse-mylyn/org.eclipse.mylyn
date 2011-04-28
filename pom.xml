@@ -42,6 +42,7 @@
   <properties>
     <tycho-version>0.11.0</tycho-version>
     <platform-version-name>indigo</platform-version-name>
+    <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository</orbit-site>
   </properties>
@@ -52,6 +53,7 @@
         <module>org.eclipse.mylyn.github-feature</module>
         <module>org.eclipse.mylyn.github.tests</module>
         <module>org.eclipse.mylyn.github-site</module>
+        <module>org.eclipse.mylyn.github.doc</module>
     </modules>
 
   <repositories>
@@ -64,6 +66,11 @@
       <id>orbit</id>
       <layout>p2</layout>
       <url>${orbit-site}</url>
+    </repository>
+    <repository>
+      <id>wikitext</id>
+      <layout>p2</layout>
+      <url>${wikitext-site}</url>
     </repository>
   </repositories>
 
