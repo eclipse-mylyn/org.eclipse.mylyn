@@ -13,17 +13,19 @@
 package org.eclipse.mylyn.github.tests;
 
 import org.eclipse.mylyn.github.internal.GistServiceTest;
+import org.eclipse.mylyn.github.internal.GitHubClientTest;
 import org.eclipse.mylyn.github.internal.IssueServiceTest;
 import org.eclipse.mylyn.github.internal.LabelServiceTest;
 import org.eclipse.mylyn.github.internal.MilestoneServiceTest;
+import org.eclipse.mylyn.github.internal.PullRequestServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ //
-IssueServiceTest.class, LabelServiceTest.class, MilestoneServiceTest.class,
-		GistServiceTest.class })
+@SuiteClasses({ GitHubClientTest.class, IssueServiceTest.class,
+		LabelServiceTest.class, MilestoneServiceTest.class,
+		GistServiceTest.class, PullRequestServiceTest.class })
 public class AllHeadlessTests {
 
 }

@@ -10,11 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,6 +33,12 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.eclipse.core.runtime.Assert;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 
 /**
  * Client class for interacting with GitHub HTTP/JSON API.
@@ -76,6 +77,7 @@ public class GitHubClient {
 	 * @param configuration
 	 */
 	public GitHubClient(HostConfiguration configuration) {
+		Assert.isNotNull(configuration, "Configuration cannot be null"); //$NON-NLS-1$
 		this.hostConfig = configuration;
 	}
 
