@@ -25,6 +25,8 @@ public class Gist {
 	private boolean isPublic;
 
 	private Date createdAt;
+	
+	private Date updatedAt;
 
 	private int comments;
 
@@ -150,6 +152,13 @@ public class Gist {
 	public Gist setId(String id) {
 		this.id = id;
 		return this;
+	}
+
+	/**
+	 * @return updatedAt
+	 */
+	public Date getUpdatedAt() {
+		return this.updatedAt;
 	}
 
 	/**

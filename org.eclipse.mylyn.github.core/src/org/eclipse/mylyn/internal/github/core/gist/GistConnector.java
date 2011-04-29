@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.github.core.gist;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -163,7 +165,20 @@ public class GistConnector extends AbstractRepositoryConnector {
 	 */
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task,
 			TaskData taskData) {
-		return false;
+		TaskAttribute modAttribute = taskData.getRoot().getAttribute(
+				TaskAttribute.DATE_MODIFICATION);
+		if (modAttribute == null)
+			return false;
+
+		boolean changed = true;
+		Date modDate = task.getModificationDate();
+		if (modDate != null) {
+			Date updateDate = taskData.getAttributeMapper().getDateValue(
+					modAttribute);
+			if (updateDate != null)
+				changed = updateDate.after(modDate);
+		}
+		return changed;
 	}
 
 	/**

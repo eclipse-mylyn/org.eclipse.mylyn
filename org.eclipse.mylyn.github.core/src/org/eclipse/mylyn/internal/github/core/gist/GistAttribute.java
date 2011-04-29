@@ -45,6 +45,13 @@ public enum GistAttribute {
 			TaskAttribute.TYPE_DATETIME, true),
 
 	/**
+	 * Gist updated date
+	 */
+	UPDATED(TaskAttribute.DATE_MODIFICATION,
+			Messages.GistAttribute_LabelModified, TaskAttribute.TYPE_DATETIME,
+			true),
+
+	/**
 	 * Comment being added to gist
 	 */
 	COMMENT_NEW(TaskAttribute.COMMENT_NEW,

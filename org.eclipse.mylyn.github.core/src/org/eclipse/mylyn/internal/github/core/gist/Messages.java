@@ -41,6 +41,9 @@ public class Messages extends NLS {
 	public static String GistAttribute_LabelKey;
 
 	/** */
+	public static String GistAttribute_LabelModified;
+
+	/** */
 	public static String GistAttribute_LabelNewComment;
 
 	/** */

@@ -117,6 +117,9 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute created = GistAttribute.CREATED.create(data);
 		mapper.setDateValue(created, gist.getCreatedAt());
 
+		TaskAttribute updated = GistAttribute.UPDATED.create(data);
+		mapper.setDateValue(updated, gist.getUpdatedAt());
+
 		TaskAttribute url = GistAttribute.URL.create(data);
 		url.setValue(gist.getHtmlUrl());
 
