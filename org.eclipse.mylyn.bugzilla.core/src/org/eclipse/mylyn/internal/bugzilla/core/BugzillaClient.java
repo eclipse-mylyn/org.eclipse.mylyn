@@ -641,7 +641,7 @@ public class BugzillaClient {
 		return new RepositoryQueryResultsFactory(stream, getCharacterEncoding());
 	}
 
-	protected static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
+	protected void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
@@ -675,6 +675,14 @@ public class BugzillaClient {
 				IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION, taskRepository, existingReport, false);
 		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.SEE_ALSO, IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
 				taskRepository, existingReport, false);
+		if (repositoryConfiguration == null) {
+			repositoryConfiguration = connector.getRepositoryConfiguration(serverUrl);
+		}
+		if (repositoryConfiguration != null) {
+			for (BugzillaCustomField bugzillaCustomField : repositoryConfiguration.getCustomFields()) {
+				existingReport.getRoot().createAttribute(bugzillaCustomField.getName());
+			}
+		}
 	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, String id) {
