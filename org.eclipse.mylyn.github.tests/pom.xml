@@ -22,7 +22,7 @@
   <artifactId>org.eclipse.mylyn.github.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
 
-  <name>Mylyn GitHub Test Plug-in (Incubation)</name>
+  <name>Eclipse EGit Mylyn GitHub Test Plug-in (Incubation)</name>
 
   <build>
     <plugins>
