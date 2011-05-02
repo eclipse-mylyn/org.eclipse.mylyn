@@ -125,4 +125,49 @@ public interface IGitHubConstants {
 	 */
 	String PARAM_PER_PAGE = "per_page"; //$NON-NLS-1$
 
+	/**
+	 * PARAM_PAGE
+	 */
+	String PARAM_PAGE = "page"; //$NON-NLS-1$
+
+	/**
+	 * HEADER_LINK
+	 */
+	String HEADER_LINK = "Link"; //$NON-NLS-1$
+
+	/**
+	 * HEADER_NEXT
+	 */
+	String HEADER_NEXT = "X-Next"; //$NON-NLS-1$
+
+	/**
+	 * HEADER_LAST
+	 */
+	String HEADER_LAST = "X-Last"; //$NON-NLS-1$
+
+	/**
+	 * META_REL
+	 */
+	String META_REL = "rel"; //$NON-NLS-1$
+
+	/**
+	 * META_LAST
+	 */
+	String META_LAST = "last"; //$NON-NLS-1$
+
+	/**
+	 * META_NEXT
+	 */
+	String META_NEXT = "next"; //$NON-NLS-1$
+
+	/**
+	 * META_FIRST
+	 */
+	String META_FIRST = "first"; //$NON-NLS-1$
+
+	/**
+	 * META_PREV
+	 */
+	String META_PREV = "prev"; //$NON-NLS-1$
+
 }
