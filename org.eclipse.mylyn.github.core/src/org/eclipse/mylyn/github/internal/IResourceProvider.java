@@ -13,19 +13,18 @@ package org.eclipse.mylyn.github.internal;
 import java.util.List;
 
 /**
- * Repository container class.
+ * Interface for container classes that can provide a collection of resources of
+ * the same type.
  * 
- * @author Kevin Sawicki (kevin@github.com)
+ * @param <V>
  */
-public class RepositoryContainer implements IResourceProvider<Repository> {
-
-	private List<Repository> repositories;
+public interface IResourceProvider<V> {
 
 	/**
-	 * @see org.eclipse.mylyn.github.internal.IResourceProvider#getResources()
+	 * Get collection of resources
+	 * 
+	 * @return non-null but possibly empty collection
 	 */
-	public List<Repository> getResources() {
-		return this.repositories;
-	}
+	List<V> getResources();
 
 }

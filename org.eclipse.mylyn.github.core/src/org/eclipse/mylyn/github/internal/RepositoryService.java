@@ -49,7 +49,7 @@ public class RepositoryService {
 
 		RepositoryContainer container = client.get(uri.toString(),
 				RepositoryContainer.class);
-		return container.getRepositories();
+		return container.getResources();
 	}
 
 	/**
@@ -66,6 +66,6 @@ public class RepositoryService {
 
 		RepositoryContainer container = client.get(uri.toString(),
 				RepositoryContainer.class);
-		return container.getRepositories();
+		return container.getResources();
 	}
 }
