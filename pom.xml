@@ -63,7 +63,7 @@
 	<repository>
 	  <id>egit</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/egit/updates-nightly/</url>
+	  <url>http://download.eclipse.org/egit/updates/</url>
 	</repository>
   </repositories>
 
