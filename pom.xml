@@ -41,6 +41,7 @@
 
   <properties>
     <tycho-version>0.11.0</tycho-version>
+    <egit-site>file:/${basedir}/../../egit/org.eclipse.egit-updatesite/target/site</egit-site>
     <platform-version-name>indigo</platform-version-name>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
@@ -57,6 +58,11 @@
     </modules>
 
   <repositories>
+    <repository>
+      <id>egit</id>
+      <layout>p2</layout>
+      <url>${egit-site}</url>
+    </repository>
     <repository>
       <id>indigo</id>
       <layout>p2</layout>
