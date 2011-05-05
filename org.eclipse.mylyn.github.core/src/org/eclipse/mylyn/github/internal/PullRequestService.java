@@ -94,9 +94,11 @@ public class PullRequestService {
 			throws IOException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		Assert.isNotNull(state, "State cannot be null"); //$NON-NLS-1$
+		String repositoryId = repository.getId();
+		Assert.isNotNull(repositoryId, "Repository id cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
-		uri.append('/').append(repository.getId());
+		uri.append('/').append(repositoryId);
 		uri.append('/').append(state);
 		PullRequestsWrapper wrapper = this.client.get(uri.toString(),
 				PullRequestsWrapper.class);

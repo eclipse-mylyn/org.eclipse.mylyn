@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -63,8 +64,30 @@ public class PullRequestServiceTest {
 	}
 
 	@Test
+	@Ignore
 	public void getPullRequest_OK() throws IOException {
-		// the OK unit test is not possible with Mockito, but with JMOckit
+		// the OK unit test is not possible with Mockito, but with JMockit
 	}
 
+	@Test(expected = AssertionFailedException.class)
+	public void getPullRequests_NullRepository() throws IOException {
+		pullRequestService.getPullRequests(null, "not null");
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void getPullRequests_NullState() throws IOException {
+		pullRequestService.getPullRequests(repository, null);
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void getPullRequests_NullRepositoryId() throws IOException {
+		when(repository.getId()).thenReturn(null);
+		pullRequestService.getPullRequests(repository, "test_state");
+	}
+
+	@Test
+	@Ignore
+	public void getPullRequests_OK() throws IOException {
+		// the OK unit test is not possible with Mockito, but with JMockit
+	}
 }
