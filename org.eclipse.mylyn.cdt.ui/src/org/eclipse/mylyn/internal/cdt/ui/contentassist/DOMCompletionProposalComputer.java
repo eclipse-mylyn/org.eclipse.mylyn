@@ -570,11 +570,13 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 	}
 
 	private ICElement getCElement(IASTPreprocessorMacroDefinition macro) {
-		try {
-			return getCElement(macro.getFileLocation().getFileName(), macro.getFileLocation().getNodeOffset());
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-					"Unable to get CElement for Macro", e)); //$NON-NLS-1$
+		if (macro != null && macro.getFileLocation() != null) {
+			try {
+				return getCElement(macro.getFileLocation().getFileName(), macro.getFileLocation().getNodeOffset());
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+						"Unable to get CElement for Macro", e)); //$NON-NLS-1$
+			}
 		}
 		return null;
 	}
@@ -593,7 +595,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 				definition = declarations[0];
 			}
 		}
-		if (definition != null) {
+		if (definition != null && definition.getFileLocation() != null) {
 			try {
 				return getCElement(definition.getFileLocation().getFileName(), definition.getFileLocation()
 						.getNodeOffset());
