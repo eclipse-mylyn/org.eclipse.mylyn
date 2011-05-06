@@ -190,7 +190,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			Tree tree = (Tree) e.widget;
 			TreeItem item = findItem(tree, e.y);
 
-			if (item == null || item.isDisposed()) {
+			if (item == null || item.isDisposed() || e.button != 1) {
 				// we can't do anything if we cant find the tree items
 				return;
 			}
