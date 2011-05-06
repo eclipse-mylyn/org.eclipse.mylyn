@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * GitHub issue comment class.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Comment {
@@ -33,14 +33,18 @@ public class Comment {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.createdAt.getTime());
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.updatedAt.getTime());
 	}
 
 	/**
