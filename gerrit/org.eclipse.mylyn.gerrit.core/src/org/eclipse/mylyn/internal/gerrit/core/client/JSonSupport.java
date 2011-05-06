@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer;
 import com.google.gwtjsonrpc.server.JsonServlet;
 
 /**
@@ -114,6 +116,14 @@ public class JSonSupport {
 							}
 						}
 						return new Edit(0, 0);
+					}
+				})
+				.registerTypeAdapter(Timestamp.class, new JsonDeserializer<Timestamp>() {
+
+					@Override
+					public Timestamp deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+							throws JsonParseException {
+						return new JavaSqlTimestamp_JsonSerializer().fromJson(json.getAsString());
 					}
 				})
 				.setExclusionStrategies(exclustionStrategy)
