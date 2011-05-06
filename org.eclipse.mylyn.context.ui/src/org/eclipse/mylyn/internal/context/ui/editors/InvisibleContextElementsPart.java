@@ -37,7 +37,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -114,6 +116,22 @@ public class InvisibleContextElementsPart {
 
 	}
 
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
+		@Override
+		public void contextChanged(ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+				if (isActiveTask()) {
+					addToolbarActions();
+				}
+				break;
+			case DEACTIVATED:
+				toolbarManager.removeAll();
+				toolbarManager.update(true);
+			}
+		}
+	};
+
 	private final class InteractionElementTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 		@Override
 		public String getText(Object element) {
@@ -169,7 +187,6 @@ public class InvisibleContextElementsPart {
 								monitor.beginTask(Messages.InvisibleContextElementsPart_Collecting_all_invisible,
 										IProgressMonitor.UNKNOWN);
 								if (allVisible != null) {
-									IInteractionContext context = ContextCore.getContextManager().getActiveContext();
 									final List<IInteractionElement> allToRemove = getAllInvisibleElements(context,
 											allVisible);
 									Display.getDefault().asyncExec(new Runnable() {
@@ -206,8 +223,20 @@ public class InvisibleContextElementsPart {
 
 	private CommonViewer commonViewer;
 
+	private final IInteractionContext context;
+
+	private ToolBarManager toolbarManager;
+
 	public InvisibleContextElementsPart(CommonViewer commonViewer) {
 		this.commonViewer = commonViewer;
+		context = ContextCore.getContextManager().getActiveContext();
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
+	}
+
+	public InvisibleContextElementsPart(CommonViewer commonViewer, IInteractionContext context) {
+		this.commonViewer = commonViewer;
+		this.context = context;
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
 	public Control createControl(FormToolkit toolkit, Composite composite) {
@@ -223,11 +252,11 @@ public class InvisibleContextElementsPart {
 		rowLayout.marginBottom = 0;
 		toolbarComposite.setLayout(rowLayout);
 
-		ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-		toolbarManager.add(new RemoveInvisibleAction());
+		toolbarManager = new ToolBarManager(SWT.FLAT);
 		toolbarManager.createControl(toolbarComposite);
-		toolbarManager.markDirty();
-		toolbarManager.update(true);
+		if (isActiveTask()) {
+			addToolbarActions();
+		}
 
 		Composite invisibleSectionClient = toolkit.createComposite(invisibleSection);
 		invisibleSectionClient.setLayout(new GridLayout());
@@ -276,15 +305,30 @@ public class InvisibleContextElementsPart {
 		createColumn(layout, 1, Messages.InvisibleContextElementsPart_Structure_kind, 100, table, invisibleTableSorter);
 		table.setSortColumn(table.getColumn(0));
 		table.setSortDirection(SWT.DOWN);
-		if (ContextCore.getContextManager().isContextActive()) {
-			Collection<Object> allVisible = getAllVisibleElementsInContextPage();
-			if (allVisible != null) {
-				IInteractionContext context = ContextCore.getContextManager().getActiveContext();
-				updateInvisibleSectionInBackground(context, allVisible);
-			}
+
+		Collection<Object> allVisible = getAllVisibleElementsInContextPage();
+		if (allVisible != null) {
+			updateInvisibleSectionInBackground(context, allVisible);
 		}
 
 		return invisibleSection;
+	}
+
+	private boolean isActiveTask() {
+		if (ContextCore.getContextManager().isContextActive()) {
+			IInteractionContext activeContext = ContextCore.getContextManager().getActiveContext();
+			if ((context instanceof ContextWrapper && ((ContextWrapper) context).isForSameTaskAs(activeContext))
+					|| context.equals(activeContext)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void addToolbarActions() {
+		toolbarManager.add(new RemoveInvisibleAction());
+		toolbarManager.markDirty();
+		toolbarManager.update(true);
 	}
 
 	private void createColumn(TableColumnLayout layout, final int index, String label, int weight, final Table table,
@@ -314,14 +358,9 @@ public class InvisibleContextElementsPart {
 	}
 
 	public void updateInvisibleElementsSection() {
-		if (ContextCore.getContextManager().isContextActive()) {
-			Collection<Object> allVisible = getAllVisibleElementsInContextPage();
-			if (allVisible != null) {
-				IInteractionContext context = ContextCore.getContextManager().getActiveContext();
-				updateInvisibleSectionInBackground(context, allVisible);
-			}
-		} else {
-			updateInvisibleSectionInBackground(null, null);
+		Collection<Object> allVisible = getAllVisibleElementsInContextPage();
+		if (allVisible != null) {
+			updateInvisibleSectionInBackground(context, allVisible);
 		}
 	}
 
@@ -418,4 +457,7 @@ public class InvisibleContextElementsPart {
 		updateInvisibleElementsSection();
 	}
 
+	public void dispose() {
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
+	}
 }

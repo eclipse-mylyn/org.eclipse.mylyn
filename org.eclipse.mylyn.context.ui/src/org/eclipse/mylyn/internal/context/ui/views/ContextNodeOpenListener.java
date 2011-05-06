@@ -19,12 +19,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.navigator.CommonViewer;
 
 /**
  * @author Mik Kersten
@@ -33,8 +35,15 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 
 	private final Viewer viewer;
 
+	private IInteractionContext context;
+
 	public ContextNodeOpenListener(Viewer viewer) {
 		this.viewer = viewer;
+	}
+
+	public ContextNodeOpenListener(CommonViewer viewer, IInteractionContext context) {
+		this.viewer = viewer;
+		this.context = context;
 	}
 
 	public void open(OpenEvent event) {
@@ -46,7 +55,11 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 		} else if (!(object instanceof IInteractionRelation)) {
 			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
-			node = ContextCore.getContextManager().getElement(handle);
+			if (context == null) {
+				node = ContextCore.getContextManager().getElement(handle);
+			} else {
+				node = context.get(handle);
+			}
 		}
 		if (node != null) {
 			ContextUi.getUiBridge(node.getContentType()).open(node);

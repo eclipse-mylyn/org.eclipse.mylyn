@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -48,6 +49,20 @@ public class InterestFilter extends ViewerFilter {
 	private Set<Object> temporarilyUnfiltered = null;
 
 	private Object lastTemporarilyUnfiltered = null;
+
+	private IInteractionContext context;
+
+	public InterestFilter() {
+		// ignore
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public InterestFilter(IInteractionContext context) {
+		this.context = context;
+
+	}
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
@@ -87,7 +102,11 @@ public class InterestFilter extends ViewerFilter {
 
 				if (!object.getClass().getName().equals(Object.class.getCanonicalName())) {
 					String handle = bridge.getHandleIdentifier(object);
-					element = ContextCore.getContextManager().getElement(handle);
+					if (context == null) {
+						element = ContextCore.getContextManager().getElement(handle);
+					} else {
+						element = context.get(handle);
+					}
 
 					// if we can't find the element, check the parent bridge
 					if (element == null
@@ -97,8 +116,12 @@ public class InterestFilter extends ViewerFilter {
 						AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 						if (parentBridge != null) {
 							String parentHandle = parentBridge.getHandleIdentifier(object);
-							IInteractionElement parentElement = ContextCore.getContextManager()
-									.getElement(parentHandle);
+							IInteractionElement parentElement;
+							if (context == null) {
+								parentElement = ContextCore.getContextManager().getElement(parentHandle);
+							} else {
+								parentElement = context.get(parentHandle);
+							}
 							if (parentElement != null && isInteresting(parentElement)) {
 								// do a sanity check to make sure that we are trying to display the element
 								// and not some other representation

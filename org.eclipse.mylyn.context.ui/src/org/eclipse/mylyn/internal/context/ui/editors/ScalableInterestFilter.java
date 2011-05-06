@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.editors;
 
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 
@@ -20,6 +21,13 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 public class ScalableInterestFilter extends InterestFilter {
 
 	private double threshold = 0;
+
+	public ScalableInterestFilter() {
+	}
+
+	public ScalableInterestFilter(IInteractionContext context) {
+		super(context);
+	}
 
 	@Override
 	protected boolean isInteresting(IInteractionElement element) {
