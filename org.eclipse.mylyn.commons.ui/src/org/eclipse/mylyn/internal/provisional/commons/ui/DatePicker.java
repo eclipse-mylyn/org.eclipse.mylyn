@@ -214,8 +214,10 @@ public class DatePicker extends Composite {
 		dateText.setBackground(backgroundColor);
 		if ((getStyle() & SWT.FLAT) != 0) {
 			pickButton.setBackground(backgroundColor);
+			clearControl.setBackground(backgroundColor);
 		} else {
 			pickButton.setBackground(null);
+			clearControl.setBackground(null);
 		}
 	}
 
