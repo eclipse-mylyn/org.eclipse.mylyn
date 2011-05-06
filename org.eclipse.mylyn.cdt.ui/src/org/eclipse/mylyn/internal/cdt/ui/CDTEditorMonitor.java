@@ -11,9 +11,8 @@ package org.eclipse.mylyn.internal.cdt.ui;
 import java.util.Iterator;
 
 import org.eclipse.cdt.core.model.CModelException;
+import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.ICElement;
-import org.eclipse.cdt.core.model.IFunction;
-import org.eclipse.cdt.core.model.IMethod;
 import org.eclipse.cdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.jface.viewers.ISelection;
@@ -74,8 +73,9 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 				if (part instanceof CEditor) {
 					currentEditor = (CEditor) part;
 					selectedElement = SelectionConverter.getElementAtOffset(currentEditor);
-					if (selectedElement == null)
+					if (selectedElement == null) {
 						return; // nothing selected
+					}
 
 					if (selectedElement != null) {
 						if (selectedElement.equals(lastSelectedElement)) {
@@ -106,8 +106,9 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 	 * @return null for elements that aren't modeled
 	 */
 	protected ICElement checkIfAcceptedAndPromoteIfNecessary(ICElement element) {
-		if (element instanceof IMethod || element instanceof IFunction)
+		if (!(element instanceof IBinary)) {
 			return element;
+		}
 		return null;
 	}
 }
