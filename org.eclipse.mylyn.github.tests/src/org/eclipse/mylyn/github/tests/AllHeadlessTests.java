@@ -13,18 +13,23 @@
 package org.eclipse.mylyn.github.tests;
 
 import org.eclipse.mylyn.github.internal.CommentTest;
+import org.eclipse.mylyn.github.internal.GistRevisionTest;
 import org.eclipse.mylyn.github.internal.GistServiceTest;
+import org.eclipse.mylyn.github.internal.GistTest;
 import org.eclipse.mylyn.github.internal.GitHubClientTest;
 import org.eclipse.mylyn.github.internal.IssueServiceTest;
+import org.eclipse.mylyn.github.internal.IssueTest;
 import org.eclipse.mylyn.github.internal.LabelServiceTest;
 import org.eclipse.mylyn.github.internal.MilestoneServiceTest;
+import org.eclipse.mylyn.github.internal.MilestoneTest;
 import org.eclipse.mylyn.github.internal.PullRequestServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ CommentTest.class, GitHubClientTest.class,
+@SuiteClasses({ CommentTest.class, GistTest.class, GistRevisionTest.class,
+		IssueTest.class, MilestoneTest.class, GitHubClientTest.class,
 		IssueServiceTest.class, LabelServiceTest.class,
 		MilestoneServiceTest.class, GistServiceTest.class,
 		PullRequestServiceTest.class })

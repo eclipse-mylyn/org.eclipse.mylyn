@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * GitHub issue milestone class.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Milestone {
@@ -43,14 +43,18 @@ public class Milestone {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.createdAt.getTime());
 	}
 
 	/**
 	 * @return dueOn
 	 */
 	public Date getDueOn() {
-		return this.dueOn;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.dueOn.getTime());
 	}
 
 	/**

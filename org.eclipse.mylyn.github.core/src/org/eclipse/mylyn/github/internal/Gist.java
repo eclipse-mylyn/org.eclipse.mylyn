@@ -25,7 +25,7 @@ public class Gist {
 	private boolean isPublic;
 
 	private Date createdAt;
-	
+
 	private Date updatedAt;
 
 	private int comments;
@@ -68,7 +68,9 @@ public class Gist {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.createdAt.getTime());
 	}
 
 	/**
@@ -158,7 +160,9 @@ public class Gist {
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.updatedAt.getTime());
 	}
 
 	/**

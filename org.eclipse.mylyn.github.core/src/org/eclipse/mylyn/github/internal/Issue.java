@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * GitHub issue class.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Issue {
@@ -52,21 +52,27 @@ public class Issue {
 	 * @return closedAt
 	 */
 	public Date getClosedAt() {
-		return this.closedAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.closedAt.getTime());
 	}
 
 	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.createdAt.getTime());
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		// see EI_EXPOSE_REP at
+		// http://findbugs.sourceforge.net/bugDescriptions.html
+		return new Date(this.updatedAt.getTime());
 	}
 
 	/**
