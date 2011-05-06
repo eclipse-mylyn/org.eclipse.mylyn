@@ -147,8 +147,15 @@ public class PlatformUiUtil {
 				Version version = new Version(versionString);
 				return version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
 			} else {
-				//TODO: change this to true when eclipse 3.6 reach end of live!
-				return false;
+				bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
+				if (bundle != null) {
+					String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+					Version version = new Version(versionString);
+					return version.compareTo(new Version("3.7.0.v3721")) >= 0; //$NON-NLS-1$
+				} else {
+					//TODO e3.7 change this to true when eclipse 3.6 reach end of live!
+					return false;
+				}
 			}
 		}
 		return true;
