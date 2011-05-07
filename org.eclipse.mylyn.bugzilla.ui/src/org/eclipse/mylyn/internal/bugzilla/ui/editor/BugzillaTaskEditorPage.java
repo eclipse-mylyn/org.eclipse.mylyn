@@ -20,8 +20,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
@@ -35,8 +39,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -45,6 +53,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -53,6 +62,7 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
@@ -299,6 +309,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	protected void createParts() {
 		attributeEditorMap.clear();
 		super.createParts();
+		testCanSubmit();
 	}
 
 	@Override
@@ -366,10 +377,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						for (String option : optionValues) {
 							attributeComponent.putOption(option, option);
 						}
-						if (optionValues.size() == 1) {
+						if (optionValues.size() > 0) {
 							attributeComponent.setValue(optionValues.get(0));
-						} else {
-							attributeComponent.setValue(""); //$NON-NLS-1$
 						}
 						refresh(attributeComponent);
 					}
@@ -479,6 +488,65 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			}
 		} else {
 			super.handleTaskSubmitted(event);
+		}
+	}
+
+	@Override
+	public void refresh() {
+		super.refresh();
+		testCanSubmit();
+	}
+
+	private void testCanSubmit() {
+		final TaskRepository taskRepository = getModel().getTaskRepository();
+		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
+		if (cred == null || cred.getUserName() == null || cred.getUserName().equals("")) { //$NON-NLS-1$
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks,
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+							refresh();
+						}
+					});
+			disableSubmit();
+			return;
+		}
+		if (!getModel().getTaskData().isNew()) {
+			TaskAttribute exporter = getModel().getTaskData()
+					.getRoot()
+					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
+			if (exporter == null) {
+				getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
+						IMessageProvider.WARNING, new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								ITask task = getModel().getTask();
+								AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+										.getRepositoryConnector(task.getConnectorKind());
+								if (connector == null) {
+									return;
+								}
+								TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+									@Override
+									public void done(IJobChangeEvent event) {
+										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+											public void run() {
+												try {
+													getTaskEditor().refreshPages();
+												} finally {
+													if (getTaskEditor() != null) {
+														getTaskEditor().showBusy(false);
+													}
+												}
+											}
+										});
+									}
+								});
+							}
+						});
+				disableSubmit();
+			}
 		}
 	}
 }

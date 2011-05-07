@@ -91,6 +91,7 @@ public enum BugzillaAttribute {
 
 	ESTIMATED_TIME(Messages.BugzillaAttribute_Estimated_Time,
 			"estimated_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
+	EXPORTER_NAME(Messages.BugzillaAttribute_Exporter, "exporter", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
 	FILENAME(Messages.BugzillaAttribute_filename, "filename", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 

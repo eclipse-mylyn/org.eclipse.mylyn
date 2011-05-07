@@ -71,6 +71,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private String token;
 
+	private String exporter;
+
 	private TaskAttribute attachmentAttribute;
 
 	private boolean bugParseErrorOccurred;
@@ -121,6 +123,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		switch (tag) {
 		case BUGZILLA:
 			// Note: here we can get the bugzilla version if necessary
+//			String version = attributes.getValue("version");
+//			String urlbase = attributes.getValue("urlbase");
+//			String maintainer = attributes.getValue("maintainer");
+			exporter = attributes.getValue("exporter");
 			break;
 		case BUG:
 			if (attributes != null && (attributes.getValue("error") != null)) { //$NON-NLS-1$
@@ -303,6 +309,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attr = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag);
 			}
 			attr.setValue(parsedText);
+
+			if (exporter != null) {
+				createAttrribute(exporter, BugzillaAttribute.EXPORTER_NAME);
+			}
 
 			break;
 		}

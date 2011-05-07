@@ -1064,6 +1064,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								doSubmit();
 							}
 						});
+						submitButton.setEnabled(submitEnabled);
 						return submitButton;
 					}
 				};
@@ -1763,6 +1764,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}
 		return super.selectReveal(object);
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	protected void disableSubmit() {
+		setSubmitEnabled(false);
 	}
 
 }

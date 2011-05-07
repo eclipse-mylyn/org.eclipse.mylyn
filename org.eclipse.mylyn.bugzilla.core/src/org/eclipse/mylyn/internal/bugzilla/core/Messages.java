@@ -83,6 +83,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_everconfirmed;
 
+	public static String BugzillaAttribute_Exporter;
+
 	public static String BugzillaAttribute_filename;
 
 	public static String BugzillaAttribute_flag;
