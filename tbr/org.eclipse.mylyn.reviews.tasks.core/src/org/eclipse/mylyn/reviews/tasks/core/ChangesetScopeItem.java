@@ -26,6 +26,7 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.history.ITag;
+import org.eclipse.team.core.history.provider.FileRevision;
 
 /**
  * 
@@ -50,7 +51,7 @@ public class ChangesetScopeItem implements IReviewScopeItem {
 					.getRepositories(new NullProgressMonitor())) {
 				if (repositoryUrl.equals(repository.getUrl())) {
 					ChangeSet changeset = connector.getChangeSet(repository,
-							new IFileRevision() {
+							new FileRevision() {
 
 								public IStorage getStorage(
 										IProgressMonitor monitor)
