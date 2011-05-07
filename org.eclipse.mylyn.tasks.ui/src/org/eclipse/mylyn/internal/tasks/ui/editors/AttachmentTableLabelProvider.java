@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -47,6 +50,8 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AttributeEditorToolkit attributeEditorToolkit;
 
+	private final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
+
 	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
@@ -71,6 +76,9 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 							}
 						}
 					}
+					return (Image) resourceManager.get(PlatformUI.getWorkbench()
+							.getEditorRegistry()
+							.getImageDescriptor(filename));
 				}
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}
@@ -145,7 +153,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public void dispose() {
-		// ignore
+		resourceManager.dispose();
 	}
 
 	@Override

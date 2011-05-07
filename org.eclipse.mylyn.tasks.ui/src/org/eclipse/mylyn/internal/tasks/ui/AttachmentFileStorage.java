@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 
@@ -47,8 +48,7 @@ public class AttachmentFileStorage extends PlatformObject implements IStorage {
 	}
 
 	public IPath getFullPath() {
-		// ignore
-		return null;
+		return Path.fromOSString(file.getAbsolutePath());
 	}
 
 	public String getName() {
