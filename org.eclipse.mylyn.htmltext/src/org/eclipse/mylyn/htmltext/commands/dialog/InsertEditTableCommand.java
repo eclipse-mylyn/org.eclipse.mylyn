@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Tom Seidel, Remus Software
+ * Copyright (c) 2011 Tom Seidel, Remus Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,7 @@ package org.eclipse.mylyn.htmltext.commands.dialog;
 import org.eclipse.mylyn.htmltext.commands.Command;
 
 /**
- * @author tom
- *
+ * @author Tom Seidel <tom.seidel@remus-software.org>
  */
 public class InsertEditTableCommand extends Command {
 
