@@ -88,7 +88,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		typeLabel.setText("Query type:");
 		// radio button to select query type
 		myOpenChangesButton = new Button(control, SWT.RADIO);
-		myOpenChangesButton.setText("My open changes");
+		myOpenChangesButton.setText("My changes");
 		myOpenChangesButton.setLayoutData(gd2);
 
 		new Label(control, SWT.NONE);
@@ -106,7 +106,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		if (query != null) {
 			titleText.setText(query.getSummary());
-			if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
+			if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				myOpenChangesButton.setSelection(true);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				byProjectButton.setSelection(true);
@@ -153,7 +153,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		// query.setUrl(getQueryUrl());
 		query.setSummary(getTitleText());
 		if (myOpenChangesButton.getSelection()) {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_OPEN_CHANGES);
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_CHANGES);
 		} else if (byProjectButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
 		} else {

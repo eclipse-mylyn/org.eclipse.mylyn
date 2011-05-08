@@ -26,7 +26,7 @@ public class GerritQuery {
 	/**
 	 * query type: my open changes
 	 */
-	public static final String MY_OPEN_CHANGES = "my open changes";
+	public static final String MY_CHANGES = "my changes";
 
 	/**
 	 * query type: all open changes

@@ -177,7 +177,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 			List<ChangeInfo> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);
-			} else if (GerritQuery.MY_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
+			} else if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryMyReviews(monitor);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				String project = query.getAttribute(GerritQuery.PROJECT);
