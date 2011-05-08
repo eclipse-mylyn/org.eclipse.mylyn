@@ -14,10 +14,12 @@ package org.eclipse.mylyn.internal.commons.ui;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -90,9 +92,15 @@ public class SectionComposite extends SharedScrolledComposite {
 					section.setLayoutData(g);
 				}
 				Point newSize = section.getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				Point currentSize = section.getShell().getSize();
-				if (newSize.x > currentSize.x || newSize.y > currentSize.y) {
-					section.getShell().setSize(newSize);
+				Rectangle currentbounds = section.getShell().getBounds();
+				if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
+					Object shellData = section.getShell().getData();
+					if (shellData instanceof Window) {
+						Window window = (Window) shellData;
+						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, newSize.x, newSize.y);
+						Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
+						section.getShell().setBounds(result);
+					}
 				} else {
 					layout(true);
 					reflow(true);
