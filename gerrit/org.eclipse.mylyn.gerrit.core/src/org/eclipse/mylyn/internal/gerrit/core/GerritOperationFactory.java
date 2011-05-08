@@ -24,6 +24,9 @@ import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.common.data.GerritConfig;
+import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
@@ -41,28 +44,28 @@ public class GerritOperationFactory {
 		return new GerritOperation<PatchLineComment>("Saving Draft", getClient(review), request);
 	}
 
-	public GerritOperation createAbandonOperation(ITask review, AbandonRequest request) {
-		return new GerritOperation("Abandoning Change", getClient(review), request);
+	public GerritOperation<ChangeDetail> createAbandonOperation(ITask review, AbandonRequest request) {
+		return new GerritOperation<ChangeDetail>("Abandoning Change", getClient(review), request);
 	}
 
-	public GerritOperation createAddReviewersOperation(ITask review, AddReviewersRequest request) {
-		return new GerritOperation("Adding Reviewers", getClient(review), request);
+	public GerritOperation<ReviewerResult> createAddReviewersOperation(ITask review, AddReviewersRequest request) {
+		return new GerritOperation<ReviewerResult>("Adding Reviewers", getClient(review), request);
 	}
 
-	public GerritOperation createPublishOperation(ITask review, PublishRequest request) {
-		return new GerritOperation("Publishing Change", getClient(review), request);
+	public GerritOperation<Object> createPublishOperation(ITask review, PublishRequest request) {
+		return new GerritOperation<Object>("Publishing Change", getClient(review), request);
 	}
 
-	public GerritOperation createRefreshConfigOperation(ITask review, RefreshConfigRequest request) {
-		return new GerritOperation("Refreshing Configuration", getClient(review), request);
+	public GerritOperation<GerritConfig> createRefreshConfigOperation(ITask review, RefreshConfigRequest request) {
+		return new GerritOperation<GerritConfig>("Refreshing Configuration", getClient(review), request);
 	}
 
-	public GerritOperation createRestoreOperation(ITask review, RestoreRequest request) {
-		return new GerritOperation("Restoring Change", getClient(review), request);
+	public GerritOperation<ChangeDetail> createRestoreOperation(ITask review, RestoreRequest request) {
+		return new GerritOperation<ChangeDetail>("Restoring Change", getClient(review), request);
 	}
 
-	public GerritOperation createSubmitOperation(ITask review, SubmitRequest request) {
-		return new GerritOperation("Submitting Change", getClient(review), request);
+	public GerritOperation<ChangeDetail> createSubmitOperation(ITask review, SubmitRequest request) {
+		return new GerritOperation<ChangeDetail>("Submitting Change", getClient(review), request);
 	}
 
 	public GerritClient getClient(ITask review) {

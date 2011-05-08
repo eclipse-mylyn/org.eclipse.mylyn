@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
@@ -40,7 +41,7 @@ public class SubmitDialog extends GerritOperationDialog {
 	}
 
 	@Override
-	public GerritOperation createOperation() {
+	public GerritOperation<ChangeDetail> createOperation() {
 		int patchSetId = patchSet.getId().get();
 		SubmitRequest request = new SubmitRequest(task.getTaskId(), patchSetId);
 		return GerritUiPlugin.getDefault().getOperationFactory().createSubmitOperation(task, request);

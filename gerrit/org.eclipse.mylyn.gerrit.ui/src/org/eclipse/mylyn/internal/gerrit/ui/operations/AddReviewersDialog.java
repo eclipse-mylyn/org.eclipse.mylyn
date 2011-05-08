@@ -40,7 +40,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 	}
 
 	@Override
-	public GerritOperation createOperation() {
+	public GerritOperation<ReviewerResult> createOperation() {
 		AddReviewersRequest request = new AddReviewersRequest(task.getTaskId(), getReviewers());
 		return GerritUiPlugin.getDefault().getOperationFactory().createAddReviewersOperation(task, request);
 	}
