@@ -177,6 +177,19 @@ public class TaskDataModel {
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
 		workingCopy.refresh(monitor);
+		if (this.listeners != null) {
+			for (final TaskDataModelListener listener : listeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+					}
+
+					public void run() throws Exception {
+						listener.modelRefreshed();
+					}
+				});
+			}
+		}
 	}
 
 	public void removeModelListener(TaskDataModelListener listener) {
