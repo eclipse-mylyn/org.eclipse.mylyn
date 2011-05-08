@@ -25,11 +25,11 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -107,15 +107,13 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 
-		setAttributeValue(data, schema.KEY, change.getId().toString());
-		//setAttributeValue(data, schema.KEY, change.getKey().abbreviate());
+		setAttributeValue(data, schema.KEY, change.getKey().abbreviate());
 		setAttributeValue(data, schema.CHANGE_ID, change.getKey().get());
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
 		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
 		setAttributeValue(data, schema.PROJECT, change.getProject().get());
 		setAttributeValue(data, schema.SUMMARY, change.getSubject());
 		setAttributeValue(data, schema.STATUS, change.getStatus().toString());
-		//setAttributeValue(data, GerritAttribute.URL, change.getUrl());
 		setAttributeValue(data, schema.UPDATED, dateToString(change.getLastUpdatedOn()));
 		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
 		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
