@@ -35,7 +35,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private final IRepositoryQuery query;
 
-	private Button myOpenChangesButton;
+	private Button myChangesButton;
 
 	private Button allOpenChangesButton;
 
@@ -87,9 +87,9 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		Label typeLabel = new Label(control, SWT.NONE);
 		typeLabel.setText("Query type:");
 		// radio button to select query type
-		myOpenChangesButton = new Button(control, SWT.RADIO);
-		myOpenChangesButton.setText("My changes");
-		myOpenChangesButton.setLayoutData(gd2);
+		myChangesButton = new Button(control, SWT.RADIO);
+		myChangesButton.setText("My changes");
+		myChangesButton.setLayoutData(gd2);
 
 		new Label(control, SWT.NONE);
 		allOpenChangesButton = new Button(control, SWT.RADIO);
@@ -107,7 +107,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		if (query != null) {
 			titleText.setText(query.getSummary());
 			if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
-				myOpenChangesButton.setSelection(true);
+				myChangesButton.setSelection(true);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				byProjectButton.setSelection(true);
 			} else {
@@ -117,7 +117,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 				projectText.setText(query.getAttribute(GerritQuery.PROJECT));
 			}
 		} else {
-			myOpenChangesButton.setSelection(true);
+			myChangesButton.setSelection(true);
 		}
 
 		SelectionListener buttonSelectionListener = new SelectionListener() {
@@ -152,7 +152,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		// TODO: set URL ????
 		// query.setUrl(getQueryUrl());
 		query.setSummary(getTitleText());
-		if (myOpenChangesButton.getSelection()) {
+		if (myChangesButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_CHANGES);
 		} else if (byProjectButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
