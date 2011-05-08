@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Mylyn Reviews Target" sequenceNumber="37">
+<target name="Mylyn Reviews Target" sequenceNumber="38">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110310-1804"/>
@@ -14,11 +14,6 @@
 <unit id="org.eclipse.jgit.feature.group" version="0.12.1"/>
 <unit id="org.eclipse.jgit.source.feature.group" version="0.12.1"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="3.6.0.I20110504-0744"/>
-<unit id="org.eclipse.mylyn.test_feature.feature.group" version="3.6.0.I20110504-0744"/>
-<repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
@@ -53,6 +48,12 @@
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.mockito.source" version="1.8.4.v201102171835"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.8.0.I20110504-0744"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="3.6.0.I20110504-0744"/>
+<unit id="org.eclipse.mylyn.test_feature.feature.group" version="3.6.0.I20110504-0744"/>
+<repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
 </location>
 </locations>
 </target>
