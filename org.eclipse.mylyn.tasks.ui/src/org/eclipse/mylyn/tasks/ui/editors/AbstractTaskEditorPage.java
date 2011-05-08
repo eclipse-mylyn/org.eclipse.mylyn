@@ -658,13 +658,18 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
-				getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
-						IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								AbstractTaskEditorPage.this.refresh();
-							}
-						});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getTaskEditor().setMessage(
+								Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
+								IMessageProvider.INFORMATION, new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										AbstractTaskEditorPage.this.refresh();
+									}
+								});
+					}
+				});
 			}
 
 			if (taskData != null) {
@@ -1064,7 +1069,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								doSubmit();
 							}
 						});
-						submitButton.setEnabled(submitEnabled);
 						return submitButton;
 					}
 				};
@@ -1764,13 +1768,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}
 		return super.selectReveal(object);
-	}
-
-	/**
-	 * @since 3.6
-	 */
-	protected void disableSubmit() {
-		setSubmitEnabled(false);
 	}
 
 }

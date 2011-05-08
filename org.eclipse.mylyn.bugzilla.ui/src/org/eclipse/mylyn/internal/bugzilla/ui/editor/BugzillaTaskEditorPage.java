@@ -300,7 +300,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				attrToken.setValue(tokenString);
 			}
 		}
-
+		if (!checkCanSubmit(IMessageProvider.ERROR)) {
+			return;
+		}
 		getTaskEditor().setMessage("", IMessageProvider.NONE); //$NON-NLS-1$
 		super.doSubmit();
 	}
@@ -309,7 +311,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	protected void createParts() {
 		attributeEditorMap.clear();
 		super.createParts();
-		testCanSubmit();
+		checkCanSubmit(IMessageProvider.INFORMATION);
 	}
 
 	@Override
@@ -494,59 +496,67 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	public void refresh() {
 		super.refresh();
-		testCanSubmit();
+		checkCanSubmit(IMessageProvider.INFORMATION);
 	}
 
-	private void testCanSubmit() {
+	private boolean checkCanSubmit(final int type) {
 		final TaskRepository taskRepository = getModel().getTaskRepository();
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		if (cred == null || cred.getUserName() == null || cred.getUserName().equals("")) { //$NON-NLS-1$
-			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks,
-					IMessageProvider.WARNING, new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-							refresh();
-						}
-					});
-			disableSubmit();
-			return;
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks, type,
+							new HyperlinkAdapter() {
+								@Override
+								public void linkActivated(HyperlinkEvent e) {
+									TasksUiUtil.openEditRepositoryWizard(taskRepository);
+									refresh();
+								}
+							});
+				}
+			});
+			return false;
 		}
 		if (!getModel().getTaskData().isNew()) {
 			TaskAttribute exporter = getModel().getTaskData()
 					.getRoot()
 					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
 			if (exporter == null) {
-				getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
-						IMessageProvider.WARNING, new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								ITask task = getModel().getTask();
-								AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-										.getRepositoryConnector(task.getConnectorKind());
-								if (connector == null) {
-									return;
-								}
-								TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
+								type, new HyperlinkAdapter() {
 									@Override
-									public void done(IJobChangeEvent event) {
-										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-											public void run() {
-												try {
-													getTaskEditor().refreshPages();
-												} finally {
-													if (getTaskEditor() != null) {
-														getTaskEditor().showBusy(false);
+									public void linkActivated(HyperlinkEvent e) {
+										ITask task = getModel().getTask();
+										AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+												.getRepositoryConnector(task.getConnectorKind());
+										if (connector == null) {
+											return;
+										}
+										TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+											@Override
+											public void done(IJobChangeEvent event) {
+												PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+													public void run() {
+														try {
+															getTaskEditor().refreshPages();
+														} finally {
+															if (getTaskEditor() != null) {
+																getTaskEditor().showBusy(false);
+															}
+														}
 													}
-												}
+												});
 											}
 										});
 									}
 								});
-							}
-						});
-				disableSubmit();
+					}
+				});
+				return false;
 			}
 		}
+		return true;
 	}
 }
