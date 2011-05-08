@@ -66,7 +66,7 @@ public class CvsConnector extends ScmConnector {
 	}
 
 	protected CvsRepository getRepository(ICVSRepositoryLocation location) {
-		CvsRepository repository = new CvsRepository(location);
+		CvsRepository repository = new CvsRepository(this, location);
 		return repository;
 	}
 

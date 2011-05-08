@@ -22,10 +22,11 @@ public class CvsRepository extends ScmRepository {
 
 	private final ICVSRepositoryLocation location;
 
-	public CvsRepository(ICVSRepositoryLocation location) {
+	public CvsRepository(CvsConnector connector, ICVSRepositoryLocation location) {
 		this.location = location;
 		setName(location.getLocation(true));
 		setUrl(location.getLocation(true));
+		setConnector(connector);
 	}
 
 	public ICVSRepositoryLocation getLocation() {

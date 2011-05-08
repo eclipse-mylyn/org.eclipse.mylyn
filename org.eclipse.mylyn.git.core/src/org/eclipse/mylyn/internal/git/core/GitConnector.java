@@ -255,7 +255,7 @@ public class GitConnector extends ScmConnector {
 		if (mapping == null) {
 			return null;
 		}
-		return new GitRepository(mapping);
+		return new GitRepository(this, mapping);
 	}
 
 	protected RepositoryCache getRepositoryCache() {

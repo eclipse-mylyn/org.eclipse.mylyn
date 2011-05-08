@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.versions.core;
 
+import org.eclipse.mylyn.versions.core.spi.ScmConnector;
+
 /**
  * @author Steffen Pingel
  */
@@ -20,10 +22,12 @@ public class ScmRepository {
 
 	private String url;
 
+	private ScmConnector connector;
+
 	protected ScmRepository() {
 	}
 
-	public ScmRepository(String name, String url) {
+	public ScmRepository(ScmConnector connector, String name, String url) {
 		this.name = name;
 		this.url = url;
 	}
@@ -36,6 +40,10 @@ public class ScmRepository {
 		return url;
 	}
 
+	public ScmConnector getConnector() {
+		return connector;
+	}
+
 	protected void setName(String name) {
 		this.name = name;
 	}
@@ -44,4 +52,7 @@ public class ScmRepository {
 		this.url = url;
 	}
 
+	protected void setConnector(ScmConnector connector) {
+		this.connector = connector;
+	}
 }

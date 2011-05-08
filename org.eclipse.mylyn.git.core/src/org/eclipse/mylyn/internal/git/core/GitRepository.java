@@ -25,8 +25,9 @@ public class GitRepository extends ScmRepository {
 
 	private final RepositoryMapping mapping;
 
-	public GitRepository(RepositoryMapping mapping) {
+	public GitRepository(GitConnector connector, RepositoryMapping mapping) {
 		this.mapping = mapping;
+		setConnector(connector);
 	}
 
 	public Repository getRepository() {
