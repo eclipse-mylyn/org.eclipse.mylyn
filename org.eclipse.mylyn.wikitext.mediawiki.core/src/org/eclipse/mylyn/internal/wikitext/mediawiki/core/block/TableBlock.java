@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
@@ -39,7 +39,7 @@ public class TableBlock extends Block {
 
 	private static final Pattern cellPattern = Pattern.compile("(\\||!)\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|]+)?\\|)?\\s*(.+)?"); //$NON-NLS-1$
+	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|\\[]+)?\\|)?\\s*(.+)?"); //$NON-NLS-1$
 
 	private static final Pattern endPattern = Pattern.compile("\\|\\}\\s*(.+)?"); //$NON-NLS-1$
 

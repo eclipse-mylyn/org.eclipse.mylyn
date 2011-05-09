@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -346,7 +346,7 @@ public class MediaWikiLanguageTest extends TestCase {
 				+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
 				+ "|}");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>"));
+		assertTrue(html.contains("<td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td>"));
 	}
 
 	public void testLinkInternalCategoryReference() {
