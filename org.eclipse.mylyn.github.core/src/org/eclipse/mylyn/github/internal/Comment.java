@@ -33,18 +33,16 @@ public class Comment {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		// see EI_EXPOSE_REP at
-		// http://findbugs.sourceforge.net/bugDescriptions.html
-		return new Date(this.createdAt.getTime());
+		return this.createdAt != null ? new Date(this.createdAt.getTime())
+				: null;
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		// see EI_EXPOSE_REP at
-		// http://findbugs.sourceforge.net/bugDescriptions.html
-		return new Date(this.updatedAt.getTime());
+		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
+				: null;
 	}
 
 	/**
