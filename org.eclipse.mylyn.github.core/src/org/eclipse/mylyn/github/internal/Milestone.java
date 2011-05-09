@@ -43,18 +43,15 @@ public class Milestone {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		// see EI_EXPOSE_REP at
-		// http://findbugs.sourceforge.net/bugDescriptions.html
-		return new Date(this.createdAt.getTime());
+		return this.createdAt != null ? new Date(this.createdAt.getTime())
+				: null;
 	}
 
 	/**
 	 * @return dueOn
 	 */
 	public Date getDueOn() {
-		// see EI_EXPOSE_REP at
-		// http://findbugs.sourceforge.net/bugDescriptions.html
-		return new Date(this.dueOn.getTime());
+		return this.dueOn != null ? new Date(this.dueOn.getTime()) : null;
 	}
 
 	/**

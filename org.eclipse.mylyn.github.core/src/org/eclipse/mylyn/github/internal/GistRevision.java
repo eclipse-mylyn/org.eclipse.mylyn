@@ -31,9 +31,8 @@ public class GistRevision {
 	 * @return committedAt
 	 */
 	public Date getCommittedAt() {
-		// see EI_EXPOSE_REP at
-		// http://findbugs.sourceforge.net/bugDescriptions.html
-		return new Date(this.committedAt.getTime());
+		return this.committedAt != null ? new Date(this.committedAt.getTime())
+				: null;
 	}
 
 	/**
