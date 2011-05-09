@@ -335,6 +335,20 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">alternative text</a> reference to the Main Page</p></body>"));
 	}
 
+	public void testLinkInternalPageReferenceWithAltText2() {
+		String html = parser.parseToHtml("[[Orion/Server_API/Preference API| Preference API]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>"));
+	}
+
+	public void testLinkInternalPageReferenceWithAltTextInTables() {
+		String html = parser.parseToHtml("{|\n" //
+				+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
+				+ "|}");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>"));
+	}
+
 	public void testLinkInternalCategoryReference() {
 		String html = parser.parseToHtml("a [[:Category:Help]] reference to the Main Page");
 		TestUtil.println("HTML: \n" + html);
