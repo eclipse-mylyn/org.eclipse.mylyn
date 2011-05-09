@@ -8,6 +8,7 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      Jan Lohre (SAP) - improvements
  *********************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
