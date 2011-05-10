@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Hiroyuki Inaba - initial API and implementation
+ *     Tasktop Technologies - 246858: provide delayed capture for screenshot attachment
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.ui.screenshots;
 
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Hiroyuki Inaba
+ * @author Benjamin Muskalla
  */
 public class SelectToolAction extends Action implements IMenuCreator {
 
@@ -93,6 +95,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 					new ToolActionItem[] {
 							new ToolActionItem(CAPTURE_DESKTOP, Messages.SelectToolAction_Desktop,
 									ScreenshotImages.MONITOR_OBJ), //
+							new ToolActionItem(CAPTURE_DESKTOP_DELAYED, Messages.SelectToolAction_Desktop_Delayed,
+									ScreenshotImages.MONITOR__DELAY_OBJ), //
 							new ToolActionItem(CAPTURE_CLIPBOARD, Messages.SelectToolAction_Clipboard,
 									ScreenshotImages.CLIPBOARD_OBJ), //
 							new ToolActionItem(CAPTURE_FILE, Messages.SelectToolAction_File, ScreenshotImages.FILE_OBJ),
@@ -647,6 +651,8 @@ public class SelectToolAction extends Action implements IMenuCreator {
 	public static final int CAPTURE_FILE = 2;
 
 	public static final int CAPTURE_RECTANGLE = 3;
+
+	public static final int CAPTURE_DESKTOP_DELAYED = 4;
 
 	public int getSelect() {
 		return selectedItemID;

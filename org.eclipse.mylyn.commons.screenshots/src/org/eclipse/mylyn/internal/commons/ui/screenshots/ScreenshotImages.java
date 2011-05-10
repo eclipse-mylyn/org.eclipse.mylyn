@@ -60,6 +60,8 @@ public class ScreenshotImages {
 
 	public static final ImageDescriptor MONITOR_OBJ = create(T_TOOL, "monitor_obj.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor MONITOR__DELAY_OBJ = create(T_TOOL, "monitor_delay_obj.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor LINE_SOLD = create(T_DRAW, "line_sold.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor LINE_DOT = create(T_DRAW, "line_dot.gif"); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009 Balazs Brinkus and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,10 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.ui.screenshots.ScreenshotViewer;
+import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -30,8 +32,11 @@ import org.eclipse.swt.widgets.Composite;
  * @author Willian Mitsuda
  * @author Mik Kersten
  * @author Hiroyuki Inaba
+ * @author Benjamin Muskalla
  */
 public class ScreenshotCreationPage extends WizardPage {
+
+	private static final String DIALOG_SETTINGS = ScreenshotCreationPage.class.getCanonicalName();
 
 	private ScreenshotViewer viewer;
 
@@ -49,6 +54,7 @@ public class ScreenshotCreationPage extends WizardPage {
 				getContainer().updateButtons();
 			}
 		};
+		viewer.setDialogSettings(getDialogSettings());
 		setControl(viewer.getControl());
 	}
 
@@ -68,6 +74,17 @@ public class ScreenshotCreationPage extends WizardPage {
 
 	public void setImageDirty(boolean imageDirty) {
 		viewer.setDirty(imageDirty);
+	}
+
+	@Override
+	protected IDialogSettings getDialogSettings() {
+		CommonsUiPlugin plugin = CommonsUiPlugin.getDefault();
+		IDialogSettings settings = plugin.getDialogSettings();
+		IDialogSettings section = settings.getSection(DIALOG_SETTINGS);
+		if (section == null) {
+			section = settings.addNewSection(DIALOG_SETTINGS);
+		}
+		return section;
 	}
 
 }

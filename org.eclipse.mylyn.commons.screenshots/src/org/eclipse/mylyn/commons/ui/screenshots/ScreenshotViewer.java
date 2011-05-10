@@ -28,7 +28,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.screenshots.Messages;
 import org.eclipse.mylyn.internal.commons.ui.screenshots.ScreenshotImages;
 import org.eclipse.mylyn.internal.commons.ui.screenshots.SelectToolAction;
@@ -79,6 +83,8 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author Mik Kersten
  * @author Hiroyuki Inaba
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
+ * @since 3.6
  */
 public class ScreenshotViewer {
 
@@ -99,6 +105,8 @@ public class ScreenshotViewer {
 	private Composite paletteArea;
 
 	private int lastDrawAction;
+
+	private IDialogSettings dialogSettings;
 
 	private SelectToolAction drawLineToolbar;
 
@@ -243,7 +251,9 @@ public class ScreenshotViewer {
 			@Override
 			public void run() {
 				if (captureAction.getSelect() == SelectToolAction.CAPTURE_DESKTOP) {
-					captureScreenshotContent();
+					captureScreenshotContent(INITIAL_CAPTURE_DELAY);
+				} else if (captureAction.getSelect() == SelectToolAction.CAPTURE_DESKTOP_DELAYED) {
+					captureScreenshotContentDelayed();
 				} else if (captureAction.getSelect() == SelectToolAction.CAPTURE_CLIPBOARD) {
 					captureScreenshotContent(captureAction.getClipboardImage());
 				} else if (captureAction.getSelect() == SelectToolAction.CAPTURE_RECTANGLE) {
@@ -704,7 +714,13 @@ public class ScreenshotViewer {
 
 	private static final int CURSOR_MARK_TOOL = -1;
 
-	private static final int CAPTURE_DELAY = 400;
+	private static final int INITIAL_CAPTURE_DELAY = 400;
+
+	private static final String DEFAULT_DELAY = "2"; //$NON-NLS-1$
+
+	private static final String DELAY_DIALOG_KEY = "ScreenshotViewerDelayDialog"; //$NON-NLS-1$
+
+	private static final String DELAY_DIALOG_DELAY_VALUE = "DelayValue"; //$NON-NLS-1$
 
 	private void allocateCursors() {
 		Display display = getShell().getDisplay();
@@ -859,14 +875,14 @@ public class ScreenshotViewer {
 		stateChanged();
 	}
 
-	private void captureScreenshotContent() {
+	private void captureScreenshotContent(int delay) {
 		final Display display = getShell().getDisplay();
 		final Shell wizardShell = getShell();
 		wizardShell.setVisible(false);
 
 		// this code needs to run asynchronously to allow the workbench to refresh before the screen is captured
 		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
-		getShell().getDisplay().timerExec(CAPTURE_DELAY, new Runnable() {
+		getShell().getDisplay().timerExec(delay, new Runnable() {
 			public void run() {
 				disposeImageResources();
 				Rectangle displayBounds = display.getBounds();
@@ -889,6 +905,70 @@ public class ScreenshotViewer {
 				stateChanged();
 			}
 		});
+	}
+
+	private void captureScreenshotContentDelayed() {
+		IInputValidator delayValidator = new IInputValidator() {
+
+			public String isValid(String newText) {
+				try {
+					int result = Integer.parseInt(newText);
+					if (result > 0) {
+						return null;
+					}
+				} catch (NumberFormatException e) {
+					// fall through
+				}
+				return Messages.ScreenshotViewer_EnterValidSeconds;
+			}
+		};
+		String delay = getDelayFromSettings(DEFAULT_DELAY);
+		InputDialog delayDialog = new InputDialog(getShell(), Messages.ScreenshotViewer_Delay,
+				Messages.ScreenshotViewer_EnterDelayForScreenshot, delay, delayValidator);
+		int resultCode = delayDialog.open();
+		if (resultCode == Window.OK) {
+			storeDelaySetting(delayDialog.getValue());
+			int newDelay = Integer.parseInt(delayDialog.getValue());
+			int newDelayInMs = newDelay * 1000;
+			captureScreenshotContent(INITIAL_CAPTURE_DELAY + newDelayInMs);
+
+		}
+	}
+
+	private void storeDelaySetting(String value) {
+		if (dialogSettings != null) {
+			IDialogSettings section = dialogSettings.getSection(DELAY_DIALOG_KEY);
+			if (section == null) {
+				section = dialogSettings.addNewSection(DELAY_DIALOG_KEY);
+			}
+			section.put(DELAY_DIALOG_DELAY_VALUE, value);
+		}
+	}
+
+	private String getDelayFromSettings(String defaultValue) {
+		String delay = defaultValue;
+		if (dialogSettings != null) {
+			IDialogSettings section = dialogSettings.getSection(DELAY_DIALOG_KEY);
+			if (section != null) {
+				int lastDelay = section.getInt(DELAY_DIALOG_DELAY_VALUE);
+				delay = String.valueOf(lastDelay);
+			}
+		}
+		return delay;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public void setDialogSettings(IDialogSettings dialogSettings) {
+		this.dialogSettings = dialogSettings;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public IDialogSettings getDialogSettings() {
+		return dialogSettings;
 	}
 
 	/**

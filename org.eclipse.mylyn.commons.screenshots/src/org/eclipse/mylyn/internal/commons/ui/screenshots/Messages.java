@@ -59,6 +59,12 @@ public class Messages extends NLS {
 
 	public static String ScreenshotCreationPage_Show_Line_Bold_Selector;
 
+	public static String ScreenshotViewer_Delay;
+
+	public static String ScreenshotViewer_EnterDelayForScreenshot;
+
+	public static String ScreenshotViewer_EnterValidSeconds;
+
 	public static String SelectToolAction_Font_Bold;
 
 	public static String SelectToolAction_Font_Italic;
@@ -76,6 +82,8 @@ public class Messages extends NLS {
 	public static String SelectToolAction_Clipboard;
 
 	public static String SelectToolAction_Desktop;
+
+	public static String SelectToolAction_Desktop_Delayed;
 
 	public static String SelectToolAction_File;
 
