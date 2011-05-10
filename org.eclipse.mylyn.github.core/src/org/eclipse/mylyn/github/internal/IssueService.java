@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class IssueService {
+public class IssueService extends GitHubService {
 
 	/**
 	 * Filter by issue assignee
@@ -72,8 +72,6 @@ public class IssueService {
 	 */
 	public static final String FIELD_TITLE = "title"; //$NON-NLS-1$
 
-	private GitHubClient client;
-
 	/**
 	 * Create issue service
 	 * 
@@ -81,8 +79,7 @@ public class IssueService {
 	 *            cannot be null
 	 */
 	public IssueService(GitHubClient client) {
-		Assert.isNotNull(client, "Client cannot be null"); //$NON-NLS-1$
-		this.client = client;
+		super(client);
 	}
 
 	/**
@@ -104,7 +101,10 @@ public class IssueService {
 		builder.append('/').append(user).append('/').append(repository);
 		builder.append(IGitHubConstants.SEGMENT_ISSUES);
 		builder.append('/').append(id).append(IGitHubConstants.SUFFIX_JSON);
-		return this.client.get(builder.toString(), Issue.class);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(builder.toString());
+		request.setType(Issue.class);
+		return (Issue) client.get(request).getBody();
 	}
 
 	/**
@@ -128,9 +128,13 @@ public class IssueService {
 		builder.append('/').append(id);
 		builder.append(IGitHubConstants.SEGMENT_COMMENTS).append(
 				IGitHubConstants.SUFFIX_JSON);
-		TypeToken<List<Comment>> commentToken = new TypeToken<List<Comment>>() {
-		};
-		return this.client.get(builder.toString(), commentToken.getType());
+		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
+		PagedRequest<Comment> request = new PagedRequest<Comment>(collector);
+		request.setUri(builder.toString()).setType(
+				new TypeToken<List<Comment>>() {
+				}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**
@@ -151,10 +155,13 @@ public class IssueService {
 		builder.append('/').append(user).append('/').append(repository);
 		builder.append(IGitHubConstants.SEGMENT_ISSUES).append(
 				IGitHubConstants.SUFFIX_JSON);
-		TypeToken<List<Issue>> issueToken = new TypeToken<List<Issue>>() {
-		};
-		return this.client.get(builder.toString(), filterData,
-				issueToken.getType());
+		ListResourceCollector<Issue> collector = new ListResourceCollector<Issue>();
+		PagedRequest<Issue> request = new PagedRequest<Issue>(collector);
+		request.setParams(filterData).setUri(builder.toString());
+		request.setType(new TypeToken<List<Issue>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**

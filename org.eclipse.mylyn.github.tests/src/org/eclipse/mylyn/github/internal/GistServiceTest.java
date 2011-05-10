@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
@@ -36,10 +38,14 @@ public class GistServiceTest {
 	@Mock
 	private GitHubClient gitHubClient;
 
+	@Mock
+	private GitHubResponse response;
+
 	private GistService gistService;
 
 	@Before
-	public void before() {
+	public void before() throws IOException {
+		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		gistService = new GistService(gitHubClient);
 	}
 
@@ -56,7 +62,7 @@ public class GistServiceTest {
 	@Test
 	public void getGist_OK() throws IOException {
 		gistService.getGist("1");
-		verify(gitHubClient).get("/gists/1.json", Gist.class);
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -67,10 +73,7 @@ public class GistServiceTest {
 	@Test
 	public void getGists_OK() throws IOException {
 		gistService.getGists("test_user");
-		TypeToken<List<Gist>> gistsToken = new TypeToken<List<Gist>>() {
-		};
-		verify(gitHubClient).get("/users/test_user/gists.json",
-				gistsToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -123,8 +126,7 @@ public class GistServiceTest {
 		Gist gist = new Gist();
 		gist.setId("123");
 		gistService.updateGist(gist);
-		verify(gitHubClient).put("/gists/123.json", gist,
-				Gist.class);
+		verify(gitHubClient).put("/gists/123.json", gist, Gist.class);
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -158,7 +160,6 @@ public class GistServiceTest {
 
 		TypeToken<List<Comment>> commentsToken = new TypeToken<List<Comment>>() {
 		};
-		verify(gitHubClient).get("/gists/1/comments.json",
-				commentsToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 }

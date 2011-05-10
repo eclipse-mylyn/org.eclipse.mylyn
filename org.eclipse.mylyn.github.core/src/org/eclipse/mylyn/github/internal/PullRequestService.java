@@ -77,9 +77,11 @@ public class PullRequestService {
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		uri.append('/').append(repositoryId);
 		uri.append('/').append(id);
-		PullRequestWrapper wrapper = this.client.get(uri.toString(),
-				PullRequestWrapper.class);
-		return wrapper.getPull();
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(uri);
+		request.setType(PullRequestWrapper.class);
+		GitHubResponse response = this.client.get(request);
+		return ((PullRequestWrapper) response.getBody()).getPull();
 	}
 
 	/**
@@ -100,8 +102,10 @@ public class PullRequestService {
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		uri.append('/').append(repositoryId);
 		uri.append('/').append(state);
-		PullRequestsWrapper wrapper = this.client.get(uri.toString(),
-				PullRequestsWrapper.class);
-		return wrapper.getPulls();
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(uri);
+		request.setType(PullRequestsWrapper.class);
+		GitHubResponse response = this.client.get(request);
+		return ((PullRequestsWrapper) response.getBody()).getPulls();
 	}
 }
