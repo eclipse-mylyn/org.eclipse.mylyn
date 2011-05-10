@@ -40,7 +40,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.11.0</tycho-version>
+    <tycho-version>0.12.0</tycho-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit-updatesite/target/site</egit-site>
     <platform-version-name>indigo</platform-version-name>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
