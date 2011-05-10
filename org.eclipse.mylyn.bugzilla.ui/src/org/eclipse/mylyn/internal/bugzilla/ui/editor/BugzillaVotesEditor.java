@@ -118,4 +118,15 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	public void refresh() {
+		if (showVotes != null && !showVotes.isDisposed()) {
+			showVotes.setText(getTaskAttribute().getValue());
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
 }

@@ -63,6 +63,14 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	private ImageHyperlink selfLink;
 
+	private Text flagText;
+
+	private Text requesteeROText;
+
+	private boolean cflowUserEditing;
+
+	private Composite flagComposite;
+
 	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
@@ -73,7 +81,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		final Composite flagComposite = toolkit.createComposite(parent);
+		flagComposite = toolkit.createComposite(parent);
 
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 1;
@@ -81,29 +89,27 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 		layout.horizontalSpacing = 10;
 		flagComposite.setLayout(layout);
 		if (isReadOnly()) {
-			Text text = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(text, false, false);
-			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			text.setText(getValueLabel());
-			text.setBackground(parent.getBackground());
-			text.setEditable(false);
+			flagText = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(flagText, false, false);
+			flagText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			flagText.setText(getValueLabel());
+			flagText.setBackground(parent.getBackground());
+			flagText.setEditable(false);
 			String tooltip = getTaskAttribute().getMetaData().getLabel();
 			if (tooltip == null) {
 				tooltip = getDescription();
 			}
 			if (tooltip != null) {
-				text.setToolTipText(tooltip);
+				flagText.setToolTipText(tooltip);
 			}
 			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
-			if (!"".equals(requestee.getValue())) { //$NON-NLS-1$
-				text = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
-				toolkit.adapt(text, false, false);
-				text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-				text.setText(requestee.getValue());
-				text.setBackground(parent.getBackground());
-				text.setEditable(false);
-				text.setToolTipText(requestee.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
-			}
+			requesteeROText = new Text(flagComposite, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(requesteeROText, false, false);
+			requesteeROText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			requesteeROText.setText(requestee.getValue());
+			requesteeROText.setBackground(parent.getBackground());
+			requesteeROText.setEditable(false);
+			requesteeROText.setToolTipText(requestee.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
 		} else {
 			combo = new CCombo(flagComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(combo, false, false);
@@ -117,14 +123,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			}
 			EditorUtil.addScrollListener(combo);
 
-			Map<String, String> labelByValue = getAttributeMapper().getAssoctiatedAttribute(getTaskAttribute())
-					.getOptions();
-			if (labelByValue != null) {
-				values = labelByValue.keySet().toArray(new String[0]);
-				for (String value : values) {
-					combo.add(labelByValue.get(value));
-				}
-			}
+			updateComboWithOptions();
 
 			select(getValue(), getValueLabel());
 
@@ -136,10 +135,12 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 						if (index > -1) {
 							Assert.isNotNull(values);
 							Assert.isLegal(index >= 0 && index <= values.length - 1);
-							setValue(values[index]);
-							if (requesteeText != null) {
-								requesteeText.setEnabled(values[index].equals("?")); //$NON-NLS-1$
-								selfLink.setEnabled(values[index].equals("?")); //$NON-NLS-1$
+							try {
+								cflowUserEditing = true;
+								setValue(values[index]);
+								selectionChanged(index);
+							} finally {
+								cflowUserEditing = false;
 							}
 						}
 					}
@@ -226,9 +227,12 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				requesteeText.addKeyListener(new KeyListener() {
 
 					public void keyReleased(KeyEvent e) {
-						// ignore
-						setRequestee(requesteeText.getText());
-
+						try {
+							cflowUserEditing = true;
+							setRequestee(requesteeText.getText());
+						} finally {
+							cflowUserEditing = false;
+						}
 					}
 
 					public void keyPressed(KeyEvent e) {
@@ -237,7 +241,12 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 				requesteeText.addModifyListener(new ModifyListener() {
 
 					public void modifyText(ModifyEvent e) {
-						setRequestee(requesteeText.getText());
+						try {
+							cflowUserEditing = true;
+							setRequestee(requesteeText.getText());
+						} finally {
+							cflowUserEditing = false;
+						}
 					}
 				});
 				toolkit.adapt(requesteeText, false, false);
@@ -246,6 +255,18 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 		}
 		toolkit.paintBordersFor(flagComposite);
 		setControl(flagComposite);
+	}
+
+	private void updateComboWithOptions() {
+		Map<String, String> labelByValue = getAttributeMapper().getAssoctiatedAttribute(getTaskAttribute())
+				.getOptions();
+		if (labelByValue != null) {
+			combo.removeAll();
+			values = labelByValue.keySet().toArray(new String[0]);
+			for (String value : values) {
+				combo.add(labelByValue.get(value));
+			}
+		}
 	}
 
 	public String getValue() {
@@ -273,10 +294,8 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 		TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 		if (requestee != null) {
 			if (!requestee.getValue().equals(value)) {
-				if (!requestee.getValue().equals(value)) {
-					getAttributeMapper().setValue(requestee, value);
-					attributeChanged();
-				}
+				getAttributeMapper().setValue(requestee, value);
+				attributeChanged();
 			}
 		}
 	}
@@ -306,5 +325,46 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 			}
 		}
 		return label;
+	}
+
+	@Override
+	public void refresh() {
+		if (!cflowUserEditing) {
+			if (flagText != null && !flagText.isDisposed()) {
+				flagText.setText(getValueLabel());
+			}
+			if (combo != null && !combo.isDisposed()) {
+				updateComboWithOptions();
+				select(getValue(), getValueLabel());
+				if (combo.getSelectionIndex() >= 0) {
+					selectionChanged(combo.getSelectionIndex());
+				}
+			}
+			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
+			if (requestee != null) {
+				if (requesteeROText != null && !requesteeROText.isDisposed()) {
+					requesteeROText.setText(requestee.getValue());
+				}
+				if (requesteeText != null && !requesteeText.isDisposed()) {
+					requesteeText.setText(requestee.getValue());
+				}
+			}
+			updateLabel();
+			if (flagComposite != null && !flagComposite.isDisposed()) {
+				flagComposite.layout();
+			}
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
+
+	private void selectionChanged(int index) {
+		if (requesteeText != null) {
+			requesteeText.setEnabled(values[index].equals("?")); //$NON-NLS-1$
+			selfLink.setEnabled(values[index].equals("?")); //$NON-NLS-1$
+		}
 	}
 }
