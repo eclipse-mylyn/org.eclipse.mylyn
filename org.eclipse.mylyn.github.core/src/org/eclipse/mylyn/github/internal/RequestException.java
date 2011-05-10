@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.github.internal;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Request exception class that wraps an {@link RequestError} object.
@@ -34,9 +35,22 @@ public class RequestException extends IOException {
 	 * @param status
 	 */
 	public RequestException(RequestError error, int status) {
-		super(error.getMessage());
+		super();
 		this.error = error;
 		this.status = status;
+	}
+
+	@Override
+	public String getMessage() {
+		StringBuilder message = new StringBuilder(error.getMessage());
+		List<FieldError> errors = error.getErrors();
+		if (errors != null && errors.size() > 0) {
+			message.append(':');
+			for (FieldError error : errors)
+				message.append(' ').append(error.format()).append(',');
+			message.deleteCharAt(message.length() - 1);
+		}
+		return message.toString();
 	}
 
 	/**

@@ -14,14 +14,14 @@ import java.util.List;
 
 /**
  * GitHub request error class
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class RequestError {
 
 	private String message;
 
-	private List<String> errors;
+	private List<FieldError> errors;
 
 	/**
 	 * @return message
@@ -32,10 +32,10 @@ public class RequestError {
 
 	/**
 	 * Get errors
-	 *
+	 * 
 	 * @return list of errors
 	 */
-	public List<String> getErrors() {
+	public List<FieldError> getErrors() {
 		return this.errors;
 	}
 

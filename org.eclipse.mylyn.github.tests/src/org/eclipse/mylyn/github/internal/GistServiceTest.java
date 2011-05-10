@@ -86,7 +86,7 @@ public class GistServiceTest {
 		Gist gist = new Gist();
 		gist.setUser(null);
 		gistService.createGist(gist);
-		verify(gitHubClient).post("/gists.json", gist, Gist.class);
+		verify(gitHubClient).post("/gists", gist, Gist.class);
 	}
 
 	@Test
@@ -96,8 +96,7 @@ public class GistServiceTest {
 		user.setLogin("test_user");
 		gist.setUser(user);
 		gistService.createGist(gist);
-		verify(gitHubClient).post("/users/test_user/gists.json", gist,
-				Gist.class);
+		verify(gitHubClient).post("/users/test_user/gists", gist, Gist.class);
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -126,7 +125,7 @@ public class GistServiceTest {
 		Gist gist = new Gist();
 		gist.setId("123");
 		gistService.updateGist(gist);
-		verify(gitHubClient).put("/gists/123.json", gist, Gist.class);
+		verify(gitHubClient).post("/gists/123", gist, Gist.class);
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -145,8 +144,7 @@ public class GistServiceTest {
 
 		Map<String, String> params = new HashMap<String, String>(1, 1);
 		params.put(IssueService.FIELD_BODY, "test_comment");
-		verify(gitHubClient).post("/gists/1/comments.json", params,
-				Comment.class);
+		verify(gitHubClient).post("/gists/1/comments", params, Comment.class);
 	}
 
 	@Test(expected = AssertionFailedException.class)

@@ -20,6 +20,18 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.github.internal.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String FieldError_InvalidField;
+
+	/** */
+	public static String FieldError_InvalidFieldWithValue;
+
+	/** */
+	public static String FieldError_MissingField;
+
+	/** */
+	public static String FieldError_ResourceError;
+
+	/** */
 	public static String GitHubRepositoryConnector_LabelConnector;
 
 	/** */

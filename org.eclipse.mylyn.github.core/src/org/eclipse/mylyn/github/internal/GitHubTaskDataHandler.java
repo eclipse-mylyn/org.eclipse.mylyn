@@ -229,6 +229,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		String assigneeValue = getAttributeValue(taskData,
 				GitHubTaskAttributes.ASSIGNEE);
 		if (assigneeValue != null) {
+			if (assigneeValue.trim().length() == 0)
+				assigneeValue = null;
 			User assignee = new User().setName(assigneeValue);
 			issue.setAssignee(assignee);
 		}

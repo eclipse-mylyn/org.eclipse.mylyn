@@ -122,8 +122,7 @@ public class IssueServiceTest {
 	@Test
 	public void createIssue_NullIssue() throws IOException {
 		issueService.createIssue("test_user", "test_repository", null);
-		verify(gitHubClient).post(
-				"/repos/test_user/test_repository/issues.json",
+		verify(gitHubClient).post("/repos/test_user/test_repository/issues",
 				new HashMap<String, String>(), Issue.class);
 	}
 
@@ -155,9 +154,8 @@ public class IssueServiceTest {
 		params.put(IssueService.FIELD_TITLE, "test_title");
 		params.put(IssueService.FIELD_BODY, "test_body");
 		params.put(IssueService.FILTER_STATE, "test_state");
-		verify(gitHubClient).put(
-				"/repos/test_user/test_repository/issues/1.json", params,
-				Issue.class);
+		verify(gitHubClient).post("/repos/test_user/test_repository/issues/1",
+				params, Issue.class);
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -183,7 +181,7 @@ public class IssueServiceTest {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(IssueService.FIELD_BODY, "test_comment");
 		verify(gitHubClient).post(
-				"/repos/test_user/test_repository/issues/1/comments.json",
-				params, Comment.class);
+				"/repos/test_user/test_repository/issues/1/comments", params,
+				Comment.class);
 	}
 }

@@ -100,7 +100,7 @@ public class IssueService extends GitHubService {
 				IGitHubConstants.SEGMENT_REPOS);
 		builder.append('/').append(user).append('/').append(repository);
 		builder.append(IGitHubConstants.SEGMENT_ISSUES);
-		builder.append('/').append(id).append(IGitHubConstants.SUFFIX_JSON);
+		builder.append('/').append(id);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(builder.toString());
 		request.setType(Issue.class);
@@ -126,8 +126,7 @@ public class IssueService extends GitHubService {
 		builder.append('/').append(user).append('/').append(repository);
 		builder.append(IGitHubConstants.SEGMENT_ISSUES);
 		builder.append('/').append(id);
-		builder.append(IGitHubConstants.SEGMENT_COMMENTS).append(
-				IGitHubConstants.SUFFIX_JSON);
+		builder.append(IGitHubConstants.SEGMENT_COMMENTS);
 		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
 		PagedRequest<Comment> request = new PagedRequest<Comment>(collector);
 		request.setUri(builder.toString()).setType(
@@ -153,8 +152,7 @@ public class IssueService extends GitHubService {
 		StringBuilder builder = new StringBuilder(
 				IGitHubConstants.SEGMENT_REPOS);
 		builder.append('/').append(user).append('/').append(repository);
-		builder.append(IGitHubConstants.SEGMENT_ISSUES).append(
-				IGitHubConstants.SUFFIX_JSON);
+		builder.append(IGitHubConstants.SEGMENT_ISSUES);
 		ListResourceCollector<Issue> collector = new ListResourceCollector<Issue>();
 		PagedRequest<Issue> request = new PagedRequest<Issue>(collector);
 		request.setParams(filterData).setUri(builder.toString());
@@ -168,15 +166,16 @@ public class IssueService extends GitHubService {
 	 * Create issue map for issue
 	 * 
 	 * @param issue
+	 * @param newIssue
 	 * @return map
 	 */
-	protected Map<String, String> createIssueMap(Issue issue) {
+	protected Map<String, String> createIssueMap(Issue issue, boolean newIssue) {
 		Map<String, String> params = new HashMap<String, String>();
 		if (issue != null) {
 			params.put(FIELD_BODY, issue.getBody());
 			params.put(FIELD_TITLE, issue.getTitle());
 			User assignee = issue.getAssignee();
-			if (assignee != null)
+			if (assignee != null && !newIssue)
 				params.put(FILTER_ASSIGNEE, assignee.getName());
 
 			Milestone milestone = issue.getMilestone();
@@ -184,8 +183,10 @@ public class IssueService extends GitHubService {
 				int number = milestone.getNumber();
 				if (number > 0)
 					params.put(FILTER_MILESTONE, Integer.toString(number));
-				else
-					params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
+				else {
+					if (!newIssue)
+						params.put(FILTER_MILESTONE, null);
+				}
 			}
 		}
 		return params;
@@ -206,10 +207,9 @@ public class IssueService extends GitHubService {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 
-		Map<String, String> params = createIssueMap(issue);
+		Map<String, String> params = createIssueMap(issue, true);
 		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
@@ -230,15 +230,14 @@ public class IssueService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
-		uri.append('/').append(issue.getNumber())
-				.append(IGitHubConstants.SUFFIX_JSON);
+		uri.append('/').append(issue.getNumber());
 
-		Map<String, String> params = createIssueMap(issue);
+		Map<String, String> params = createIssueMap(issue, false);
 		String state = issue.getState();
 		if (state != null) {
 			params.put(FILTER_STATE, state);
 		}
-		return this.client.put(uri.toString(), params, Issue.class);
+		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
 	/**
@@ -260,8 +259,7 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 		uri.append('/').append(issueId);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
 
 		Map<String, String> params = new HashMap<String, String>(1, 1);
 		params.put(FIELD_BODY, comment);

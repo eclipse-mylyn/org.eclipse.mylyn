@@ -95,7 +95,7 @@ public class LabelServiceTest {
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
 		verify(gitHubClient).put(
-				"/repos/test_user/test_repository/issues/1/labels.json", null,
+				"/repos/test_user/test_repository/issues/1/labels", null,
 				labelsToken.getType());
 	}
 
@@ -106,8 +106,8 @@ public class LabelServiceTest {
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
 		verify(gitHubClient).put(
-				"/repos/test_user/test_repository/issues/1/labels.json",
-				labels, labelsToken.getType());
+				"/repos/test_user/test_repository/issues/1/labels", labels,
+				labelsToken.getType());
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -130,7 +130,7 @@ public class LabelServiceTest {
 		Label label = new Label();
 		labelService.createLabel("test_user", "test_repository", label);
 		verify(gitHubClient).post(
-				"/repos/test_user/test_repository/labels.json", label,
+				"/repos/test_user/test_repository/labels", label,
 				Label.class);
 	}
 }

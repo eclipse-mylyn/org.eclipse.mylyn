@@ -76,11 +76,6 @@ public interface IGitHubConstants {
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
 
 	/**
-	 * SUFFIX_JSON
-	 */
-	String SUFFIX_JSON = ".json"; //$NON-NLS-1$
-
-	/**
 	 * HOST_API
 	 */
 	String HOST_API = "api.github.com"; //$NON-NLS-1$

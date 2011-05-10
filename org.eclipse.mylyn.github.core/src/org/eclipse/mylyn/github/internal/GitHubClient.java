@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,11 +40,6 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.eclipse.core.runtime.Assert;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-
 /**
  * Client class for interacting with GitHub HTTP/JSON API.
  */
@@ -58,7 +58,7 @@ public class GitHubClient {
 	private Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Date.class, new DateFormatter())
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-			.create();
+			.serializeNulls().create();
 
 	private boolean sendCredentials = false;
 
@@ -162,7 +162,12 @@ public class GitHubClient {
 		if (stream == null)
 			throw new JsonParseException("Empty body"); //$NON-NLS-1$
 		InputStreamReader reader = new InputStreamReader(stream);
-		return this.gson.fromJson(reader, type);
+		try {
+			return this.gson.fromJson(reader, type);
+		} catch (JsonParseException jpe) {
+			jpe.printStackTrace();
+			throw new IOException(jpe);
+		}
 	}
 
 	/**

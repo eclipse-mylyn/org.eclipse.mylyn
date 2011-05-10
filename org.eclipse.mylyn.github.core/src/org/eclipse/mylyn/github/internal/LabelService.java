@@ -46,8 +46,7 @@ public class LabelService extends GitHubService {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_LABELS);
 		ListResourceCollector<Label> collector = new ListResourceCollector<Label>();
 		PagedRequest<Label> request = new PagedRequest<Label>(collector);
 		request.setUri(uri).setType(new TypeToken<List<Label>>() {
@@ -74,12 +73,11 @@ public class LabelService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES).append('/').append(issueId);
-		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_LABELS);
 
-		TypeToken<List<Label>> labelToken = new TypeToken<List<Label>>() {
-		};
-		return this.client.put(uri.toString(), labels, labelToken.getType());
+		return this.client.put(uri.toString(), labels,
+				new TypeToken<List<Label>>() {
+				}.getType());
 	}
 
 	/**
@@ -98,8 +96,7 @@ public class LabelService extends GitHubService {
 		Assert.isNotNull(label, "Label cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_LABELS);
 		return this.client.post(uri.toString(), label, Label.class);
 	}
 

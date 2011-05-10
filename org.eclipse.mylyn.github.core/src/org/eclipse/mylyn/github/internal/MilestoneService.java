@@ -49,8 +49,7 @@ public class MilestoneService extends GitHubService {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_MILESTONES).append(
-				IGitHubConstants.SUFFIX_JSON);
+		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
 		ListResourceCollector<Milestone> collector = new ListResourceCollector<Milestone>();
 		PagedRequest<Milestone> request = new PagedRequest<Milestone>(collector);
 		if (state != null)
