@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -23,9 +22,7 @@ import org.eclipse.core.runtime.Assert;
  * Milestone service class for listing the {@link Milestone} objects in use by a
  * repository and user accessed via a {@link GitHubClient}.
  */
-public class MilestoneService {
-
-	private GitHubClient client;
+public class MilestoneService extends GitHubService {
 
 	/**
 	 * Create milestone service
@@ -34,8 +31,7 @@ public class MilestoneService {
 	 *            cannot be null
 	 */
 	public MilestoneService(GitHubClient client) {
-		Assert.isNotNull(client, "Client cannot be null"); //$NON-NLS-1$
-		this.client = client;
+		super(client);
 	}
 
 	/**
@@ -55,14 +51,14 @@ public class MilestoneService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_MILESTONES).append(
 				IGitHubConstants.SUFFIX_JSON);
-		Map<String, String> params = null;
-		if (state != null) {
-			params = Collections.singletonMap(IssueService.FILTER_STATE, state);
-		}
-		TypeToken<List<Milestone>> milestoneToken = new TypeToken<List<Milestone>>() {
-		};
-		return this.client
-				.get(uri.toString(), params, milestoneToken.getType());
+		ListResourceCollector<Milestone> collector = new ListResourceCollector<Milestone>();
+		PagedRequest<Milestone> request = new PagedRequest<Milestone>(collector);
+		if (state != null)
+			request.setParams(Collections.singletonMap(
+					IssueService.FILTER_STATE, state));
+		request.setUri(uri).setType(new TypeToken<List<Milestone>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
-
 }

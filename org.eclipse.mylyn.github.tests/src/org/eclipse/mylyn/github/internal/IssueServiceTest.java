@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.AssertionFailedException;
@@ -23,8 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Unit tests for {@link IssueService}
@@ -36,10 +35,14 @@ public class IssueServiceTest {
 	@Mock
 	private GitHubClient gitHubClient;
 
+	@Mock
+	private GitHubResponse response;
+
 	private IssueService issueService;
 
 	@Before
-	public void before() {
+	public void before() throws IOException {
+		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		issueService = new IssueService(gitHubClient);
 	}
 
@@ -66,9 +69,7 @@ public class IssueServiceTest {
 	@Test
 	public void getIssue_OK() throws IOException {
 		issueService.getIssue("test_user", "test_repository", "test_id");
-		verify(gitHubClient).get(
-				"/repos/test_user/test_repository/issues/test_id.json",
-				Issue.class);
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -89,11 +90,7 @@ public class IssueServiceTest {
 	@Test
 	public void getComments_OK() throws IOException {
 		issueService.getComments("test_user", "test_repository", "test_id");
-		TypeToken<List<Comment>> commentToken = new TypeToken<List<Comment>>() {
-		};
-		verify(gitHubClient)
-				.get("/repos/test_user/test_repository/issues/test_id/comments.json",
-						commentToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)
@@ -109,11 +106,7 @@ public class IssueServiceTest {
 	@Test
 	public void getIssues_OK() throws IOException {
 		issueService.getIssues("test_user", "test_repository", null);
-		TypeToken<List<Issue>> issuesToken = new TypeToken<List<Issue>>() {
-		};
-		verify(gitHubClient).get(
-				"/repos/test_user/test_repository/issues.json", null,
-				issuesToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)

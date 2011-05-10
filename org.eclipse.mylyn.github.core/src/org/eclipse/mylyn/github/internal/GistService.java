@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +19,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
  * Service class for getting and list gists.
  */
-public class GistService {
-
-	private GitHubClient client;
+public class GistService extends GitHubService {
 
 	/**
 	 * Create gist service
@@ -32,8 +30,7 @@ public class GistService {
 	 * @param client
 	 */
 	public GistService(GitHubClient client) {
-		Assert.isNotNull(client, "Client cannot be null");
-		this.client = client;
+		super(client);
 	}
 
 	/**
@@ -47,7 +44,10 @@ public class GistService {
 		Assert.isNotNull(id, "Gist id cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(id).append(IGitHubConstants.SUFFIX_JSON);
-		return this.client.get(uri.toString(), Gist.class);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(uri);
+		request.setType(Gist.class);
+		return (Gist) this.client.get(request).getBody();
 	}
 
 	/**
@@ -63,9 +63,12 @@ public class GistService {
 		uri.append('/').append(user);
 		uri.append(IGitHubConstants.SEGMENT_GISTS).append(
 				IGitHubConstants.SUFFIX_JSON);
-		TypeToken<List<Gist>> gistToken = new TypeToken<List<Gist>>() {
-		};
-		return this.client.get(uri.toString(), gistToken.getType());
+		ListResourceCollector<Gist> collector = new ListResourceCollector<Gist>();
+		PagedRequest<Gist> request = new PagedRequest<Gist>(collector);
+		request.setUri(uri).setType(new TypeToken<List<Gist>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**
@@ -141,10 +144,12 @@ public class GistService {
 		uri.append('/').append(gistId);
 		uri.append(IGitHubConstants.SEGMENT_COMMENTS).append(
 				IGitHubConstants.SUFFIX_JSON);
-
-		TypeToken<List<Comment>> commentToken = new TypeToken<List<Comment>>() {
-		};
-		return this.client.get(uri.toString(), commentToken.getType());
+		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
+		PagedRequest<Comment> request = new PagedRequest<Comment>(collector);
+		request.setUri(uri).setType(new TypeToken<List<Comment>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 }

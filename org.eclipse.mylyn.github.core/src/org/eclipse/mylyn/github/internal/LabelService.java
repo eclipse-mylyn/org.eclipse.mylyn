@@ -21,9 +21,7 @@ import org.eclipse.core.runtime.Assert;
  * Label service class for listing {@link Label} objects in use for a given user
  * and repository.
  */
-public class LabelService {
-
-	private GitHubClient client;
+public class LabelService extends GitHubService {
 
 	/**
 	 * Create label service for client
@@ -31,8 +29,7 @@ public class LabelService {
 	 * @param client
 	 */
 	public LabelService(GitHubClient client) {
-		Assert.isNotNull(client, "Client cannot be null"); //$NON-NLS-1$
-		this.client = client;
+		super(client);
 	}
 
 	/**
@@ -51,9 +48,12 @@ public class LabelService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_LABELS).append(
 				IGitHubConstants.SUFFIX_JSON);
-		TypeToken<List<Label>> labelToken = new TypeToken<List<Label>>() {
-		};
-		return this.client.get(uri.toString(), labelToken.getType());
+		ListResourceCollector<Label> collector = new ListResourceCollector<Label>();
+		PagedRequest<Label> request = new PagedRequest<Label>(collector);
+		request.setUri(uri).setType(new TypeToken<List<Label>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**

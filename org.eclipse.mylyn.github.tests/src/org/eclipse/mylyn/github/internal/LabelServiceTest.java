@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -23,8 +27,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
  * Unit tests for {@link LabelService}.
  */
@@ -35,10 +37,14 @@ public class LabelServiceTest {
 	@Mock
 	private GitHubClient gitHubClient;
 
+	@Mock
+	private GitHubResponse response;
+
 	private LabelService labelService;
 
 	@Before
-	public void before() {
+	public void before() throws IOException {
+		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		labelService = new LabelService(gitHubClient);
 	}
 
@@ -62,9 +68,7 @@ public class LabelServiceTest {
 		labelService.getLabels("test_user", "test_repository");
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
-		verify(gitHubClient).get(
-				"/repos/test_user/test_repository/labels.json",
-				labelsToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test(expected = AssertionFailedException.class)

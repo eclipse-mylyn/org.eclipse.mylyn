@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.AssertionFailedException;
@@ -22,8 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Unit tests for {@link MilestoneService}
@@ -35,10 +36,14 @@ public class MilestoneServiceTest {
 	@Mock
 	private GitHubClient gitHubClient;
 
+	@Mock
+	private GitHubResponse response;
+
 	private MilestoneService milestoneService;
 
 	@Before
-	public void before() {
+	public void before() throws IOException {
+		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		milestoneService = new MilestoneService(gitHubClient);
 	}
 
@@ -62,9 +67,7 @@ public class MilestoneServiceTest {
 		milestoneService.getMilestones("test_user", "test_repository", null);
 		TypeToken<List<Milestone>> milestonesToken = new TypeToken<List<Milestone>>() {
 		};
-		verify(gitHubClient).get(
-				"/repos/test_user/test_repository/milestones.json", null,
-				milestonesToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 	@Test
@@ -73,10 +76,7 @@ public class MilestoneServiceTest {
 				"test_state");
 		TypeToken<List<Milestone>> milestonesToken = new TypeToken<List<Milestone>>() {
 		};
-		verify(gitHubClient).get(
-				"/repos/test_user/test_repository/milestones.json",
-				Collections.singletonMap(IssueService.FILTER_STATE,
-						"test_state"), milestonesToken.getType());
+		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
 }

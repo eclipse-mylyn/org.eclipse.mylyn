@@ -13,16 +13,12 @@ package org.eclipse.mylyn.github.internal;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
-
 /**
  * Repository service class.
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class RepositoryService {
-
-	private GitHubClient client;
+public class RepositoryService extends GitHubService {
 
 	/**
 	 * Create repository service
@@ -31,8 +27,7 @@ public class RepositoryService {
 	 *            cannot be null
 	 */
 	public RepositoryService(GitHubClient client) {
-		Assert.isNotNull(client, "Client cannot be null"); //$NON-NLS-1$
-		this.client = client;
+		super(client);
 	}
 
 	/**
@@ -47,9 +42,12 @@ public class RepositoryService {
 		uri.append(IGitHubConstants.SEGMENT_ORGANIZATIONS).append(
 				IGitHubConstants.SEGMENT_REPOSITORIES);
 
-		RepositoryContainer container = client.get(uri.toString(),
-				RepositoryContainer.class);
-		return container.getResources();
+		ListResourceCollector<Repository> collector = new ListResourceCollector<Repository>();
+		PagedRequest<Repository> request = new PagedRequest<Repository>(
+				collector);
+		request.setUri(uri);
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**
@@ -64,8 +62,11 @@ public class RepositoryService {
 		uri.append(IGitHubConstants.SEGMENT_REPOS)
 				.append(IGitHubConstants.SEGMENT_SHOW).append('/').append(user);
 
-		RepositoryContainer container = client.get(uri.toString(),
-				RepositoryContainer.class);
-		return container.getResources();
+		ListResourceCollector<Repository> collector = new ListResourceCollector<Repository>();
+		PagedRequest<Repository> request = new PagedRequest<Repository>(
+				collector);
+		request.setUri(uri);
+		getAll(request);
+		return collector.getResources();
 	}
 }

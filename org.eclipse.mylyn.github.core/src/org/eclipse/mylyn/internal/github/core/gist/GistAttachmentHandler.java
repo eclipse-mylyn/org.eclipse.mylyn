@@ -24,6 +24,7 @@ import org.eclipse.mylyn.github.internal.GistFile;
 import org.eclipse.mylyn.github.internal.GistService;
 import org.eclipse.mylyn.github.internal.GitHub;
 import org.eclipse.mylyn.github.internal.GitHubClient;
+import org.eclipse.mylyn.github.internal.GitHubRequest;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -71,7 +72,9 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 		TaskAttribute urlAttribute = attachmentAttribute
 				.getAttribute(GistAttribute.RAW_FILE_URL.getId());
 		try {
-			return client.getStream(urlAttribute.getValue(), null);
+			GitHubRequest request = new GitHubRequest();
+			request.setUri(urlAttribute.getValue());
+			return client.getStream(request);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}
