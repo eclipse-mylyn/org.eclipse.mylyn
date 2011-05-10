@@ -32,7 +32,7 @@ import org.eclipse.mylyn.versions.ui.spi.ScmUiConnector;
  * @author Alvaro Sanchez-Leon
  * @version $Revision$
  */
-public class GitUiConnector implements ScmUiConnector {
+public class GitUiConnector extends ScmUiConnector {
 
 	// ------------------------------------------------------------------------
 	// Constants

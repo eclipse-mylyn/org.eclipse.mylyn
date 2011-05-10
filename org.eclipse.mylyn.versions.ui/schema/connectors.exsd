@@ -62,7 +62,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylyn.versions.ui.spi.ScmUiConnector"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.versions.ui.spi.ScmUiConnector:"/>
                </appinfo>
             </annotation>
          </attribute>
