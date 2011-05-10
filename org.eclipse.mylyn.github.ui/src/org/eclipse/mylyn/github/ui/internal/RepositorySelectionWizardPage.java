@@ -173,6 +173,8 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	private void validatePage() {
 		setPageComplete(getRepositories().length > 0 || createGistRepository());
+		if (isPageComplete())
+			setErrorMessage(null);
 	}
 
 	private void updateInput(final List<Repository> repos) {

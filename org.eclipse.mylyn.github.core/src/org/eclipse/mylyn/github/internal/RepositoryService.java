@@ -46,6 +46,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = new PagedRequest<Repository>(
 				collector);
 		request.setUri(uri);
+		request.setType(RepositoryContainer.class);
 		getAll(request);
 		return collector.getResources();
 	}
@@ -66,6 +67,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = new PagedRequest<Repository>(
 				collector);
 		request.setUri(uri);
+		request.setType(RepositoryContainer.class);
 		getAll(request);
 		return collector.getResources();
 	}
