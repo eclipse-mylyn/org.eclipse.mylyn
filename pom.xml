@@ -88,18 +88,22 @@
       <id>codehaus.snapshots</id>
       <url>http://snapshots.repository.codehaus.org/</url>
     </pluginRepository>
+    <pluginRepository>
+      <id>tycho-snapshot</id>
+      <url>https://repository.sonatype.org/content/repositories/tycho-014/</url>
+    </pluginRepository>
   </pluginRepositories>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.sonatype.tycho</groupId>
+                <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-maven-plugin</artifactId>
                 <version>${tycho-version}</version>
                 <extensions>true</extensions>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.tycho</groupId>
+                <groupId>org.eclipse.tycho</groupId>
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tycho-version}</version>
                 <configuration>
@@ -110,7 +114,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.sonatype.tycho</groupId>
+                    <groupId>org.eclipse.tycho</groupId>
                     <artifactId>maven-osgi-compiler-plugin</artifactId>
                     <version>${tycho-version}</version>
                     <configuration>
@@ -126,7 +130,7 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.sonatype.tycho</groupId>
+                    <groupId>org.eclipse.tycho</groupId>
                     <artifactId>target-platform-configuration</artifactId>
                     <version>${tycho-version}</version>
                     <configuration>
