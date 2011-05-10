@@ -36,6 +36,8 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 
 	private TaskAttribute attrRemoveCc;
 
+	protected boolean cflowWidgetSelected;
+
 	public TracCcAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
@@ -50,42 +52,69 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 		list.setToolTipText(getDescription());
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(list);
 
-		TaskAttribute attrUserCC = getTaskAttribute();
-		if (attrUserCC != null) {
-			for (String value : attrUserCC.getValues()) {
-				list.add(value);
-			}
-		}
+		populateFromAttribute();
 
 		attrRemoveCc = getModel().getTaskData().getRoot().getMappedAttribute(TracAttributeMapper.REMOVE_CC);
-		for (String item : attrRemoveCc.getValues()) {
-			int i = list.indexOf(item);
-			if (i != -1) {
-				list.select(i);
-			}
-		}
+		selectValuesToRemove();
 
 		list.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				for (String cc : list.getItems()) {
-					int index = list.indexOf(cc);
-					if (list.isSelected(index)) {
-						java.util.List<String> remove = attrRemoveCc.getValues();
-						if (!remove.contains(cc)) {
-							attrRemoveCc.addValue(cc);
+				try {
+					cflowWidgetSelected = true;
+					for (String cc : list.getItems()) {
+						int index = list.indexOf(cc);
+						if (list.isSelected(index)) {
+							java.util.List<String> remove = attrRemoveCc.getValues();
+							if (!remove.contains(cc)) {
+								attrRemoveCc.addValue(cc);
+							}
+						} else {
+							attrRemoveCc.removeValue(cc);
 						}
-					} else {
-						attrRemoveCc.removeValue(cc);
 					}
+					getModel().attributeChanged(attrRemoveCc);
+				} finally {
+					cflowWidgetSelected = false;
 				}
-				getModel().attributeChanged(attrRemoveCc);
 			}
 		});
 
 		list.showSelection();
 
 		setControl(list);
+	}
+
+	private void populateFromAttribute() {
+		TaskAttribute attrUserCC = getTaskAttribute();
+		if (attrUserCC != null) {
+			for (String value : attrUserCC.getValues()) {
+				list.add(value);
+			}
+		}
+	}
+
+	private void selectValuesToRemove() {
+		for (String item : attrRemoveCc.getValues()) {
+			int i = list.indexOf(item);
+			if (i != -1) {
+				list.select(i);
+			}
+		}
+	}
+
+	@Override
+	public void refresh() {
+		if (!cflowWidgetSelected && list != null && !list.isDisposed()) {
+			list.removeAll();
+			populateFromAttribute();
+			selectValuesToRemove();
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 }
