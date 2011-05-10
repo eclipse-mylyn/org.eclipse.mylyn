@@ -34,6 +34,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
+	private SourceViewer viewer;
+
+	private boolean cflowModify;
+
 	public LongTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
@@ -45,7 +49,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		if (!isReadOnly()) {
 			style |= SWT.V_SCROLL;
 		}
-		SourceViewer viewer = new SourceViewer(parent, null, style);
+		viewer = new SourceViewer(parent, null, style);
 		RepositoryTextViewerConfiguration configuration = RichTextEditor.installHyperlinkPresenter(viewer,
 				getModel().getTaskRepository(), getModel().getTask(), Mode.DEFAULT);
 		viewer.configure(configuration);
@@ -64,7 +68,12 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					setValue(text.getText());
+					try {
+						cflowModify = true;
+						setValue(text.getText());
+					} finally {
+						cflowModify = false;
+					}
 					CommonFormUtil.ensureVisible(text);
 				}
 			});
@@ -82,4 +91,15 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	public void refresh() {
+		if (!cflowModify && viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
+			viewer.getDocument().set(getValue());
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
 }

@@ -41,6 +41,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	private boolean showTime;
 
+	private Text text;
+
 	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
@@ -49,7 +51,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite composite, FormToolkit toolkit) {
 		if (isReadOnly()) {
-			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
+			text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
@@ -65,11 +67,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			} else {
 				datePicker.setDateFormat(EditorUtil.getDateTimeFormat());
 			}
-			if (getValue() != null) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(getValue());
-				datePicker.setDate(cal);
-			}
+			updateDatePicker();
 			datePicker.addPickerSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -89,6 +87,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 						datePicker.setDate(null);
 					}
 				}
+
 			});
 
 			GridDataFactory.fillDefaults().hint(120, SWT.DEFAULT).grab(false, false).applyTo(datePicker);
@@ -96,6 +95,14 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(datePicker, false, false);
 
 			setControl(datePicker);
+		}
+	}
+
+	private void updateDatePicker() {
+		if (getValue() != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(getValue());
+			datePicker.setDate(cal);
 		}
 	}
 
@@ -134,6 +141,21 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	public void setValue(Date date) {
 		getAttributeMapper().setDateValue(getTaskAttribute(), date);
 		attributeChanged();
+	}
+
+	@Override
+	public void refresh() {
+		if (text != null && !text.isDisposed()) {
+			text.setText(getTextValue());
+		}
+		if (datePicker != null && !datePicker.isDisposed()) {
+			updateDatePicker();
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 
 }

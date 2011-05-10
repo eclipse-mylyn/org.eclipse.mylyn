@@ -16,6 +16,10 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -56,6 +60,24 @@ public abstract class AbstractAttributeEditor {
 
 	private String description;
 
+	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
+		@Override
+		public void attributeChanged(TaskDataModelEvent event) {
+			if (shouldAutoRefresh() && getTaskAttribute().equals(event.getTaskAttribute())) {
+				try {
+					refresh();
+				} catch (UnsupportedOperationException e) {
+				}
+			}
+		}
+	};
+
+	private final DisposeListener disposeListener = new DisposeListener() {
+		public void widgetDisposed(DisposeEvent e) {
+			getModel().removeModelListener(modelListener);
+		}
+	};
+
 	/**
 	 * @since 3.0
 	 */
@@ -67,6 +89,7 @@ public abstract class AbstractAttributeEditor {
 		setDecorationEnabled(true);
 		setReadOnly(taskAttribute.getMetaData().isReadOnly());
 		setDescription(taskAttribute.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
+		getModel().addModelListener(modelListener);
 	}
 
 	/**
@@ -166,9 +189,13 @@ public abstract class AbstractAttributeEditor {
 	 * @since 3.0
 	 */
 	protected void setControl(Control control) {
+		if (this.control != null && !this.control.isDisposed()) {
+			this.control.removeDisposeListener(disposeListener);
+		}
 		this.control = control;
 		if (control != null) {
 			control.setData(KEY_TASK_ATTRIBUTE, taskAttribute);
+			control.addDisposeListener(disposeListener);
 		}
 	}
 
@@ -247,6 +274,17 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	/**
+	 * Subclasses that implement refresh should override this method to return true, so that they will be automatically
+	 * refreshed when the model changes.
+	 * 
+	 * @return whether the editor should be automatically refreshed when the model changes
+	 * @since 3.6
+	 */
+	protected boolean shouldAutoRefresh() {
+		return false;
+	}
+
+	/**
 	 * @since 3.5
 	 */
 	public String getDescription() {
@@ -258,6 +296,16 @@ public abstract class AbstractAttributeEditor {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	protected void updateLabel() {
+		Label labelControl = getLabelControl();
+		if (labelControl != null && !labelControl.isDisposed()) {
+			labelControl.setText(getLabel());
+		}
 	}
 
 }

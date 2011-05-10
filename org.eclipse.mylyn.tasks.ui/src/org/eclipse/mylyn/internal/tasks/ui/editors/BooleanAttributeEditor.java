@@ -67,7 +67,7 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		if (button == null) {
+		if (button == null || button.isDisposed()) {
 			return;
 		}
 
@@ -77,5 +77,10 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 		} finally {
 			ignoreNotification = false;
 		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 }

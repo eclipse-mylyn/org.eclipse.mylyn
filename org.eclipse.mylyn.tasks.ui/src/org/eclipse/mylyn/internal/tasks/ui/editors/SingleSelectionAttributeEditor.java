@@ -16,13 +16,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -41,15 +37,6 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	private Text text;
 
 	private String[] values;
-
-	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
-		@Override
-		public void attributeChanged(TaskDataModelEvent event) {
-			if (getTaskAttribute().equals(event.getTaskAttribute())) {
-				refresh();
-			}
-		}
-	};
 
 	public SingleSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -88,15 +75,6 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			setControl(combo);
 		}
 		refresh();
-
-		getControl().addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				getModel().removeModelListener(modelListener);
-			}
-
-		});
-		getModel().addModelListener(modelListener);
 	}
 
 	public String getValue() {
@@ -111,7 +89,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	public void refresh() {
 		try {
 			ignoreNotification = true;
-			if (text != null) {
+			if (text != null && !text.isDisposed()) {
 				String label = getValueLabel();
 				if ("".equals(label)) { //$NON-NLS-1$
 					// if set to the empty string the label will use 64px on GTK 
@@ -119,7 +97,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 				} else {
 					text.setText(label);
 				}
-			} else if (combo != null) {
+			} else if (combo != null && !combo.isDisposed()) {
 				combo.removeAll();
 				Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
 				if (labelByValue != null) {
@@ -134,6 +112,11 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		} finally {
 			ignoreNotification = false;
 		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 
 	private void select(String value, String label) {

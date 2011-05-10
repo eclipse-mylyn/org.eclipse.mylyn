@@ -15,12 +15,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -32,15 +28,6 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 	private PriorityEditor editor;
 
 	private ITaskMapping mapping;
-
-	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
-		@Override
-		public void attributeChanged(TaskDataModelEvent event) {
-			if (getTaskAttribute().equals(event.getTaskAttribute())) {
-				refresh();
-			}
-		}
-	};
 
 	public PriorityAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -62,14 +49,6 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 		editor.setReadOnly(isReadOnly());
 		editor.createControl(parent, toolkit);
 		setControl(editor.getControl());
-		getControl().addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				getModel().removeModelListener(modelListener);
-			}
-
-		});
-		getModel().addModelListener(modelListener);
 		refresh();
 	}
 
@@ -83,8 +62,15 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		editor.setLabelByValue(getAttributeMapper().getOptions(getTaskAttribute()));
-		updateEditor();
+		if (editor.getControl() != null && !editor.getControl().isDisposed()) {
+			editor.setLabelByValue(getAttributeMapper().getOptions(getTaskAttribute()));
+			updateEditor();
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 
 	public void setValue(String value) {
@@ -92,7 +78,6 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 		if (!oldValue.equals(value)) {
 			getAttributeMapper().setValue(getTaskAttribute(), value);
 			attributeChanged();
-			updateEditor();
 		}
 	}
 

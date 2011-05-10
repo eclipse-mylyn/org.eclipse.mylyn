@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
@@ -56,6 +57,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 	private Composite parent;
 
 	private Button button;
+
+	private boolean cflowSelect;
 
 	public CheckboxMultiSelectAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -107,20 +110,25 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 					selectionDialog.addEventListener(new IInPlaceDialogListener() {
 
 						public void buttonPressed(InPlaceDialogEvent event) {
-							if (event.getReturnCode() == Window.OK) {
-								Set<String> newValues = selectionDialog.getSelectedValues();
-								if (!new HashSet<String>(values).equals(newValues)) {
-									setValues(new ArrayList<String>(newValues));
-									attributeChanged();
-									updateText();
+							cflowSelect = true;
+							try {
+								if (event.getReturnCode() == Window.OK) {
+									Set<String> newValues = selectionDialog.getSelectedValues();
+									if (!new HashSet<String>(values).equals(newValues)) {
+										setValues(new ArrayList<String>(newValues));
+										attributeChanged();
+										updateText();
+									}
+								} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+									Set<String> newValues = new HashSet<String>();
+									if (!new HashSet<String>(values).equals(newValues)) {
+										setValues(new ArrayList<String>(newValues));
+										attributeChanged();
+										updateText();
+									}
 								}
-							} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
-								Set<String> newValues = new HashSet<String>();
-								if (!new HashSet<String>(values).equals(newValues)) {
-									setValues(new ArrayList<String>(newValues));
-									attributeChanged();
-									updateText();
-								}
+							} finally {
+								cflowSelect = false;
 							}
 						}
 					});
@@ -214,4 +222,15 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 		}
 	}
 
+	@Override
+	public void refresh() {
+		if (!cflowSelect) {
+			updateText();
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
 }

@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -70,13 +71,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 			list.setFont(EditorUtil.TEXT_FONT);
 			list.setToolTipText(getDescription());
 
-			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
-			if (labelByValue != null) {
-				allValues = labelByValue.keySet().toArray(new String[0]);
-				for (String value : allValues) {
-					list.add(labelByValue.get(value));
-				}
-			}
+			updateListWithOptions();
 
 			select(getValues(), getValuesLabels());
 
@@ -102,6 +97,23 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 		}
 	}
 
+	private void updateListWithOptions() {
+		if (list != null && !list.isDisposed()) {
+			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
+			if (labelByValue != null) {
+				int topIndex = list.getTopIndex();
+				list.removeAll();
+				allValues = labelByValue.keySet().toArray(new String[0]);
+				for (String value : allValues) {
+					list.add(labelByValue.get(value));
+				}
+				if (topIndex > 0) {
+					list.setTopIndex(topIndex);
+				}
+			}
+		}
+	}
+
 	public String[] getValues() {
 		return getAttributeMapper().getValues(getTaskAttribute()).toArray(new String[0]);
 	}
@@ -111,7 +123,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	private void select(String[] values, String[] labels) {
-		if (text != null) {
+		if (text != null && !text.isDisposed()) {
 			StringBuilder valueString = new StringBuilder();
 			if (labels != null) {
 				for (int i = 0; i < labels.length; i++) {
@@ -123,7 +135,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 			}
 			text.setText(valueString.toString());
 
-		} else if (list != null) {
+		} else if (list != null && !list.isDisposed()) {
 			if (values != null) {
 				list.deselectAll();
 				Set<String> selectedValues = new HashSet<String>(Arrays.asList(values));
@@ -144,4 +156,14 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	public void refresh() {
+		updateListWithOptions();
+		select(getValues(), getValuesLabels());
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
 }

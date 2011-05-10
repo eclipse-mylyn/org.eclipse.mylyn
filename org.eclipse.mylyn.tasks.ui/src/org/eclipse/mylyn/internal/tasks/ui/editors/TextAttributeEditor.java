@@ -32,6 +32,8 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 
 	private Text text;
 
+	private boolean cflowModifyText;
+
 	public TextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
@@ -56,7 +58,12 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.setToolTipText(getDescription());
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					setValue(text.getText());
+					cflowModifyText = true;// prevent infinite recursion and also prevent resetting the caret location
+					try {
+						setValue(text.getText());
+					} finally {
+						cflowModifyText = false;
+					}
 					CommonFormUtil.ensureVisible(text);
 				}
 			});
@@ -74,4 +81,15 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	@Override
+	public void refresh() {
+		if (!cflowModifyText && text != null && !text.isDisposed()) {
+			text.setText(getValue());
+		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
+	}
 }

@@ -162,12 +162,20 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		try {
-			ignoreNotification = true;
-			editor.setText(getValue());
-		} finally {
-			ignoreNotification = false;
+		// proceed if the control is null (i.e. has not yet been created); setText will create it
+		if (editor.getControl() == null || !editor.getControl().isDisposed()) {
+			try {
+				ignoreNotification = true;
+				editor.setText(getValue());
+			} finally {
+				ignoreNotification = false;
+			}
 		}
+	}
+
+	@Override
+	public boolean shouldAutoRefresh() {
+		return true;
 	}
 
 	@Override
