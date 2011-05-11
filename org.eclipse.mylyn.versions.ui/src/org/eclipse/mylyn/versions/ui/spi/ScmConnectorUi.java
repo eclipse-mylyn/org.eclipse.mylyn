@@ -22,7 +22,7 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
  * 
  * @author Alvaro Sanchez-Leon
  */
-public abstract class ScmUiConnector {
+public abstract class ScmConnectorUi {
 	/**
 	 * Resolve change sets for a given repository and narrow down the selection possibilities to the ones related to the
 	 * given resource provided. This method is suitable to open a UI Wizard, the selection is expected to be driven by

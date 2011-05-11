@@ -5,7 +5,7 @@
          point="org.eclipse.mylyn.versions.ui.connectors">
       <connector
             id="org.eclipse.egit.core.GitProvider"
-            ui="org.eclipse.mylyn.internal.git.ui.connector.GitUiConnector">
+            ui="org.eclipse.mylyn.internal.git.ui.connector.GitConnectorUi">
       </connector>
    </extension>
 

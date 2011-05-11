@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.versions.ui.spi.ScmUiConnector;
+import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.RepositoryProvider;
@@ -45,7 +45,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * @author Steffen Pingel
  */
 public class ScmUi {
-	private static HashMap<String, ScmUiConnector> connectorById = new HashMap<String, ScmUiConnector>();
+	private static HashMap<String, ScmConnectorUi> connectorById = new HashMap<String, ScmConnectorUi>();
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.versions.ui"; //$NON-NLS-1$
 
@@ -117,11 +117,11 @@ public class ScmUi {
 	/**
 	 * @return
 	 */
-	public static List<ScmUiConnector> getAllRegisteredUiConnectors() {
-		List<ScmUiConnector> scmUiConnectors = new ArrayList<ScmUiConnector>();
+	public static List<ScmConnectorUi> getAllRegisteredUiConnectors() {
+		List<ScmConnectorUi> scmUiConnectors = new ArrayList<ScmConnectorUi>();
 		String[] teamProviderIds = RepositoryProvider.getAllProviderTypeIds();
 		for (String providerId : teamProviderIds) {
-			ScmUiConnector connector = getScmUiConnectorById(providerId);
+			ScmConnectorUi connector = getScmUiConnectorById(providerId);
 			if (connector != null) {
 				scmUiConnectors.add(connector);
 			}
@@ -133,7 +133,7 @@ public class ScmUi {
 	 * @param resource
 	 * @return
 	 */
-	public static ScmUiConnector getUiConnector(IResource resource) {
+	public static ScmConnectorUi getUiConnector(IResource resource) {
 		if (!RepositoryProvider.isShared(resource.getProject())) {
 			return null;
 		}
@@ -142,8 +142,8 @@ public class ScmUi {
 		return getScmUiConnectorById(provider.getID());
 	}
 
-	private synchronized static ScmUiConnector getScmUiConnectorById(String id) {
-		ScmUiConnector connector = connectorById.get(id);
+	private synchronized static ScmConnectorUi getScmUiConnectorById(String id) {
+		ScmConnectorUi connector = connectorById.get(id);
 		if (connector == null) {
 			connector = loadConnector(id);
 			connectorById.put(id, connector);
@@ -151,7 +151,7 @@ public class ScmUi {
 		return connector;
 	}
 
-	private static ScmUiConnector loadConnector(String id) {
+	private static ScmConnectorUi loadConnector(String id) {
 		Assert.isNotNull(id);
 		MultiStatus result = new MultiStatus(ScmUi.ID_PLUGIN, 0, "Scm ui connectors failed to load.", null); //$NON-NLS-1$
 
@@ -164,8 +164,8 @@ public class ScmUi {
 				if (id.equals(element.getAttribute("id"))) { //$NON-NLS-1$
 					try {
 						Object object = element.createExecutableExtension("ui"); //$NON-NLS-1$
-						if (object instanceof ScmUiConnector) {
-							return (ScmUiConnector) object;
+						if (object instanceof ScmConnectorUi) {
+							return (ScmConnectorUi) object;
 						} else {
 							result.add(new Status(
 									IStatus.ERROR,
