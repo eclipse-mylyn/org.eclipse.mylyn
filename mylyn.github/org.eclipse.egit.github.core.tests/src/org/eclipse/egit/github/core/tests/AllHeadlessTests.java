@@ -28,9 +28,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ CommentTest.class, GistTest.class, GistRevisionTest.class,
-		IssueTest.class, MilestoneTest.class, GitHubClientTest.class,
-		IssueServiceTest.class, LabelServiceTest.class,
+@SuiteClasses({ PullRequestDiscussionTest.class, RepositoryTest.class,
+		PullRequestTest.class, CommentTest.class, GistTest.class,
+		GistRevisionTest.class, IssueTest.class, MilestoneTest.class,
+		GitHubClientTest.class, IssueServiceTest.class, LabelServiceTest.class,
 		MilestoneServiceTest.class, GistServiceTest.class,
 		PullRequestServiceTest.class })
 public class AllHeadlessTests {
