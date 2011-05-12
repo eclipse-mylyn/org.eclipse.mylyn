@@ -56,28 +56,32 @@ public class PullRequestDiscussion {
 	 * @return authoredDate
 	 */
 	public Date getAuthoredDate() {
-		return this.authoredDate;
+		return this.authoredDate != null ? new Date(this.authoredDate.getTime())
+				: null;
 	}
 
 	/**
 	 * @return commitedDate
 	 */
 	public Date getCommitedDate() {
-		return this.commitedDate;
+		return this.commitedDate != null ? new Date(this.commitedDate.getTime())
+				: null;
 	}
 
 	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		return this.createdAt != null ? new Date(this.createdAt.getTime())
+				: null;
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
+				: null;
 	}
 
 	/**
