@@ -20,8 +20,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -39,9 +37,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -517,46 +512,46 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			});
 			return false;
 		}
-		if (!getModel().getTaskData().isNew()) {
-			TaskAttribute exporter = getModel().getTaskData()
-					.getRoot()
-					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
-			if (exporter == null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
-								type, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										ITask task = getModel().getTask();
-										AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-												.getRepositoryConnector(task.getConnectorKind());
-										if (connector == null) {
-											return;
-										}
-										TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
-											@Override
-											public void done(IJobChangeEvent event) {
-												PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-													public void run() {
-														try {
-															getTaskEditor().refreshPages();
-														} finally {
-															if (getTaskEditor() != null) {
-																getTaskEditor().showBusy(false);
-															}
-														}
-													}
-												});
-											}
-										});
-									}
-								});
-					}
-				});
-				return false;
-			}
-		}
+//		if (!getModel().getTaskData().isNew()) {
+//			TaskAttribute exporter = getModel().getTaskData()
+//					.getRoot()
+//					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
+//			if (exporter == null) {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
+//								type, new HyperlinkAdapter() {
+//									@Override
+//									public void linkActivated(HyperlinkEvent e) {
+//										ITask task = getModel().getTask();
+//										AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+//												.getRepositoryConnector(task.getConnectorKind());
+//										if (connector == null) {
+//											return;
+//										}
+//										TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+//											@Override
+//											public void done(IJobChangeEvent event) {
+//												PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//													public void run() {
+//														try {
+//															getTaskEditor().refreshPages();
+//														} finally {
+//															if (getTaskEditor() != null) {
+//																getTaskEditor().showBusy(false);
+//															}
+//														}
+//													}
+//												});
+//											}
+//										});
+//									}
+//								});
+//					}
+//				});
+//				return false;
+//			}
+//		}
 		return true;
 	}
 }
