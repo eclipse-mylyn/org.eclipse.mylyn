@@ -23,7 +23,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link Comment}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class CommentTest {
 

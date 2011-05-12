@@ -14,12 +14,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
-import java.util.List;
 
-import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -33,7 +29,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link MilestoneService}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class MilestoneServiceTest {
 
@@ -69,8 +64,6 @@ public class MilestoneServiceTest {
 	@Test
 	public void getMilestones_NullState() throws IOException {
 		milestoneService.getMilestones("test_user", "test_repository", null);
-		TypeToken<List<Milestone>> milestonesToken = new TypeToken<List<Milestone>>() {
-		};
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
@@ -78,8 +71,6 @@ public class MilestoneServiceTest {
 	public void getMilestones_OK() throws IOException {
 		milestoneService.getMilestones("test_user", "test_repository",
 				"test_state");
-		TypeToken<List<Milestone>> milestonesToken = new TypeToken<List<Milestone>>() {
-		};
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 

@@ -33,7 +33,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link IssueService}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest {
 

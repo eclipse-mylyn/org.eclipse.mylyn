@@ -27,7 +27,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Tests for {@link PullRequestServiceTest}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class PullRequestServiceTest {
 

@@ -14,11 +14,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
@@ -38,7 +35,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link GistService}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class GistServiceTest {
 
@@ -162,9 +158,6 @@ public class GistServiceTest {
 	@Test
 	public void getComments_OK() throws IOException {
 		gistService.getComments("1");
-
-		TypeToken<List<Comment>> commentsToken = new TypeToken<List<Comment>>() {
-		};
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 }
