@@ -34,7 +34,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link LabelService}.
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class LabelServiceTest {
 
@@ -70,8 +69,6 @@ public class LabelServiceTest {
 	@Test
 	public void getLabels_OK() throws IOException {
 		labelService.getLabels("test_user", "test_repository");
-		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
-		};
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 

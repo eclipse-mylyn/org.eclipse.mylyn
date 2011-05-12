@@ -23,7 +23,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for {@link Milestone}
  */
-@SuppressWarnings("restriction")
 @RunWith(MockitoJUnitRunner.class)
 public class MilestoneTest {
 
