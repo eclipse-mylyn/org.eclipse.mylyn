@@ -49,10 +49,12 @@
   </properties>
 
     <modules>
+        <module>org.eclipse.egit.github.core</module>
         <module>org.eclipse.mylyn.github.core</module>
         <module>org.eclipse.mylyn.github.ui</module>
         <module>org.eclipse.mylyn.github-feature</module>
-        <module>org.eclipse.mylyn.github.tests</module>
+        <module>org.eclipse.egit.github.core.tests</module>
+        <!--module>org.eclipse.mylyn.github.tests</module -->
         <module>org.eclipse.mylyn.github-site</module>
         <module>org.eclipse.mylyn.github.doc</module>
     </modules>

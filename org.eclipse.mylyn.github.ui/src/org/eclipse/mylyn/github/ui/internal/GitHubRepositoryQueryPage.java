@@ -21,6 +21,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.service.IssueService;
+import org.eclipse.egit.github.core.util.LabelComparator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -32,9 +35,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
-import org.eclipse.mylyn.github.internal.IssueService;
-import org.eclipse.mylyn.github.internal.LabelComparator;
-import org.eclipse.mylyn.github.internal.Milestone;
 import org.eclipse.mylyn.github.internal.QueryUtils;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
@@ -282,11 +282,11 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		TaskRepository repository = getTaskRepository();
 		boolean hasLabels = connector.hasCachedLabels(repository);
 		if (hasLabels) {
-			List<org.eclipse.mylyn.github.internal.Label> labels = connector
+			List<org.eclipse.egit.github.core.Label> labels = connector
 					.getLabels(repository);
 			Collections.sort(labels, new LabelComparator());
 			List<String> labelNames = new ArrayList<String>(labels.size());
-			for (org.eclipse.mylyn.github.internal.Label label : labels)
+			for (org.eclipse.egit.github.core.Label label : labels)
 				labelNames.add(label.getName());
 			this.labelsViewer.setInput(labelNames);
 		}

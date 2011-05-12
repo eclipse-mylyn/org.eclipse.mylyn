@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.internal;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.egit.github.core.Repository;
 
 /**
  * GitHub class
@@ -132,9 +132,7 @@ public class GitHub {
 	 * @return repository or null if not present in url
 	 */
 	public static Repository getRepository(String repositoryUrl) {
-		Matcher matcher = URL_PATTERN.matcher(repositoryUrl);
-		return matcher.matches() ? new Repository(matcher.group(1),
-				matcher.group(2)) : null;
+		return Repository.createFromUrl(repositoryUrl);
 	}
 
 	/**

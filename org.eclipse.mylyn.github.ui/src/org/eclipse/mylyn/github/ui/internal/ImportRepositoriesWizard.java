@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.internal.GitHub;
-import org.eclipse.mylyn.github.internal.Repository;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.gist.GistRepositorySettingsPage;
 import org.eclipse.mylyn.internal.github.ui.gist.Messages;

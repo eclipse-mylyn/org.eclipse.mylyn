@@ -24,23 +24,4 @@
 
   <name>Eclipse EGit Mylyn GitHub Test Plug-in (Incubation)</name>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-test-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <excludes>
-            <!-- test mojo matches TestProject be default and treats it as PojoTest -->
-            <exclude>**/Test*.class</exclude>
-          </excludes>
-          <useUIHarness>false</useUIHarness>
-          <useUIThread>false</useUIThread>
-          <testSuite>org.eclipse.mylyn.github.tests</testSuite>
-          <testClass>org.eclipse.mylyn.github.tests.AllHeadlessTests</testClass>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

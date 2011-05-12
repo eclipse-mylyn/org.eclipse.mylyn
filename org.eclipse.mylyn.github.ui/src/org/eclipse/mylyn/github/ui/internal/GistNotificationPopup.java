@@ -12,7 +12,7 @@ package org.eclipse.mylyn.github.ui.internal;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.github.internal.Gist;
+import org.eclipse.egit.github.core.Gist;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -24,7 +24,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
