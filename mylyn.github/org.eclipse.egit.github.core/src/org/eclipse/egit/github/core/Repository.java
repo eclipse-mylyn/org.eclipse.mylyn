@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * GitHub Repository class.
@@ -207,14 +207,15 @@ public class Repository {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		return this.createdAt != null ? new Date(this.createdAt.getTime())
+				: null;
 	}
 
 	/**
 	 * @return pushedAt
 	 */
 	public Date getPushedAt() {
-		return this.pushedAt;
+		return this.pushedAt != null ? new Date(this.pushedAt.getTime()) : null;
 	}
 
 	/**
