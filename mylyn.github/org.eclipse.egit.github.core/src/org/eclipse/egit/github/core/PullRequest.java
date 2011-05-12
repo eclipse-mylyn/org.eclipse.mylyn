@@ -51,42 +51,46 @@ public class PullRequest {
 	 * @return closedAt
 	 */
 	public Date getClosedAt() {
-		return this.closedAt;
+		return this.closedAt != null ? new Date(this.closedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt;
+		return this.createdAt != null ? new Date(this.createdAt.getTime())
+				: null;
 	}
 
 	/**
 	 * @return issueCreatedAt
 	 */
 	public Date getIssueCreatedAt() {
-		return this.issueCreatedAt;
+		return this.issueCreatedAt != null ? new Date(
+				this.issueCreatedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return issueUpdatedAt
 	 */
 	public Date getIssueUpdatedAt() {
-		return this.issueUpdatedAt;
+		return this.issueUpdatedAt != null ? new Date(
+				this.issueUpdatedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return mergedAt
 	 */
 	public Date getMergedAt() {
-		return this.mergedAt;
+		return this.mergedAt != null ? new Date(this.mergedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
+				: null;
 	}
 
 	/**
