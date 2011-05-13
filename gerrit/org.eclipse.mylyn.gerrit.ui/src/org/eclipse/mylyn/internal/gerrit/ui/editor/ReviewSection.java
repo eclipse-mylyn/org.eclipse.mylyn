@@ -254,10 +254,8 @@ public class ReviewSection extends AbstractGerritSection {
 		for (final ChangeInfo changeInfo : changeInfos) {
 			AccountInfo user = changeDetail.getAccounts().get(changeInfo.getOwner());
 			Link link = new Link(composite, SWT.NONE);
-			link.setText(NLS.bind(
-					"<a>{0}</a>: {1} ({3}) by {2}",
-					new String[] { Integer.toString(changeInfo.getId().get()), changeInfo.getSubject(),
-							GerritUtil.getUserLabel(user), String.valueOf(changeInfo.getStatus()) }));
+			link.setText(NLS.bind("<a>{0}</a>: {1} ({3}) by {2}", new String[] { changeInfo.getKey().abbreviate(),
+					changeInfo.getSubject(), GerritUtil.getUserLabel(user), String.valueOf(changeInfo.getStatus()) }));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
