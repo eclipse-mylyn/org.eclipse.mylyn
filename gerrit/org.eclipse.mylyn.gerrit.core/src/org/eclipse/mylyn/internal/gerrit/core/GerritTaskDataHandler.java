@@ -147,7 +147,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	public void updateTaskData(TaskData data, ChangeInfo changeInfo) {
 		GerritTaskSchema schema = GerritTaskSchema.getDefault();
-		setAttributeValue(data, schema.KEY, changeInfo.getId() + ""); //$NON-NLS-1$
+		setAttributeValue(data, schema.KEY, changeInfo.getKey().abbreviate());
 		setAttributeValue(data, schema.OWNER, changeInfo.getOwner().toString());
 		setAttributeValue(data, schema.PROJECT, changeInfo.getProject().getName());
 		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
