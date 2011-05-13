@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Tests for {@link PullRequestServiceTest}
+ * Tests for {@link PullRequestService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PullRequestServiceTest {
