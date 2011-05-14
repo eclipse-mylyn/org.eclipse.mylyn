@@ -220,9 +220,9 @@
      <build>
        <plugins>
          <plugin>
-           <groupId>org.eclipse.dash.m4e</groupId>
-           <artifactId>eclipse-signing-maven-plugin</artifactId>
-           <version>1.0-SNAPSHOT</version>
+           <groupId>org.eclipse.dash.maven</groupId>
+           <artifactId>eclipse-maven-signing-plugin</artifactId>
+           <version>1.0.0.0-SNAPSHOT</version>
            <executions>
              <execution>
                <id>pack</id>
