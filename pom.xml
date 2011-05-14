@@ -227,7 +227,7 @@
              <execution>
                <id>pack</id>
                <configuration>
-                 <inputFile>${project.build.directory}/org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile>
+                 <inputFile>${project.build.directory}/../org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile>
                </configuration>
                <phase>package</phase>
                <goals>
@@ -247,7 +247,7 @@
              <execution>
                <id>repack</id>
                <configuration>
-                 <inputFile>${project.build.directory}/org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile> 
+                 <inputFile>${project.build.directory}/../org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile> 
                </configuration>
                <phase>package</phase>
                <goals>
