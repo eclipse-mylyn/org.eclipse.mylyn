@@ -226,12 +226,12 @@
            <executions>
              <execution>
                <id>pack</id>
-               <phase>package</phase>
-               <goals>
-                 <goal>pack</goal>
                <configuration>
                  <inputFile>${project.build.directory}/org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile>
                </configuration>
+               <phase>package</phase>
+               <goals>
+                 <goal>pack</goal>
                </goals>
              </execution>
              <execution>
