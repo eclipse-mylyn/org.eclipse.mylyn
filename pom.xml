@@ -229,6 +229,9 @@
                <phase>package</phase>
                <goals>
                  <goal>pack</goal>
+               <configuration>
+                 <inputFile>${project.build.directory}/org.eclipse.mylyn.github-site/target/github-updatesite.zip</inputFile>
+               </configuration>
                </goals>
              </execution>
              <execution>
