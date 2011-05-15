@@ -159,7 +159,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
-		layout.numColumns = 2;
+		layout.numColumns = 1;
 		layout.marginHeight = 0;
 		layout.marginTop = 0;
 		layout.marginWidth = 0;
@@ -182,11 +182,19 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 					}
 				}
 			});
-		} else {
-			layout.numColumns = 1;
+			layout.numColumns++;
 		}
 
 		addSummaryText(composite, toolkit);
+
+		TaskAttribute userAssignedAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		if (userAssignedAttribute != null) {
+			UserAttributeEditor editor = new UserAttributeEditor(getModel(), userAssignedAttribute);
+			editor.createControl(composite, toolkit);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(editor.getControl());
+			layout.marginRight = 1;
+			layout.numColumns++;
+		}
 
 		if (needsHeader()) {
 			createHeaderLayout(composite, toolkit);
@@ -258,6 +266,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			layout.numColumns = 1;
 			toolkit.createLabel(headerComposite, " "); //$NON-NLS-1$
 		}
+
 		return headerComposite;
 	}
 

@@ -54,6 +54,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.commons.identity.IdentityModel;
+import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
 import org.eclipse.mylyn.internal.commons.ui.TaskBarManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
@@ -1016,6 +1018,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
+	private IdentityModel identityModel;
+
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
 		return menuContributors;
 	}
@@ -1394,4 +1398,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return synchronizationManger;
 	}
 
+	public IdentityModel getIdentityModel() {
+		if (identityModel == null) {
+			identityModel = new IdentityModel(new File(getDataDirectory(), "cache"));
+			identityModel.addConnector(new GravatarConnector());
+		}
+		return identityModel;
+	}
 }
