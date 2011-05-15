@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,32 +11,20 @@
 
 package org.eclipse.mylyn.commons.identity;
 
-import java.util.concurrent.Future;
-
 /**
  * @author Steffen Pingel
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  * @since 0.8
  */
-public interface IIdentity {
+public interface IProfileImage {
 
-	//	public static final String KIND_DEFAULT = "org.eclipse.mylyn.commons.identity.default"; //$NON-NLS-1$
-	//
-	//	public static final String KIND_EMAIL = "org.eclipse.mylyn.commons.identity.email"; //$NON-NLS-1$
+	public abstract byte[] getData();
 
-	public void addAccount(Account account);
+	public abstract int getWidth();
 
-	public String[] getAliases();
+	public abstract int getHeight();
 
-	public Account getAccountByKind(String kind);
-
-	public Account getAccountById(String id);
-
-	public void removeAccount(Account account);
-
-	public Future<IProfileImage> requestImage(int preferredWidth, int preferredHeight);
-
-	public Future<IProfile> requestProfile();
+	public abstract String getFormat();
 
 }
