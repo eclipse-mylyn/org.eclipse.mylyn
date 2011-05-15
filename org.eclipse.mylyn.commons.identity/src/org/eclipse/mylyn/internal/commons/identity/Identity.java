@@ -146,9 +146,9 @@ public class Identity implements IIdentity {
 
 	private final Set<Account> accounts;
 
-	private List<ProfileImage> images;
-
 	private final UUID id;
+
+	private List<ProfileImage> images;
 
 	private final List<PropertyChangeListener> listeners;
 
@@ -169,6 +169,10 @@ public class Identity implements IIdentity {
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		listeners.add(listener);
+	}
+
+	public Account[] getAccounts() {
+		return accounts.toArray(new Account[accounts.size()]);
 	}
 
 	public Account getAccountById(String id) {
@@ -252,8 +256,32 @@ public class Identity implements IIdentity {
 	}
 
 	public Future<IProfile> requestProfile() {
-		// ignore
-		return null;
+		if (profile != null) {
+			return new FutureResult<IProfile>(profile);
+		}
+		FutureJob<IProfile> job = new FutureJob<IProfile>("Retrieving Profile") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					model.updateProfile(profile, monitor);
+					setProfile(profile);
+					return success(profile);
+				} catch (Throwable t) {
+					return error(t);
+				} finally {
+					done();
+				}
+			}
+		};
+		job.schedule();
+		return job;
+	}
+
+	private void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
+		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		for (PropertyChangeListener listener : listeners) {
+			listener.propertyChange(event);
+		}
 	}
 
 	protected synchronized void addImage(ProfileImage image) {
@@ -264,11 +292,14 @@ public class Identity implements IIdentity {
 		firePropertyChangeEvent("image", null, image); //$NON-NLS-1$
 	}
 
-	private void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-		for (PropertyChangeListener listener : listeners) {
-			listener.propertyChange(event);
+	protected synchronized void removeImage(ProfileImage image) {
+		if (images != null) {
+			images.remove(image);
 		}
+	}
+
+	protected void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 }

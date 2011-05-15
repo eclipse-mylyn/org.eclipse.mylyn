@@ -14,12 +14,13 @@ package org.eclipse.mylyn.commons.identity.spi;
 import java.io.Serializable;
 
 import org.eclipse.mylyn.commons.identity.IIdentity;
+import org.eclipse.mylyn.commons.identity.IProfile;
 
 /**
  * @author Steffen Pingel
  * @since 0.8
  */
-public final class Profile implements Serializable {
+public final class Profile implements IProfile, Serializable {
 
 	private static final long serialVersionUID = -1079729573911113939L;
 

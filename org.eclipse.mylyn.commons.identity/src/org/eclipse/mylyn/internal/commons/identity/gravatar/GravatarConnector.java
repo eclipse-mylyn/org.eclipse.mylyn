@@ -88,7 +88,7 @@ public class GravatarConnector extends IdentityConnector {
 
 	@Override
 	public void updateProfile(Profile profile, IProgressMonitor monitor) throws CoreException {
-		// ignore		
+		// TODO retrieve Gravatar profile information
 	}
 
 	private String getHash(IIdentity identity) {

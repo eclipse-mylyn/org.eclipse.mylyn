@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.identity.Account;
 import org.eclipse.mylyn.commons.identity.IIdentity;
 import org.eclipse.mylyn.commons.identity.spi.IdentityConnector;
+import org.eclipse.mylyn.commons.identity.spi.Profile;
 import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
 import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
 
@@ -69,6 +70,10 @@ public final class IdentityModel implements Serializable {
 		connectors.remove(new GravatarConnector());
 	}
 
+	public IIdentity[] getIdentities() {
+		return identityById.values().toArray(new IIdentity[identityById.values().size()]);
+	}
+
 	public ProfileImage getImage(Identity identity, int preferredWidth, int preferredHeight, IProgressMonitor monitor)
 			throws CoreException {
 		for (IdentityConnector connector : connectors) {
@@ -78,6 +83,21 @@ public final class IdentityModel implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	public void updateProfile(Profile profile, IProgressMonitor monitor) throws CoreException {
+		Account[] accounts = profile.getIdentity().getAccounts();
+		for (Account account : accounts) {
+			if (profile.getEmail() == null && account.getId().contains("@")) { //$NON-NLS-1$
+				profile.setEmail(account.getId());
+			}
+			if (profile.getName() == null && account.getName() != null) {
+				profile.setName(account.getName());
+			}
+		}
+		for (IdentityConnector connector : connectors) {
+			connector.updateProfile(profile, monitor);
+		}
 	}
 
 }

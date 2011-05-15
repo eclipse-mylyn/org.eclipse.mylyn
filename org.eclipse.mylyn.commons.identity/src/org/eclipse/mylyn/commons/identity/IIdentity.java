@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.commons.identity;
 
 import java.beans.PropertyChangeListener;
+import java.util.UUID;
 import java.util.concurrent.Future;
 
 /**
@@ -30,11 +31,15 @@ public interface IIdentity {
 
 	public void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public String[] getAliases();
+	public Account getAccountById(String id);
 
 	public Account getAccountByKind(String kind);
 
-	public Account getAccountById(String id);
+	public Account[] getAccounts();
+
+	public String[] getAliases();
+
+	public UUID getId();
 
 	public void removeAccount(Account account);
 
