@@ -156,6 +156,8 @@ public class Identity implements IIdentity {
 
 	private Profile profile;
 
+	private boolean refreshProfile;
+
 	public Identity(IdentityModel model) {
 		this.model = model;
 		this.id = UUID.randomUUID();
@@ -165,6 +167,7 @@ public class Identity implements IIdentity {
 
 	public void addAccount(Account account) {
 		accounts.add(account);
+		refreshProfile = true;
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -256,13 +259,16 @@ public class Identity implements IIdentity {
 	}
 
 	public Future<IProfile> requestProfile() {
-		if (profile != null) {
+		if (profile != null && !refreshProfile) {
 			return new FutureResult<IProfile>(profile);
 		}
+
+		refreshProfile = false;
 		FutureJob<IProfile> job = new FutureJob<IProfile>("Retrieving Profile") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
+					Profile profile = new Profile(Identity.this);
 					model.updateProfile(profile, monitor);
 					setProfile(profile);
 					return success(profile);

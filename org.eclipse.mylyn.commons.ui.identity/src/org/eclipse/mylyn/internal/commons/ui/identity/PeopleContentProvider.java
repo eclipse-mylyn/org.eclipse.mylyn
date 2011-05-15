@@ -13,12 +13,15 @@ package org.eclipse.mylyn.internal.commons.ui.identity;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.identity.IIdentity;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
  */
 public class PeopleContentProvider implements ITreeContentProvider {
+
+	private static final Object[] EMPTY_ARRAY = new Object[0];
 
 	public PeopleContentProvider() {
 	}
@@ -30,7 +33,6 @@ public class PeopleContentProvider implements ITreeContentProvider {
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// ignore
-
 	}
 
 	public Object[] getElements(Object inputElement) {
@@ -38,17 +40,20 @@ public class PeopleContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getChildren(Object parentElement) {
-		// ignore
-		return null;
+		if (parentElement instanceof IIdentity) {
+			return ((IIdentity) parentElement).getAccounts();
+		}
+		return EMPTY_ARRAY;
 	}
 
 	public Object getParent(Object element) {
-		// ignore
 		return null;
 	}
 
 	public boolean hasChildren(Object element) {
-		// ignore
+		if (element instanceof IIdentity) {
+			return true;
+		}
 		return false;
 	}
 

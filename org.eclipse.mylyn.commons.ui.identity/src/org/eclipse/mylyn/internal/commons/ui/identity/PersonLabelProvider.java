@@ -18,8 +18,11 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylyn.commons.identity.Account;
 import org.eclipse.mylyn.commons.identity.IIdentity;
+import org.eclipse.mylyn.commons.identity.IProfile;
 import org.eclipse.mylyn.commons.identity.IProfileImage;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.ISharedImages;
@@ -66,6 +69,10 @@ public class PersonLabelProvider extends LabelProvider {
 				}
 			}
 			return image;
+		} else if (object instanceof Account) {
+			Account account = (Account) object;
+			Image image = TasksUiPlugin.getDefault().getBrandingIcon(account.getKind());
+			return image;
 		}
 		return null;
 	}
@@ -74,7 +81,28 @@ public class PersonLabelProvider extends LabelProvider {
 	public String getText(Object object) {
 		if (object instanceof IIdentity) {
 			IIdentity identity = (IIdentity) object;
-			return identity.getAccounts()[0].getId();
+			Future<IProfile> result = identity.requestProfile();
+			if (result.isDone()) {
+				try {
+					IProfile profile = result.get(0, TimeUnit.SECONDS);
+					if (profile.getName() != null) {
+						return profile.getName();
+					} else if (profile.getEmail() != null) {
+						return profile.getEmail();
+					}
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+			//return identity.getAccounts()[0].getId();
+			return identity.getId().toString();
+		} else if (object instanceof Account) {
+			Account account = (Account) object;
+			if (account.getName() != null) {
+				return account.getName() + " <" + account.getId() + ">";
+			} else {
+				return account.getId();
+			}
 		}
 		return null;
 	}
