@@ -34,7 +34,7 @@
 <unit id="org.json" version="1.0.0.v201011060100"/>
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.objenesis" version="1.0.0.v201006030720"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110515001817/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
