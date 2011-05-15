@@ -63,7 +63,7 @@ public abstract class AbstractAttributeEditor {
 	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
 		@Override
 		public void attributeChanged(TaskDataModelEvent event) {
-			if (shouldAutoRefresh() && getTaskAttribute().equals(event.getTaskAttribute())) {
+			if (!ignoreAttributeChanged && shouldAutoRefresh() && getTaskAttribute().equals(event.getTaskAttribute())) {
 				try {
 					refresh();
 				} catch (UnsupportedOperationException e) {
@@ -77,6 +77,8 @@ public abstract class AbstractAttributeEditor {
 			getModel().removeModelListener(modelListener);
 		}
 	};
+
+	private boolean ignoreAttributeChanged;
 
 	/**
 	 * @since 3.0
@@ -96,7 +98,12 @@ public abstract class AbstractAttributeEditor {
 	 * @since 3.0
 	 */
 	protected void attributeChanged() {
-		getModel().attributeChanged(getTaskAttribute());
+		try {
+			ignoreAttributeChanged = true;
+			getModel().attributeChanged(getTaskAttribute());
+		} finally {
+			ignoreAttributeChanged = false;
+		}
 	}
 
 	/**
