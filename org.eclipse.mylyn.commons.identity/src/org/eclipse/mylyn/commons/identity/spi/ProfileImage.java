@@ -31,11 +31,14 @@ public final class ProfileImage implements IProfileImage, Serializable {
 
 	String format;
 
+	long timestamp;
+
 	public ProfileImage(byte[] data, int width, int height, String format) {
 		this.data = data;
 		this.width = width;
 		this.height = height;
 		this.format = format;
+		this.timestamp = System.currentTimeMillis();
 	}
 
 	public byte[] getData() {
@@ -52,6 +55,14 @@ public final class ProfileImage implements IProfileImage, Serializable {
 
 	public String getFormat() {
 		return format;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }

@@ -43,6 +43,8 @@ public class CommonImages {
 
 	private static final String T_OBJ_32 = "obj32"; //$NON-NLS-1$
 
+	private static final String T_OBJ48 = "obj48"; //$NON-NLS-1$
+
 	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 
 	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
@@ -275,6 +277,8 @@ public class CommonImages {
 	public static final ImageDescriptor CHECKBOX_UNSELECTED = create(T_ELCL, "checkboxunselected.gif"); //$NON-NLS-1$;
 
 	public static final ImageDescriptor CHECKBOX_DISABLED = create(T_ELCL, "checkboxgreyed.gif"); //$NON-NLS-1$;
+
+	public static final ImageDescriptor PERSON_LARGE = create(T_OBJ48, "person.gif"); //$NON-NLS-1$;
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {

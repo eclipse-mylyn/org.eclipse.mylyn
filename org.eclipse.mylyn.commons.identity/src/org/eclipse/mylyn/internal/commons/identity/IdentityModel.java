@@ -13,10 +13,10 @@ package org.eclipse.mylyn.internal.commons.identity;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.CoreException;
@@ -42,14 +42,14 @@ public final class IdentityModel implements Serializable {
 	public IdentityModel(File cacheDirectory) {
 		this.cacheDirectory = cacheDirectory;
 		connectors = new CopyOnWriteArrayList<IdentityConnector>();
-		identityById = new HashMap<UUID, Identity>();
+		identityById = new WeakHashMap<UUID, Identity>();
 	}
 
 	public void addConnector(IdentityConnector connector) {
 		connectors.add(new GravatarConnector());
 	}
 
-	public IIdentity getIdentity(Account account) {
+	public synchronized IIdentity getIdentity(Account account) {
 		for (Identity identity : identityById.values()) {
 			if (identity.is(account)) {
 				return identity;
@@ -58,6 +58,10 @@ public final class IdentityModel implements Serializable {
 
 		Identity identity = new Identity(this);
 		identity.addAccount(account);
+
+		// cache identity
+		identityById.put(identity.getId(), identity);
+
 		return identity;
 	}
 

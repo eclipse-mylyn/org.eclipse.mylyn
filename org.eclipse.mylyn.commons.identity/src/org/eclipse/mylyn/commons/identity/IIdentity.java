@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.identity;
 
+import java.beans.PropertyChangeListener;
 import java.util.concurrent.Future;
 
 /**
@@ -27,6 +28,8 @@ public interface IIdentity {
 
 	public void addAccount(Account account);
 
+	public void addPropertyChangeListener(PropertyChangeListener listener);
+
 	public String[] getAliases();
 
 	public Account getAccountByKind(String kind);
@@ -34,6 +37,8 @@ public interface IIdentity {
 	public Account getAccountById(String id);
 
 	public void removeAccount(Account account);
+
+	public void removePropertyChangeListener(PropertyChangeListener listener);
 
 	public Future<IProfileImage> requestImage(int preferredWidth, int preferredHeight);
 

@@ -37,6 +37,8 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class GravatarStore implements Serializable, ISchedulingRule {
 
+	private boolean cacheEnabled;
+
 	/**
 	 * TIMEOUT
 	 */
@@ -47,13 +49,17 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 */
 	public static final int BUFFER_SIZE = 8192;
 
+	public enum Rating {
+		G, PG, R, X
+	};
+
 	private static final long serialVersionUID = 6084425297832914970L;
 
 	private long lastRefresh = 0L;
 
 	private final String url;
 
-	private final Map<String, Gravatar> avatars;
+	private Map<String, Gravatar> avatars;
 
 	/**
 	 * Create gravatar store
@@ -74,7 +80,19 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 			url += "/"; //$NON-NLS-1$
 		}
 		this.url = url;
-		this.avatars = Collections.synchronizedMap(new HashMap<String, Gravatar>());
+	}
+
+	public boolean isCacheEnabled() {
+		return avatars != null;
+	}
+
+	public void setCacheEnabled(boolean cacheEnabled) {
+		this.cacheEnabled = cacheEnabled;
+		if (cacheEnabled && avatars == null) {
+			avatars = Collections.synchronizedMap(new HashMap<String, Gravatar>());
+		} else if (!cacheEnabled && avatars != null) {
+			avatars = null;
+		}
 	}
 
 	/**
@@ -88,7 +106,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#containsGravatar(java.lang.String)
 	 */
 	public boolean containsGravatar(String hash) {
-		return hash != null ? this.avatars.containsKey(hash) : false;
+		return hash != null && avatars != null ? this.avatars.containsKey(hash) : false;
 	}
 
 	/**
@@ -112,6 +130,9 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#refresh(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public GravatarStore refresh(IProgressMonitor monitor) {
+		if (this.avatars == null) {
+			return this;
+		}
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
@@ -174,16 +195,28 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 		return this;
 	}
 
+	public Gravatar loadGravatarByHash(String hash) throws IOException {
+		return loadGravatarByHash(hash, -1, null);
+	}
+
 	/**
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#loadGravatarByHash(java.lang.String)
 	 */
-	public Gravatar loadGravatarByHash(String hash) throws IOException {
+	public Gravatar loadGravatarByHash(String hash, int size, Rating rating) throws IOException {
+		Assert.isLegal(size == -1 || (size >= 1 && size <= 512), "size must have a value of -1 or between 1 and 512"); //$NON-NLS-1$
 		if (!GravatarUtils.isValidHash(hash)) {
 			return null;
 		}
 
 		Gravatar avatar = null;
-		HttpURLConnection connection = (HttpURLConnection) new URL(this.url + hash).openConnection();
+		String location = this.url + hash + "?d=404"; //$NON-NLS-1$
+		if (size != -1) {
+			location += "&s=" + size; //$NON-NLS-1$
+		}
+		if (rating != null) {
+			location += "&r=" + rating.name().toLowerCase(); //$NON-NLS-1$
+		}
+		HttpURLConnection connection = (HttpURLConnection) new URL(location).openConnection();
 		connection.setConnectTimeout(TIMEOUT);
 		connection.setUseCaches(false);
 		connection.connect();
@@ -207,7 +240,9 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 			}
 		}
 		avatar = new Gravatar(hash, System.currentTimeMillis(), output.toByteArray());
-		this.avatars.put(hash, avatar);
+		if (this.avatars != null) {
+			this.avatars.put(hash, avatar);
+		}
 		return avatar;
 	}
 
@@ -222,7 +257,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	 * @see org.eclipse.mylyn.internal.commons.identity.gravatar.IGravatarStore#getGravatarByHash(java.lang.String)
 	 */
 	public Gravatar getGravatarByHash(String hash) {
-		return hash != null ? this.avatars.get(hash) : null;
+		return hash != null && avatars != null ? this.avatars.get(hash) : null;
 	}
 
 	/**
