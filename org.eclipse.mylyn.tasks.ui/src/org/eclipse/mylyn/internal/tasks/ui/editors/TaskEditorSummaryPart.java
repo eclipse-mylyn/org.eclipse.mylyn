@@ -191,7 +191,11 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		if (userAssignedAttribute != null) {
 			UserAttributeEditor editor = new UserAttributeEditor(getModel(), userAssignedAttribute);
 			editor.createControl(composite, toolkit);
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(editor.getControl());
+			GridDataFactory.fillDefaults()
+					.align(SWT.CENTER, SWT.CENTER)
+					.span(1, 2)
+					.indent(0, 1)
+					.applyTo(editor.getControl());
 			layout.marginRight = 1;
 			layout.numColumns++;
 		}

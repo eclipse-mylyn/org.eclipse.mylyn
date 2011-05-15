@@ -153,6 +153,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_UNKNOWN;
 
+	public static String BugzillaAttribute_URLBASE;
+
 	public static String BugzillaAttribute_URL;
 
 	public static String BugzillaAttribute_Query_Timestamp;
