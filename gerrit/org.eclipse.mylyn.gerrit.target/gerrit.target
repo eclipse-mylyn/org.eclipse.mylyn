@@ -50,9 +50,9 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.8.0.I20110504-0744"/>
-<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="3.6.0.I20110504-0744"/>
-<unit id="org.eclipse.mylyn.test_feature.feature.group" version="3.6.0.I20110504-0744"/>
+<unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.test_feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
 </location>
 </locations>
