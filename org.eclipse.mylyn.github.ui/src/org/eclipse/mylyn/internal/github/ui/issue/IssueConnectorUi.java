@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.github.internal.GitHub;
-import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,7 +40,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 /**
  * GitHub connector specific UI extensions.
  */
-public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
+public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private final Pattern issuePattern = Pattern.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)");
 
@@ -49,8 +49,8 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 	 * 
 	 * @return connector
 	 */
-	public static GitHubRepositoryConnector getCoreConnector() {
-		return (GitHubRepositoryConnector) TasksUi
+	public static IssueConnector getCoreConnector() {
+		return (IssueConnector) TasksUi
 				.getRepositoryConnector(GitHub.CONNECTOR_KIND);
 	}
 
@@ -73,7 +73,7 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 	@Override
 	public ITaskRepositoryPage getSettingsPage(
 			final TaskRepository taskRepository) {
-		return new GitHubRepositorySettingsPage(taskRepository);
+		return new IssueRepositorySettingsPage(taskRepository);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 	public IWizard getQueryWizard(final TaskRepository taskRepository,
 			final IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
-		GitHubRepositoryQueryPage queryPage = new GitHubRepositoryQueryPage(
+		IssueRepositoryQueryPage queryPage = new IssueRepositoryQueryPage(
 				taskRepository, queryToEdit);
 		wizard.addPage(queryPage);
 		return wizard;
@@ -167,7 +167,7 @@ public class GitHubRepositoryConnectorUI extends AbstractRepositoryConnectorUi {
 	 */
 	public ITaskSearchPage getSearchPage(TaskRepository repository,
 			IStructuredSelection selection) {
-		return new GitHubRepositoryQueryPage(repository, null);
+		return new IssueRepositoryQueryPage(repository, null);
 	}
 
 }

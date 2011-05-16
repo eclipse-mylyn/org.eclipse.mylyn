@@ -8,11 +8,13 @@
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.mylyn.github.internal.GitHubTaskAttributes;
+import org.eclipse.mylyn.github.ui.internal.AvatarLabel;
+import org.eclipse.mylyn.github.ui.internal.GitHubUi;
+import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
@@ -125,7 +127,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 	}
 
-	private TaskAttribute getAttribute(GitHubTaskAttributes attribute) {
+	private TaskAttribute getAttribute(IssueAttribute attribute) {
 		return getAttribute(attribute.getId());
 	}
 
@@ -160,7 +162,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		layout.verticalSpacing = 3;
 		composite.setLayout(layout);
 
-		TaskAttribute reporter = getAttribute(GitHubTaskAttributes.REPORTER);
+		TaskAttribute reporter = getAttribute(IssueAttribute.REPORTER);
 		if (reporter != null) {
 			IRepositoryPerson person = getTaskData().getAttributeMapper()
 					.getRepositoryPerson(reporter);
@@ -171,7 +173,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		}
 		addSummaryText(composite, toolkit);
 
-		TaskAttribute assignee = getAttribute(GitHubTaskAttributes.ASSIGNEE);
+		TaskAttribute assignee = getAttribute(IssueAttribute.ASSIGNEE);
 		if (assignee != null) {
 			IRepositoryPerson person = getTaskData().getAttributeMapper()
 					.getRepositoryPerson(assignee);

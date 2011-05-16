@@ -8,7 +8,7 @@
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.github.internal.GitHubTaskAttributes;
+import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
@@ -64,9 +64,9 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	@Override
 	protected AbstractAttributeEditor createAttributeEditor(
 			TaskAttribute attribute) {
-		if (GitHubTaskAttributes.LABELS.getId().equals(attribute.getId())) {
+		if (IssueAttribute.LABELS.getId().equals(attribute.getId())) {
 			return new IssueLabelAttributeEditor(getModel(), attribute);
-		} else if (GitHubTaskAttributes.MILESTONE.getId().equals(
+		} else if (IssueAttribute.MILESTONE.getId().equals(
 				attribute.getId())) {
 			return super.createAttributeEditor(attribute);
 		}
@@ -195,11 +195,11 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 		TaskAttribute root = getTaskData().getRoot();
 		List<TaskAttribute> attributes = new LinkedList<TaskAttribute>();
 		TaskAttribute milestones = root
-				.getAttribute(GitHubTaskAttributes.MILESTONE.getId());
+				.getAttribute(IssueAttribute.MILESTONE.getId());
 		if (milestones != null)
 			attributes.add(milestones);
 
-		TaskAttribute labels = root.getAttribute(GitHubTaskAttributes.LABELS
+		TaskAttribute labels = root.getAttribute(IssueAttribute.LABELS
 				.getId());
 		if (labels != null)
 			attributes.add(labels);

@@ -10,12 +10,12 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core.issue;
 
 /**
  * Enumeration of task operations
  */
-public enum GitHubTaskOperation {
+public enum IssueOperation {
 
 	/**
 	 * LEAD
@@ -34,7 +34,7 @@ public enum GitHubTaskOperation {
 
 	private final String label;
 
-	private GitHubTaskOperation(String label) {
+	private IssueOperation(String label) {
 		this.label = label;
 	}
 
@@ -64,8 +64,8 @@ public enum GitHubTaskOperation {
 	 * @return the operation, or null if the id was null or did not match any
 	 *         operation
 	 */
-	public static GitHubTaskOperation fromId(String opId) {
-		for (GitHubTaskOperation op : values()) {
+	public static IssueOperation fromId(String opId) {
+		for (IssueOperation op : values()) {
 			if (op.getId().equals(opId)) {
 				return op;
 			}

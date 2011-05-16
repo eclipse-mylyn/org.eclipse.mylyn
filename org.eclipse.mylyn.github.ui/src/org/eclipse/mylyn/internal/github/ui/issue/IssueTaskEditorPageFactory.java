@@ -10,9 +10,10 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
-import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.ui.internal.GitHubImages;
+import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -25,7 +26,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 /**
  * Editor page factory for GitHub.
  */
-public class GitHubTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
+public class IssueTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
@@ -41,7 +42,7 @@ public class GitHubTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return Messages.GitHubTaskEditorPageFactory_PageText;
+		return Messages.IssueTaskEditorPageFactory_PageText;
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class GitHubTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		return new GitHubTaskEditorPage(parentEditor);
+		return new IssueTaskEditorPage(parentEditor);
 	}
 
 	@Override

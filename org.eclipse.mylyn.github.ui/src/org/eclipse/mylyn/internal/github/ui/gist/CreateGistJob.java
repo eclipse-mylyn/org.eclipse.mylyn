@@ -8,7 +8,7 @@
  * Contributors:
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -21,6 +21,7 @@ import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.GistService;
+import org.eclipse.mylyn.github.ui.internal.GitHubUi;
 import org.eclipse.ui.PlatformUI;
 
 public class CreateGistJob extends Job {

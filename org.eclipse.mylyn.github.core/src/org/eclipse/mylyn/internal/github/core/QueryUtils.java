@@ -8,7 +8,7 @@
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core;
 
 import java.util.Collection;
 import java.util.Collections;

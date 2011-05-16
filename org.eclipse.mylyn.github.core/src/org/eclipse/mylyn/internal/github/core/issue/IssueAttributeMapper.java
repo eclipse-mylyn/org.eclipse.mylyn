@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 /**
  * GitHub task attribute mapper class.
  */
-public class GitHubTaskAttributeMapper extends TaskAttributeMapper {
+public class IssueAttributeMapper extends TaskAttributeMapper {
 
 	private DateFormat format = DateFormat.getDateTimeInstance(
 			DateFormat.MEDIUM, DateFormat.SHORT);
@@ -32,7 +32,7 @@ public class GitHubTaskAttributeMapper extends TaskAttributeMapper {
 	/**
 	 * @param taskRepository
 	 */
-	public GitHubTaskAttributeMapper(TaskRepository taskRepository) {
+	public IssueAttributeMapper(TaskRepository taskRepository) {
 		super(taskRepository);
 	}
 

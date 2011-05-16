@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core;
 
 import java.util.regex.Pattern;
 

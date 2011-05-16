@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
 import java.util.Date;
@@ -30,6 +30,8 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -46,26 +48,26 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 /**
  * GitHub issue task data handler
  */
-public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
+public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static final String DATA_VERSION = "1"; //$NON-NLS-1$
 	private static final String MILESTONE_NONE_KEY = "0"; //$NON-NLS-1$
-	private GitHubTaskAttributeMapper taskAttributeMapper = null;
-	private final GitHubRepositoryConnector connector;
+	private IssueAttributeMapper taskAttributeMapper = null;
+	private final IssueConnector connector;
 
 	/**
 	 * Create GitHub issue task data handler for connector
 	 * 
 	 * @param connector
 	 */
-	public GitHubTaskDataHandler(GitHubRepositoryConnector connector) {
+	public IssueTaskDataHandler(IssueConnector connector) {
 		this.connector = connector;
 	}
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
 		if (this.taskAttributeMapper == null)
-			this.taskAttributeMapper = new GitHubTaskAttributeMapper(
+			this.taskAttributeMapper = new IssueAttributeMapper(
 					taskRepository);
 		return this.taskAttributeMapper;
 	}
@@ -75,40 +77,40 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 		String key = Integer.toString(issue.getNumber());
 		TaskData data = new TaskData(getAttributeMapper(repository),
-				GitHubRepositoryConnector.KIND, repository.getRepositoryUrl(),
+				IssueConnector.KIND, repository.getRepositoryUrl(),
 				key);
 		data.setVersion(DATA_VERSION);
 
 		createOperations(data, issue);
 
-		createAttribute(data, GitHubTaskAttributes.KEY, key);
-		createAttribute(data, GitHubTaskAttributes.TITLE, issue.getTitle());
-		createAttribute(data, GitHubTaskAttributes.BODY, issue.getBody());
-		createAttribute(data, GitHubTaskAttributes.STATUS, issue.getState());
-		createAttribute(data, GitHubTaskAttributes.CREATION_DATE,
+		createAttribute(data, IssueAttribute.KEY, key);
+		createAttribute(data, IssueAttribute.TITLE, issue.getTitle());
+		createAttribute(data, IssueAttribute.BODY, issue.getBody());
+		createAttribute(data, IssueAttribute.STATUS, issue.getState());
+		createAttribute(data, IssueAttribute.CREATION_DATE,
 				issue.getCreatedAt());
-		createAttribute(data, GitHubTaskAttributes.MODIFICATION_DATE,
+		createAttribute(data, IssueAttribute.MODIFICATION_DATE,
 				issue.getUpdatedAt());
-		createAttribute(data, GitHubTaskAttributes.CLOSED_DATE,
+		createAttribute(data, IssueAttribute.CLOSED_DATE,
 				issue.getClosedAt());
 
 		User reporter = issue.getUser();
-		createAttribute(data, GitHubTaskAttributes.REPORTER, reporter,
+		createAttribute(data, IssueAttribute.REPORTER, reporter,
 				repository);
 		String reporterGravatar = reporter != null ? reporter.getGravatarUrl()
 				: null;
-		createAttribute(data, GitHubTaskAttributes.REPORTER_GRAVATAR,
+		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR,
 				reporterGravatar);
 
 		User assignee = issue.getAssignee();
-		createAttribute(data, GitHubTaskAttributes.ASSIGNEE, assignee,
+		createAttribute(data, IssueAttribute.ASSIGNEE, assignee,
 				repository);
 		String assigneeGravatar = assignee != null ? assignee.getGravatarUrl()
 				: null;
-		createAttribute(data, GitHubTaskAttributes.ASSIGNEE_GRAVATAR,
+		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR,
 				assigneeGravatar);
 
-		createAttribute(data, GitHubTaskAttributes.COMMENT_NEW);
+		createAttribute(data, IssueAttribute.COMMENT_NEW);
 
 		createLabels(repository, data, issue);
 
@@ -123,7 +125,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		String number = current != null ? Integer.toString(current.getNumber())
 				: MILESTONE_NONE_KEY;
 		TaskAttribute milestoneAttribute = createAttribute(data,
-				GitHubTaskAttributes.MILESTONE, number);
+				IssueAttribute.MILESTONE, number);
 
 		if (!this.connector.hasCachedMilestones(repository))
 			try {
@@ -135,7 +137,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		List<Milestone> cachedMilestones = this.connector
 				.getMilestones(repository);
 		milestoneAttribute.putOption(MILESTONE_NONE_KEY,
-				Messages.GitHubTaskDataHandler_MilestoneNone);
+				Messages.IssueAttribute_MilestoneNone);
 		for (Milestone milestone : cachedMilestones)
 			milestoneAttribute.putOption(
 					Integer.toString(milestone.getNumber()),
@@ -145,7 +147,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	private void createLabels(TaskRepository repository, TaskData data,
 			Issue issue) {
 		TaskAttribute labels = createAttribute(data,
-				GitHubTaskAttributes.LABELS, issue.getLabels());
+				IssueAttribute.LABELS, issue.getLabels());
 
 		if (!this.connector.hasCachedLabels(repository))
 			try {
@@ -167,17 +169,17 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		if (!data.isNew()) {
 			String state = issue.getState();
 			if (state != null) {
-				addOperation(data, issue, GitHubTaskOperation.LEAVE, true);
+				addOperation(data, issue, IssueOperation.LEAVE, true);
 				if (state.equals(IssueService.STATE_OPEN))
-					addOperation(data, issue, GitHubTaskOperation.CLOSE, false);
+					addOperation(data, issue, IssueOperation.CLOSE, false);
 				else if (state.equals(IssueService.STATE_CLOSED))
-					addOperation(data, issue, GitHubTaskOperation.REOPEN, false);
+					addOperation(data, issue, IssueOperation.REOPEN, false);
 			}
 		}
 	}
 
 	private void addOperation(TaskData data, Issue issue,
-			GitHubTaskOperation operation, boolean asDefault) {
+			IssueOperation operation, boolean asDefault) {
 		TaskAttribute attribute = data.getRoot().createAttribute(
 				TaskAttribute.PREFIX_OPERATION + operation.getId());
 		String label = createOperationLabel(issue, operation);
@@ -191,8 +193,8 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private String createOperationLabel(Issue issue,
-			GitHubTaskOperation operation) {
-		return operation == GitHubTaskOperation.LEAVE ? operation.getLabel()
+			IssueOperation operation) {
+		return operation == IssueOperation.LEAVE ? operation.getLabel()
 				+ issue.getState() : operation.getLabel();
 	}
 
@@ -233,11 +235,11 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		if (!taskData.isNew()) {
 			issue.setNumber(Integer.parseInt(taskData.getTaskId()));
 		}
-		issue.setBody(getAttributeValue(taskData, GitHubTaskAttributes.BODY));
-		issue.setTitle(getAttributeValue(taskData, GitHubTaskAttributes.TITLE));
+		issue.setBody(getAttributeValue(taskData, IssueAttribute.BODY));
+		issue.setTitle(getAttributeValue(taskData, IssueAttribute.TITLE));
 
 		String assigneeValue = getAttributeValue(taskData,
-				GitHubTaskAttributes.ASSIGNEE);
+				IssueAttribute.ASSIGNEE);
 		if (assigneeValue != null) {
 			if (assigneeValue.trim().length() == 0)
 				assigneeValue = null;
@@ -246,7 +248,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		String milestoneValue = getAttributeValue(taskData,
-				GitHubTaskAttributes.MILESTONE);
+				IssueAttribute.MILESTONE);
 		if (milestoneValue != null) {
 			Milestone milestone = new Milestone();
 			if (milestoneValue.length() > 0)
@@ -257,13 +259,13 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private String getAttributeValue(TaskData taskData,
-			GitHubTaskAttributes attr) {
+			IssueAttribute attr) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.getId());
 		return attribute == null ? null : attribute.getValue();
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
-			GitHubTaskAttributes attribute) {
+			IssueAttribute attribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(attribute.getId());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.defaults().setType(attribute.getType())
@@ -273,7 +275,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
-			GitHubTaskAttributes attribute, String value) {
+			IssueAttribute attribute, String value) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
 			data.getAttributeMapper().setValue(attr, value);
@@ -282,7 +284,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
-			GitHubTaskAttributes attribute, Date value) {
+			IssueAttribute attribute, Date value) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
 			data.getAttributeMapper().setDateValue(attr, value);
@@ -290,7 +292,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return attr;
 	}
 
-	private void createAttribute(TaskData data, GitHubTaskAttributes attribute,
+	private void createAttribute(TaskData data, IssueAttribute attribute,
 			User value, TaskRepository repository) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (value != null) {
@@ -302,7 +304,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
-			GitHubTaskAttributes attribute, List<Label> values) {
+			IssueAttribute attribute, List<Label> values) {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (values != null) {
 			List<String> labels = new LinkedList<String>();
@@ -321,7 +323,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 		data.setVersion(DATA_VERSION);
 
-		for (GitHubTaskAttributes attr : GitHubTaskAttributes.values()) {
+		for (IssueAttribute attr : IssueAttribute.values()) {
 			if (attr.isInitTask()) {
 				createAttribute(data, attr, (String) null);
 			}
@@ -346,7 +348,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes) throws IOException {
 		// Update labels if changed
 		TaskAttribute labelsAttribute = data.getRoot().getAttribute(
-				GitHubTaskAttributes.LABELS.getId());
+				IssueAttribute.LABELS.getId());
 		if (oldAttributes.contains(labelsAttribute)) {
 			LabelService labelService = new LabelService(client);
 
@@ -392,7 +394,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		Issue issue = createIssue(taskData);
 		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
-			GitHubClient client = GitHubRepositoryConnector
+			GitHubClient client = IssueConnector
 					.createClient(repository);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
@@ -404,7 +406,7 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 				// Handle new comment
 				String comment = getAttributeValue(taskData,
-						GitHubTaskAttributes.COMMENT_NEW);
+						IssueAttribute.COMMENT_NEW);
 				if (comment != null && comment.length() > 0)
 					service.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
@@ -416,9 +418,9 @@ public class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 				TaskAttribute operationAttribute = taskData.getRoot()
 						.getAttribute(TaskAttribute.OPERATION);
 				if (operationAttribute != null) {
-					GitHubTaskOperation operation = GitHubTaskOperation
+					IssueOperation operation = IssueOperation
 							.fromId(operationAttribute.getValue());
-					if (operation != GitHubTaskOperation.LEAVE)
+					if (operation != IssueOperation.LEAVE)
 						switch (operation) {
 						case REOPEN:
 							issue.setState(IssueService.STATE_OPEN);

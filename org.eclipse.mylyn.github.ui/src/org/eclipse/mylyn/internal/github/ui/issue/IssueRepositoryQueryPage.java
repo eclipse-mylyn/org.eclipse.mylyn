@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +34,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.github.internal.GitHubRepositoryConnector;
-import org.eclipse.mylyn.github.internal.QueryUtils;
+import org.eclipse.mylyn.github.ui.internal.GitHubImages;
+import org.eclipse.mylyn.internal.github.core.QueryUtils;
+import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -64,7 +65,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * GitHub issue repository query page class.
  */
-public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
+public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 	private Button openButton;
 	private Button closedButton;
@@ -88,10 +89,10 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public GitHubRepositoryQueryPage(String pageName,
+	public IssueRepositoryQueryPage(String pageName,
 			TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName, taskRepository, query);
-		setDescription(Messages.GitHubRepositoryQueryPage_Description);
+		setDescription(Messages.IssueRepositoryQueryPage_Description);
 		setPageComplete(false);
 	}
 
@@ -99,14 +100,14 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	 * @param taskRepository
 	 * @param query
 	 */
-	public GitHubRepositoryQueryPage(TaskRepository taskRepository,
+	public IssueRepositoryQueryPage(TaskRepository taskRepository,
 			IRepositoryQuery query) {
 		this("issueQueryPage", taskRepository, query); //$NON-NLS-1$
 	}
 
 	private void createLabelsArea(Composite parent) {
 		Group labelsArea = new Group(parent, SWT.NONE);
-		labelsArea.setText(Messages.GitHubRepositoryQueryPage_LabelsLabel);
+		labelsArea.setText(Messages.IssueRepositoryQueryPage_LabelsLabel);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(labelsArea);
 		GridLayoutFactory.swtDefaults().applyTo(labelsArea);
 
@@ -143,16 +144,16 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 				.applyTo(statusArea);
 
 		new Label(statusArea, SWT.NONE)
-				.setText(Messages.GitHubRepositoryQueryPage_StatusLabel);
+				.setText(Messages.IssueRepositoryQueryPage_StatusLabel);
 
 		openButton = new Button(statusArea, SWT.CHECK);
 		openButton.setSelection(true);
-		openButton.setText(Messages.GitHubRepositoryQueryPage_StatusOpen);
+		openButton.setText(Messages.IssueRepositoryQueryPage_StatusOpen);
 		openButton.addSelectionListener(this.completeListener);
 
 		closedButton = new Button(statusArea, SWT.CHECK);
 		closedButton.setSelection(true);
-		closedButton.setText(Messages.GitHubRepositoryQueryPage_StatusClosed);
+		closedButton.setText(Messages.IssueRepositoryQueryPage_StatusClosed);
 		closedButton.addSelectionListener(this.completeListener);
 
 		ToolBar toolbar = new ToolBar(statusArea, SWT.FLAT);
@@ -167,7 +168,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		});
 		updateItem.setImage(updateImage);
 		updateItem
-				.setToolTipText(Messages.GitHubRepositoryQueryPage_TooltipUpdateRepository);
+				.setToolTipText(Messages.IssueRepositoryQueryPage_TooltipUpdateRepository);
 		GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL)
 				.grab(true, false).applyTo(toolbar);
 		updateItem.addSelectionListener(new SelectionAdapter() {
@@ -180,20 +181,20 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 		Label milestonesLabel = new Label(optionsArea, SWT.NONE);
 		milestonesLabel
-				.setText(Messages.GitHubRepositoryQueryPage_MilestoneLabel);
+				.setText(Messages.IssueRepositoryQueryPage_MilestoneLabel);
 
 		milestoneCombo = new Combo(optionsArea, SWT.DROP_DOWN | SWT.READ_ONLY);
 		GridDataFactory.fillDefaults().grab(true, false)
 				.applyTo(milestoneCombo);
 
 		Label assigneeLabel = new Label(optionsArea, SWT.NONE);
-		assigneeLabel.setText(Messages.GitHubRepositoryQueryPage_AssigneeLabel);
+		assigneeLabel.setText(Messages.IssueRepositoryQueryPage_AssigneeLabel);
 
 		assigneeText = new Text(optionsArea, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(assigneeText);
 
 		Label mentionLabel = new Label(optionsArea, SWT.NONE);
-		mentionLabel.setText(Messages.GitHubRepositoryQueryPage_MentionsLabel);
+		mentionLabel.setText(Messages.IssueRepositoryQueryPage_MentionsLabel);
 
 		mentionText = new Text(optionsArea, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(mentionText);
@@ -216,7 +217,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 					.applyTo(titleArea);
 
 			new Label(titleArea, SWT.NONE)
-					.setText(Messages.GitHubRepositoryQueryPage_TitleLabel);
+					.setText(Messages.IssueRepositoryQueryPage_TitleLabel);
 			titleText = new Text(titleArea, SWT.SINGLE | SWT.BORDER);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(new ModifyListener() {
@@ -277,8 +278,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		if (this.labelsViewer.getControl().isDisposed())
 			return false;
 
-		GitHubRepositoryConnector connector = GitHubRepositoryConnectorUI
-				.getCoreConnector();
+		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
 		boolean hasLabels = connector.hasCachedLabels(repository);
 		if (hasLabels) {
@@ -297,15 +297,14 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		if (this.milestoneCombo.isDisposed())
 			return false;
 
-		GitHubRepositoryConnector connector = GitHubRepositoryConnectorUI
-				.getCoreConnector();
+		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
 		boolean hasMilestones = connector.hasCachedMilestones(repository);
 		if (hasMilestones) {
 			this.milestones = connector.getMilestones(repository);
 			this.milestoneCombo.removeAll();
 			this.milestoneCombo
-					.add(Messages.GitHubRepositoryQueryPage_MilestoneNone);
+					.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
 			Collections.sort(this.milestones, new Comparator<Milestone>() {
 
 				public int compare(Milestone m1, Milestone m2) {
@@ -327,15 +326,15 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 				public void run(IProgressMonitor monitor) throws CoreException {
 					Policy.monitorFor(monitor);
 					monitor.beginTask("", 2); //$NON-NLS-1$
-					GitHubRepositoryConnector connector = GitHubRepositoryConnectorUI
+					IssueConnector connector = IssueConnectorUi
 							.getCoreConnector();
 					TaskRepository repository = getTaskRepository();
 
-					monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingLabels);
+					monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingLabels);
 					connector.refreshLabels(repository);
 					monitor.worked(1);
 
-					monitor.setTaskName(Messages.GitHubRepositoryQueryPage_TaskLoadingMilestones);
+					monitor.setTaskName(Messages.IssueRepositoryQueryPage_TaskLoadingMilestones);
 					connector.refreshMilestones(repository);
 					monitor.done();
 
@@ -360,7 +359,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		} catch (CoreException e) {
 			IStatus status = e.getStatus();
 			ErrorDialog.openError(getShell(),
-					Messages.GitHubRepositoryQueryPage_ErrorLoading,
+					Messages.IssueRepositoryQueryPage_ErrorLoading,
 					e.getLocalizedMessage(), status);
 		}
 	}
@@ -380,7 +379,7 @@ public class GitHubRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		if (complete) {
 			String message = null;
 			if (!openButton.getSelection() && !closedButton.getSelection())
-				message = Messages.GitHubRepositoryQueryPage_ErrorStatus;
+				message = Messages.IssueRepositoryQueryPage_ErrorStatus;
 
 			setErrorMessage(message);
 			complete = message == null;

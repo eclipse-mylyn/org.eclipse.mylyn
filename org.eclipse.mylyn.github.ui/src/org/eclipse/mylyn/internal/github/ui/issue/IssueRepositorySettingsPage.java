@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.issue;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,7 +26,8 @@ import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.github.ui.internal.GitHubUi;
+import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -38,8 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * GitHub connector specific extensions.
  */
-public class GitHubRepositorySettingsPage extends
-		AbstractRepositorySettingsPage {
+public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	/**
 	 * URL
@@ -60,9 +60,9 @@ public class GitHubRepositorySettingsPage extends
 	 * @param taskRepository
 	 *            - Object to populate
 	 */
-	public GitHubRepositorySettingsPage(final TaskRepository taskRepository) {
-		super(Messages.GitHubRepositorySettingsPage_Title,
-				Messages.GitHubRepositorySettingsPage_Description,
+	public IssueRepositorySettingsPage(final TaskRepository taskRepository) {
+		super(Messages.IssueRepositorySettingsPage_Title,
+				Messages.IssueRepositorySettingsPage_Description,
 				taskRepository);
 		this.setHttpAuth(false);
 		this.setNeedsAdvanced(false);
@@ -136,10 +136,10 @@ public class GitHubRepositorySettingsPage extends
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask(
-						Messages.GitHubRepositorySettingsPage_TaskValidating,
+						Messages.IssueRepositorySettingsPage_TaskValidating,
 						100);
 				try {
-					monitor.subTask(Messages.GitHubRepositorySettingsPage_TaskContactingServer);
+					monitor.subTask(Messages.IssueRepositorySettingsPage_TaskContactingServer);
 					try {
 						AuthenticationCredentials auth = repository
 								.getCredentials(AuthenticationType.REPOSITORY);
@@ -154,7 +154,7 @@ public class GitHubRepositorySettingsPage extends
 						service.getIssues(repo.getOwner(), repo.getName(), null);
 					} catch (IOException e) {
 						String message = MessageFormat
-								.format(Messages.GitHubRepositorySettingsPage_StatusError,
+								.format(Messages.IssueRepositorySettingsPage_StatusError,
 										e.getLocalizedMessage());
 						setStatus(GitHubUi.createErrorStatus(message));
 						return;
@@ -163,7 +163,7 @@ public class GitHubRepositorySettingsPage extends
 					}
 
 					setStatus(new Status(IStatus.OK, GitHubUi.BUNDLE_ID,
-							Messages.GitHubRepositorySettingsPage_StatusSuccess));
+							Messages.IssueRepositorySettingsPage_StatusSuccess));
 				} finally {
 					monitor.done();
 				}

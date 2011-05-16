@@ -16,26 +16,27 @@ import static junit.framework.Assert.assertNotNull;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylyn.github.internal.GitHub;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.ui.issue.IssueConnectorUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Headless test for {@link GitHubRepositoryConnectorUI}
+ * Headless test for {@link IssueConnectorUi}
  * 
  * @author Christian Trutz <christian.trutz@gmail.com>
  */
 @SuppressWarnings("restriction")
 public class GitHubRepositoryConnectorUIHeadlessTest {
 
-	private GitHubRepositoryConnectorUI connectorUI;
+	private IssueConnectorUi connectorUI;
 
 	private TaskRepository repository;
 
 	@Before
 	public void before() {
-		connectorUI = new GitHubRepositoryConnectorUI();
+		connectorUI = new IssueConnectorUi();
 		repository = new TaskRepository(GitHub.CONNECTOR_KIND,
 				GitHub.createGitHubUrl("foo", "bar"));
 	}

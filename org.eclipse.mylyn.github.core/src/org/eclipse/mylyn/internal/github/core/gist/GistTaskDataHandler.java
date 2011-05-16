@@ -27,8 +27,8 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.github.internal.GitHub;
-import org.eclipse.mylyn.github.internal.GitHubTaskAttributeMapper;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.issue.IssueAttributeMapper;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -274,7 +274,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getAttributeMapper(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		return new GitHubTaskAttributeMapper(taskRepository);
+		return new IssueAttributeMapper(taskRepository);
 	}
 
 }

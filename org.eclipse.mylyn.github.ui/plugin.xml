@@ -4,13 +4,13 @@
    <extension
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorCore
-            class="org.eclipse.mylyn.github.internal.GitHubRepositoryConnector"
+            class="org.eclipse.mylyn.internal.github.core.issue.IssueConnector"
             id="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnector"
             name="%org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnector">
       </connectorCore>
       <connectorUi
             brandingIcon="icons/obj16/github.png"
-            class="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
+            class="org.eclipse.mylyn.internal.github.ui.issue.IssueConnectorUi"
             id="org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             name="%org.eclipse.mylyn.github.ui.internal.GitHubRepositoryConnectorUI"
             overlayIcon="icons/obj16/github_8x8.png">
@@ -19,7 +19,7 @@
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
-            class="org.eclipse.mylyn.github.ui.internal.GitHubTaskEditorPageFactory"
+            class="org.eclipse.mylyn.internal.github.ui.issue.IssueTaskEditorPageFactory"
             id="org.eclipse.mylyn.github.ui.internal.GitHubTaskEditorPageFactory">
       </pageFactory>
       <pageFactory
@@ -78,7 +78,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.eclipse.mylyn.github.ui.internal.CreateGistHandler"
+            class="org.eclipse.mylyn.internal.github.ui.gist.CreateGistHandler"
             commandId="org.eclipse.mylyn.github.ui.command.createGist">
       </handler>
       <handler

@@ -8,11 +8,12 @@
  * Contributors:
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.util.Set;
 
 import org.eclipse.egit.github.core.Gist;
+import org.eclipse.mylyn.github.ui.internal.GitHubImages;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.tasks.core.TaskRepository;

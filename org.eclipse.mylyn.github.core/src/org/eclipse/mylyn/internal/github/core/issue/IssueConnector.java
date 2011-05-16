@@ -10,7 +10,7 @@
  *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
  *******************************************************************************/
-package org.eclipse.mylyn.github.internal;
+package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,6 +41,9 @@ import org.eclipse.egit.github.core.util.LabelComparator;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
+import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -55,7 +58,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * GitHub connector.
  */
-public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
+public class IssueConnector extends AbstractRepositoryConnector {
 
 	/**
 	 * GitHub kind.
@@ -81,7 +84,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * GitHub specific {@link AbstractTaskDataHandler}.
 	 */
-	private final GitHubTaskDataHandler taskDataHandler;
+	private final IssueTaskDataHandler taskDataHandler;
 
 	private final Map<TaskRepository, List<Label>> repositoryLabels = Collections
 			.synchronizedMap(new HashMap<TaskRepository, List<Label>>());
@@ -92,8 +95,8 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * Create GitHub issue repository connector
 	 */
-	public GitHubRepositoryConnector() {
-		taskDataHandler = new GitHubTaskDataHandler(this);
+	public IssueConnector() {
+		taskDataHandler = new IssueTaskDataHandler(this);
 	}
 
 	/**
@@ -233,7 +236,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public String getLabel() {
-		return Messages.GitHubRepositoryConnector_LabelConnector;
+		return Messages.IssueConnector_LabelConnector;
 	}
 
 	/**
@@ -252,7 +255,7 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 		List<String> statuses = QueryUtils.getAttributes(
 				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.GitHubRepositoryConnector_TaskQuerying,
+		monitor.beginTask(Messages.IssueConector_TaskQuerying,
 				statuses.size());
 		try {
 			Repository repo = GitHub.getRepository(repository
@@ -370,10 +373,10 @@ public class GitHubRepositoryConnector extends AbstractRepositoryConnector {
 			IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		monitor.beginTask("", 2); //$NON-NLS-1$
-		monitor.setTaskName(Messages.GitHubRepositoryConnector_TaskUpdatingLabels);
+		monitor.setTaskName(Messages.IssueConnector_TaskUpdatingLabels);
 		refreshLabels(taskRepository);
 		monitor.worked(1);
-		monitor.setTaskName(Messages.GitHubRepositoryConnector_TaskUpdatingMilestones);
+		monitor.setTaskName(Messages.IssueConnector_TaskUpdatingMilestones);
 		refreshMilestones(taskRepository);
 		monitor.done();
 	}
