@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
@@ -116,14 +115,12 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 									Set<String> newValues = selectionDialog.getSelectedValues();
 									if (!new HashSet<String>(values).equals(newValues)) {
 										setValues(new ArrayList<String>(newValues));
-										attributeChanged();
 										updateText();
 									}
 								} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
 									Set<String> newValues = new HashSet<String>();
 									if (!new HashSet<String>(values).equals(newValues)) {
 										setValues(new ArrayList<String>(newValues));
-										attributeChanged();
 										updateText();
 									}
 								}
