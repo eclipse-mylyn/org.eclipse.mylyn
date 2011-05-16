@@ -255,8 +255,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		List<String> statuses = QueryUtils.getAttributes(
 				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.IssueConector_TaskQuerying,
-				statuses.size());
+		monitor.beginTask(Messages.IssueConector_TaskQuerying, statuses.size());
 		try {
 			Repository repo = GitHub.getRepository(repository
 					.getRepositoryUrl());
@@ -406,8 +405,16 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		if (!taskData.isNew()) {
 			task.setUrl(getTaskUrl(taskRepository.getUrl(),
 					taskData.getTaskId()));
+			String diffUrl = null;
+			TaskAttribute prDiff = taskData.getRoot().getAttribute(
+					IssueAttribute.PULL_REQUEST_DIFF.getId());
+			if (prDiff != null) {
+				diffUrl = taskData.getAttributeMapper().getValue(prDiff);
+				if (diffUrl.length() == 0)
+					diffUrl = null;
+			}
+			task.setAttribute(IssueAttribute.PULL_REQUEST_DIFF.getId(), diffUrl);
 		}
 		new TaskMapper(taskData).applyTo(task);
 	}
-
 }

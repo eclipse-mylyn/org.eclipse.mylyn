@@ -20,6 +20,12 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.github.ui.issue.messages"; //$NON-NLS-1$
 
 	/** */
+	public static String IssueConnectorUi_LabelIssueKind;
+
+	/** */
+	public static String IssueConnectorUi_LabelPullRequestKind;
+
+	/** */
 	public static String IssueRepositoryQueryPage_ErrorLoading;
 
 	/** */

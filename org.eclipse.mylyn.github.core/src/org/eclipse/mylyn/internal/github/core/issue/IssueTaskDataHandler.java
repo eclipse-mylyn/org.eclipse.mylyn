@@ -24,6 +24,7 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -67,8 +68,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
 		if (this.taskAttributeMapper == null)
-			this.taskAttributeMapper = new IssueAttributeMapper(
-					taskRepository);
+			this.taskAttributeMapper = new IssueAttributeMapper(taskRepository);
 		return this.taskAttributeMapper;
 	}
 
@@ -77,8 +77,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		String key = Integer.toString(issue.getNumber());
 		TaskData data = new TaskData(getAttributeMapper(repository),
-				IssueConnector.KIND, repository.getRepositoryUrl(),
-				key);
+				IssueConnector.KIND, repository.getRepositoryUrl(), key);
 		data.setVersion(DATA_VERSION);
 
 		createOperations(data, issue);
@@ -91,20 +90,17 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 				issue.getCreatedAt());
 		createAttribute(data, IssueAttribute.MODIFICATION_DATE,
 				issue.getUpdatedAt());
-		createAttribute(data, IssueAttribute.CLOSED_DATE,
-				issue.getClosedAt());
+		createAttribute(data, IssueAttribute.CLOSED_DATE, issue.getClosedAt());
 
 		User reporter = issue.getUser();
-		createAttribute(data, IssueAttribute.REPORTER, reporter,
-				repository);
+		createAttribute(data, IssueAttribute.REPORTER, reporter, repository);
 		String reporterGravatar = reporter != null ? reporter.getGravatarUrl()
 				: null;
 		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR,
 				reporterGravatar);
 
 		User assignee = issue.getAssignee();
-		createAttribute(data, IssueAttribute.ASSIGNEE, assignee,
-				repository);
+		createAttribute(data, IssueAttribute.ASSIGNEE, assignee, repository);
 		String assigneeGravatar = assignee != null ? assignee.getGravatarUrl()
 				: null;
 		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR,
@@ -115,6 +111,10 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		createLabels(repository, data, issue);
 
 		createMilestone(repository, data, issue);
+
+		PullRequest pr = issue.getPullRequest();
+		String prDiffUrl = pr != null ? pr.getDiffUrl() : null;
+		createAttribute(data, IssueAttribute.PULL_REQUEST_DIFF, prDiffUrl);
 
 		return data;
 	}
@@ -146,8 +146,8 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 	private void createLabels(TaskRepository repository, TaskData data,
 			Issue issue) {
-		TaskAttribute labels = createAttribute(data,
-				IssueAttribute.LABELS, issue.getLabels());
+		TaskAttribute labels = createAttribute(data, IssueAttribute.LABELS,
+				issue.getLabels());
 
 		if (!this.connector.hasCachedLabels(repository))
 			try {
@@ -192,8 +192,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	private String createOperationLabel(Issue issue,
-			IssueOperation operation) {
+	private String createOperationLabel(Issue issue, IssueOperation operation) {
 		return operation == IssueOperation.LEAVE ? operation.getLabel()
 				+ issue.getState() : operation.getLabel();
 	}
@@ -258,8 +257,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		return issue;
 	}
 
-	private String getAttributeValue(TaskData taskData,
-			IssueAttribute attr) {
+	private String getAttributeValue(TaskData taskData, IssueAttribute attr) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.getId());
 		return attribute == null ? null : attribute.getValue();
 	}
@@ -277,18 +275,16 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 	private TaskAttribute createAttribute(TaskData data,
 			IssueAttribute attribute, String value) {
 		TaskAttribute attr = createAttribute(data, attribute);
-		if (value != null) {
+		if (value != null)
 			data.getAttributeMapper().setValue(attr, value);
-		}
 		return attr;
 	}
 
 	private TaskAttribute createAttribute(TaskData data,
 			IssueAttribute attribute, Date value) {
 		TaskAttribute attr = createAttribute(data, attribute);
-		if (value != null) {
+		if (value != null)
 			data.getAttributeMapper().setDateValue(attr, value);
-		}
 		return attr;
 	}
 
@@ -308,9 +304,8 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attr = createAttribute(data, attribute);
 		if (values != null) {
 			List<String> labels = new LinkedList<String>();
-			for (Label label : values) {
+			for (Label label : values)
 				labels.add(label.getName());
-			}
 			data.getAttributeMapper().setValues(attr, labels);
 		}
 		return attr;
@@ -323,11 +318,9 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		data.setVersion(DATA_VERSION);
 
-		for (IssueAttribute attr : IssueAttribute.values()) {
-			if (attr.isInitTask()) {
+		for (IssueAttribute attr : IssueAttribute.values())
+			if (attr.isInitTask())
 				createAttribute(data, attr, (String) null);
-			}
-		}
 
 		return true;
 	}
@@ -394,8 +387,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		Issue issue = createIssue(taskData);
 		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
-			GitHubClient client = IssueConnector
-					.createClient(repository);
+			GitHubClient client = IssueConnector.createClient(repository);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
 				issue.setState(IssueService.STATE_OPEN);

@@ -64,6 +64,8 @@ public class Messages extends NLS {
 	/** */
 	public static String IssueAttribute_LabelModified;
 
+	public static String IssueAttribute_LabelPullRequestDiffUrl;
+
 	/** */
 	public static String IssueAttribute_LabelReporter;
 

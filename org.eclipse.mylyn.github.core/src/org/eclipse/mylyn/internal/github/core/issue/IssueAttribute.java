@@ -34,9 +34,8 @@ public enum IssueAttribute {
 	/**
 	 * Issue description
 	 */
-	BODY(Messages.IssueAttribute_LabelDescription,
-			TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT,
-			false, true),
+	BODY(Messages.IssueAttribute_LabelDescription, TaskAttribute.DESCRIPTION,
+			TaskAttribute.TYPE_LONG_RICH_TEXT, false, true),
 
 	/**
 	 * Issue creation date
@@ -109,7 +108,14 @@ public enum IssueAttribute {
 	 */
 	REPORTER_GRAVATAR(Messages.IssueAttribute_LabelReporterGravatar,
 			"github.issue.reporter.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
-			true, false);
+			true, false),
+
+	/**
+	 * URL to diff if issue is a pull request
+	 */
+	PULL_REQUEST_DIFF(Messages.IssueAttribute_LabelPullRequestDiffUrl,
+			"github.issue.pull.diff", //$NON-NLS-2$
+			TaskAttribute.TYPE_URL, null, true, false);
 
 	private final String id;
 	private final String label;
@@ -123,8 +129,8 @@ public enum IssueAttribute {
 		this(label, id, type, TaskAttribute.KIND_DEFAULT, readOnly, initTask);
 	}
 
-	private IssueAttribute(String label, String id, String type,
-			String kind, boolean readOnly, boolean initTask) {
+	private IssueAttribute(String label, String id, String type, String kind,
+			boolean readOnly, boolean initTask) {
 		this.label = label;
 		this.id = id;
 		this.kind = kind;

@@ -24,8 +24,10 @@ import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -42,7 +44,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private final Pattern issuePattern = Pattern.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)");
+	private final Pattern issuePattern = Pattern.compile("(?:([a-zA-Z0-9_\\.-]+)(?:/([a-zA-Z0-9_\\.-]+))?)?\\#(\\d+)"); //$NON-NLS-1$
 
 	/**
 	 * Get core repository connector
@@ -113,8 +115,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 		wizard.addPage(queryPage);
 		return wizard;
 	}
-	
-	
+
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
 		
@@ -168,6 +169,12 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	public ITaskSearchPage getSearchPage(TaskRepository repository,
 			IStructuredSelection selection) {
 		return new IssueRepositoryQueryPage(repository, null);
+	}
+
+	@Override
+	public String getTaskKindLabel(ITask task) {
+		return task.getAttribute(IssueAttribute.PULL_REQUEST_DIFF.getId()) == null ? Messages.IssueConnectorUi_LabelIssueKind
+				: Messages.IssueConnectorUi_LabelPullRequestKind;
 	}
 
 }
