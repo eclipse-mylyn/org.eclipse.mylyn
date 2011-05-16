@@ -28,7 +28,7 @@ import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
 
 /**
- * Description: Entry class to resolve the generic versions components from a User interface
+ * Entry class to resolve the generic versions components from a User interface.
  * 
  * @author Alvaro Sanchez-Leon
  */

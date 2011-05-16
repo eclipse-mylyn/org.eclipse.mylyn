@@ -7,8 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Ericsson - Created for Mylyn Reviews. Initial use in R4E
- *   
+ *   Ericsson - Initial API and implementation
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.git.ui;
@@ -53,8 +52,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * Description: This class implements the dialog used to fill-in the Find review items details This is a modeless-like
- * dialog
+ * This class implements the dialog used to fill-in the Find review items details This is a modeless-like dialog.
  * 
  * @author Sebastien Dubois
  */
