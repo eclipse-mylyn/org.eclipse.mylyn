@@ -109,9 +109,8 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 		uri.append('/').append(id);
-		GitHubRequest request = new GitHubRequest();
-		request.setUri(uri);
-		request.setType(Issue.class);
+		GitHubRequest request = createRequest().setUri(uri)
+				.setType(Issue.class);
 		return (Issue) client.get(request).getBody();
 	}
 
@@ -136,7 +135,7 @@ public class IssueService extends GitHubService {
 		builder.append('/').append(id);
 		builder.append(IGitHubConstants.SEGMENT_COMMENTS);
 		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
-		PagedRequest<Comment> request = new PagedRequest<Comment>(collector);
+		PagedRequest<Comment> request = createPagedRequest(collector);
 		request.setUri(builder.toString()).setType(
 				new TypeToken<List<Comment>>() {
 				}.getType());
@@ -161,7 +160,7 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 		ListResourceCollector<Issue> collector = new ListResourceCollector<Issue>();
-		PagedRequest<Issue> request = new PagedRequest<Issue>(collector);
+		PagedRequest<Issue> request = createPagedRequest(collector);
 		request.setParams(filterData).setUri(uri);
 		request.setType(new TypeToken<List<Issue>>() {
 		}.getType());

@@ -11,10 +11,16 @@
 package org.eclipse.egit.github.core.tests.live;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.egit.github.core.IResourceCollector;
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.service.IssueService;
 
 /**
@@ -54,6 +60,42 @@ public class IssueTest extends LiveTest {
 		assertFalse(issues.isEmpty());
 		for (Issue issue : issues)
 			assertNotNull(issue);
+	}
+
+	/**
+	 * Test limiting result size
+	 * 
+	 * @throws IOException
+	 */
+	public void testLimit() throws IOException {
+		IssueService service = new IssueService(client) {
+
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			protected <V> PagedRequest<V> createPagedRequest(
+					final IResourceCollector<V> collector) {
+				return super.createPagedRequest(new IResourceCollector() {
+
+					public boolean accept(int page, Collection response) {
+						collector.accept(page, response);
+						return false;
+					}
+				});
+			}
+
+		};
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(IssueService.FILTER_STATE, IssueService.STATE_CLOSED);
+		List<Issue> issues = service.getIssues("schacon", "showoff", params);
+		assertNotNull(issues);
+		assertTrue(issues.size() > 2);
+		params.put(IGitHubConstants.PARAM_PER_PAGE, "1");
+		issues = service.getIssues("schacon", "showoff", params);
+		assertNotNull(issues);
+		assertEquals(1, issues.size());
+		params.put(IGitHubConstants.PARAM_PER_PAGE, "2");
+		issues = service.getIssues("schacon", "showoff", params);
+		assertNotNull(issues);
+		assertEquals(2, issues.size());
 	}
 
 }
