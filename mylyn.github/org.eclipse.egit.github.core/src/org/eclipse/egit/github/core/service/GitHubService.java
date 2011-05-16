@@ -18,6 +18,7 @@ import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IResourceCollector;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -39,6 +40,27 @@ public abstract class GitHubService {
 	public GitHubService(GitHubClient client) {
 		Assert.notNull("Client cannot be null", client); //$NON-NLS-1$
 		this.client = client;
+	}
+
+	/**
+	 * Unified request creation method that all sub-classes should use so
+	 * overriding classes can extend and configure the default request.
+	 * 
+	 * @return request
+	 */
+	protected GitHubRequest createRequest() {
+		return new GitHubRequest();
+	}
+
+	/**
+	 * Unified paged request creation method that all sub-classes should use so
+	 * overriding classes can extend and configure the default request.
+	 * 
+	 * @param collector
+	 * @return request
+	 */
+	protected <V> PagedRequest<V> createPagedRequest(IResourceCollector<V> collector) {
+		return new PagedRequest<V>(collector);
 	}
 
 	/**
