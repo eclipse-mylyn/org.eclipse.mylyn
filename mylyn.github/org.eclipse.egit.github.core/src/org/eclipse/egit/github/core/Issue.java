@@ -34,6 +34,8 @@ public class Issue {
 
 	private Milestone milestone;
 
+	private PullRequest pullRequest;
+
 	private String body;
 
 	private String htmlUrl;
@@ -113,6 +115,13 @@ public class Issue {
 	public Issue setMilestone(Milestone milestone) {
 		this.milestone = milestone;
 		return this;
+	}
+
+	/**
+	 * @return pullRequest
+	 */
+	public PullRequest getPullRequest() {
+		return this.pullRequest;
 	}
 
 	/**
