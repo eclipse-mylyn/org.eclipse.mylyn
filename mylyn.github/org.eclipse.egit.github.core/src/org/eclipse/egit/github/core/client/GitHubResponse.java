@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.HttpResponse;
 
 /**
  * GitHub API response class.
@@ -27,8 +27,8 @@ public class GitHubResponse {
 	 * @param method
 	 * @param body
 	 */
-	public GitHubResponse(HttpMethod method, Object body) {
-		links = new PageLinks(method);
+	public GitHubResponse(HttpResponse response, Object body) {
+		links = new PageLinks(response);
 		this.body = body;
 	}
 

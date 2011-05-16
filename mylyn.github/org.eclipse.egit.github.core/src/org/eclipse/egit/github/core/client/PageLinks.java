@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 
 /**
  * Page link class to be used to determine the links to other pages of request
@@ -32,11 +32,11 @@ public class PageLinks {
 	/**
 	 * Parse links from executed method
 	 * 
-	 * @param method
+	 * @param response
 	 */
-	public PageLinks(HttpMethod method) {
-		Header[] linkHeaders = method
-				.getResponseHeaders(IGitHubConstants.HEADER_LINK);
+	public PageLinks(HttpResponse response) {
+		Header[] linkHeaders = response
+				.getHeaders(IGitHubConstants.HEADER_LINK);
 		if (linkHeaders.length > 0) {
 			String[] links = linkHeaders[0].getValue().split(DELIM_LINKS);
 			for (String link : links) {
@@ -70,13 +70,13 @@ public class PageLinks {
 				}
 			}
 		} else {
-			Header[] nextHeaders = method
-					.getResponseHeaders(IGitHubConstants.HEADER_NEXT);
+			Header[] nextHeaders = response
+					.getHeaders(IGitHubConstants.HEADER_NEXT);
 			if (nextHeaders.length > 0)
 				next = nextHeaders[0].getValue();
 
-			Header[] lastHeaders = method
-					.getResponseHeaders(IGitHubConstants.HEADER_LAST);
+			Header[] lastHeaders = response
+					.getHeaders(IGitHubConstants.HEADER_LAST);
 			if (lastHeaders.length > 0)
 				last = lastHeaders[0].getValue();
 		}
