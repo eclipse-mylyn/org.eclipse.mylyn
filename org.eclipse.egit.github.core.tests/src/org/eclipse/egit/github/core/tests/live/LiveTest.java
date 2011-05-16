@@ -15,7 +15,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.http.HttpHost;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
 /**
@@ -51,11 +51,10 @@ public abstract class LiveTest extends TestCase {
 	protected GitHubClient createClient(String url) throws IOException {
 		GitHubClient client = null;
 		if (url != null) {
-			HostConfiguration config = new HostConfiguration();
 			URL parsed = new URL(url);
-			config.setHost(parsed.getHost(), parsed.getPort(),
+			HttpHost httpHost = new HttpHost(parsed.getHost(), parsed.getPort(),
 					parsed.getProtocol());
-			client = new GitHubClient(config);
+			client = new GitHubClient(httpHost);
 		} else
 			client = new GitHubClient();
 		return configure(client);
