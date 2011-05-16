@@ -107,17 +107,12 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 
-		setAttributeValue(data, schema.KEY, change.getKey().abbreviate());
+		updateTaskData(repository, data, new ChangeInfo(change));
 		setAttributeValue(data, schema.CHANGE_ID, change.getKey().get());
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
 		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
-		setAttributeValue(data, schema.PROJECT, change.getProject().get());
-		setAttributeValue(data, schema.SUMMARY, change.getSubject());
-		setAttributeValue(data, schema.STATUS, change.getStatus().toString());
-		setAttributeValue(data, schema.UPDATED, dateToString(change.getLastUpdatedOn()));
 		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
 		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
-		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
 		if (change.getStatus() != null && change.getStatus().isClosed()) {
 			setAttributeValue(data, schema.COMPLETED, dateToString(change.getLastUpdatedOn()));
 		}
@@ -145,14 +140,13 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
 	}
 
-	public void updateTaskData(TaskData data, ChangeInfo changeInfo) {
+	public void updateTaskData(TaskRepository repository, TaskData data, ChangeInfo changeInfo) {
 		GerritTaskSchema schema = GerritTaskSchema.getDefault();
 		setAttributeValue(data, schema.KEY, changeInfo.getKey().abbreviate());
-		setAttributeValue(data, schema.OWNER, changeInfo.getOwner().toString());
 		setAttributeValue(data, schema.PROJECT, changeInfo.getProject().getName());
 		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
 		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
-		//setAttributeValue(data, GerritAttribute.URL, change.getUrl());
+		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
 		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getLastUpdatedOn()));
 	}
 

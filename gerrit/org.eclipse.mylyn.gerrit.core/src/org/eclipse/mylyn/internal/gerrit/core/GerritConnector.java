@@ -188,7 +188,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				for (ChangeInfo changeInfo : result) {
 					TaskData taskData = taskDataHandler.createTaskData(repository, changeInfo.getId() + "", monitor); //$NON-NLS-1$
 					taskData.setPartial(true);
-					taskDataHandler.updateTaskData(taskData, changeInfo);
+					taskDataHandler.updateTaskData(repository, taskData, changeInfo);
 					resultCollector.accept(taskData);
 				}
 				return Status.OK_STATUS;
