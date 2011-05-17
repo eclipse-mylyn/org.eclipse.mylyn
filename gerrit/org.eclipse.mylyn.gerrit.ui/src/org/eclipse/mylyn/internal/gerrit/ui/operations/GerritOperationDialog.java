@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
@@ -28,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.ITasksUiFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.swt.SWT;
@@ -36,6 +41,8 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -43,6 +50,7 @@ import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public abstract class GerritOperationDialog extends ProgressDialog {
 
@@ -159,6 +167,26 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 				editor.getViewer().getTextWidget().setSelection(0);
 			}
 		});
+
+		return editor;
+	}
+
+	protected Text createPersonTextEditor(Composite composite, String value) {
+		int style = SWT.FLAT | SWT.BORDER | SWT.MULTI | SWT.WRAP;
+		Text editor = new Text(composite, style);
+		if (value != null) {
+			editor.setText(value);
+		}
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		ITasksUiFactory uiFactory = TasksUi.getUiFactory();
+		IContentProposalProvider proposalProvider = uiFactory.createPersonContentProposalProvider(repository);
+		ILabelProvider proposalLabelProvider = uiFactory.createPersonContentProposalLabelProvider(repository);
+
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(editor, new TextContentAdapter(),
+				proposalProvider, ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND, new char[0], true);
+		adapter.setLabelProvider(proposalLabelProvider);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
 		return editor;
 	}

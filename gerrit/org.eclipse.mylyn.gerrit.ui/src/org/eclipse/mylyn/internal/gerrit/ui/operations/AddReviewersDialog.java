@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,25 +15,27 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AddReviewersRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.google.gerrit.common.data.ReviewerResult;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public class AddReviewersDialog extends GerritOperationDialog {
 
-	private RichTextEditor messageEditor;
+	private Text messageEditor;
 
 	public AddReviewersDialog(Shell parentShell, ITask task) {
 		super(parentShell, task);
@@ -56,10 +58,11 @@ public class AddReviewersDialog extends GerritOperationDialog {
 		setMessage("Enter a comma separated list of names or email addresses.");
 
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		GridLayout layout = GridLayoutFactory.fillDefaults().margins(5, 5).create();
+		composite.setLayout(layout);
 
-		messageEditor = createRichTextEditor(composite, "");
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor.getControl());
+		messageEditor = createPersonTextEditor(composite, "");
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor);
 
 		return composite;
 	}
