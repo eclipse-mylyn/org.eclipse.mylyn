@@ -111,5 +111,11 @@
             name="%importRepositoriesWizardName">
       </wizard>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.mylyn.github.ui.command.cloneGist"
+            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/cloneGit.gif">
+      </image>
+   </extension>
 </plugin>

@@ -14,13 +14,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
+import java.util.Collections;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.HandlerEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -46,6 +50,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -62,9 +67,51 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 public class CloneGistHandler extends AbstractHandler {
 
 	/**
+	 * Get gist name for task data used to create projects and Git repositories
+	 * 
+	 * @param data
+	 * @return name
+	 */
+	public static String getGistName(TaskData data) {
+		return "gist-" + data.getTaskId(); //$NON-NLS-1$
+	}
+
+	private static IWorkspaceRoot getWorkspaceRoot() {
+		return ResourcesPlugin.getWorkspace().getRoot();
+	}
+
+	private static RepositoryUtil getRepoUtil() {
+		return org.eclipse.egit.core.Activator.getDefault().getRepositoryUtil();
+	}
+
+	/**
 	 * ID
 	 */
 	public static final String ID = "org.eclipse.mylyn.github.ui.command.cloneGist"; //$NON-NLS-1$
+
+	private IEvaluationContext context;
+
+	@Override
+	public void setEnabled(Object evaluationContext) {
+		context = evaluationContext instanceof IEvaluationContext ? (IEvaluationContext) evaluationContext
+				: null;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		if (!super.isEnabled())
+			return false;
+		if (context == null)
+			return false;
+		ExecutionEvent event = new ExecutionEvent(null, Collections.EMPTY_MAP,
+				null, context);
+		TaskData data = getTaskData(event);
+		if (data == null)
+			return false;
+		String id = getGistName(data);
+		return !getWorkspaceRoot().getProject(id).exists()
+				&& !getRepoUtil().getConfiguredRepositories().contains(id);
+	}
 
 	private File getParentDirectory() {
 		String destinationDir = Activator.getDefault().getPreferenceStore()
@@ -102,9 +149,8 @@ public class CloneGistHandler extends AbstractHandler {
 		project.open(IResource.BACKGROUND_REFRESH, monitor);
 
 		monitor.setTaskName(Messages.CloneGistHandler_TaskConnectingProject);
-		ConnectProviderOperation cpo = new ConnectProviderOperation(project,
-				repository.getDirectory());
-		cpo.execute(monitor);
+		new ConnectProviderOperation(project, repository.getDirectory())
+				.execute(monitor);
 	}
 
 	private CloneOperation createCloneOperation(TaskData data, String name)
@@ -138,16 +184,12 @@ public class CloneGistHandler extends AbstractHandler {
 		}
 	}
 
-	private RepositoryUtil getRepoUtil() {
-		return org.eclipse.egit.core.Activator.getDefault().getRepositoryUtil();
-	}
-
 	private Job createCloneJob(final ExecutionEvent event, final TaskData data) {
 		Job job = new Job(Messages.CloneGistHandler_TaskCloning) {
 
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					final String name = "gist-" + data.getTaskId(); //$NON-NLS-1$
+					final String name = getGistName(data);
 
 					CloneOperation operation = createCloneOperation(data, name);
 					updateCredentials(data, operation);
@@ -188,6 +230,9 @@ public class CloneGistHandler extends AbstractHandler {
 				} catch (Exception e) {
 					displayError(event, e);
 					Activator.logError("Error cloning gist", e); //$NON-NLS-1$
+				} finally {
+					fireHandlerChanged(new HandlerEvent(CloneGistHandler.this,
+							true, false));
 				}
 				return Status.OK_STATUS;
 			}
@@ -211,13 +256,12 @@ public class CloneGistHandler extends AbstractHandler {
 	}
 
 	/**
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * Get task data from event
+	 * 
+	 * @param event
+	 * @return task data
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
-		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) activeSite
-				.getService(IWorkbenchSiteProgressService.class);
-
+	protected TaskData getTaskData(ExecutionEvent event) {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection == null || selection.isEmpty())
 			selection = HandlerUtil.getActiveMenuSelection(event);
@@ -225,8 +269,28 @@ public class CloneGistHandler extends AbstractHandler {
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			if (first instanceof TaskData)
-				service.schedule(createCloneJob(event, (TaskData) first));
+				return (TaskData) first;
+			else if (first instanceof ITask)
+				try {
+					return TasksUi.getTaskDataManager().getTaskData(
+							(ITask) first);
+				} catch (CoreException e) {
+					return null;
+				}
 		}
+		return null;
+	}
+
+	/**
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
+		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) activeSite
+				.getService(IWorkbenchSiteProgressService.class);
+		TaskData data = getTaskData(event);
+		if (data != null)
+			service.schedule(createCloneJob(event, data));
 		return null;
 	}
 }

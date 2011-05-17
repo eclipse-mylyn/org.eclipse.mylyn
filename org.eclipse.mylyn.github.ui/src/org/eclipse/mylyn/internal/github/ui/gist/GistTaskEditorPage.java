@@ -20,14 +20,19 @@ import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.ui.UIIcons;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
+import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.issue.IssueSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -37,6 +42,8 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 
 /**
  * Gist task editor page class
@@ -53,47 +60,27 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		setNeedsSubmitButton(true);
 	}
 
+	private CommandContributionItem createCommandContributionItem(
+			String commandId) {
+		CommandContributionItemParameter parameter = new CommandContributionItemParameter(
+				getSite(), commandId, commandId,
+				CommandContributionItem.STYLE_PUSH);
+		return new CommandContributionItem(parameter);
+	}
+
+	private void addCloneAction(IToolBarManager manager) {
+		if (TasksUiUtil.isOutgoingNewTask(getTask(), GistConnector.KIND))
+			return;
+		manager.prependToGroup(
+				"open", createCommandContributionItem(CloneGistHandler.ID)); //$NON-NLS-1$
+	}
+
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#fillToolBar(org.eclipse.jface.action.IToolBarManager)
 	 */
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		super.fillToolBar(toolBarManager);
-
-		Action cloneGist = new Action(
-				Messages.GistTaskEditorPage_LabelCloneGistAction,
-				UIIcons.CLONEGIT) {
-
-			public void run() {
-				ICommandService srv = (ICommandService) getSite().getService(
-						ICommandService.class);
-				IHandlerService hsrv = (IHandlerService) getSite().getService(
-						IHandlerService.class);
-				Command command = srv.getCommand(CloneGistHandler.ID);
-
-				ExecutionEvent event = hsrv.createExecutionEvent(command, null);
-				if (event.getApplicationContext() instanceof IEvaluationContext) {
-					IEvaluationContext context = (IEvaluationContext) event
-							.getApplicationContext();
-					IStructuredSelection selection = new StructuredSelection(
-							getModel().getTaskData());
-					context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
-							selection);
-					try {
-						command.executeWithChecks(event);
-					} catch (ExecutionException ignored) {
-						// Ignored
-					} catch (NotDefinedException ignored) {
-						// Ignored
-					} catch (NotEnabledException ignored) {
-						// Ignored
-					} catch (NotHandledException ignored) {
-						// Ignored
-					}
-				}
-			}
-
-		};
-		toolBarManager.prependToGroup("open", cloneGist); //$NON-NLS-1$
+		addCloneAction(toolBarManager);
 	}
 
 	/**
