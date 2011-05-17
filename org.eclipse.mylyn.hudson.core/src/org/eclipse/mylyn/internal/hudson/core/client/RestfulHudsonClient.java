@@ -14,13 +14,10 @@
 
 package org.eclipse.mylyn.internal.hudson.core.client;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,12 +56,12 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelRunArtifact;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
 import org.eclipse.osgi.util.NLS;
-import org.json.JSONException;
-import org.json.JSONWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.google.gson.Gson;
 
 /**
  * Represents the Hudson repository that is accessed through REST.
@@ -345,6 +342,21 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
+	private class Parameters {
+
+		private NameValue[] parameter;
+	}
+
+	private static class NameValue {
+
+		@SuppressWarnings("unused")
+		private Object name;
+
+		@SuppressWarnings("unused")
+		private Object value;
+
+	}
+
 	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters, final IOperationMonitor monitor)
 			throws HudsonException {
 		new HudsonOperation<Object>(client) {
@@ -354,33 +366,24 @@ public class RestfulHudsonClient {
 				method.setFollowRedirects(false);
 				method.setDoAuthentication(true);
 				if (parameters != null) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					Writer writer = new OutputStreamWriter(out);
-					try {
-						JSONWriter json = new JSONWriter(writer);
-						json.object().key("parameter").array();
-						for (Entry<String, String> entry : parameters.entrySet()) {
-							method.addParameter(new NameValuePair("name", entry.getKey()));
-							json.object().key("name").value(entry.getKey());
-							String value = entry.getValue();
-							if (value != null) {
-								method.addParameter(new NameValuePair("value", value));
-								json.key("value");
-								if (entry.getKey().equals("Boolean")) {
-									json.value(Boolean.parseBoolean(entry.getValue()));
-								} else {
-									json.value(entry.getValue());
-								}
-							}
-							json.endObject();
+					Parameters params = new Parameters();
+					params.parameter = new NameValue[parameters.size()];
+
+					int i = 0;
+					for (Entry<String, String> entry : parameters.entrySet()) {
+						method.addParameter(new NameValuePair("name", entry.getKey()));
+						String value = entry.getValue();
+						if (value != null) {
+							method.addParameter(new NameValuePair("value", value));
 						}
-						json.endArray().endObject();
-						writer.flush();
-						method.addParameter(new NameValuePair("json", out.toString()));
-						method.addParameter(new NameValuePair("Submit", "Build"));
-					} catch (JSONException e) {
-						throw new IOException("Error constructing request: " + e);
+
+						NameValue param = new NameValue();
+						param.name = entry.getKey();
+						param.value = entry.getValue();
+						params.parameter[i++] = param;
 					}
+					method.addParameter(new NameValuePair("json", new Gson().toJson(params)));
+					method.addParameter(new NameValuePair("Submit", "Build"));
 				}
 
 				try {
