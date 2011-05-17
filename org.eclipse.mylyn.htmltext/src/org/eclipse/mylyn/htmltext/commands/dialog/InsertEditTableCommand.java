@@ -15,6 +15,7 @@ import org.eclipse.mylyn.htmltext.commands.Command;
 
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
+ * @since 0.8
  */
 public class InsertEditTableCommand extends Command {
 
