@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.github.core.gist;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.CoreException;
@@ -20,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -62,19 +62,12 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 	public InputStream getContent(TaskRepository repository, ITask task,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
 			throws CoreException {
-		GitHubClient client = new GitHubClient();
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
-
 		TaskAttribute urlAttribute = attachmentAttribute
 				.getAttribute(GistAttribute.RAW_FILE_URL.getId());
 		try {
-			GitHubRequest request = new GitHubRequest();
-			request.setUri(urlAttribute.getValue());
-			return client.getStream(request);
+			if (urlAttribute == null)
+				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
+			return new URL(urlAttribute.getValue()).openStream();
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}

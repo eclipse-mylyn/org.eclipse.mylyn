@@ -33,6 +33,11 @@
             description="Create Gist based on selection"
             id="org.eclipse.mylyn.github.ui.command.createGist"
             name="Create Gist">
+         <commandParameter
+               id="publicGist"
+               name="%createGistPublicParamName"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             description="Clone Gist into Git repository"
@@ -45,34 +50,82 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:#AbstractTextEditorContext?after=additions">
-         <command
-               commandId="org.eclipse.mylyn.github.ui.command.createGist"
+         <menu
                icon="icons/obj16/github.png"
-               label="Create Gist"
-               style="push">
-         </command>
+               label="%githubMenuLabel">
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_private.png"
+                  label="%createPrivateGistLabel"
+                  style="push">
+               <parameter
+                     name="publicGist"
+                     value="false">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_public.png"
+                  label="%createPublicGistLabel"
+                  style="push">
+               <parameter
+                     name="publicGist"
+                     value="true">
+               </parameter>
+            </command>
+         </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any">
-         <command
-               commandId="org.eclipse.mylyn.github.ui.command.createGist"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
                icon="icons/obj16/github.png"
-               label="Create Gist"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <adapt
-                           type="org.eclipse.core.resources.IFile">
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
+               label="%githubMenuLabel">
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_private.png"
+                  label="%createPrivateGistLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate
+                           ifEmpty="false">
+                        <adapt
+                              type="org.eclipse.core.resources.IFile">
+                        </adapt>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+               <parameter
+                     name="publicGist"
+                     value="false">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_public.png"
+                  label="%createPublicGistLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate
+                           ifEmpty="false">
+                        <adapt
+                              type="org.eclipse.core.resources.IFile">
+                        </adapt>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+               <parameter
+                     name="publicGist"
+                     value="true">
+               </parameter>
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension

@@ -28,71 +28,71 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.github.ui.internal.GitHubUi;
-import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Create Gist handler class.
+ */
 public class CreateGistHandler extends AbstractHandler {
+
+	/**
+	 * PUBLIC_GIST
+	 */
+	public static final String PUBLIC_GIST = "publicGist"; //$NON-NLS-1$
 
 	/**
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
 	 */
 	public boolean isEnabled() {
-		return !TasksUi.getRepositoryManager()
-				.getRepositories(GistConnector.KIND).isEmpty();
+		return !GistConnectorUi.getRepositories().isEmpty();
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		IEditorInput input = HandlerUtil.getActiveEditorInput(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if(selection != null) {
-			if(selection instanceof ITextSelection) {
-				ITextSelection text = (ITextSelection) selection;
-				IEditorInput input = editor.getEditorInput();
-				if(input instanceof IFileEditorInput) {
-					// only use the first repository, in the future provide a selection if multiple exist
-					IFileEditorInput fileInput = (IFileEditorInput) input;
-					IFile file = fileInput.getFile();
-					createGistJob(file.getName(), file.getFileExtension(), text.getText());
-				}
-			} else
-			if(selection instanceof IStructuredSelection) {
-				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-				Object obj = structuredSelection.getFirstElement();
-				if(obj instanceof IFile) {
-					IFile file = (IFile) obj;
-					createGistJob(file);
-				}
-			}
+		if (selection == null || selection.isEmpty())
+			selection = HandlerUtil.getActiveMenuSelection(event);
+		if (selection instanceof ITextSelection
+				&& input instanceof IFileEditorInput) {
+			ITextSelection text = (ITextSelection) selection;
+			IFile file = ((IFileEditorInput) input).getFile();
+			createGistJob(file.getName(), file.getFileExtension(),
+					text.getText(),
+					Boolean.parseBoolean(event.getParameter(PUBLIC_GIST)));
+		} else if (selection instanceof IStructuredSelection) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			Object obj = structuredSelection.getFirstElement();
+			if (obj instanceof IFile)
+				createGistJob((IFile) obj,
+						Boolean.parseBoolean(event.getParameter(PUBLIC_GIST)));
 		}
 		return null;
 	}
 
-	private void createGistJob(String name, String extension, String contents) {
-		Set<TaskRepository> repositories = TasksUi.getRepositoryManager()
-				.getRepositories(GistConnector.KIND);
+	private void createGistJob(String name, String extension, String contents,
+			boolean isPublic) {
+		Set<TaskRepository> repositories = GistConnectorUi.getRepositories();
 
+		// only use the first repository, in the future provide a
+		// selection if multiple exist
 		TaskRepository repository = repositories.iterator().next();
 		GitHubClient client = new GitHubClient();
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
-		String userName = null;
-		if (credentials != null) {
-			userName = credentials.getUserName();
-			client.setCredentials(userName, credentials.getPassword());
-		}
+		if (credentials != null)
+			client.setCredentials(credentials.getUserName(),
+					credentials.getPassword());
 		GistService service = new GistService(client);
-		CreateGistJob job = new CreateGistJob("Creating Gist", name, contents,
-				service, userName);
+		CreateGistJob job = new CreateGistJob(Messages.CreateGistHandler_CreateGistJobName, name, contents,
+				service, isPublic);
 		job.setSystem(true);
 		job.schedule();
 	}
 
-	private void createGistJob(IFile file) {
+	private void createGistJob(IFile file, boolean isPublic) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(file.getContents()));
@@ -102,7 +102,8 @@ public class CreateGistHandler extends AbstractHandler {
 				result.append(line).append('\n');
 
 			String contents = result.toString();
-			createGistJob(file.getName(), file.getFileExtension(), contents);
+			createGistJob(file.getName(), file.getFileExtension(), contents,
+					isPublic);
 		} catch (CoreException e) {
 			GitHubUi.logError(e);
 		} catch (IOException e) {

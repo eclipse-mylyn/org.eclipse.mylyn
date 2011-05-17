@@ -10,15 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.gist;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.mylyn.github.ui.internal.GitHubImages;
-import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,6 +30,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
+/**
+ * Gist notification popup class
+ */
 @SuppressWarnings("restriction")
 public class GistNotificationPopup extends AbstractNotificationPopup {
 
@@ -37,6 +40,13 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 
 	private String title;
 
+	/**
+	 * Create Gist notification popup
+	 * 
+	 * @param display
+	 * @param gist
+	 * @param title
+	 */
 	public GistNotificationPopup(Display display, Gist gist, String title) {
 		super(display);
 		this.gist = gist;
@@ -47,27 +57,34 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 	protected void createContentArea(Composite composite) {
 		composite.setLayout(new GridLayout(1, true));
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("Title: " + title);
+		label.setText(MessageFormat.format(
+				Messages.GistNotificationPopup_GistTitle, title));
 		Link link = new Link(composite, SWT.WRAP);
-		link.setText("Created Gist: <a>" + gist.getId() + "</a>");
+		link.setText(MessageFormat.format(
+				Messages.GistNotificationPopup_GistLink, gist.getId()));
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setBackground(composite.getBackground());
 		link.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Set<TaskRepository> repositories = TasksUi
-						.getRepositoryManager().getRepositories(
-								GistConnector.KIND);
-				if (!repositories.isEmpty())
-					TasksUiUtil.openTask(repositories.iterator().next(), gist.getId());
+				Set<TaskRepository> repositories = GistConnectorUi
+						.getRepositories();
+				if (!repositories.isEmpty()) {
+					TaskRepository repository = repositories.iterator().next();
+					AbstractTask task = TasksUiInternal.getTask(
+							repository.getRepositoryUrl(), gist.getId(),
+							gist.getHtmlUrl());
+					if (task != null)
+						TasksUiInternal.refreshAndOpenTaskListElement(task);
+				}
 			}
 		});
 	}
 
 	@Override
 	protected String getPopupShellTitle() {
-		return "GitHub Notification";
+		return Messages.GistNotificationPopup_ShellTitle;
 	}
 
 	@Override

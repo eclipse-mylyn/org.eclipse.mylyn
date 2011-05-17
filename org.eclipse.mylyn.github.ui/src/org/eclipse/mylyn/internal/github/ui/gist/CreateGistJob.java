@@ -19,46 +19,63 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.mylyn.github.ui.internal.GitHubUi;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * Create Gist job class
+ */
 public class CreateGistJob extends Job {
 
 	private String title;
 	private String content;
 	private GistService service;
-	private String user;
+	private boolean isPublic;
 
+	/**
+	 * Create job that will create a Gist with the specified parameters
+	 * 
+	 * @param name
+	 * @param title
+	 * @param content
+	 * @param service
+	 * @param isPublic
+	 */
 	public CreateGistJob(String name, String title, String content,
-			GistService service, String user) {
+			GistService service, boolean isPublic) {
 		super(name);
 		this.title = title;
 		this.content = content;
 		this.service = service;
-		this.user = user;
+		this.isPublic = isPublic;
 	}
 
 	@Override
+	@SuppressWarnings("restriction")
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			Gist gist = new Gist().setPublic(true);
-			if (user != null)
-				gist.setUser(new User().setLogin(user));
+			Gist gist = new Gist().setPublic(isPublic);
 			gist.setDescription(title);
 			GistFile file = new GistFile().setContent(content);
 			gist.setFiles(Collections.singletonMap(title, file));
 			final Gist created = service.createGist(gist);
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				@SuppressWarnings("restriction")
+			final Display display = PlatformUI.getWorkbench().getDisplay();
+			display.asyncExec(new Runnable() {
+
 				public void run() {
 					GistNotificationPopup popup = new GistNotificationPopup(
-							PlatformUI.getWorkbench().getDisplay(), created, title);
+							display, created, title);
 					popup.create();
 					popup.open();
 				}
 			});
+			TasksUiPlugin
+					.getTaskJobFactory()
+					.createSynchronizeRepositoriesJob(
+							GistConnectorUi.getRepositories()).schedule();
 		} catch (IOException e) {
 			GitHubUi.logError(e);
 		}

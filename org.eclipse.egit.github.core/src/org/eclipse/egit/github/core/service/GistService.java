@@ -21,7 +21,6 @@ import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.ListResourceCollector;
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -88,13 +87,9 @@ public class GistService extends GitHubService {
 	public Gist createGist(Gist gist) throws IOException {
 		Assert.notNull("Gist cannot be null", gist);
 		StringBuilder uri = new StringBuilder();
-		User user = gist.getUser();
-		if (user != null) {
-			String login = user.getLogin();
-			Assert.notNull("User login name cannot be null", login);
-			uri.append(IGitHubConstants.SEGMENT_USERS);
-			uri.append('/').append(login);
-		}
+		String user = client.getUser();
+		if (user != null)
+			uri.append(IGitHubConstants.SEGMENT_USERS).append('/').append(user);
 		uri.append(IGitHubConstants.SEGMENT_GISTS);
 		return this.client.post(uri.toString(), gist, Gist.class);
 	}

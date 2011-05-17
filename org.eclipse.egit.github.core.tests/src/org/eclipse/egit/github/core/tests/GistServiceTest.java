@@ -92,25 +92,6 @@ public class GistServiceTest {
 		verify(gitHubClient).post("/gists", gist, Gist.class);
 	}
 
-	@Test
-	public void createGist_NonNullUser() throws IOException {
-		Gist gist = new Gist();
-		User user = new User();
-		user.setLogin("test_user");
-		gist.setUser(user);
-		gistService.createGist(gist);
-		verify(gitHubClient).post("/users/test_user/gists", gist, Gist.class);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void createGist_NonNullUser_NullLogin() throws IOException {
-		Gist gist = new Gist();
-		User user = new User();
-		user.setLogin(null);
-		gist.setUser(user);
-		gistService.createGist(gist);
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void updateGist_NullGist() throws IOException {
 		gistService.updateGist(null);

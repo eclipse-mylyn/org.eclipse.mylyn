@@ -31,6 +31,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -135,6 +136,20 @@ public class GitHubClient {
 					new UsernamePasswordCredentials(user, password));
 		else
 			this.client.getCredentialsProvider().clear();
+	}
+
+	/**
+	 * Get the user that this client is currently authenticating as
+	 * 
+	 * @return user or null if not authentication
+	 */
+	public String getUser() {
+		Credentials credentials = this.client.getCredentialsProvider()
+				.getCredentials(
+						new AuthScope(httpHost.getHostName(), httpHost
+								.getPort()));
+		return credentials != null ? credentials.getUserPrincipal().getName()
+				: null;
 	}
 
 	/**

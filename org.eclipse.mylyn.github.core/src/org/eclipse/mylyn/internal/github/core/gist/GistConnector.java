@@ -84,7 +84,8 @@ public class GistConnector extends AbstractRepositoryConnector {
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#canCreateNewTask(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
 	public boolean canCreateNewTask(TaskRepository repository) {
-		return true;
+		// Gists are created from menu actions on files and text selections
+		return false;
 	}
 
 	/**

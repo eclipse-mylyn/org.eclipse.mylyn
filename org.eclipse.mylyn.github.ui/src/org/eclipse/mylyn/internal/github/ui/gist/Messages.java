@@ -41,6 +41,9 @@ public class Messages extends NLS {
 	public static String CloneGistHandler_TaskRegisteringRepository;
 
 	/** */
+	public static String CreateGistHandler_CreateGistJobName;
+
+	/** */
 	public static String GistAttachmentPage_Description;
 
 	/** */
@@ -57,6 +60,15 @@ public class Messages extends NLS {
 
 	/** */
 	public static String GistConnectorUi_LabelTaskKind;
+
+	/** */
+	public static String GistNotificationPopup_GistLink;
+
+	/** */
+	public static String GistNotificationPopup_GistTitle;
+
+	/** */
+	public static String GistNotificationPopup_ShellTitle;
 
 	/** */
 	public static String GistRepositoryQueryPage_LabelTitle;

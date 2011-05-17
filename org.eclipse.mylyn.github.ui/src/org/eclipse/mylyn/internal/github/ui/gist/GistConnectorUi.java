@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.gist;
 
+import java.util.Set;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -39,6 +41,16 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	public static GistConnector getCoreConnector() {
 		return (GistConnector) TasksUi
 				.getRepositoryConnector(GistConnector.KIND);
+	}
+
+	/**
+	 * Get Gist task repositories
+	 * 
+	 * @return possibly empty set of Gist task repositories
+	 */
+	public static Set<TaskRepository> getRepositories() {
+		return TasksUi.getRepositoryManager().getRepositories(
+				GistConnector.KIND);
 	}
 
 	/**
