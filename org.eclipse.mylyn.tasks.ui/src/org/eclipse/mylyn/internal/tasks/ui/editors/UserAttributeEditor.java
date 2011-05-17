@@ -118,6 +118,12 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	@Override
+	protected boolean shouldAutoRefresh() {
+		// do not auto refresh to avoid picking up partially entered accounts
+		return false;
+	}
+
+	@Override
 	public void refresh() {
 		if (label.isDisposed()) {
 			return;

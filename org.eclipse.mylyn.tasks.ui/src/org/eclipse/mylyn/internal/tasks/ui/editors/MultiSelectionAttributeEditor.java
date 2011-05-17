@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2008, 2009 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -43,6 +42,8 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private List list;
 
+	protected boolean suppressRefresh;
+
 	public MultiSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		if (isReadOnly()) {
@@ -54,7 +55,6 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-
 		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY | SWT.WRAP);
 			text.setFont(EditorUtil.TEXT_FONT);
@@ -87,7 +87,12 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 							Assert.isLegal(index >= 0 && index <= allValues.length - 1);
 							selectedValues[i] = allValues[index];
 						}
-						setValues(selectedValues);
+						try {
+							suppressRefresh = true;
+							setValues(selectedValues);
+						} finally {
+							suppressRefresh = false;
+						}
 					}
 				});
 				list.showSelection();
@@ -164,6 +169,6 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
 }

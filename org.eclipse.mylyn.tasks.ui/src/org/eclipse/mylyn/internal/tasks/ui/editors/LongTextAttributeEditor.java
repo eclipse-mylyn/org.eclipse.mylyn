@@ -68,12 +68,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					try {
-						cflowModify = true;
-						setValue(text.getText());
-					} finally {
-						cflowModify = false;
-					}
+					setValue(text.getText());
 					CommonFormUtil.ensureVisible(text);
 				}
 			});
@@ -93,7 +88,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		if (!cflowModify && viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
+		if (viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
 			viewer.getDocument().set(getValue());
 		}
 	}

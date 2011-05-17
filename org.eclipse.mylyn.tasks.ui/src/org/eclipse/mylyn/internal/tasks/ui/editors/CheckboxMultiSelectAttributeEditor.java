@@ -58,7 +58,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	private Button button;
 
-	private boolean cflowSelect;
+	private boolean suppressRefresh;
 
 	public CheckboxMultiSelectAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -73,7 +73,7 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 			toolkit.adapt(valueText, false, false);
 			valueText.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			valueText.setToolTipText(getDescription());
-			updateText();
+			refresh();
 			setControl(valueText);
 		} else {
 			this.parent = parent;
@@ -110,23 +110,23 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 					selectionDialog.addEventListener(new IInPlaceDialogListener() {
 
 						public void buttonPressed(InPlaceDialogEvent event) {
-							cflowSelect = true;
+							suppressRefresh = true;
 							try {
 								if (event.getReturnCode() == Window.OK) {
 									Set<String> newValues = selectionDialog.getSelectedValues();
 									if (!new HashSet<String>(values).equals(newValues)) {
 										setValues(new ArrayList<String>(newValues));
-										updateText();
+										refresh();
 									}
 								} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
 									Set<String> newValues = new HashSet<String>();
 									if (!new HashSet<String>(values).equals(newValues)) {
 										setValues(new ArrayList<String>(newValues));
-										updateText();
+										refresh();
 									}
 								}
 							} finally {
-								cflowSelect = false;
+								suppressRefresh = false;
 							}
 						}
 					});
@@ -134,32 +134,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 				}
 			});
 			toolkit.adapt(valueText, false, false);
-			updateText();
+			refresh();
 			setControl(composite);
-		}
-	}
-
-	private void updateText() {
-		if (valueText != null && !valueText.isDisposed()) {
-			StringBuilder valueString = new StringBuilder();
-			List<String> values = getValuesLabels();
-			Collections.sort(values);
-			for (int i = 0; i < values.size(); i++) {
-				valueString.append(values.get(i));
-				if (i != values.size() - 1) {
-					valueString.append(", "); //$NON-NLS-1$
-				}
-			}
-			valueText.setText(valueString.toString());
-			if (valueText != null && parent != null && parent.getParent() != null
-					&& parent.getParent().getParent() != null) {
-				Point size = valueText.getSize();
-				// subtract 1 from size for border
-				Point newSize = valueText.computeSize(size.x - 1, SWT.DEFAULT);
-				if (newSize.y != size.y) {
-					reflow();
-				}
-			}
 		}
 	}
 
@@ -222,13 +198,32 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 	@Override
 	public void refresh() {
-		if (!cflowSelect) {
-			updateText();
+		if (valueText == null || valueText.isDisposed()) {
+			return;
+		}
+
+		StringBuilder valueString = new StringBuilder();
+		List<String> values = getValuesLabels();
+		Collections.sort(values);
+		for (int i = 0; i < values.size(); i++) {
+			valueString.append(values.get(i));
+			if (i != values.size() - 1) {
+				valueString.append(", "); //$NON-NLS-1$
+			}
+		}
+		valueText.setText(valueString.toString());
+		if (valueText != null && parent != null && parent.getParent() != null && parent.getParent().getParent() != null) {
+			Point size = valueText.getSize();
+			// subtract 1 from size for border
+			Point newSize = valueText.computeSize(size.x - 1, SWT.DEFAULT);
+			if (newSize.y != size.y) {
+				reflow();
+			}
 		}
 	}
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
 }

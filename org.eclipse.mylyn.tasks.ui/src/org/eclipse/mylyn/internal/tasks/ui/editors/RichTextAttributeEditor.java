@@ -41,6 +41,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	protected boolean ignoreNotification;
 
+	protected boolean suppressRefresh;
+
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
 		this(manager, taskRepository, taskAttribute, SWT.MULTI);
 	}
@@ -57,7 +59,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			public void valueChanged(String value) {
 				if (!ignoreNotification) {
-					RichTextAttributeEditor.this.setValue(value);
+					try {
+						suppressRefresh = true;
+						RichTextAttributeEditor.this.setValue(value);
+					} finally {
+						suppressRefresh = false;
+					}
 				}
 			};
 		};
@@ -175,7 +182,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
 
 	@Override

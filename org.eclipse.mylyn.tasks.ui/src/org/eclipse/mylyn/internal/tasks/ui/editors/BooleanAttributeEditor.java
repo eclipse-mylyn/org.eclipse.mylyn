@@ -30,6 +30,8 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	private boolean ignoreNotification;
 
+	private boolean suppressRefresh;
+
 	public BooleanAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
@@ -42,7 +44,12 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!ignoreNotification) {
-					setValue(button.getSelection());
+					try {
+						suppressRefresh = true;
+						setValue(button.getSelection());
+					} finally {
+						suppressRefresh = false;
+					}
 				}
 			}
 		});
@@ -81,6 +88,7 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
+
 }

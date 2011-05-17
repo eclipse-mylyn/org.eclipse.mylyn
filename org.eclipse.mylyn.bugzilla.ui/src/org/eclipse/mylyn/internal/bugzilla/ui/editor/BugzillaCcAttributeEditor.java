@@ -37,7 +37,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 
 	private TaskAttribute attrRemoveCc;
 
-	protected boolean cflowWidgetSelected;
+	protected boolean suppressRefresh;
 
 	public BugzillaCcAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -68,7 +68,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					cflowWidgetSelected = true;
+					suppressRefresh = true;
 					for (String cc : list.getItems()) {
 						int index = list.indexOf(cc);
 						if (list.isSelected(index)) {
@@ -82,7 +82,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 					}
 					getModel().attributeChanged(attrRemoveCc);
 				} finally {
-					cflowWidgetSelected = false;
+					suppressRefresh = false;
 				}
 			}
 		});
@@ -112,7 +112,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		if (!cflowWidgetSelected && list != null && !list.isDisposed()) {
+		if (list != null && !list.isDisposed()) {
 			list.removeAll();
 			populateFromAttribute();
 			selectValuesToRemove();
@@ -121,6 +121,6 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
 }

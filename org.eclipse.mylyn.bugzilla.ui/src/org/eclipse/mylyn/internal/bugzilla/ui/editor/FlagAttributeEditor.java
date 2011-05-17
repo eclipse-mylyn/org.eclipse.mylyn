@@ -67,7 +67,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	private Text requesteeROText;
 
-	private boolean cflowUserEditing;
+	private boolean suppressRefresh;
 
 	private Composite flagComposite;
 
@@ -136,11 +136,11 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 							Assert.isNotNull(values);
 							Assert.isLegal(index >= 0 && index <= values.length - 1);
 							try {
-								cflowUserEditing = true;
+								suppressRefresh = true;
 								setValue(values[index]);
 								selectionChanged(index);
 							} finally {
-								cflowUserEditing = false;
+								suppressRefresh = false;
 							}
 						}
 					}
@@ -228,10 +228,10 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 					public void keyReleased(KeyEvent e) {
 						try {
-							cflowUserEditing = true;
+							suppressRefresh = true;
 							setRequestee(requesteeText.getText());
 						} finally {
-							cflowUserEditing = false;
+							suppressRefresh = false;
 						}
 					}
 
@@ -242,10 +242,10 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 					public void modifyText(ModifyEvent e) {
 						try {
-							cflowUserEditing = true;
+							suppressRefresh = true;
 							setRequestee(requesteeText.getText());
 						} finally {
-							cflowUserEditing = false;
+							suppressRefresh = false;
 						}
 					}
 				});
@@ -329,36 +329,34 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		if (!cflowUserEditing) {
-			if (flagText != null && !flagText.isDisposed()) {
-				flagText.setText(getValueLabel());
+		if (flagText != null && !flagText.isDisposed()) {
+			flagText.setText(getValueLabel());
+		}
+		if (combo != null && !combo.isDisposed()) {
+			updateComboWithOptions();
+			select(getValue(), getValueLabel());
+			if (combo.getSelectionIndex() >= 0) {
+				selectionChanged(combo.getSelectionIndex());
 			}
-			if (combo != null && !combo.isDisposed()) {
-				updateComboWithOptions();
-				select(getValue(), getValueLabel());
-				if (combo.getSelectionIndex() >= 0) {
-					selectionChanged(combo.getSelectionIndex());
-				}
+		}
+		TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
+		if (requestee != null) {
+			if (requesteeROText != null && !requesteeROText.isDisposed()) {
+				requesteeROText.setText(requestee.getValue());
 			}
-			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
-			if (requestee != null) {
-				if (requesteeROText != null && !requesteeROText.isDisposed()) {
-					requesteeROText.setText(requestee.getValue());
-				}
-				if (requesteeText != null && !requesteeText.isDisposed()) {
-					requesteeText.setText(requestee.getValue());
-				}
+			if (requesteeText != null && !requesteeText.isDisposed()) {
+				requesteeText.setText(requestee.getValue());
 			}
-			updateLabel();
-			if (flagComposite != null && !flagComposite.isDisposed()) {
-				flagComposite.layout();
-			}
+		}
+		updateLabel();
+		if (flagComposite != null && !flagComposite.isDisposed()) {
+			flagComposite.layout();
 		}
 	}
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
 
 	private void selectionChanged(int index) {

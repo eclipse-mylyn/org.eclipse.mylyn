@@ -36,7 +36,7 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 
 	private TaskAttribute attrRemoveCc;
 
-	protected boolean cflowWidgetSelected;
+	protected boolean suppressRefresh;
 
 	public TracCcAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -58,11 +58,10 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 		selectValuesToRemove();
 
 		list.addSelectionListener(new SelectionAdapter() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					cflowWidgetSelected = true;
+					suppressRefresh = true;
 					for (String cc : list.getItems()) {
 						int index = list.indexOf(cc);
 						if (list.isSelected(index)) {
@@ -76,7 +75,7 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 					}
 					getModel().attributeChanged(attrRemoveCc);
 				} finally {
-					cflowWidgetSelected = false;
+					suppressRefresh = false;
 				}
 			}
 		});
@@ -106,7 +105,7 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void refresh() {
-		if (!cflowWidgetSelected && list != null && !list.isDisposed()) {
+		if (list != null && !list.isDisposed()) {
 			list.removeAll();
 			populateFromAttribute();
 			selectValuesToRemove();
@@ -115,6 +114,7 @@ public class TracCcAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
+
 }
