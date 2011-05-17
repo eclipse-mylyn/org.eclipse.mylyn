@@ -60,6 +60,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.identity.Account;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -91,6 +92,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -1423,6 +1425,18 @@ public class TasksUiInternal {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		return connector.canGetTaskHistory(repository, task);
+	}
+
+	public static Account getAccount(TaskAttribute attribute) {
+		Account account;
+		if (TaskAttribute.TYPE_PERSON.equals(attribute.getMetaData().getType())) {
+			IRepositoryPerson person = attribute.getTaskData().getAttributeMapper().getRepositoryPerson(attribute);
+			account = Account.id(person.getPersonId()).name(person.getName());
+		} else {
+			account = Account.id(attribute.getValue());
+		}
+		TaskRepository repository = attribute.getTaskData().getAttributeMapper().getTaskRepository();
+		return account.kind(repository.getConnectorKind()).url(repository.getRepositoryUrl());
 	}
 
 }

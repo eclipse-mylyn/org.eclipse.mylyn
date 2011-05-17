@@ -23,6 +23,7 @@ import org.eclipse.mylyn.commons.identity.IProfileImage;
 import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -124,19 +125,15 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		if (identity != null) {
 			identity.removePropertyChangeListener(imageListener);
 		}
-		Account account;
 		if (TaskAttribute.TYPE_PERSON.equals(getTaskAttribute().getMetaData().getType())) {
 			IRepositoryPerson person = getTaskAttribute().getTaskData()
 					.getAttributeMapper()
 					.getRepositoryPerson(getTaskAttribute());
-			account = Account.id(person.getPersonId()).name(person.getName());
 			label.setToolTipText(getLabel() + " " + person.toString()); //$NON-NLS-1$
 		} else {
-			account = Account.id(getTaskAttribute().getValue());
 			label.setToolTipText(getDescription());
 		}
-		account = account.kind(getModel().getTaskRepository().getConnectorKind()).url(
-				getModel().getTaskRepository().getRepositoryUrl());
+		Account account = TasksUiInternal.getAccount(getTaskAttribute());
 		identity = TasksUiPlugin.getDefault().getIdentityModel().getIdentity(account);
 		identity.addPropertyChangeListener(imageListener);
 		Future<IProfileImage> result = identity.requestImage(IMAGE_SIZE, IMAGE_SIZE);
