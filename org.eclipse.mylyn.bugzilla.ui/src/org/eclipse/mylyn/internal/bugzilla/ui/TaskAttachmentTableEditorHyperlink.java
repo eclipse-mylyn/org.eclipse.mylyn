@@ -14,14 +14,17 @@ package org.eclipse.mylyn.internal.bugzilla.ui;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -61,8 +64,12 @@ public final class TaskAttachmentTableEditorHyperlink implements IHyperlink {
 		AbstractTaskEditorPage page = getTaskEditorPage();
 		if (page != null) {
 			if (!page.selectReveal(TaskAttribute.PREFIX_ATTACHMENT + attachmentId)) {
-				String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
-				TasksUiUtil.openUrl(url);
+				String msg = NLS.bind(Messages.TaskAttachmentTableEditorHyperlink_QuestionMsg, attachmentId);
+				if (MessageDialog.openQuestion(WorkbenchUtil.getShell(),
+						Messages.TaskAttachmentTableEditorHyperlink_AttachmentNotFound, msg)) {
+					String url = repository.getUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentId;
+					TasksUiUtil.openUrl(url);
+				}
 			}
 		}
 	}

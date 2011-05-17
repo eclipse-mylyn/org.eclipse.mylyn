@@ -20,6 +20,10 @@ public class Messages extends NLS {
 
 	public static String TaskAttachmentHyperlink_Open_Attachment_X_in_Y;
 
+	public static String TaskAttachmentTableEditorHyperlink_AttachmentNotFound;
+
+	public static String TaskAttachmentTableEditorHyperlink_QuestionMsg;
+
 	public static String TaskAttachmentTableEditorHyperlink_Show_Attachment_X_in_Y;
 
 	static {
