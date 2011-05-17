@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -44,6 +45,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Robert Elves
  * @author Steffen Pingel
+ * @author Mike Wu
  */
 public class TaskListExternalizationTest extends TestCase {
 
@@ -581,6 +583,29 @@ public class TaskListExternalizationTest extends TestCase {
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
 		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());
 		assertEquals(task.getScheduledForDate(), readTask.getScheduledForDate());
+	}
+
+	// test case for bug 342086
+	public void testDatesTimeZone() throws Exception {
+		TaskTestUtil.resetTaskListAndRepositories();
+
+		TimeZone.setDefault(TimeZone.getTimeZone("PRC"));
+		AbstractTask task = new LocalTask("1", "task 1");
+		Date creationDate = new Date();
+		task.setCreationDate(creationDate);
+		TasksUiPlugin.getTaskList().addTask(task);
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+
+		TaskTestUtil.saveNow();
+		TimeZone.setDefault(TimeZone.getTimeZone("CST"));
+		TaskTestUtil.resetTaskList();
+		TasksUiPlugin.getDefault().initializeDataSources();
+
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
+		ITask readTask = readList.iterator().next();
+		assertTrue(readTask.getSummary().equals("task 1"));
+		assertTrue(readTask.getCreationDate().compareTo(creationDate) == 0);
 	}
 
 	// Task retention when connector missing upon startup

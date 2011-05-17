@@ -53,9 +53,9 @@ import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -70,12 +70,15 @@ import org.w3c.dom.NodeList;
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Mike Wu
  */
 public final class DelegatingTaskExternalizer {
 
 	static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
-	static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z"; //$NON-NLS-1$
+	static final String OUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S Z"; //$NON-NLS-1$
+
+	static final String IN_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z"; //$NON-NLS-1$
 
 	static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming"; //$NON-NLS-1$
 
@@ -347,8 +350,7 @@ public final class DelegatingTaskExternalizer {
 		if (date == null) {
 			return ""; //$NON-NLS-1$
 		}
-		String f = DATE_FORMAT;
-		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+		SimpleDateFormat format = new SimpleDateFormat(OUT_DATE_FORMAT, Locale.ENGLISH);
 		return format.format(date);
 	}
 
@@ -356,8 +358,7 @@ public final class DelegatingTaskExternalizer {
 		if (date == null) {
 			return ""; //$NON-NLS-1$
 		}
-		String f = DATE_FORMAT;
-		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+		SimpleDateFormat format = new SimpleDateFormat(OUT_DATE_FORMAT, Locale.ENGLISH);
 		return format.format(date.getTime());
 	}
 
@@ -638,8 +639,7 @@ public final class DelegatingTaskExternalizer {
 		if ("".equals(dateString)) { //$NON-NLS-1$
 			return null;
 		}
-		String formatString = DATE_FORMAT;
-		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+		SimpleDateFormat format = new SimpleDateFormat(IN_DATE_FORMAT, Locale.ENGLISH);
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
