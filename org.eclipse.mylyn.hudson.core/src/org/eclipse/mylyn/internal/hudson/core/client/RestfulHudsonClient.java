@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -64,8 +65,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import com.sun.xml.bind.v2.runtime.JAXBContextImpl.JAXBContextBuilder;
 
 /**
  * Represents the Hudson repository that is accessed through REST.
@@ -405,9 +404,25 @@ public class RestfulHudsonClient {
 	}
 
 	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
-		// fails on Java 5, see bug 325176
-		// JAXBContext ctx = JAXBContext.newInstance(clazz);
-		JAXBContext ctx = new JAXBContextBuilder().setClasses(new Class<?>[] { clazz }).build();
+		JAXBContext ctx;
+		try {
+			ctx = JAXBContext.newInstance(clazz);
+		} catch (JAXBException e) {
+			// fails on Java 5, see bug 325176
+			// instantiate com.sun.xml.bind implementation which is an optional dependency
+			// use reflection to avoid compile time dependency, see bug 344198 
+			//JAXBContext ctx = new com.sun.xml.bind.v2.runtime.JAXBContextImpl.JAXBContextBuilder().setClasses(new Class[] { clazz }).build();
+			try {
+				Class<?> contextBuilderClass = Class.forName("com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder");
+				Object obj = contextBuilderClass.newInstance();
+				Method method = contextBuilderClass.getDeclaredMethod("setClasses", Class[].class);
+				obj = method.invoke(obj, new Object[] { new Class[] { clazz } });
+				method = contextBuilderClass.getDeclaredMethod("build");
+				ctx = (JAXBContext) method.invoke(obj);
+			} catch (Exception e2) {
+				throw new JAXBException(e2);
+			}
+		}
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 
 		JAXBElement<T> hudsonElement = unmarshaller.unmarshal(node, clazz);
