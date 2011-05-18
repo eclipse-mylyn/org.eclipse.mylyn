@@ -55,6 +55,13 @@ public class Milestone {
 	}
 
 	/**
+	 * @param dueOn
+	 */
+	public void setDueOn(Date dueOn) {
+		this.dueOn = dueOn;
+	}
+
+	/**
 	 * @return closedIssues
 	 */
 	public int getClosedIssues() {
@@ -92,6 +99,13 @@ public class Milestone {
 	}
 
 	/**
+	 * @param description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
 	 * @return state
 	 */
 	public String getState() {
@@ -99,10 +113,24 @@ public class Milestone {
 	}
 
 	/**
+	 * @param state
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	/**
 	 * @return title
 	 */
 	public String getTitle() {
 		return this.title;
+	}
+
+	/**
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/**

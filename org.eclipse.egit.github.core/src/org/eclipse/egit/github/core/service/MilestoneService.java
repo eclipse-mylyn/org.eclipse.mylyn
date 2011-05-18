@@ -20,6 +20,7 @@ import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -65,4 +66,54 @@ public class MilestoneService extends GitHubService {
 		getAll(request);
 		return collector.getResources();
 	}
+
+	/**
+	 * Create a milestone
+	 * 
+	 * @param user
+	 *            must be non-null
+	 * @param repository
+	 *            must be non-null
+	 * @param milestone
+	 *            must be non-null
+	 * @return created milestone
+	 * @throws IOException
+	 */
+	public Milestone createMilestone(String user, String repository,
+			Milestone milestone) throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Milestone cannot be null", milestone); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
+		return client.post(uri.toString(), milestone, Milestone.class);
+	}
+
+	/**
+	 * Get a milestone
+	 * 
+	 * @param user
+	 *            must be non-null
+	 * @param repository
+	 *            must be non-null
+	 * @param number
+	 *            must be non-null
+	 * @return created milestone
+	 * @throws IOException
+	 */
+	public Milestone getMilestone(String user, String repository, String number)
+			throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Milestone cannot be null", number); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_MILESTONES).append('/')
+				.append(number);
+		GitHubRequest request = new GitHubRequest().setUri(uri);
+		request.setType(Milestone.class);
+		return (Milestone) client.get(request).getBody();
+	}
+
 }
