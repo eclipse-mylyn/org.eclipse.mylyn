@@ -49,8 +49,7 @@
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<!--<repository location="http://download.eclipse.org/eclipse/updates/3.7milestones/"/>-->
-<repository location="http://download.eclipse.org/eclipse/updates/3.7milestones/S-3.7M6-201103101119/"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.7milestones/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
