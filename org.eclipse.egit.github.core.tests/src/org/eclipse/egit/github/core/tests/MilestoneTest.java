@@ -12,13 +12,15 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 import org.eclipse.egit.github.core.Milestone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Unit tests for {@link Milestone}
@@ -43,6 +45,16 @@ public class MilestoneTest {
 				Milestone.class);
 		milestone.getDueOn().setTime(0);
 		assertTrue(milestone.getDueOn().getTime() != 0);
+	}
+
+	@Test
+	public void setDueOn_ReferenceMutableObject()
+			throws IllegalAccessException, NoSuchFieldException {
+		Milestone milestone = new Milestone();
+		Date longTimeAgo = new Date(0L);
+		milestone.setDueOn(longTimeAgo);
+		longTimeAgo.setTime(10000L);
+		assertTrue(milestone.getDueOn().getTime() == 0L);
 	}
 
 }
