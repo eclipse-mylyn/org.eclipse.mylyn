@@ -14,7 +14,7 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.egit.github.core.Gist;
-import org.eclipse.mylyn.github.ui.internal.GitHubImages;
+import org.eclipse.mylyn.internal.github.ui.GitHubImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;

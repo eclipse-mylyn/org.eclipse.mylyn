@@ -12,9 +12,9 @@ package org.eclipse.mylyn.internal.github.ui.issue;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.mylyn.github.ui.internal.AvatarLabel;
-import org.eclipse.mylyn.github.ui.internal.GitHubUi;
 import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
+import org.eclipse.mylyn.internal.github.ui.AvatarLabel;
+import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;

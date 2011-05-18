@@ -8,11 +8,11 @@
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.mylyn.github.ui.internal.AvatarStore.IAvatarCallback;
+import org.eclipse.mylyn.internal.github.ui.AvatarStore.IAvatarCallback;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
@@ -141,8 +141,8 @@ public class AvatarLabel implements IAvatarCallback {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.github.ui.internal.AvatarStore.IAvatarCallback#loaded(org.eclipse.swt.graphics.ImageData,
-	 *      org.eclipse.mylyn.github.ui.internal.AvatarStore)
+	 * @see org.eclipse.mylyn.internal.github.ui.AvatarStore.IAvatarCallback#loaded(org.eclipse.swt.graphics.ImageData,
+	 *      org.eclipse.mylyn.internal.github.ui.AvatarStore)
 	 */
 	public void loaded(final ImageData data, final AvatarStore store) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
