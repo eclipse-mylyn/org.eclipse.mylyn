@@ -26,7 +26,6 @@ public class AllContextTests {
 
 		ContextTestUtil.triggerContextUiLazyStart();
 
-		// $JUnit-BEGIN$
 		suite.addTestSuite(InteractionContextListeningTest.class);
 		suite.addTestSuite(ScalingFactorsTest.class);
 		suite.addTestSuite(InteractionContextTest.class);
@@ -35,7 +34,6 @@ public class AllContextTests {
 		suite.addTestSuite(ContextTest.class);
 		suite.addTestSuite(InteractionEventTest.class);
 		suite.addTestSuite(ShadowsBridgeTest.class);
-		// $JUnit-END$
 		return suite;
 	}
 

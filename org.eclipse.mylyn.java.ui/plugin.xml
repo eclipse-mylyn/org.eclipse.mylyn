@@ -544,5 +544,11 @@
          name="%command.folding.auto.name">
       </command>
     </extension>
+   <extension
+         point="org.eclipse.mylyn.context.core.strategies">
+      <contextComputationStrategy
+            class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy">
+      </contextComputationStrategy>
+   </extension>
    
 </plugin>

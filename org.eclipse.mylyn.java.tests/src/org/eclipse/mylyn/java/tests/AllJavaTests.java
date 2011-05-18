@@ -52,6 +52,7 @@ public class AllJavaTests {
 		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		suite.addTestSuite(XmlSearchPluginTest.class);
 		suite.addTestSuite(JavaEditingMonitorTest.class);
+		suite.addTestSuite(JavaStackTraceContextComputationStrategyTest.class);
 		return suite;
 	}
 }

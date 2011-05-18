@@ -42,7 +42,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextCorePlugin extends Plugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.core"; //$NON-NLS-1$
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.core"; //$NON-NLS-1$
 
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
