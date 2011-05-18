@@ -11,11 +11,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -50,6 +45,11 @@ import org.apache.http.protocol.HttpContext;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.RequestError;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+
 /**
  * Client class for interacting with GitHub HTTP/JSON API.
  */
@@ -73,8 +73,18 @@ public class GitHubClient {
 	 * Create default client
 	 */
 	public GitHubClient() {
-		this(new HttpHost(IGitHubConstants.HOST_API, -1,
-				IGitHubConstants.PROTOCOL_HTTPS));
+		this(IGitHubConstants.HOST_API, -1, IGitHubConstants.PROTOCOL_HTTPS);
+	}
+
+	/**
+	 * Create client for host configuration
+	 * 
+	 * @param hostname
+	 * @param port
+	 * @param scheme
+	 */
+	public GitHubClient(String hostname, int port, String scheme) {
+		this(new HttpHost(hostname, port, scheme));
 	}
 
 	/**

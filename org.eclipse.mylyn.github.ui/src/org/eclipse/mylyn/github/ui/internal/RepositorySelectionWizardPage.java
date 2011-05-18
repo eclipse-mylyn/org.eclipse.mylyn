@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.http.HttpHost;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -208,9 +207,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
-					HttpHost httpHost = new HttpHost(IGitHubConstants.HOST_API_V2, -1,
+					GitHubClient client = new GitHubClient(
+							IGitHubConstants.HOST_API_V2, -1,
 							IGitHubConstants.PROTOCOL_HTTPS);
-					GitHubClient client = new GitHubClient(httpHost);
 					client.setCredentials(user, password);
 					RepositoryService service = new RepositoryService(client);
 					repoCount = 0;
