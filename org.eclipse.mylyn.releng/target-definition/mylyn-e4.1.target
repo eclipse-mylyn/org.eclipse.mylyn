@@ -38,7 +38,7 @@
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/e4/sdk/drops/S-4.1M5-201101282000/repository"/>
+<repository location="http://download.eclipse.org/e4/sdk/drops/S-4.1RC1-201105161455/repository"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
