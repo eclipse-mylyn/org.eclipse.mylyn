@@ -315,18 +315,17 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, TaskData data,
 			ITaskMapping initializationData, IProgressMonitor monitor)
 			throws CoreException {
-
 		data.setVersion(DATA_VERSION);
-
 		for (IssueAttribute attr : IssueAttribute.values())
 			if (attr.isInitTask())
 				createAttribute(data, attr, (String) null);
-
+		createLabels(repository, data, new Issue());
 		return true;
 	}
 
 	/**
-	 * Update labels for issue
+	 * Create any new labels that have been added to the issue and set the
+	 * issues labels to the current value of labels attribute.
 	 * 
 	 * @param user
 	 * @param repo
@@ -334,12 +333,11 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param repository
 	 * @param data
 	 * @param oldAttributes
-	 * @throws IOException
+	 * @param issue
 	 */
 	protected void updateLabels(String user, String repo, GitHubClient client,
 			TaskRepository repository, TaskData data,
-			Set<TaskAttribute> oldAttributes) throws IOException {
-		// Update labels if changed
+			Set<TaskAttribute> oldAttributes, Issue issue) {
 		TaskAttribute labelsAttribute = data.getRoot().getAttribute(
 				IssueAttribute.LABELS.getId());
 		if (oldAttributes.contains(labelsAttribute)) {
@@ -360,6 +358,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 					newLabels.add(label);
 				labels.add(label);
 			}
+			issue.setLabels(labels);
 			for (Label label : newLabels)
 				try {
 					labelService.createLabel(user, repo, label);
@@ -367,15 +366,12 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 					// TODO detect failure and handle label already created
 				}
 
-			labelService.setLabels(user, repo, data.getTaskId(), labels);
-
 			if (!newLabels.isEmpty())
 				try {
 					this.connector.refreshLabels(repository);
 				} catch (CoreException ignore) {
 					// Ignore
 				}
-
 		}
 	}
 
@@ -388,6 +384,8 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
+			updateLabels(repo.getOwner(), repo.getName(), client, repository,
+					taskData, oldAttributes, issue);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
 				issue.setState(IssueService.STATE_OPEN);
@@ -395,16 +393,12 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 						issue);
 				taskId = Integer.toString(issue.getNumber());
 			} else {
-
 				// Handle new comment
 				String comment = getAttributeValue(taskData,
 						IssueAttribute.COMMENT_NEW);
 				if (comment != null && comment.length() > 0)
 					service.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
-
-				updateLabels(repo.getOwner(), repo.getName(), client,
-						repository, taskData, oldAttributes);
 
 				// Handle state change
 				TaskAttribute operationAttribute = taskData.getRoot()

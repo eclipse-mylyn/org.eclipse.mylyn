@@ -81,7 +81,7 @@ public enum IssueAttribute {
 	 * Labels applied to issue
 	 */
 	LABELS(Messages.IssueAttribute_LabelLabels, "github.issue.labels", //$NON-NLS-1$
-			TaskAttribute.TYPE_MULTI_SELECT, true, false),
+			TaskAttribute.TYPE_MULTI_SELECT, true, true),
 
 	/**
 	 * Issue assignee
