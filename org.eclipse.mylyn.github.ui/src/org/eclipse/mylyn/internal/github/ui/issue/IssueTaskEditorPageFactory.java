@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
-import org.eclipse.mylyn.github.ui.internal.GitHubImages;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.ui.GitHubImages;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;

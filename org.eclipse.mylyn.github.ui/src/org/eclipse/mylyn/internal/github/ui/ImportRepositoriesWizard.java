@@ -8,7 +8,7 @@
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.github.ui.internal;
+package org.eclipse.mylyn.internal.github.ui;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.jface.viewers.IStructuredSelection;
