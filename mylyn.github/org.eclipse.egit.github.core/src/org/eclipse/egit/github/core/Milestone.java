@@ -58,7 +58,7 @@ public class Milestone {
 	 * @param dueOn
 	 */
 	public void setDueOn(Date dueOn) {
-		this.dueOn = dueOn;
+		this.dueOn = dueOn != null ? new Date(dueOn.getTime()) : null;
 	}
 
 	/**
