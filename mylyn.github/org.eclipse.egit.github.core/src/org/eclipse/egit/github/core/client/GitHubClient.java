@@ -128,14 +128,16 @@ public class GitHubClient {
 	 * 
 	 * @param user
 	 * @param password
+	 * @return this client
 	 */
-	public void setCredentials(String user, String password) {
+	public GitHubClient setCredentials(String user, String password) {
 		if (user != null && password != null)
 			this.client.getCredentialsProvider().setCredentials(
 					new AuthScope(httpHost.getHostName(), httpHost.getPort()),
 					new UsernamePasswordCredentials(user, password));
 		else
 			this.client.getCredentialsProvider().clear();
+		return this;
 	}
 
 	/**
