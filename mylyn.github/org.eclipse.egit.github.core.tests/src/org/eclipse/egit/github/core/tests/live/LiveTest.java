@@ -16,6 +16,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.http.HttpHost;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
 /**
@@ -29,6 +30,11 @@ public abstract class LiveTest extends TestCase {
 	protected GitHubClient client;
 
 	/**
+	 * Writable repository
+	 */
+	protected String writableRepo;
+
+	/**
 	 * Configure client
 	 * 
 	 * @param client
@@ -37,6 +43,7 @@ public abstract class LiveTest extends TestCase {
 	protected GitHubClient configure(GitHubClient client) {
 		String user = System.getProperty("github.test.user");
 		String password = System.getProperty("github.test.password");
+		writableRepo = System.getProperty("github.test.repository");
 		client.setCredentials(user, password);
 		return client;
 	}
@@ -52,8 +59,8 @@ public abstract class LiveTest extends TestCase {
 		GitHubClient client = null;
 		if (url != null) {
 			URL parsed = new URL(url);
-			HttpHost httpHost = new HttpHost(parsed.getHost(), parsed.getPort(),
-					parsed.getProtocol());
+			HttpHost httpHost = new HttpHost(parsed.getHost(),
+					parsed.getPort(), parsed.getProtocol());
 			client = new GitHubClient(httpHost);
 		} else
 			client = new GitHubClient();
