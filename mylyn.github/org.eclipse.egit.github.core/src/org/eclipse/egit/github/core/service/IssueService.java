@@ -13,6 +13,7 @@ package org.eclipse.egit.github.core.service;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
@@ -175,8 +177,8 @@ public class IssueService extends GitHubService {
 	 * @param newIssue
 	 * @return map
 	 */
-	protected Map<String, String> createIssueMap(Issue issue, boolean newIssue) {
-		Map<String, String> params = new HashMap<String, String>();
+	protected Map<Object, Object> createIssueMap(Issue issue, boolean newIssue) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
 		if (issue != null) {
 			params.put(FIELD_BODY, issue.getBody());
 			params.put(FIELD_TITLE, issue.getTitle());
@@ -193,6 +195,13 @@ public class IssueService extends GitHubService {
 					if (!newIssue)
 						params.put(FILTER_MILESTONE, null);
 				}
+			}
+			List<Label> labels = issue.getLabels();
+			if (labels != null) {
+				List<String> labelNames = new ArrayList<String>(labels.size());
+				for (Label label : labels)
+					labelNames.add(label.getName());
+				params.put(FILTER_LABELS, labelNames);
 			}
 		}
 		return params;
@@ -215,7 +224,7 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 
-		Map<String, String> params = createIssueMap(issue, true);
+		Map<Object, Object> params = createIssueMap(issue, true);
 		return this.client.post(uri.toString(), params, Issue.class);
 	}
 
@@ -238,7 +247,7 @@ public class IssueService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 		uri.append('/').append(issue.getNumber());
 
-		Map<String, String> params = createIssueMap(issue, false);
+		Map<Object, Object> params = createIssueMap(issue, false);
 		String state = issue.getState();
 		if (state != null)
 			params.put(FILTER_STATE, state);

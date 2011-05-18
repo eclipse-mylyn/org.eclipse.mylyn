@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -99,6 +100,15 @@ public class Issue {
 	 */
 	public List<Label> getLabels() {
 		return this.labels;
+	}
+
+	/**
+	 * @param labels
+	 * @return this issue
+	 */
+	public Issue setLabels(List<Label> labels) {
+		this.labels = labels != null ? new ArrayList<Label>(labels) : null;
+		return this;
 	}
 
 	/**
