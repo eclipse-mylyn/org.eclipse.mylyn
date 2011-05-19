@@ -287,6 +287,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 						labelsQuery.toString());
 			}
 
+			String owner = repo.getOwner();
+			String name = repo.getName();
 			for (String status : statuses) {
 				filterData.put(IssueService.FILTER_STATE, status);
 				List<Issue> issues = service.getIssues(repo.getOwner(),
@@ -294,16 +296,16 @@ public class IssueConnector extends AbstractRepositoryConnector {
 
 				// collect task data
 				for (Issue issue : issues) {
+					List<Comment> comments = null;
+					if (issue.getComments() > 0)
+						comments = service.getComments(owner, name,
+								Integer.toString(issue.getNumber()));
 					TaskData taskData = taskDataHandler.createTaskData(
-							repository, monitor, repo.getOwner(),
-							repo.getName(), issue);
-					taskData.setPartial(true);
+							repository, monitor, owner, name, issue, comments);
 					collector.accept(taskData);
 				}
 				monitor.worked(1);
 			}
-
-			result = Status.OK_STATUS;
 		} catch (RequestException e) {
 			result = GitHub.createErrorStatus(new GitHubException(e));
 		} catch (IOException e) {
@@ -329,10 +331,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 				comments = service.getComments(repo.getOwner(), repo.getName(),
 						taskId);
 			}
-			TaskData taskData = taskDataHandler.createTaskData(repository,
-					monitor, repo.getOwner(), repo.getName(), issue, comments);
-
-			return taskData;
+			return taskDataHandler.createTaskData(repository, monitor,
+					repo.getOwner(), repo.getName(), issue, comments);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createErrorStatus(e));
 		}
@@ -383,20 +383,9 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasTaskChanged(TaskRepository repository, ITask task,
 			TaskData taskData) {
-		TaskAttribute modAttribute = taskData.getRoot().getAttribute(
-				TaskAttribute.DATE_MODIFICATION);
-		if (modAttribute == null)
-			return false;
-
-		boolean changed = true;
-		Date modDate = task.getModificationDate();
-		if (modDate != null) {
-			Date updateDate = taskData.getAttributeMapper().getDateValue(
-					modAttribute);
-			if (updateDate != null)
-				changed = updateDate.after(modDate);
-		}
-		return changed;
+		Date dataDate = getTaskMapping(taskData).getModificationDate();
+		Date taskDate = task.getModificationDate();
+		return dataDate == null || !dataDate.equals(taskDate);
 	}
 
 	@Override
