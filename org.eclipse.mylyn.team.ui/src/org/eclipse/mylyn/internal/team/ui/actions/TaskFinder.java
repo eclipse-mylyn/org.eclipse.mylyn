@@ -187,7 +187,6 @@ public class TaskFinder {
 			if (taskId != null && repositoryUrl != null) {
 				// XXX fix this hack (jira ids don't work here)
 				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
-//					String handle = AbstractTask.getHandle(repositoryUrl, taskId);
 					task = TasksUiInternal.getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
@@ -197,14 +196,15 @@ public class TaskFinder {
 					if (currTask != null) {
 						String currUrl = currTask.getUrl();
 						if (taskFullUrl.equals(currUrl)) {
-							return new LinkedTaskInfo(currTask, null);
+							task = currTask;
+							break;
 						}
 					}
 				}
 			}
 		}
 
-		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment, timestamp);
+		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment, timestamp, task);
 	}
 
 	private final AbstractTaskReference reference;
