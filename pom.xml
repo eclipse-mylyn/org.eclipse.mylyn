@@ -45,7 +45,7 @@
     <platform-version-name>indigo</platform-version-name>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20110422041657/repository</orbit-site>
   </properties>
 
     <modules>
