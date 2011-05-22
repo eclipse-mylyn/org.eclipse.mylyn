@@ -30,6 +30,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -50,8 +52,8 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 			+ FQN_PART + "((:\\s+\\w.*)|(\\.((\\<(?:cl)?init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))?" //$NON-NLS-1$
 			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$ 
 
-	private final SortedSet<String> filteredPrefixes = new TreeSet<String>(
-			Arrays.asList(new String[] { "java", "javax" }));
+	private final SortedSet<String> filteredPrefixes = new TreeSet<String>(Arrays.asList(new String[] { "java", //$NON-NLS-1$
+			"javax", "junit.framework", "sun.reflect" })); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
 	 * public for testing only
@@ -140,12 +142,28 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 
 		TaskData taskData = (TaskData) input.getAdapter(TaskData.class);
 		if (taskData != null) {
-			TaskAttribute descriptionAttr = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
-			if (descriptionAttr != null) {
-				String description = descriptionAttr.getValue();
+			TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+			if (attribute != null) {
+				String description = attribute.getValue();
 				if (description != null && description.length() > 0) {
 					return description;
 				}
+			}
+
+			attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+			if (attribute != null) {
+				String description = attribute.getValue();
+				if (description != null && description.length() > 0) {
+					return description;
+				}
+			}
+		}
+
+		ITask task = (ITask) input.getAdapter(ITask.class);
+		if (task instanceof AbstractTask) {
+			String description = ((AbstractTask) task).getNotes();
+			if (description != null && description.length() > 0) {
+				return description;
 			}
 		}
 
