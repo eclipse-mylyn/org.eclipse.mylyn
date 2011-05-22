@@ -20,6 +20,8 @@ import java.util.Calendar;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
@@ -29,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -45,6 +48,26 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * @author Steffen Pingel
  */
 public class WorkbenchUtil {
+
+	public static final String GROUP_EDIT = "group.edit"; //$NON-NLS-1$
+
+	public static final String GROUP_FILE = "group.file"; //$NON-NLS-1$
+
+	public static final String GROUP_REFRESH = "group.refresh"; //$NON-NLS-1$
+
+	public static final String GROUP_FILTER = "group.filter"; //$NON-NLS-1$
+
+	public static final String GROUP_NAVIGATE = "group.navigate"; //$NON-NLS-1$
+
+	public static final String GROUP_NEW = "group.new"; //$NON-NLS-1$
+
+	public static final String GROUP_OPEN = "group.open"; //$NON-NLS-1$
+
+	public static final String GROUP_PREFERENCES = "group.preferences"; //$NON-NLS-1$
+
+	public static final String GROUP_PROPERTIES = "group.properties"; //$NON-NLS-1$
+
+	public static final String GROUP_RUN = "group.run"; //$NON-NLS-1$
 
 	// TODO e3.6 IProgressConstants2#SHOW_IN_TASKBAR_ICON_PROPERTY
 	public static final QualifiedName SHOW_IN_TASKBAR_ICON_PROPERTY = new QualifiedName(
@@ -275,6 +298,19 @@ public class WorkbenchUtil {
 				}
 			}
 		}
+	}
+
+	public static void addDefaultGroups(IMenuManager menuManager) {
+		menuManager.add(new Separator(GROUP_NEW));
+		menuManager.add(new Separator(GROUP_OPEN));
+		menuManager.add(new Separator(GROUP_EDIT));
+		menuManager.add(new Separator(GROUP_FILE));
+		menuManager.add(new Separator(GROUP_RUN));
+		menuManager.add(new Separator(GROUP_NAVIGATE));
+		menuManager.add(new Separator(GROUP_REFRESH));
+		menuManager.add(new Separator(GROUP_FILTER));
+		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		menuManager.add(new Separator(GROUP_PROPERTIES));
 	}
 
 }
