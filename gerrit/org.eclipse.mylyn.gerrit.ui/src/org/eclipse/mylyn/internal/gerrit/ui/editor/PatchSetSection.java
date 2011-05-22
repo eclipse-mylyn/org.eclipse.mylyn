@@ -32,6 +32,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -448,7 +449,13 @@ public class PatchSetSection extends AbstractGerritSection {
 
 				ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, null);
 				CompareConfiguration configuration = new CompareConfiguration();
-				CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
+				if (item.getBase() != null && item.getTarget() != null) {
+					CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
+				} else {
+					// the content has not been cached, yet
+					getTaskEditorPage().getEditor().setMessage("The selected file is not available, yet",
+							IMessageProvider.WARNING);
+				}
 			}
 		});
 
