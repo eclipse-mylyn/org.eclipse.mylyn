@@ -118,7 +118,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 
 	private MenuManager menuManager;
 
-	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.changes"; //$NON-NLS-1$
+	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.Changes"; //$NON-NLS-1$
 
 	public ChangesPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);

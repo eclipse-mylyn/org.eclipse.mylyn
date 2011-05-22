@@ -149,6 +149,12 @@
           id="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
           name="New Task From Build">
     </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.NewTaskFromTestHandler"
+          id="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
+          name="New Task From Test">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -167,6 +173,10 @@
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
+          icon="icons/etool16/task-new.gif">
+    </image>
+    <image
+          commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
           icon="icons/etool16/task-new.gif">
     </image>
  </extension>
@@ -610,6 +620,18 @@
                 name="org.eclipse.ui.views.showView.viewId"
                 value="org.eclipse.mylyn.commons.team.navigator.Repositories">
           </parameter>
+       </command>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.eclipse.mylyn.builds.ui.editor.menu.TestResult?after=group.open">
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
+             label="New Task From Test..."
+             style="push">
        </command>
     </menuContribution>
  </extension>

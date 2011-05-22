@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -66,7 +68,7 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 
 			@Override
 			public String getDescription() {
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				sb.append(NLS.bind("Build Results at {0} .\n", build.getUrl()));
 				sb.append("\n");
 				if (build.getChangeSet() != null && build.getChangeSet().getChanges().size() > 0) {
@@ -92,42 +94,58 @@ public class NewTaskFromBuildAction extends BaseSelectionListenerAction {
 							DateUtil.getFormattedDurationShort(build.getTestResult().getDuration())));
 					sb.append("\n");
 					sb.append("Failed Tests:\n");
-					for (ITestSuite suite : build.getTestResult().getSuites()) {
-						for (ITestCase testCase : suite.getCases()) {
-							if (testCase.getStatus() == TestCaseResult.FAILED
-									|| testCase.getStatus() == TestCaseResult.REGRESSION) {
-								sb.append(" ");
-								sb.append(testCase.getClassName());
-								if (testCase.getLabel() != null) {
-									sb.append(".");
-									sb.append(testCase.getLabel());
-
-									// emulate stack trace format to hyperlink tests in task editor
-									sb.append("(");
-									String className = testCase.getClassName();
-									int i = className.lastIndexOf(".");
-									if (i != -1) {
-										className = className.substring(i + 1);
-									}
-									i = className.lastIndexOf("$");
-									if (i != -1) {
-										className = className.substring(0, i);
-									}
-									sb.append(className);
-									sb.append(".java:0)");
-								}
-								sb.append("\n");
-							}
-						}
-					}
+					appendFailed(sb, build.getTestResult().getSuites());
 					sb.append("\n");
 				}
 				return sb.toString();
 			}
-
 		};
 
 		return TasksUiUtil.openNewTaskEditor(WorkbenchUtil.getShell(), mapping, null);
+	}
+
+	public static void appendFailed(StringBuilder sb, List<ITestSuite> suites) {
+		for (ITestSuite suite : suites) {
+			for (ITestCase testCase : suite.getCases()) {
+				if (testCase.getStatus() == TestCaseResult.FAILED || testCase.getStatus() == TestCaseResult.REGRESSION) {
+					append(sb, testCase);
+				}
+			}
+		}
+	}
+
+	public static void append(StringBuilder sb, ITestSuite suite) {
+		for (ITestCase testCase : suite.getCases()) {
+			append(sb, testCase);
+		}
+	}
+
+	public static void append(StringBuilder sb, ITestCase testCase) {
+		if (testCase.getStackTrace() != null) {
+			sb.append(testCase.getStackTrace());
+		} else {
+			sb.append(" ");
+			sb.append(testCase.getClassName());
+			if (testCase.getLabel() != null) {
+				sb.append(".");
+				sb.append(testCase.getLabel());
+
+				// emulate stack trace format to hyperlink tests in task editor
+				sb.append("(");
+				String className = testCase.getClassName();
+				int i = className.lastIndexOf(".");
+				if (i != -1) {
+					className = className.substring(i + 1);
+				}
+				i = className.lastIndexOf("$");
+				if (i != -1) {
+					className = className.substring(0, i);
+				}
+				sb.append(className);
+				sb.append(".java:0)");
+			}
+		}
+		sb.append("\n");
 	}
 
 }

@@ -119,7 +119,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 
 	}
 
-	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.artifacts"; //$NON-NLS-1$
+	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.Artifacts"; //$NON-NLS-1$
 
 	private MenuManager menuManager;
 

@@ -38,6 +38,7 @@ import org.eclipse.mylyn.builds.internal.core.TestResult;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.util.TestResultManager;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -193,7 +194,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 					FeaturePath.fromList(Literals.BUILD__TEST_RESULT, Literals.TEST_RESULT__IGNORED_COUNT));
 		}
 
-		viewer = new TreeViewer(toolkit.createTree(composite, SWT.NONE));
+		viewer = new TreeViewer(toolkit.createTree(composite, SWT.MULTI));
 		GridDataFactory.fillDefaults().hint(300, 100).span(6, 1).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new TestResultContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new TestResultLabelProvider(), null, null));
@@ -216,7 +217,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		testFailureFilter = new TestFailureFilter();
 
 		menuManager = new MenuManager();
-		menuManager.setRemoveAllWhenShown(true);
+		WorkbenchUtil.addDefaultGroups(menuManager);
 		getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
 		Menu menu = menuManager.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
@@ -255,6 +256,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		super.fillToolBar(toolBarManager);
 
 		toolBarManager.add(filterTestFailuresAction);
+		toolBarManager.add(showTestResultsAction);
 	}
 
 }
