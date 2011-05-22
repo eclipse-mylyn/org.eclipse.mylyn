@@ -92,7 +92,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository arg0) {
-		return false;
+		return true;
 	}
 
 	public GerritClient getClient(TaskRepository repository) {

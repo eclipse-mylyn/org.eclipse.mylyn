@@ -16,8 +16,9 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -65,30 +66,31 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		GridLayout layout = new GridLayout(3, false);
 		control.setLayout(layout);
 
-		KeyListener keyListener = new KeyListener() {
-			public void keyPressed(KeyEvent e) {
-				// ignore
-			}
-
-			public void keyReleased(KeyEvent e) {
-				getContainer().updateButtons();
+		ModifyListener modifyListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				updateButtons();
 			}
 		};
 
-		Label titleLabel = new Label(control, SWT.NONE);
-		titleLabel.setText("Query Title:");
+		if (getSearchContainer() == null) {
+			Label titleLabel = new Label(control, SWT.NONE);
+			titleLabel.setText("Query Title:");
 
-		titleText = new Text(control, SWT.BORDER);
-		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		gd2.horizontalSpan = 2;
-		titleText.setLayoutData(gd2);
-		titleText.addKeyListener(keyListener);
+			titleText = new Text(control, SWT.BORDER);
+			GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+			gd2.horizontalSpan = 2;
+			titleText.setLayoutData(gd2);
+			titleText.addModifyListener(modifyListener);
+		}
 
 		Label typeLabel = new Label(control, SWT.NONE);
 		typeLabel.setText("Query type:");
 		// radio button to select query type
 		myChangesButton = new Button(control, SWT.RADIO);
 		myChangesButton.setText("My changes");
+		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		gd2.horizontalSpan = 2;
 		myChangesButton.setLayoutData(gd2);
 
 		new Label(control, SWT.NONE);
@@ -102,10 +104,12 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		projectText = new Text(control, SWT.BORDER);
 		projectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		projectText.addKeyListener(keyListener);
+		projectText.addModifyListener(modifyListener);
 
 		if (query != null) {
-			titleText.setText(query.getSummary());
+			if (titleText != null) {
+				titleText.setText(query.getSummary());
+			}
 			if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				myChangesButton.setSelection(true);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
@@ -120,22 +124,24 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			myChangesButton.setSelection(true);
 		}
 
-		SelectionListener buttonSelectionListener = new SelectionListener() {
+		SelectionListener buttonSelectionListener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectText.setEnabled(byProjectButton.getSelection());
-				IWizardContainer c = getContainer();
-				if (c.getCurrentPage() != null) {
-					c.updateButtons();
-				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
+				updateButtons();
 			}
 		};
 		buttonSelectionListener.widgetSelected(null);
 		byProjectButton.addSelectionListener(buttonSelectionListener);
 
 		setControl(control);
+	}
+
+	protected void updateButtons() {
+		IWizardContainer c = getContainer();
+		if (c != null && c.getCurrentPage() != null) {
+			c.updateButtons();
+		}
 	}
 
 	@Override

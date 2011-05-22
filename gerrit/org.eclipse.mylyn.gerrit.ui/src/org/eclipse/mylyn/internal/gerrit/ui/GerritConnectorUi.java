@@ -7,9 +7,11 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Tasktop Technologies - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.ui.wizards.GerritCustomQueryPage;
@@ -19,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
@@ -27,6 +30,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  * 
  * @author Mikael Kober
  * @author Thomas Westling
+ * @author Steffen Pingel
  */
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
@@ -53,8 +57,13 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
+	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+		return new GerritCustomQueryPage(repository, "GerritQueryPage", null);
+	}
+
+	@Override
 	public boolean hasSearchPage() {
-		return false;
+		return true;
 	}
 
 	@Override
