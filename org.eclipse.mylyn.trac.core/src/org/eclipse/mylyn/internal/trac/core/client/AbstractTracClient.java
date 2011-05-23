@@ -44,6 +44,11 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
  */
 public abstract class AbstractTracClient implements ITracClient {
 
+	/**
+	 * Artificial status code to indicate that SSL cert authentication failed.
+	 */
+	public static final int SC_CERT_AUTH_FAILED = 499;
+
 	protected static final boolean DEBUG_AUTH = Boolean.valueOf(Platform.getDebugOption("org.eclipse.mylyn.trac.core/debug/authentication")); //$NON-NLS-1$
 
 	protected static final String USER_AGENT = "TracConnector"; //$NON-NLS-1$

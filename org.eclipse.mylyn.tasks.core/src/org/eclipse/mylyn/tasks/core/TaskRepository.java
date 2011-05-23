@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eugene Kuleshov - improvements
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.core;
@@ -96,6 +97,8 @@ public final class TaskRepository extends PlatformObject {
 
 	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$
 
+	private static final String AUTH_CERT = "org.eclipse.mylyn.tasklist.repositories.certauth"; //$NON-NLS-1$
+
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
 	 *             credentials
@@ -169,6 +172,8 @@ public final class TaskRepository extends PlatformObject {
 		switch (type) {
 		case HTTP:
 			return AUTH_HTTP;
+		case CERTIFICATE:
+			return AUTH_CERT;
 		case PROXY:
 			return AUTH_PROXY;
 		case REPOSITORY:

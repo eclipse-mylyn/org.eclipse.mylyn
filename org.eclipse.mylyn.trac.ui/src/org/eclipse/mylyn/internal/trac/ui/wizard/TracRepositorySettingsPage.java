@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Steffen Pingel - initial API and implementation
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.ui.wizard;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.SslCertificateException;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -62,6 +64,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	public TracRepositorySettingsPage(TaskRepository taskRepository) {
 		super(TITLE, DESCRIPTION, taskRepository);
+		setNeedsCertAuth(true);
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);

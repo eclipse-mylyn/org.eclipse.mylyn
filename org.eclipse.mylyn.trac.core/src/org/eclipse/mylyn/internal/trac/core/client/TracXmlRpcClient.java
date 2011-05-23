@@ -232,6 +232,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 					System.err.println(location.getUrl() + ": Proxy authentication required (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
 				}
 				throw new TracProxyAuthenticationException();
+			} else if (code == SC_CERT_AUTH_FAILED) {
+				if (DEBUG_AUTH) {
+					System.err.println(location.getUrl() + ": Certificate authentication failed (" + code + ")"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				}
+				throw new TracSslCertificateException();
 			}
 			return false;
 		}
@@ -470,6 +475,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			} catch (TracProxyAuthenticationException e) {
 				try {
 					location.requestCredentials(AuthenticationType.PROXY, null, monitor);
+				} catch (UnsupportedRequestException ignored) {
+					throw e;
+				}
+				lastException = e;
+			} catch (TracSslCertificateException e) {
+				try {
+					location.requestCredentials(AuthenticationType.CERTIFICATE, null, monitor);
 				} catch (UnsupportedRequestException ignored) {
 					throw e;
 				}

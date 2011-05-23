@@ -85,6 +85,8 @@ public class Messages extends NLS {
 
 	public static String TaskListNotificationManager_Open_Notification_Job;
 
+	public static String TaskRepositoryLocationUi_Enter_CLIENTCERTIFICATE_password;
+
 	public static String TaskRepositoryLocationUi_Enter_HTTP_password;
 
 	public static String TaskRepositoryLocationUi_Enter_proxy_password;

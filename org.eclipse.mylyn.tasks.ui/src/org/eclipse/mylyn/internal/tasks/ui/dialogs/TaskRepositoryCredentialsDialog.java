@@ -8,6 +8,7 @@
  * Contributors:
  *     Frank Becker - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.dialogs;
@@ -34,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
@@ -43,6 +45,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * @author Frank Becker
  * @author Steffen Pingel
+ * @author Torsten Kalix
  */
 public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
@@ -71,6 +74,10 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 	private TaskRepository taskRepository;
 
 	private String username = ""; //$NON-NLS-1$
+
+	private Button certBrowseButton;
+
+	private boolean isFileDialog;
 
 	private TaskRepositoryCredentialsDialog(Shell parentShell) {
 		super(parentShell);
@@ -112,7 +119,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
 	private void createCenterArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(3, false));
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		if (taskRepository != null) {
@@ -137,7 +144,11 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			label.setText(taskRepository.getRepositoryLabel());
 		}
 
-		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_User_ID);
+		if (isFileDialog) {
+			new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_Filename);
+		} else {
+			new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_User_ID);
+		}
 
 		final Text usernameField = new Text(composite, SWT.BORDER);
 		usernameField.addModifyListener(new ModifyListener() {
@@ -154,6 +165,25 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				.hint(convertHorizontalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
 				.grab(true, false)
 				.applyTo(usernameField);
+
+		if (isFileDialog) {
+			certBrowseButton = new Button(composite, SWT.PUSH);
+			certBrowseButton.setText(Messages.TaskRepositoryCredentialsDialog_ChooseCertificateFile);
+			certBrowseButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					FileDialog fileDialog = new FileDialog(getShell(), SWT.OPEN);
+					fileDialog.setFilterPath(System.getProperty("user.home", ".")); //$NON-NLS-1$ //$NON-NLS-2$
+					String returnFile = fileDialog.open();
+					if (returnFile != null) {
+						username = returnFile;
+						usernameField.setText(returnFile);
+					}
+				}
+			});
+		} else {
+			new Label(composite, SWT.NONE).setText(""); //$NON-NLS-1$
+		}
 
 		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_Password);
 
@@ -300,6 +330,15 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			throw new IllegalArgumentException();
 		}
 		this.username = username;
+	}
+
+	/**
+	 * switch from asking for username / password to asking for certificate-file / password
+	 * 
+	 * @param isFileDialog
+	 */
+	public void setFileDialog(boolean isFileDialog) {
+		this.isFileDialog = isFileDialog;
 	}
 
 }

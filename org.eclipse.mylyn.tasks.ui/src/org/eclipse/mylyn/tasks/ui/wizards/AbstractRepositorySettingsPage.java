@@ -60,6 +60,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -120,6 +121,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	protected StringFieldEditor httpAuthPasswordEditor;
 
+	private StringFieldEditor certAuthFileNameEditor;
+
+	private Button certBrowseButton;
+
+	private StringFieldEditor certAuthPasswordEditor;
+
 	protected StringFieldEditor proxyHostnameEditor;
 
 	protected StringFieldEditor proxyPortEditor;
@@ -147,11 +154,17 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private String oldHttpAuthPassword;
 
+	private String oldCertAuthFileName;
+
+	private String oldCertAuthPassword;
+
 	private boolean needsAnonymousLogin;
 
 	private boolean needsTimeZone;
 
 	private boolean needsEncoding;
+
+	private boolean needsCertAuth;
 
 	private boolean needsHttpAuth;
 
@@ -163,6 +176,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private Composite advancedComp;
 
+	private Composite certAuthComp;
+
 	private Composite httpAuthComp;
 
 	private Composite proxyAuthComp;
@@ -172,6 +187,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	private String originalUrl;
 
 	private Button otherEncoding;
+
+	private Button certAuthButton;
 
 	private Button httpAuthButton;
 
@@ -201,6 +218,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	protected Button savePasswordButton;
 
 	private Button saveHttpPasswordButton;
+
+	private Button saveCertPasswordButton;
 
 	private Button saveProxyPasswordButton;
 
@@ -505,6 +524,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			createAdvancedSection();
 		}
 
+		if (needsCertAuth()) {
+			createCertAuthSection();
+		}
+
 		if (needsHttpAuth()) {
 			createHttpAuthSection();
 		}
@@ -668,6 +691,101 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 	}
 
+	private void createCertAuthSection() {
+		ExpandableComposite section = createSection(compositeContainer,
+				Messages.AbstractRepositorySettingsPage_certificate_settings);
+
+		certAuthComp = toolkit.createComposite(section, SWT.NONE);
+		certAuthComp.setBackground(compositeContainer.getBackground());
+		section.setClient(certAuthComp);
+
+		certAuthButton = new Button(certAuthComp, SWT.CHECK);
+		GridDataFactory.fillDefaults()
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(certAuthButton);
+
+		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
+
+		certAuthButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				setCertAuth(certAuthButton.getSelection());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+		});
+
+		certAuthFileNameEditor = new StringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_CertificateFile_, StringFieldEditor.UNLIMITED, certAuthComp) { //$NON-NLS-1$
+
+			@Override
+			protected boolean doCheckState() {
+				return true;
+			}
+
+			@Override
+			protected void valueChanged() {
+				super.valueChanged();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
+		};
+
+		certBrowseButton = new Button(certAuthComp, SWT.PUSH);
+		certBrowseButton.setText(Messages.AbstractRepositorySettingsPage_ChooseCertificateFile_);
+		certBrowseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fileDialog = new FileDialog(getShell(), SWT.OPEN);
+				fileDialog.setFilterPath(System.getProperty("user.home", ".")); //$NON-NLS-1$ //$NON-NLS-2$
+				String returnFile = fileDialog.open();
+				if (returnFile != null) {
+					certAuthFileNameEditor.setStringValue(returnFile);
+				}
+			}
+		});
+
+		certAuthPasswordEditor = new RepositoryStringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_CertificatePassword_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
+				certAuthComp) {
+			@Override
+			public int getNumberOfControls() {
+				return 2;
+			}
+		};
+		((RepositoryStringFieldEditor) certAuthPasswordEditor).getTextControl().setEchoChar('*');
+
+		saveCertPasswordButton = new Button(certAuthComp, SWT.CHECK);
+		saveCertPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
+
+		certAuthFileNameEditor.setEnabled(certAuthButton.getSelection(), certAuthComp);
+		certBrowseButton.setEnabled(certAuthButton.getSelection());
+		certAuthPasswordEditor.setEnabled(certAuthButton.getSelection(), certAuthComp);
+		saveCertPasswordButton.setEnabled(certAuthButton.getSelection());
+
+		if (repository != null) {
+			saveCertPasswordButton.setSelection(repository.getSavePassword(AuthenticationType.CERTIFICATE));
+		} else {
+			saveCertPasswordButton.setSelection(false);
+		}
+		setCertAuth(oldCertAuthPassword != null || oldCertAuthFileName != null);
+		section.setExpanded(certAuthButton.getSelection());
+
+		GridLayout gridLayout2 = new GridLayout();
+		gridLayout2.numColumns = 3;
+		gridLayout2.marginWidth = 0;
+		certAuthComp.setLayout(gridLayout2);
+	}
+
 	private void createHttpAuthSection() {
 		ExpandableComposite section = createSection(compositeContainer,
 				Messages.AbstractRepositorySettingsPage_Http_Authentication);
@@ -760,6 +878,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				oldPassword = ""; //$NON-NLS-1$
 			}
 
+			AuthenticationCredentials oldCertCredentials = repository.getCredentials(AuthenticationType.CERTIFICATE);
+			if (oldCertCredentials != null) {
+				oldCertAuthFileName = oldCertCredentials.getUserName();
+				oldCertAuthPassword = oldCertCredentials.getPassword();
+			} else {
+				oldCertAuthPassword = null;
+				oldCertAuthFileName = null;
+			}
+
 			AuthenticationCredentials oldHttpCredentials = repository.getCredentials(AuthenticationType.HTTP);
 			if (oldHttpCredentials != null) {
 				oldHttpAuthUserId = oldHttpCredentials.getUserName();
@@ -792,6 +919,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			oldPassword = ""; //$NON-NLS-1$
 			oldHttpAuthPassword = null;
 			oldHttpAuthUserId = null;
+			oldCertAuthFileName = null;
+			oldCertAuthPassword = null;
 		}
 	}
 
@@ -1048,10 +1177,40 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
+	 * @since 3.6
+	 */
+	public void setCertAuth(boolean selected) {
+		if (!needsCertAuth) {
+			return;
+		}
+		certAuthButton.setSelection(selected);
+		if (!selected) {
+			oldCertAuthFileName = certAuthFileNameEditor.getStringValue();
+			oldCertAuthPassword = certAuthPasswordEditor.getStringValue();
+			certAuthFileNameEditor.setStringValue(null);
+			certAuthPasswordEditor.setStringValue(null);
+		} else {
+			certAuthFileNameEditor.setStringValue(oldCertAuthFileName);
+			certAuthPasswordEditor.setStringValue(oldCertAuthPassword);
+		}
+		certAuthFileNameEditor.setEnabled(selected, certAuthComp);
+		certBrowseButton.setEnabled(selected);
+		certAuthPasswordEditor.setEnabled(selected, certAuthComp);
+		saveCertPasswordButton.setEnabled(selected);
+	}
+
+	/**
 	 * @since 2.2
 	 */
 	public boolean getHttpAuth() {
 		return httpAuthButton.getSelection();
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public boolean getCertAuth() {
+		return certAuthButton.getSelection();
 	}
 
 	/**
@@ -1211,6 +1370,28 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	public String getHttpAuthPassword() {
 		if (needsHttpAuth()) {
 			return httpAuthPasswordEditor.getStringValue();
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public String getCertAuthFileName() {
+		if (needsCertAuth()) {
+			return certAuthFileNameEditor.getStringValue();
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public String getCertAuthPassword() {
+		if (needsCertAuth()) {
+			return certAuthPasswordEditor.getStringValue();
 		} else {
 			return ""; //$NON-NLS-1$
 		}
@@ -1453,6 +1634,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 		repository.setRepositoryLabel(getRepositoryLabel());
 
+		if (needsCertAuth()) {
+			if (getCertAuth()) {
+				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getCertAuthFileName(),
+						getCertAuthPassword());
+				repository.setCredentials(AuthenticationType.CERTIFICATE, webCredentials, getSaveCertPassword());
+			} else {
+				repository.setCredentials(AuthenticationType.CERTIFICATE, null, getSaveCertPassword());
+			}
+		}
+
 		if (needsHttpAuth()) {
 			if (getHttpAuth()) {
 				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getHttpAuthUserId(),
@@ -1537,6 +1728,20 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public void setNeedsAdvanced(boolean needsAdvanced) {
 		this.needsAdvanced = needsAdvanced;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public boolean needsCertAuth() {
+		return this.needsCertAuth;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public void setNeedsCertAuth(boolean needsCertificate) {
+		this.needsCertAuth = needsCertificate;
 	}
 
 	/**
@@ -1640,6 +1845,17 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	public Boolean getSaveProxyPassword() {
 		if (needsProxy()) {
 			return saveProxyPasswordButton.getSelection();
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public Boolean getSaveCertPassword() {
+		if (needsCertAuth()) {
+			return saveCertPasswordButton.getSelection();
 		} else {
 			return false;
 		}

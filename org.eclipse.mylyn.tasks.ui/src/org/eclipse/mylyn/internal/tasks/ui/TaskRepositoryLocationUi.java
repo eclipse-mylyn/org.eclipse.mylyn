@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -21,8 +22,8 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskRepositoryCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
@@ -124,7 +125,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		private void initializeDialog(TaskRepositoryCredentialsDialog dialog) {
 			dialog.setTaskRepository(taskRepository);
-
+			dialog.setFileDialog(AuthenticationType.CERTIFICATE.equals(authType));
 			AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
 			if (credentials != null) {
 				dialog.setUsername(credentials.getUserName());
@@ -142,6 +143,8 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		private String getDefaultMessage() {
 			if (AuthenticationType.REPOSITORY.equals(authType)) {
 				return Messages.TaskRepositoryLocationUi_Enter_repository_password;
+			} else if (AuthenticationType.CERTIFICATE.equals(authType)) {
+				return Messages.TaskRepositoryLocationUi_Enter_CLIENTCERTIFICATE_password;
 			} else if (AuthenticationType.HTTP.equals(authType)) {
 				return Messages.TaskRepositoryLocationUi_Enter_HTTP_password;
 			} else if (AuthenticationType.PROXY.equals(authType)) {

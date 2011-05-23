@@ -207,6 +207,16 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Password_;
 
+	public static String AbstractRepositorySettingsPage_certificate_settings;
+
+	public static String AbstractRepositorySettingsPage_Enable_certificate_authentification;
+
+	public static String AbstractRepositorySettingsPage_CertificateFile_;
+
+	public static String AbstractRepositorySettingsPage_ChooseCertificateFile_;
+
+	public static String AbstractRepositorySettingsPage_CertificatePassword_;
+
 	public static String AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets;
 
 	public static String AbstractRepositorySettingsPage_Proxy_host_address_;

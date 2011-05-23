@@ -48,6 +48,7 @@ import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.commons.net.SslCertificateException;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -157,6 +158,11 @@ public class TracWebClient extends AbstractTracClient {
 					if (needsReauthentication(code, monitor)) {
 						continue;
 					}
+				} catch (SslCertificateException e) {
+					if (needsReauthentication(SC_CERT_AUTH_FAILED, monitor)) {
+						continue;
+					}
+					throw e;
 				} finally {
 					WebUtil.releaseConnection(method, monitor);
 				}
@@ -183,6 +189,8 @@ public class TracWebClient extends AbstractTracClient {
 				authenticationType = AuthenticationType.REPOSITORY;
 			} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
 				authenticationType = AuthenticationType.PROXY;
+			} else if (code == SC_CERT_AUTH_FAILED) {
+				authenticationType = AuthenticationType.CERTIFICATE;
 			} else {
 				return false;
 			}

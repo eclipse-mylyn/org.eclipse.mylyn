@@ -43,7 +43,11 @@ public class Messages extends NLS {
 
 	public static String TaskListSortDialog_Title;
 
+	public static String TaskRepositoryCredentialsDialog_ChooseCertificateFile;
+
 	public static String TaskRepositoryCredentialsDialog_Enter_Credentials;
+
+	public static String TaskRepositoryCredentialsDialog_Enter_repository_certificate;
 
 	public static String TaskRepositoryCredentialsDialog_Enter_repository_credentials;
 
@@ -60,6 +64,8 @@ public class Messages extends NLS {
 	public static String TaskRepositoryCredentialsDialog_Task_Repository;
 
 	public static String TaskRepositoryCredentialsDialog_User_ID;
+
+	public static String TaskRepositoryCredentialsDialog_Filename;
 
 	public static String UiLegendControl_Active_task;
 
