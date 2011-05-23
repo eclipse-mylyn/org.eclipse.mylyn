@@ -165,6 +165,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		userID = -1;
 		final AuthenticationCredentials credentials = this.getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
+			String user = credentials.getUserName();
+			String password = credentials.getPassword();
+			if ("".equals(user) || "".equals(password)) {
+				return userID;
+			}
 			userID = (new BugzillaXmlRpcOperation<Integer>(this) {
 				@SuppressWarnings("serial")
 				@Override

@@ -2344,9 +2344,15 @@ public class BugzillaClient {
 		boolean useXMLRPC = Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
 		if (useXMLRPC && xmlRpcClient == null) {
 			WebLocation webLocation = new WebLocation(this.repositoryUrl + "/xmlrpc.cgi"); //$NON-NLS-1$
-			webLocation.setCredentials(AuthenticationType.REPOSITORY,
-					location.getCredentials(AuthenticationType.REPOSITORY).getUserName(),
-					location.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+			String username = ""; //$NON-NLS-1$
+			String password = ""; //$NON-NLS-1$
+			if (location.getCredentials(AuthenticationType.REPOSITORY) != null) {
+				username = location.getCredentials(AuthenticationType.REPOSITORY).getUserName();
+			}
+			if (location.getCredentials(AuthenticationType.REPOSITORY) != null) {
+				password = location.getCredentials(AuthenticationType.REPOSITORY).getPassword();
+			}
+			webLocation.setCredentials(AuthenticationType.REPOSITORY, username, password);
 			xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
 			xmlRpcClient.setContentTypeCheckingEnabled(true);
 		}
