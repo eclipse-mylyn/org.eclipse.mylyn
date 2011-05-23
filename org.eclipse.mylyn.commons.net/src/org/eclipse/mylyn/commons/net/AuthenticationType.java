@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     BREDEX GmbH - fix for bug 295050 
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -26,5 +27,11 @@ public enum AuthenticationType {
 	/** Proxy authentication. */
 	PROXY,
 	/** Task repository authentication. */
-	REPOSITORY
+	REPOSITORY,
+	/**
+	 * Client authentication using certificates.
+	 * 
+	 * @since 3.6
+	 */
+	CERTIFICATE,
 }

@@ -1,31 +1,37 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 Steffen Pingel and others.
+ * Copyright (c) 2011 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Steffen Pingel - initial API and implementation
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.eclipse.mylyn.commons.net.SslCertificateException;
 
 /**
  * @author Steffen Pingel
  */
-public class XmlRpcProxyAuthenticationException extends XmlRpcException {
+public class XmlRpcSslCertificateException extends XmlRpcException {
 
-	private static final long serialVersionUID = 305145749259511429L;
+	private static final long serialVersionUID = 6981133252991248441L;
 
-	public XmlRpcProxyAuthenticationException(String message) {
+	public XmlRpcSslCertificateException(String message) {
 		super(message);
 	}
 
-	public XmlRpcProxyAuthenticationException() {
+	public XmlRpcSslCertificateException() {
 		super(null);
+	}
+
+	public XmlRpcSslCertificateException(SslCertificateException e) {
+		super(null);
+		initCause(e);
 	}
 
 }

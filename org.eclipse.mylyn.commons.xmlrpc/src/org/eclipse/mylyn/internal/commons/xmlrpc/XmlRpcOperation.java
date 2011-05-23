@@ -80,6 +80,13 @@ public abstract class XmlRpcOperation<T> {
 					throw e;
 				}
 				lastException = e;
+			} catch (XmlRpcSslCertificateException e) {
+				try {
+					client.getLocation().requestCredentials(AuthenticationType.CERTIFICATE, null, monitor);
+				} catch (UnsupportedRequestException ignored) {
+					throw e;
+				}
+				lastException = e;
 			}
 		}
 		if (lastException != null) {

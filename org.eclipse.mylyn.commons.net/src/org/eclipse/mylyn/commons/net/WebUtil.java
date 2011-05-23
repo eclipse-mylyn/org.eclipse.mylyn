@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -297,8 +298,15 @@ public class WebUtil {
 		}
 
 		if (WebUtil.isRepositoryHttps(url)) {
-			Protocol protocol = new Protocol("https", sslSocketFactory, HTTPS_PORT); //$NON-NLS-1$
-			hostConfiguration.setHost(host, port, protocol);
+			AuthenticationCredentials certCredentials = location.getCredentials(AuthenticationType.CERTIFICATE);
+			if (certCredentials == null) {
+				Protocol protocol = new Protocol("https", sslSocketFactory, HTTPS_PORT); //$NON-NLS-1$
+				hostConfiguration.setHost(host, port, protocol);
+			} else {
+				Protocol protocol = new Protocol("https", (ProtocolSocketFactory) new PollingSslProtocolSocketFactory( //$NON-NLS-1$
+						certCredentials.getUserName(), certCredentials.getPassword(), null), HTTPS_PORT);
+				hostConfiguration.setHost(host, port, protocol);
+			}
 		} else {
 			Protocol protocol = new Protocol("http", socketFactory, HTTP_PORT); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);

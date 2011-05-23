@@ -39,6 +39,7 @@ import org.apache.xmlrpc.util.HttpUtil;
 import org.apache.xmlrpc.util.XmlRpcIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.SslCertificateException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.xml.sax.SAXException;
 
@@ -223,6 +224,8 @@ class HttpClientTransportFactory implements XmlRpcTransportFactory {
 				} else {
 					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t); //$NON-NLS-1$
 				}
+			} catch (SslCertificateException e) {
+				throw new XmlRpcSslCertificateException(e);
 			} catch (IOException e) {
 				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e); //$NON-NLS-1$
 			}

@@ -7,17 +7,23 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     BREDEX GmbH - fix for bug 295050
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -29,6 +35,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.net.SslCertificateException;
 
 /**
  * Provides support for managing SSL connections.
@@ -46,6 +53,12 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 	private static final String KEY_STORE_TYPE = "javax.net.ssl.keyStoreType"; //$NON-NLS-1$
 
 	private final boolean hasKeyManager;
+
+	private String keyStoreFileName;
+
+	private String keyStorePassword;
+
+	private String keyStoreType;
 
 	private SSLSocketFactory socketFactory;
 
@@ -76,6 +89,13 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 		}
 	}
 
+	public PollingSslProtocolSocketFactory(String keyStoreFileName, String keyStorePassword, String keyStoreType) {
+		this.keyStoreFileName = keyStoreFileName;
+		this.keyStorePassword = keyStorePassword;
+		this.keyStoreType = keyStoreType;
+		this.hasKeyManager = false;
+	}
+
 	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
 			UnknownHostException {
 		return getSocketFactory().createSocket(socket, host, port, autoClose);
@@ -103,13 +123,100 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 		return socket;
 	}
 
-	public SSLSocketFactory getSocketFactory() throws IOException {
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		PollingSslProtocolSocketFactory other = (PollingSslProtocolSocketFactory) obj;
+		if (keyStoreFileName == null) {
+			if (other.keyStoreFileName != null) {
+				return false;
+			}
+		} else if (!keyStoreFileName.equals(other.keyStoreFileName)) {
+			return false;
+		}
+		if (keyStorePassword == null) {
+			if (other.keyStorePassword != null) {
+				return false;
+			}
+		} else if (!keyStorePassword.equals(other.keyStorePassword)) {
+			return false;
+		}
+		if (keyStoreType == null) {
+			if (other.keyStoreType != null) {
+				return false;
+			}
+		} else if (!keyStoreType.equals(other.keyStoreType)) {
+			return false;
+		}
+		return true;
+	}
+
+	public synchronized SSLSocketFactory getSocketFactory() throws IOException {
 		if (socketFactory == null) {
+			if (keyStoreFileName != null && keyStorePassword != null) {
+				KeyManager[] keymanagers = null;
+				try {
+					if (keyStoreType == null) {
+						try {
+							keymanagers = openKeyStore(KeyStore.getDefaultType());
+						} catch (Exception e) {
+							keymanagers = openKeyStore("pkcs12"); //$NON-NLS-1$
+						}
+					} else {
+						keymanagers = openKeyStore(keyStoreType);
+					}
+				} catch (Exception cause) {
+					IOException e = new SslCertificateException();
+					e.initCause(cause);
+					throw e;
+				}
+
+				try {
+					SSLContext sslContext = SSLContext.getInstance("SSL"); //$NON-NLS-1$
+					sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
+					this.socketFactory = sslContext.getSocketFactory();
+				} catch (Exception cause) {
+					IOException e = new SslCertificateException();
+					e.initCause(cause);
+					throw e;
+				}
+			}
 			throw new IOException("Could not initialize SSL context"); //$NON-NLS-1$
 		}
 		return socketFactory;
 	}
 
+	private KeyManager[] openKeyStore(String type) throws KeyStoreException, IOException, NoSuchAlgorithmException,
+			CertificateException, FileNotFoundException, UnrecoverableKeyException {
+		KeyStore keyStore = KeyStore.getInstance(type);
+		char[] password = keyStorePassword.toCharArray();
+		keyStore.load(new FileInputStream(keyStoreFileName), password);
+		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+		keyManagerFactory.init(keyStore, password);
+		return keyManagerFactory.getKeyManagers();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((keyStoreFileName == null) ? 0 : keyStoreFileName.hashCode());
+		result = prime * result + ((keyStorePassword == null) ? 0 : keyStorePassword.hashCode());
+		result = prime * result + ((keyStoreType == null) ? 0 : keyStoreType.hashCode());
+		return result;
+	}
+
+	/**
+	 * Public for testing only.
+	 */
 	public boolean hasKeyManager() {
 		return hasKeyManager;
 	}
