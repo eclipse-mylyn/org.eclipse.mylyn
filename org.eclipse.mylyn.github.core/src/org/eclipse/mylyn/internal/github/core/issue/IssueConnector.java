@@ -38,6 +38,7 @@ import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.egit.github.core.service.MilestoneService;
 import org.eclipse.egit.github.core.util.LabelComparator;
+import org.eclipse.egit.github.core.util.MilestoneComparator;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -168,6 +169,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 					repo.getName(), IssueService.STATE_OPEN));
 			milestones.addAll(service.getMilestones(repo.getOwner(),
 					repo.getName(), IssueService.STATE_CLOSED));
+			Collections.sort(milestones, new MilestoneComparator());
 			this.repositoryMilestones.put(repository, milestones);
 			return milestones;
 		} catch (IOException e) {
@@ -185,9 +187,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		List<Milestone> milestones = new LinkedList<Milestone>();
 		List<Milestone> cached = this.repositoryMilestones.get(repository);
-		if (cached != null) {
+		if (cached != null)
 			milestones.addAll(cached);
-		}
 		return milestones;
 	}
 
