@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 
+import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
@@ -40,8 +41,11 @@ import org.eclipse.ui.activities.IIdentifier;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.browser.WebBrowserPreference;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
+import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -311,6 +315,23 @@ public class WorkbenchUtil {
 		menuManager.add(new Separator(GROUP_FILTER));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menuManager.add(new Separator(GROUP_PROPERTIES));
+	}
+
+	public static Object openProperties(IServiceLocator serviceLocator) {
+		IHandlerService service = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+		if (service != null) {
+			try {
+				return service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
+			} catch (NotEnabledException e) {
+				// ignore
+			} catch (Exception e) {
+				CommonsUiPlugin.getDefault()
+						.getLog()
+						.log(new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN,
+								"Opening repository properties failed", e)); //$NON-NLS-1$
+			}
+		}
+		return IStatus.CANCEL;
 	}
 
 }
