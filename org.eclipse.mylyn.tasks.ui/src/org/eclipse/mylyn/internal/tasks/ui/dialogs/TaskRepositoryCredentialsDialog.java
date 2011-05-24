@@ -131,7 +131,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			GridDataFactory.fillDefaults()
 					.align(SWT.FILL, SWT.CENTER)
 					.grab(true, false)
-					.span(2, 1)
+					.span(3, 1)
 					.applyTo(labelComposite);
 
 			Label label = new Label(labelComposite, SWT.NONE);
@@ -182,7 +182,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				}
 			});
 		} else {
-			new Label(composite, SWT.NONE).setText(""); //$NON-NLS-1$
+			new Label(composite, SWT.NONE).setText(" "); //$NON-NLS-1$
 		}
 
 		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_Password);
@@ -212,7 +212,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				savePassword = savePasswordButton.getSelection();
 			}
 		});
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(savePasswordButton);
+		GridDataFactory.fillDefaults().span(3, 1).applyTo(savePasswordButton);
 
 		createWarningMessage(composite);
 	}
