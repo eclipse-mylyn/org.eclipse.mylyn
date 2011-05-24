@@ -68,6 +68,9 @@
                 value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
           </instanceof>
        </triggerPoints>
+       <actionProvider
+             class="org.eclipse.mylyn.internal.builds.ui.navigator.BuildNavigatorActionProvider">
+       </actionProvider>
     </navigatorContent>
  </extension>
  <extension
