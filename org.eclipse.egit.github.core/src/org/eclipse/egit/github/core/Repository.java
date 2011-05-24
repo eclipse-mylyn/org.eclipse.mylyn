@@ -169,6 +169,13 @@ public class Repository {
 	}
 
 	/**
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @return fork
 	 */
 	public boolean isFork() {
@@ -204,6 +211,13 @@ public class Repository {
 	}
 
 	/**
+	 * @param isPrivate
+	 */
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+
+	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
@@ -226,10 +240,24 @@ public class Repository {
 	}
 
 	/**
+	 * @param description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
 	 * @return homepage
 	 */
 	public String getHomepage() {
 		return this.homepage;
+	}
+
+	/**
+	 * @param homepage
+	 */
+	public void setHomepage(String homepage) {
+		this.homepage = homepage;
 	}
 
 	/**
