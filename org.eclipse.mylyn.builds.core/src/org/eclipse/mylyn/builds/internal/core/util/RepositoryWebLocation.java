@@ -34,11 +34,13 @@ public class RepositoryWebLocation extends AbstractWebLocation {
 
 	@Override
 	public AuthenticationCredentials getCredentials(AuthenticationType type) {
-		UsernamePasswordCredentials credentials = location.getCredentials(
-				org.eclipse.mylyn.commons.repositories.auth.AuthenticationType.REPOSITORY,
-				UsernamePasswordCredentials.class);
-		if (credentials != null) {
-			return new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword());
+		if (type != AuthenticationType.CERTIFICATE) {
+			UsernamePasswordCredentials credentials = location.getCredentials(
+					org.eclipse.mylyn.commons.repositories.auth.AuthenticationType.REPOSITORY,
+					UsernamePasswordCredentials.class);
+			if (credentials != null) {
+				return new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword());
+			}
 		}
 		return null;
 	}
