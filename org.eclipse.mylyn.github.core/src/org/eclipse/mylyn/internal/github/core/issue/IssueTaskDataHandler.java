@@ -110,7 +110,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		createLabels(repository, data, issue);
 
-		createMilestone(repository, data, issue);
+		createMilestones(repository, data, issue);
 
 		PullRequest pr = issue.getPullRequest();
 		String prDiffUrl = pr != null ? pr.getDiffUrl() : null;
@@ -119,7 +119,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		return data;
 	}
 
-	private void createMilestone(TaskRepository repository, TaskData data,
+	private void createMilestones(TaskRepository repository, TaskData data,
 			Issue issue) {
 		Milestone current = issue.getMilestone();
 		String number = current != null ? Integer.toString(current.getNumber())
@@ -319,7 +319,9 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		for (IssueAttribute attr : IssueAttribute.values())
 			if (attr.isInitTask())
 				createAttribute(data, attr, (String) null);
-		createLabels(repository, data, new Issue());
+		Issue dummy = new Issue();
+		createLabels(repository, data, dummy);
+		createMilestones(repository, data, dummy);
 		return true;
 	}
 
