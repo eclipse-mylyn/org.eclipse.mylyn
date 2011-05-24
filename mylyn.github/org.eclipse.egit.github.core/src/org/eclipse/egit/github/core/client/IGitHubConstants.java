@@ -71,6 +71,11 @@ public interface IGitHubConstants {
 	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_CREATE
+	 */
+	String SEGMENT_CREATE = "/create"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
