@@ -11,8 +11,11 @@
 package org.eclipse.egit.github.core.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.Repository;
@@ -22,10 +25,28 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Repository service class.
- * 
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class RepositoryService extends GitHubService {
+
+	/**
+	 * FIELD_NAME
+	 */
+	public static final String FIELD_NAME = "name"; //$NON-NLS-1$
+
+	/**
+	 * FIELD_DESCRIPTION
+	 */
+	public static final String FIELD_DESCRIPTION = "description"; //$NON-NLS-1$
+
+	/**
+	 * FIELD_HOMEPAGE
+	 */
+	public static final String FIELD_HOMEPAGE = "homepage"; //$NON-NLS-1$
+
+	/**
+	 * FIELD_PUBLIC
+	 */
+	public static final String FIELD_PUBLIC = "public"; //$NON-NLS-1$
 
 	private static class RepositoryContainer implements
 			IResourceProvider<Repository> {
@@ -38,6 +59,12 @@ public class RepositoryService extends GitHubService {
 		public List<Repository> getResources() {
 			return this.repositories;
 		}
+
+	}
+
+	private static class RepositoryWrapper {
+
+		Repository repository;
 
 	}
 
@@ -91,5 +118,36 @@ public class RepositoryService extends GitHubService {
 		request.setType(RepositoryContainer.class);
 		getAll(request);
 		return collector.getResources();
+	}
+
+	/**
+	 * Create a new repository
+	 * 
+	 * @param repository
+	 * @return created repository
+	 * @throws IOException
+	 */
+	public Repository createRepository(Repository repository)
+			throws IOException {
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
+		uri.append(IGitHubConstants.SEGMENT_REPOS).append(
+				IGitHubConstants.SEGMENT_CREATE);
+
+		// Name is required, all others are optional
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(FIELD_NAME, repository.getName());
+		String desc = repository.getDescription();
+		if (desc != null)
+			params.put(FIELD_DESCRIPTION, desc);
+		String homepage = repository.getHomepage();
+		if (homepage != null)
+			params.put(FIELD_HOMEPAGE, homepage);
+		params.put(FIELD_PUBLIC, repository.isPrivate() ? Integer.toString(0)
+				: Integer.toString(1));
+
+		RepositoryWrapper wrapper = client.post(uri.toString(), params,
+				RepositoryWrapper.class);
+		return wrapper.repository;
 	}
 }
