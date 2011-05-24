@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,8 +22,8 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
@@ -50,9 +47,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -183,17 +178,7 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IHandlerService service = (IHandlerService) getSite().getService(IHandlerService.class);
-				if (service != null) {
-					try {
-						service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
-					} catch (NotEnabledException e) {
-						// ignore
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Opening repository properties failed", e)); //$NON-NLS-1$
-					}
-				}
+				WorkbenchUtil.openProperties(getSite());
 			}
 		});
 

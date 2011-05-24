@@ -2000,6 +2000,9 @@
          <commonSorter
                class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter">
          </commonSorter>
+         <actionProvider
+               class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesNavigatorActionProvider">
+         </actionProvider>
       </navigatorContent>
     </extension>
     <extension
