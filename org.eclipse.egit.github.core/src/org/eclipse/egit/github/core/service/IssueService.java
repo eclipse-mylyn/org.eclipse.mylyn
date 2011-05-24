@@ -183,7 +183,7 @@ public class IssueService extends GitHubService {
 			params.put(FIELD_BODY, issue.getBody());
 			params.put(FIELD_TITLE, issue.getTitle());
 			User assignee = issue.getAssignee();
-			if (assignee != null && !newIssue)
+			if (assignee != null)
 				params.put(FILTER_ASSIGNEE, assignee.getName());
 
 			Milestone milestone = issue.getMilestone();
