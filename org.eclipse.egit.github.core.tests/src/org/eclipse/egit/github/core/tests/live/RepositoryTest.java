@@ -47,4 +47,24 @@ public class RepositoryTest extends LiveTest {
 		}
 	}
 
+	/**
+	 * Test creating a repository
+	 * 
+	 * @throws IOException
+	 */
+	public void testCreate() throws IOException {
+		assertNotNull("Client user is required", client.getUser());
+		RepositoryService service = new RepositoryService(
+				createClient(IGitHubConstants.URL_API_V2));
+		Repository repository = new Repository(client.getUser(), "test-create-"
+				+ System.currentTimeMillis());
+		repository.setPrivate(true);
+		Repository created = service.createRepository(repository);
+		assertNotNull(created);
+		assertNotSame(repository, created);
+		assertTrue(created.isPrivate());
+		assertEquals(repository.getOwner(), created.getOwner());
+		assertEquals(repository.getName(), created.getName());
+	}
+
 }
