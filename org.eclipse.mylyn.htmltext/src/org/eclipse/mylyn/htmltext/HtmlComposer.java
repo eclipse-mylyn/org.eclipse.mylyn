@@ -219,6 +219,11 @@ public class HtmlComposer {
 	 */
 	private boolean initialized;
 
+	
+	public HtmlComposer(final Composite parent, final int style) {
+		this(parent, style, null);
+		
+	}
 	/**
 	 * Constructs a new instance of a {@link Browser} and includes a ckeditor
 	 * instance.
@@ -230,7 +235,7 @@ public class HtmlComposer {
 	 *            the style of control to construct
 	 * @see Browser#Browser(Composite, int)
 	 */
-	public HtmlComposer(final Composite parent, final int style) {
+	public HtmlComposer(final Composite parent, final int style, Configuration config) {
 		browser = new Browser(parent, style);
 		browser.setMenu(new Menu(browser));
 		new RenderCompleteFunction(browser);
@@ -239,7 +244,7 @@ public class HtmlComposer {
 			baseUrl = FileLocator.resolve(FileLocator.find(HtmlTextActivator
 					.getDefault().getBundle(), new Path(
 					"/eclipsebridge/base.html"), Collections.EMPTY_MAP));
-			browser.setUrl(baseUrl.toString());
+			browser.setUrl(baseUrl.toString() + (config != null ? "?" + config.toQuery() : ""));
 			browser.addProgressListener(new ProgressAdapter() {
 				@Override
 				public void completed(ProgressEvent event) {
