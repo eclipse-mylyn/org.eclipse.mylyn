@@ -56,9 +56,11 @@ public class Milestone {
 
 	/**
 	 * @param dueOn
+	 * @return this milestone
 	 */
-	public void setDueOn(Date dueOn) {
+	public Milestone setDueOn(Date dueOn) {
 		this.dueOn = dueOn != null ? new Date(dueOn.getTime()) : null;
+		return this;
 	}
 
 	/**
@@ -100,9 +102,11 @@ public class Milestone {
 
 	/**
 	 * @param description
+	 * @return this milestone
 	 */
-	public void setDescription(String description) {
+	public Milestone setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	/**
@@ -114,9 +118,11 @@ public class Milestone {
 
 	/**
 	 * @param state
+	 * @return this milestone
 	 */
-	public void setState(String state) {
+	public Milestone setState(String state) {
 		this.state = state;
+		return this;
 	}
 
 	/**
@@ -128,9 +134,11 @@ public class Milestone {
 
 	/**
 	 * @param title
+	 * @return this milestone
 	 */
-	public void setTitle(String title) {
+	public Milestone setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	/**

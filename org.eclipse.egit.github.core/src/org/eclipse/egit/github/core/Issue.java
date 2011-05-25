@@ -90,9 +90,11 @@ public class Issue {
 
 	/**
 	 * @param number
+	 * @return this issue
 	 */
-	public void setNumber(int number) {
+	public Issue setNumber(int number) {
 		this.number = number;
+		return this;
 	}
 
 	/**
@@ -166,9 +168,11 @@ public class Issue {
 
 	/**
 	 * @param state
+	 * @return this issue
 	 */
-	public void setState(String state) {
+	public Issue setState(String state) {
 		this.state = state;
+		return this;
 	}
 
 	/**
