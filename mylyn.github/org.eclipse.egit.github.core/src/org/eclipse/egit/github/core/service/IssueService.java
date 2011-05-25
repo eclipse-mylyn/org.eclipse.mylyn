@@ -281,4 +281,25 @@ public class IssueService extends GitHubService {
 		return this.client.post(uri.toString(), params, Comment.class);
 	}
 
+	/**
+	 * Delete the issue comment with the given id
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param comment
+	 * @throws IOException
+	 */
+	public void deleteComment(String user, String repository, String comment)
+			throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Comment cannot be null", comment); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append('/').append(comment);
+		client.delete(uri.toString());
+	}
+
 }

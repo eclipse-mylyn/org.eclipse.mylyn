@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.PullRequestService;
+import org.junit.Test;
 
 /**
  * Live pull request tests
@@ -47,7 +51,8 @@ public class PullRequestTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetch() throws IOException {
+	@Test
+	public void fetch() throws IOException {
 		PullRequestService service = new PullRequestService(
 				createClient(IGitHubConstants.URL_API_V2));
 		PullRequest request = service.getPullRequest(new Repository(

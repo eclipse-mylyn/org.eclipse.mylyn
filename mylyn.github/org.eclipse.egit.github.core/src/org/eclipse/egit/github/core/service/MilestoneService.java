@@ -116,4 +116,24 @@ public class MilestoneService extends GitHubService {
 		return (Milestone) client.get(request).getBody();
 	}
 
+	/**
+	 * Delete a milestone with the given id from the given repository
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param milestone
+	 * @throws IOException
+	 */
+	public void deleteMilestone(String user, String repository, String milestone)
+			throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Milestone cannot be null", milestone); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
+		uri.append('/').append(milestone);
+		client.delete(uri.toString());
+	}
+
 }
