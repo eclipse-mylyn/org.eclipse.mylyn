@@ -1,0 +1,17 @@
+[project "technology.egit"]
+	name = EGit
+	license = Eclipse Public License v1.0
+
+[review]
+	url = http://egit.eclipse.org/r/r/
+
+[consumes "technology.jgit"]
+	name = JGit
+	version = 1.0.0
+	license = Eclipse Distribution License v1.0
+
+[CQ "5162"]
+	description = jakarta-httpclient-4.1 (PB Orbit CQ4840)
+	license = Apache License, 2.0
+	use = unmodified source & binary
+	state = approved
