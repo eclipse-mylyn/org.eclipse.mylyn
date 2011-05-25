@@ -170,9 +170,11 @@ public class Repository {
 
 	/**
 	 * @param name
+	 * @return this repository
 	 */
-	public void setName(String name) {
+	public Repository setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	/**
@@ -212,9 +214,11 @@ public class Repository {
 
 	/**
 	 * @param isPrivate
+	 * @return this repository
 	 */
-	public void setPrivate(boolean isPrivate) {
+	public Repository setPrivate(boolean isPrivate) {
 		this.isPrivate = isPrivate;
+		return this;
 	}
 
 	/**
@@ -241,9 +245,11 @@ public class Repository {
 
 	/**
 	 * @param description
+	 * @return this repository
 	 */
-	public void setDescription(String description) {
+	public Repository setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	/**
@@ -255,9 +261,11 @@ public class Repository {
 
 	/**
 	 * @param homepage
+	 * @return this repository
 	 */
-	public void setHomepage(String homepage) {
+	public Repository setHomepage(String homepage) {
 		this.homepage = homepage;
+		return this;
 	}
 
 	/**
