@@ -16,9 +16,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Assert;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -103,6 +105,49 @@ public class LabelService extends GitHubService {
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_LABELS);
 		return this.client.post(uri.toString(), label, Label.class);
+	}
+
+	/**
+	 * Get label with given name
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param label
+	 * @return label
+	 * @throws IOException
+	 */
+	public Label getLabel(String user, String repository, String label)
+			throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Label cannot be null", label); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		uri.append('/').append(label);
+		GitHubRequest request = createRequest().setUri(uri)
+				.setType(Label.class);
+		return (Label) client.get(request).getBody();
+	}
+
+	/**
+	 * Delete a label with the given id from the given repository
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param label
+	 * @throws IOException
+	 */
+	public void deleteLabel(String user, String repository, String label)
+			throws IOException {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		Assert.notNull("Label cannot be null", label); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		uri.append('/').append(label);
+		client.delete(uri.toString());
 	}
 
 }

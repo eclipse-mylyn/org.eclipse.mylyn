@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +27,7 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.service.IssueService;
+import org.junit.Test;
 
 /**
  * 
@@ -33,7 +39,8 @@ public class IssueTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetch() throws IOException {
+	@Test
+	public void fetchIssue() throws IOException {
 		IssueService service = new IssueService(client);
 		Issue issue = service.getIssue("schacon", "showoff", "1");
 		assertNotNull(issue);
@@ -52,7 +59,8 @@ public class IssueTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetchAll() throws IOException {
+	@Test
+	public void fetchAllIssues() throws IOException {
 		IssueService service = new IssueService(client);
 		List<Issue> issues = service.getIssues("schacon", "showoff",
 				Collections.singletonMap(IssueService.FILTER_STATE,
@@ -67,7 +75,8 @@ public class IssueTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testLimit() throws IOException {
+	@Test
+	public void limit() throws IOException {
 		IssueService service = new IssueService(client) {
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })

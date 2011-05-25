@@ -13,7 +13,7 @@ package org.eclipse.egit.github.core;
 import java.util.Date;
 
 /**
- * GitHub issue comment class.
+ * GitHub issue and gist comment class.
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
@@ -24,6 +24,8 @@ public class Comment {
 	private Date updatedAt;
 
 	private String body;
+
+	private String id;
 
 	private String url;
 
@@ -50,6 +52,13 @@ public class Comment {
 	 */
 	public String getBody() {
 		return this.body;
+	}
+
+	/**
+	 * @return id
+	 */
+	public String getId() {
+		return this.id;
 	}
 
 	/**
