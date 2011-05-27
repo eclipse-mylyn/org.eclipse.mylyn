@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 
 /**
@@ -83,6 +85,9 @@ public class ConnectorDiscoveryExtensionReader {
 			// no particular iu specified, use connector id
 			connectorDescriptor.getInstallableUnits().add(getFeatureId(connectorDescriptor.getId()));
 		}
+		for (IConfigurationElement child : element.getChildren("attribute")) { //$NON-NLS-1$
+			readAttribute(child, connectorDescriptor.getAttributes());
+		}
 		for (IConfigurationElement child : element.getChildren("featureFilter")) { //$NON-NLS-1$
 			FeatureFilter featureFilterItem = readFeatureFilter(child);
 			featureFilterItem.setConnectorDescriptor(connectorDescriptor);
@@ -107,6 +112,10 @@ public class ConnectorDiscoveryExtensionReader {
 		connectorDescriptor.validate();
 
 		return connectorDescriptor;
+	}
+
+	private void readAttribute(IConfigurationElement element, Map<String, String> attributes) {
+		attributes.put(element.getAttribute("key"), element.getAttribute("value")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private String getFeatureId(String id) {

@@ -195,6 +195,7 @@ public class DiscoveryViewer {
 			checkbox.setText(" "); //$NON-NLS-1$
 			// help UI tests
 			checkbox.setData("connectorId", connector.getId()); //$NON-NLS-1$
+			checkbox.setVisible(connector.isInstallable());
 			configureLook(checkbox, background);
 			checkbox.setSelection(installableConnectors.contains(connector));
 			checkbox.addFocusListener(new FocusAdapter() {
@@ -318,6 +319,13 @@ public class DiscoveryViewer {
 					MessageDialog.openWarning(shellProvider.getShell(),
 							Messages.DiscoveryViewer_Install_Connector_Title,
 							NLS.bind(Messages.DiscoveryViewer_Already_installed_Error, connector.getName()));
+					return false;
+				}
+				if (!connector.isInstallable()) {
+					if (connector.getInstallMessage() != null) {
+						MessageDialog.openInformation(shellProvider.getShell(),
+								Messages.DiscoveryViewer_Install_Connector_Title, connector.getInstallMessage());
+					}
 					return false;
 				}
 				if (connector.getAvailable() != null && !connector.getAvailable()) {
@@ -994,7 +1002,7 @@ public class DiscoveryViewer {
 		// have
 		// connectors that are filtered based on version of Mylyn
 		Bundle bundle = Platform.getBundle("org.eclipse.mylyn.tasks.core"); //$NON-NLS-1$
-		String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+		String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		if (versionString != null) {
 			Version version = new Version(versionString);
 			environment.put("org.eclipse.mylyn.version", version.toString()); //$NON-NLS-1$

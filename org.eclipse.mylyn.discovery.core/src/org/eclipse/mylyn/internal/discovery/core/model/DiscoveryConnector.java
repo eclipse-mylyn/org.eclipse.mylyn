@@ -17,6 +17,9 @@ import java.beans.PropertyChangeSupport;
  * @author David Green
  */
 public class DiscoveryConnector extends ConnectorDescriptor {
+
+	public static String ATTRIBUTE_INSTALL_MESSAGE = "installMessage"; //$NON-NLS-1$
+
 	private AbstractDiscoverySource source;
 
 	private DiscoveryCategory category;
@@ -114,4 +117,13 @@ public class DiscoveryConnector extends ConnectorDescriptor {
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
+
+	public boolean isInstallable() {
+		return getInstallMessage() == null;
+	}
+
+	public String getInstallMessage() {
+		return getAttributes().get(ATTRIBUTE_INSTALL_MESSAGE);
+	}
+
 }

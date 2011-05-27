@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.discovery.core.model;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,6 +54,8 @@ public class ConnectorDescriptor {
 	protected String certificationId;
 
 	protected boolean installed;
+
+	private final java.util.Map<String, String> attributes = new HashMap<String, String>();
 
 	public ConnectorDescriptor() {
 	}
@@ -263,6 +266,10 @@ public class ConnectorDescriptor {
 
 	public void setStatsUrl(String statsUrl) {
 		this.statsUrl = statsUrl;
+	}
+
+	public java.util.Map<String, String> getAttributes() {
+		return attributes;
 	}
 
 }

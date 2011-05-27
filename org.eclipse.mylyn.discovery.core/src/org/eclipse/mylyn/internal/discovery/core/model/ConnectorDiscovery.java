@@ -329,6 +329,9 @@ public class ConnectorDiscovery {
 		Map<String, Collection<DiscoveryConnector>> urlToDescriptors = new HashMap<String, Collection<DiscoveryConnector>>();
 
 		for (DiscoveryConnector descriptor : connectors) {
+			if (!descriptor.isInstallable()) {
+				continue;
+			}
 			String url = descriptor.getSiteUrl();
 			if (!url.endsWith("/")) { //$NON-NLS-1$
 				url += "/"; //$NON-NLS-1$

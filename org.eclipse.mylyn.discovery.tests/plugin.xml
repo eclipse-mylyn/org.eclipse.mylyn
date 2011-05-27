@@ -56,6 +56,24 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
             description="Trac Connector"
+            id="org.eclipse.mylyn.trac"
+            kind="task"
+            license="License"
+            name="Uninstallable Trac Test Connector"
+            provider="Eclipse Mylyn"
+            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
+            statsUrl="http://localhost/stats/">
+         <iu
+               id="org.eclipse.mylyn.trac_feature">
+         </iu>
+         <attribute
+               key="installMessage"
+               value="This connector requires Eclipse 5.0.">
+         </attribute>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.tests.connectorCategory1"
+            description="Trac Connector"
             id="org.eclipse.mylyn.discovery.2tests"
             kind="task"
             license="License"
