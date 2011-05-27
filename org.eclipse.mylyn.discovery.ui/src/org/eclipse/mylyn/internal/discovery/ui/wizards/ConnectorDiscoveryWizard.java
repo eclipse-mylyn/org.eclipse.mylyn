@@ -43,7 +43,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 		}
 	}
 
-	private boolean showConnectorDescriptorKindFilter = true;
+	private boolean showConnectorDescriptorKindFilter = false;
 
 	private boolean showConnectorDescriptorTextFilter = true;
 
