@@ -41,8 +41,6 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -168,7 +166,7 @@ public class DiscoveryViewer {
 
 		private Image iconImage;
 
-		private Image warningIconImage;
+//		private Image warningIconImage;
 
 		public ConnectorDescriptorItemUi(final DiscoveryConnector connector, Composite categoryChildrenContainer,
 				Color background) {
@@ -368,17 +366,17 @@ public class DiscoveryViewer {
 			description.setForeground(foreground);
 
 			if (iconImage != null) {
-				boolean unavailable = !enabled && connector.getAvailable() != null;
-				if (unavailable) {
-					if (warningIconImage == null) {
-						warningIconImage = new DecorationOverlayIcon(iconImage, DiscoveryImages.OVERLAY_WARNING_32,
-								IDecoration.BOTTOM_RIGHT).createImage();
-						disposables.add(warningIconImage);
-					}
-					iconLabel.setImage(warningIconImage);
-				} else if (warningIconImage != null) {
-					iconLabel.setImage(iconImage);
-				}
+//				boolean unavailable = !enabled && connector.getAvailable() != null;
+//				if (unavailable) {
+//					if (warningIconImage == null) {
+//						warningIconImage = new DecorationOverlayIcon(iconImage, DiscoveryImages.OVERLAY_WARNING_32,
+//								IDecoration.BOTTOM_RIGHT).createImage();
+//						disposables.add(warningIconImage);
+//					}
+//					iconLabel.setImage(warningIconImage);
+//				} else if (warningIconImage != null) {
+				iconLabel.setImage(iconImage);
+//				}
 			}
 		}
 	}
