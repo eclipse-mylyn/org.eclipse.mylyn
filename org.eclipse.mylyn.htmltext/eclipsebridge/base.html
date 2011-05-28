@@ -14,6 +14,7 @@ http://www.eclipse.org/legal/epl-v10.html
 	<meta content="text/html; charset=utf-8" http-equiv="content-type" />
 	<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="integration.js"></script>
+	<script type="text/javascript" src="externalconfiguration.js"></script>
 	<script type="text/javascript" src="format.js"></script>
 	<script type="text/javascript">
 	//<![CDATA[
@@ -41,15 +42,7 @@ CKEDITOR.editorConfig = function( config )
 	config.toolbarStartupExpanded = false;
 	config.scayt_autoStartup = false;
 	config.startupFocus = true;
-	var enterMode = getQuerystring("enterMode","");
-	if (enterMode == "P"){
-		config.enterMode = CKEDITOR.ENTER_P;
-	} else if (enterMode = "BR") {
-		config.enterMode = CKEDITOR.ENTER_BR;
-	} else if (enterMode = "BR") {
-		config.enterMode = CKEDITOR.ENTER_DIV;
-	}
-	config.shiftEnterMode = CKEDITOR.ENTER_BR;
+	doExternalConfiguration(config);
 };
 
 
@@ -60,24 +53,6 @@ var fireOuter = function(selection)
 	selectionChanged("test",selection);
 };
 
-function getQuerystring(key, default_) {
-    if (default_==null) {
-        default_ = "";
-    }
-    var search = unescape(location.search);
-    if (search == "") {
-        return default_;
-    }
-    search = search.substr(1);
-    var params = search.split("&");
-    for (var i = 0; i < params.length; i++) {
-        var pairs = params[i].split("=");
-        if(pairs[0] == key) {
-            return pairs[1];
-        }
-    }
-    return default_;
-}
 
 function registerListeners()
 {

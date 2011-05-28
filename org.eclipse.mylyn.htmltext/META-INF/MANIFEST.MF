@@ -17,7 +17,9 @@ Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.commands.indent,
  org.eclipse.mylyn.htmltext.commands.justify,
  org.eclipse.mylyn.htmltext.commands.list,
+ org.eclipse.mylyn.htmltext.configuration,
  org.eclipse.mylyn.htmltext.events,
  org.eclipse.mylyn.htmltext.listener,
- org.eclipse.mylyn.htmltext.model
+ org.eclipse.mylyn.htmltext.model,
+ org.eclipse.mylyn.internal.htmltext.configuration;x-internal:=true
 Bundle-ClassPath: htmltext.jar

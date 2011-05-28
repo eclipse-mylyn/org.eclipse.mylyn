@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.htmltext.commands.Command;
 import org.eclipse.mylyn.htmltext.commands.GetHtmlCommand;
 import org.eclipse.mylyn.htmltext.commands.SetHtmlCommand;
+import org.eclipse.mylyn.htmltext.configuration.Configuration;
 import org.eclipse.mylyn.htmltext.events.NodeSelectionEvent;
 import org.eclipse.mylyn.htmltext.listener.NodeSelectionChangeListener;
 import org.eclipse.mylyn.htmltext.model.TriState;
@@ -220,6 +221,18 @@ public class HtmlComposer {
 	private boolean initialized;
 
 	
+	/**
+	 * Constructs a new instance of a {@link Browser} and includes a ckeditor
+	 * instance.
+	 * 
+	 * @param parent
+	 *            a composite control which will be the parent of the new
+	 *            instance (cannot be null)
+	 * @param style
+	 *            the style of control to construct
+	 * @see Browser#Browser(Composite, int)
+	 * 
+	 */
 	public HtmlComposer(final Composite parent, final int style) {
 		this(parent, style, null);
 		
@@ -233,7 +246,9 @@ public class HtmlComposer {
 	 *            instance (cannot be null)
 	 * @param style
 	 *            the style of control to construct
+	 * @param config the configuration for the html-widget
 	 * @see Browser#Browser(Composite, int)
+	 * @since 0.8
 	 */
 	public HtmlComposer(final Composite parent, final int style, Configuration config) {
 		browser = new Browser(parent, style);
