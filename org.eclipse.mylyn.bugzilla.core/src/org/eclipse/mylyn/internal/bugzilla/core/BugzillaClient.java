@@ -419,6 +419,13 @@ public class BugzillaClient {
 						"Authentication credentials from location missing.")); //$NON-NLS-1$
 			}
 			if (credentials != null) {
+				String password = credentials.getPassword();
+				if ("".equals(password) && !hasHTTPAuthenticationCredentials()) { //$NON-NLS-1$
+					loggedIn = false;
+					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_EMPTY_PASSWORD, repositoryUrl.toString(),
+							"Empty password not allowed for Authentication credentials.")); //$NON-NLS-1$
+				}
 				formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, credentials.getUserName());
 				formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD,
 						credentials.getPassword());

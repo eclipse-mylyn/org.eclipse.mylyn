@@ -60,6 +60,8 @@ public class BugzillaStatus extends Status {
 	public String getMessage() {
 
 		switch (getCode()) {
+		case RepositoryStatus.ERROR_EMPTY_PASSWORD:
+			return NLS.bind(Messages.BugzillaStatus_emptyPassword, this.getRepositoryUrl(), this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
 			return NLS.bind(Messages.BugzillaStatus_repositoryLoginFailure, this.getRepositoryUrl(), this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:

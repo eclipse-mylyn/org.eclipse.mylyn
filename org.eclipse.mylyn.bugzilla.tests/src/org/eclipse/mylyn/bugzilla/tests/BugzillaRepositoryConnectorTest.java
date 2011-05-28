@@ -24,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
@@ -42,6 +44,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -1154,6 +1157,27 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 						.getValue());
 			}
 		}
+	}
+
+	public void testCredentialsWithoutPassword() throws Exception {
+		TaskRepository repository = BugzillaFixture.current().repository();
+		AuthenticationCredentials oldCreds = repository.getCredentials(AuthenticationType.REPOSITORY);
+		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials(oldCreds.getUserName(), "");
+		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
+		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
+
+		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		try {
+			client.validate(new NullProgressMonitor());
+
+		} catch (CoreException e) {
+			assertTrue(e.getStatus().getMessage().indexOf("Please validate credentials via Task Repositories view.") != -1);
+			return;
+		} finally {
+			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);
+			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		}
+		fail("Should have failed due to an empty password.");
 	}
 
 }

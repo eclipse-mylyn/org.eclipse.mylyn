@@ -49,6 +49,11 @@ public class RepositoryStatus extends Status {
 
 	public final static int ERROR_INTERNAL = 7;
 
+	/**
+	 * @since 3.6
+	 */
+	public final static int ERROR_EMPTY_PASSWORD = 13;
+
 	private String htmlMessage;
 
 	protected String repositoryUrl;

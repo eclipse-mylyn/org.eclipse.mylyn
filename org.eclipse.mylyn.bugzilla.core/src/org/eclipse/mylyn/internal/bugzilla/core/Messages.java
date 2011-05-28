@@ -301,6 +301,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaStatus_operationCancelled;
 
+	public static String BugzillaStatus_emptyPassword;
+
 	public static String BugzillaStatus_errorIo;
 
 	public static String BugzillaStatus_errorInternal;
