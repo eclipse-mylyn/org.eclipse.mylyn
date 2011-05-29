@@ -63,6 +63,7 @@ public class EnvironmentTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		installedFeatures = new HashSet<String>();
+		System.setProperty("EnvironmentTest", "2");
 		environment = new Environment() {
 			@Override
 			public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
@@ -137,6 +138,15 @@ public class EnvironmentTest extends TestCase {
 
 		installedFeatures.add("org.eclipse.cdt");
 		assertFalse(environment.matches(new StubEntry(values), null));
+	}
+
+	public void testMatchesFilter() {
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("filter", "(EnvironmentTest<=1)");
+		assertFalse(environment.matches(new StubEntry(values), null));
+
+		values.put("filter", "(EnvironmentTest=2)");
+		assertTrue(environment.matches(new StubEntry(values), null));
 	}
 
 }
