@@ -8,6 +8,7 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -40,6 +41,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -53,7 +55,6 @@ import com.google.gerrit.common.data.AccountDashboardInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.ChangeDetailService;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.ChangeManageService;
@@ -352,12 +353,28 @@ public class GerritClient {
 	}
 
 	public PatchSetDetail getPatchSetDetail(final PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
-		return execute(monitor, new Operation<PatchSetDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeDetailService().patchSetDetail(id, this);
+		PatchSetDetail result = null;
+		try {
+			result = execute(monitor, new Operation<PatchSetDetail>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getChangeDetailService().patchSetDetail(id, null, null, this);
+				}
+			});
+		} catch (GerritException e) {
+			// fallback for Gerrit < 2.1.7
+			if (e.getMessage().contains("Error parsing request")) { //$NON-NLS-1$
+				result = execute(monitor, new Operation<PatchSetDetail>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getChangeDetailService().patchSetDetail(id, this);
+					}
+				});
+			} else {
+				throw e;
 			}
-		});
+		}
+		return result;
 	}
 
 	public PatchSetPublishDetail getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
