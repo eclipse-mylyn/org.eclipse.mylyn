@@ -58,6 +58,7 @@ import org.eclipse.mylyn.internal.commons.identity.IdentityModel;
 import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
 import org.eclipse.mylyn.internal.commons.ui.TaskBarManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
@@ -83,6 +84,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.notifications.Environment;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
@@ -666,12 +668,23 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			Long checktime = getPreferenceStore().getLong(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME);
 
-			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime);
+			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
+					new Environment() {
+						private Set<String> installedFeatures;
+
+						@Override
+						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+							if (installedFeatures == null) {
+								installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
+							}
+							return installedFeatures;
+						}
+					});
 
 			// Disabled for initial 3.4 release as per bug#263528
-//			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
-//				serviceMessageManager.start();
-//			}
+			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
+				serviceMessageManager.start();
+			}
 
 			// trigger lazy initialization
 			new TasksUiInitializationJob().schedule();
@@ -943,7 +956,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		store.setDefault(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
-		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED, true);
+		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED, false);
 		store.setDefault(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
 		store.setDefault(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
 		store.setDefault(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT, false);
@@ -972,7 +985,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, true);
 		store.setDefault(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED, true);
 
-		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL, "http://eclipse.org/mylyn/message.xml"); //$NON-NLS-1$
+		store.setDefault(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL, "http://eclipse.org/mylyn/updates.xml"); //$NON-NLS-1$
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {

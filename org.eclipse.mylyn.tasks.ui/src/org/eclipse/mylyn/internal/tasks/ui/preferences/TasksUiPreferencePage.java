@@ -111,8 +111,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button showTaskTrimButton;
 
-	// Disabled for initial 3.4 release as per bug#263528
-//	private Button taskListServiceMessageEnabledButton;
+	private Button taskListServiceMessageEnabledButton;
 
 	public TasksUiPreferencePage() {
 		super();
@@ -213,9 +212,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED,
 				taskListTooltipEnabledButton.getSelection());
-		// Disabled for initial 3.4 release as per bug#263528
-//		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED,
-//				taskListServiceMessageEnabledButton.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED,
+				taskListServiceMessageEnabledButton.getSelection());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SHOW_TRIM, showTaskTrimButton.getSelection());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
@@ -288,9 +286,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-		// Disabled for initial 3.4 release as per bug#263528
-//		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
-//				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
@@ -328,9 +325,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-		// Disabled for initial 3.4 release as per bug#263528
-//		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-//				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
+				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
@@ -519,11 +515,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
 
-		// Disabled for initial 3.4 release as per bug#263528
-//		taskListServiceMessageEnabledButton = new Button(group, SWT.CHECK);
-//		taskListServiceMessageEnabledButton.setText(Messages.TasksUiPreferencePage_show_service_messages);
-//		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
-//				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListServiceMessageEnabledButton = new Button(group, SWT.CHECK);
+		taskListServiceMessageEnabledButton.setText("Display notification when new connectors are available"); //$NON-NLS-1$
+		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 	}
 
 	private void createTaskActivityGroup(Composite container) {

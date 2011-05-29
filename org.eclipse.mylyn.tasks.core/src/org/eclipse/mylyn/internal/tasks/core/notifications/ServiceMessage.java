@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.tasks.core.notifications;
 /**
  * @author Robert Elves
  */
-public class ServiceMessage {
+public class ServiceMessage implements Comparable<ServiceMessage> {
 
 	public enum Element {
-		ID, TITLE, DESCRIPTION, URL, IMAGE, VERSION
+		ID, TITLE, DESCRIPTION, URL, IMAGE
 	};
 
 	private String id;
@@ -29,8 +29,6 @@ public class ServiceMessage {
 	private String url;
 
 	private String image;
-
-	private String version;
 
 	private String eTag;
 
@@ -72,10 +70,6 @@ public class ServiceMessage {
 		return lastModified;
 	}
 
-	public String getVersion() {
-		return version;
-	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -96,12 +90,33 @@ public class ServiceMessage {
 		this.image = image;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
 	public boolean isValid() {
 		return id != null && title != null && description != null && image != null;
+	}
+
+	public int compareTo(ServiceMessage o) {
+		return -getId().compareTo(o.getId());
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ServiceMessage [id="); //$NON-NLS-1$
+		builder.append(id);
+		builder.append(", title="); //$NON-NLS-1$
+		builder.append(title);
+		builder.append(", description="); //$NON-NLS-1$
+		builder.append(description);
+		builder.append(", url="); //$NON-NLS-1$
+		builder.append(url);
+		builder.append(", image="); //$NON-NLS-1$
+		builder.append(image);
+		builder.append(", eTag="); //$NON-NLS-1$
+		builder.append(eTag);
+		builder.append(", lastModified="); //$NON-NLS-1$
+		builder.append(lastModified);
+		builder.append("]"); //$NON-NLS-1$
+		return builder.toString();
 	}
 
 }

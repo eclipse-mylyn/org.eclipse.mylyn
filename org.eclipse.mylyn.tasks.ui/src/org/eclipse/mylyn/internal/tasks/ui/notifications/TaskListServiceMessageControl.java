@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 
@@ -29,10 +31,10 @@ import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageEvent;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.preferences.TasksUiPreferencePage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -41,7 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.osgi.framework.Version;
 
 /**
  * @author Robert Elves
@@ -54,6 +55,7 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 
 	public TaskListServiceMessageControl(Composite parent) {
 		super(parent);
+		setPreferencesPageId(TasksUiPreferencePage.ID);
 	}
 
 	static ExecutionEvent createExecutionEvent(Command command, IHandlerService handlerService) {
@@ -83,33 +85,21 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 					continue;
 				}
 
-				if (!lastMessageId.equals(message.getId()) && isForCurrentVersion(message)) {
+				if (message.getId().compareTo(lastMessageId) > 0) {
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							setMessage(message);
+							// event id is not used but must be set to make configure link visible
+							setEventId(""); //$NON-NLS-1$
 						}
 					});
+					break;
 				}
 			}
 			break;
 		case STOP:
 			close();
 			break;
-		}
-	}
-
-	private boolean isForCurrentVersion(ServiceMessage message) {
-		if (message.getVersion() == null) {
-			return true;
-		}
-
-		try {
-			VersionRange version = new VersionRange(message.getVersion());
-			String versionString = (String) TasksUiPlugin.getDefault().getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-			return version.isIncluded(new Version(versionString));
-		} catch (IllegalArgumentException e) {
-			// invalid version range
-			return false;
 		}
 	}
 
@@ -126,8 +116,8 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 			this.currentMessage = message;
 
 			setTitle(message.getTitle());
-			setDescription(message.getDescription());
 			setTitleImage(Dialog.getImage(message.getImage()));
+			setDescription(message.getDescription());
 		}
 	}
 
@@ -136,35 +126,67 @@ public class TaskListServiceMessageControl extends ServiceMessageControl impleme
 		return new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (e.text != null) {
-					String action = e.text.toLowerCase();
-					if ("create-local-task".equals(action)) { //$NON-NLS-1$
-						closeMessage();
-						LocalTask task = TasksUiInternal.createNewLocalTask(null);
-						TasksUiUtil.openTask(task);
-					} else if ("connect".equals(action)) { //$NON-NLS-1$
-						closeMessage();
-						new AddRepositoryAction().run();
-					} else if ("discovery".equals(action)) { //$NON-NLS-1$
-						closeMessage();
-						final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
-						if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
-							IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-									IHandlerService.class);
-							try {
-								handlerService.executeCommand(discoveryWizardCommand.getId(), null);
-							} catch (Exception e1) {
-								IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
-										new Object[] { e1.getMessage() }), e1);
-								TasksUiInternal.logAndDisplayStatus(
-										Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
-							}
+				if (e.text == null) {
+					return;
+				}
+
+				String action = getAction(e.text);
+				if ("create-local-task".equals(action)) { //$NON-NLS-1$
+					closeMessage();
+					LocalTask task = TasksUiInternal.createNewLocalTask(null);
+					TasksUiUtil.openTask(task);
+				} else if ("connect".equals(action)) { //$NON-NLS-1$
+					closeMessage();
+					new AddRepositoryAction().run();
+				} else if ("discovery".equals(action)) { //$NON-NLS-1$
+					closeMessage();
+					final Command discoveryWizardCommand = TasksUiInternal.getConfiguredDiscoveryWizardCommand();
+					if (discoveryWizardCommand != null && discoveryWizardCommand.isEnabled()) {
+						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+								IHandlerService.class);
+						try {
+							handlerService.executeCommand(discoveryWizardCommand.getId(), null);
+						} catch (Exception e1) {
+							IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+									Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+									new Object[] { e1.getMessage() }), e1);
+							TasksUiInternal.logAndDisplayStatus(
+									Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
 						}
 					}
+				} else if (TasksUiInternal.isValidUrl(e.text)) {
+					TasksUiUtil.openUrl(e.text);
 				}
 			}
+
 		};
+	}
+
+	/**
+	 * Extracts action from query part or a URL if applicable.
+	 */
+	public static String getAction(String action) {
+		if (action.startsWith("http")) { //$NON-NLS-1$
+			URL url;
+			try {
+				url = new URL(action);
+				String query = url.getQuery();
+				if (query != null && query.startsWith("action=")) { //$NON-NLS-1$
+					int i = query.indexOf("&"); //$NON-NLS-1$
+					if (i != -1) {
+						action = query.substring(7, i);
+					} else {
+						action = query.substring(7);
+					}
+				} else {
+					return null;
+				}
+			} catch (MalformedURLException e1) {
+				// ignore
+				return null;
+			}
+		}
+		return action.toLowerCase();
 	}
 
 }

@@ -19,4 +19,9 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.core;x-internal:=tr
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.core.data,
  org.eclipse.mylyn.tasks.core.sync
+Import-Package: com.sun.syndication.feed;version="0.9.0";resolution:=optional,
+ com.sun.syndication.feed.module;version="0.9.0";resolution:=optional,
+ com.sun.syndication.feed.synd;version="0.9.0";resolution:=optional,
+ com.sun.syndication.io;version="0.9.0";resolution:=optional,
+ org.jdom;version="1.0.0";resolution:=optional
 Bundle-Localization: plugin

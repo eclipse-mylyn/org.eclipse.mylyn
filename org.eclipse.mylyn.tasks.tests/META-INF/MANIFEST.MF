@@ -33,10 +33,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.security,
  org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.tasks.search
+Import-Package: com.sun.syndication.feed.synd;version="0.9.0";resolution:=optional
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.connector;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.core;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.data;x-internal:=true,
+ org.eclipse.mylyn.tasks.tests.support;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui.editor;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.util;x-internal:=true

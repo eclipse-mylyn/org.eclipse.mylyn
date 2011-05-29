@@ -8,15 +8,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core.notifications;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -45,11 +42,11 @@ public class ServiceMessageManager {
 
 	protected static final long START_DELAY = 30 * 1000;
 
-	protected static final long RECHECK_DELAY = 24 * 60 * 60 * 1000;
+	protected static final long RECHECK_DELAY = 14 * 24 * 60 * 60 * 1000;
 
 	private String serviceMessageUrl;
 
-	private volatile List<ServiceMessage> messages = Collections.emptyList();
+	private volatile List<? extends ServiceMessage> messages = Collections.emptyList();
 
 	private Job messageCheckJob;
 
@@ -63,11 +60,19 @@ public class ServiceMessageManager {
 
 	private final long checktime;
 
-	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag, long checktime) {
+	private final Environment environment;
+
+	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag, long checktime,
+			Environment environment) {
 		this.serviceMessageUrl = serviceMessageUrl;
 		this.lastModified = lastModified;
 		this.checktime = checktime;
 		this.eTag = eTag;
+		this.environment = environment;
+	}
+
+	public ServiceMessageManager(String serviceMessageUrl, String lastModified, String eTag, long checktime) {
+		this(serviceMessageUrl, lastModified, eTag, checktime, new Environment());
 	}
 
 	public void start() {
@@ -75,8 +80,13 @@ public class ServiceMessageManager {
 			messageCheckJob = new Job("Checking for new service message") { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					updateServiceMessage(monitor);
-					return Status.OK_STATUS;
+					try {
+						updateServiceMessage(monitor);
+						return Status.OK_STATUS;
+					} catch (Throwable t) {
+						// fail silently
+						return Status.CANCEL_STATUS;
+					}
 				}
 
 			};
@@ -95,18 +105,17 @@ public class ServiceMessageManager {
 			messageCheckJob.schedule(START_DELAY);
 		} else {
 			long nextCheckTime = checktime + RECHECK_DELAY;
-			long now = new Date().getTime();
+			long now = System.currentTimeMillis();
 			if (nextCheckTime < now) {
 				messageCheckJob.schedule(START_DELAY);
 			} else if (nextCheckTime > now) {
-				if ((nextCheckTime - now) < START_DELAY) {
+				if (nextCheckTime - now < START_DELAY) {
 					messageCheckJob.schedule(START_DELAY);
 				} else {
 					messageCheckJob.schedule(nextCheckTime - now);
 				}
 			}
 		}
-
 	}
 
 	public void stop() {
@@ -143,16 +152,17 @@ public class ServiceMessageManager {
 		listeners.remove(listener);
 	}
 
-	private void notifyListeners(List<ServiceMessage> messages) {
+	private void notifyListeners(List<? extends ServiceMessage> messages) {
 		this.messages = messages;
 		for (final ServiceMessage message : messages) {
 			message.setETag(eTag);
 			message.setLastModified(lastModified);
 		}
 
+		ArrayList<ServiceMessage> sortedMessages = new ArrayList<ServiceMessage>(messages);
+		Collections.sort(messages);
 		final ServiceMessageEvent event = new ServiceMessageEvent(this, ServiceMessageEvent.EVENT_KIND.MESSAGE_UPDATE,
-				messages);
-
+				sortedMessages);
 		for (final IServiceMessageListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void run() throws Exception {
@@ -176,7 +186,7 @@ public class ServiceMessageManager {
 	 */
 	public int updateServiceMessage(IProgressMonitor monitor) {
 		int status = -1;
-		List<ServiceMessage> messages = null;
+		List<? extends ServiceMessage> messages = null;
 		try {
 			HttpClient httpClient = new HttpClient(WebUtil.getConnectionManager());
 			WebUtil.configureHttpClient(httpClient, null);
@@ -203,13 +213,7 @@ public class ServiceMessageManager {
 
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
-						SAXParserFactory factory = SAXParserFactory.newInstance();
-						factory.setValidating(false);
-						SAXParser parser = factory.newSAXParser();
-
-						ServiceMessageXmlHandler handler = new ServiceMessageXmlHandler();
-						parser.parse(in, handler);
-						messages = handler.getMessages();
+						messages = readMessages(in, monitor);
 					} finally {
 						in.close();
 					}
@@ -218,27 +222,45 @@ public class ServiceMessageManager {
 				} else if (status == HttpStatus.SC_NOT_MODIFIED) {
 					// no new messages
 				} else {
-					if (!statusLogged) {
-						statusLogged = true;
-						StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-								"Http error retrieving service message: " + HttpStatus.getStatusText(status))); //$NON-NLS-1$
-					}
+					logStatus(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+							"Http error retrieving service message: " + HttpStatus.getStatusText(status))); //$NON-NLS-1$
 				}
 			} finally {
 				WebUtil.releaseConnection(method, monitor);
 			}
 		} catch (Exception e) {
-			if (!statusLogged) {
-				statusLogged = true;
-				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-						"Http error retrieving service message.", e)); //$NON-NLS-1$
-			}
+			logStatus(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+					"Http error retrieving service message.", e)); //$NON-NLS-1$
 		}
 
 		if (messages != null && messages.size() > 0) {
 			notifyListeners(messages);
 		}
 		return status;
+	}
+
+	private void logStatus(IStatus status) {
+		if (!statusLogged) {
+			statusLogged = true;
+			//StatusHandler.log(status);
+		}
+	}
+
+//	private List<ServiceMessage> readMessages(InputStream in) throws ParserConfigurationException, SAXException,
+//			IOException {
+//		SAXParserFactory factory = SAXParserFactory.newInstance();
+//		factory.setValidating(false);
+//		SAXParser parser = factory.newSAXParser();
+//
+//		ServiceMessageXmlHandler handler = new ServiceMessageXmlHandler();
+//		parser.parse(in, handler);
+//		return handler.getMessages();
+//	}
+
+	private List<? extends ServiceMessage> readMessages(InputStream in, IProgressMonitor monitor) throws IOException {
+		FeedReader reader = new FeedReader(environment);
+		reader.parse(in, monitor);
+		return reader.getEntries();
 	}
 
 }

@@ -165,7 +165,7 @@ public class TasksUiInternal {
 	 */
 	public static Command getConfiguredDiscoveryWizardCommand() {
 		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.discovery.ui.discoveryWizardCommand"); //$NON-NLS-1$
+		final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.tasks.ui.discoveryWizardCommand"); //$NON-NLS-1$
 		if (discoveryWizardCommand != null) {
 			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 					IHandlerService.class);

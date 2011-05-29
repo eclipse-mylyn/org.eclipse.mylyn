@@ -75,9 +75,6 @@ public class ServiceMessageXmlHandler extends DefaultHandler {
 				case IMAGE:
 					message.setImage(parsedText);
 					break;
-				case VERSION:
-					message.setVersion(parsedText);
-					break;
 				}
 			} catch (IllegalArgumentException e) {
 				// ignore unrecognized elements
