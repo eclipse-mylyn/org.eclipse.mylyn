@@ -21,6 +21,8 @@ import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.DefaultTaskSchemaTest;
+import org.eclipse.mylyn.tasks.tests.core.EnvironmentTest;
+import org.eclipse.mylyn.tasks.tests.core.FeedReaderTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
@@ -46,6 +48,8 @@ public class AllHeadlessStandaloneTest {
 		// commons
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
+		suite.addTestSuite(FeedReaderTest.class);
+		suite.addTestSuite(EnvironmentTest.class);
 
 		// context
 		// disabled due to failure: bug 257972
