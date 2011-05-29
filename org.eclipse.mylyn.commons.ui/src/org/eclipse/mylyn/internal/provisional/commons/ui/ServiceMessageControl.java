@@ -100,8 +100,19 @@ public abstract class ServiceMessageControl {
 
 	private String eventId;
 
+	private String preferencesPageId;
+
 	public ServiceMessageControl(Composite parent) {
 		this.parent = parent;
+		setPreferencesPageId(NOTIFICATIONS_PREF_PAGE);
+	}
+
+	public String getPreferencesPageId() {
+		return preferencesPageId;
+	}
+
+	public void setPreferencesPageId(String preferencesPageId) {
+		this.preferencesPageId = preferencesPageId;
 	}
 
 	/**
@@ -195,55 +206,33 @@ public abstract class ServiceMessageControl {
 
 		buttonsComp.setLayout(gLayout);
 
-		// Disabled for initial 3.4 release as per bug#263528
-		//		settingsLink = new ImageHyperlink(buttonsComp, SWT.NONE);
-		//		settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
-		//		settingsLink.addHyperlinkListener(new HyperlinkAdapter() {
-		//			@Override
-		//			public void linkActivated(HyperlinkEvent e) {
-		//				PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
-		//						TaskListServiceMessageControl.this.parent.getShell(),
-		//						"org.eclipse.mylyn.tasks.ui.preferences", null, null); //$NON-NLS-1$
-		//				if (pref != null) {
-		//					pref.open();
-		//				}
-		//			}
-		//
-		//			@Override
-		//			public void linkEntered(HyperlinkEvent e) {
-		//				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES_HOVER));
-		//			}
-		//
-		//			@Override
-		//			public void linkExited(HyperlinkEvent e) {
-		//				settingsLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_PREFERENCES));
-		//			}
-		//		});
-		configureLink = new ImageHyperlink(buttonsComp, SWT.NONE);
-		configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
-		configureLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkEntered(HyperlinkEvent e) {
-				configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE_HOVER));
-			}
-
-			@Override
-			public void linkExited(HyperlinkEvent e) {
-				configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
-			}
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(getShell(), NOTIFICATIONS_PREF_PAGE,
-						new String[0], eventId);
-				// Only close the message if the did not cancel the operation 
-				if (pd != null) {
-					pd.open();
+		if (getPreferencesPageId() != null) {
+			configureLink = new ImageHyperlink(buttonsComp, SWT.NONE);
+			configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
+			configureLink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkEntered(HyperlinkEvent e) {
+					configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE_HOVER));
 				}
-			}
-		});
-		// Initially invisible, must have eventId for this to be of any use.
-		configureLink.setVisible(eventId != null);
+
+				@Override
+				public void linkExited(HyperlinkEvent e) {
+					configureLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CONFIGURE));
+				}
+
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencesPageId(),
+							new String[0], eventId);
+					// Only close the message if the did not cancel the operation 
+					if (pd != null) {
+						pd.open();
+					}
+				}
+			});
+			// Initially invisible, must have eventId for this to be of any use.
+			configureLink.setVisible(eventId != null);
+		}
 
 		closeLink = new ImageHyperlink(buttonsComp, SWT.NONE);
 		closeLink.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
@@ -291,7 +280,7 @@ public abstract class ServiceMessageControl {
 
 	protected void setDescription(String description) {
 		descriptionLabel.setText(description);
-		parent.layout(true);
+		parent.layout(true, true);
 	}
 
 	/**
@@ -315,7 +304,9 @@ public abstract class ServiceMessageControl {
 	 */
 	protected void setEventId(String eventId) {
 		this.eventId = eventId;
-		configureLink.setVisible(eventId != null);
+		if (configureLink != null) {
+			configureLink.setVisible(eventId != null);
+		}
 	}
 
 	/**
