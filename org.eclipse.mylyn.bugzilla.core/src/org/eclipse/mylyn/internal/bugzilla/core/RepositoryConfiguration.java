@@ -681,20 +681,28 @@ public class RepositoryConfiguration implements Serializable {
 		}
 		if (validTransitions != null && attributeStatus != null && validTransitions.isValid()) {
 			//Handle custom operations. Currently only tuned for transitions based on default status names
-			addOperation(bugReport, BugzillaOperation.none);
-			for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
-				//Special case: the CLOSED status needs a Resolution input. 
-				//This happens automatically if current status is RESOLVED, else we need to supply one
-				if (b.toString().equals(BugzillaOperation.close.toString())) {
-					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
-						//Do not add close with resolution operation if status is RESOLVED
-						continue;
-					} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
-						//Do not add normal 'close' operation if status is not currently RESOLVED
-						continue;
+			if (attributeStatus.getValue().equals("START")) { //$NON-NLS-1$
+				addOperation(bugReport, BugzillaOperation.new_default);
+				TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
+				TaskOperation.applyTo(operationAttribute, BugzillaOperation.new_default.toString(),
+						IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
+
+			} else {
+				addOperation(bugReport, BugzillaOperation.none);
+				for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
+					//Special case: the CLOSED status needs a Resolution input. 
+					//This happens automatically if current status is RESOLVED, else we need to supply one
+					if (b.toString().equals(BugzillaOperation.close.toString())) {
+						if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
+							//Do not add close with resolution operation if status is RESOLVED
+							continue;
+						} else if (!attributeStatus.getValue().equals("RESOLVED") && b.getInputId() == null) { //$NON-NLS-1$
+							//Do not add normal 'close' operation if status is not currently RESOLVED
+							continue;
+						}
 					}
+					addOperation(bugReport, b);
 				}
-				addOperation(bugReport, b);
 			}
 		} else {
 			TaskAttribute everConfirmed = bugReport.getRoot().getAttribute(BugzillaAttribute.EVERCONFIRMED.getKey());
