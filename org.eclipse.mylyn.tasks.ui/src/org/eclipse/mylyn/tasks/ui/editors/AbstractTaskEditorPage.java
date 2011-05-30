@@ -188,8 +188,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		private final boolean attachContext;
 
-		public SubmitTaskJobListener(boolean attachContext) {
+		private final boolean expandLastComment;
+
+		public SubmitTaskJobListener(boolean attachContext, boolean expandLastComment) {
 			this.attachContext = attachContext;
+			this.expandLastComment = expandLastComment;
 		}
 
 		@Override
@@ -223,6 +226,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								migrator.setMigrateDueDate(!connector.hasRepositoryDueDate(getTaskRepository(),
 										newTask, taskData));
 								migrator.execute(newTask);
+							}
+							if (expandLastComment) {
+								expandLastComment();
 							}
 						}
 						handleTaskSubmitted(new SubmitJobEvent(job));
@@ -979,10 +985,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 			doSave(new NullProgressMonitor());
 
+			TaskAttribute newCommentAttribute = getModel().getTaskData()
+					.getRoot()
+					.getMappedAttribute(TaskAttribute.COMMENT_NEW);
+			boolean expandLastComment = newCommentAttribute != null
+					&& getModel().getChangedAttributes().contains(newCommentAttribute);
+
 			SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
 					getModel().getTaskRepository(), task, getModel().getTaskData(),
 					getModel().getChangedOldAttributes());
-			submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext()));
+			submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext(), expandLastComment));
 			submitJob.schedule();
 		} catch (RuntimeException e) {
 			showEditorBusy(false);
@@ -1768,6 +1780,23 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			}
 		}
 		return super.selectReveal(object);
+	}
+
+	void expandLastComment() {
+		if (getManagedForm() == null || getManagedForm().getForm().isDisposed()) {
+			// editor possibly closed or page has not been initialized
+			return;
+		}
+
+		if (taskData == null) {
+			return;
+		}
+
+		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_COMMENT);
+		if (commentAttributes.size() > 0) {
+			selectReveal(commentAttributes.get(commentAttributes.size() - 1).getId());
+		}
 	}
 
 }

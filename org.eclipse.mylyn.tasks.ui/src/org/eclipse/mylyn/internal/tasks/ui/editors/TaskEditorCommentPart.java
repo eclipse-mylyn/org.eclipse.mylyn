@@ -312,7 +312,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
 					| ExpandableComposite.COMPACT;
-			if (hasIncomingChanges || expandAllInProgress) {
+			if (hasIncomingChanges || (expandAllInProgress && !suppressExpandViewers)) {
 				style |= ExpandableComposite.EXPANDED;
 			}
 			commentComposite = toolkit.createExpandableComposite(composite, style);
@@ -571,6 +571,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private Font privateFont;
 
+	private boolean suppressExpandViewers;
+
 	public TaskEditorCommentPart() {
 		this.commentGroupStrategy = new CommentGroupStrategy() {
 			@Override
@@ -698,9 +700,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void expandAllComments() {
+	private void expandAllComments(boolean expandViewers) {
 		try {
 			expandAllInProgress = true;
+			suppressExpandViewers = !expandViewers;
 			getTaskEditorPage().setReflow(false);
 
 			if (section != null) {
@@ -710,19 +713,18 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 				CommonFormUtil.setExpanded(section, true);
 
-				//if (expandGroups) {
-				List<CommentGroupViewer> viewers = getCommentGroupViewers();
-				for (int i = viewers.size() - 1; i >= 0; i--) {
-					if (!viewers.get(i).isFullyExpanded()) {
-						viewers.get(i).setExpanded(true);
-						// bug 280152: expand all groups
-						//break;
+				if (expandViewers) {
+					List<CommentGroupViewer> viewers = getCommentGroupViewers();
+					for (int i = viewers.size() - 1; i >= 0; i--) {
+						if (!viewers.get(i).isFullyExpanded()) {
+							viewers.get(i).setExpanded(true);
+						}
 					}
 				}
-				//}
 			}
 		} finally {
 			expandAllInProgress = false;
+			suppressExpandViewers = false;
 			getTaskEditorPage().setReflow(true);
 		}
 		getTaskEditorPage().reflow();
@@ -760,7 +762,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		Action expandAllAction = new Action("") { //$NON-NLS-1$
 			@Override
 			public void run() {
-				expandAllComments();
+				expandAllComments(true);
 			}
 		};
 		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
@@ -838,7 +840,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		if (commentAttribute == null) {
 			return null;
 		}
-		expandAllComments();
+		expandAllComments(false);
 		List<CommentGroupViewer> groupViewers = getCommentGroupViewers();
 		for (CommentGroupViewer groupViewer : groupViewers) {
 			for (CommentViewer viewer : groupViewer.getCommentViewers()) {
