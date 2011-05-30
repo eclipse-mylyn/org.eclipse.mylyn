@@ -22,8 +22,31 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITaskRepositoryPage extends IWizardPage {
 
+	/**
+	 * Invoked to commit changes from the wizard page to the <code>repository</code> object.
+	 * 
+	 * @since 3.0
+	 * @param repository
+	 *            the task repository to persists settings to
+	 */
 	public abstract void applyTo(TaskRepository repository);
 
+	/**
+	 * Returns the URL currently entered on the page. This is used by the framework to detect if the URL of the
+	 * repository has changed which requires a migration job to run.
+	 * 
+	 * @since 3.0
+	 * @return the repository URL that is currently entered
+	 */
 	public abstract String getRepositoryUrl();
+
+	/**
+	 * Invoked when the wizard that contains page finishes. This method should commit all entered data to the
+	 * <code>repository</code> object.
+	 * 
+	 * @since 3.6
+	 * @see #applyTo(TaskRepository)
+	 */
+	public abstract void performFinish(TaskRepository repository);
 
 }

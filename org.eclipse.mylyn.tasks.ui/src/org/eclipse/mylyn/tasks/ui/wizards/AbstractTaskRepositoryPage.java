@@ -277,6 +277,17 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Invokes {@link #applyTo(TaskRepository)} by default. Client may override.
+	 * 
+	 * @since 3.6
+	 */
+	public void performFinish(TaskRepository repository) {
+		applyTo(repository);
+	}
+
+	/**
 	 * Returns a status if there is a message to display, otherwise null.
 	 */
 	private IStatus computeValidation() {
