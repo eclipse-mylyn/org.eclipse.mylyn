@@ -33,6 +33,8 @@ public class TaskEditorExtensions {
 
 	public static final String REPOSITORY_PROPERTY_EDITOR_EXTENSION = "editorExtension"; //$NON-NLS-1$
 
+	public static final String REPOSITORY_PROPERTY_AVATAR_SUPPORT = "avatarSupport"; //$NON-NLS-1$
+
 	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<String, RegisteredTaskEditorExtension>();
 
 	private static Map<String, String> associationByConnectorKind = new HashMap<String, String>();

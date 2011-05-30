@@ -271,9 +271,13 @@ public class Messages extends NLS {
 
 	public static String TaskEditorExtensionSettingsContribution__default_;
 
+	public static String TaskEditorExtensionSettingsContribution_Avatar_Button_Label;
+
 	public static String TaskEditorExtensionSettingsContribution_Editor;
 
 	public static String TaskEditorExtensionSettingsContribution_Plain_Text;
+
+	public static String TaskEditorExtensionSettingsContribution_Rendering_Group_Label;
 
 	public static String TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor;
 
