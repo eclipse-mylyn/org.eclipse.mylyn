@@ -54,7 +54,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.IFormColors;
@@ -423,17 +422,19 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 //				String value = commentID.getValue();
 //				sb.append(" (ID " + value + ")");
 //			}
-			if (taskComment.getIsPrivate() != null) {
-				if (taskComment.getIsPrivate()) {
-					if (privateFont == null) {
-						Font a = formHyperlink.getFont();
-						FontData[] fd = a.getFontData();
-						fd[0].setStyle(SWT.ITALIC | SWT.BOLD);
-						privateFont = new Font(Display.getCurrent(), fd[0]);
+			if (taskComment.getIsPrivate() != null && taskComment.getIsPrivate()) {
+				if (privateFont == null) {
+					Font a = formHyperlink.getFont();
+					FontData[] fd = a.getFontData();
+					for (FontData fontData : fd) {
+						fontData.setStyle(SWT.ITALIC | SWT.BOLD);
 					}
-					formHyperlink.setFont(privateFont);
-					toolTipText = NLS.bind(Messages.TaskEditorCommentPart_Privat_Comment_ToolTip_Text, toolTipText);
+					privateFont = new Font(formHyperlink.getDisplay(), fd);
 				}
+				formHyperlink.setFont(privateFont);
+				toolTipText = NLS.bind(Messages.TaskEditorCommentPart_Privat_Comment_ToolTip_Text, toolTipText);
+			} else {
+				formHyperlink.setFont(commentComposite.getFont());
 			}
 			formHyperlink.setToolTipText(toolTipText);
 
