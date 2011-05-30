@@ -126,6 +126,11 @@ public final class TaskAttribute {
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
 	/**
+	 * @since 3.6
+	 */
+	public static final String COMMENT_ISPRIVATE = "task.common.comment.isprivate"; //$NON-NLS-1$
+
+	/**
 	 * Key for the meta datum that determines if an attribute is disabled. This is used to indicate that an attribute
 	 * should not be modified, e.g. due to work-flow state but it may still be generally writeable.
 	 * 

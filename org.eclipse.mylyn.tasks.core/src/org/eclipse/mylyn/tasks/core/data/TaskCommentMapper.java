@@ -36,6 +36,8 @@ public class TaskCommentMapper {
 
 	private String url;
 
+	private Boolean isPrivate;
+
 	public TaskCommentMapper() {
 	}
 
@@ -63,6 +65,13 @@ public class TaskCommentMapper {
 		return url;
 	}
 
+	/**
+	 * @since 3.6
+	 */
+	public Boolean getIsPrivate() {
+		return isPrivate;
+	}
+
 	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
@@ -85,6 +94,13 @@ public class TaskCommentMapper {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	/**
+	 * @since 3.6
+	 */
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -121,6 +137,10 @@ public class TaskCommentMapper {
 		if (child != null) {
 			comment.setText(mapper.getValue(child));
 		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
+		if (child != null) {
+			comment.setIsPrivate(mapper.getBooleanValue(child));
+		}
 		return comment;
 	}
 
@@ -155,6 +175,11 @@ public class TaskCommentMapper {
 			mapper.setValue(child, getText());
 			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
 		}
+		if (getIsPrivate() != null) {
+			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_ISPRIVATE).createAttribute(
+					taskAttribute);
+			mapper.setBooleanValue(child, getIsPrivate());
+		}
 	}
 
 	public void applyTo(ITaskComment taskComment) {
@@ -173,6 +198,9 @@ public class TaskCommentMapper {
 		}
 		if (getText() != null) {
 			taskComment.setText(getText());
+		}
+		if (getIsPrivate() != null) {
+			taskComment.setIsPrivate(getIsPrivate());
 		}
 	}
 }

@@ -124,9 +124,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case BUGZILLA:
 			// Note: here we can get the bugzilla version if necessary
 //			String version = attributes.getValue("version");
-//			String urlbase = attributes.getValue("urlbase");
+//			urlbase = attributes.getValue("urlbase"); //$NON-NLS-1$
 //			String maintainer = attributes.getValue("maintainer");
-			exporter = attributes.getValue("exporter");
+			exporter = attributes.getValue("exporter"); //$NON-NLS-1$
 			break;
 		case BUG:
 			if (attributes != null && (attributes.getValue("error") != null)) { //$NON-NLS-1$
@@ -141,7 +141,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			token = null;
 			break;
 		case LONG_DESC:
-			taskComment = new TaskComment(commentNum++);
+			String is_private = attributes.getValue("isprivate");
+			taskComment = new TaskComment(is_private);
 			break;
 		case WHO:
 			if (taskComment != null) {
@@ -317,7 +318,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		}
 
-		// Comment attributes
+			// Comment attributes
 		case WHO:
 			if (taskComment != null) {
 				taskComment.author = parsedText;
@@ -522,6 +523,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
 					IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
 			break;
+		case COMMENTID:
+			if (taskComment != null) {
+				taskComment.id = Integer.parseInt(parsedText);
+			}
+			break;
 		default:
 			createAttrribute(parsedText, tag);
 			break;
@@ -667,6 +673,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				.createPerson(comment.author);
 		author.setName(comment.authorName);
 		taskComment.setAuthor(author);
+		taskComment.setIsPrivate(comment.isPrivate.equals("1")); //$NON-NLS-1$
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrTimestamp.setValue(comment.createdTimeStamp);
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));
@@ -681,6 +688,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		if (comment.timeWorked != null) {
 			TaskAttribute workTime = BugzillaTaskDataHandler.createAttribute(attribute, BugzillaAttribute.WORK_TIME);
 			workTime.setValue(comment.timeWorked);
+		}
+
+		if (comment.id != 0) {
+			TaskAttribute commentID = BugzillaTaskDataHandler.createAttribute(attribute, BugzillaAttribute.COMMENTID);
+			commentID.setValue(Integer.toString(comment.id));
+			int i = 9;
+			i++;
 		}
 
 		parseAttachment(taskComment);
@@ -723,6 +737,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		@SuppressWarnings("unused")
 		public int number;
 
+		public int id;
+
 		public String author;
 
 		public String authorName;
@@ -733,14 +749,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 		public String timeWorked;
 
-		@SuppressWarnings("unused")
-		public boolean hasAttachment;
+		public String isPrivate;
 
-		@SuppressWarnings("unused")
-		public String attachmentId;
-
-		public TaskComment(int num) {
-			this.number = num;
+		public TaskComment(String isprivate) {
+			this.isPrivate = isprivate;
 		}
 	}
 

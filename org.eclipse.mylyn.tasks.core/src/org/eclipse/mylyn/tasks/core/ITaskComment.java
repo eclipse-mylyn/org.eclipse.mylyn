@@ -100,4 +100,14 @@ public interface ITaskComment {
 	 */
 	public abstract void setUrl(String url);
 
+	/**
+	 * @since 3.6
+	 */
+	public abstract Boolean getIsPrivate();
+
+	/**
+	 * @since 3.6
+	 */
+	public abstract void setIsPrivate(Boolean isPrivate);
+
 }

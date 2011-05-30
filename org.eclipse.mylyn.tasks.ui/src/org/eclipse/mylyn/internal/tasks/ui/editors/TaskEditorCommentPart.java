@@ -39,11 +39,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,6 +54,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.IFormColors;
@@ -356,7 +360,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			titleComposite.setBackground(null);
 
 			ImageHyperlink expandCommentHyperlink = createTitleHyperLink(toolkit, titleComposite, taskComment);
-			expandCommentHyperlink.setFont(commentComposite.getFont());
 			expandCommentHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -399,10 +402,11 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				sb.append(taskComment.getNumber());
 				sb.append(": "); //$NON-NLS-1$
 			}
+			String toolTipText = ""; //$NON-NLS-1$;
 			if (author != null) {
 				if (author.getName() != null) {
 					sb.append(author.getName());
-					formHyperlink.setToolTipText(author.getPersonId());
+					toolTipText = author.getPersonId();
 				} else {
 					sb.append(author.getPersonId());
 				}
@@ -411,6 +415,28 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				sb.append(", "); //$NON-NLS-1$
 				sb.append(EditorUtil.formatDateTime(taskComment.getCreationDate()));
 			}
+//			We need the CommentID for change the value of private
+//			this is only for an test included
+//			Maybe we need this for bug# 284026
+//			TaskAttribute commentID = taskComment.getTaskAttribute().getAttribute("commentid");
+//			if (commentID != null) {
+//				String value = commentID.getValue();
+//				sb.append(" (ID " + value + ")");
+//			}
+			if (taskComment.getIsPrivate() != null) {
+				if (taskComment.getIsPrivate()) {
+					if (privateFont == null) {
+						Font a = formHyperlink.getFont();
+						FontData[] fd = a.getFontData();
+						fd[0].setStyle(SWT.ITALIC | SWT.BOLD);
+						privateFont = new Font(Display.getCurrent(), fd[0]);
+					}
+					formHyperlink.setFont(privateFont);
+					toolTipText = NLS.bind(Messages.TaskEditorCommentPart_Privat_Comment_ToolTip_Text, toolTipText);
+				}
+			}
+			formHyperlink.setToolTipText(toolTipText);
+
 			formHyperlink.setText(sb.toString());
 			formHyperlink.setEnabled(true);
 			formHyperlink.setUnderlined(false);
@@ -542,6 +568,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private CommentActionGroup actionGroup;
 
+	private Font privateFont;
+
 	public TaskEditorCommentPart() {
 		this.commentGroupStrategy = new CommentGroupStrategy() {
 			@Override
@@ -663,6 +691,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		super.dispose();
 		if (actionGroup != null) {
 			actionGroup.dispose();
+		}
+		if (privateFont != null) {
+			privateFont.dispose();
 		}
 	}
 

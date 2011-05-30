@@ -64,6 +64,8 @@ public enum BugzillaAttribute {
 	CLASSIFICATION_ID(Messages.BugzillaAttribute_Classification_ID,
 			"classification_id", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
+	COMMENTID(Messages.BugzillaAttribute_Comment_ID, "commentid", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
+
 	COMPONENT(Messages.BugzillaAttribute_Component, "component", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
 	CONFIRM_PRODUCT_CHANGE("confirm_product_change", "confirm_product_change", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$ //$NON-NLS-2$
@@ -103,6 +105,8 @@ public enum BugzillaAttribute {
 	IS_OBSOLETE(Messages.BugzillaAttribute_Obsolete, "isobsolete", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
 	IS_PATCH(Messages.BugzillaAttribute_Patch, "ispatch", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
+
+	IS_PRIVATE(Messages.BugzillaAttribute_Private, "isprivate", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
 	KEYWORDS(Messages.BugzillaAttribute_Keywords, "keywords", IBugzillaConstants.EDITOR_TYPE_KEYWORDS, false, false), //$NON-NLS-1$
 
@@ -150,8 +154,6 @@ public enum BugzillaAttribute {
 	TYPE(Messages.BugzillaAttribute_type, "type", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
 	UNKNOWN(Messages.BugzillaAttribute_UNKNOWN, "UNKNOWN", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
-
-	URLBASE(Messages.BugzillaAttribute_URLBASE, "urlbase", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
 	VERSION(Messages.BugzillaAttribute_Version, "version", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 

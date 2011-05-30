@@ -79,6 +79,12 @@ public final class DefaultTaskSchema extends AbstractTaskSchema {
 	public final Field COMMENT_HAS_ATTACHMENT = createField(TaskAttribute.COMMENT_HAS_ATTACHMENT,
 			Messages.DefaultTaskSchema_Attachment_Label, TaskAttribute.TYPE_BOOLEAN, Flag.READ_ONLY);
 
+	/**
+	 * @since 3.6
+	 */
+	public final Field COMMENT_ISPRIVATE = createField(TaskAttribute.COMMENT_ISPRIVATE,
+			Messages.DefaultTaskSchema_Private_Label, TaskAttribute.TYPE_BOOLEAN);
+
 	public final Field COMMENT_NUMBER = createField(TaskAttribute.COMMENT_NUMBER,
 			Messages.DefaultTaskSchema_Number_Label, TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 

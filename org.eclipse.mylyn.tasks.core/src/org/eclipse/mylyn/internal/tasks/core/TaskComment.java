@@ -43,6 +43,8 @@ public class TaskComment implements ITaskComment {
 
 	private String url;
 
+	private Boolean isPrivate;
+
 	public TaskComment(TaskRepository taskRepository, ITask task, TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
@@ -110,6 +112,14 @@ public class TaskComment implements ITaskComment {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Boolean getIsPrivate() {
+		return isPrivate;
+	}
+
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 }

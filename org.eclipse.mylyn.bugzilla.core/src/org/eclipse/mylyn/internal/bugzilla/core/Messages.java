@@ -61,6 +61,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Classification_ID;
 
+	public static String BugzillaAttribute_Comment_ID;
+
 	public static String BugzillaAttribute_Component;
 
 	public static String BugzillaAttribute_Content_Type;
@@ -113,6 +115,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttribute_Priority;
 
+	public static String BugzillaAttribute_Private;
+
 	public static String BugzillaAttribute_Product;
 
 	public static String BugzillaAttribute_QA_Contact;
@@ -152,8 +156,6 @@ public class Messages extends NLS {
 	public static String BugzillaAttribute_type;
 
 	public static String BugzillaAttribute_UNKNOWN;
-
-	public static String BugzillaAttribute_URLBASE;
 
 	public static String BugzillaAttribute_URL;
 

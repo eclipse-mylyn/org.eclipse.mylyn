@@ -58,6 +58,8 @@ public class Messages extends NLS {
 
 	public static String DefaultTaskSchema_Priority_Label;
 
+	public static String DefaultTaskSchema_Private_Label;
+
 	public static String DefaultTaskSchema_Product_Label;
 
 	public static String DefaultTaskSchema_Rank_Label;
