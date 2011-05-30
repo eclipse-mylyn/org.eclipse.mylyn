@@ -36,6 +36,8 @@ public final class BuildsUiConstants {
 
 	public static final String ID_VIEW_BUILDS = "org.eclipse.mylyn.builds.navigator.builds"; //$NON-NLS-1$
 
+	public static final String ID_REPOSITORY_CATEGORY_BUILDS = "org.eclipse.mylyn.builds.ui.category.Builds";
+
 	private BuildsUiConstants() {
 	}
 
