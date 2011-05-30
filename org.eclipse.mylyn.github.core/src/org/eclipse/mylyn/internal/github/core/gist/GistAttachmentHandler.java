@@ -69,7 +69,7 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
 			return new URL(urlAttribute.getValue()).openStream();
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 
@@ -111,7 +111,7 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			file.setContent(output.toString());
 			service.updateGist(gist);
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		} finally {
 			try {
 				input.close();

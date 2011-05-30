@@ -22,6 +22,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
@@ -103,6 +104,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						monitor.worked(20);
 						service.getGists(user);
 					} catch (IOException e) {
+						e = GitHubException.wrap(e);
 						String message = MessageFormat
 								.format(Messages.GistRepositorySettingsPage_StatusError,
 										e.getLocalizedMessage());
