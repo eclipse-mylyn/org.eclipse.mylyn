@@ -83,6 +83,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			switch (event.getEventKind()) {
 			case PRE_ACTIVATED:
 				initLazyStart();
+				contextPopulationStrategy.activated(event);
 				break;
 			}
 		}
@@ -109,6 +110,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private final Map<String, Set<String>> preservedFilterClasses = new HashMap<String, Set<String>>();
 
 	private final Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
+
+	private final ContextPopulationStrategy contextPopulationStrategy = new ContextPopulationStrategy();
 
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
@@ -234,9 +237,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
 						"Could not lazy start context plug-in", t)); //$NON-NLS-1$
-			}
-			if (TasksUi.getTaskActivityManager() != null) {
-				ContextCore.getContextManager().removeListener(contextActivationListener);
 			}
 		}
 	}

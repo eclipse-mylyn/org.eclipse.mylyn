@@ -41,6 +41,10 @@ public class Messages extends NLS {
 
 	public static String AbstractFocusViewAction_Empty_task_context;
 
+	public static String CompoundContextComputationStrategy_Computing_Context_Task_Label;
+
+	public static String ContextPopulationStrategy_Populate_Context_Job_Label;
+
 	public static String FilteredChildrenDecorationDrawer_No_Filtered_Children;
 
 	public static String FilteredChildrenDecorationDrawer_Show_Filtered_Children;
