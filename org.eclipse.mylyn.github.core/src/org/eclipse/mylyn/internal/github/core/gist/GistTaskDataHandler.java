@@ -231,7 +231,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 			try {
 				gist = service.createGist(gist);
 			} catch (IOException e) {
-				throw new CoreException(GitHub.createErrorStatus(e));
+				throw new CoreException(GitHub.createWrappedStatus(e));
 			}
 			response = new RepositoryResponse(ResponseKind.TASK_CREATED,
 					gist.getId());
@@ -244,7 +244,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 
 				service.updateGist(gist);
 			} catch (IOException e) {
-				throw new CoreException(GitHub.createErrorStatus(e));
+				throw new CoreException(GitHub.createWrappedStatus(e));
 			}
 			response = new RepositoryResponse(ResponseKind.TASK_UPDATED,
 					taskData.getTaskId());

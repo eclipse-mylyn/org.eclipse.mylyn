@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -153,6 +154,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 						monitor.worked(50);
 						service.getIssues(repo.getOwner(), repo.getName(), null);
 					} catch (IOException e) {
+						e = GitHubException.wrap(e);
 						String message = MessageFormat
 								.format(Messages.IssueRepositorySettingsPage_StatusError,
 										e.getLocalizedMessage());

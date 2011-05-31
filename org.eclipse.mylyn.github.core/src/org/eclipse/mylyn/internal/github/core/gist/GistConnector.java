@@ -138,7 +138,7 @@ public class GistConnector extends AbstractRepositoryConnector {
 
 			return data;
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 
@@ -206,7 +206,7 @@ public class GistConnector extends AbstractRepositoryConnector {
 				collector.accept(data);
 			}
 		} catch (IOException e) {
-			status = GitHub.createErrorStatus(e);
+			status = GitHub.createWrappedStatus(e);
 		}
 		return status;
 	}
