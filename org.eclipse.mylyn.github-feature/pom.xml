@@ -19,5 +19,5 @@
 	<modelVersion>4.0.0</modelVersion>
     <artifactId>feature</artifactId>
     <packaging>eclipse-feature</packaging>
-    <name>Eclipse EGit Mylyn GitHub Feature (Incubation)</name>
+    <name>Eclipse EGit Mylyn GitHub Feature</name>
 </project>

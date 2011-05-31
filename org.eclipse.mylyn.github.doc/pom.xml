@@ -24,7 +24,7 @@ http://www.eclipse.org/legal/epl-v10.html
   <artifactId>org.eclipse.mylyn.github.doc</artifactId>
   <packaging>eclipse-plugin</packaging>
 
-  <name>Eclipse EGit Mylyn GitHub Documentation (Incubation)</name>
+  <name>Eclipse EGit Mylyn GitHub Documentation</name>
 
   <build>
     <plugins>

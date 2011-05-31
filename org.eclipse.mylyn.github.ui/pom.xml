@@ -19,5 +19,5 @@
 	<modelVersion>4.0.0</modelVersion>
     <artifactId>ui</artifactId>
     <packaging>eclipse-plugin</packaging>
-    <name>Eclipse EGit Mylyn GitHub UI (Incubation)</name>
+    <name>Eclipse EGit Mylyn GitHub UI</name>
 </project>
