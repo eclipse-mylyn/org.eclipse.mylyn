@@ -363,7 +363,8 @@ public class GerritClient {
 			});
 		} catch (GerritException e) {
 			// fallback for Gerrit < 2.1.7
-			if (e.getMessage().contains("Error parsing request")) { //$NON-NLS-1$
+			String message = e.getMessage();
+			if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
 				result = execute(monitor, new Operation<PatchSetDetail>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
