@@ -87,7 +87,7 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 
 		createGravatarControl(parent);
 
-		Group group = new Group(parent, SWT.BORDER);
+		Group group = new Group(parent, SWT.NONE);
 		group.setText(Messages.TaskEditorExtensionSettingsContribution_Rendering_Group_Label);
 		group.setLayout(new GridLayout(1, true));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
