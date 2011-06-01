@@ -38,7 +38,6 @@ public class GitHubException extends IOException {
 	public static IOException wrap(IOException exception) {
 		return exception instanceof RequestException ? new GitHubException(
 				(RequestException) exception) : exception;
-
 	}
 
 	/**
@@ -52,7 +51,10 @@ public class GitHubException extends IOException {
 
 	public String getMessage() {
 		RequestError error = ((RequestException) getCause()).getError();
-		StringBuilder message = new StringBuilder(error.getMessage());
+		String errorMessage = error.getMessage();
+		if (errorMessage == null)
+			errorMessage = "";
+		StringBuilder message = new StringBuilder(errorMessage);
 		List<FieldError> errors = error.getErrors();
 		if (errors != null && errors.size() > 0) {
 			message.append(':');

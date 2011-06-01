@@ -12,13 +12,15 @@ package org.eclipse.egit.github.core;
 
 import java.util.List;
 
-
 /**
  * GitHub request error class
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class RequestError {
+
+	// This field is required for legacy v2 error support
+	private String error;
 
 	private String message;
 
@@ -28,7 +30,7 @@ public class RequestError {
 	 * @return message
 	 */
 	public String getMessage() {
-		return this.message;
+		return message != null ? message : error;
 	}
 
 	/**

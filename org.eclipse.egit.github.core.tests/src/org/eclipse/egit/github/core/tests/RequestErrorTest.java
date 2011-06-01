@@ -1,0 +1,57 @@
+/******************************************************************************
+ *  Copyright (c) 2011 GitHub Inc.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *****************************************************************************/
+package org.eclipse.egit.github.core.tests;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import com.google.gson.Gson;
+
+import org.eclipse.egit.github.core.RequestError;
+import org.junit.Test;
+
+/**
+ * Unit tests of {@link RequestError} class
+ */
+public class RequestErrorTest {
+
+	@Test
+	public void testErrorField() throws Exception {
+		Gson gson = new Gson();
+		RequestError error = gson.fromJson("{\"error\":\"not authorized\"}",
+				RequestError.class);
+		assertNotNull(error);
+		assertEquals("not authorized", error.getMessage());
+		assertNull(error.getErrors());
+	}
+
+	@Test
+	public void testMessageField() throws Exception {
+		Gson gson = new Gson();
+		RequestError error = gson.fromJson("{\"message\":\"not authorized\"}",
+				RequestError.class);
+		assertNotNull(error);
+		assertEquals("not authorized", error.getMessage());
+		assertNull(error.getErrors());
+	}
+
+	@Test
+	public void testErrorAndMessageField() throws Exception {
+		Gson gson = new Gson();
+		RequestError error = gson.fromJson(
+				"{\"message\":\"not authorized\",\"error\":\"bad username\"}",
+				RequestError.class);
+		assertNotNull(error);
+		assertEquals("not authorized", error.getMessage());
+		assertNull(error.getErrors());
+	}
+}

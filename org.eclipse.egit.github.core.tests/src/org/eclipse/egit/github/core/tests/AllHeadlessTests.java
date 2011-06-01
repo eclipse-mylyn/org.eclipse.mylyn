@@ -33,7 +33,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		GistRevisionTest.class, IssueTest.class, MilestoneTest.class,
 		GitHubClientTest.class, IssueServiceTest.class, LabelServiceTest.class,
 		MilestoneServiceTest.class, GistServiceTest.class,
-		PullRequestServiceTest.class })
+		PullRequestServiceTest.class, RequestErrorTest.class })
 public class AllHeadlessTests {
 
 }
