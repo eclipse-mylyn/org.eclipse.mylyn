@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -50,6 +51,8 @@ public class CheckActivityJob extends Job {
 	 */
 	protected long tick = ACTIVE_TICK;
 
+	volatile boolean errorLogged;
+
 	public CheckActivityJob(IActivityManagerCallback callback) {
 		super(Messages.CheckActivityJob_Activity_Monitor_Job);
 		this.callback = callback;
@@ -77,54 +80,63 @@ public class CheckActivityJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		if (isEnabled()) {
-			try {
-				long lastEventTime = callback.getLastEventTime();
-				long currentTime = System.currentTimeMillis();
-				// check if the last activity exceeds timeout
-				if ((currentTime - lastEventTime) >= inactivityTimeout && inactivityTimeout != 0) {
-					if (active) {
-						// time out
-						active = false;
-						callback.inactive();
-					}
-				} else {
-					if (!active) {
-						active = true;
-						// back, start recording activity
-						if (inactivityTimeout != 0) {
-							previousEventTime = lastEventTime;
-						} else {
-							// if timeouts are disabled only the currentTime is relevant for tracking activity 
-							previousEventTime = currentTime;
+		try {
+			if (isEnabled()) {
+				try {
+					long lastEventTime = callback.getLastEventTime();
+					long currentTime = System.currentTimeMillis();
+					// check if the last activity exceeds timeout
+					if ((currentTime - lastEventTime) >= inactivityTimeout && inactivityTimeout != 0) {
+						if (active) {
+							// time out
+							active = false;
+							callback.inactive();
 						}
-						callback.active();
 					} else {
-						// check if the activity internal is unreasonably long, it is likely that 
-						// the computer came back from sleep at worst difference should be tick * 2
-						if (currentTime - previousEventTime > tick * 3) {
+						if (!active) {
+							active = true;
+							// back, start recording activity
 							if (inactivityTimeout != 0) {
-								// check for recent event
-								if (currentTime - lastEventTime <= tick) {
-									// event since resume
-									previousEventTime = lastEventTime;
-								} else {
-									// time out
-									active = false;
-									callback.inactive();
-								}
+								previousEventTime = lastEventTime;
 							} else {
 								// if timeouts are disabled only the currentTime is relevant for tracking activity 
 								previousEventTime = currentTime;
 							}
+							callback.active();
 						} else {
-							callback.addMonitoredActivityTime(previousEventTime, currentTime);
-							previousEventTime = currentTime;
+							// check if the activity internal is unreasonably long, it is likely that 
+							// the computer came back from sleep at worst difference should be tick * 2
+							if (currentTime - previousEventTime > tick * 3) {
+								if (inactivityTimeout != 0) {
+									// check for recent event
+									if (currentTime - lastEventTime <= tick) {
+										// event since resume
+										previousEventTime = lastEventTime;
+									} else {
+										// time out
+										active = false;
+										callback.inactive();
+									}
+								} else {
+									// if timeouts are disabled only the currentTime is relevant for tracking activity 
+									previousEventTime = currentTime;
+								}
+							} else {
+								callback.addMonitoredActivityTime(previousEventTime, currentTime);
+								previousEventTime = currentTime;
+							}
 						}
 					}
+				} finally {
+					reschedule();
 				}
-			} finally {
-				reschedule();
+			}
+		} catch (Throwable t) {
+			// this job runs frequently and should never cause error popups
+			if (!errorLogged) {
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
+						"An error occured while processing events", t)); //$NON-NLS-1$
+				errorLogged = true;
 			}
 		}
 		return Status.OK_STATUS;
