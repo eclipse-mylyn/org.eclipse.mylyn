@@ -14,10 +14,6 @@ package org.eclipse.mylyn.internal.git.ui.connector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.git.ui.GetChangeSetDialog;
@@ -37,8 +33,7 @@ public class GitConnectorUi extends ScmConnectorUi {
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.git.ui"; //$NON-NLS-1$
 
 	@Override
-	public ChangeSet getChangeSet(ScmRepository repo, IResource resource, IProgressMonitor monitor)
-			throws CoreException {
+	public ChangeSet getChangeSet(ScmRepository repository, IResource resource) {
 		Assert.isNotNull(resource);
 
 		final IProject project = resource.getProject();
@@ -50,9 +45,7 @@ public class GitConnectorUi extends ScmConnectorUi {
 
 		// Check if the provider is for Git
 		if (!GitProvider.class.getName().equals(scmConnector.getProviderId())) {
-			throw new CoreException(new Status(IStatus.ERROR, ID_PLUGIN, "No Git connector: "
-					+ scmConnector.getProviderId()) {
-			});
+			throw new RuntimeException("No Git connector: " + scmConnector.getProviderId());
 		}
 
 		final GetChangeSetDialog dialog = new GetChangeSetDialog(null, project);

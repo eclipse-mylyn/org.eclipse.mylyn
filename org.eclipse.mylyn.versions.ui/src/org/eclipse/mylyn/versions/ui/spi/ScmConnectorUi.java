@@ -12,8 +12,6 @@
 package org.eclipse.mylyn.versions.ui.spi;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 
@@ -28,16 +26,12 @@ public abstract class ScmConnectorUi {
 	 * given resource provided. This method is suitable to open a UI Wizard, the selection is expected to be driven by
 	 * the user.
 	 * 
-	 * @param repo
+	 * @param repository
 	 *            - Associated repository
 	 * @param resource
 	 *            - work space resource e.g. project used to narrow down the change set options presented to the user
-	 * @param monitor
-	 *            - used to monitor the progress of an activity
 	 * @return ChnageSet - user selection
-	 * @throws CoreException
 	 */
-	public abstract ChangeSet getChangeSet(ScmRepository repo, IResource resource, IProgressMonitor monitor)
-			throws CoreException;
+	public abstract ChangeSet getChangeSet(ScmRepository repository, IResource resource);
 
 }
