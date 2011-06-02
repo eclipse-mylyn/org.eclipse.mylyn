@@ -30,41 +30,38 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 
 	private long interval;
 
-	private long incactiveInterval;
+	private long inactiveInterval;
 
-	private final ITaskJobFactory jobFactory;
-
-	private SynchronizationJob refreshJob;
+	private final SynchronizationJob refreshJob;
 
 	private boolean userActive;
 
+	/**
+	 * Absolute time in milliseconds when refresh job will next run.
+	 */
 	private long scheduledTime;
 
+	/**
+	 * Absolute time in milliseconds when refresh job last completed.
+	 */
 	private long lastSyncTime;
 
 	private final JobChangeAdapter jobListener;
 
 	public TaskListSynchronizationScheduler(ITaskJobFactory jobFactory) {
-		this.jobFactory = jobFactory;
 		this.userActive = true;
 		this.jobListener = new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				scheduledTime = 0;
-				lastSyncTime = System.currentTimeMillis();
-				reschedule();
+				jobDone();
 			}
 
 		};
-	}
-
-	private SynchronizationJob createRefreshJob() {
-		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(null);
+		this.refreshJob = jobFactory.createSynchronizeRepositoriesJob(null);
 		// do not show in progress view by default
-		job.setSystem(true);
-		job.setUser(false);
-		job.setFullSynchronization(true);
-		return job;
+		this.refreshJob.setSystem(true);
+		this.refreshJob.setUser(false);
+		this.refreshJob.setFullSynchronization(true);
 	}
 
 	public synchronized SynchronizationJob getRefreshJob() {
@@ -76,10 +73,10 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		if (delay != 0) {
 			if (!userActive) {
 				// triple scheduling interval each time
-				this.incactiveInterval *= 3;
-				delay = this.incactiveInterval;
+				this.inactiveInterval *= 3;
+				delay = this.inactiveInterval;
 				if (TRACE_ENABLED) {
-					trace("Set inactive interval to " + DateUtil.getFormattedDurationShort(this.incactiveInterval)); //$NON-NLS-1$
+					trace("Set inactive interval to " + DateUtil.getFormattedDurationShort(this.inactiveInterval)); //$NON-NLS-1$
 				}
 			}
 			if (this.scheduledTime != 0) {
@@ -124,18 +121,11 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 	public synchronized void setInterval(long delay, long interval) {
 		if (this.interval != interval) {
 			this.interval = interval;
-			this.incactiveInterval = interval;
+			this.inactiveInterval = interval;
 			this.scheduledTime = 0;
 
-			if (refreshJob != null) {
-				cancel();
-				refreshJob.removeJobChangeListener(jobListener);
-				refreshJob = null;
-			}
-
+			cancel();
 			if (interval > 0) {
-				refreshJob = createRefreshJob();
-				refreshJob.addJobChangeListener(jobListener);
 				schedule(delay);
 			}
 		}
@@ -149,13 +139,15 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 				}
 				this.userActive = true;
 				// reset inactive interval each time the user becomes active
-				this.incactiveInterval = interval;
-				if (interval != 0 && System.currentTimeMillis() - lastSyncTime > interval) {
-					// the last sync was long ago, sync right away
-					cancel();
-					schedule(0);
-				} else {
-					reschedule();
+				this.inactiveInterval = interval;
+				if (interval != 0) {
+					if (System.currentTimeMillis() - lastSyncTime > interval) {
+						// the last sync was long ago, sync right away
+						cancel();
+						schedule(0);
+					} else {
+						reschedule();
+					}
 				}
 			}
 		}
@@ -169,6 +161,12 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		synchronized (this) {
 			this.userActive = false;
 		}
+	}
+
+	synchronized void jobDone() {
+		this.scheduledTime = 0;
+		this.lastSyncTime = System.currentTimeMillis();
+		reschedule();
 	}
 
 }
