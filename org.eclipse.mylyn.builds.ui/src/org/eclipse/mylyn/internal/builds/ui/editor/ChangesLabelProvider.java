@@ -81,6 +81,9 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 	}
 
 	private String trim(String message) {
+		if (message == null) {
+			return null;
+		}
 		int i = message.indexOf("\n"); //$NON-NLS-1$
 		if (i != -1) {
 			return message.substring(0, i);
