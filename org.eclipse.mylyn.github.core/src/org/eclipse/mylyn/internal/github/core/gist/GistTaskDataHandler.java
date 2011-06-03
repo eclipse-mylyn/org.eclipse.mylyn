@@ -135,7 +135,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 			mapper.setRepositoryPerson(reporter, reporterPerson);
 
 			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR.create(data);
-			mapper.setValue(gravatar, user.getGravatarUrl());
+			mapper.setValue(gravatar, user.getAvatarUrl());
 		}
 
 		Map<String, GistFile> files = gist.getFiles();

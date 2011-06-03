@@ -94,14 +94,14 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		User reporter = issue.getUser();
 		createAttribute(data, IssueAttribute.REPORTER, reporter, repository);
-		String reporterGravatar = reporter != null ? reporter.getGravatarUrl()
+		String reporterGravatar = reporter != null ? reporter.getAvatarUrl()
 				: null;
 		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR,
 				reporterGravatar);
 
 		User assignee = issue.getAssignee();
 		createAttribute(data, IssueAttribute.ASSIGNEE, assignee, repository);
-		String assigneeGravatar = assignee != null ? assignee.getGravatarUrl()
+		String assigneeGravatar = assignee != null ? assignee.getAvatarUrl()
 				: null;
 		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR,
 				assigneeGravatar);
