@@ -29,13 +29,10 @@ import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
-import org.junit.runner.RunWith;
-import org.junit.runners.AllTests;
 
 /**
  * @author Steffen Pingel
  */
-@RunWith(AllTests.class)
 public class AllHeadlessStandaloneTest {
 
 	public static Test suite() {
