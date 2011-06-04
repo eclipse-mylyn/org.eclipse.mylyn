@@ -38,6 +38,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.tests,
  org.eclipse.mylyn.context.tests
 Export-Package: org.eclipse.mylyn.java.tests;x-internal:=true,
+ org.eclipse.mylyn.java.tests.resources;x-internal:=true,
  org.eclipse.mylyn.java.tests.search;x-internal:=true,
  org.eclipse.mylyn.java.tests.xml;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
