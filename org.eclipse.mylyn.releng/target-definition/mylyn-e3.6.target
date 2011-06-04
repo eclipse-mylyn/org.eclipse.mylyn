@@ -21,7 +21,7 @@
 <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
 <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
 <unit id="javax.wsdl" version="1.6.2.v201012040545"/>
-<unit id="org.antlr.runtime" version="3.2.0.v201101311130"/>
+<unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.apache.axis" version="1.4.0.v201005080400"/>
 <unit id="org.apache.commons.codec" version="1.3.0.v201101211617"/>
 <unit id="org.apache.commons.discovery" version="0.2.0.v201004190315"/>
