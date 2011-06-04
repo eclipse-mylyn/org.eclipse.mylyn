@@ -5,8 +5,8 @@ Bundle-Vendor: Eclipse Mylyn
 Bundle-Version: 0.8.0.qualifier
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tasks.dsl;singleton:=true
 Bundle-ActivationPolicy: lazy
-Import-Package: org.antlr.runtime;version="[3.0.0,3.0.0]",
- org.antlr.runtime.tree;version="[3.0.0,3.0.0]",
+Import-Package: org.antlr.runtime;version="[3.0.0,3.1.0)",
+ org.antlr.runtime.tree;version="[3.0.0,3.1.0)",
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.reviews.tasks.dsl;x-friends:="org.eclipse.mylyn.reviews.tasks.ui",

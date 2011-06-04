@@ -18,6 +18,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.client;x-friends:="org.eclipse.mylyn.gerrit.ui",
+ org.eclipse.mylyn.internal.gerrit.core.client.compat;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.egit;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.operations;x-friends:="org.eclipse.mylyn.gerrit.ui"
 Bundle-Vendor: Eclipse Mylyn
