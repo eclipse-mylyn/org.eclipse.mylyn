@@ -629,7 +629,6 @@
  <extension
        point="org.eclipse.ui.menus">
     <menuContribution
-          allPopups="false"
           locationURI="popup:org.eclipse.mylyn.builds.ui.editor.menu.TestResult?after=group.open">
        <command
              commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
