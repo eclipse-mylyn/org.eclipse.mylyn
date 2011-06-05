@@ -136,5 +136,10 @@
       <artifactId>xmlrpc-client</artifactId>
       <version>3.0</version>
 	</dependency>
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.9</version>
+	</dependency>
   </dependencies>
 </project>
