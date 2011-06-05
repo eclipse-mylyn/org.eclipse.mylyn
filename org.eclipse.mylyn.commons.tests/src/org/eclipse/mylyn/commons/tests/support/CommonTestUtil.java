@@ -201,6 +201,9 @@ public class CommonTestUtil {
 				if (path.contains("/bin/")) {
 					// account for bin/ when running from Eclipse workspace
 					directory += "../";
+				} else if (path.contains("/target/classes/")) {
+					// account for bin/ when running from Eclipse workspace
+					directory += "../../";
 				}
 				filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
 				return new File(filename).getCanonicalFile();
