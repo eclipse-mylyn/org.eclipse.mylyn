@@ -33,6 +33,8 @@ import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
 /**
  * @author Steffen Pingel
  */
+//required for Maven which runs tests using JUnit 4
+@RunWith(AllTests.class)
 public class AllHeadlessStandaloneTest {
 
 	public static Test suite() {
