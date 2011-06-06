@@ -102,28 +102,30 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			final TaskListView taskListView = (TaskListView) part;
-			TasksUiInternal.preservingSelection(taskListView.getViewer(), new Runnable() {
-				public void run() {
-					try {
-						taskListView.getFilteredTree().setRedraw(false);
-						taskListView.setFocusedMode(true);
-						previousSorter = taskListView.getViewer().getSorter();
-						previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
-						taskListView.clearFilters();
-						if (!taskListView.getFilters().contains(taskListInterestFilter)) {
-							taskListView.addFilter(taskListInterestFilter);
-						}
-						// Setting sorter causes root refresh
-						taskListView.getViewer().setSorter(taskListInterestSorter);
-						taskListView.getViewer().expandAll();
+			if (!taskListView.isFocusedMode()) {
+				TasksUiInternal.preservingSelection(taskListView.getViewer(), new Runnable() {
+					public void run() {
+						try {
+							taskListView.getFilteredTree().setRedraw(false);
+							taskListView.setFocusedMode(true);
+							previousSorter = taskListView.getViewer().getSorter();
+							previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
+							taskListView.clearFilters();
+							if (!taskListView.getFilters().contains(taskListInterestFilter)) {
+								taskListView.addFilter(taskListInterestFilter);
+							}
+							// Setting sorter causes root refresh
+							taskListView.getViewer().setSorter(taskListInterestSorter);
+							taskListView.getViewer().expandAll();
 //				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 
-						showProgressBar(taskListView, true);
-					} finally {
-						taskListView.getFilteredTree().setRedraw(true);
+							showProgressBar(taskListView, true);
+						} finally {
+							taskListView.getFilteredTree().setRedraw(true);
+						}
 					}
-				}
-			});
+				});
+			}
 			return true;
 		} else {
 			return false;
@@ -145,10 +147,10 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 						try {
 							taskListView.getViewer().getControl().setRedraw(false);
 							taskListView.setFocusedMode(false);
-							taskListView.removeFilter(taskListInterestFilter);
 							for (AbstractTaskListFilter filter : previousFilters) {
 								taskListView.addFilter(filter);
 							}
+							taskListView.removeFilter(taskListInterestFilter);
 							Text textControl = taskListView.getFilteredTree().getFilterControl();
 							if (textControl != null && textControl.getText().length() > 0) {
 								taskListView.getViewer().expandAll();
