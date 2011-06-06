@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -344,7 +344,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 			break;
 		}
 		cssStyles = preferences.getCssByPhraseModifierType().get(key);
-		if (cssStyles == null && span.getAttributes().getCssStyle() == null) {
+		if (cssStyles == null && span.getAttributes().getCssStyle() == null && span.getChildren().isEmpty()) {
 			return null;
 		}
 		FontState fontState = new FontState(parentState);
@@ -423,7 +423,10 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 	}
 
-	private static class Token extends org.eclipse.jface.text.rules.Token {
+	/**
+	 * public for testing purposes
+	 */
+	public static class Token extends org.eclipse.jface.text.rules.Token {
 
 		private final int offset;
 
@@ -459,6 +462,11 @@ public class MarkupTokenScanner implements ITokenScanner {
 		@Override
 		public TextAttribute getData() {
 			return (TextAttribute) super.getData();
+		}
+
+		@Override
+		public String toString() {
+			return "Token [offset=" + offset + ", length=" + length + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 		}
 
 	}

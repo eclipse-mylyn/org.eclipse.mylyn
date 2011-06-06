@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1059,6 +1059,13 @@ public class TextileLanguageTest extends TestCase {
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"/stories/10146\"><em>Click me</em></a>"));
+	}
+
+	public void testHyperlinkWithEmphasis2() throws IOException {
+		String html = parser.parseToHtml("\"_Eclipse_\":http://eclipse.org");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"http://eclipse.org\"><em>Eclipse</em></a>"));
 	}
 
 	public void testHyperlinkWithPunctuation() throws IOException {
