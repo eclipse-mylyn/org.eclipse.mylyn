@@ -39,8 +39,6 @@ class Messages extends NLS {
 
 	public static String MarkupEditor_updateOutline;
 
-	public static String ContentAssistProposal_label;
-
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
