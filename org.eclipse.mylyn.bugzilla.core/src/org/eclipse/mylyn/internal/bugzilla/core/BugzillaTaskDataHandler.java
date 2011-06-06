@@ -481,7 +481,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 				repositoryConfiguration.configureTaskData(taskData, shortLogin, connector);
 			}
-			boolean updateConfig = false;
+//			boolean updateConfig = false;
 			for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
 				Map<String, String> opt = taskAttribute.getOptions();
 				if (opt != null && !opt.isEmpty()) {
@@ -489,7 +489,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					for (String value : values) {
 						if (!opt.containsKey(value)) {
 							taskAttribute.putOption(value, value);
-							updateConfig = true;
+//							updateConfig = true;
 						}
 					}
 				}

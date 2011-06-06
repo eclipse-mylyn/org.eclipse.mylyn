@@ -25,6 +25,8 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String GetTaskHistoryJob_Retrieving_History;
+
 	public static String SubmitTaskAttachmentJob_Sending_data;
 
 	public static String SubmitTaskAttachmentJob_Submitting_attachment;
@@ -68,4 +70,6 @@ public class Messages extends NLS {
 	public static String SynchronizeTasksJob_Synchronizing_Tasks__X_;
 
 	public static String SynchronizeTasksJob_Receiving_X_tasks_from_X;
+
+	public static String UpdateRepositoryConfigurationJob_Receiving_configuration;
 }

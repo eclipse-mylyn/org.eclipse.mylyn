@@ -175,7 +175,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		repositoryManager = TasksUiPlugin.getRepositoryManager();
 		repositoryManager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		commentFormats = new String[] { COMMENT_1, COMMENT_2, COMMENT_3, COMMENT_4 };
+		commentFormats = new String[] { COMMENT_1, COMMENT_2, COMMENT_3, COMMENT_4, COMMENT_5 };
 		bugFormats = new String[] { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1,
 				BUG_FORMAT_2, BUG_FORMAT_3, BUG_FORMAT_4 };
 		bugCommentFormats = new String[] { TASK_FORMAT_1_COMMENT_2, TASK_FORMAT_2_COMMENT_2, TASK_FORMAT_3_COMMENT_2,

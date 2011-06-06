@@ -167,7 +167,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		if (credentials != null) {
 			String user = credentials.getUserName();
 			String password = credentials.getPassword();
-			if ("".equals(user) || "".equals(password)) {
+			if ("".equals(user) || "".equals(password)) { //$NON-NLS-1$//$NON-NLS-2$
 				return userID;
 			}
 			userID = (new BugzillaXmlRpcOperation<Integer>(this) {
@@ -427,22 +427,22 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					List<BugHistory> result = new ArrayList<BugHistory>(ids.length);
 					for (Object item : (Object[]) response.get("bugs")) { //$NON-NLS-1$
 						Map<?, ?> map = (Map<?, ?>) item;
-						Integer id = (Integer) map.get("id");
+						Integer id = (Integer) map.get("id"); //$NON-NLS-1$
 						BugHistory history = new BugHistory(id);
-						Object[] historyItems = (Object[]) map.get("history");
+						Object[] historyItems = (Object[]) map.get("history"); //$NON-NLS-1$
 						for (Object historyItem : historyItems) {
 							Map<?, ?> historyItemMap = (Map<?, ?>) historyItem;
-							Revision revision = history.createRevision((Date) historyItemMap.get("when"),
-									(String) historyItemMap.get("who"));
-							Object[] changeItems = (Object[]) historyItemMap.get("changes");
+							Revision revision = history.createRevision((Date) historyItemMap.get("when"), //$NON-NLS-1$
+									(String) historyItemMap.get("who")); //$NON-NLS-1$
+							Object[] changeItems = (Object[]) historyItemMap.get("changes"); //$NON-NLS-1$
 							if (changeItems != null) {
 								for (Object changeItem : changeItems) {
 									Map<?, ?> changeItemMap = (Map<?, ?>) changeItem;
-									int attachmentId = (changeItemMap.get("attachment_id") != null)
-											? Integer.parseInt((String) changeItemMap.get("attachment_id"))
+									int attachmentId = (changeItemMap.get("attachment_id") != null) //$NON-NLS-1$
+											? Integer.parseInt((String) changeItemMap.get("attachment_id")) //$NON-NLS-1$
 											: -1;
-									revision.addChange((String) changeItemMap.get("field_name"),
-											(String) changeItemMap.get("added"), (String) changeItemMap.get("removed"),
+									revision.addChange((String) changeItemMap.get("field_name"), //$NON-NLS-1$
+											(String) changeItemMap.get("added"), (String) changeItemMap.get("removed"), //$NON-NLS-1$ //$NON-NLS-2$
 											attachmentId);
 								}
 							}

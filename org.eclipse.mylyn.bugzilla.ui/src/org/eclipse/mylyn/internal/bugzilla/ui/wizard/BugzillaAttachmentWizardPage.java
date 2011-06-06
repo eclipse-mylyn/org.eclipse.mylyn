@@ -233,7 +233,6 @@ public class BugzillaAttachmentWizardPage extends WizardPage {
 		String type = commentAttribute.getMetaData().getType();
 		if (type != null) {
 			commentEditor = factory.createEditor(type, commentAttribute);
-			String labelString = commentEditor.getLabel();
 			if (commentEditor.hasLabel()) {
 				commentEditor.createLabelControl(attributeArea, toolkit);
 				if (commentEditor.getLabelControl() != null) {

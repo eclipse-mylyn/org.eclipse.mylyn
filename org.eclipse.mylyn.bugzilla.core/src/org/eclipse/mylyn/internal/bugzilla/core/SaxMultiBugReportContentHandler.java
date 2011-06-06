@@ -141,7 +141,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			token = null;
 			break;
 		case LONG_DESC:
-			String is_private = attributes.getValue("isprivate");
+			String is_private = attributes.getValue("isprivate"); //$NON-NLS-1$
 			taskComment = new TaskComment(is_private);
 			break;
 		case WHO:
@@ -318,7 +318,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		}
 
-			// Comment attributes
+		// Comment attributes
 		case WHO:
 			if (taskComment != null) {
 				taskComment.author = parsedText;
@@ -693,8 +693,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		if (comment.id != 0) {
 			TaskAttribute commentID = BugzillaTaskDataHandler.createAttribute(attribute, BugzillaAttribute.COMMENTID);
 			commentID.setValue(Integer.toString(comment.id));
-			int i = 9;
-			i++;
 		}
 
 		parseAttachment(taskComment);

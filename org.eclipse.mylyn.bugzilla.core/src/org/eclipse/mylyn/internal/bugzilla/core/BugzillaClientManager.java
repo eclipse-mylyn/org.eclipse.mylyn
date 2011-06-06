@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -27,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryChangeEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
+import org.eclipse.mylyn.internal.tasks.core.sync.UpdateRepositoryConfigurationJob;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
@@ -105,35 +105,8 @@ public class BugzillaClientManager implements IRepositoryListener, IRepositoryCh
 			if (IBugzillaConstants.BUGZILLA_USE_XMLRPC.equals(key)
 					|| IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE.equals(key)) {
 				final TaskRepository repository = event.getRepository();
-				TaskJob updateJob = new TaskJob(Messages.BugzillaClientManager_Refreshing_repository_configuration) {
-					private IStatus error;
-
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						monitor = SubMonitor.convert(monitor);
-						monitor.beginTask(Messages.BugzillaClientManager_Receiving_configuration, IProgressMonitor.UNKNOWN);
-						try {
-							try {
-								connector.updateRepositoryConfiguration(repository, null, monitor);
-							} catch (CoreException e) {
-								error = e.getStatus();
-							}
-						} finally {
-							monitor.done();
-						}
-						return Status.OK_STATUS;
-					}
-
-					@Override
-					public boolean belongsTo(Object family) {
-						return family == repository;
-					}
-
-					@Override
-					public IStatus getStatus() {
-						return error;
-					}
-				};
+				TaskJob updateJob = new UpdateRepositoryConfigurationJob(
+						Messages.BugzillaClientManager_Refreshing_repository_configuration, repository, connector);
 				updateJob.setPriority(Job.INTERACTIVE);
 				updateJob.addJobChangeListener(repositoryConfigurationUpdateJobChangeAdapter);
 				updateJob.addJobChangeListener(new JobChangeAdapter() {
