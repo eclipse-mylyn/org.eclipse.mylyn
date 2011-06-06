@@ -33,7 +33,6 @@ import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.egit.github.core.service.MilestoneService;
@@ -43,7 +42,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
-import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -120,7 +118,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 			this.repositoryLabels.put(repository, labels);
 			return labels;
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 
@@ -173,7 +171,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 			this.repositoryMilestones.put(repository, milestones);
 			return milestones;
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 
@@ -307,10 +305,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 				}
 				monitor.worked(1);
 			}
-		} catch (RequestException e) {
-			result = GitHub.createErrorStatus(new GitHubException(e));
 		} catch (IOException e) {
-			result = GitHub.createErrorStatus(e);
+			result = GitHub.createWrappedStatus(e);
 		}
 
 		monitor.done();
@@ -335,7 +331,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 			return taskDataHandler.createTaskData(repository, monitor,
 					repo.getOwner(), repo.getName(), issue, comments);
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 

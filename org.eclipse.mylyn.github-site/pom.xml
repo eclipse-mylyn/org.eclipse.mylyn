@@ -21,7 +21,7 @@
   <artifactId>github-updatesite</artifactId>
   <packaging>eclipse-repository</packaging>
 
-  <name>Eclipse EGit Mylyn GitHub Repository (Incubation)</name>
+  <name>Eclipse EGit Mylyn GitHub Repository</name>
 
   <build>
     <plugins>

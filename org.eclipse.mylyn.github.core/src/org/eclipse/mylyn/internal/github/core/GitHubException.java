@@ -29,6 +29,18 @@ public class GitHubException extends IOException {
 	private static final long serialVersionUID = -1456910662911777231L;
 
 	/**
+	 * Wraps the given {@link IOException} with a {@link GitHubException} if it
+	 * is a {@link RequestException} instance.
+	 * 
+	 * @param exception
+	 * @return wrapped exception
+	 */
+	public static IOException wrap(IOException exception) {
+		return exception instanceof RequestException ? new GitHubException(
+				(RequestException) exception) : exception;
+	}
+
+	/**
 	 * Create GitHub exception from {@link RequestException}
 	 * 
 	 * @param cause
@@ -39,7 +51,10 @@ public class GitHubException extends IOException {
 
 	public String getMessage() {
 		RequestError error = ((RequestException) getCause()).getError();
-		StringBuilder message = new StringBuilder(error.getMessage());
+		String errorMessage = error.getMessage();
+		if (errorMessage == null)
+			errorMessage = "";
+		StringBuilder message = new StringBuilder(errorMessage);
 		List<FieldError> errors = error.getErrors();
 		if (errors != null && errors.size() > 0) {
 			message.append(':');

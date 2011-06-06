@@ -23,7 +23,7 @@ public class User {
 
 	private String email;
 
-	private String gravatarUrl;
+	private String avatarUrl;
 
 	private String location;
 
@@ -57,10 +57,10 @@ public class User {
 	}
 
 	/**
-	 * @return gravatarUrl
+	 * @return avatarUrl
 	 */
-	public String getGravatarUrl() {
-		return this.gravatarUrl;
+	public String getAvatarUrl() {
+		return this.avatarUrl;
 	}
 
 	/**

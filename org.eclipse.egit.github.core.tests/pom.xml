@@ -22,7 +22,7 @@
   <artifactId>org.eclipse.egit.github.core.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
 
-  <name>Eclipse EGit GitHub API Test Plug-in (Incubation)</name>
+  <name>Eclipse EGit GitHub API Test Plug-in</name>
 
   <build>
     <plugins>

@@ -86,12 +86,7 @@ public class GistService extends GitHubService {
 	 */
 	public Gist createGist(Gist gist) throws IOException {
 		Assert.notNull("Gist cannot be null", gist);
-		StringBuilder uri = new StringBuilder();
-		String user = client.getUser();
-		if (user != null)
-			uri.append(IGitHubConstants.SEGMENT_USERS).append('/').append(user);
-		uri.append(IGitHubConstants.SEGMENT_GISTS);
-		return this.client.post(uri.toString(), gist, Gist.class);
+		return client.post(IGitHubConstants.SEGMENT_GISTS, gist, Gist.class);
 	}
 
 	/**
