@@ -19,7 +19,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ GistTest.class, IssueTest.class, LabelTest.class,
-		MilestoneTest.class, PullRequestTest.class, RepositoryTest.class })
+		MilestoneTest.class, PullRequestTest.class, RepositoryTest.class,
+		UserTest.class })
 public class LiveTests {
 
 }

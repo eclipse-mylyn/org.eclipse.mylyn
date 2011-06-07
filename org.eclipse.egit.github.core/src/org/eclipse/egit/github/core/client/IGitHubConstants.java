@@ -76,6 +76,11 @@ public interface IGitHubConstants {
 	String SEGMENT_PULLS = "/pulls"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_USER
+	 */
+	String SEGMENT_USER = "/user"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_USERS
 	 */
 	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
