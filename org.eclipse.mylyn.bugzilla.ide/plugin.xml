@@ -108,6 +108,10 @@
 		<product featureId="org.eclipse.cvs" id="org.eclipse.cvs"
 			providerId="org.eclipse">
 		</product>
+		<mapping namespace="org.eclipse.cvs" productId="org.eclipse.cvs">
+			<property name="product" value="Platform"/>
+			<property name="component" value="CVS"/>
+		</mapping>
 		<mapping namespace="org.eclipse.team.cvs" productId="org.eclipse.cvs">
 			<property name="product" value="Platform"/>
 			<property name="component" value="CVS"/>
