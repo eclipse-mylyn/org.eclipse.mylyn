@@ -319,6 +319,8 @@ public class GitHubClient {
 			case HttpStatus.SC_OK:
 				return new GitHubResponse(response, parseJson(response,
 						request.getType()));
+			case HttpStatus.SC_NO_CONTENT:
+				return new GitHubResponse(response, null);
 			case HttpStatus.SC_BAD_REQUEST:
 			case HttpStatus.SC_UNAUTHORIZED:
 			case HttpStatus.SC_FORBIDDEN:

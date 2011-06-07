@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
@@ -25,6 +26,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
+import org.eclipse.egit.github.core.client.RequestException;
 
 /**
  * Service class for getting and list gists.
@@ -55,6 +57,23 @@ public class GistService extends GitHubService {
 		request.setUri(uri);
 		request.setType(Gist.class);
 		return (Gist) this.client.get(request).getBody();
+	}
+
+	/**
+	 * Get starred gists for currently authenticated user
+	 * 
+	 * @return list of gists
+	 * @throws IOException
+	 */
+	public List<Gist> getStarredGists() throws IOException {
+		ListResourceCollector<Gist> collector = new ListResourceCollector<Gist>();
+		PagedRequest<Gist> request = new PagedRequest<Gist>(collector);
+		request.setUri(IGitHubConstants.SEGMENT_GISTS
+				+ IGitHubConstants.SEGMENT_STARRED);
+		request.setType(new TypeToken<List<Gist>>() {
+		}.getType());
+		getAll(request);
+		return collector.getResources();
 	}
 
 	/**
@@ -171,6 +190,56 @@ public class GistService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());
+	}
+
+	/**
+	 * Star the gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void starGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		client.put(uri.toString(), null, null);
+	}
+
+	/**
+	 * Unstar the gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void unstarGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Check if a gist is starred
+	 * 
+	 * @param gistId
+	 * @return true if starred, false if not starred
+	 * @throws IOException
+	 */
+	public boolean isStarred(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		try {
+			client.get(new GitHubRequest().setUri(uri));
+			return true;
+		} catch (RequestException e) {
+			if (e.getStatus() == HttpStatus.SC_NOT_FOUND)
+				return false;
+			throw e;
+		}
 	}
 
 }

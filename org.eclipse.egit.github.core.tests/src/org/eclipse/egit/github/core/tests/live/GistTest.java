@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core.tests.live;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -107,6 +108,48 @@ public class GistTest extends LiveTest {
 			service.deleteComment(comment.getId());
 		} finally {
 			service.deleteGist(created.getId());
+		}
+	}
+
+	/**
+	 * Test starring, unstarring, and checking if a gist if starred
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void starUnstarGist() throws IOException {
+		assertNotNull("Test requires user", client.getUser());
+
+		Gist gist = new Gist().setDescription("star test");
+		gist.setPublic(false);
+		GistFile file = new GistFile().setContent("content");
+		gist.setFiles(Collections.singletonMap("foo.txt", file));
+		GistService service = new GistService(client);
+		Gist created = service.createGist(gist);
+		assertNotNull(created);
+		String id = created.getId();
+		assertNotNull(id);
+		try {
+			List<Gist> starred = service.getStarredGists();
+			assertNotNull(starred);
+			for (Gist star : starred)
+				assertFalse(id.equals(star.getId()));
+			assertFalse(service.isStarred(id));
+			service.starGist(id);
+			assertTrue(service.isStarred(id));
+			starred = service.getStarredGists();
+			assertNotNull(starred);
+			boolean gistStarred = false;
+			for (Gist star : starred) {
+				gistStarred = id.equals(star.getId());
+				if (gistStarred)
+					break;
+			}
+			assertTrue(gistStarred);
+			service.unstarGist(id);
+			assertFalse(service.isStarred(id));
+		} finally {
+			service.deleteGist(id);
 		}
 	}
 }

@@ -30,7 +30,7 @@ public abstract class GitHubService {
 	/**
 	 * Client field
 	 */
-	protected GitHubClient client;
+	protected final GitHubClient client;
 
 	/**
 	 * Create service for client
@@ -65,7 +65,7 @@ public abstract class GitHubService {
 
 	/**
 	 * Get paged request by performing multiple requests until no more pages are
-	 * available of the request collector no longer accepts resource results.
+	 * available or the request collector no longer accepts resource results.
 	 * 
 	 * @param <V>
 	 * @param request
