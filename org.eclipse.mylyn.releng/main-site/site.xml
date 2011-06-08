@@ -33,9 +33,6 @@
    <feature url="features/org.eclipse.mylyn.cvs_0.0.0.jar" id="org.eclipse.mylyn.cvs" version="0.0.0">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
-      <category name="Integration"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.git_0.0.0.jar" id="org.eclipse.mylyn.git" version="0.0.0">
       <category name="Integration"/>
    </feature>
@@ -71,12 +68,6 @@
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.htmltext_0.0.0.jar" id="org.eclipse.mylyn.htmltext" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.reviews.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.feature" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.reviews.sdk.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.sdk.feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.sdk_feature_0.0.0.jar" id="org.eclipse.mylyn.sdk_feature" version="0.0.0">
