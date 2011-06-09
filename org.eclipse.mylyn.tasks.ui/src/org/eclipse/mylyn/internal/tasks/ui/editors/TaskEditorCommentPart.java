@@ -499,10 +499,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return commentAttribute;
 		}
 
+		@SuppressWarnings("unused")
 		public TaskComment getTaskComment() {
 			return taskComment;
 		}
 
+		@SuppressWarnings("unused")
 		public Control getControl() {
 			return commentComposite;
 		}

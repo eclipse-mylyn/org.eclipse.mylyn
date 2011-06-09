@@ -37,10 +37,8 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
@@ -128,7 +126,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -362,28 +359,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 
 	};
-
-	private class AdditionalMenuAction extends Action {
-
-		public AdditionalMenuAction() {
-			setImageDescriptor(JFaceResources.getImageRegistry().getDescriptor(PopupDialog.POPUP_IMG_MENU));
-			setDisabledImageDescriptor(JFaceResources.getImageRegistry().getDescriptor(
-					PopupDialog.POPUP_IMG_MENU_DISABLED));
-
-		}
-
-		@Override
-		public void runWithEvent(Event event) {
-			ToolItem toolItem = (ToolItem) event.widget;
-			Menu menu = getMenuCreator().getMenu(toolItem.getControl());
-			Rectangle bounds = toolItem.getParent().getBounds();
-			Point topLeft = new Point(bounds.x, bounds.y + bounds.height);
-			topLeft = toolItem.getControl().getShell().toDisplay(topLeft);
-			menu.setLocation(topLeft.x, topLeft.y);
-			menu.setVisible(true);
-		}
-
-	}
 
 	private class MenuCreator implements IMenuCreator {
 

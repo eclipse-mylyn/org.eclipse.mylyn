@@ -371,7 +371,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskActivityMonitor taskActivityMonitor;
 
-	private ServiceReference proxyServiceReference;
+	private ServiceReference<?> proxyServiceReference;
 
 	private IProxyChangeListener proxyChangeListener;
 
@@ -1379,8 +1379,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		try {
 			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 //				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-			TaskListNotifier taskListNotifier = new TaskListNotifier(getRepositoryModel(), getTaskDataManager(),
-					getSynchronizationManger());
+			TaskListNotifier taskListNotifier = new TaskListNotifier(getTaskDataManager(), getSynchronizationManger());
 			getTaskDataManager().addListener(taskListNotifier);
 			taskListNotificationManager.addNotificationProvider(taskListNotifier);
 			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
@@ -1413,7 +1412,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public IdentityModel getIdentityModel() {
 		if (identityModel == null) {
-			identityModel = new IdentityModel(new File(getDataDirectory(), "cache"));
+			identityModel = new IdentityModel(new File(getDataDirectory(), "cache")); //$NON-NLS-1$
 			identityModel.addConnector(new GravatarConnector());
 		}
 		return identityModel;

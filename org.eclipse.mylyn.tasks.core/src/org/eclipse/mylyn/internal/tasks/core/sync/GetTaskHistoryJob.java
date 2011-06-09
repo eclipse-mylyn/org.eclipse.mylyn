@@ -40,7 +40,7 @@ public class GetTaskHistoryJob extends TaskJob {
 	private TaskHistory history;
 
 	public GetTaskHistoryJob(AbstractRepositoryConnector connector, TaskRepository repository, ITask task) {
-		super("Retrieving History");
+		super(Messages.GetTaskHistoryJob_Retrieving_History);
 		this.connector = connector;
 		this.repository = repository;
 		this.task = task;

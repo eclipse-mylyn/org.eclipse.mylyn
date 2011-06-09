@@ -64,7 +64,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		try {
 			Class<?> clazz = Class.forName("org.eclipse.ui.internal.PageLayout"); //$NON-NLS-1$
 			if (clazz != null && clazz.isInstance(layout)) {
-				Method method = clazz.getDeclaredMethod("getActionSets", null); //$NON-NLS-1$
+				Method method = clazz.getDeclaredMethod("getActionSets"); //$NON-NLS-1$
 				ArrayList<?> actionSets = (ArrayList<?>) method.invoke(layout);
 				actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
 				actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$

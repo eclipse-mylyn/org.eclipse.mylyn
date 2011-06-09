@@ -55,7 +55,7 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 	private final PropertyChangeListener imageListener = new PropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getPropertyName().equals("image")) {
+			if (event.getPropertyName().equals("image")) { //$NON-NLS-1$
 				final ProfileImage profileImage = (ProfileImage) event.getNewValue();
 				Display.getDefault().asyncExec(new Runnable() {
 

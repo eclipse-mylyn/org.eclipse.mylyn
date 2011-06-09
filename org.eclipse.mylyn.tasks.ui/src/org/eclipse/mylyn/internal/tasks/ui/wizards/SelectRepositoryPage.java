@@ -47,7 +47,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesViewSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -85,7 +84,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private final ITaskRepositoryFilter taskRepositoryFilter;
 
-	private TaskRepositoriesContentProvider contentProvider;
+//	private TaskRepositoriesContentProvider contentProvider;
 
 	class RepositoryContentProvider implements ITreeContentProvider {
 

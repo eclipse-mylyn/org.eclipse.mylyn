@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.SynchronizationManger;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
@@ -47,15 +46,11 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	private final List<TaskListNotification> notificationQueue = new ArrayList<TaskListNotification>();
 
-	private final RepositoryModel repositoryModel;
-
 	public boolean enabled;
 
 	private final SynchronizationManger synchronizationManger;
 
-	public TaskListNotifier(RepositoryModel repositoryModel, TaskDataManager taskDataManager,
-			SynchronizationManger synchronizationManger) {
-		this.repositoryModel = repositoryModel;
+	public TaskListNotifier(TaskDataManager taskDataManager, SynchronizationManger synchronizationManger) {
 		this.taskDataManager = taskDataManager;
 		this.synchronizationManger = synchronizationManger;
 	}

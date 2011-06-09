@@ -26,15 +26,12 @@ public class TaskEditorOutlinePage extends ContentOutlinePage {
 
 	private TaskEditorOutlineModel model;
 
-	private TaskRepository taskRepository;
-
 	private TreeViewer viewer;
 
 	public TaskEditorOutlinePage() {
 	}
 
 	public void setInput(TaskRepository taskRepository, TaskEditorOutlineNode rootNode) {
-		this.taskRepository = taskRepository;
 		if (rootNode != null) {
 			this.model = new TaskEditorOutlineModel(rootNode);
 		} else {

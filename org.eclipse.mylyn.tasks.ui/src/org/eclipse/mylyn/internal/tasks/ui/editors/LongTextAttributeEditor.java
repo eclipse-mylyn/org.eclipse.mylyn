@@ -36,8 +36,6 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
 	private SourceViewer viewer;
 
-	private boolean cflowModify;
-
 	public LongTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));

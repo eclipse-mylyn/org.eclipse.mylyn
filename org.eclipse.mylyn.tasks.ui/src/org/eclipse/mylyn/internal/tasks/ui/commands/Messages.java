@@ -46,4 +46,10 @@ public class Messages extends NLS {
 	public static String RemoteTaskSelectionDialog_Select_a_task_or_repository;
 
 	public static String RemoteTaskSelectionDialog_Select_a_task_repository;
+
+	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Install_Connectors;
+
+	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_new_connectors_are_available;
+
+	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Unable_to_launch_connector_install;
 }
