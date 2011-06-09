@@ -24,9 +24,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -93,6 +95,20 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			} else if (obj instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer scheduledContainer = (ScheduledTaskContainer) obj;
 				for (ITask task : scheduledContainer.getChildren()) {
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
+							task.getConnectorKind());
+					addTaskToSync(client, task, tasksToSyncMap);
+				}
+			} else if (obj instanceof Person) {
+				Person person = (Person) obj;
+				for (ITask task : person.getChildren()) {
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
+							task.getConnectorKind());
+					addTaskToSync(client, task, tasksToSyncMap);
+				}
+			} else if (obj instanceof TaskGroup) {
+				TaskGroup group = (TaskGroup) obj;
+				for (ITask task : group.getChildren()) {
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
 							task.getConnectorKind());
 					addTaskToSync(client, task, tasksToSyncMap);
