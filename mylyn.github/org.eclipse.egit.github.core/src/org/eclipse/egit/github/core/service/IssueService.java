@@ -22,12 +22,12 @@ import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -136,13 +136,36 @@ public class IssueService extends GitHubService {
 		builder.append(IGitHubConstants.SEGMENT_ISSUES);
 		builder.append('/').append(id);
 		builder.append(IGitHubConstants.SEGMENT_COMMENTS);
-		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
-		PagedRequest<Comment> request = createPagedRequest(collector);
+		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(builder.toString()).setType(
 				new TypeToken<List<Comment>>() {
 				}.getType());
-		getAll(request);
-		return collector.getResources();
+		return getAll(request);
+	}
+
+	/**
+	 * Get bulk issues request
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param filterData
+	 * @param start
+	 * @param size
+	 * @return paged request
+	 */
+	protected PagedRequest<Issue> createIssuesRequest(String user,
+			String repository, Map<String, String> filterData, int start,
+			int size) {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		PagedRequest<Issue> request = createPagedRequest(start, size);
+		request.setParams(filterData).setUri(uri);
+		request.setType(new TypeToken<List<Issue>>() {
+		}.getType());
+		return request;
 	}
 
 	/**
@@ -156,18 +179,56 @@ public class IssueService extends GitHubService {
 	 */
 	public List<Issue> getIssues(String user, String repository,
 			Map<String, String> filterData) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
-		ListResourceCollector<Issue> collector = new ListResourceCollector<Issue>();
-		PagedRequest<Issue> request = createPagedRequest(collector);
-		request.setParams(filterData).setUri(uri);
-		request.setType(new TypeToken<List<Issue>>() {
-		}.getType());
-		getAll(request);
-		return collector.getResources();
+		PagedRequest<Issue> request = createIssuesRequest(user, repository,
+				filterData, PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		return getAll(request);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param filterData
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(String user, String repository,
+			Map<String, String> filterData) {
+		return pageIssues(user, repository, filterData, PagedRequest.PAGE_SIZE);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param filterData
+	 * @param size
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(String user, String repository,
+			Map<String, String> filterData, int size) {
+		return pageIssues(user, repository, filterData,
+				PagedRequest.PAGE_FIRST, size);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 * 
+	 * @param user
+	 * @param repository
+	 * @param filterData
+	 * @param size
+	 *            page size
+	 * @param start
+	 *            starting page number
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(String user, String repository,
+			Map<String, String> filterData, int start, int size) {
+		PagedRequest<Issue> request = createIssuesRequest(user, repository,
+				filterData, start, size);
+		return createPageIterator(request);
 	}
 
 	/**
