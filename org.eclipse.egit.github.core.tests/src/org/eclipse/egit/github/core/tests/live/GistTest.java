@@ -17,11 +17,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.GistService;
 import org.junit.Test;
 
@@ -150,6 +153,39 @@ public class GistTest extends LiveTest {
 			assertFalse(service.isStarred(id));
 		} finally {
 			service.deleteGist(id);
+		}
+	}
+
+	/**
+	 * Test paging through public gists
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void twoPublicGistPages() throws Exception {
+		GistService service = new GistService(client);
+		PageIterator<Gist> pages = service.pagePublicGists(10);
+		assertNotNull(pages);
+		assertTrue(pages.hasNext());
+		Collection<Gist> gists = pages.next();
+		assertNotNull(gists);
+		assertTrue(gists.size() > 0);
+		Set<String> ids = new HashSet<String>();
+		for (Gist gist : gists) {
+			assertNotNull(gist);
+			assertNotNull(gist.getId());
+			assertFalse(ids.contains(gist.getId()));
+			ids.add(gist.getId());
+		}
+		assertTrue(pages.hasNext());
+		gists = pages.next();
+		assertNotNull(gists);
+		assertTrue(gists.size() > 0);
+		for (Gist gist : gists) {
+			assertNotNull(gist);
+			assertNotNull(gist.getId());
+			assertFalse(ids.contains(gist.getId()));
+			ids.add(gist.getId());
 		}
 	}
 }

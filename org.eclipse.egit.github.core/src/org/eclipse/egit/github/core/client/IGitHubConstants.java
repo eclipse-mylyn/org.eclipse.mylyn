@@ -71,6 +71,11 @@ public interface IGitHubConstants {
 	String SEGMENT_STAR = "/star"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_PUBLIC
+	 */
+	String SEGMENT_PUBLIC = "/public"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_PULLS
 	 */
 	String SEGMENT_PULLS = "/pulls"; //$NON-NLS-1$
