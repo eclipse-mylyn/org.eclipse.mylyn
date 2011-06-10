@@ -94,6 +94,7 @@ public class GitHubClient {
 		AuthCache authCache = new BasicAuthCache();
 		authCache.put(this.httpHost, new BasicScheme());
 		httpContext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+		client.addRequestInterceptor(new AuthInterceptor(), 0);
 	}
 
 	/**
