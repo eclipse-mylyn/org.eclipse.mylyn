@@ -10,14 +10,19 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.service.GistService;
+import org.junit.Test;
 
 /**
  * @author Kevin Sawicki (kevin@github.com)
@@ -29,9 +34,12 @@ public class GistTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testList() throws IOException {
+	@Test
+	public void listGists() throws IOException {
+		assertNotNull("Test requires user with gists", client.getUser());
+
 		GistService service = new GistService(client);
-		Collection<Gist> gists = service.getGists("kevinsawicki");
+		Collection<Gist> gists = service.getGists(client.getUser());
 		assertNotNull(gists);
 		assertFalse(gists.isEmpty());
 		for (Gist gist : gists) {
@@ -51,6 +59,54 @@ public class GistTest extends LiveTest {
 				assertNotNull(comment.getUpdatedAt());
 				assertNotNull(comment.getUser());
 			}
+		}
+	}
+
+	/**
+	 * Test creating and deleting a Gist
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void createDeleteGist() throws IOException {
+		assertNotNull("Test requires user", client.getUser());
+
+		Gist gist = new Gist().setDescription("testing");
+		gist.setPublic(false);
+		GistFile file = new GistFile().setContent("content");
+		gist.setFiles(Collections.singletonMap("foo.txt", file));
+		GistService service = new GistService(client);
+		Gist created = service.createGist(gist);
+		assertNotNull(created);
+		assertNotNull(created.getId());
+		service.deleteGist(created.getId());
+	}
+
+	/**
+	 * Test creating and deleting a Gist comment
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void createDeleteGistComment() throws IOException {
+		assertNotNull("Test requires user", client.getUser());
+
+		Gist gist = new Gist().setDescription("testing");
+		gist.setPublic(false);
+		GistFile file = new GistFile().setContent("content");
+		gist.setFiles(Collections.singletonMap("foo.txt", file));
+		GistService service = new GistService(client);
+		Gist created = service.createGist(gist);
+		assertNotNull(created);
+		assertNotNull(created.getId());
+		try {
+			Comment comment = service.createComment(created.getId(),
+					"test comment");
+			assertNotNull(comment);
+			assertNotNull(comment.getId());
+			service.deleteComment(comment.getId());
+		} finally {
+			service.deleteGist(created.getId());
 		}
 	}
 }

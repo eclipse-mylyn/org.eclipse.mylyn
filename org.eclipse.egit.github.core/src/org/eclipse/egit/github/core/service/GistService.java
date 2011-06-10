@@ -146,4 +146,31 @@ public class GistService extends GitHubService {
 		return collector.getResources();
 	}
 
+	/**
+	 * Delete the Gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void deleteGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Delete the Gist comment with the given id
+	 * 
+	 * @param commentId
+	 * @throws IOException
+	 */
+	public void deleteComment(String commentId) throws IOException {
+		Assert.notNull("Gist comment id cannot be null", commentId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append('/').append(commentId);
+		client.delete(uri.toString());
+	}
+
 }
