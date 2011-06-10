@@ -371,7 +371,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskActivityMonitor taskActivityMonitor;
 
-	private ServiceReference<?> proxyServiceReference;
+	private ServiceReference proxyServiceReference;
 
 	private IProxyChangeListener proxyChangeListener;
 
