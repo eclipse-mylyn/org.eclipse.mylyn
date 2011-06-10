@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.NoSuchPageException;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
+import org.eclipse.egit.github.core.client.RequestException;
 
 /**
  * Base GitHub service class.
@@ -104,5 +106,23 @@ public abstract class GitHubService {
 			throw pageException.getCause();
 		}
 		return elements;
+	}
+
+	/**
+	 * Check if the uri returns a non-404
+	 * 
+	 * @param uri
+	 * @return true if no exception, false if 404
+	 * @throws IOException
+	 */
+	protected boolean check(String uri) throws IOException {
+		try {
+			client.get(new GitHubRequest().setUri(uri));
+			return true;
+		} catch (RequestException e) {
+			if (e.getStatus() == HttpStatus.SC_NOT_FOUND)
+				return false;
+			throw e;
+		}
 	}
 }

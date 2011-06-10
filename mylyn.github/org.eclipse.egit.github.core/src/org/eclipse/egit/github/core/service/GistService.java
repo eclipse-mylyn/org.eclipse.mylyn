@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
@@ -26,7 +25,6 @@ import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
-import org.eclipse.egit.github.core.client.RequestException;
 
 /**
  * Service class for getting and list gists.
@@ -317,14 +315,6 @@ public class GistService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(IGitHubConstants.SEGMENT_STAR);
-		try {
-			client.get(new GitHubRequest().setUri(uri));
-			return true;
-		} catch (RequestException e) {
-			if (e.getStatus() == HttpStatus.SC_NOT_FOUND)
-				return false;
-			throw e;
-		}
+		return check(uri.toString());
 	}
-
 }
