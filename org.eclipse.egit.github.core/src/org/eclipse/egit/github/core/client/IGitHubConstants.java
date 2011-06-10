@@ -106,6 +106,11 @@ public interface IGitHubConstants {
 	String SEGMENT_FOLLOWING = "/following"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_ORGS
+	 */
+	String SEGMENT_ORGS = "/orgs"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$

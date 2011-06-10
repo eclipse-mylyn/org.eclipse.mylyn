@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -69,5 +71,12 @@ public abstract class LiveTest {
 	public void setUp() throws Exception {
 		String testUrl = System.getProperty("github.test.url");
 		this.client = createClient(testUrl);
+	}
+
+	/**
+	 * Check authenticated user is present
+	 */
+	public void checkUser() {
+		assertNotNull("Test requires authenticated user", client.getUser());
 	}
 }
