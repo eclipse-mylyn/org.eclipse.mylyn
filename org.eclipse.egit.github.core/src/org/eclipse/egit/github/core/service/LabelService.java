@@ -16,9 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Assert;
-import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -54,12 +52,10 @@ public class LabelService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(IGitHubConstants.SEGMENT_LABELS);
-		ListResourceCollector<Label> collector = new ListResourceCollector<Label>();
-		PagedRequest<Label> request = new PagedRequest<Label>(collector);
+		PagedRequest<Label> request = createPagedRequest();
 		request.setUri(uri).setType(new TypeToken<List<Label>>() {
 		}.getType());
-		getAll(request);
-		return collector.getResources();
+		return getAll(request);
 	}
 
 	/**

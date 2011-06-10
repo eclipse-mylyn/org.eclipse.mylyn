@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IResourceProvider;
-import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -89,14 +88,10 @@ public class RepositoryService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
 		uri.append(IGitHubConstants.SEGMENT_ORGANIZATIONS).append(
 				IGitHubConstants.SEGMENT_REPOSITORIES);
-
-		ListResourceCollector<Repository> collector = new ListResourceCollector<Repository>();
-		PagedRequest<Repository> request = new PagedRequest<Repository>(
-				collector);
+		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
-		getAll(request);
-		return collector.getResources();
+		return getAll(request);
 	}
 
 	/**
@@ -111,13 +106,10 @@ public class RepositoryService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_REPOS)
 				.append(IGitHubConstants.SEGMENT_SHOW).append('/').append(user);
 
-		ListResourceCollector<Repository> collector = new ListResourceCollector<Repository>();
-		PagedRequest<Repository> request = new PagedRequest<Repository>(
-				collector);
+		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
-		getAll(request);
-		return collector.getResources();
+		return getAll(request);
 	}
 
 	/**

@@ -21,16 +21,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -42,12 +37,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.eclipse.egit.github.core.Assert;
@@ -57,9 +50,6 @@ import org.eclipse.egit.github.core.RequestError;
  * Client class for interacting with GitHub HTTP/JSON API.
  */
 public class GitHubClient {
-
-	private static final NameValuePair PER_PAGE_PARAM = new BasicNameValuePair(
-			IGitHubConstants.PARAM_PER_PAGE, Integer.toString(100));
 
 	private final HttpHost httpHost;
 
@@ -220,42 +210,6 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Get name value pairs for data map.
-	 * 
-	 * @param data
-	 * @param page
-	 * @return name value pair array
-	 */
-	protected List<NameValuePair> getPairs(Map<String, String> data, int page) {
-		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		if (data == null || data.isEmpty()) {
-			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PAGE,
-					Integer.toString(page)));
-			pairs.add(PER_PAGE_PARAM);
-		} else {
-			for (Entry<String, String> entry : data.entrySet())
-				pairs.add(new BasicNameValuePair(entry.getKey(), entry
-						.getValue()));
-			if (!data.containsKey(IGitHubConstants.PARAM_PER_PAGE))
-				pairs.add(PER_PAGE_PARAM);
-		}
-		return pairs;
-	}
-
-	/**
-	 * Get uri for request
-	 * 
-	 * @param request
-	 * @return uri
-	 */
-	protected String getUri(GitHubRequest request) {
-		return request.getUri()
-				+ (request.getUri().indexOf('?') == -1 ? '?' : '&')
-				+ URLEncodedUtils.format(
-						getPairs(request.getParams(), request.getPage()), null);
-	}
-
-	/**
 	 * Get status line from response
 	 * 
 	 * @param response
@@ -278,7 +232,7 @@ public class GitHubClient {
 	 * @throws IOException
 	 */
 	public InputStream getStream(GitHubRequest request) throws IOException {
-		HttpGet method = createGet(getUri(request));
+		HttpGet method = createGet(request.generateUri());
 		try {
 			HttpResponse response = client.execute(httpHost, method,
 					httpContext);
@@ -310,7 +264,7 @@ public class GitHubClient {
 	 * @throws IOException
 	 */
 	public GitHubResponse get(GitHubRequest request) throws IOException {
-		HttpGet method = createGet(getUri(request));
+		HttpGet method = createGet(request.generateUri());
 		try {
 			HttpResponse response = client.execute(httpHost, method,
 					httpContext);
