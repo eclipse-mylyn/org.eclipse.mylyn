@@ -76,4 +76,53 @@ public class OrganizationTest extends LiveTest {
 		}
 	}
 
+	/**
+	 * Test fetching members of first org that the currently authenticated user
+	 * is in.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void membersInFirstOrg() throws Exception {
+		checkUser();
+
+		OrganizationService service = new OrganizationService(client);
+		List<User> orgs = service.getOrganizations(client.getUser());
+		assertNotNull(orgs);
+		assertFalse(orgs.isEmpty());
+		String orgName = orgs.get(0).getLogin();
+		assertNotNull(orgName);
+		List<User> members = service.getMembers(orgName);
+		assertNotNull(members);
+		assertFalse(members.isEmpty());
+		boolean selfFound = false;
+		for (User member : members) {
+			assertNotNull(member);
+			assertNotNull(member.getLogin());
+			assertTrue(service.isMember(orgName, member.getLogin()));
+			if (client.getUser().equals(member.getLogin()))
+				selfFound = true;
+		}
+		assertTrue(selfFound);
+	}
+
+	/**
+	 * Test checking member in organization for specific user
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void membershipInOrg() throws Exception {
+		checkUser();
+
+		OrganizationService service = new OrganizationService(client);
+		List<User> orgs = service.getOrganizations(client.getUser());
+		assertNotNull(orgs);
+		assertFalse(orgs.isEmpty());
+		String orgName = orgs.get(0).getLogin();
+		assertNotNull(orgName);
+		assertTrue(service.isMember(orgName, client.getUser()));
+		assertFalse(service.isMember(orgName,
+				"notarealuserintheorg" + System.nanoTime()));
+	}
 }
