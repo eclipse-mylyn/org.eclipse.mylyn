@@ -122,7 +122,7 @@ public class RepositoryConfiguration implements Serializable {
 	 */
 	public List<String> getProducts() {
 		ArrayList<String> productList = new ArrayList<String>(products.keySet());
-		Collections.sort(productList);
+		Collections.sort(productList, String.CASE_INSENSITIVE_ORDER);
 		return productList;
 	}
 
@@ -649,7 +649,8 @@ public class RepositoryConfiguration implements Serializable {
 
 				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
 						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
-						&& element != BugzillaAttribute.BUG_STATUS && element != BugzillaAttribute.TARGET_MILESTONE) {
+						&& element != BugzillaAttribute.BUG_STATUS && element != BugzillaAttribute.TARGET_MILESTONE
+						&& element != BugzillaAttribute.PRODUCT) {
 					Collections.sort(options);
 				}
 			}
