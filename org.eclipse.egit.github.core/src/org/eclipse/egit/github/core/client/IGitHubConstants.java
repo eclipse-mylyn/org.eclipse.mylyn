@@ -26,6 +26,11 @@ public interface IGitHubConstants {
 	String SEGMENT_SHOW = "/show"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_SEARCH
+	 */
+	String SEGMENT_SEARCH = "/search"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_ORGANIZATIONS
 	 */
 	String SEGMENT_ORGANIZATIONS = "/organizations"; //$NON-NLS-1$

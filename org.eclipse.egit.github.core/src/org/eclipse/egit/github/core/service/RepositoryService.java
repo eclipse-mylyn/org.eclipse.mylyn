@@ -113,6 +113,25 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Search repositories
+	 * 
+	 * @param query
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> searchRepositories(String query) throws IOException {
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
+		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(IGitHubConstants.SEGMENT_SEARCH);
+		uri.append('/').append(query);
+
+		PagedRequest<Repository> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(RepositoryContainer.class);
+		return getAll(request);
+	}
+
+	/**
 	 * Create a new repository
 	 * 
 	 * @param repository
