@@ -319,7 +319,7 @@ public class GitHubClient {
 			if (type != null)
 				return parseJson(response, type);
 		case HttpStatus.SC_NO_CONTENT:
-			break;
+			return null;
 		case HttpStatus.SC_BAD_REQUEST:
 		case HttpStatus.SC_UNAUTHORIZED:
 		case HttpStatus.SC_FORBIDDEN:
@@ -331,7 +331,6 @@ public class GitHubClient {
 		default:
 			throw new IOException(status.getReasonPhrase());
 		}
-		return null;
 	}
 
 	/**

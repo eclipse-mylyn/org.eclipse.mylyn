@@ -121,6 +121,11 @@ public interface IGitHubConstants {
 	String SEGMENT_MEMBERS = "/members"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_PUBLIC_MEMBERS
+	 */
+	String SEGMENT_PUBLIC_MEMBERS = "/public_members"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$

@@ -141,6 +141,25 @@ public class OrganizationService extends GitHubService {
 	}
 
 	/**
+	 * Get public members of organization
+	 * 
+	 * @param organization
+	 * @return list of public organization members
+	 * @throws IOException
+	 */
+	public List<User> getPublicMembers(String organization) throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		PagedRequest<User> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<User>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
 	 * Check if the given user is a member of the given organization
 	 * 
 	 * @param organization
@@ -157,5 +176,78 @@ public class OrganizationService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_MEMBERS);
 		uri.append('/').append(user);
 		return check(uri.toString());
+	}
+
+	/**
+	 * Check if the given user is a public member of the given organization
+	 * 
+	 * @param organization
+	 * @param user
+	 * @return true if public member, false if not public member
+	 * @throws IOException
+	 */
+	public boolean isPublicMember(String organization, String user)
+			throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append('/').append(user);
+		return check(uri.toString());
+	}
+
+	/**
+	 * Publicize membership of given user in given organization
+	 * 
+	 * @param organization
+	 * @param user
+	 * @throws IOException
+	 */
+	public void showMembership(String organization, String user)
+			throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append('/').append(user);
+		client.put(uri.toString(), null, null);
+	}
+
+	/**
+	 * Conceal membership of given user in given organization
+	 * 
+	 * @param organization
+	 * @param user
+	 * @throws IOException
+	 */
+	public void hideMembership(String organization, String user)
+			throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append('/').append(user);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Remove the given member from the given organization
+	 * 
+	 * @param organization
+	 * @param user
+	 * @throws IOException
+	 */
+	public void removeMember(String organization, String user)
+			throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_MEMBERS);
+		uri.append('/').append(user);
+		client.delete(uri.toString());
 	}
 }
