@@ -43,7 +43,7 @@ public class TaskSelectionDialogWithRandom extends TaskSelectionDialog {
 	private boolean activateTask = false;
 
 	public TaskSelectionDialogWithRandom(Shell parent) {
-		super(parent);
+		super(parent, false);
 	}
 
 	@Override
