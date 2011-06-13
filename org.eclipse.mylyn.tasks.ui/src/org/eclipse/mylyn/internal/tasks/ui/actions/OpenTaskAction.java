@@ -34,7 +34,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 
 	@Override
 	public void run(IAction action) {
-		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell(), true);
+		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
 		dlg.setTitle(Messages.OpenTaskAction_Open_Task);
 		dlg.setMessage(Messages.OpenTaskAction_Select_a_task_to_open__);
 		dlg.setShowExtendedOpeningOptions(true);
@@ -43,14 +43,13 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			return;
 		}
 
-		for (Object result : dlg.getResult()) {
-			if (result instanceof ITask) {
-				AbstractTask task = (AbstractTask) result;
-				if (dlg.getOpenInBrowser()) {
-					TasksUiUtil.openWithBrowser(task);
-				} else {
-					TasksUiInternal.refreshAndOpenTaskListElement(task);
-				}
+		Object result = dlg.getFirstResult();
+		if (result instanceof ITask) {
+			AbstractTask task = (AbstractTask) result;
+			if (dlg.getOpenInBrowser()) {
+				TasksUiUtil.openWithBrowser(task);
+			} else {
+				TasksUiInternal.refreshAndOpenTaskListElement(task);
 			}
 		}
 	}

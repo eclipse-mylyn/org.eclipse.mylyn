@@ -428,8 +428,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private final TaskActivationHistory taskActivationHistory;
 
-	public TaskSelectionDialog(Shell parent, boolean multi) {
-		super(parent, multi);
+	public TaskSelectionDialog(Shell parent) {
+		super(parent);
 		this.taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 		this.history = new LinkedHashSet<AbstractTask>(taskActivationHistory.getPreviousTasks());
 		this.itemsComparator = new TaskHistoryItemsComparator(new ArrayList<AbstractTask>(history));
