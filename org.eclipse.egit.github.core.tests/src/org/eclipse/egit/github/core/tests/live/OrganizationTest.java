@@ -124,5 +124,7 @@ public class OrganizationTest extends LiveTest {
 		assertTrue(service.isMember(orgName, client.getUser()));
 		assertFalse(service.isMember(orgName,
 				"notarealuserintheorg" + System.nanoTime()));
+		assertFalse(service.isPublicMember(orgName, "notarealuserintheorg"
+				+ System.nanoTime()));
 	}
 }
