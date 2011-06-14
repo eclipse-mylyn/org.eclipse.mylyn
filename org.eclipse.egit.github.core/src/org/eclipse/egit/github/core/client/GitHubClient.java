@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.ProxySelector;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -95,6 +97,11 @@ public class GitHubClient {
 	public GitHubClient(HttpHost httpHost) {
 		Assert.notNull("Http host cannot be null", httpHost); //$NON-NLS-1$
 		this.httpHost = httpHost;
+
+		// Support JVM configured proxy servers
+		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
+				.getConnectionManager().getSchemeRegistry(), ProxySelector
+				.getDefault()));
 
 		// Preemptive authentication
 		httpContext = new BasicHttpContext();
