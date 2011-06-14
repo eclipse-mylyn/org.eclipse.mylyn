@@ -68,8 +68,6 @@ public class RepositoryLocation extends PlatformObject {
 
 	private static final String SAVE_PASSWORD = ".savePassword"; //$NON-NLS-1$
 
-	private static final String USERNAME = ".username"; //$NON-NLS-1$
-
 	private static String getKeyPrefix(AuthenticationType type) {
 		switch (type) {
 		case HTTP:
@@ -82,14 +80,10 @@ public class RepositoryLocation extends PlatformObject {
 		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
 	}
 
-	private String cachedUserName;
-
 	private ICredentialsStore credentialsStore;
 
 	// transient
 	private IStatus errorStatus = null;
-
-	private boolean isCachedUserName;
 
 	private final Map<String, String> properties = new LinkedHashMap<String, String>();
 
@@ -255,9 +249,6 @@ public class RepositoryLocation extends PlatformObject {
 		String prefix = getKeyPrefix(authType);
 
 		if (credentials == null) {
-			if (authType == AuthenticationType.REPOSITORY) {
-				cachedUserName = null;
-			}
 			setProperty(prefix + ENABLED, String.valueOf(false));
 		} else {
 			setProperty(prefix + ENABLED, String.valueOf(true));

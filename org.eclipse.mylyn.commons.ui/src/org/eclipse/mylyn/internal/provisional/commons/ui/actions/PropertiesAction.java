@@ -21,7 +21,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class PropertiesAction extends BaseSelectionListenerAction {
 
 	public PropertiesAction() {
-		super("Properties");
+		super(Messages.PropertiesAction_Properties);
 	}
 
 	@Override

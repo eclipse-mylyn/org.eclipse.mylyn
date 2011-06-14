@@ -34,6 +34,8 @@ import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
  */
 public final class IdentityModel implements Serializable {
 
+	private static final long serialVersionUID = -8812399358357509612L;
+
 	private transient final List<IdentityConnector> connectors;
 
 	private transient final File cacheDirectory;

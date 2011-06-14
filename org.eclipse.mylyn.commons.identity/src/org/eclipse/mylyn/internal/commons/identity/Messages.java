@@ -9,24 +9,16 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.provisional.commons.ui.actions;
+package org.eclipse.mylyn.internal.commons.identity;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.identity.messages"; //$NON-NLS-1$
 
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.ui.actions.messages"; //$NON-NLS-1$
+	public static String Identity_Retrieving_Image;
 
-	public static String CollapseAllAction_Label;
-
-	public static String CollapseAllAction_ToolTip;
-
-	public static String ExpandAllAction_Label;
-
-	public static String ExpandAllAction_ToolTip;
-
-	public static String PropertiesAction_Properties;
-
+	public static String Identity_Retrieving_Profile;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -34,5 +26,4 @@ public class Messages extends NLS {
 
 	private Messages() {
 	}
-
 }

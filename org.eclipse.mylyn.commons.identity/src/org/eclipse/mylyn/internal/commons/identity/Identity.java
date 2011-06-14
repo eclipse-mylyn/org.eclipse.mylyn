@@ -238,7 +238,7 @@ public class Identity implements IIdentity {
 				}
 			}
 		}
-		FutureJob<IProfileImage> job = new FutureJob<IProfileImage>("Retrieving Image") {
+		FutureJob<IProfileImage> job = new FutureJob<IProfileImage>(Messages.Identity_Retrieving_Image) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -264,7 +264,7 @@ public class Identity implements IIdentity {
 		}
 
 		refreshProfile = false;
-		FutureJob<IProfile> job = new FutureJob<IProfile>("Retrieving Profile") {
+		FutureJob<IProfile> job = new FutureJob<IProfile>(Messages.Identity_Retrieving_Profile) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {

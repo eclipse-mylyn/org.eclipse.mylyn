@@ -37,8 +37,6 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class GravatarStore implements Serializable, ISchedulingRule {
 
-	private boolean cacheEnabled;
-
 	/**
 	 * TIMEOUT
 	 */
@@ -87,7 +85,6 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 	}
 
 	public void setCacheEnabled(boolean cacheEnabled) {
-		this.cacheEnabled = cacheEnabled;
 		if (cacheEnabled && avatars == null) {
 			avatars = Collections.synchronizedMap(new HashMap<String, Gravatar>());
 		} else if (!cacheEnabled && avatars != null) {

@@ -110,7 +110,7 @@ public abstract class GravatarUtils {
 	}
 
 	public static boolean isValidEmail(String alias) {
-		return alias != null && alias.contains("@");
+		return alias != null && alias.contains("@"); //$NON-NLS-1$
 	}
 
 }

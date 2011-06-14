@@ -99,7 +99,7 @@ public class PersonLabelProvider extends LabelProvider {
 		} else if (object instanceof Account) {
 			Account account = (Account) object;
 			if (account.getName() != null) {
-				return account.getName() + " <" + account.getId() + ">";
+				return account.getName() + " <" + account.getId() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				return account.getId();
 			}

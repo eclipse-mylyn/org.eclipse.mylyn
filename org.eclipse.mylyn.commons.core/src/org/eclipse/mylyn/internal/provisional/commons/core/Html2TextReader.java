@@ -68,8 +68,6 @@ public class Html2TextReader extends SubstitutionTextReader {
 		fgEntityLookup.put("quot", "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private int fCounter = 0;
-
 	private boolean fInParagraph = false;
 
 	private boolean fIsPreformattedText = false;
@@ -86,15 +84,6 @@ public class Html2TextReader extends SubstitutionTextReader {
 	 */
 	public Html2TextReader(Reader reader) {
 		super(new PushbackReader(reader));
-	}
-
-	@Override
-	public int read() throws IOException {
-		int c = super.read();
-		if (c != -1) {
-			++fCounter;
-		}
-		return c;
 	}
 
 	protected void startBold() {
@@ -276,9 +265,6 @@ public class Html2TextReader extends SubstitutionTextReader {
 	}
 
 	private String processPreformattedText(int c) {
-		if (c == '\r' || c == '\n') {
-			fCounter++;
-		}
 		return null;
 	}
 

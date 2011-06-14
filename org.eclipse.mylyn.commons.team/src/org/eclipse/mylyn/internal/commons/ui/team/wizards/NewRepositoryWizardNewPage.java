@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +86,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	private WizardPatternFilter filteredTreeFilter;
 
 	//Keep track of the wizards we have previously selected
-	private final Hashtable selectedWizards = new Hashtable();
+	private final Hashtable<IWizardDescriptor, WorkbenchWizardNode> selectedWizards = new Hashtable<IWizardDescriptor, WorkbenchWizardNode>();
 
 	private IDialogSettings settings;
 
@@ -99,7 +98,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	private CLabel descImageCanvas;
 
-	private final Map imageTable = new HashMap();
+	private final Map<ImageDescriptor, Image> imageTable = new HashMap<ImageDescriptor, Image>();
 
 	private IWizardDescriptor selectedElement;
 
@@ -167,7 +166,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	 * Remove all primary wizards that are not in the wizard collection
 	 */
 	private void trimPrimaryWizards() {
-		ArrayList newPrimaryWizards = new ArrayList(primaryWizards.length);
+		ArrayList<IWizardDescriptor> newPrimaryWizards = new ArrayList<IWizardDescriptor>(primaryWizards.length);
 
 		if (wizardCategories == null) {
 			return;//No categories so nothing to trim
@@ -437,7 +436,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 							// 'show all' state but not the 'no show all' state
 							// (because they didnt exist).
 							Object[] newExpanded = filteredTree.getViewer().getExpandedElements();
-							List deltaList = new ArrayList(Arrays.asList(delta));
+							List<Object> deltaList = new ArrayList<Object>(Arrays.asList(delta));
 							deltaList.removeAll(Arrays.asList(newExpanded));
 						}
 					} finally {
@@ -471,8 +470,8 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 			 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 			 */
 			public void widgetDisposed(DisposeEvent e) {
-				for (Iterator i = imageTable.values().iterator(); i.hasNext();) {
-					((Image) i.next()).dispose();
+				for (Object element : imageTable.values()) {
+					((Image) element).dispose();
 				}
 				imageTable.clear();
 			}
@@ -489,7 +488,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 			return;
 		}
 
-		List categoriesToExpand = new ArrayList(expandedCategoryPaths.length);
+		List<IWizardCategory> categoriesToExpand = new ArrayList<IWizardCategory>(expandedCategoryPaths.length);
 
 		if (wizardCategories != null) {
 			for (String expandedCategoryPath : expandedCategoryPaths) {
@@ -606,14 +605,14 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	 */
 	protected void storeExpandedCategories() {
 		Object[] expandedElements = filteredTree.getViewer().getExpandedElements();
-		List expandedElementPaths = new ArrayList(expandedElements.length);
+		List<String> expandedElementPaths = new ArrayList<String>(expandedElements.length);
 		for (int i = 0; i < expandedElements.length; ++i) {
 			if (expandedElements[i] instanceof IWizardCategory) {
 				expandedElementPaths.add(((IWizardCategory) expandedElements[i]).getPath().toString());
 			}
 		}
 		settings.put(STORE_EXPANDED_CATEGORIES_ID,
-				(String[]) expandedElementPaths.toArray(new String[expandedElementPaths.size()]));
+				expandedElementPaths.toArray(new String[expandedElementPaths.size()]));
 	}
 
 	/**
@@ -658,7 +657,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 				GridData data = (GridData) descImageCanvas.getLayoutData();
 				data.widthHint = SWT.DEFAULT;
 				data.heightHint = SWT.DEFAULT;
-				Image image = (Image) imageTable.get(descriptor);
+				Image image = imageTable.get(descriptor);
 				if (image == null) {
 					image = descriptor.createImage(false);
 					imageTable.put(descriptor, image);
@@ -707,7 +706,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 		selectedElement = selectedObject;
 		WorkbenchWizardNode selectedNode;
 		if (selectedWizards.containsKey(selectedObject)) {
-			selectedNode = (WorkbenchWizardNode) selectedWizards.get(selectedObject);
+			selectedNode = selectedWizards.get(selectedObject);
 		} else {
 			selectedNode = new WorkbenchWizardNode(page, selectedObject) {
 				@Override
