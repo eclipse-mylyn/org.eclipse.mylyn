@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -50,8 +51,31 @@ public class CreateGistHandler extends AbstractHandler {
 		return !GistConnectorUi.getRepositories().isEmpty();
 	}
 
+	/**
+	 * TODO replace this with HandlerUtil.getActiveEditorInput(ExecutionEvent)
+	 * as soon as we don't support Eclipse 3.6 anymore copied from HandlerUtil
+	 * in 3.7 to be able to run this on 3.6
+	 *
+	 * Return the input of the active editor.
+	 *
+	 * @param event
+	 *            The execution event that contains the application context
+	 * @return the input of the active editor, or <code>null</code>.
+	 */
+	private static IEditorInput getActiveEditorInput(ExecutionEvent event) {
+		Object o = HandlerUtil.getVariable(event,
+				ISources.ACTIVE_EDITOR_INPUT_NAME);
+		if (o instanceof IEditorInput) {
+			return (IEditorInput) o;
+		}
+		return null;
+	}
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorInput input = HandlerUtil.getActiveEditorInput(event);
+		// TODO replace this with
+		// HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon
+		// as we don't support Eclipse 3.6 anymore
+		IEditorInput input = getActiveEditorInput(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection == null || selection.isEmpty())
 			selection = HandlerUtil.getActiveMenuSelection(event);
