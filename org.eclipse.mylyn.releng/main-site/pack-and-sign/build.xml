@@ -59,7 +59,9 @@
 	  <param name="site" value="${projectDir}/site"/>
 	</antcall>
 
+	<!-- does not work
 	<antcall target="add-mirrors-url"/>
+	-->
 
 	<antcall target="publish"/>
 
