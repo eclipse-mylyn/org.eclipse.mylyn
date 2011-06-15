@@ -24,7 +24,7 @@ public class GitHubResponse {
 	/**
 	 * Create response
 	 * 
-	 * @param method
+	 * @param response
 	 * @param body
 	 */
 	public GitHubResponse(HttpResponse response, Object body) {

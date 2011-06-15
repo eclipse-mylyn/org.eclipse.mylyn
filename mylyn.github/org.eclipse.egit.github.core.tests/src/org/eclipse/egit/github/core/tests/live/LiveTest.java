@@ -10,19 +10,19 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.http.HttpHost;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.junit.Before;
 
 /**
  * Base live test class.
  */
-public abstract class LiveTest extends TestCase {
+public abstract class LiveTest {
 
 	/**
 	 * Configured client
@@ -67,11 +67,16 @@ public abstract class LiveTest extends TestCase {
 		return configure(client);
 	}
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
+	@Before
 	public void setUp() throws Exception {
 		String testUrl = System.getProperty("github.test.url");
 		this.client = createClient(testUrl);
+	}
+
+	/**
+	 * Check authenticated user is present
+	 */
+	public void checkUser() {
+		assertNotNull("Test requires authenticated user", client.getUser());
 	}
 }

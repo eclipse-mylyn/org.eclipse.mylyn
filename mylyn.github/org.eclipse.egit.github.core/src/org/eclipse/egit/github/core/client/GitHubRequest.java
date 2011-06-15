@@ -11,7 +11,14 @@
 package org.eclipse.egit.github.core.client;
 
 import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  * GitHub API request class.
@@ -24,13 +31,38 @@ public class GitHubRequest {
 
 	private Type type;
 
-	private int page = 1;
-
 	/**
 	 * @return uri
 	 */
 	public String getUri() {
-		return this.uri;
+		return uri;
+	}
+
+	/**
+	 * Get name value pairs for data map.
+	 * 
+	 * @param data
+	 * @return name value pair array
+	 */
+	protected List<NameValuePair> getPairs(Map<String, String> data) {
+		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
+		if (data != null && !data.isEmpty())
+			for (Entry<String, String> entry : data.entrySet())
+				pairs.add(new BasicNameValuePair(entry.getKey(), entry
+						.getValue()));
+		return pairs;
+	}
+
+	/**
+	 * Generate full uri
+	 * 
+	 * @return uri
+	 */
+	public String generateUri() {
+		if (uri.indexOf('?') != -1)
+			return uri;
+		String params = URLEncodedUtils.format(getPairs(getParams()), null);
+		return uri + '?' + params;
 	}
 
 	/**
@@ -54,7 +86,7 @@ public class GitHubRequest {
 	 * @return params
 	 */
 	public Map<String, String> getParams() {
-		return this.params;
+		return params;
 	}
 
 	/**
@@ -70,7 +102,7 @@ public class GitHubRequest {
 	 * @return type
 	 */
 	public Type getType() {
-		return this.type;
+		return type;
 	}
 
 	/**
@@ -81,21 +113,4 @@ public class GitHubRequest {
 		this.type = type;
 		return this;
 	}
-
-	/**
-	 * @return page
-	 */
-	public int getPage() {
-		return this.page;
-	}
-
-	/**
-	 * @param page
-	 * @return this request
-	 */
-	public GitHubRequest setPage(int page) {
-		this.page = page;
-		return this;
-	}
-
 }

@@ -10,12 +10,20 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Live repository test
@@ -27,7 +35,8 @@ public class RepositoryTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetch() throws IOException {
+	@Test
+	public void fetchRepositories() throws IOException {
 		RepositoryService service = new RepositoryService(
 				createClient(IGitHubConstants.URL_API_V2));
 		List<Repository> repos = service.getRepositories("defunkt");
@@ -52,7 +61,9 @@ public class RepositoryTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testCreate() throws IOException {
+	@Test
+	@Ignore
+	public void createRepository() throws IOException {
 		assertNotNull("Client user is required", client.getUser());
 		RepositoryService service = new RepositoryService(
 				createClient(IGitHubConstants.URL_API_V2));

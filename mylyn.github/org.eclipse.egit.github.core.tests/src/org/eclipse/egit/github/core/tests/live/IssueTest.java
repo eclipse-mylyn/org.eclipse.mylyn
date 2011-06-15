@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,11 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.IResourceCollector;
 import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
-import org.eclipse.egit.github.core.client.PagedRequest;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.IssueService;
+import org.junit.Test;
 
 /**
  * 
@@ -33,7 +37,8 @@ public class IssueTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetch() throws IOException {
+	@Test
+	public void fetchIssue() throws IOException {
 		IssueService service = new IssueService(client);
 		Issue issue = service.getIssue("schacon", "showoff", "1");
 		assertNotNull(issue);
@@ -52,7 +57,8 @@ public class IssueTest extends LiveTest {
 	 * 
 	 * @throws IOException
 	 */
-	public void testFetchAll() throws IOException {
+	@Test
+	public void fetchAllIssues() throws IOException {
 		IssueService service = new IssueService(client);
 		List<Issue> issues = service.getIssues("schacon", "showoff",
 				Collections.singletonMap(IssueService.FILTER_STATE,
@@ -63,39 +69,39 @@ public class IssueTest extends LiveTest {
 	}
 
 	/**
-	 * Test limiting result size
+	 * Test paging of requests
 	 * 
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void testLimit() throws IOException {
-		IssueService service = new IssueService(client) {
-
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			protected <V> PagedRequest<V> createPagedRequest(
-					final IResourceCollector<V> collector) {
-				return super.createPagedRequest(new IResourceCollector() {
-
-					public boolean accept(int page, Collection response) {
-						collector.accept(page, response);
-						return false;
-					}
-				});
-			}
-
-		};
+	@Test
+	public void testPaging() throws Exception {
+		IssueService service = new IssueService(client);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(IssueService.FILTER_STATE, IssueService.STATE_CLOSED);
-		List<Issue> issues = service.getIssues("schacon", "showoff", params);
-		assertNotNull(issues);
-		assertTrue(issues.size() > 2);
-		params.put(IGitHubConstants.PARAM_PER_PAGE, "1");
-		issues = service.getIssues("schacon", "showoff", params);
-		assertNotNull(issues);
-		assertEquals(1, issues.size());
-		params.put(IGitHubConstants.PARAM_PER_PAGE, "2");
-		issues = service.getIssues("schacon", "showoff", params);
-		assertNotNull(issues);
-		assertEquals(2, issues.size());
+		PageIterator<Issue> iterator = service.pageIssues("schacon", "showoff",
+				params, 1);
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+		Collection<Issue> page = iterator.next();
+		int pages = iterator.getLastPage();
+		int read = 1;
+		assertNotNull(page);
+		assertEquals(1, page.size());
+		assertNotNull(iterator.getRequest());
+		assertNotNull(iterator.getNextUri());
+		assertTrue(iterator.getNextPage() > 1);
+		assertNotNull(iterator.getLastUri());
+		assertTrue(iterator.getLastPage() > iterator.getNextPage());
+		assertTrue(iterator.hasNext());
+		Collection<Issue> page2 = iterator.next();
+		read++;
+		assertNotNull(page2);
+		assertFalse(page.equals(page2));
+		while (iterator.hasNext()) {
+			iterator.next();
+			read++;
+		}
+		assertEquals(pages, read);
 	}
 
 }

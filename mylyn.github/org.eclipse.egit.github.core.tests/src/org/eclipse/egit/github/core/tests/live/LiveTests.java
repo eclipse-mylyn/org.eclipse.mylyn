@@ -18,8 +18,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * All tests against a live GitHub instance.
  */
 @RunWith(Suite.class)
-@SuiteClasses({ GistTest.class, IssueTest.class, MilestoneTest.class,
-		PullRequestTest.class, RepositoryTest.class })
+@SuiteClasses({ GistTest.class, IssueTest.class, LabelTest.class,
+		MilestoneTest.class, OrganizationTest.class, PullRequestTest.class,
+		RepositoryTest.class, TeamTest.class, UserTest.class })
 public class LiveTests {
 
 }
