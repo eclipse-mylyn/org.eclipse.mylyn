@@ -26,6 +26,11 @@ public interface IGitHubConstants {
 	String SEGMENT_SHOW = "/show"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_SEARCH
+	 */
+	String SEGMENT_SEARCH = "/search"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_ORGANIZATIONS
 	 */
 	String SEGMENT_ORGANIZATIONS = "/organizations"; //$NON-NLS-1$
@@ -61,9 +66,29 @@ public interface IGitHubConstants {
 	String SEGMENT_GISTS = "/gists"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_STARRED
+	 */
+	String SEGMENT_STARRED = "/starred"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_STAR
+	 */
+	String SEGMENT_STAR = "/star"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_PUBLIC
+	 */
+	String SEGMENT_PUBLIC = "/public"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_PULLS
 	 */
 	String SEGMENT_PULLS = "/pulls"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_USER
+	 */
+	String SEGMENT_USER = "/user"; //$NON-NLS-1$
 
 	/**
 	 * SEGMENT_USERS
@@ -74,6 +99,36 @@ public interface IGitHubConstants {
 	 * SEGMENT_CREATE
 	 */
 	String SEGMENT_CREATE = "/create"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_FOLLOWERS
+	 */
+	String SEGMENT_FOLLOWERS = "/followers"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_FOLLOWERS
+	 */
+	String SEGMENT_FOLLOWING = "/following"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_ORGS
+	 */
+	String SEGMENT_ORGS = "/orgs"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_MEMBERS
+	 */
+	String SEGMENT_MEMBERS = "/members"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_PUBLIC_MEMBERS
+	 */
+	String SEGMENT_PUBLIC_MEMBERS = "/public_members"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_TEAMS
+	 */
+	String SEGMENT_TEAMS = "/teams"; //$NON-NLS-1$
 
 	/**
 	 * SEGMENT_V2_API

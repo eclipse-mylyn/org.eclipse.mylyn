@@ -20,10 +20,10 @@ import java.util.Map;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.ListResourceCollector;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -58,6 +58,41 @@ public class GistService extends GitHubService {
 	}
 
 	/**
+	 * Get starred gists for currently authenticated user
+	 * 
+	 * @return list of gists
+	 * @throws IOException
+	 */
+	public List<Gist> getStarredGists() throws IOException {
+		PagedRequest<Gist> request = createPagedRequest();
+		request.setUri(IGitHubConstants.SEGMENT_GISTS
+				+ IGitHubConstants.SEGMENT_STARRED);
+		request.setType(new TypeToken<List<Gist>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Create user gist paged request
+	 * 
+	 * @param user
+	 * @param start
+	 * @param size
+	 * @return request
+	 */
+	protected PagedRequest<Gist> createUserGistRequest(String user, int start,
+			int size) {
+		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
+		uri.append('/').append(user);
+		uri.append(IGitHubConstants.SEGMENT_GISTS);
+		PagedRequest<Gist> request = createPagedRequest(start, size);
+		request.setUri(uri).setType(new TypeToken<List<Gist>>() {
+		}.getType());
+		return request;
+	}
+
+	/**
 	 * Get gists for specified user
 	 * 
 	 * @param user
@@ -65,16 +100,85 @@ public class GistService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Gist> getGists(String user) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
-		uri.append('/').append(user);
-		uri.append(IGitHubConstants.SEGMENT_GISTS);
-		ListResourceCollector<Gist> collector = new ListResourceCollector<Gist>();
-		PagedRequest<Gist> request = new PagedRequest<Gist>(collector);
-		request.setUri(uri).setType(new TypeToken<List<Gist>>() {
+		PagedRequest<Gist> request = createUserGistRequest(user,
+				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		return getAll(request);
+	}
+
+	/**
+	 * Create page iterator for given user's gists
+	 * 
+	 * @param user
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageGists(final String user) {
+		return pageGists(user, PagedRequest.PAGE_SIZE);
+	}
+
+	/**
+	 * Create page iterator for given user's gists
+	 * 
+	 * @param user
+	 * @param size
+	 *            size of page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageGists(final String user, final int size) {
+		return pageGists(user, PagedRequest.PAGE_FIRST, size);
+	}
+
+	/**
+	 * Create page iterator for given user's gists
+	 * 
+	 * @param user
+	 * @param size
+	 *            size of page
+	 * @param start
+	 *            starting page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageGists(final String user, final int start,
+			final int size) {
+		PagedRequest<Gist> request = createUserGistRequest(user, start, size);
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Create page iterator for all public gists
+	 * 
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pagePublicGists() {
+		return pagePublicGists(PagedRequest.PAGE_SIZE);
+	}
+
+	/**
+	 * Create page iterator for all public gists
+	 * 
+	 * @param size
+	 *            size of page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pagePublicGists(final int size) {
+		return pagePublicGists(PagedRequest.PAGE_FIRST, size);
+	}
+
+	/**
+	 * Create page iterator for all public gists
+	 * 
+	 * @param start
+	 *            starting page number
+	 * @param size
+	 *            size of page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pagePublicGists(final int start, final int size) {
+		PagedRequest<Gist> request = createPagedRequest(start, size);
+		request.setUri(IGitHubConstants.SEGMENT_GISTS
+				+ IGitHubConstants.SEGMENT_PUBLIC);
+		request.setType(new TypeToken<List<Gist>>() {
 		}.getType());
-		getAll(request);
-		return collector.getResources();
+		return createPageIterator(request);
 	}
 
 	/**
@@ -138,12 +242,79 @@ public class GistService extends GitHubService {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
-		ListResourceCollector<Comment> collector = new ListResourceCollector<Comment>();
-		PagedRequest<Comment> request = new PagedRequest<Comment>(collector);
+		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri).setType(new TypeToken<List<Comment>>() {
 		}.getType());
-		getAll(request);
-		return collector.getResources();
+		return getAll(request);
 	}
 
+	/**
+	 * Delete the Gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void deleteGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Delete the Gist comment with the given id
+	 * 
+	 * @param commentId
+	 * @throws IOException
+	 */
+	public void deleteComment(String commentId) throws IOException {
+		Assert.notNull("Gist comment id cannot be null", commentId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append('/').append(commentId);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Star the gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void starGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		client.put(uri.toString(), null, null);
+	}
+
+	/**
+	 * Unstar the gist with the given id
+	 * 
+	 * @param gistId
+	 * @throws IOException
+	 */
+	public void unstarGist(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Check if a gist is starred
+	 * 
+	 * @param gistId
+	 * @return true if starred, false if not starred
+	 * @throws IOException
+	 */
+	public boolean isStarred(String gistId) throws IOException {
+		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_GISTS);
+		uri.append('/').append(gistId);
+		uri.append(IGitHubConstants.SEGMENT_STAR);
+		return check(uri.toString());
+	}
 }
