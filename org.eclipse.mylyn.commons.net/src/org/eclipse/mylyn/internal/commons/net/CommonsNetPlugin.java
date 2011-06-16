@@ -79,12 +79,14 @@ public class CommonsNetPlugin extends Plugin {
 		CommonsNetPlugin.proxyService = proxyService;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private ServiceTracker tracker;
 
 	public CommonsNetPlugin() {
 		INSTANCE = this;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
