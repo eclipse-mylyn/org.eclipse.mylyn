@@ -5,11 +5,11 @@
   <parent>
     <artifactId>mylyn-docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.docs</groupId>
   <artifactId>org.eclipse.mylyn.wikitext.confluence.ui</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>1.6.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
