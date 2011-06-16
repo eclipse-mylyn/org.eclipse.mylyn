@@ -26,9 +26,9 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
+        <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
-        <version>0.10.0</version>
+        <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>
