@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn.reviews</groupId>
   <artifactId>mylyn-reviews-parent</artifactId>
-  <version>0.8.0-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -63,7 +63,7 @@
 	<repository>
 	  <id>egit</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/egit/updates/</url>
+	  <url>http://download.eclipse.org/egit/staging/v1.0.0.201106090707-r</url>
 	</repository>
   </repositories>
 

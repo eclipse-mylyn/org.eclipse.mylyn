@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.eclipse.mylyn.reviews</groupId>
     <artifactId>mylyn-reviews-parent</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.reviews</groupId>
   <artifactId>mylyn-reviews-tasks-parent</artifactId>
-  <version>0.8.0-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>org.eclipse.mylyn.reviews.tasks</module>
