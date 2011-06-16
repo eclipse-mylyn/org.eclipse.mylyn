@@ -21,7 +21,7 @@ BUILD=$2
 
 SRC=/home/data/httpd/download.eclipse.org/mylyn/archive/$MAJOR/$BUILD
 OUT=/home/data/httpd/download.eclipse.org/mylyn/archive/$MAJOR/mylyn-$MAJOR-api.zip
-TMP=/shared/tools/mylyn/tmp/profile
+TMP=$HOME/tmp/profile
 
 rm -rf $TMP || true
 mkdir -p $TMP
