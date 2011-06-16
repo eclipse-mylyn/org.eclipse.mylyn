@@ -5,11 +5,11 @@
   <parent>
     <artifactId>mylyn-builds-parent</artifactId>
     <groupId>org.eclipse.mylyn.builds</groupId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn.builds</groupId>
   <artifactId>org.eclipse.mylyn.hudson.core</artifactId>
-  <version>0.8.0-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
