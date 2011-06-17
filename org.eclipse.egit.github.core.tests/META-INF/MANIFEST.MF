@@ -8,11 +8,13 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: com.google.gson;version="[1.6.0,2.0.0)",
  com.google.gson.reflect;version="[1.6.0,2.0.0)",
  org.apache.http;version="[4.1.0,5.0.0)",
+ org.eclipse.egit.github.core;version="[1.0.0,1.1.0)",
+ org.eclipse.egit.github.core.client;version="[1.0.0,1.1.0)",
+ org.eclipse.egit.github.core.service;version="[1.0.0,1.1.0)",
  org.mockito;version="[1.8.4,2.0.0)",
  org.mockito.runners;version="[1.8.4,2.0.0)",
  org.mockito.stubbing;version="[1.8.4,2.0.0)"
-Require-Bundle: org.eclipse.egit.github.core;bundle-version="[1.0.0,1.1.0)",
- org.junit;bundle-version="[4.8.1,5.0.0)",
+Require-Bundle: org.junit;bundle-version="[4.8.1,5.0.0)",
  org.hamcrest;bundle-version="[1.1.0,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)"
 Bundle-Vendor: %providerName
