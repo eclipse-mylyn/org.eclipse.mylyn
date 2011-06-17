@@ -22,6 +22,12 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
  */
 public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 
+	private static final String OPTION_MAX_LEVEL = "maxLevel";//$NON-NLS-1$
+
+	private static final String OPTION_STYLE = "style"; //$NON-NLS-1$
+
+	private static final String OPTION_CLASS = "class"; //$NON-NLS-1$
+
 	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
@@ -45,13 +51,15 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 						String key = keyValue[0].trim();
 						String value = keyValue[1].trim();
 
-						if (key.equals("style")) { //$NON-NLS-1$
+						if (key.equals(OPTION_STYLE)) {
 							setStyle(value);
-						} else if (key.equals("maxLevel")) { //$NON-NLS-1$
+						} else if (key.equals(OPTION_MAX_LEVEL)) {
 							try {
 								maxLevel = Integer.parseInt(value);
 							} catch (NumberFormatException e) {
 							}
+						} else if (key.equals(OPTION_CLASS)) {
+							setCssClass(value);
 						}
 					}
 				}

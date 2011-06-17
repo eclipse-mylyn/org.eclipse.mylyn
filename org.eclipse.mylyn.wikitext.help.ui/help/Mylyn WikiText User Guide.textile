@@ -577,6 +577,17 @@ bc..
  
  p. a paragraph starts
 
+
+h2. Textile Extensions
+
+Mylyn WikiText adds the following extensions to Textile:
+
+* @{toc}@ - emit a table of contents.  Parameters may be specified as follows: 
+** @{toc:style=circle}@ Emit with list-style=circle
+** @{toc:maxLevel=2}@ Emit with heading levels up to and including h2.
+** @{toc:class=tableOfContents}@ Emit with CSS class of "tableOfContents".  Defaults to "toc" if unspecified.
+* @{glossary}@ - emit a glossary of terms in a definition list.  Glossary terms are specified using Textile syntax for acronyms.
+
 h2. Examples
 
 This document was written in Textile markup.  The original source code for this document "is available here":http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn.wikitext.ui/help/Mylyn%20WikiText%20User%20Guide.textile?root=Tools_Project&view=markup

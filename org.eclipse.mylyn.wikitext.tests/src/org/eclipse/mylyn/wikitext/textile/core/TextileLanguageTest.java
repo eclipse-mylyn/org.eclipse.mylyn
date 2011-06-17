@@ -1192,6 +1192,22 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<h3 id=\"Subhead4\">"));
 	}
 
+	public void testTableOfContentsWithNoClass() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"toc\""));
+	}
+
+	public void testTableOfContentsWithClass() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"test\""));
+	}
+
 	public void testTableOfContentsWithMaxLevel() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:maxLevel=2}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
