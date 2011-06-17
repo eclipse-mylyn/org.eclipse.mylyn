@@ -46,6 +46,7 @@
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository</orbit-site>
+    <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
   </properties>
 
     <modules>

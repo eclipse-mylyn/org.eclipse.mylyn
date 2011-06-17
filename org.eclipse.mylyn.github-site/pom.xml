@@ -97,12 +97,12 @@
                    <tasks>
                      <delete includeemptydirs="false">
                        <fileset
-                         dir="/home/data/httpd/download.eclipse.org/egit/github/updates-nightly">
+                         dir="${download-publish-path}">
                          <include name="**" />
                        </fileset>
                      </delete>
                      <copy includeemptydirs="false"
-                       todir="/home/data/httpd/download.eclipse.org/egit/github/updates-nightly">
+                       todir="${download-publish-path}">
                        <fileset dir="target/checksumFix">
                          <include name="**" />
                        </fileset>
