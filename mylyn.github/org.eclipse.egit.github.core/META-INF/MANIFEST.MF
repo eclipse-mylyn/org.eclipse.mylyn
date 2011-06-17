@@ -23,7 +23,7 @@ Import-Package: com.google.gson;version="[1.6.0,2.0.0)",
  org.apache.http.impl.conn;version="[4.1.0,5.0.0)",
  org.apache.http.message;version="[4.1.0,5.0.0)",
  org.apache.http.protocol;version="[4.1.0,5.0.0)"
-Export-Package: org.eclipse.egit.github.core,
- org.eclipse.egit.github.core.client,
- org.eclipse.egit.github.core.service,
- org.eclipse.egit.github.core.util
+Export-Package: org.eclipse.egit.github.core;version="1.0.0",
+ org.eclipse.egit.github.core.client;version="1.0.0",
+ org.eclipse.egit.github.core.service;version="1.0.0",
+ org.eclipse.egit.github.core.util;version="1.0.0"
