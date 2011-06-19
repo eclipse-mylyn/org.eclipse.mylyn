@@ -33,6 +33,8 @@ public class TaskComment implements ITaskComment {
 
 	private int number;
 
+	private String commentID;
+
 	private final ITask task;
 
 	private final TaskAttribute taskAttribute;
@@ -122,4 +124,11 @@ public class TaskComment implements ITaskComment {
 		this.isPrivate = isPrivate;
 	}
 
+	public void setCommentID(String commentID) {
+		this.commentID = commentID;
+	}
+
+	public String getCommentID() {
+		return commentID;
+	}
 }

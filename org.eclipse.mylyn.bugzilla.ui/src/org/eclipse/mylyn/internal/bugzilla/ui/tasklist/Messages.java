@@ -89,6 +89,10 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_Error_updating_repository_configuration;
 
+	public static String BugzillaRepositorySettingsPage_insiderGroup;
+
+	public static String BugzillaRepositorySettingsPage_insiderGroup_ToolTip;
+
 	public static String BugzillaRepositorySettingsPage_local_users_enabled;
 
 	public static String BugzillaRepositorySettingsPage_override_auto_detection_of_platform;

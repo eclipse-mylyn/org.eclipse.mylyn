@@ -61,7 +61,7 @@ public class BugzillaTaskCompletionTest extends TestCase {
 		taskData.getRoot()
 				.createAttribute(BugzillaAttribute.BUG_STATUS.getKey())
 				.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
-		TaskAttribute attrComment = taskData.getRoot().createAttribute("commentId");
+		TaskAttribute attrComment = taskData.getRoot().createAttribute(BugzillaAttribute.COMMENTID.getKey());
 		attrComment.getMetaData().setType(TaskAttribute.TYPE_COMMENT);
 		TaskAttribute attrCreationDate = attrComment.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrCreationDate.setValue("2009-12-11 12:00");
@@ -81,7 +81,7 @@ public class BugzillaTaskCompletionTest extends TestCase {
 				BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
 		TaskAttribute status = taskData.getRoot().createAttribute(BugzillaAttribute.BUG_STATUS.getKey());
 		status.setValue("REOPENED");
-		TaskAttribute attrComment = taskData.getRoot().createAttribute("commentId");
+		TaskAttribute attrComment = taskData.getRoot().createAttribute(BugzillaAttribute.COMMENTID.getKey());
 		attrComment.getMetaData().setType(TaskAttribute.TYPE_COMMENT);
 		TaskAttribute attrCreationDate = attrComment.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrCreationDate.setValue("2008-12-11 12:00");

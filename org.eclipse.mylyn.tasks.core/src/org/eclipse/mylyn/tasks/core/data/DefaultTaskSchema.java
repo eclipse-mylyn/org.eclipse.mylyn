@@ -154,4 +154,10 @@ public final class DefaultTaskSchema extends AbstractTaskSchema {
 	public final Field TASK_URL = createField(TaskAttribute.TASK_URL, Messages.DefaultTaskSchema_URL_Label,
 			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
+	/**
+	 * @since 3.7
+	 */
+	public final Field COMMENT_ID = createField(TaskAttribute.COMMENT_ID, Messages.DefaultTaskSchema_ID, TaskAttribute.TYPE_INTEGER,
+			Flag.READ_ONLY);
+
 }

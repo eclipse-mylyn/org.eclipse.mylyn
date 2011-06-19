@@ -40,6 +40,8 @@ public class Messages extends NLS {
 
 	public static String DefaultTaskSchema_Filename_Label;
 
+	public static String DefaultTaskSchema_ID;
+
 	public static String DefaultTaskSchema_ID_Label;
 
 	public static String DefaultTaskSchema_Key_Label;

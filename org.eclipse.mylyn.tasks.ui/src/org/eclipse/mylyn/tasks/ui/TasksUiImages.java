@@ -198,6 +198,17 @@ public class TasksUiImages {
 	 */
 	public static final ImageDescriptor BANNER_REPORT_BUG = create(WIZBAN, "bug-wizard.gif"); //$NON-NLS-1$
 
+	/**
+	 * @since 3.7
+	 */
+
+	public static final ImageDescriptor LOCK_CLOSE = create(TOOL, "lock.gif"); //$NON-NLS-1$
+
+	/**
+	 * @since 3.7
+	 */
+	public static final ImageDescriptor LOCK_OPEN = create(TOOL, "unlock.gif"); //$NON-NLS-1$
+
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;

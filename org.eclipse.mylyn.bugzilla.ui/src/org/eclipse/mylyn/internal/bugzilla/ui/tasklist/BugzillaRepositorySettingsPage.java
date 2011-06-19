@@ -123,6 +123,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Button use_see_also;
 
+	private Button insidergroup;
+
 	public BugzillaRepositorySettingsPage(TaskRepository taskRepository) {
 		super(TITLE, DESCRIPTION, taskRepository);
 		setNeedsAnonymousLogin(true);
@@ -259,6 +261,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaRepositoryConnector.getLanguageSettings()) {
 			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
+		}
+		Label insidergroupLabel = new Label(parent, SWT.NONE);
+		insidergroupLabel.setText(Messages.BugzillaRepositorySettingsPage_insiderGroup);
+		insidergroupLabel.setToolTipText(Messages.BugzillaRepositorySettingsPage_insiderGroup_ToolTip);
+		insidergroup = new Button(parent, SWT.CHECK);
+		if (repository != null) {
+			boolean insider = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP));
+			insidergroup.setSelection(insider);
 		}
 
 		Group workflowGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
@@ -721,6 +731,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				Boolean.toString(!usebugaliases.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
 				Boolean.toString(!use_see_also.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, Boolean.toString(insidergroup.getSelection()));
 	}
 
 	@Override

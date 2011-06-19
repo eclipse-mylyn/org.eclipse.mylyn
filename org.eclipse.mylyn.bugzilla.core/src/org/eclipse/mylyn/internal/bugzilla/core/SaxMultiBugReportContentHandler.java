@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -79,15 +80,23 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private final BugzillaRepositoryConnector connector;
 
+	private boolean useIsPrivate;
+
+	private final TaskAttributeMapper mapper;
+
 	private final SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //$NON-NLS-1$
 
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
 			BugzillaRepositoryConnector connector) {
+		this.mapper = mapper;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;
 		this.collector = collector;
 		this.connector = connector;
+		TaskRepository taskRepository = mapper.getTaskRepository();
+		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP);
+		useIsPrivate = (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
 	}
 
 	public boolean errorOccurred() {
@@ -666,14 +675,23 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_COMMENT + commentNum);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
-		taskComment.setCommentId(commentNum + ""); //$NON-NLS-1$
+		taskComment.setCommentId(comment.id + ""); //$NON-NLS-1$
 		taskComment.setNumber(commentNum);
 		IRepositoryPerson author = repositoryTaskData.getAttributeMapper()
 				.getTaskRepository()
 				.createPerson(comment.author);
 		author.setName(comment.authorName);
 		taskComment.setAuthor(author);
-		taskComment.setIsPrivate(comment.isPrivate.equals("1")); //$NON-NLS-1$
+		if (useIsPrivate) {
+			taskComment.setIsPrivate(comment.isPrivate.equals("1")); //$NON-NLS-1$
+		} else {
+			if (comment.isPrivate.equals("1")) { //$NON-NLS-1$
+				TaskRepository taskRepository = mapper.getTaskRepository();
+				taskRepository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, "true"); //$NON-NLS-1$
+				useIsPrivate = true;
+			}
+			taskComment.setIsPrivate(null);
+		}
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrTimestamp.setValue(comment.createdTimeStamp);
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));

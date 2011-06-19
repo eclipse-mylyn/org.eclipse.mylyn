@@ -177,6 +177,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return BugzillaAttribute.THETEXT.getKey();
 		} else if (key.equals(TaskAttribute.COMMENT_ISPRIVATE)) {
 			return BugzillaAttribute.IS_PRIVATE.getKey();
+		} else if (key.equals(TaskAttribute.COMMENT_ID)) {
+			return BugzillaAttribute.COMMENTID.getKey();
 		} else if (key.equals(TaskAttribute.DATE_CREATION)) {
 			return BugzillaAttribute.CREATION_TS.getKey();
 		} else if (key.equals(TaskAttribute.DESCRIPTION)) {

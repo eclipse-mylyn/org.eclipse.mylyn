@@ -266,6 +266,12 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_PARAM_USE_SEE_ALSO = "bugzilla.param.use_see_also"; //$NON-NLS-1$
 
+	public static final String BUGZILLA_INSIDER_GROUP = "bugzilla.insider.group"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PREFIX_DEFINED_ISPRIVATE = "defined_isprivate_"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_PREFIX_ISPRIVATE = "isprivate_"; //$NON-NLS-1$
+
 	// Bugzilla Task Attribute Editor Types 
 
 	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords"; //$NON-NLS-1$

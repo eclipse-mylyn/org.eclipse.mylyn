@@ -39,14 +39,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -290,7 +287,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	}
 
-	private class CommentViewer {
+	protected class CommentViewer {
 
 		private Composite buttonComposite;
 
@@ -376,9 +373,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonComposite.setVisible(commentComposite.isExpanded());
 
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-			ReplyToCommentAction replyAction = new ReplyToCommentAction(this, taskComment);
-			replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
-			toolBarManager.add(replyAction);
+			addActionsToToolbar(toolBarManager, taskComment, this);
 			toolBarManager.createControl(buttonComposite);
 
 			return buttonComposite;
@@ -414,30 +409,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				sb.append(", "); //$NON-NLS-1$
 				sb.append(EditorUtil.formatDateTime(taskComment.getCreationDate()));
 			}
-//			We need the CommentID for change the value of private
-//			this is only for an test included
-//			Maybe we need this for bug# 284026
-//			TaskAttribute commentID = taskComment.getTaskAttribute().getAttribute("commentid");
-//			if (commentID != null) {
-//				String value = commentID.getValue();
-//				sb.append(" (ID " + value + ")");
-//			}
-			if (taskComment.getIsPrivate() != null && taskComment.getIsPrivate()) {
-				if (privateFont == null) {
-					Font a = formHyperlink.getFont();
-					FontData[] fd = a.getFontData();
-					for (FontData fontData : fd) {
-						fontData.setStyle(SWT.ITALIC | SWT.BOLD);
-					}
-					privateFont = new Font(formHyperlink.getDisplay(), fd);
-				}
-				formHyperlink.setFont(privateFont);
-				toolTipText = NLS.bind(Messages.TaskEditorCommentPart_Privat_Comment_ToolTip_Text, toolTipText);
-			} else {
-				formHyperlink.setFont(commentComposite.getFont());
-			}
 			formHyperlink.setToolTipText(toolTipText);
-
 			formHyperlink.setText(sb.toString());
 			formHyperlink.setEnabled(true);
 			formHyperlink.setUnderlined(false);
@@ -499,12 +471,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return commentAttribute;
 		}
 
-		@SuppressWarnings("unused")
 		public TaskComment getTaskComment() {
 			return taskComment;
 		}
 
-		@SuppressWarnings("unused")
 		public Control getControl() {
 			return commentComposite;
 		}
@@ -571,8 +541,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private CommentActionGroup actionGroup;
 
-	private Font privateFont;
-
 	private boolean suppressExpandViewers;
 
 	public TaskEditorCommentPart() {
@@ -583,6 +551,13 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		};
 		setPartName(Messages.TaskEditorCommentPart_Comments);
+	}
+
+	protected void addActionsToToolbar(ToolBarManager toolBarManager, final TaskComment taskComment,
+			CommentViewer commentViewer) {
+		ReplyToCommentAction replyAction = new ReplyToCommentAction(commentViewer, taskComment);
+		replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
+		toolBarManager.add(replyAction);
 	}
 
 	private void collapseAllComments() {
@@ -696,9 +671,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		super.dispose();
 		if (actionGroup != null) {
 			actionGroup.dispose();
-		}
-		if (privateFont != null) {
-			privateFont.dispose();
 		}
 	}
 

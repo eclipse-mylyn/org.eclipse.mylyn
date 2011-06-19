@@ -139,8 +139,6 @@ public class Messages extends NLS {
 
 	public static String TaskEditorCommentPart_Expand_Comments;
 
-	public static String TaskEditorCommentPart_Privat_Comment_ToolTip_Text;
-
 	public static String TaskEditorDescriptionPart_Description;
 
 	public static String TaskEditorDescriptionPart_Detector;

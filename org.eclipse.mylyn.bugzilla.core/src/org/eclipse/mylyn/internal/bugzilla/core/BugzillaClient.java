@@ -1458,6 +1458,24 @@ public class BugzillaClient {
 							fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-" //$NON-NLS-1$//$NON-NLS-2$
 									+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
 						}
+					} else if (id.startsWith(TaskAttribute.PREFIX_COMMENT)) {
+						TaskAttribute commentID = a.getAttribute(BugzillaAttribute.COMMENTID.getKey());
+						if (commentID != null) {
+							String valueID = commentID.getValue();
+							TaskAttribute definedIsPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
+									+ valueID);
+							if (definedIsPrivate != null) {
+								fields.put(definedIsPrivate.getId(), new NameValuePair(definedIsPrivate.getId(),
+										definedIsPrivate.getValue() != null ? definedIsPrivate.getValue() : "")); //$NON-NLS-1$
+							}
+							TaskAttribute isPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE
+									+ valueID);
+							if (isPrivate != null) {
+								fields.put(isPrivate.getId(), new NameValuePair(isPrivate.getId(),
+										isPrivate.getValue() != null ? isPrivate.getValue() : "")); //$NON-NLS-1$
+							}
+							continue;
+						}
 					} else if (id.startsWith("task.common.")) { //$NON-NLS-1$
 						// Don't post any remaining non-bugzilla specific attributes
 						continue;

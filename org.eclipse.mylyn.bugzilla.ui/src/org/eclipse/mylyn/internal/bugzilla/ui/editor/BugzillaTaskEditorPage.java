@@ -97,11 +97,16 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
-
+		boolean hasPartComments = false;
 		// remove unnecessary default editor parts
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
 				descriptors.remove(taskEditorPartDescriptor);
+				break;
+			}
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_COMMENTS)) {
+				descriptors.remove(taskEditorPartDescriptor);
+				hasPartComments = true;
 				break;
 			}
 		}
@@ -134,6 +139,15 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						}
 					}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_PLANNING)); //$NON-NLS-1$
 				}
+			}
+			if (hasPartComments) {
+				descriptors.add(new TaskEditorPartDescriptor(ID_PART_COMMENTS) {
+					@Override
+					public AbstractTaskEditorPart createPart() {
+						return new BugzillaTaskEditorCommentPart();
+					}
+				}.setPath(PATH_COMMENTS));
+
 			}
 		} catch (CoreException e) {
 			// ignore
