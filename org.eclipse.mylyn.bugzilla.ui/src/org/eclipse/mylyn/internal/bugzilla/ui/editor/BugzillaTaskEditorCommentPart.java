@@ -82,7 +82,8 @@ public class BugzillaTaskEditorCommentPart extends TaskEditorCommentPart {
 	@Override
 	protected void addActionsToToolbar(ToolBarManager toolBarManager, TaskComment taskComment,
 			CommentViewer commentViewer) {
-		if (taskComment.getIsPrivate() != null) {
+		String insidergroup = getModel().getTaskRepository().getProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP);
+		if (Boolean.parseBoolean(insidergroup)) {
 			LockAction lockAction = new LockAction(taskComment);
 			toolBarManager.add(lockAction);
 		}
