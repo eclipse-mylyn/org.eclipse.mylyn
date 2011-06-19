@@ -104,6 +104,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				descriptors.remove(taskEditorPartDescriptor);
 				break;
 			}
+		}
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_COMMENTS)) {
 				descriptors.remove(taskEditorPartDescriptor);
 				hasPartComments = true;
