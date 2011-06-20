@@ -42,13 +42,16 @@ public class TaskSelectionDialogWithRandom extends TaskSelectionDialog {
 
 	private boolean activateTask = false;
 
+	public TaskSelectionDialogWithRandom(Shell parent, boolean multi) {
+		super(parent, multi);
+	}
+
 	public TaskSelectionDialogWithRandom(Shell parent) {
 		super(parent);
 	}
 
 	@Override
 	protected void createAdditionalButtons(Composite parent) {
-
 		randomTaskButton = createButton(parent, RANDOM_ID, Messages.TaskSelectionDialog_Random_Task, false);
 		randomTaskButton.setToolTipText(Messages.TaskSelectionDialogWithRandom_Feeling_Lazy_Tooltip);
 		randomTaskButton.addSelectionListener(new SelectionListener() {

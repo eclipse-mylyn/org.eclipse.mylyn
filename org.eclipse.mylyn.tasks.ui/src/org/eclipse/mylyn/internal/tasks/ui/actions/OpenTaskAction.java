@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
+ *     Abner Ballardo - fixes for bug 349003
+ *     Tasktop Technologies - improvements 
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -23,6 +25,8 @@ import org.eclipse.ui.actions.ActionDelegate;
 
 /**
  * @author Willian Mitsuda
+ * @author Abner Ballardo
+ * @author Steffen Pingel
  */
 public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
 
@@ -34,7 +38,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 
 	@Override
 	public void run(IAction action) {
-		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
+		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell(), true);
 		dlg.setTitle(Messages.OpenTaskAction_Open_Task);
 		dlg.setMessage(Messages.OpenTaskAction_Select_a_task_to_open__);
 		dlg.setShowExtendedOpeningOptions(true);
@@ -43,13 +47,14 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			return;
 		}
 
-		Object result = dlg.getFirstResult();
-		if (result instanceof ITask) {
-			AbstractTask task = (AbstractTask) result;
-			if (dlg.getOpenInBrowser()) {
-				TasksUiUtil.openWithBrowser(task);
-			} else {
-				TasksUiInternal.refreshAndOpenTaskListElement(task);
+		for (Object result : dlg.getResult()) {
+			if (result instanceof ITask) {
+				AbstractTask task = (AbstractTask) result;
+				if (dlg.getOpenInBrowser()) {
+					TasksUiUtil.openWithBrowser(task);
+				} else {
+					TasksUiInternal.refreshAndOpenTaskListElement(task);
+				}
 			}
 		}
 	}
