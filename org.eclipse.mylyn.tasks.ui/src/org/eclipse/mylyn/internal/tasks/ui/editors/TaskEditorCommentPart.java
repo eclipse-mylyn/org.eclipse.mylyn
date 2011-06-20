@@ -409,6 +409,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				sb.append(", "); //$NON-NLS-1$
 				sb.append(EditorUtil.formatDateTime(taskComment.getCreationDate()));
 			}
+			formHyperlink.setFont(commentComposite.getFont());
 			formHyperlink.setToolTipText(toolTipText);
 			formHyperlink.setText(sb.toString());
 			formHyperlink.setEnabled(true);
