@@ -12,7 +12,7 @@ package org.eclipse.mylyn.internal.github.ui;
 
 import java.io.IOException;
 
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -88,7 +88,7 @@ public class RepositorySearchWizardPage extends WizardPage {
 							IGitHubConstants.PROTOCOL_HTTPS);
 					RepositoryService repositoryService = new RepositoryService(
 							client);
-					java.util.List<Repository> repositories = repositoryService
+					java.util.List<SearchRepository> repositories = repositoryService
 							.searchRepositories(searchForText.getText());
 					repoListViewer.setInput(repositories.toArray());
 				} catch (IOException ioException) {

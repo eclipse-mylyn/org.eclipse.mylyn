@@ -1,4 +1,4 @@
-/*******************************************************************************
+/******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
@@ -7,209 +7,128 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
- *******************************************************************************/
+ *****************************************************************************/
 package org.eclipse.egit.github.core;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
- * GitHub Repository class.
+ * Repository model class
  */
-public class Repository {
-
-	/**
-	 * Create repository from url.
-	 * 
-	 * @see Repository#createFromId(String)
-	 * @param url
-	 * @return repository or null if parsing fails
-	 */
-	public static Repository createFromUrl(URL url) {
-		return url != null ? createFromId(url.getPath()) : null;
-	}
-
-	/**
-	 * Create repository from id. The id is split on the '/' character and the
-	 * last two non-empty segments are interpreted to be the repository owner
-	 * and name.
-	 * 
-	 * @param id
-	 * @return repository
-	 */
-	public static Repository createFromId(String id) {
-		if (id == null)
-			return null;
-		String owner = null;
-		String name = null;
-		String[] segments = id.split("/"); //$NON-NLS-1$
-		for (int i = segments.length - 1; i >= 0; i--)
-			if (segments[i].length() > 0)
-				if (name == null)
-					name = segments[i];
-				else if (owner == null)
-					owner = segments[i];
-				else
-					break;
-
-		return owner != null && name != null ? new Repository(owner, name)
-				: null;
-	}
-
-	/**
-	 * Create from string url
-	 * 
-	 * @see Repository#createFromUrl(URL)
-	 * @param url
-	 * @return repository or null if it could not be parsed from url path
-	 */
-	public static Repository createFromUrl(String url) {
-		try {
-			return url != null ? createFromUrl(new URL(url)) : null;
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
+public class Repository implements IRepositoryIdProvider {
 
 	private boolean fork;
+
 	private boolean hasDownloads;
+
 	private boolean hasIssues;
+
 	private boolean hasWiki;
+
 	@SerializedName("private")
 	private boolean isPrivate;
 
 	private Date createdAt;
+
 	private Date pushedAt;
 
-	private String description;
-	private String homepage;
-	private String language;
-	private String name;
-	private String owner;
-	private String url;
-
 	private int forks;
+
 	private int openIssues;
+
 	private int size;
+
 	private int watchers;
 
-	/**
-	 * Create repository with owner and name
-	 * 
-	 * @param owner
-	 * @param name
-	 */
-	public Repository(String owner, String name) {
-		Assert.notNull("Owner cannot be null", owner); //$NON-NLS-1$
-		Assert.notEmpty("Owner cannot be empty", owner); //$NON-NLS-1$
-		Assert.notNull("Name cannot be null", name); //$NON-NLS-1$
-		Assert.notEmpty("Name cannot be empty", name); //$NON-NLS-1$
+	private String defaultBranch;
 
-		this.owner = owner;
-		this.name = name;
-	}
+	private String description;
 
-	/**
-	 * Create repository
-	 */
-	Repository() {
+	private String htmlUrl;
 
-	}
+	private String language;
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return getId().hashCode();
-	}
+	private String masterBranch;
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		else if (obj instanceof Repository)
-			return getId().equals(((Repository) obj).getId());
-		else
-			return false;
-	}
+	private String name;
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return getId();
-	}
+	private String url;
 
-	/**
-	 * Get unique identifier for repository
-	 * 
-	 * @return id
-	 */
-	public String getId() {
-		return this.owner + '/' + this.name;
-	}
-
-	/**
-	 * @return owner
-	 */
-	public String getOwner() {
-		return this.owner;
-	}
-
-	/**
-	 * @return name
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * @param name
-	 * @return this repository
-	 */
-	public Repository setName(String name) {
-		this.name = name;
-		return this;
-	}
+	private User owner;
 
 	/**
 	 * @return fork
 	 */
 	public boolean isFork() {
-		return this.fork;
+		return fork;
+	}
+
+	/**
+	 * @param fork
+	 * @return this repository
+	 */
+	public Repository setFork(boolean fork) {
+		this.fork = fork;
+		return this;
 	}
 
 	/**
 	 * @return hasDownloads
 	 */
 	public boolean isHasDownloads() {
-		return this.hasDownloads;
+		return hasDownloads;
+	}
+
+	/**
+	 * @param hasDownloads
+	 * @return this repository
+	 */
+	public Repository setHasDownloads(boolean hasDownloads) {
+		this.hasDownloads = hasDownloads;
+		return this;
 	}
 
 	/**
 	 * @return hasIssues
 	 */
 	public boolean isHasIssues() {
-		return this.hasIssues;
+		return hasIssues;
+	}
+
+	/**
+	 * @param hasIssues
+	 * @return this repository
+	 */
+	public Repository setHasIssues(boolean hasIssues) {
+		this.hasIssues = hasIssues;
+		return this;
 	}
 
 	/**
 	 * @return hasWiki
 	 */
 	public boolean isHasWiki() {
-		return this.hasWiki;
+		return hasWiki;
+	}
+
+	/**
+	 * @param hasWiki
+	 * @return this repository
+	 */
+	public Repository setHasWiki(boolean hasWiki) {
+		this.hasWiki = hasWiki;
+		return this;
 	}
 
 	/**
 	 * @return isPrivate
 	 */
 	public boolean isPrivate() {
-		return this.isPrivate;
+		return isPrivate;
 	}
 
 	/**
@@ -225,22 +144,119 @@ public class Repository {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return DateUtils.clone(createdAt);
+	}
+
+	/**
+	 * @param createdAt
+	 * @return this rdateepository
+	 */
+	public Repository setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
+		return this;
 	}
 
 	/**
 	 * @return pushedAt
 	 */
 	public Date getPushedAt() {
-		return this.pushedAt != null ? new Date(this.pushedAt.getTime()) : null;
+		return DateUtils.clone(pushedAt);
+	}
+
+	/**
+	 * @param pushedAt
+	 * @return this repository
+	 */
+	public Repository setPushedAt(Date pushedAt) {
+		this.pushedAt = DateUtils.clone(pushedAt);
+		return this;
+	}
+
+	/**
+	 * @return forks
+	 */
+	public int getForks() {
+		return forks;
+	}
+
+	/**
+	 * @param forks
+	 * @return this repository
+	 */
+	public Repository setForks(int forks) {
+		this.forks = forks;
+		return this;
+	}
+
+	/**
+	 * @return openIssues
+	 */
+	public int getOpenIssues() {
+		return openIssues;
+	}
+
+	/**
+	 * @param openIssues
+	 * @return this repository
+	 */
+	public Repository setOpenIssues(int openIssues) {
+		this.openIssues = openIssues;
+		return this;
+	}
+
+	/**
+	 * @return size
+	 */
+	public int getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size
+	 * @return this repository
+	 */
+	public Repository setSize(int size) {
+		this.size = size;
+		return this;
+	}
+
+	/**
+	 * @return watchers
+	 */
+	public int getWatchers() {
+		return watchers;
+	}
+
+	/**
+	 * @param watchers
+	 * @return this repository
+	 */
+	public Repository setWatchers(int watchers) {
+		this.watchers = watchers;
+		return this;
+	}
+
+	/**
+	 * @return defaultBranch
+	 */
+	public String getDefaultBranch() {
+		return defaultBranch;
+	}
+
+	/**
+	 * @param defaultBranch
+	 * @return this repository
+	 */
+	public Repository setDefaultBranch(String defaultBranch) {
+		this.defaultBranch = defaultBranch;
+		return this;
 	}
 
 	/**
 	 * @return description
 	 */
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	/**
@@ -253,18 +269,18 @@ public class Repository {
 	}
 
 	/**
-	 * @return homepage
+	 * @return htmlUrl
 	 */
-	public String getHomepage() {
-		return this.homepage;
+	public String getHtmlUrl() {
+		return htmlUrl;
 	}
 
 	/**
-	 * @param homepage
+	 * @param htmlUrl
 	 * @return this repository
 	 */
-	public Repository setHomepage(String homepage) {
-		this.homepage = homepage;
+	public Repository setHtmlUrl(String htmlUrl) {
+		this.htmlUrl = htmlUrl;
 		return this;
 	}
 
@@ -272,42 +288,95 @@ public class Repository {
 	 * @return language
 	 */
 	public String getLanguage() {
-		return this.language;
+		return language;
+	}
+
+	/**
+	 * @param language
+	 * @return this repository
+	 */
+	public Repository setLanguage(String language) {
+		this.language = language;
+		return this;
+	}
+
+	/**
+	 * @return masterBranch
+	 */
+	public String getMasterBranch() {
+		return masterBranch;
+	}
+
+	/**
+	 * @param masterBranch
+	 * @return this repository
+	 */
+	public Repository setMasterBranch(String masterBranch) {
+		this.masterBranch = masterBranch;
+		return this;
+	}
+
+	/**
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 * @return this repository
+	 */
+	public Repository setName(String name) {
+		this.name = name;
+		return this;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
-	 * @return forks
+	 * @param url
+	 * @return this repository
 	 */
-	public int getForks() {
-		return this.forks;
+	public Repository setUrl(String url) {
+		this.url = url;
+		return this;
 	}
 
 	/**
-	 * @return openIssues
+	 * @return owner
 	 */
-	public int getOpenIssues() {
-		return this.openIssues;
+	public User getOwner() {
+		return owner;
 	}
 
 	/**
-	 * @return size
+	 * @param owner
+	 * @return this repository
 	 */
-	public int getSize() {
-		return this.size;
+	public Repository setOwner(User owner) {
+		this.owner = owner;
+		return this;
 	}
 
 	/**
-	 * @return watchers
+	 * Generate id for this repository
+	 * 
+	 * @see IRepositoryIdProvider#generateId()
 	 */
-	public int getWatchers() {
-		return this.watchers;
+	public String generateId() {
+		final User owner = this.owner;
+		final String name = this.name;
+		if (owner == null || name == null || name.length() == 0)
+			return null;
+		final String login = owner.getLogin();
+		if (login == null || login.length() == 0)
+			return null;
+		return login + "/" + name;
 	}
-
 }

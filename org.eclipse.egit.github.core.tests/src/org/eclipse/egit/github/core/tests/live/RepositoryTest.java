@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,8 +37,7 @@ public class RepositoryTest extends LiveTest {
 	 */
 	@Test
 	public void fetchRepositories() throws IOException {
-		RepositoryService service = new RepositoryService(
-				createClient(IGitHubConstants.URL_API_V2));
+		RepositoryService service = new RepositoryService(client);
 		List<Repository> repos = service.getRepositories("defunkt");
 		assertNotNull(repos);
 		assertFalse(repos.isEmpty());
@@ -46,7 +45,6 @@ public class RepositoryTest extends LiveTest {
 			assertNotNull(repo);
 			assertNotNull(repo.getName());
 			assertNotNull(repo.getOwner());
-			assertNotNull(repo.getId());
 			assertNotNull(repo.getUrl());
 			assertNotNull(repo.getCreatedAt());
 			assertTrue(repo.getSize() >= 0);
@@ -65,10 +63,10 @@ public class RepositoryTest extends LiveTest {
 	@Ignore
 	public void createRepository() throws IOException {
 		assertNotNull("Client user is required", client.getUser());
-		RepositoryService service = new RepositoryService(
-				createClient(IGitHubConstants.URL_API_V2));
-		Repository repository = new Repository(client.getUser(), "test-create-"
-				+ System.currentTimeMillis());
+		RepositoryService service = new RepositoryService(client);
+		Repository repository = new Repository();
+		repository.setOwner(new User().setLogin(client.getUser()));
+		repository.setName("test-create-" + System.currentTimeMillis());
 		repository.setPrivate(true);
 		Repository created = service.createRepository(repository);
 		assertNotNull(created);

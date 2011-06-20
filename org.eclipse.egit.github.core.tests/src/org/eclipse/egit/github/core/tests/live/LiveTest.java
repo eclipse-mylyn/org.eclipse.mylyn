@@ -67,6 +67,11 @@ public abstract class LiveTest {
 		return configure(client);
 	}
 
+	/**
+	 * Set up live unit test
+	 * 
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		String testUrl = System.getProperty("github.test.url");

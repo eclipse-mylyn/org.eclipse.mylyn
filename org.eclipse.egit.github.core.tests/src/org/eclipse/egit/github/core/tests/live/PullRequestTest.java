@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.PullRequestDiscussion;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class PullRequestTest extends LiveTest {
 
 		User user = marker.getUser();
 		assertNotNull(user);
-		assertNotNull(user.getName());
+		assertNotNull(user.getLogin());
 
 		Repository repo = marker.getRepository();
 		assertNotNull(repo);
@@ -53,9 +53,8 @@ public class PullRequestTest extends LiveTest {
 	 */
 	@Test
 	public void fetch() throws IOException {
-		PullRequestService service = new PullRequestService(
-				createClient(IGitHubConstants.URL_API_V2));
-		PullRequest request = service.getPullRequest(new Repository(
+		PullRequestService service = new PullRequestService(client);
+		PullRequest request = service.getPullRequest(new SearchRepository(
 				"technoweenie", "faraday"), "15");
 		assertNotNull(request);
 		assertNotNull(request.getHtmlUrl());
@@ -63,9 +62,28 @@ public class PullRequestTest extends LiveTest {
 		assertNotNull(request.getPatchUrl());
 		checkMarker(request.getHead());
 		checkMarker(request.getBase());
+	}
 
-		List<PullRequestDiscussion> discussion = request.getDiscussion();
-		assertNotNull(discussion);
-		assertFalse(discussion.isEmpty());
+	/**
+	 * Test fetching all pull requests
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void fetchAll() throws IOException {
+		PullRequestService service = new PullRequestService(client);
+		List<PullRequest> requests = service.getPullRequests(
+				new SearchRepository("technoweenie", "faraday"),
+				IssueService.STATE_CLOSED);
+		assertNotNull(requests);
+		assertFalse(requests.isEmpty());
+		for (PullRequest request : requests) {
+			assertNotNull(request);
+			assertNotNull(request.getUpdatedAt());
+			assertNotNull(request.getCreatedAt());
+			assertNotNull(request.getHtmlUrl());
+			assertNotNull(request.getDiffUrl());
+			assertNotNull(request.getPatchUrl());
+		}
 	}
 }

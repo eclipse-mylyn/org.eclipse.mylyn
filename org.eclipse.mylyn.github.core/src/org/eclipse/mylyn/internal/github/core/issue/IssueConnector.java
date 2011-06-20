@@ -31,7 +31,7 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
@@ -108,7 +108,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	public List<Label> refreshLabels(TaskRepository repository)
 			throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
+		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		LabelService service = new LabelService(client);
 		try {
@@ -158,7 +158,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	public List<Milestone> refreshMilestones(TaskRepository repository)
 			throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
+		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		GitHubClient client = createClient(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
@@ -256,7 +256,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 
 		monitor.beginTask(Messages.IssueConector_TaskQuerying, statuses.size());
 		try {
-			Repository repo = GitHub.getRepository(repository
+			RepositoryId repo = GitHub.getRepository(repository
 					.getRepositoryUrl());
 
 			GitHubClient client = createClient(repository);
@@ -316,7 +316,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
-		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
+		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 
 		try {
 			GitHubClient client = createClient(repository);

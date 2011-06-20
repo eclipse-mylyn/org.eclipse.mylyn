@@ -10,47 +10,25 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Assert;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.GitHubResponse;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Service class getting and listing pull requests.
  */
 public class PullRequestService extends GitHubService {
-
-	/**
-	 * Pull request wrapper
-	 */
-	private static class PullRequestWrapper {
-
-		private PullRequest pull;
-
-		public PullRequest getPull() {
-			return this.pull;
-		}
-
-	}
-
-	/**
-	 * Pull requests wrapper
-	 */
-	private static class PullRequestsWrapper {
-
-		private List<PullRequest> pulls;
-
-		public List<PullRequest> getPulls() {
-			return this.pulls;
-		}
-
-	}
 
 	/**
 	 * @param client
@@ -67,19 +45,43 @@ public class PullRequestService extends GitHubService {
 	 * @return pull request
 	 * @throws IOException
 	 */
-	public PullRequest getPullRequest(Repository repository, String id)
-			throws IOException {
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+	public PullRequest getPullRequest(IRepositoryIdProvider repository,
+			String id) throws IOException {
+		final String repoId = getId(repository);
 		Assert.notNull("Id cannot be null", id); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(repoId);
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
-		uri.append('/').append(repository.getId());
 		uri.append('/').append(id);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(uri);
-		request.setType(PullRequestWrapper.class);
-		GitHubResponse response = this.client.get(request);
-		return ((PullRequestWrapper) response.getBody()).getPull();
+		request.setType(PullRequest.class);
+		return (PullRequest) client.get(request).getBody();
+	}
+
+	/**
+	 * Create paged request for fetching pull requests
+	 * 
+	 * @param provider
+	 * @param state
+	 * @param start
+	 * @param size
+	 * @return paged request
+	 */
+	protected PagedRequest<PullRequest> createdPullsRequest(
+			IRepositoryIdProvider provider, String state, int start, int size) {
+		final String id = getId(provider);
+		Assert.notNull("State cannot be null", state); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		PagedRequest<PullRequest> request = createPagedRequest();
+		request.setUri(uri);
+		request.setParams(Collections.singletonMap(IssueService.FILTER_STATE,
+				state));
+		request.setType(new TypeToken<List<PullRequest>>() {
+		}.getType());
+		return request;
 	}
 
 	/**
@@ -90,20 +92,52 @@ public class PullRequestService extends GitHubService {
 	 * @return list of pull requests
 	 * @throws IOException
 	 */
-	public List<PullRequest> getPullRequests(Repository repository, String state)
-			throws IOException {
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("State cannot be null", state); //$NON-NLS-1$
-		String repositoryId = repository.getId();
-		Assert.notNull("Repository id cannot be null", repositoryId); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
-		uri.append('/').append(repositoryId);
-		uri.append('/').append(state);
-		GitHubRequest request = new GitHubRequest();
-		request.setUri(uri);
-		request.setType(PullRequestsWrapper.class);
-		GitHubResponse response = this.client.get(request);
-		return ((PullRequestsWrapper) response.getBody()).getPulls();
+	public List<PullRequest> getPullRequests(IRepositoryIdProvider repository,
+			String state) throws IOException {
+		PagedRequest<PullRequest> request = createdPullsRequest(repository,
+				state, PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		return getAll(request);
+	}
+
+	/**
+	 * Page pull requests with given state
+	 * 
+	 * @param repository
+	 * @param state
+	 * @return iterator over pages of pull requests
+	 */
+	public PageIterator<PullRequest> pagePullRequests(
+			IRepositoryIdProvider repository, String state) {
+		return pagePullRequests(repository, state, PagedRequest.PAGE_SIZE);
+	}
+
+	/**
+	 * Page pull requests with given state
+	 * 
+	 * @param repository
+	 * @param state
+	 * @param size
+	 * @return iterator over pages of pull requests
+	 */
+	public PageIterator<PullRequest> pagePullRequests(
+			IRepositoryIdProvider repository, String state, int size) {
+		return pagePullRequests(repository, state, PagedRequest.PAGE_FIRST,
+				size);
+	}
+
+	/**
+	 * Page pull requests with given state
+	 * 
+	 * @param repository
+	 * @param state
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of pull requests
+	 */
+	public PageIterator<PullRequest> pagePullRequests(
+			IRepositoryIdProvider repository, String state, int start, int size) {
+		PagedRequest<PullRequest> request = createdPullsRequest(repository,
+				state, start, size);
+		return createPageIterator(request);
 	}
 }

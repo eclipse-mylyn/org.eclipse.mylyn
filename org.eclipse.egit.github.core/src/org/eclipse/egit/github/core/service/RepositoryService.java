@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
@@ -48,22 +49,16 @@ public class RepositoryService extends GitHubService {
 	public static final String FIELD_PUBLIC = "public"; //$NON-NLS-1$
 
 	private static class RepositoryContainer implements
-			IResourceProvider<Repository> {
+			IResourceProvider<SearchRepository> {
 
-		private List<Repository> repositories;
+		private List<SearchRepository> repositories;
 
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
-		public List<Repository> getResources() {
+		public List<SearchRepository> getResources() {
 			return this.repositories;
 		}
-
-	}
-
-	private static class RepositoryWrapper {
-
-		Repository repository;
 
 	}
 
@@ -78,37 +73,43 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
-	 * Get all repositories accessible through organizational membership
-	 * 
-	 * @return list of repositories
-	 * @throws IOException
-	 */
-
-	public List<Repository> getOrganizationRepositories() throws IOException {
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
-		uri.append(IGitHubConstants.SEGMENT_ORGANIZATIONS).append(
-				IGitHubConstants.SEGMENT_REPOSITORIES);
-		PagedRequest<Repository> request = createPagedRequest();
-		request.setUri(uri);
-		request.setType(RepositoryContainer.class);
-		return getAll(request);
-	}
-
-	/**
-	 * Get repositories
+	 * Get repositories for the given user
 	 * 
 	 * @param user
 	 * @return list of repositories
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories(String user) throws IOException {
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
-		uri.append(IGitHubConstants.SEGMENT_REPOS)
-				.append(IGitHubConstants.SEGMENT_SHOW).append('/').append(user);
-
+		Assert.notNull("User cannot be null", user);
+		Assert.notEmpty("User cannot be empty", user);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
+		uri.append('/').append(user);
+		uri.append(IGitHubConstants.SEGMENT_REPOS);
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
-		request.setType(RepositoryContainer.class);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get organization repositories for the given organization
+	 * 
+	 * @param organization
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getOrgRepositories(String organization)
+			throws IOException {
+		Assert.notNull("Organization cannot be null", organization);
+		Assert.notEmpty("Organization cannot be empty", organization);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		PagedRequest<Repository> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
 		return getAll(request);
 	}
 
@@ -119,13 +120,14 @@ public class RepositoryService extends GitHubService {
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<Repository> searchRepositories(String query) throws IOException {
+	public List<SearchRepository> searchRepositories(String query)
+			throws IOException {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
 		uri.append(IGitHubConstants.SEGMENT_REPOS);
 		uri.append(IGitHubConstants.SEGMENT_SEARCH);
 		uri.append('/').append(query);
 
-		PagedRequest<Repository> request = createPagedRequest();
+		PagedRequest<SearchRepository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
 		return getAll(request);
@@ -141,24 +143,25 @@ public class RepositoryService extends GitHubService {
 	public Repository createRepository(Repository repository)
 			throws IOException {
 		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
-		uri.append(IGitHubConstants.SEGMENT_REPOS).append(
-				IGitHubConstants.SEGMENT_CREATE);
+		return client.post(IGitHubConstants.SEGMENT_USER
+				+ IGitHubConstants.SEGMENT_REPOS, repository, Repository.class);
+	}
 
-		// Name is required, all others are optional
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(FIELD_NAME, repository.getName());
-		String desc = repository.getDescription();
-		if (desc != null)
-			params.put(FIELD_DESCRIPTION, desc);
-		String homepage = repository.getHomepage();
-		if (homepage != null)
-			params.put(FIELD_HOMEPAGE, homepage);
-		params.put(FIELD_PUBLIC, repository.isPrivate() ? Integer.toString(0)
-				: Integer.toString(1));
-
-		RepositoryWrapper wrapper = client.post(uri.toString(), params,
-				RepositoryWrapper.class);
-		return wrapper.repository;
+	/**
+	 * Create a new repository
+	 * 
+	 * @param organization
+	 * @param repository
+	 * @return created repository
+	 * @throws IOException
+	 */
+	public Repository createRepository(String organization,
+			Repository repository) throws IOException {
+		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		uri.append('/').append(organization);
+		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		return client.post(uri.toString(), repository, Repository.class);
 	}
 }
