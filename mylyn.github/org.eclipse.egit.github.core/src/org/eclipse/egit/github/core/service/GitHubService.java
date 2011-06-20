@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Assert;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.NoSuchPageException;
@@ -124,5 +125,19 @@ public abstract class GitHubService {
 				return false;
 			throw e;
 		}
+	}
+
+	/**
+	 * Get id for repository
+	 * 
+	 * @param provider
+	 * @return non-null id
+	 */
+	protected String getId(IRepositoryIdProvider provider) {
+		Assert.notNull("Repository provider cannot be null", provider); //$NON-NLS-1$
+		final String id = provider.generateId();
+		Assert.notNull("Repository id cannot be null", id); //$NON-NLS-1$
+		Assert.notEmpty("Repository id cannot be empty", id); //$NON-NLS-1$
+		return id;
 	}
 }
