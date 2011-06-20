@@ -59,6 +59,14 @@ public class Messages extends NLS {
 
 	public static String BugzillaResponseDetailDialog_Email_Line;
 
+	public static String BugzillaTaskEditorCommentPart_privateComment;
+
+	public static String BugzillaTaskEditorCommentPart_publicComment;
+
+	public static String BugzillaTaskEditorNewCommentPart_privateComment;
+
+	public static String BugzillaTaskEditorNewCommentPart_publicComment;
+
 	public static String BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks;
 
 	public static String BugzillaTaskEditorPage_Changes_Submitted_Message;

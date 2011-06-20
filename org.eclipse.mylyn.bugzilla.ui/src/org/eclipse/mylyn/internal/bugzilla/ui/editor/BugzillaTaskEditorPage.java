@@ -112,6 +112,13 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				break;
 			}
 		}
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_NEW_COMMENT)) {
+				descriptors.remove(taskEditorPartDescriptor);
+				hasPartComments = true;
+				break;
+			}
+		}
 
 		// Add Bugzilla Planning part
 		try {
@@ -154,6 +161,14 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		} catch (CoreException e) {
 			// ignore
 		}
+
+		// Add the updated Bugzilla new comment part
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new BugzillaTaskEditorNewCommentPart();
+			}
+		}.setPath(PATH_COMMENTS));
 
 		// Add the updated Bugzilla people part
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {

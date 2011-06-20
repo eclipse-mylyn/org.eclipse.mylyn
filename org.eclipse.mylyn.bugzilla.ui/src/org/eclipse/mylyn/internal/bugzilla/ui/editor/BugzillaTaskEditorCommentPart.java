@@ -33,10 +33,10 @@ public class BugzillaTaskEditorCommentPart extends TaskEditorCommentPart {
 			if (taskComment.getIsPrivate() != null) {
 				if (taskComment.getIsPrivate()) {
 					this.setImageDescriptor(TasksUiImages.LOCK_CLOSE);
-					this.setToolTipText("private Comment");
+					this.setToolTipText(Messages.BugzillaTaskEditorCommentPart_privateComment);
 				} else {
 					this.setImageDescriptor(TasksUiImages.LOCK_OPEN);
-					this.setToolTipText("public Comment");
+					this.setToolTipText(Messages.BugzillaTaskEditorCommentPart_publicComment);
 				}
 			}
 		}
