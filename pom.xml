@@ -185,7 +185,7 @@
 		<mylyn-pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</mylyn-pack200>
 		<mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</mylyn-test-args>
 		<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
-		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/docs/archive</mylyn-archive>
+		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/docs/drops</mylyn-archive>
 		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/docs</mylyn-site>
 		<mylyn-skip-sign>false</mylyn-skip-sign>
 		<mylyn-skip-promote>false</mylyn-skip-promote>
