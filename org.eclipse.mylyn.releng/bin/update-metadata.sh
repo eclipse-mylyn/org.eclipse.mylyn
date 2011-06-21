@@ -8,8 +8,12 @@ for i in $(find -name site.xml); do
  (
  cd $(dirname $i)
  DIR=$(pwd)
- DIR=${DIR##*archive/}
+ DIR=${DIR##*drops/}
  DIR=${DIR%%/*}
+ if [ -z "$VERSION" ]; then
+   echo "Failed to determine version for $i. Exiting."
+   exit 1
+ fi
  echo Version: $DIR 
  $BASE/generate-p2-metadata.sh 
  $BASE/add-mirrors.sh $DIR
