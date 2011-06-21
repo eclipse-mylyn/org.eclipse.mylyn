@@ -41,13 +41,13 @@
                   <targetExtension>.tmp</targetExtension>
                 </fileMapper>
               </fileMappers>
-			  <stylesheet>../../org.eclipse.mylyn.releng/scripts/test-fixture.xsl</stylesheet>
+			  <stylesheet>${basedir}/test-fixture.xsl</stylesheet>
             </transformationSet>
 			<!-- append @ex.y to all test cases to differentiate target platform -->
             <transformationSet>
               <dir>../../org.eclipse.mylyn.tests/target/surefire-reports</dir>
               <outputDir>../../org.eclipse.mylyn.tests/target/surefire-reports</outputDir>
-              <stylesheet>../../org.eclipse.mylyn.releng/scripts/test-suite.xsl</stylesheet>
+              <stylesheet>${basedir}/test-suite.xsl</stylesheet>
 			  <includes>
 				<include>*.tmp</include>
 			  </includes>

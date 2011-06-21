@@ -6,7 +6,7 @@ wget -O version.properties $SRC/version.properties
 
 VERSION=$(head -n 1 version.properties)
 QUALIFIER=$(tail -n 1 version.properties)
-DST=/home/data/httpd/download.eclipse.org/mylyn/archive/$VERSION/$QUALIFIER
+DST=/home/data/httpd/download.eclipse.org/mylyn/drops/$VERSION/$QUALIFIER
 
 SITE=/home/data/httpd/download.eclipse.org/mylyn/snapshots
 
