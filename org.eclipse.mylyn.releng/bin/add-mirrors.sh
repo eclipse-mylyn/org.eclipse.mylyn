@@ -52,11 +52,11 @@ echo "p2.mirrorsURL: $MIRRORS_URL"
 echo "p2.statsURI  : $STATS_URI"
 
 echo "Updating site.xml"
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
+sed -i -e 's/<site pack200=\"true\".*>/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/site.xml\&amp;protocol=http\&amp;format=xml">/' site.xml
 
 if [ -e category.xml ]; then
 echo "Updating mirrorsURL in category.xml to $RELATIVE"
-sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/\&amp;protocol=http\&amp;format=xml">/' category.xml
+sed -i -e 's/<site pack200=\"true\".*>/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file='$MIRROR_PATH'\/\&amp;protocol=http\&amp;format=xml">/' category.xml
 fi
 
 echo "Updating content.jar"
