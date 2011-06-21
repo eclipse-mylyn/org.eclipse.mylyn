@@ -19,8 +19,8 @@ fi
 MAJOR=$1
 BUILD=$2
 
-SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR/$BUILD
-OUT=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR/mylyn-$MAJOR-api.zip
+SRC=/home/data/httpd/download.eclipse.org/mylyn/drops/$MAJOR/$BUILD
+OUT=/home/data/httpd/download.eclipse.org/mylyn/drops/$MAJOR/mylyn-$MAJOR-api.zip
 TMP=/shared/tools/mylyn/tmp/profile
 
 rm -rf $TMP || true

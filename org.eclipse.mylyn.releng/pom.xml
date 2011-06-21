@@ -34,7 +34,7 @@
 	<mylyn-test-append></mylyn-test-append>
 
 	<mylyn-main-repository>Mylyn for Eclipse 3.5, 3.6 and 3.7</mylyn-main-repository>
-	<mylyn-archive>${basedir}/target/archive</mylyn-archive>
+	<mylyn-archive>${basedir}/target/drops</mylyn-archive>
 	<mylyn-site></mylyn-site>
 
 	<mylyn-qualifier-format>'I'yyyyMMdd-HHmm</mylyn-qualifier-format>
