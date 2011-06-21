@@ -24,6 +24,8 @@ BASE=$(dirname $0)
 LOCATION=$(readlink -f .)
 PREFIX=/home/data/httpd/download.eclipse.org
 RELATIVE=${LOCATION:${#PREFIX}}
+PROJECT=${RELATIVE:1}
+PROJECT=${PROJECT%%/*}
 
 if [ "$PREFIX" != ${LOCATION:0:${#PREFIX}} ]; then
  echo "$LOCATION must be subdirectory of $PREFIX"
@@ -35,10 +37,16 @@ if [ -z "$RELATIVE" ]; then
  exit 1
 fi
 
+if [ -z "$PROJECT" ]; then
+ echo "failed to compute project for $LOCATION"
+ exit 1
+fi
+
+
 # escape slashes
 MIRROR_PATH=$(echo $RELATIVE | sed s/\\//\\\\\\//g)
 MIRRORS_URL="http://www.eclipse.org/downloads/download.php?file=$RELATIVE/&protocol=http&format=xml"
-STATS_URI="http://download.eclipse.org/stats/mylyn/$1"
+STATS_URI="http://download.eclipse.org/stats/$PROJECT/$1"
 
 echo "p2.mirrorsURL: $MIRRORS_URL"
 echo "p2.statsURI  : $STATS_URI"
