@@ -298,6 +298,15 @@ public class MediaWikiLanguageTest extends TestCase {
 				.find());
 	}
 
+	public void testPreformattedSource_bug349724() {
+		String html = parser.parseToHtml("normal para\n<source lang=\"javascript\">preformatted\n more pre\n</source>normal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<p>normal para</p><pre class=\"source-javascript\">preformatted\\s+more pre\\s+</pre><p>normal para</p>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testHtmlTags() {
 		String html = parser.parseToHtml("normal para <b id=\"foo\">test heading</b>");
 		TestUtil.println("HTML: \n" + html);

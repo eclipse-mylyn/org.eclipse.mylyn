@@ -79,14 +79,37 @@ public abstract class AbstractHtmlBlock extends Block {
 	}
 
 	/**
-	 * handle attributes of the opening tag. The default implementation does nothing, however subclasses may override
-	 * this method to process attributes.
+	 * handle attributes of the opening tag. The default implementation processes XML-style attributes however
+	 * subclasses may override this method to provide special attribute processing.
 	 * 
 	 * @param attributes
 	 *            the attributes, or null if there are none
+	 * @see #handleAttribute(String, String)
 	 */
 	protected void setAttributes(String attributes) {
-		// default does nothing
+		if (attributes != null) {
+			Pattern pattern = Pattern.compile("\\s+([a-zA-Z][a-zA-Z0-9_:-]*)=\"([^\"]*)\""); //$NON-NLS-1$
+			Matcher matcher = pattern.matcher(attributes);
+			while (matcher.find()) {
+				String attrName = matcher.group(1);
+				String attrValue = matcher.group(2);
+				handleAttribute(attrName, attrValue);
+			}
+		}
+	}
+
+	/**
+	 * Handle a named attribute. The default implementation does nothing
+	 * 
+	 * @param attrName
+	 *            the attribute name
+	 * @param attrValue
+	 *            the attribute value
+	 * @see #setAttributes(String)
+	 * @since 1.5.1
+	 */
+	protected void handleAttribute(String attrName, String attrValue) {
+		// nothing to do
 	}
 
 	protected abstract void handleBlockContent(String content);

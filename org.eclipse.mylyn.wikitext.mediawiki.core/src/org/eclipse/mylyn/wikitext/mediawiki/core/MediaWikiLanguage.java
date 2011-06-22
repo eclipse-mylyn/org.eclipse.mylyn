@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.PreformattedBlock;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.TableOfContentsBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase.EscapePhraseModifier;
@@ -91,6 +92,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 			// repository usage.
 			blocks.add(new PreformattedBlock());
 		}
+		blocks.add(new SourceBlock());
 
 		blocks.add(new TableBlock());
 		blocks.add(new TableOfContentsBlock());
