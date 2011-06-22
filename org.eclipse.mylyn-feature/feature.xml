@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <url>
+      <discovery label="Mylyn 3.7 for Eclipse 3.6, 3.7 and 3.8" url="http://download.eclipse.org/mylyn/releases/3.7"/>
+   </url>
+
    <requires>
       <import plugin="org.eclipse.mylyn.commons.core" version="3.6.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.6.0" match="compatible"/>
