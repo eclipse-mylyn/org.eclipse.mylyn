@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
@@ -129,7 +129,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 				if (project == null && user != null) {
 					// same project name, different user
 					String url = repository.getUrl();
-					Repository repo = GitHub.getRepository(url);
+					RepositoryId repo = GitHub.getRepository(url);
 					if (repo != null)
 						project = repo.getName();
 				}

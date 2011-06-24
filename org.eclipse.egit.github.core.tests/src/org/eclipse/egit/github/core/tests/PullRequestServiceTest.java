@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class PullRequestServiceTest {
 	private GitHubClient gitHubClient;
 
 	@Mock
-	private Repository repository;
+	private SearchRepository repository;
 
 	private PullRequestService pullRequestService;
 

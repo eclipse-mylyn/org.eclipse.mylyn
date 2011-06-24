@@ -84,15 +84,14 @@ public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
 	public boolean performFinish() {
 		String user = credentialsPage.getUserName();
 		String password = credentialsPage.getPassword();
-		for (Object selected : reposPage.getRepositories()) {
-			Repository repo = (Repository) selected;
+		for (Repository repo : reposPage.getRepositories()) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(
 					user, password);
 			TaskRepository repository = new TaskRepository(
-					GitHub.CONNECTOR_KIND, GitHub.createGitHubUrl(
-							repo.getOwner(), repo.getName()));
+					GitHub.CONNECTOR_KIND, GitHub.createGitHubUrl(repo
+							.getOwner().getLogin(), repo.getName()));
 			repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
-					repo.getId());
+					repo.generateId());
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					credentials, true);
 			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,

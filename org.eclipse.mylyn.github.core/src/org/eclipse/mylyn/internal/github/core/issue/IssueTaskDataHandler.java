@@ -25,7 +25,7 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
@@ -383,7 +383,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		String taskId = taskData.getTaskId();
 		Issue issue = createIssue(taskData);
-		Repository repo = GitHub.getRepository(repository.getRepositoryUrl());
+		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
 			updateLabels(repo.getOwner(), repo.getName(), client, repository,

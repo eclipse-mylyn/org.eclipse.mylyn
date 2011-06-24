@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -84,7 +84,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	protected void syncRepositoryLabel() {
 		if (syncLabel) {
 			String url = serverUrlCombo.getText();
-			Repository repo = GitHub.getRepository(url);
+			RepositoryId repo = GitHub.getRepository(url);
 			if (repo != null)
 				repositoryLabelEditor.setStringValue(repo.getOwner() + '/'
 						+ repo.getName());
@@ -149,7 +149,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 							client.setCredentials(auth.getUserName(),
 									auth.getPassword());
 						IssueService service = new IssueService(client);
-						Repository repo = GitHub.getRepository(repository
+						RepositoryId repo = GitHub.getRepository(repository
 								.getRepositoryUrl());
 						monitor.worked(50);
 						service.getIssues(repo.getOwner(), repo.getName(), null);

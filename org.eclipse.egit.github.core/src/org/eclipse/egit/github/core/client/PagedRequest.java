@@ -10,35 +10,78 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import org.eclipse.egit.github.core.Assert;
-import org.eclipse.egit.github.core.IResourceCollector;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
- * Pages request class that contains a collector for accept resources page by
- * page.
+ * Paged request class that contains the initial page size and page number of
+ * the request.
  * 
  * @param <V>
  */
 public class PagedRequest<V> extends GitHubRequest {
 
-	private IResourceCollector<V> collector;
+	/**
+	 * First page
+	 */
+	public static final int PAGE_FIRST = 1;
 
 	/**
-	 * Create paged request with non-null collector
-	 * 
-	 * @param collector
-	 *            must be non-null
+	 * Default page size
 	 */
-	public PagedRequest(IResourceCollector<V> collector) {
-		Assert.notNull("Collector cannot be null", collector); //$NON-NLS-1$
-		this.collector = collector;
+	public static final int PAGE_SIZE = 100;
+
+	private final int pageSize;
+
+	private final int page;
+
+	/**
+	 * Create paged request with default size
+	 */
+	public PagedRequest() {
+		this(PAGE_FIRST, PAGE_SIZE);
 	}
 
 	/**
-	 * @return collector
+	 * Create paged request with given starting page and page size.
+	 * 
+	 * @param start
+	 * @param size
 	 */
-	public IResourceCollector<V> getCollector() {
-		return this.collector;
+	public PagedRequest(int start, int size) {
+		page = start;
+		pageSize = size;
+	}
+
+	/**
+	 * @return pageSize
+	 */
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	@Override
+	protected List<NameValuePair> getPairs(Map<String, String> data) {
+		List<NameValuePair> pairs = super.getPairs(data);
+		int size = getPageSize();
+		if (size > 0)
+			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PER_PAGE,
+					Integer.toString(size)));
+		int number = getPage();
+		if (number > 0)
+			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PAGE,
+					Integer.toBinaryString(number)));
+		return pairs;
+	}
+
+	/**
+	 * @return page
+	 */
+	public int getPage() {
+		return page;
 	}
 
 }

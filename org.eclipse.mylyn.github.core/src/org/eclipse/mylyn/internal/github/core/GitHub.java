@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.RequestException;
 
 /**
@@ -144,8 +144,8 @@ public class GitHub {
 	 * @param repositoryUrl
 	 * @return repository or null if not present in url
 	 */
-	public static Repository getRepository(String repositoryUrl) {
-		return Repository.createFromUrl(repositoryUrl);
+	public static RepositoryId getRepository(String repositoryUrl) {
+		return RepositoryId.createFromUrl(repositoryUrl);
 	}
 
 	/**

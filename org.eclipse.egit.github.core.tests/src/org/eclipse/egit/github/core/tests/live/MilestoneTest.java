@@ -10,11 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.MilestoneService;
+import org.junit.Test;
 
 /**
  * Unit tests of {@link MilestoneService}
@@ -22,11 +29,15 @@ import org.eclipse.egit.github.core.service.MilestoneService;
 public class MilestoneTest extends LiveTest {
 
 	/**
-	 * Test creating a milestone
+	 * Test creating and deleting a milestone
 	 * 
 	 * @throws Exception
 	 */
-	public void testCreate() throws Exception {
+	@Test
+	public void createDelete() throws Exception {
+		assertNotNull("User is required for test", client.getUser());
+		assertNotNull("Repo is required for test", writableRepo);
+
 		Milestone m = new Milestone();
 		m.setDescription("desc " + System.currentTimeMillis());
 		m.setTitle("Title " + System.currentTimeMillis());
@@ -74,5 +85,15 @@ public class MilestoneTest extends LiveTest {
 		assertEquals(created.getDueOn(), fetched.getDueOn());
 		assertEquals(created.getCreator().getLogin(), fetched.getCreator()
 				.getLogin());
+
+		service.deleteMilestone(client.getUser(), writableRepo,
+				Integer.toString(created.getNumber()));
+		try {
+			service.getMilestone(client.getUser(), writableRepo,
+					Integer.toString(created.getNumber()));
+			fail("Fetch did not throw exception");
+		} catch (RequestException e) {
+			assertEquals(HttpStatus.SC_NOT_FOUND, e.getStatus());
+		}
 	}
 }

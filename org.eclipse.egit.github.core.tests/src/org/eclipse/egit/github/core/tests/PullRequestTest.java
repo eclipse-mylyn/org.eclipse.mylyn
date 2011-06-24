@@ -35,22 +35,6 @@ public class PullRequestTest {
 	}
 
 	@Test
-	public void getIssueCreatedAt_ReferenceMutableObject() {
-		PullRequest pullRequest = gson.fromJson(
-				"{issueCreatedAt : '2003-10-10'}", PullRequest.class);
-		pullRequest.getIssueCreatedAt().setTime(0);
-		assertTrue(pullRequest.getIssueCreatedAt().getTime() != 0);
-	}
-
-	@Test
-	public void getIssueUpdatedAt_ReferenceMutableObject() {
-		PullRequest pullRequest = gson.fromJson(
-				"{issueUpdatedAt : '2003-10-10'}", PullRequest.class);
-		pullRequest.getIssueUpdatedAt().setTime(0);
-		assertTrue(pullRequest.getIssueUpdatedAt().getTime() != 0);
-	}
-
-	@Test
 	public void getMergedAt_ReferenceMutableObject() {
 		PullRequest pullRequest = gson.fromJson("{mergedAt : '2003-10-10'}",
 				PullRequest.class);
