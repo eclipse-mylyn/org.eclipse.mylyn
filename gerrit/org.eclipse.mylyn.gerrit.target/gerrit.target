@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Mylyn Reviews Target" sequenceNumber="38">
+<target name="Mylyn Reviews Target" sequenceNumber="74">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110310-1804"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110606-0949"/>
 <repository location="http://download.eclipse.org/releases/indigo/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="0.12.1"/>
-<unit id="org.eclipse.egit.source.feature.group" version="0.12.1"/>
-<unit id="org.eclipse.egit.mylyn.feature.group" version="0.12.1"/>
-<unit id="org.eclipse.jgit.feature.group" version="0.12.1"/>
-<unit id="org.eclipse.jgit.source.feature.group" version="0.12.1"/>
+<unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
+<unit id="org.eclipse.egit.source.feature.group" version="1.0.0.201106090707-r"/>
+<unit id="org.eclipse.egit.mylyn.feature.group" version="1.0.0.201106090707-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="1.0.0.201106090707-r"/>
+<unit id="org.eclipse.jgit.source.feature.group" version="1.0.0.201106090707-r"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -26,31 +26,30 @@
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.google.gerrit.common" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.common.source" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.prettify" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.prettify.source" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.reviewdb" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.reviewdb.source" version="2.1.5.v201103020530"/>
-<unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.core.source" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.integration.source" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.generator.source" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.integration" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.library.source" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.text.source" version="1.1.0.v20090501071000"/>
-<unit id="org.objenesis.source" version="1.0.0.v201006030720"/>
-<unit id="org.objenesis" version="1.0.0.v201006030720"/>
-<unit id="org.mockito" version="1.8.4.v201102171835"/>
-<unit id="org.mockito.source" version="1.8.4.v201102171835"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110304120314/repository/"/>
+<unit id="com.google.gerrit.common" version="0.0.0"/>
+<unit id="com.google.gerrit.common.source" version="0.0.0"/>
+<unit id="com.google.gerrit.prettify" version="0.0.0"/>
+<unit id="com.google.gerrit.prettify.source" version="0.0.0"/>
+<unit id="com.google.gerrit.reviewdb" version="0.0.0"/>
+<unit id="com.google.gerrit.reviewdb.source" version="0.0.0"/>
+<unit id="org.hamcrest.core" version="0.0.0"/>
+<unit id="org.hamcrest.core.source" version="0.0.0"/>
+<unit id="org.hamcrest.integration.source" version="0.0.0"/>
+<unit id="org.hamcrest.generator" version="0.0.0"/>
+<unit id="org.hamcrest.generator.source" version="0.0.0"/>
+<unit id="org.hamcrest.integration" version="0.0.0"/>
+<unit id="org.hamcrest.library" version="0.0.0"/>
+<unit id="org.hamcrest.library.source" version="0.0.0"/>
+<unit id="org.hamcrest" version="0.0.0"/>
+<unit id="org.hamcrest.text" version="0.0.0"/>
+<unit id="org.hamcrest.text.source" version="0.0.0"/>
+<unit id="org.objenesis.source" version="0.0.0"/>
+<unit id="org.objenesis" version="0.0.0"/>
+<unit id="org.mockito" version="0.0.0"/>
+<unit id="org.mockito.source" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.test_feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
