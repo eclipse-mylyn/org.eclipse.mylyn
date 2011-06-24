@@ -12,14 +12,14 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.SearchRepository;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Tests for {@link Repository}.
+ * Tests for {@link SearchRepository}.
  */
 public class RepositoryTest {
 
@@ -28,16 +28,16 @@ public class RepositoryTest {
 
 	@Test
 	public void getCreatedAt_ReferenceMutableObject() {
-		Repository repository = gson.fromJson("{createdAt : '2003-10-10'}",
-				Repository.class);
+		SearchRepository repository = gson.fromJson("{createdAt : '2003-10-10'}",
+				SearchRepository.class);
 		repository.getCreatedAt().setTime(0);
 		assertTrue(repository.getCreatedAt().getTime() != 0);
 	}
 
 	@Test
 	public void getPushedAt_ReferenceMutableObject() {
-		Repository repository = gson.fromJson("{pushedAt : '2003-10-10'}",
-				Repository.class);
+		SearchRepository repository = gson.fromJson("{pushedAt : '2003-10-10'}",
+				SearchRepository.class);
 		repository.getPushedAt().setTime(0);
 		assertTrue(repository.getPushedAt().getTime() != 0);
 	}

@@ -10,16 +10,17 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
-
 /**
  * Pull request marker model class.
  */
 public class PullRequestMarker {
 
-	private Repository repository;
+	private Repository repo;
 
 	private String label;
+
 	private String ref;
+
 	private String sha;
 
 	private User user;
@@ -28,35 +29,35 @@ public class PullRequestMarker {
 	 * @return repository
 	 */
 	public Repository getRepository() {
-		return this.repository;
+		return repo;
 	}
 
 	/**
 	 * @return label
 	 */
 	public String getLabel() {
-		return this.label;
+		return label;
 	}
 
 	/**
 	 * @return ref
 	 */
 	public String getRef() {
-		return this.ref;
+		return ref;
 	}
 
 	/**
 	 * @return sha
 	 */
 	public String getSha() {
-		return this.sha;
+		return sha;
 	}
 
 	/**
 	 * @return user
 	 */
 	public User getUser() {
-		return this.user;
+		return user;
 	}
 
 }

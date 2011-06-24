@@ -10,20 +10,48 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.util.Date;
+
 /**
  * GitHub user class.
- *
+ * 
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class User {
 
-	private String blob;
+	private boolean hireable;
+
+	private Date createdAt;
+
+	private int collaborators;
+
+	private int diskUsage;
+
+	private int followers;
+
+	private int following;
+
+	private int id;
+
+	private int ownedPrivateRepos;
+
+	private int privateGists;
+
+	private int publicGists;
+
+	private int publicRepos;
+
+	private int totalPrivateRepos;
+
+	private String avatarUrl;
+
+	private String blog;
 
 	private String company;
 
 	private String email;
 
-	private String avatarUrl;
+	private String htmlUrl;
 
 	private String location;
 
@@ -35,46 +63,301 @@ public class User {
 
 	private String url;
 
+	private UserPlan plan;
+
 	/**
-	 * @return blob
+	 * @return hireable
 	 */
-	public String getBlob() {
-		return this.blob;
+	public boolean isHireable() {
+		return hireable;
 	}
 
 	/**
-	 * @return company
+	 * @param hireable
+	 * @return this user
 	 */
-	public String getCompany() {
-		return this.company;
+	public User setHireable(boolean hireable) {
+		this.hireable = hireable;
+		return this;
 	}
 
 	/**
-	 * @return email
+	 * @return createdAt
 	 */
-	public String getEmail() {
-		return this.email;
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt
+	 * @return this user
+	 */
+	public User setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+		return this;
+	}
+
+	/**
+	 * @return collaborators
+	 */
+	public int getCollaborators() {
+		return collaborators;
+	}
+
+	/**
+	 * @param collaborators
+	 * @return this user
+	 */
+	public User setCollaborators(int collaborators) {
+		this.collaborators = collaborators;
+		return this;
+	}
+
+	/**
+	 * @return diskUsage
+	 */
+	public int getDiskUsage() {
+		return diskUsage;
+	}
+
+	/**
+	 * @param diskUsage
+	 * @return this user
+	 */
+	public User setDiskUsage(int diskUsage) {
+		this.diskUsage = diskUsage;
+		return this;
+	}
+
+	/**
+	 * @return followers
+	 */
+	public int getFollowers() {
+		return followers;
+	}
+
+	/**
+	 * @param followers
+	 * @return this user
+	 */
+	public User setFollowers(int followers) {
+		this.followers = followers;
+		return this;
+	}
+
+	/**
+	 * @return following
+	 */
+	public int getFollowing() {
+		return following;
+	}
+
+	/**
+	 * @param following
+	 * @return this user
+	 */
+	public User setFollowing(int following) {
+		this.following = following;
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this user
+	 */
+	public User setId(int id) {
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * @return ownedPrivateRepos
+	 */
+	public int getOwnedPrivateRepos() {
+		return ownedPrivateRepos;
+	}
+
+	/**
+	 * @param ownedPrivateRepos
+	 * @return this user
+	 */
+	public User setOwnedPrivateRepos(int ownedPrivateRepos) {
+		this.ownedPrivateRepos = ownedPrivateRepos;
+		return this;
+	}
+
+	/**
+	 * @return privateGists
+	 */
+	public int getPrivateGists() {
+		return privateGists;
+	}
+
+	/**
+	 * @param privateGists
+	 * @return this user
+	 */
+	public User setPrivateGists(int privateGists) {
+		this.privateGists = privateGists;
+		return this;
+	}
+
+	/**
+	 * @return publicGists
+	 */
+	public int getPublicGists() {
+		return publicGists;
+	}
+
+	/**
+	 * @param publicGists
+	 * @return this user
+	 */
+	public User setPublicGists(int publicGists) {
+		this.publicGists = publicGists;
+		return this;
+	}
+
+	/**
+	 * @return publicRepos
+	 */
+	public int getPublicRepos() {
+		return publicRepos;
+	}
+
+	/**
+	 * @param publicRepos
+	 * @return this user
+	 */
+	public User setPublicRepos(int publicRepos) {
+		this.publicRepos = publicRepos;
+		return this;
+	}
+
+	/**
+	 * @return totalPrivateRepos
+	 */
+	public int getTotalPrivateRepos() {
+		return totalPrivateRepos;
+	}
+
+	/**
+	 * @param totalPrivateRepos
+	 * @return this user
+	 */
+	public User setTotalPrivateRepos(int totalPrivateRepos) {
+		this.totalPrivateRepos = totalPrivateRepos;
+		return this;
 	}
 
 	/**
 	 * @return avatarUrl
 	 */
 	public String getAvatarUrl() {
-		return this.avatarUrl;
+		return avatarUrl;
+	}
+
+	/**
+	 * @param avatarUrl
+	 * @return this user
+	 */
+	public User setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
+		return this;
+	}
+
+	/**
+	 * @return blog
+	 */
+	public String getBlog() {
+		return blog;
+	}
+
+	/**
+	 * @param blog
+	 * @return this user
+	 */
+	public User setBlog(String blog) {
+		this.blog = blog;
+		return this;
+	}
+
+	/**
+	 * @return company
+	 */
+	public String getCompany() {
+		return company;
+	}
+
+	/**
+	 * @param company
+	 * @return this user
+	 */
+	public User setCompany(String company) {
+		this.company = company;
+		return this;
+	}
+
+	/**
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 * @return this user
+	 */
+	public User setEmail(String email) {
+		this.email = email;
+		return this;
+	}
+
+	/**
+	 * @return htmlUrl
+	 */
+	public String getHtmlUrl() {
+		return htmlUrl;
+	}
+
+	/**
+	 * @param htmlUrl
+	 * @return this user
+	 */
+	public User setHtmlUrl(String htmlUrl) {
+		this.htmlUrl = htmlUrl;
+		return this;
 	}
 
 	/**
 	 * @return location
 	 */
 	public String getLocation() {
-		return this.location;
+		return location;
+	}
+
+	/**
+	 * @param location
+	 * @return this user
+	 */
+	public User setLocation(String location) {
+		this.location = location;
+		return this;
 	}
 
 	/**
 	 * @return login
 	 */
 	public String getLogin() {
-		return this.login;
+		return login;
 	}
 
 	/**
@@ -90,7 +373,7 @@ public class User {
 	 * @return name
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -106,14 +389,48 @@ public class User {
 	 * @return type
 	 */
 	public String getType() {
-		return this.type;
+		return type;
+	}
+
+	/**
+	 * @param type
+	 * @return this user
+	 */
+	public User setType(String type) {
+		this.type = type;
+		return this;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
+	}
+
+	/**
+	 * @param url
+	 * @return this user
+	 */
+	public User setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
+	/**
+	 * @return plan
+	 */
+	public UserPlan getPlan() {
+		return plan;
+	}
+
+	/**
+	 * @param plan
+	 * @return this user
+	 */
+	public User setPlan(UserPlan plan) {
+		this.plan = plan;
+		return this;
 	}
 
 }
