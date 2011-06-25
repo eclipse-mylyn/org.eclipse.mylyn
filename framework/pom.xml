@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.eclipse.mylyn.reviews</groupId>
     <artifactId>mylyn-reviews-parent</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
   </parent>
   <artifactId>mylyn-reviews-framework-parent</artifactId>
   <packaging>pom</packaging>

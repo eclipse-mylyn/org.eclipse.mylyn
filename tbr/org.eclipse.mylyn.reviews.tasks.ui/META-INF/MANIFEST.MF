@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews (Incubation)
 Bundle-Vendor: Eclipse Mylyn
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tasks.ui;singleton:=true
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.reviews.tasks.ui.internal.ReviewsUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

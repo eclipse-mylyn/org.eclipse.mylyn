@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews (Incubation)
 Bundle-Vendor: Eclipse Mylyn
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tasks.dsl;singleton:=true
 Bundle-ActivationPolicy: lazy
 Import-Package: org.antlr.runtime;version="[3.0.0,3.1.0)",
