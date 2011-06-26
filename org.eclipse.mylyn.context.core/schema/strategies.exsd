@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.ui.strategy.AbstractContextComputationStrategy:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.ContextComputationStrategy:"/>
                </appInfo>
             </annotation>
          </attribute>
