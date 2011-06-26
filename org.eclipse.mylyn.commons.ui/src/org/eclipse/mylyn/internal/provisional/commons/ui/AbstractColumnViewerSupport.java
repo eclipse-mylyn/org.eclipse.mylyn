@@ -111,10 +111,10 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 	abstract void addColumnSelectionListener(T column, SelectionListener selectionListener);
 
 	private MenuItem createMenuItem(Menu parent, final T column, final int i) {
-		final MenuItem itemName = new MenuItem(parent, SWT.CHECK);
-		itemName.setText(column.getText());
-		itemName.setSelection(getWidth(column) > 0);
-		itemName.addListener(SWT.Selection, new Listener() {
+		final MenuItem item = new MenuItem(parent, SWT.CHECK);
+		item.setText(column.getText());
+		item.setSelection(getWidth(column) > 0);
+		item.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				int lastWidth = getWidth(column);
 				if (lastWidth != 0) {
@@ -128,14 +128,14 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 					// if the default and the last width was 0, then set to 150 pixels
 					lastStates[i].width = 150;
 				}
-				if (itemName.getSelection()) {
+				if (item.getSelection()) {
 					setWidth(column, lastStates[i].width);
 				} else {
 					setWidth(column, 0);
 				}
 			}
 		});
-		return itemName;
+		return item;
 	}
 
 	private void createRestoreDefaults(Menu parent) {
@@ -237,11 +237,9 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 				}
 			}
 
-			Object canHide = column.getData(KEY_COLUMN_CAN_HIDE);
 			MenuItem item = createMenuItem(headerMenu, column, i);
-			if (canHide != null && canHide instanceof Boolean && item != null) {
-				item.setEnabled((Boolean) canHide);
-			}
+			item.setEnabled(canHide(column));
+
 			defaults[i] = new ColumnState();
 			defaults[i].width = getWidth(column);
 
@@ -275,6 +273,11 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 		});
 	}
 
+	private boolean canHide(T column) {
+		Object canHide = column.getData(KEY_COLUMN_CAN_HIDE);
+		return !(canHide instanceof Boolean) || ((Boolean) canHide).booleanValue();
+	}
+
 	void initializeViewerSupport() {
 		initialize();
 		restore();
@@ -299,9 +302,17 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 					int[] order = new int[children.length];
 					for (int i = 0; i < children.length; i++) {
 						T column = getColumn(i);
-						setWidth(column, children[i].getInteger("width")); //$NON-NLS-1$ 
+						Integer widthInteger = children[i].getInteger("width"); //$NON-NLS-1$
+						if (widthInteger != null) {
+							int width = widthInteger;
+							// ensure that columns that may not be hidden have a non zero width
+							if (width >= 0 && (width > 0 || canHide(column))) {
+								setWidth(column, width);
+							}
+						}
 						headerMenu.getItem(i).setSelection(getWidth(column) > 0);
-						order[i] = children[i].getInteger("order"); //$NON-NLS-1$
+						Integer orderInteger = children[i].getInteger("order"); //$NON-NLS-1$
+						order[i] = (orderInteger != null) ? orderInteger.intValue() : 0;
 					}
 					try {
 						setColumnOrder(order);
