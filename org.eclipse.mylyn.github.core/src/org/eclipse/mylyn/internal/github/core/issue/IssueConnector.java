@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.egit.github.core.service.MilestoneService;
@@ -71,7 +73,14 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	 * @return client
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = new GitHubClient();
+		GitHubClient client;
+		try {
+			String host = new URL(repository.getRepositoryUrl()).getHost();
+			host = IGitHubConstants.SUBDOMAIN_API + "." + host;
+			client = new GitHubClient(host, -1, IGitHubConstants.PROTOCOL_HTTPS);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null)

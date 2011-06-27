@@ -136,9 +136,14 @@ public interface IGitHubConstants {
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
 
 	/**
+	 * SUBDOMAIN_API
+	 */
+	String SUBDOMAIN_API = "api"; //$NON-NLS-1$
+
+	/**
 	 * HOST_API
 	 */
-	String HOST_API = "api.github.com"; //$NON-NLS-1$
+	String HOST_API = SUBDOMAIN_API + ".github.com"; //$NON-NLS-1$
 
 	/**
 	 * HOST_API_V2
