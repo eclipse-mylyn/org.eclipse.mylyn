@@ -64,11 +64,13 @@ public class BugzillaTaskEditorNewCommentPart extends TaskEditorNewCommentPart {
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		TaskAttribute isprivate = getAttribute().getParentAttribute().getAttribute("comment_is_private"); //$NON-NLS-1$
-		if (isprivate == null) {
-			isprivate = getAttribute().getParentAttribute().createAttribute("comment_is_private"); //$NON-NLS-1$
+		if (getAttribute() != null) {
+			TaskAttribute isprivate = getAttribute().getParentAttribute().getAttribute("comment_is_private"); //$NON-NLS-1$
+			if (isprivate == null) {
+				isprivate = getAttribute().getParentAttribute().createAttribute("comment_is_private"); //$NON-NLS-1$
+			}
+			isprivate.setValue("0"); //$NON-NLS-1$
 		}
-		isprivate.setValue("0"); //$NON-NLS-1$
 	}
 
 }
