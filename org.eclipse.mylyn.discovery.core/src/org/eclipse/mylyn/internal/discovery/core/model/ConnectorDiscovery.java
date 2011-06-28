@@ -275,7 +275,7 @@ public class ConnectorDiscovery {
 				boolean match = false;
 				try {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
-					match = filter.match(environment);
+					match = filter.match((Dictionary) environment);
 				} catch (InvalidSyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 							Messages.ConnectorDiscovery_illegal_filter_syntax,
