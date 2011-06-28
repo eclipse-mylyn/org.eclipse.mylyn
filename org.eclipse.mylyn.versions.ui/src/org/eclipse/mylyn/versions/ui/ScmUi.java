@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
 import org.eclipse.osgi.util.NLS;
@@ -111,7 +110,8 @@ public class ScmUi {
 		ITypedElement right = new FileRevisionTypedElement(file2, null);
 
 		CompareFileRevisionEditorInput input = new CompareFileRevisionEditorInput(left, right, page);
-		CompareUI.openCompareEditor(input, OpenStrategy.activateOnOpen());
+		// TODO e3.5: replace with CompareUI.openCompareEditor(input, OpenStrategy.activateOnOpen());
+		CompareUI.openCompareEditor(input);
 	}
 
 	/**
