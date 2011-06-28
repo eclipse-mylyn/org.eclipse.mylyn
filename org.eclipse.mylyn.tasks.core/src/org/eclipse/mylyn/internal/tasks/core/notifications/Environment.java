@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Filter;
@@ -40,7 +41,7 @@ public class Environment {
 	public Version getFrameworkVersion() {
 		Bundle bundle = Platform.getBundle("org.eclipse.mylyn"); //$NON-NLS-1$
 		if (bundle != null) {
-			return bundle.getVersion();
+			return CoreUtil.getVersion(bundle);
 		} else {
 			return Version.emptyVersion;
 		}
