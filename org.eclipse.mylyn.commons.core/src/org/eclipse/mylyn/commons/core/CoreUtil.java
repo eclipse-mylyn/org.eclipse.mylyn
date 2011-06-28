@@ -13,6 +13,9 @@ package org.eclipse.mylyn.commons.core;
 
 import java.util.Map;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
+
 /**
  * @since 3.0
  * @author Steffen Pingel
@@ -77,6 +80,17 @@ public class CoreUtil {
 		} else {
 			sb.append(object);
 		}
+	}
+
+	/**
+	 * Returns the version of the bundle.
+	 * 
+	 * @since 3.7
+	 */
+	// TODO e3.5 remove this method and replace with bundle.getVersion()
+	public static Version getVersion(Bundle bundle) {
+		String header = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+		return (header != null) ? Version.parseVersion(header) : null;
 	}
 
 }

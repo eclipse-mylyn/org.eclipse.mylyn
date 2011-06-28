@@ -41,8 +41,12 @@ public class AbstractDeleteLineHandler extends AbstractTextViewerHandler impleme
 			TextViewerDeleteLineTarget target = new TextViewerDeleteLineTarget(viewer);
 
 			try {
-				target.deleteLine(viewer.getDocument(), (ITextSelection) viewer.getSelectionProvider().getSelection(),
-						type, copyToClipboard);
+				ITextSelection textSelection = (ITextSelection) viewer.getSelectionProvider().getSelection();
+				target.deleteLine(viewer.getDocument(), textSelection.getOffset(), textSelection.getLength(), type,
+						copyToClipboard);
+				// TODO e3.5 replace invocation
+//				target.deleteLine(viewer.getDocument(), (ITextSelection) viewer.getSelectionProvider().getSelection(),
+//						type, copyToClipboard);
 			} catch (BadLocationException e) {
 				throw new ExecutionException(e.getMessage(), e);
 			}

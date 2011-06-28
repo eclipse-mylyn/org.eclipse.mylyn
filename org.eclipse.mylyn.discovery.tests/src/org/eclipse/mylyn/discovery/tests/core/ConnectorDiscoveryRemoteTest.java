@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.discovery.tests.DiscoveryTestConstants;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
@@ -55,7 +56,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 	public void testVerifyAvailability() throws Exception {
 		// XXX e3.5 skip test in Tycho build
 		Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
-		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(bundle.getVersion())) { //$NON-NLS-1$
+		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(CoreUtil.getVersion(bundle))) { //$NON-NLS-1$
 			System.err.println("Skipping test on Eclipse 3.5 due to lack of proxy support");
 			return;
 		}

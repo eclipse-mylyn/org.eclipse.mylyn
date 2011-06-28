@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
@@ -274,7 +275,7 @@ public class ConnectorDiscovery {
 				boolean match = false;
 				try {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
-					match = filter.match((Dictionary) environment);
+					match = filter.match(environment);
 				} catch (InvalidSyntaxException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
 							Messages.ConnectorDiscovery_illegal_filter_syntax,
@@ -312,7 +313,7 @@ public class ConnectorDiscovery {
 		for (IBundleGroupProvider provider : Platform.getBundleGroupProviders()) {
 			for (IBundleGroup bundleGroup : provider.getBundleGroups()) {
 				for (Bundle bundle : bundleGroup.getBundles()) {
-					featureToVersion.put(bundle.getSymbolicName(), bundle.getVersion());
+					featureToVersion.put(bundle.getSymbolicName(), CoreUtil.getVersion(bundle));
 				}
 			}
 		}
