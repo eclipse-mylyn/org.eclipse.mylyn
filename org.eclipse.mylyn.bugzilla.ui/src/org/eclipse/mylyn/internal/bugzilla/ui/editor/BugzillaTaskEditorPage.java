@@ -98,6 +98,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		boolean hasPartComments = false;
+		boolean hasPartNewComment = false;
 		// remove unnecessary default editor parts
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
@@ -115,7 +116,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_NEW_COMMENT)) {
 				descriptors.remove(taskEditorPartDescriptor);
-				hasPartComments = true;
+				hasPartNewComment = true;
 				break;
 			}
 		}
@@ -162,14 +163,15 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			// ignore
 		}
 
-		// Add the updated Bugzilla new comment part
-		descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new BugzillaTaskEditorNewCommentPart();
-			}
-		}.setPath(PATH_COMMENTS));
-
+		if (hasPartNewComment) {
+			// Add the updated Bugzilla new comment part
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new BugzillaTaskEditorNewCommentPart();
+				}
+			}.setPath(PATH_COMMENTS));
+		}
 		// Add the updated Bugzilla people part
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {
 			@Override
