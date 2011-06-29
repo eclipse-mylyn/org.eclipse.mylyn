@@ -37,6 +37,8 @@ public class Messages extends NLS {
 	/** */
 	public static String CredentialsWizardPage_Title;
 
+	public static String RepositoryImportWizard_CloningRepository;
+
 	/** */
 	public static String RepositorySearchWizardPage_SearchButton;
 

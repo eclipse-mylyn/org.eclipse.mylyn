@@ -17,7 +17,9 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -44,6 +46,7 @@ public class RepositorySearchWizardPage extends WizardPage {
 	private Button searchButton;
 	private List repoList;
 	private ListViewer repoListViewer;
+	private SearchRepository repository = null;
 
 	/**
 	 * 
@@ -51,6 +54,10 @@ public class RepositorySearchWizardPage extends WizardPage {
 	protected RepositorySearchWizardPage() {
 		super(RepositorySearchWizardPage.class.getName());
 		setPageComplete(false);
+	}
+
+	protected SearchRepository getRepository() {
+		return repository;
 	}
 
 	/**
@@ -113,8 +120,13 @@ public class RepositorySearchWizardPage extends WizardPage {
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
 					public void selectionChanged(SelectionChangedEvent event) {
-						setPageComplete(!repoListViewer.getSelection()
-								.isEmpty());
+						ISelection selection = repoListViewer.getSelection();
+						if (selection instanceof IStructuredSelection) {
+							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+							repository = (SearchRepository) structuredSelection
+									.getFirstElement();
+						}
+						setPageComplete(!selection.isEmpty());
 
 					}
 				});
