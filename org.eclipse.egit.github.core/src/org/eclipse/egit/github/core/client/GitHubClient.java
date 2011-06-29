@@ -23,8 +23,10 @@ import java.lang.reflect.Type;
 import java.net.ProxySelector;
 import java.util.Date;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -43,7 +45,9 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.RequestError;
@@ -53,11 +57,16 @@ import org.eclipse.egit.github.core.RequestError;
  */
 public class GitHubClient {
 
+	private static final Header USER_AGENT = new BasicHeader(HTTP.USER_AGENT,
+			"GitHubJava/1.1.0"); //$NON-NLS-1$
+
 	private final HttpHost httpHost;
 
 	private final HttpContext httpContext;
 
 	private final DefaultHttpClient client = new DefaultHttpClient();
+
+	private Header userAgent = USER_AGENT;
 
 	private final Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Date.class, new DateFormatter())
@@ -105,13 +114,40 @@ public class GitHubClient {
 	}
 
 	/**
+	 * Set the value to set as the user agent header on every request created.
+	 * Specifying a null or empty agent parameter will reset this client to use
+	 * the default user agent header value.
+	 * 
+	 * @param agent
+	 * @return this client
+	 */
+	public GitHubClient setUserAgent(String agent) {
+		if (agent != null && agent.length() > 0)
+			userAgent = new BasicHeader(HTTP.USER_AGENT, agent);
+		else
+			userAgent = USER_AGENT;
+		return this;
+	}
+
+	/**
+	 * Configure request with standard headers
+	 * 
+	 * @param request
+	 * @return configured request
+	 */
+	protected <V extends HttpMessage> V configureRequest(V request) {
+		request.addHeader(userAgent);
+		return request;
+	}
+
+	/**
 	 * Create standard post method
 	 * 
 	 * @param uri
 	 * @return post
 	 */
 	protected HttpPost createPost(String uri) {
-		return new HttpPost(uri);
+		return configureRequest(new HttpPost(uri));
 	}
 
 	/**
@@ -121,7 +157,7 @@ public class GitHubClient {
 	 * @return post
 	 */
 	protected HttpPut createPut(String uri) {
-		return new HttpPut(uri);
+		return configureRequest(new HttpPut(uri));
 	}
 
 	/**
@@ -131,7 +167,7 @@ public class GitHubClient {
 	 * @return get method
 	 */
 	protected HttpGet createGet(String uri) {
-		return new HttpGet(uri);
+		return configureRequest(new HttpGet(uri));
 	}
 
 	/**
@@ -141,7 +177,7 @@ public class GitHubClient {
 	 * @return get method
 	 */
 	protected HttpDelete createDelete(String uri) {
-		return new HttpDelete(uri);
+		return configureRequest(new HttpDelete(uri));
 	}
 
 	/**
@@ -153,11 +189,11 @@ public class GitHubClient {
 	 */
 	public GitHubClient setCredentials(String user, String password) {
 		if (user != null && password != null)
-			this.client.getCredentialsProvider().setCredentials(
+			client.getCredentialsProvider().setCredentials(
 					new AuthScope(httpHost.getHostName(), httpHost.getPort()),
 					new UsernamePasswordCredentials(user, password));
 		else
-			this.client.getCredentialsProvider().clear();
+			client.getCredentialsProvider().clear();
 		return this;
 	}
 
@@ -167,7 +203,7 @@ public class GitHubClient {
 	 * @return user or null if not authentication
 	 */
 	public String getUser() {
-		Credentials credentials = this.client.getCredentialsProvider()
+		Credentials credentials = client.getCredentialsProvider()
 				.getCredentials(
 						new AuthScope(httpHost.getHostName(), httpHost
 								.getPort()));
@@ -188,7 +224,7 @@ public class GitHubClient {
 			throws IOException {
 		InputStreamReader reader = new InputStreamReader(getStream(response));
 		try {
-			return this.gson.fromJson(reader, type);
+			return gson.fromJson(reader, type);
 		} catch (JsonParseException jpe) {
 			throw new IOException(jpe.getMessage());
 		} finally {

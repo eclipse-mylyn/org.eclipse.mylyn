@@ -81,6 +81,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
+		client.setUserAgent(GitHub.USER_AGENT);
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null)

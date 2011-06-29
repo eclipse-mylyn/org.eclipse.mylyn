@@ -44,6 +44,9 @@ public class GitHub {
 			+ Pattern.quote(HTTP_WWW_GITHUB_ORG) + "|"
 			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)");
 
+	/** USER_AGENT */
+	public static final String USER_AGENT = "GitHubEclipse/1.1.0"; //$NON-NLS-1$
+
 	/**
 	 * Create status of severity with message
 	 * 
