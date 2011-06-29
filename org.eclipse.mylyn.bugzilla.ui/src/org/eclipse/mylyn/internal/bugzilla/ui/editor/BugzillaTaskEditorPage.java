@@ -545,46 +545,26 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			});
 			return false;
 		}
-//		if (!getModel().getTaskData().isNew()) {
-//			TaskAttribute exporter = getModel().getTaskData()
-//					.getRoot()
-//					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
-//			if (exporter == null) {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
-//								type, new HyperlinkAdapter() {
-//									@Override
-//									public void linkActivated(HyperlinkEvent e) {
-//										ITask task = getModel().getTask();
-//										AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-//												.getRepositoryConnector(task.getConnectorKind());
-//										if (connector == null) {
-//											return;
-//										}
-//										TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
-//											@Override
-//											public void done(IJobChangeEvent event) {
-//												PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//													public void run() {
-//														try {
-//															getTaskEditor().refreshPages();
-//														} finally {
-//															if (getTaskEditor() != null) {
-//																getTaskEditor().showBusy(false);
-//															}
-//														}
-//													}
-//												});
-//											}
-//										});
-//									}
-//								});
-//					}
-//				});
-//				return false;
-//			}
-//		}
+		if (!getModel().getTaskData().isNew()) {
+			TaskAttribute exporter = getModel().getTaskData()
+					.getRoot()
+					.getAttribute(BugzillaAttribute.EXPORTER_NAME.getKey());
+			if (exporter == null || exporter.getValue().equals("")) { //$NON-NLS-1$
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
+								type, new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										TasksUiUtil.openEditRepositoryWizard(taskRepository);
+										refresh();
+									}
+								});
+					}
+				});
+				return false;
+			}
+		}
 		return true;
 	}
 }

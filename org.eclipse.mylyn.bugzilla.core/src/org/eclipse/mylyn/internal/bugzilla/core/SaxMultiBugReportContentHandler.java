@@ -322,6 +322,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 			if (exporter != null) {
 				createAttrribute(exporter, BugzillaAttribute.EXPORTER_NAME);
+			} else {
+				createAttrribute("", BugzillaAttribute.EXPORTER_NAME); //$NON-NLS-1$
 			}
 
 			break;
