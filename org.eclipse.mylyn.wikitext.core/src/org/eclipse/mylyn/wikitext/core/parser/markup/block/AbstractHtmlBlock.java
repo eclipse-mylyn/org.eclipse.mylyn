@@ -106,7 +106,7 @@ public abstract class AbstractHtmlBlock extends Block {
 	 * @param attrValue
 	 *            the attribute value
 	 * @see #setAttributes(String)
-	 * @since 1.5.1
+	 * @since 1.6
 	 */
 	protected void handleAttribute(String attrName, String attrValue) {
 		// nothing to do
