@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.service.GistService;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -77,7 +78,7 @@ public class CreateGistJob extends Job {
 					.createSynchronizeRepositoriesJob(
 							GistConnectorUi.getRepositories()).schedule();
 		} catch (IOException e) {
-			GitHubUi.logError(e);
+			GitHubUi.logError(GitHubException.wrap(e));
 		}
 		return Status.OK_STATUS;
 	}
