@@ -527,11 +527,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	public void appendTextToNewComment(String text) {
 		AbstractTaskEditorPart newCommentPart = getPart(ID_PART_NEW_COMMENT);
-		if (newCommentPart != null) {
-			if (newCommentPart instanceof TaskEditorRichTextPart) {
-				((TaskEditorRichTextPart) newCommentPart).appendText(text);
-				newCommentPart.setFocus();
-			}
+		if (newCommentPart instanceof TaskEditorRichTextPart) {
+			((TaskEditorRichTextPart) newCommentPart).appendText(text);
+			newCommentPart.setFocus();
 		}
 	}
 
@@ -780,14 +778,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					return new TaskEditorCommentPart();
 				}
 			}.setPath(PATH_COMMENTS));
-
-			descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
-				@Override
-				public AbstractTaskEditorPart createPart() {
-					return new TaskEditorNewCommentPart();
-				}
-			}.setPath(PATH_COMMENTS));
 		}
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorNewCommentPart();
+			}
+		}.setPath(PATH_COMMENTS));
 
 		if (needsPrivateSection() || taskData.isNew()) {
 			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
