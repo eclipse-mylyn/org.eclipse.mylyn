@@ -18,6 +18,10 @@
     <module>org.eclipse.mylyn.bugzilla.core</module>
     <module>org.eclipse.mylyn.bugzilla.tests</module>
     <module>org.eclipse.mylyn.bugzilla.ui</module>
+    <module>org.eclipse.mylyn.help.sdk</module>
+    <module>org.eclipse.mylyn.help.ui</module>
+    <module>org.eclipse.mylyn.sdk-feature</module>
+    <module>org.eclipse.mylyn.test-feature</module>
     <module>org.eclipse.mylyn.oslc.core</module>
     <module>org.eclipse.mylyn.oslc.tests</module>
     <module>org.eclipse.mylyn.oslc.ui</module>
