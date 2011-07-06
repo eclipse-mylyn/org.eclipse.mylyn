@@ -340,11 +340,10 @@ public class RepositorySelectionWizardPage extends WizardPage {
 					try {
 						monitor.beginTask("", 2); //$NON-NLS-1$
 						monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingRepositories);
-						List<Repository> userRepos = service
-								.getRepositories(user);
+						List<Repository> userRepos = service.getRepositories();
 						removeExisting(userRepos, existing);
 						repoCount += userRepos.size();
-						for (Repository repo : service.getRepositories(user))
+						for (Repository repo : userRepos)
 							repos.add(new RepositoryAdapter(repo));
 						monitor.worked(1);
 						monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingOrganizationRepositories);

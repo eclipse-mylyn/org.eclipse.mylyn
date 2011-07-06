@@ -73,6 +73,21 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Get repositories for the currently authenticated user
+	 * 
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getRepositories() throws IOException {
+		PagedRequest<Repository> request = createPagedRequest();
+		request.setUri(IGitHubConstants.SEGMENT_USER
+				+ IGitHubConstants.SEGMENT_REPOS);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
 	 * Get repositories for the given user
 	 * 
 	 * @param user
