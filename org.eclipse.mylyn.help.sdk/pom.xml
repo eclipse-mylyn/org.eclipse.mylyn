@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>mylyn-mylyn-parent</artifactId>
-    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>mylyn-tasks-parent</artifactId>
+    <groupId>org.eclipse.mylyn.tasks</groupId>
     <version>3.7.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.eclipse.mylyn</groupId>
+  <groupId>org.eclipse.mylyn.tasks</groupId>
   <artifactId>org.eclipse.mylyn.help.sdk</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
