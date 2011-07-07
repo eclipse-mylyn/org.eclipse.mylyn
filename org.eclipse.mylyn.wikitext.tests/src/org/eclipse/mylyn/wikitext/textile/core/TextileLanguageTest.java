@@ -1208,6 +1208,15 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol class=\"test\""));
 	}
 
+	public void testTableOfContentsWithClassAtTopLevel_bug341019() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"test\" style=\"list-style: none;\">"));
+		assertTrue(html.contains("<ol style=\"list-style: none;\">"));
+	}
+
 	public void testTableOfContentsWithMaxLevel() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:maxLevel=2}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 

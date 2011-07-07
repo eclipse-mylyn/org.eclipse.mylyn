@@ -34,20 +34,27 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 	}
 
 	protected void emitToc(OutlineItem item) {
+
+		Attributes nullAttributes = new Attributes();
+
+		emitToc(item, 0, nullAttributes);
+	}
+
+	private void emitToc(OutlineItem item, int level, Attributes nullAttributes) {
 		if (item.getChildren().isEmpty()) {
 			return;
 		}
 		if ((item.getLevel() + 1) > maxLevel) {
 			return;
 		}
-		Attributes nullAttributes = new Attributes();
 
-		Attributes listAttributes = new Attributes(null, cssClass, "list-style: " + style + ";", null);//$NON-NLS-1$ //$NON-NLS-2$ 
+		Attributes listAttributes = new Attributes(null, level == 0 ? cssClass : null,
+				"list-style: " + style + ";", null);//$NON-NLS-1$ //$NON-NLS-2$ 
 		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
 			builder.link('#' + child.getId(), child.getLabel());
-			emitToc(child);
+			emitToc(child, level + 1, nullAttributes);
 			builder.endBlock();
 		}
 		builder.endBlock();
