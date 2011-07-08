@@ -32,8 +32,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -47,6 +49,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -63,18 +66,62 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  */
 public class RepositorySelectionWizardPage extends WizardPage {
 
-	public static class RepositoryLabelProvider extends
+	private static class RepositoryStyledLabelProvider implements
+			IStyledLabelProvider, ILabelProvider {
+		private final WorkbenchLabelProvider wrapped = new WorkbenchLabelProvider();
+
+		public String getText(Object element) {
+			return wrapped.getText(element);
+		}
+
+		public void addListener(ILabelProviderListener listener) {
+		}
+
+		public void dispose() {
+			wrapped.dispose();
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+		}
+
+		public StyledString getStyledText(Object element) {
+			// TODO Replace with use of IWorkbenchAdapter3 when 3.6 is no longer
+			// supported
+			if (element instanceof RepositoryAdapter)
+				return ((RepositoryAdapter) element).getStyledText(element);
+			if (element instanceof OrganizationAdapter)
+				return ((OrganizationAdapter) element).getStyledText(element);
+
+			return new StyledString(wrapped.getText(element));
+		}
+
+		public Image getImage(Object element) {
+			return wrapped.getImage(element);
+		}
+
+	}
+
+	private static class RepositoryLabelProvider extends
 			DelegatingStyledCellLabelProvider implements ILabelProvider {
 
-		private final WorkbenchLabelProvider wrapped;
+		private final RepositoryStyledLabelProvider wrapped;
 
 		public RepositoryLabelProvider() {
-			super(new WorkbenchLabelProvider());
-			wrapped = (WorkbenchLabelProvider) getStyledStringProvider();
+			super(new RepositoryStyledLabelProvider());
+			wrapped = (RepositoryStyledLabelProvider) getStyledStringProvider();
 		}
 
 		public String getText(Object element) {
 			return wrapped.getText(element);
+		}
+
+		public void dispose() {
+			super.dispose();
+			wrapped.dispose();
 		}
 	}
 
