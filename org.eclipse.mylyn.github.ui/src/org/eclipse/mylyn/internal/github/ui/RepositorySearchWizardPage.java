@@ -11,53 +11,79 @@
 package org.eclipse.mylyn.internal.github.ui;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.egit.github.core.Language;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.util.UrlUtils;
+import org.eclipse.egit.ui.UIIcons;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Search for GitHub repositories wizard page.
  */
 public class RepositorySearchWizardPage extends WizardPage {
 
-	private Text searchForText;
-	private Button searchButton;
-	private List repoList;
-	private ListViewer repoListViewer;
-	private SearchRepository repository = null;
+	private SearchRepository[] repositories = null;
+
+	private final GitHubClient client = new GitHubClient(
+			IGitHubConstants.HOST_API_V2, -1, IGitHubConstants.PROTOCOL_HTTPS);
+
+	private final RepositoryService repositoryService = new RepositoryService(
+			client);
+
+	private Text searchText;
 
 	/**
 	 * 
 	 */
 	protected RepositorySearchWizardPage() {
-		super(RepositorySearchWizardPage.class.getName());
+		super("repoSearchPage", Messages.RepositorySearchWizardPage_Title, null); //$NON-NLS-1$
+		setDescription(Messages.RepositorySearchWizardPage_Description);
 		setPageComplete(false);
 	}
 
-	protected SearchRepository getRepository() {
-		return repository;
+	/**
+	 * Get selected repositories
+	 * 
+	 * @return repositories
+	 */
+	protected SearchRepository[] getRepositories() {
+		return repositories;
 	}
 
 	/**
@@ -65,71 +91,196 @@ public class RepositorySearchWizardPage extends WizardPage {
 	 */
 	public void createControl(Composite parent) {
 		final Composite root = new Composite(parent, SWT.NONE);
-		setControl(root);
-		root.setLayout(new GridLayout(3, false));
+		GridLayoutFactory.swtDefaults().numColumns(1).applyTo(root);
 
-		Label searchForLabel = new Label(root, SWT.NONE);
-		searchForLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 3, 1));
+		Composite rowOne = new Composite(root, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(rowOne);
+
+		Label searchForLabel = new Label(rowOne, SWT.NONE);
 		searchForLabel
 				.setText(Messages.RepositorySearchWizardPage_SearchForRepositories);
 
-		searchForText = new Text(root, SWT.BORDER);
-		searchForText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 2, 1));
+		final Combo languageCombo = new Combo(rowOne, SWT.READ_ONLY
+				| SWT.DROP_DOWN);
+		languageCombo.add(Messages.RepositorySearchWizardPage_AnyLanguage);
 
-		searchButton = new Button(root, SWT.NONE);
+		for (Language language : Language.values())
+			languageCombo.add(language.getValue());
+
+		languageCombo.select(0);
+
+		Composite rowTwo = new Composite(root, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(rowTwo);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(rowTwo);
+
+		searchText = new Text(rowTwo, SWT.SINGLE | SWT.BORDER);
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER)
+				.grab(true, false).applyTo(searchText);
+
+		final Button searchButton = new Button(rowTwo, SWT.NONE);
 		searchButton.setText(Messages.RepositorySearchWizardPage_SearchButton);
-		searchButton.addSelectionListener(new SelectionAdapter() {
+		searchButton.setEnabled(false);
 
-			public void widgetSelected(SelectionEvent selectionEvent) {
-
-				Shell shell = root.getShell();
-				Cursor prevCursor = shell.getCursor();
-				Cursor busy = new Cursor(shell.getDisplay(), SWT.CURSOR_WAIT);
-				shell.setCursor(busy);
-				try {
-
-					GitHubClient client = new GitHubClient(
-							IGitHubConstants.HOST_API_V2, -1,
-							IGitHubConstants.PROTOCOL_HTTPS);
-					RepositoryService repositoryService = new RepositoryService(
-							client);
-					java.util.List<SearchRepository> repositories = repositoryService
-							.searchRepositories(searchForText.getText());
-					repoListViewer.setInput(repositories.toArray());
-				} catch (IOException ioException) {
-					repoListViewer.setInput(new Object[] {});
-					GitHubUi.logError(ioException);
-				} finally {
-					shell.setCursor(prevCursor);
-					busy.dispose();
-				}
-
-				setPageComplete(false);
-			}
-		});
-
-		repoListViewer = new ListViewer(root, SWT.BORDER | SWT.V_SCROLL);
-		repoList = repoListViewer.getList();
-		repoList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3,
-				1));
+		final TableViewer repoListViewer = new TableViewer(root);
+		GridDataFactory.fillDefaults().grab(true, true)
+				.applyTo(repoListViewer.getControl());
 		repoListViewer.setContentProvider(new ArrayContentProvider());
-		repoListViewer.setLabelProvider(new LabelProvider());
+
+		repoListViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
+				new IStyledLabelProvider() {
+
+					private Image repoImage = UIIcons.REPOSITORY.createImage();
+
+					public void removeListener(ILabelProviderListener listener) {
+					}
+
+					public boolean isLabelProperty(Object element,
+							String property) {
+						return false;
+					}
+
+					public void dispose() {
+						repoImage.dispose();
+					}
+
+					public void addListener(ILabelProviderListener listener) {
+					}
+
+					public StyledString getStyledText(Object element) {
+						StyledString styled = new StyledString();
+						SearchRepository repo = (SearchRepository) element;
+						styled.append(repo.getOwner() + "/" + repo.getName()); //$NON-NLS-1$
+						styled.append(" (" + repo.getLanguage() + ")", //$NON-NLS-1$ //$NON-NLS-2$
+								StyledString.QUALIFIER_STYLER);
+
+						int forks = repo.getForks();
+						if (forks != 1)
+							styled.append(MessageFormat.format(
+									Messages.RepositorySearchWizardPage_Forks,
+									forks), StyledString.COUNTER_STYLER);
+						else
+							styled.append(
+									Messages.RepositorySearchWizardPage_Fork,
+									StyledString.COUNTER_STYLER);
+
+						int watchers = repo.getWatchers();
+						if (watchers != 1)
+							styled.append(
+									MessageFormat
+											.format(Messages.RepositorySearchWizardPage_Watchers,
+													watchers),
+									StyledString.COUNTER_STYLER);
+						else
+							styled.append(
+									Messages.RepositorySearchWizardPage_Watcher,
+									StyledString.COUNTER_STYLER);
+
+						return styled;
+					}
+
+					public Image getImage(Object element) {
+						return repoImage;
+					}
+				}));
+
 		repoListViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
 					public void selectionChanged(SelectionChangedEvent event) {
-						ISelection selection = repoListViewer.getSelection();
-						if (selection instanceof IStructuredSelection) {
-							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-							repository = (SearchRepository) structuredSelection
-									.getFirstElement();
-						}
-						setPageComplete(!selection.isEmpty());
-
+						validate(repoListViewer);
 					}
 				});
 
+		searchText.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				searchButton
+						.setEnabled(searchText.getText().trim().length() != 0);
+			}
+		});
+
+		searchButton.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				String language = null;
+				if (languageCombo.getSelectionIndex() > 0)
+					language = languageCombo.getText();
+				search(language, searchText.getText().trim(), repoListViewer);
+			}
+		});
+
+		setControl(root);
+	}
+
+	private void validate(TableViewer viewer) {
+		ISelection selection = viewer.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			Object[] selected = ((IStructuredSelection) selection).toArray();
+			repositories = new SearchRepository[selected.length];
+			System.arraycopy(selected, 0, repositories, 0, selected.length);
+		}
+		setPageComplete(!selection.isEmpty());
+	}
+
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible)
+			searchText.setFocus();
+	}
+
+	private void search(final String language, final String text,
+			final TableViewer viewer) {
+		viewer.setSelection(StructuredSelection.EMPTY);
+		try {
+			getContainer().run(true, true, new IRunnableWithProgress() {
+
+				public void run(IProgressMonitor monitor)
+						throws InvocationTargetException, InterruptedException {
+					monitor.beginTask(
+							MessageFormat
+									.format(Messages.RepositorySearchWizardPage_Searching,
+											text), 10);
+					try {
+						StringBuilder query = new StringBuilder();
+						for (String term : text.split("\n")) //$NON-NLS-1$
+							query.append(UrlUtils.encode(term.trim())).append(
+									'+');
+						query.deleteCharAt(query.length() - 1);
+						final List<SearchRepository> repositories = repositoryService
+								.searchRepositories(query.toString(), language);
+						PlatformUI.getWorkbench().getDisplay()
+								.syncExec(new Runnable() {
+
+									public void run() {
+										if (viewer.getControl().isDisposed())
+											return;
+										setMessage(
+												MessageFormat
+														.format(Messages.RepositorySearchWizardPage_Found,
+																repositories
+																		.size()),
+												INFORMATION);
+										viewer.setInput(repositories);
+										validate(viewer);
+									}
+								});
+					} catch (IOException e) {
+						throw new InvocationTargetException(GitHubException
+								.wrap(e));
+					}
+				}
+			});
+			setErrorMessage(null);
+		} catch (InvocationTargetException e) {
+			viewer.setInput(Collections.emptyList());
+			Throwable cause = e.getCause();
+			if (cause == null)
+				cause = e;
+			setErrorMessage(MessageFormat.format(
+					Messages.RepositorySearchWizardPage_Error,
+					cause.getLocalizedMessage()));
+		} catch (InterruptedException e) {
+			GitHubUi.logError(e);
+		}
 	}
 }

@@ -37,13 +37,56 @@ public class Messages extends NLS {
 	/** */
 	public static String CredentialsWizardPage_Title;
 
+	/** */
+	public static String RepositoryImportWizard_CloningRepositories;
+
+	/** */
+	public static String RepositoryImportWizard_Cloning;
+
+	/** */
 	public static String RepositoryImportWizard_CloningRepository;
+
+	/** */
+	public static String RepositoryImportWizard_CreatingOperation;
+
+	/** */
+	public static String RepositoryImportWizard_Registering;
+
+	/** */
+	public static String RepositorySearchWizardPage_Found;
+
+	/** */
+	public static String RepositorySearchWizardPage_Error;
+
+	/** */
+	public static String RepositorySearchWizardPage_AnyLanguage;
+
+	/** */
+	public static String RepositorySearchWizardPage_Description;
+
+	/** */
+	public static String RepositorySearchWizardPage_Fork;
+
+	/** */
+	public static String RepositorySearchWizardPage_Forks;
 
 	/** */
 	public static String RepositorySearchWizardPage_SearchButton;
 
 	/** */
 	public static String RepositorySearchWizardPage_SearchForRepositories;
+
+	/** */
+	public static String RepositorySearchWizardPage_Searching;
+
+	/** */
+	public static String RepositorySearchWizardPage_Title;
+
+	/** */
+	public static String RepositorySearchWizardPage_Watcher;
+
+	/** */
+	public static String RepositorySearchWizardPage_Watchers;
 
 	/** */
 	public static String RepositorySelectionWizardPage_Description;

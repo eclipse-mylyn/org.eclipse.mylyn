@@ -165,6 +165,16 @@
       </wizard>
    </extension>
    <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.egit.ui.internal.clone.gitclonecategory"
+            class="org.eclipse.mylyn.internal.github.ui.RepositoryImportWizard"
+            icon="icons/obj16/github.png"
+            id="org.eclipse.mylyn.github.ui.cloneRepositoriesWizard"
+            name="%cloneRepositoriesWizardName">
+      </wizard>
+   </extension>
+   <extension
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.eclipse.mylyn.github.ui.command.cloneGist"

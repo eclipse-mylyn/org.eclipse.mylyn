@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
 
 /**
@@ -46,6 +47,16 @@ public class GitHub {
 
 	/** USER_AGENT */
 	public static final String USER_AGENT = "GitHubEclipse/1.1.0"; //$NON-NLS-1$
+
+	/**
+	 * Configure client with standard configuration
+	 * 
+	 * @param client
+	 * @return given client
+	 */
+	public static GitHubClient configureClient(GitHubClient client) {
+		return client.setUserAgent(USER_AGENT);
+	}
 
 	/**
 	 * Create status of severity with message

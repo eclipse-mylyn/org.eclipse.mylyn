@@ -54,13 +54,12 @@ public class GistConnector extends AbstractRepositoryConnector {
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
 		GitHubClient client = new GitHubClient();
-		client.setUserAgent(GitHub.USER_AGENT);
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null)
 			client.setCredentials(credentials.getUserName(),
 					credentials.getPassword());
-		return client;
+		return GitHub.configureClient(client);
 	}
 
 	private GistTaskDataHandler dataHandler = new GistTaskDataHandler();

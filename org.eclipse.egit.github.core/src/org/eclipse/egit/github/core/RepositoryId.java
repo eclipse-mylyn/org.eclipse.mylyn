@@ -71,6 +71,23 @@ public class RepositoryId implements IRepositoryIdProvider {
 		}
 	}
 
+	/**
+	 * Create repository id from given owner and name. This method validates the
+	 * parameters and throws an {@link IllegalArgumentException} if either is
+	 * null or empty.
+	 * 
+	 * @param owner
+	 * @param name
+	 * @return repository id
+	 */
+	public static RepositoryId create(String owner, String name) {
+		Assert.notNull("Owner cannot be null", owner);
+		Assert.notEmpty("Owner cannot be empty", owner);
+		Assert.notNull("Name cannot be null", name);
+		Assert.notEmpty("Name cannot be empty", name);
+		return new RepositoryId(owner, name);
+	}
+
 	private final String owner;
 
 	private final String name;
