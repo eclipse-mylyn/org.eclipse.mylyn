@@ -2,39 +2,16 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
+  <parent>
+    <groupId>org.eclipse.mylyn</groupId>
+    <artifactId>org.eclipse.mylyn-parent</artifactId>
+    <version>3.7.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
+  </parent>
   <groupId>org.eclipse.mylyn.docs</groupId>
-  <artifactId>mylyn-docs-parent</artifactId>
+  <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
   <version>1.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <properties>
-    <tycho-version>0.12.0</tycho-version>
-
-    <mylyn-credentials></mylyn-credentials>
-    <mylyn-keyring>${basedir}/eclipse.keyring</mylyn-keyring>
-    <mylyn-keyring-password>${basedir}/eclipse.keyring.password</mylyn-keyring-password>
-
-    <mylyn-skip-source-check>true</mylyn-skip-source-check>
-	<mylyn-skip-sign>true</mylyn-skip-sign>
-	<mylyn-skip-pack>false</mylyn-skip-pack>
-	<mylyn-skip-promote>true</mylyn-skip-promote>
-
-    <mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials}</mylyn-test-args>
-    <mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
-	<mylyn-test-append></mylyn-test-append>
-
-	<mylyn-docs-repository>Mylyn Docs</mylyn-docs-repository>
-	<mylyn-archive>${basedir}/target/archive</mylyn-archive>
-	<mylyn-site></mylyn-site>
-
-	<mylyn-pack200>${java.home}/bin</mylyn-pack200>
-	
-    <!--<maven.test.skip>true</maven.test.skip>-->
-    <maven.test.error.ignore>true</maven.test.error.ignore>
-    <maven.test.failure.ignore>true</maven.test.failure.ignore>    
-  </properties>
-
   <mailingLists>
     <mailingList>
       <name>Mylyn Docs Mailing List</name>
@@ -44,25 +21,25 @@
       <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-docs-dev</archive>
     </mailingList>
   </mailingLists>
-
   <issueManagement>
     <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn;product=Mylyn%20Docs</url>
     <system>Bugzilla</system>
   </issueManagement>
-
-  <licenses>
-    <license>
-      <name>Eclipse Public License v1.0</name>
-      <comments>
-       All rights reserved.
-
-       This program and the accompanying materials are made
-       available under the terms of the Eclipse Public License v1.0
-       which accompanies this distribution, and is available at       http://www.eclipse.org/legal/epl-v10.htm
-      </comments>
-    </license>
-  </licenses>
-
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>mylyn-snapshots</id>
+      <url>http://download.eclipse.org/mylyn/maven/snapshots</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>mylyn-releases</id>
+      <url>http://download.eclipse.org/mylyn/maven/releases</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
   <modules>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
     <module>org.eclipse.mylyn.htmltext</module>
@@ -86,262 +63,4 @@
     <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.ui</module>
   </modules>
-
-  <repositories>
-	<repository>
-	  <id>eclipse-mylyn</id>
-	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/mylyn/snapshots/weekly/</url>
-	</repository>
-	<repository>
-	  <id>eclipse-orbit</id>
-	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</url>
-	</repository>
-  </repositories>
-
-  <profiles>
-    <profile>
-      <id>galileo</id>
-      <properties>
-        <platform-version>[3.5.0,3.6.0)</platform-version>
-      </properties>
-	  <repositories>
-		<repository>
-		  <id>galileo</id>
-		  <layout>p2</layout>
-		  <url>http://download.eclipse.org/releases/galileo/</url>
-		</repository>
-	  </repositories>
-    </profile>
-    <profile>
-      <id>helios</id>
-      <properties>
-        <platform-version>[3.6.0,3.7.0)</platform-version>
-      </properties>
-	  <repositories>
-		<repository>
-		  <id>helios</id>
-		  <layout>p2</layout>
-		  <url>http://download.eclipse.org/releases/helios/</url>
-		</repository>
-	  </repositories>
-    </profile>
-    <profile>
-      <id>indigo</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <platform-version>[3.7.0,3.8.0)</platform-version>
-      </properties>
-	  <repositories>
-		<repository>
-		  <id>indigo</id>
-		  <layout>p2</layout>
-		  <url>http://download.eclipse.org/releases/indigo/</url>
-		</repository>
-	  </repositories>
-    </profile>
-    <profile>
-      <id>e4.1</id>
-      <properties>
-        <target-version>4.1</target-version>
-        <target-platform>mylyn-e4.1</target-platform>
-        <platform-version>[4.1.0,4.2.0)</platform-version>
-      </properties>
-	  <repositories>
-		<repository>
-		  <id>indigo</id>
-		  <layout>p2</layout>
-		  <url>http://download.eclipse.org/releases/indigo/</url>
-		</repository>
-	  </repositories>
-    </profile>
-	<profile>
-      <id>release</id>
-      <activation>
-		<property>
-		  <name>env.TYPE</name>
-          <value>release</value>
-		</property>
-      </activation>
-      <properties>
-		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
-	  </properties>
-	</profile>
-    <profile>
-      <id>hudson.eclipse.org</id>
-      <activation>
-		<property>
-          <name>user.name</name>
-          <value>hudsonbuild</value>
-		</property>
-      </activation>
-      <properties>
-		<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
-		<mylyn-keyring>${env.WORKSPACE}/keyring</mylyn-keyring>
-		<mylyn-keyring-password>${env.WORKSPACE}/keyring.password</mylyn-keyring-password>
-		<mylyn-pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</mylyn-pack200>
-		<mylyn-test-args>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</mylyn-test-args>
-		<mylyn-test-app-args>-eclipse.keyring ${mylyn-keyring} -eclipse.password ${mylyn-keyring-password}</mylyn-test-app-args>
-		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/docs/drops</mylyn-archive>
-		<mylyn-site>/home/data/httpd/download.eclipse.org/mylyn/docs</mylyn-site>
-		<mylyn-skip-sign>false</mylyn-skip-sign>
-		<mylyn-skip-promote>false</mylyn-skip-promote>
-      </properties>
-    </profile>
-  </profiles>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <!-- need maven-findbugs-2.3.2, see
-           http://jira.codehaus.org/browse/MFINDBUGS-122
-           remove this when this version is released -->
-      <id>codehaus.snapshots</id>
-      <url>http://snapshots.repository.codehaus.org/</url>
-    </pluginRepository>
-  </pluginRepositories>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <resolver>p2</resolver>
-          <environments>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86_64</arch>
-            </environment>
-          </environments>
-        </configuration>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-compiler-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-        <plugin>
-          <!-- TODO remove workaround when
-             https://issues.sonatype.org/browse/TYCHO-473
-             is fixed -->
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-source-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <executions>
-            <execution>
-              <id>attach-source</id>
-              <phase>process-classes</phase>
-              <goals>
-                <goal>plugin-source</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-packaging-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <format>'I'yyyyMMdd-HHmm</format>
-            <archiveSite>true</archiveSite>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.1</version>
-          <configuration>
-            <encoding>ISO-8859-1</encoding>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.3</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.3.2</version>
-          <configuration>
-            <findbugsXmlOutput>true</findbugsXmlOutput>
-            <failOnError>false</failOnError>
-            <skip>${mylyn-skip-source-check}</skip>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.5</version>
-          <configuration>
-            <sourceEncoding>utf-8</sourceEncoding>
-            <minimumTokens>100</minimumTokens>
-            <targetJdk>1.5</targetJdk>
-            <format>xml</format>
-            <failOnViolation>false</failOnViolation>
-            <skip>${mylyn-skip-source-check}</skip>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>cpd-check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-	<extensions>
-		<extension>
-			<!--  webdav support, see http://maven.apache.org/wagon/wagon-providers/wagon-webdav-jackrabbit/ -->
-			<groupId>org.apache.maven.wagon</groupId>
-			<artifactId>wagon-webdav-jackrabbit</artifactId>
-			<version>1.0-beta-6</version>
-		</extension>
-	</extensions>
-  </build>
 </project>

@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>mylyn-docs-parent</artifactId>
+    <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
     <version>1.6.0-SNAPSHOT</version>
   </parent>
