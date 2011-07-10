@@ -10,14 +10,11 @@
   <groupId>org.eclipse.mylyn.tasks</groupId>
   <artifactId>org.eclipse.mylyn.bugzilla.tests</artifactId>
   <version>3.7.0-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
+  <packaging>eclipse-test-plugin</packaging>
+  <properties>
+	<test.suite>${project.artifactId}.AllBugzillaTests</test.suite>
+  </properties>
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-      </plugin>
-    </plugins>
 	<!-- resources for standalone tests -->
     <resources>
       <resource>
@@ -27,5 +24,20 @@
 		</includes>
 	  </resource>
 	</resources>
+    <plugins>
+	  <plugin>
+		<groupId>org.eclipse.tycho</groupId>
+		<artifactId>tycho-surefire-plugin</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
+		</configuration>
+	  </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 </project>
