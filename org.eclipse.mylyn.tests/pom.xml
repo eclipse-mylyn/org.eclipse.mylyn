@@ -3,29 +3,29 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>mylyn-mylyn-parent</artifactId>
+    <artifactId>org.eclipse.mylyn-parent</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
     <version>3.7.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
-  <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn.tests</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
-    <mylyn-test-suite>org.eclipse.mylyn.tests.AllTests</mylyn-test-suite>
+    <test.suite>org.eclipse.mylyn.tests.AllTests</test.suite>
     <mylyn-skip-test>${maven.test.skip}</mylyn-skip-test>
   </properties>
   <profiles>
     <profile>
       <id>localonly</id>
       <properties>
-        <mylyn-test-suite>org.eclipse.mylyn.tests.AllNonConnectorTests</mylyn-test-suite>
+        <test.suite>org.eclipse.mylyn.tests.AllNonConnectorTests</test.suite>
       </properties>
     </profile>
     <profile>
       <id>heartbeat</id>
       <properties>
-        <mylyn-test-suite>org.eclipse.mylyn.tests.AllHeartbeatTests</mylyn-test-suite>
+        <test.suite>org.eclipse.mylyn.tests.AllHeartbeatTests</test.suite>
       </properties>
     </profile>
     <profile>
@@ -37,7 +37,7 @@
     <profile>
       <id>performance</id>
       <properties>
-        <mylyn-test-suite>org.eclipse.mylyn.tests.AllPerformanceTests</mylyn-test-suite>
+        <test.suite>org.eclipse.mylyn.tests.AllPerformanceTests</test.suite>
       </properties>
     </profile>
   </profiles>
@@ -72,9 +72,9 @@
           <product>org.eclipse.sdk.ide</product>
           <application>org.eclipse.ui.ide.workbench</application>
           <testSuite>org.eclipse.mylyn.tests</testSuite>
-          <testClass>${mylyn-test-suite}</testClass>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${mylyn-test-args}</argLine>
-          <appArgLine>${mylyn-test-app-args}</appArgLine> 
+          <testClass>${test.suite}</testClass>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+          <appArgLine>${test.args}</appArgLine> 
 		  <explodedBundles>
 			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
 		  </explodedBundles>
@@ -110,6 +110,61 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+	  <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+		<version>1.0-beta-3</version>
+        <executions>
+          <execution>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+			<!-- append @x.y.z to repository test cases to differentiate test fixtures -->
+            <transformationSet>
+              <dir>${project.build.directory}/surefire-reports</dir>
+              <outputDir>${project.build.directory}/surefire-reports</outputDir>
+			  <includes>
+				<include>*.xml</include>
+			  </includes>
+			  <!-- map to different file extensions since overriding source
+				   file does not work -->
+			  <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.tmp</targetExtension>
+                </fileMapper>
+              </fileMappers>
+			  <stylesheet>${basedir}/test-fixture.xsl</stylesheet>
+            </transformationSet>
+			<!-- append @ex.y to all test cases to differentiate target platform -->
+            <transformationSet>
+              <dir>${project.build.directory}/surefire-reports</dir>
+              <outputDir>${project.build.directory}/surefire-reports</outputDir>
+              <stylesheet>${basedir}/test-suite.xsl</stylesheet>
+			  <includes>
+				<include>*.tmp</include>
+			  </includes>
+			  <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.xml</targetExtension>
+                </fileMapper>
+              </fileMappers>
+			  <!--
+              <parameters>
+                <parameter>
+                  <name>append</name>
+                  <value>${mylyn-test-append}</value>
+                </parameter>
+              </parameters>
+			  -->
+            </transformationSet>
+          </transformationSets>
+        </configuration>
       </plugin>
     </plugins>
   </build>
