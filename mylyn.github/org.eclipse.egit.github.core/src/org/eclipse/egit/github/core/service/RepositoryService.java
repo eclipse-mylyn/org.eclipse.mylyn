@@ -13,13 +13,17 @@ package org.eclipse.egit.github.core.service;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Assert;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -137,12 +141,29 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<SearchRepository> searchRepositories(String query)
 			throws IOException {
+		return searchRepositories(query, null);
+	}
+
+	/**
+	 * Search for repositories matching language and query
+	 * 
+	 * @param query
+	 * @param language
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<SearchRepository> searchRepositories(final String query,
+			final String language) throws IOException {
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
 		uri.append(IGitHubConstants.SEGMENT_REPOS);
 		uri.append(IGitHubConstants.SEGMENT_SEARCH);
 		uri.append('/').append(query);
-
 		PagedRequest<SearchRepository> request = createPagedRequest();
+
+		if (language != null && language.length() > 0)
+			request.setParams(Collections.singletonMap(
+					IGitHubConstants.PARAM_LANGUAGE, language));
+
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
 		return getAll(request);
@@ -178,5 +199,35 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(organization);
 		uri.append(IGitHubConstants.SEGMENT_REPOS);
 		return client.post(uri.toString(), repository, Repository.class);
+	}
+
+	/**
+	 * Get repository
+	 * 
+	 * @param owner
+	 * @param name
+	 * @return repository
+	 * @throws IOException
+	 */
+	public Repository getRepository(final String owner, final String name)
+			throws IOException {
+		return getRepository(RepositoryId.create(owner, name));
+	}
+
+	/**
+	 * Get repository
+	 * 
+	 * @param provider
+	 * @return repository
+	 * @throws IOException
+	 */
+	public Repository getRepository(final IRepositoryIdProvider provider)
+			throws IOException {
+		final String id = getId(provider);
+		GitHubRequest request = createRequest();
+		request.setUri(IGitHubConstants.SEGMENT_REPOS + "/" + id);
+		request.setType(Repository.class);
+		return (Repository) client.get(request).getBody();
+
 	}
 }

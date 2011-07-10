@@ -201,6 +201,11 @@ public interface IGitHubConstants {
 	String PARAM_PAGE = "page"; //$NON-NLS-1$
 
 	/**
+	 * PARAM_LANGUAGE
+	 */
+	String PARAM_LANGUAGE = "language"; //$NON-NLS-1$
+
+	/**
 	 * HEADER_LINK
 	 */
 	String HEADER_LINK = "Link"; //$NON-NLS-1$

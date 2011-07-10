@@ -44,9 +44,15 @@ public class Repository implements IRepositoryIdProvider {
 
 	private int watchers;
 
-	private String defaultBranch;
+	private Repository parent;
+
+	private Repository source;
+
+	private String cloneUrl;
 
 	private String description;
+
+	private String gitUrl;
 
 	private String htmlUrl;
 
@@ -55,6 +61,10 @@ public class Repository implements IRepositoryIdProvider {
 	private String masterBranch;
 
 	private String name;
+
+	private String sshUrl;
+
+	private String svnUrl;
 
 	private String url;
 
@@ -237,18 +247,50 @@ public class Repository implements IRepositoryIdProvider {
 	}
 
 	/**
-	 * @return defaultBranch
+	 * @return parent
 	 */
-	public String getDefaultBranch() {
-		return defaultBranch;
+	public Repository getParent() {
+		return parent;
 	}
 
 	/**
-	 * @param defaultBranch
+	 * @param parent
 	 * @return this repository
 	 */
-	public Repository setDefaultBranch(String defaultBranch) {
-		this.defaultBranch = defaultBranch;
+	public Repository setParent(Repository parent) {
+		this.parent = parent;
+		return this;
+	}
+
+	/**
+	 * @return source
+	 */
+	public Repository getSource() {
+		return source;
+	}
+
+	/**
+	 * @param source
+	 * @return this repository
+	 */
+	public Repository setSource(Repository source) {
+		this.source = source;
+		return this;
+	}
+
+	/**
+	 * @return cloneUrl
+	 */
+	public String getCloneUrl() {
+		return cloneUrl;
+	}
+
+	/**
+	 * @param cloneUrl
+	 * @return this repository
+	 */
+	public Repository setCloneUrl(String cloneUrl) {
+		this.cloneUrl = cloneUrl;
 		return this;
 	}
 
@@ -265,6 +307,22 @@ public class Repository implements IRepositoryIdProvider {
 	 */
 	public Repository setDescription(String description) {
 		this.description = description;
+		return this;
+	}
+
+	/**
+	 * @return gitUrl
+	 */
+	public String getGitUrl() {
+		return gitUrl;
+	}
+
+	/**
+	 * @param gitUrl
+	 * @return this repository
+	 */
+	public Repository setGitUrl(String gitUrl) {
+		this.gitUrl = gitUrl;
 		return this;
 	}
 
@@ -329,6 +387,38 @@ public class Repository implements IRepositoryIdProvider {
 	 */
 	public Repository setName(String name) {
 		this.name = name;
+		return this;
+	}
+
+	/**
+	 * @return sshUrl
+	 */
+	public String getSshUrl() {
+		return sshUrl;
+	}
+
+	/**
+	 * @param sshUrl
+	 * @return this repository
+	 */
+	public Repository setSshUrl(String sshUrl) {
+		this.sshUrl = sshUrl;
+		return this;
+	}
+
+	/**
+	 * @return svnUrl
+	 */
+	public String getSvnUrl() {
+		return svnUrl;
+	}
+
+	/**
+	 * @param svnUrl
+	 * @return this repository
+	 */
+	public Repository setSvnUrl(String svnUrl) {
+		this.svnUrl = svnUrl;
 		return this;
 	}
 
