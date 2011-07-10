@@ -11,7 +11,7 @@
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
-	<test.suite>org.eclipse.mylyn.monitor.tests.AllMonitorTests</test.suite>
+	<test.suite>${project.artifactId}.AllMonitorTests</test.suite>
   </properties>
   <build>
     <plugins>
@@ -19,6 +19,15 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
       </plugin>
+	  <plugin>
+		<groupId>org.eclipse.tycho</groupId>
+		<artifactId>tycho-surefire-plugin</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
+		</configuration>
+	  </plugin>
     </plugins>
   </build>
 </project>

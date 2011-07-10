@@ -11,10 +11,19 @@
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
-	<test.suite>org.eclipse.mylyn.discovery.tests.AllDiscoveryTests</test.suite>
+	<test.suite>${project.artifactId}.AllDiscoveryTests</test.suite>
   </properties>
   <build>
     <plugins>
+	  <plugin>
+		<groupId>org.eclipse.tycho</groupId>
+		<artifactId>tycho-surefire-plugin</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
+		</configuration>
+	  </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
