@@ -3,11 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>mylyn-commons-parent</artifactId>
+    <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
     <groupId>org.eclipse.mylyn.commons</groupId>
     <version>3.7.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.eclipse.mylyn.commons</groupId>
   <artifactId>org.eclipse.mylyn.discovery.ui</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
