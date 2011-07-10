@@ -4,14 +4,42 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
-    <artifactId>mylyn-parent</artifactId>
+    <artifactId>org.eclipse.mylyn-parent</artifactId>
     <version>3.7.0-SNAPSHOT</version>
-    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn.releng</relativePath>
+    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.tasks</groupId>
-  <artifactId>mylyn-tasks-parent</artifactId>
+  <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <mailingLists>
+    <mailingList>
+      <name>Mylyn Tasks Mailing List</name>
+      <post>mylyn-tasks-dev@eclipse.org</post>
+      <subscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-tasks-dev</subscribe>
+      <unsubscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-tasks-dev</unsubscribe>
+      <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-tasks-dev</archive>
+    </mailingList>
+  </mailingLists>
+  <issueManagement>
+    <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn;product=Mylyn%20Tasks</url>
+    <system>Bugzilla</system>
+  </issueManagement>
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>mylyn-snapshots</id>
+      <url>http://download.eclipse.org/mylyn/maven/snapshots</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>mylyn-releases</id>
+      <url>http://download.eclipse.org/mylyn/maven/releases</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
   <modules>
     <module>org.eclipse.mylyn-feature</module>
     <module>org.eclipse.mylyn.bugzilla-feature</module>
@@ -36,14 +64,4 @@
     <module>org.eclipse.mylyn.trac.tests</module>
     <module>org.eclipse.mylyn.trac.ui</module>
   </modules>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
