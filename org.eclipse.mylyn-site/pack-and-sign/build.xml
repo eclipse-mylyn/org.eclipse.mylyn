@@ -1,0 +1,176 @@
+<project name="pack-and-sign" default="pack-and-sign" basedir=".">
+
+  <dirname property="scriptdir" file="${ant.file.pack-and-sign}"/>
+  <property name="pack200" value="${java.home}/bin"/>
+  <property name="filter" value=""/>
+  <property name="mirrorsUrl" value=""/>
+
+  <target name="pack-and-sign">
+	<fail unless="localRepository">Required property localRepository not set</fail>
+	<fail unless="projectDir">Required property projectDir not set</fail>
+	<fail unless="repositoryName">Required property repositoryName not set</fail>
+	<fail unless="signDir">Required property signDir not set</fail>
+	<fail unless="dist">Required property dist not set</fail>
+
+	<echo>Running on ${os.name} ${os.version} (${os.arch}) / ${ant.version} / ${java.vendor} ${java.vm.name} ${java.version}</echo>
+
+	<condition property="sign.skip" value="true"><equals arg1="${skipSign}" arg2="true"/></condition>
+	<condition property="pack.skip" value="true"><equals arg1="${skipPack}" arg2="true"/></condition>
+  	<condition property="promote.skip" value="true"><equals arg1="${skipPromote}" arg2="true"/></condition>
+
+  	<!-- sign -->
+
+	<antcall target="sign"/>
+
+	<!-- condition jars -->
+
+	<delete dir="${projectDir}/conditioner"/>
+	<copy todir="${projectDir}/conditioner">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*${filter}*.jar"/>
+	  </fileset>
+	</copy>
+
+	<antcall target="pack">
+	  <param name="args" value="-processAll -repack"/>
+	  <param name="site" value="${projectDir}/conditioner"/>
+	</antcall>
+
+	<copy todir="${projectDir}/site">
+	  <fileset dir="${projectDir}/conditioner">
+		<include name="**/*${filter}*.jar"/>
+	  </fileset>
+	</copy>
+
+	<!-- create site archive  -->
+
+	<antcall target="publish"/>
+
+	<zip file="${projectDir}/site-archive.zip">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*"/>
+	  </fileset>
+	</zip>
+
+	<!-- pack200  -->
+	
+	<antcall target="pack">
+	  <param name="args" value="-pack"/>
+	  <param name="site" value="${projectDir}/site"/>
+	</antcall>
+
+	<!-- does not work
+	<antcall target="add-mirrors-url"/>
+	-->
+
+	<antcall target="publish"/>
+
+	<!-- create packed site archive  -->
+
+	<zip file="${projectDir}/site-packed.zip">
+	  <fileset dir="${projectDir}/site">
+		<include name="**/*"/>
+	  </fileset>
+	</zip>
+  	
+  	<!-- promote -->
+
+	<antcall target="promote"/>
+
+  </target>
+
+  <target name="sign" unless="sign.skip">	
+	<chmod perm="755" file="${scriptdir}/sign-and-wait.sh"/>
+	<exec executable="${scriptdir}/sign-and-wait.sh" failonerror="true">
+	  <arg value="${projectDir}/site"/>
+	  <arg value="${signDir}"/>
+	  <arg value="${filter}"/>
+	</exec>
+  </target>
+
+  <target name="promote" unless="promote.skip">	
+	<chmod perm="755" file="${scriptdir}/promote.sh"/>
+  	<chmod perm="755" file="${scriptdir}/update-composite.sh"/>
+	<exec executable="${scriptdir}/promote.sh" dir="${scriptdir}" failonerror="true">
+	  <arg value="${dist}"/>
+	  <arg value="${version}"/>
+	  <arg value="${qualifier}"/>
+	  <arg value="${projectDir}"/>	
+	  <arg value="${archiveDir}"/>
+	  <arg value="${siteDir}"/>
+	</exec>
+  </target>
+
+  <target name="pack" unless="pack.skip">	
+	<delete file="${site}/content.jar" />
+	<delete file="${site}/artifacts.jar" />
+	
+	<path id="jarprocessor.classpath">
+	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-p2-runtime">
+		<include name="*/eclipse/plugins/org.eclipse.equinox.p2.jarprocessor_*.jar" />
+	  </fileset>
+	</path>		
+
+	<echo>Using ${pack200} for packing</echo>
+
+	<!-- pack200 -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.internal.p2.jarprocessor.Main"
+			  fork="true" classpathref="jarprocessor.classpath" failonerror="true" maxmemory="512m"
+		  dir="${projectDir}/site">
+	  <jvmarg line="-Dorg.eclipse.update.jarprocessor.pack200=${pack200}" />
+	  <arg line="-verbose ${args}" />
+	  <arg line="-outputDir ${site} ${site}" />
+	</java>
+	
+	<!-- remove corrupted jars -->
+	<!--
+	<delete>
+	  <fileset dir="${projectDir}/site">
+		<include name="plugins/com.google.gwt*.pack.gz"/>
+	  </fileset>
+	</delete>
+	-->
+  </target>
+
+  <target name="add-mirrors-url" unless="promote.skip">	
+	<replace file="${projectDir}/../site.xml">
+	  <replacetoken><![CDATA[<site pack200="true">]]></replacetoken>
+	  <replacevalue><![CDATA[<site pack200="true" mirrorsURL="${mirrorsUrl}">]]></replacevalue>
+	</replace>	
+  </target>
+
+  <target name="publish">	
+	<delete file="${projectDir}/site/content.jar" />
+	<delete file="${projectDir}/site/artifacts.jar" />
+
+	<path id="eclipse.classpath">
+	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-p2-runtime">
+		<include name="*/eclipse/plugins/org.eclipse.equinox.launcher_*.jar" />
+	  </fileset>
+	</path>
+
+	<!-- generate metadata -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.launcher.Main" fork="true"
+		  classpathref="eclipse.classpath" failonerror="true" maxmemory="256m"
+		  dir="${projectDir}/site">
+	  <arg line="-application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher" />
+	  <arg line="-source ${projectDir}/site" />
+	  <arg line="-metadataRepository file://${projectDir}/site" />
+	  <arg line="-artifactRepository file://${projectDir}/site" />
+	  <arg line="-metadataRepositoryName '${repositoryName}'" />
+	  <arg line="-artifactRepositoryName '${repositoryName}'" />
+	  <arg line="-compress -reusePackedFiles -reusePack200Files -publishArtifacts" />
+	</java>
+	
+	<!-- publish categories -->
+	<java jvm="${java.home}/bin/java" classname="org.eclipse.equinox.launcher.Main" fork="true"
+		  classpathref="eclipse.classpath" failonerror="true" maxmemory="256m"
+		  dir="${projectDir}/site">
+	  <arg line="-application org.eclipse.equinox.p2.publisher.CategoryPublisher" />
+	  <arg line="-metadataRepository file://${projectDir}/site" />
+	  <arg line="-categoryDefinition file://${projectDir}/../site.xml" />
+	  <arg line="-compress -categoryQualifier" />
+	</java>	
+  </target>
+
+</project>
