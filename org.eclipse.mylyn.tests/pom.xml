@@ -13,7 +13,7 @@
   <packaging>eclipse-test-plugin</packaging>
   <properties>
     <test.suite>org.eclipse.mylyn.tests.AllTests</test.suite>
-    <mylyn-skip-test>${maven.test.skip}</mylyn-skip-test>
+    <test.all.skip>${test.skip}</test.all.skip>
   </properties>
   <profiles>
     <profile>
@@ -28,53 +28,17 @@
         <test.suite>org.eclipse.mylyn.tests.AllHeartbeatTests</test.suite>
       </properties>
     </profile>
-    <profile>
-      <id>incubator</id>
-      <properties>
-        <mylyn-skip-test>true</mylyn-skip-test>
-      </properties>
-    </profile>
-    <profile>
-      <id>performance</id>
-      <properties>
-        <test.suite>org.eclipse.mylyn.tests.AllPerformanceTests</test.suite>
-      </properties>
-    </profile>
   </profiles>
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <phase>pre-integration-test</phase>
-            <configuration>
-              <target>
-                <echo>Initializing Test Harness</echo>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-		  <skip>${mylyn-skip-test}</skip>
-          <useUIHarness>true</useUIHarness>
-          <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
-          <product>org.eclipse.sdk.ide</product>
-          <application>org.eclipse.ui.ide.workbench</application>
-          <testSuite>org.eclipse.mylyn.tests</testSuite>
-          <testClass>${test.suite}</testClass>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
-          <appArgLine>${test.args}</appArgLine> 
+		  <skip>${test.all.skip}</skip>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
 		  <explodedBundles>
 			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
 		  </explodedBundles>
@@ -106,10 +70,6 @@
             </dependency>
           </dependencies>		  
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
       </plugin>
 	  <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -165,6 +125,10 @@
             </transformationSet>
           </transformationSets>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

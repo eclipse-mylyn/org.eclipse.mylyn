@@ -15,18 +15,18 @@
 
   <properties>
     <mylyn-version>3.7.0-SNAPSHOT</mylyn-version>
-    <tycho-version>0.12.0</tycho-version>
+    <tycho-version>0.13.0-SNAPSHOT</tycho-version>
 
-    <mylyn-credentials></mylyn-credentials>
+    <mylyn-credentials>${user.home}/.mylyn/credentials.properties</mylyn-credentials>
 	<mylyn-test-append></mylyn-test-append>
 
     <analysis.skip>true</analysis.skip>
 
-    <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials}</test.vmargs>
+    <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} ${test.osvmargs}</test.vmargs>
+	<test.osvmargs></test.osvmargs>
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password}</test.args>
-    <test.keyring.file>${basedir}/eclipse.keyring</test.keyring.file>
-    <test.keyring.password>${basedir}/eclipse.keyring.password</test.keyring.password>
-	<test.suite></test.suite>
+    <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
+    <test.keyring.password>${project.build.directory}/target/work/configuration/config.ini</test.keyring.password>
 
 	<sign.skip>true</sign.skip>
 	<pack.skip>false</pack.skip>
@@ -66,13 +66,13 @@
 	  <uniqueVersion>false</uniqueVersion>
 	  <id>mylyn-releases</id>
 	  <name>Mylyn Release Repository</name>
-	  <url>scp://dev.eclipse.org/maven/releases</url>
+	  <url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</url>
 	</repository>
 	<snapshotRepository>
 	  <uniqueVersion>false</uniqueVersion>
 	  <id>mylyn-snapshot</id>
 	  <name>Mylyn Snapshot Repository</name>
-	  <url>scp://dev.eclipse.org/maven/snapshots</url>
+	  <url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</url>
 	</snapshotRepository>
   </distributionManagement>
 
@@ -179,15 +179,12 @@
 		</property>
       </activation>
       <properties>
-		<mylyn-credentials>${env.WORKSPACE}/credentials.properties</mylyn-credentials>
-		<test.keyring.file>${env.WORKSPACE}/keyring</test.keyring.file>
-		<test.keyring.password>${env.WORKSPACE}/keyring.password</test.keyring.password>
-		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
+		<mylyn-credentials>/home/data/httpd/download-staging.priv/tools/mylyn/hudson/.credentials.properties</mylyn-credentials>
 		<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</test.vmargs>
-		<test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password}</test.args>
 		<!--
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
+		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
 		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/archive</dist.archive>
       </properties>
     </profile>
@@ -328,6 +325,18 @@
 		</repository>
 	  </repositories>
 	</profile>
+	<profile>
+      <id>osx</id>
+      <activation>
+        <property>
+          <name>java.vendor.url</name>
+          <value>http://www.apple.com/</value>
+        </property>
+      </activation>
+      <properties>
+        <test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
+      </properties>
+    </profile>
   </profiles>
 
   <build>
@@ -338,6 +347,26 @@
         <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
+	  <!--
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.6</version>
+		<executions>
+		  <execution>
+			<phase>pre-integration-test</phase>
+			<configuration>
+			  <target if="test.suite">
+				<echo file="${test.keyring.password}">.</echo>
+			  </target>
+			</configuration>
+			<goals>
+			  <goal>run</goal>
+			</goals>
+		  </execution>
+		</executions>
+	  </plugin>
+	  -->
     </plugins>
     <pluginManagement>
       <plugins>
@@ -489,24 +518,6 @@
 		  </executions>
 		</plugin>
 		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-antrun-plugin</artifactId>
-		  <version>1.6</version>
-		  <executions>
-			<execution>
-			  <phase>pre-integration-test</phase>
-			  <configuration>
-				<target>
-				  <echo>Initializing Test Harness</echo>
-				</target>
-			  </configuration>
-			  <goals>
-				<goal>run</goal>
-			  </goals>
-			</execution>
-		  </executions>
-		</plugin>
-		<plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
@@ -517,8 +528,6 @@
 			<forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
 			<product>org.eclipse.sdk.ide</product>
 			<application>org.eclipse.ui.ide.workbench</application>
-			<testSuite>${project.artifactId}</testSuite>
-			<testClass>${test.suite}</testClass>
 			<argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
 			<appArgLine>${test.args}</appArgLine> 
 			<environmentVariables>
@@ -526,6 +535,13 @@
 			  <https_proxy>${https_proxy}</https_proxy>
 			</environmentVariables>
 			<application>org.eclipse.ui.ide.workbench</application>
+			<dependencies>
+			  <dependency>
+				<type>p2-installable-unit</type>
+				<artifactId>org.eclipse.sdk.feature.group</artifactId>
+				<version>${platform-version}</version>
+			  </dependency>
+			</dependencies>
           </configuration>
 		</plugin>
       </plugins>
