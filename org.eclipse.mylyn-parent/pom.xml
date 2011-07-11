@@ -26,7 +26,7 @@
 	<test.osvmargs></test.osvmargs>
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password}</test.args>
     <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
-    <test.keyring.password>${project.build.directory}/target/work/configuration/config.ini</test.keyring.password>
+    <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
 
 	<sign.skip>true</sign.skip>
 	<pack.skip>false</pack.skip>
