@@ -76,6 +76,22 @@
 	</snapshotRepository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>mylyn-snapshots</id>
+      <url>http://download.eclipse.org/mylyn/maven/snapshots</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>mylyn-releases</id>
+      <url>http://download.eclipse.org/mylyn/maven/releases</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
+
   <pluginRepositories>
     <pluginRepository>
 	  <id>sonatype-snapshots</id>
