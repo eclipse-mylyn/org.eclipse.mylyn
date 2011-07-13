@@ -7,7 +7,7 @@
     <groupId>org.eclipse.mylyn.versions</groupId>
     <version>0.9.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.eclipse.mylyn.versions.sdk</artifactId>
+  <artifactId>org.eclipse.mylyn.versions.sdk-feature</artifactId>
   <version>0.9.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
