@@ -207,7 +207,7 @@
     <module>../../org.eclipse.mylyn.commons</module>
     <module>../../org.eclipse.mylyn.versions</module>
     <module>../../org.eclipse.mylyn.tasks</module>
-    <module>../../org.eclipse.mylyn.contexts</module>
+    <module>../../org.eclipse.mylyn.context</module>
     <module>../../org.eclipse.mylyn.builds</module>
     <module>../../org.eclipse.mylyn.docs</module>
     <module>../../org.eclipse.mylyn.reviews</module>

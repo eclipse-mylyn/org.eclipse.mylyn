@@ -16,21 +16,11 @@
     <profile>
       <id>standalone</id>
       <modules>
-	<module>org.eclipse.mylyn.tests.standalone</module>
+		<module>org.eclipse.mylyn.tests.standalone</module>
       </modules>
     </profile>
   </profiles>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>
-    <module>org.eclipse.mylyn.help.sdk</module>
-    <module>org.eclipse.mylyn.help.ui</module>
-    <module>org.eclipse.mylyn.sdk-feature</module>
-    <module>org.eclipse.mylyn.test-feature</module>
-    <module>org.eclipse.mylyn.tests</module>
-<!--
-    <module>org.eclipse.mylyn.tests.performance</module>
-    <module>org.eclipse.mylyn.tests.performance-feature</module>
--->
-    <module>org.eclipse.mylyn.tests.ui</module>
   </modules>
 </project>
