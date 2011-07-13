@@ -22,6 +22,7 @@
 
     <analysis.skip>true</analysis.skip>
 
+	<test.skip>${maven.test.skip}</test.skip>
     <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} ${test.osvmargs}</test.vmargs>
 	<test.osvmargs></test.osvmargs>
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password}</test.args>
@@ -40,10 +41,6 @@
 
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
 	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/weekly/</mylyn-repository-url>
-
-    <!--<maven.test.skip>true</maven.test.skip>-->
-    <maven.test.error.ignore>true</maven.test.error.ignore>
-    <maven.test.failure.ignore>true</maven.test.failure.ignore>
   </properties>
 
   <mailingLists>
@@ -121,8 +118,29 @@
   </organization>
 
   <profiles>
+	<!-- Target profiles -->
+    <profile>
+      <id>default-target</id>
+      <activation>
+		<property>
+          <name>!target-profile</name>
+		</property>
+      </activation>
+	  <!-- Properties get overridden if a specific target profile is activated. -->
+      <properties>
+        <target-version>3.7</target-version>
+        <target-platform>mylyn-e3.7</target-platform>
+		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+      </properties>
+    </profile>
     <profile>
       <id>ganymede</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>ganymede</value>
+		</property>
+      </activation>
       <properties>
         <target-version>3.4</target-version>
         <target-platform>mylyn-e3.4</target-platform>
@@ -131,6 +149,12 @@
     </profile>
     <profile>
       <id>galileo</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>galileo</value>
+		</property>
+      </activation>
       <properties>
         <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
@@ -139,6 +163,12 @@
     </profile>
     <profile>
       <id>helios</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>helios</value>
+		</property>
+      </activation>
       <properties>
         <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
@@ -148,7 +178,10 @@
     <profile>
       <id>indigo</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+		<property>
+          <name>t</name>
+          <value>indigo</value>
+		</property>
       </activation>
       <properties>
         <target-version>3.7</target-version>
@@ -158,6 +191,12 @@
     </profile>
     <profile>
       <id>juno</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>juno</value>
+		</property>
+      </activation>
       <properties>
         <target-version>3.8</target-version>
         <target-platform>mylyn-e3.8</target-platform>
@@ -166,6 +205,12 @@
     </profile>
     <profile>
       <id>e4.1</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>e4.1</value>
+		</property>
+      </activation>
       <properties>
         <target-version>4.1</target-version>
         <target-platform>mylyn-e4.1</target-platform>
@@ -174,75 +219,20 @@
     </profile>
     <profile>
       <id>e4.2</id>
+      <activation>
+		<property>
+          <name>target-profile</name>
+          <value>e4.2</value>
+		</property>
+      </activation>
       <properties>
         <target-version>4.2</target-version>
         <target-platform>mylyn-e4.2</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
       </properties>
     </profile>
-    <profile>
-      <id>heartbeat</id>
-      <properties>
-		<mylyn-reviews-skip-test>true</mylyn-reviews-skip-test>
-      </properties>
-    </profile>
-    <profile>
-      <id>hudson.eclipse.org</id>
-      <activation>
-		<property>
-          <name>user.name</name>
-          <value>hudsonbuild</value>
-		</property>
-      </activation>
-      <properties>
-		<mylyn-credentials>/home/data/httpd/download-staging.priv/tools/mylyn/hudson/.credentials.properties</mylyn-credentials>
-		<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</test.vmargs>
-		<!--
-		<mylyn-test-append>@e${target-version}</mylyn-test-append>
-		-->
-		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
-		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/archive</dist.archive>
-      </properties>
-    </profile>
-    <profile>
-      <id>publish</id>
-      <activation>
-		<property>
-          <name>env.PUBLISH</name>
-          <value>true</value>
-		</property>
-      </activation>
-      <properties>
-		<promote.skip>false</promote.skip>
-	  </properties>
-	</profile>
-    <profile>
-      <id>snapshot</id>
-      <activation>
-		<property>
-          <name>env.TYPE</name>
-          <value>snapshot</value>
-		</property>
-      </activation>
-      <properties>
-		<sign.skip>false</sign.skip>
-		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
-	  </properties>
-	</profile>
-    <profile>
-      <id>release</id>
-      <activation>
-		<property>
-          <name>env.TYPE</name>
-          <value>release</value>
-		</property>
-      </activation>
-      <properties>
-		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
-		<sign.skip>false</sign.skip>
-		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
-	  </properties>
-	</profile>
+
+	<!-- Target definition profiles -->
     <profile>
       <id>explicit-target</id>
       <activation>
@@ -344,6 +334,8 @@
 		</repository>
 	  </repositories>
 	</profile>
+
+	<!-- OS and machine specific profiles -->
 	<profile>
       <id>osx</id>
       <activation>
@@ -356,6 +348,70 @@
         <test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
       </properties>
     </profile>
+    <profile>
+      <id>hudson.eclipse.org</id>
+      <activation>
+		<property>
+          <name>user.name</name>
+          <value>hudsonbuild</value>
+		</property>
+      </activation>
+      <properties>
+		<mylyn-credentials>/home/data/httpd/download-staging.priv/tools/mylyn/hudson/.credentials.properties</mylyn-credentials>
+		<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</test.vmargs>
+		<!--
+		<mylyn-test-append>@e${target-version}</mylyn-test-append>
+		-->
+		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
+		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/archive</dist.archive>
+		<maven.test.error.ignore>true</maven.test.error.ignore>
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+      </properties>
+    </profile>
+
+	<!-- Release type profiles -->
+    <profile>
+      <id>heartbeat</id>
+    </profile>
+    <profile>
+      <id>snapshot</id>
+      <activation>
+		<property>
+          <name>env.TYPE</name>
+          <value>snapshot</value>
+		</property>
+      </activation>
+      <properties>
+		<sign.skip>false</sign.skip>
+		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+	  </properties>
+	</profile>
+    <profile>
+      <id>release</id>
+      <activation>
+		<property>
+          <name>env.TYPE</name>
+          <value>release</value>
+		</property>
+      </activation>
+      <properties>
+		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
+		<sign.skip>false</sign.skip>
+		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+	  </properties>
+	</profile>
+    <profile>
+      <id>publish</id>
+      <activation>
+		<property>
+          <name>env.PUBLISH</name>
+          <value>true</value>
+		</property>
+      </activation>
+      <properties>
+		<promote.skip>false</promote.skip>
+	  </properties>
+	</profile>
   </profiles>
 
   <build>
@@ -391,17 +447,6 @@
       <plugins>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-compiler-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-        <plugin>
-          <!-- TODO remove workaround when
-               https://issues.sonatype.org/browse/TYCHO-473
-               is fixed -->
-          <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-source-plugin</artifactId>
           <version>${tycho-version}</version>
           <executions>
@@ -414,6 +459,23 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-compiler-plugin</artifactId>
+          <version>${tycho-version}</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4.1</version>
+          <configuration>
+            <encoding>ISO-8859-1</encoding>
+          </configuration>
+        </plugin>
+		<!-- computes git revision for manifest -->
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-packaging-plugin</artifactId>
@@ -429,14 +491,7 @@
 			</archive>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.1</version>
-          <configuration>
-            <encoding>ISO-8859-1</encoding>
-          </configuration>
-        </plugin>
+		<!-- code analysis -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
@@ -487,7 +542,7 @@
 			</dependency>
 		  </dependencies>
 		</plugin>
-		<!-- record Git revision in MANIFEST.MF -->
+		<!-- record git revision in manifest -->
 		<plugin>
 		  <groupId>org.codehaus.mojo</groupId>
 		  <artifactId>exec-maven-plugin</artifactId>
@@ -536,6 +591,7 @@
 			</execution>
 		  </executions>
 		</plugin>
+		<!-- common test configuration -->
 		<plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-surefire-plugin</artifactId>
