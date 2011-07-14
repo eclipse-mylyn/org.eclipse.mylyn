@@ -43,9 +43,11 @@
          id="org.eclipse.mylyn.bugzilla_feature"
          version="0.0.0"/>
 
+   <!--
    <includes
          id="org.eclipse.mylyn.commons.sdk"
          version="0.0.0"/>
+   -->
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.core.source"
