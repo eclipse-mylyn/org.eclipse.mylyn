@@ -47,6 +47,7 @@
     <module>org.eclipse.mylyn.cdt.ui</module>
     <module>org.eclipse.mylyn.context-feature</module>
     <module>org.eclipse.mylyn.context.core</module>
+    <module>org.eclipse.mylyn.context.sdk-feature</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>
     <module>org.eclipse.mylyn.ide-feature</module>
