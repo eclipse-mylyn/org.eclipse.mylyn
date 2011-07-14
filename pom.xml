@@ -40,13 +40,20 @@
       <layout>default</layout>
     </repository>
   </repositories>
+  <profiles>
+	<profile>
+	  <id>explicit-target</id>
+	  <modules>
+		<module>org.eclipse.mylyn.context.core</module>
+	  </modules>
+	</profile>
+  </profiles>
   <modules>
     <module>org.eclipse.mylyn.bugzilla.ide</module>
     <module>org.eclipse.mylyn.cdt-feature</module>
     <module>org.eclipse.mylyn.cdt.tests</module>
     <module>org.eclipse.mylyn.cdt.ui</module>
     <module>org.eclipse.mylyn.context-feature</module>
-    <module>org.eclipse.mylyn.context.core</module>
     <module>org.eclipse.mylyn.context.sdk-feature</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>
