@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.subclipse.core;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
+import org.tigris.subversion.subclipse.core.resources.SVNWorkspaceRoot;
+import org.tigris.subversion.svnclientadapter.SVNUrl;
 
 /**
  * @author Alvaro Sanchez-Leon
@@ -21,15 +24,22 @@ public class SubclipseRepository extends ScmRepository {
 
 	private final ISVNRepositoryLocation location;
 
-	public SubclipseRepository(SubclipseConnector connector, ISVNRepositoryLocation location) {
+	private final SVNUrl folderUrlStr;
+
+	public SubclipseRepository(SubclipseConnector connector, ISVNRepositoryLocation location, IProject aSelectedProject) {
 		this.location = location;
 		setName(location.getLocation());
 		setUrl(location.getUrl().toString());
 		setConnector(connector);
+		folderUrlStr = SVNWorkspaceRoot.getSVNFolderFor(aSelectedProject).getUrl();
 	}
 
 	public ISVNRepositoryLocation getLocation() {
 		return location;
+	}
+
+	public SVNUrl getProjectSVNFolder() {
+		return folderUrlStr;
 	}
 
 }

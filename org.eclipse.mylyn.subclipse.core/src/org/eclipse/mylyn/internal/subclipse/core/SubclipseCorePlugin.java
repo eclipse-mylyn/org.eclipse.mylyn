@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.subclipse.core;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -24,11 +21,7 @@ public class SubclipseCorePlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.subclipse.core"; //$NON-NLS-1$
 
-	private static final String FTMP_FOLDER_NAME = "subversionTmp"; //$NON-NLS-1$
-
 	static private SubclipseCorePlugin plugin = null;
-
-	public static File tmpDir = null;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -38,7 +31,7 @@ public class SubclipseCorePlugin extends Plugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		deleteTmpFolderTask();
+		super.stop(context);
 	}
 
 	/**
@@ -50,58 +43,4 @@ public class SubclipseCorePlugin extends Plugin {
 		return plugin;
 	}
 
-	/**
-	 * Get the associated temporary directory
-	 * 
-	 * @return
-	 * @throws IOException
-	 */
-	public File getTmpDir() throws IOException {
-		if (tmpDir == null || (!tmpDir.exists())) {
-			tmpDir = plugin.getStateLocation().addTrailingSeparator().append(FTMP_FOLDER_NAME).toFile();
-			tmpDir.mkdir();
-		}
-		return tmpDir;
-	}
-
-	/**
-	 * Delete plug-in temporary files
-	 */
-	private void deleteTmpFolderTask() {
-		if (tmpDir == null || (!tmpDir.exists())) {
-			return;
-		}
-
-		// Delete files in a separate thread
-		Runnable runnable = new Runnable() {
-			public void run() {
-				deleteTmpFolder(tmpDir);
-			}
-		};
-
-		// Start
-		Thread thread = new Thread(runnable);
-		thread.start();
-	}
-
-	/**
-	 * Delete folder contents and given folder last
-	 * 
-	 * @param tmpFolder
-	 */
-	private void deleteTmpFolder(final File tmpFolder) {
-		// Need to delete each file before the directory
-		if (tmpFolder.exists()) {
-			for (File f : tmpFolder.listFiles()) {
-				if (f.isDirectory()) {
-					deleteTmpFolder(f);
-				} else {
-					f.delete();
-				}
-			}
-
-			// finally, Delete the directory
-			tmpFolder.delete();
-		}
-	}
 }
