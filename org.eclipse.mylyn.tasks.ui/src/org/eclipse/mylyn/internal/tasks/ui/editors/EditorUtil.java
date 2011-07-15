@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
@@ -71,6 +72,10 @@ import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
+/**
+ * @author Steffen Pingel
+ * @author Leo Dos Santos
+ */
 public class EditorUtil {
 
 	private static final int PAGE_H_SCROLL_INCREMENT = 64;
@@ -565,31 +570,52 @@ public class EditorUtil {
 	}
 
 	public static void addScrollListener(final CCombo combo) {
-		combo.addListener(SWT.KeyDown, new Listener() {
-			public void handleEvent(Event event) {
-				if (event.keyCode == SWT.ARROW_UP) {
-					if (combo.isFocusControl()) {
-						// could be a legitimate key event, let CCombo handle it
-						return;
-					}
-					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
-					if (form != null) {
-						EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
-						event.doit = false;
-					}
-				} else if (event.keyCode == SWT.ARROW_DOWN) {
-					if (combo.isFocusControl()) {
-						// could be a legitimate key event, let CCombo handle it
-						return;
-					}
-					ScrolledComposite form = FormUtil.getScrolledComposite(combo);
-					if (form != null) {
-						EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
-						event.doit = false;
+		if (PlatformUiUtil.usesMouseWheelEventsForScrolling()) {
+			combo.addListener(SWT.MouseWheel, new Listener() {
+				public void handleEvent(Event event) {
+					if (event.count > 0) {
+						EditorUtil.handleScrollUp(combo, event);
+					} else if (event.count < 0) {
+						EditorUtil.handleScrollDown(combo, event);
 					}
 				}
-			}
-		});
+
+			});
+		} else {
+			combo.addListener(SWT.KeyDown, new Listener() {
+				public void handleEvent(Event event) {
+					if (event.keyCode == SWT.ARROW_UP) {
+						EditorUtil.handleScrollUp(combo, event);
+					} else if (event.keyCode == SWT.ARROW_DOWN) {
+						EditorUtil.handleScrollDown(combo, event);
+					}
+				}
+			});
+		}
+	}
+
+	private static void handleScrollUp(CCombo combo, Event event) {
+		if (combo.isFocusControl()) {
+			// could be a legitimate key event, let CCombo handle it
+			return;
+		}
+		ScrolledComposite form = FormUtil.getScrolledComposite(combo);
+		if (form != null) {
+			EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
+			event.doit = false;
+		}
+	}
+
+	private static void handleScrollDown(CCombo combo, Event event) {
+		if (combo.isFocusControl()) {
+			// could be a legitimate key event, let CCombo handle it
+			return;
+		}
+		ScrolledComposite form = FormUtil.getScrolledComposite(combo);
+		if (form != null) {
+			EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
+			event.doit = false;
+		}
 	}
 
 	public static void setTitleBarForeground(ExpandableComposite composite, Color color) {
