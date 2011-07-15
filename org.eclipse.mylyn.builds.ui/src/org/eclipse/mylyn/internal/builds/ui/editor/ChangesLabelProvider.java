@@ -19,6 +19,7 @@ import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
@@ -34,7 +35,16 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 		}
 	};
 
+	private final CommonImageManger imageManager;
+
 	public ChangesLabelProvider() {
+		this.imageManager = new CommonImageManger();
+	}
+
+	@Override
+	public void dispose() {
+		imageManager.dispose();
+		super.dispose();
 	}
 
 	@Override
@@ -42,7 +52,8 @@ public class ChangesLabelProvider extends LabelProvider implements IStyledLabelP
 		if (element instanceof IChange) {
 			return CommonImages.getImage(BuildImages.CHANGE_SET);
 		} else if (element instanceof IChangeArtifact) {
-			return CommonImages.getImage(CommonImages.FILE_PLAIN);
+			IChangeArtifact changeArtifact = (IChangeArtifact) element;
+			return imageManager.getFileImage(changeArtifact.getFile());
 		}
 		return null;
 	}
