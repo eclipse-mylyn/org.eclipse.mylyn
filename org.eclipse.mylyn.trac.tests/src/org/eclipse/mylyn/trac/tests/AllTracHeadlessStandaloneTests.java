@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientTest;
@@ -31,7 +32,7 @@ import org.eclipse.mylyn.trac.tests.support.TracFixture;
 public class AllTracHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(false);
+		return suite(TestUtil.runHeartbeatTestsOnly());
 	}
 
 	public static Test suite(boolean defaultOnly) {

@@ -129,6 +129,10 @@ public class TestUtil {
 		return CommonTestUtil.getFile(source, filename);
 	}
 
+	public static boolean runHeartbeatTestsOnly() {
+		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+	}
+
 //	public static File getFile(String bundleId, Class<?> clazz, String filename) throws IOException {
 //		Bundle bundle = Platform.getBundle(bundleId);
 //		if (bundle != null) {

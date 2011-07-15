@@ -21,7 +21,9 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
+import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
+import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
  * @author Mik Kersten
@@ -29,12 +31,18 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 public class AllBugzillaTests {
 
 	public static Test suite() {
-		return suite(false);
+		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
+		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
+		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
+		addTests(defaultOnly, suite);
+		return suite;
+	}
 
+	private static void addTests(boolean defaultOnly, TestSuite suite) {
 		// Standalone tests (Don't require an instance of Eclipse)
 		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
 
@@ -59,8 +67,6 @@ public class AllBugzillaTests {
 				addTests_3_6(suite, fixture);
 			}
 		}
-
-		return suite;
 	}
 
 	protected static void addTests_3_6(TestSuite suite, BugzillaFixture fixture) {

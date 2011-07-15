@@ -14,7 +14,9 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorWebTest;
@@ -32,11 +34,18 @@ import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 public class AllTracTests {
 
 	public static Test suite() {
-		return suite(false);
+		TestSuite suite = new ManagedTestSuite(AllTracTests.class.getName());
+		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.trac.tests");
+		TestSuite suite = new TestSuite(AllTracTests.class.getName());
+		addTests(defaultOnly, suite);
+		return suite;
+	}
+
+	private static void addTests(boolean defaultOnly, TestSuite suite) {
 		suite.addTest(AllTracHeadlessStandaloneTests.suite(defaultOnly));
 		suite.addTestSuite(TracUtilTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
@@ -51,7 +60,6 @@ public class AllTracTests {
 				addTests(suite, fixture);
 			}
 		}
-		return suite;
 	}
 
 	protected static void addTests(TestSuite suite, TracFixture fixture) {
