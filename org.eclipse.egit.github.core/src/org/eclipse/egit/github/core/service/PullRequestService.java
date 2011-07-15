@@ -14,11 +14,16 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.Assert;
+import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.PullRequestCommit;
+import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -26,9 +31,36 @@ import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
- * Service class getting and listing pull requests.
+ * Service class for creating, updating, getting, and listing pull requests as
+ * well as getting the commits associated with a pull request and the files
+ * modified by a pull request.
  */
 public class PullRequestService extends GitHubService {
+
+	/**
+	 * PR_TITLE
+	 */
+	public static final String PR_TITLE = "title"; //$NON-NLS-1$
+
+	/**
+	 * PR_BODY
+	 */
+	public static final String PR_BODY = "body"; //$NON-NLS-1$
+
+	/**
+	 * PR_BASE
+	 */
+	public static final String PR_BASE = "base"; //$NON-NLS-1$
+
+	/**
+	 * PR_HEAD
+	 */
+	public static final String PR_HEAD = "head"; //$NON-NLS-1$
+
+	/**
+	 * PR_STATE
+	 */
+	public static final String PR_STATE = "state"; //$NON-NLS-1$
 
 	/**
 	 * @param client
@@ -38,22 +70,21 @@ public class PullRequestService extends GitHubService {
 	}
 
 	/**
-	 * Get pull request from repository with id
+	 * Create request for single pull request
 	 * 
 	 * @param repository
 	 * @param id
-	 * @return pull request
+	 * @return request
 	 * @throws IOException
 	 */
-	public PullRequest getPullRequest(IRepositoryIdProvider repository,
-			String id) throws IOException {
+	public PullRequest getPullRequest(IRepositoryIdProvider repository, int id)
+			throws IOException {
 		final String repoId = getId(repository);
-		Assert.notNull("Id cannot be null", id); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		uri.append('/').append(id);
-		GitHubRequest request = new GitHubRequest();
+		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(PullRequest.class);
 		return (PullRequest) client.get(request).getBody();
@@ -139,5 +170,127 @@ public class PullRequestService extends GitHubService {
 		PagedRequest<PullRequest> request = createdPullsRequest(repository,
 				state, start, size);
 		return createPageIterator(request);
+	}
+
+	private Map<String, String> createPrMap(PullRequest request) {
+		Map<String, String> params = new HashMap<String, String>();
+		String title = request.getTitle();
+		if (title != null)
+			params.put(PR_TITLE, title);
+		String body = request.getBody();
+		if (body != null)
+			params.put(PR_BODY, body);
+		PullRequestMarker baseMarker = request.getBase();
+		if (baseMarker != null) {
+			String base = baseMarker.getLabel();
+			if (base != null)
+				params.put(PR_BASE, base);
+		}
+		PullRequestMarker headMarker = request.getHead();
+		if (headMarker != null) {
+			String head = headMarker.getLabel();
+			if (head != null)
+				params.put(PR_HEAD, head);
+		}
+		return params;
+	}
+
+	private Map<String, String> editPrMap(PullRequest request) {
+		Map<String, String> params = new HashMap<String, String>();
+		String title = request.getTitle();
+		if (title != null)
+			params.put(PR_TITLE, title);
+		String body = request.getBody();
+		if (body != null)
+			params.put(PR_BODY, body);
+		String state = request.getState();
+		if (state != null)
+			params.put(PR_STATE, state);
+		return params;
+	}
+
+	/**
+	 * Create pull request
+	 * 
+	 * @param repository
+	 * @param request
+	 * @return created pull request
+	 * @throws IOException
+	 */
+	public PullRequest createPullRequest(IRepositoryIdProvider repository,
+			PullRequest request) throws IOException {
+		String id = getId(repository);
+		Assert.notNull("Request cannot be null", request);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(id);
+		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		Map<String, String> params = createPrMap(request);
+		return client.post(uri.toString(), params, PullRequest.class);
+	}
+
+	/**
+	 * Edit pull request
+	 * 
+	 * @param repository
+	 * @param request
+	 * @return edited pull request
+	 * @throws IOException
+	 */
+	public PullRequest editPullRequest(IRepositoryIdProvider repository,
+			PullRequest request) throws IOException {
+		String id = getId(repository);
+		Assert.notNull("Request cannot be null", request);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append('/').append(request.getNumber());
+		Map<String, String> params = editPrMap(request);
+		return client.post(uri.toString(), params, PullRequest.class);
+	}
+
+	/**
+	 * Get all commits associated with given pull request id
+	 * 
+	 * @param repository
+	 * @param id
+	 * @return list of commits
+	 * @throws IOException
+	 */
+	public List<PullRequestCommit> getCommits(IRepositoryIdProvider repository,
+			int id) throws IOException {
+		final String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		PagedRequest<PullRequestCommit> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<PullRequestCommit>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get all changed files associated with given pull request id
+	 * 
+	 * @param repository
+	 * @param id
+	 * @return list of commit files
+	 * @throws IOException
+	 */
+	public List<CommitFile> getFiles(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		final String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_FILES);
+		PagedRequest<CommitFile> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<CommitFile>>() {
+		}.getType());
+		return getAll(request);
 	}
 }

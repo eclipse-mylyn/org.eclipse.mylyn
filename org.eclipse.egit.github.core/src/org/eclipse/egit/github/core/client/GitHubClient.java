@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 import java.io.IOException;
@@ -21,7 +19,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.ProxySelector;
-import java.util.Date;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -68,10 +65,7 @@ public class GitHubClient {
 
 	private Header userAgent = USER_AGENT;
 
-	private final Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Date.class, new DateFormatter())
-			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-			.serializeNulls().create();
+	private final Gson gson = GsonUtils.createGson();
 
 	/**
 	 * Create default client
@@ -237,6 +231,35 @@ public class GitHubClient {
 	}
 
 	/**
+	 * Convert object to a JSON string
+	 * 
+	 * @param object
+	 * @return JSON string
+	 * @throws IOException
+	 */
+	private String toJson(Object object) throws IOException {
+		try {
+			return gson.toJson(object);
+		} catch (JsonParseException jpe) {
+			throw new IOException(jpe.getMessage());
+		}
+	}
+
+	/**
+	 * Get {@link HttpEntity} from response
+	 * 
+	 * @param response
+	 * @return non-null entity
+	 * @throws IOException
+	 */
+	protected HttpEntity getEntity(HttpResponse response) throws IOException {
+		HttpEntity entity = response.getEntity();
+		if (entity == null)
+			throw new IOException("Response has no entity"); //$NON-NLS-1$
+		return entity;
+	}
+
+	/**
 	 * Get {@link InputStream} from response
 	 * 
 	 * @param response
@@ -244,13 +267,78 @@ public class GitHubClient {
 	 * @throws IOException
 	 */
 	protected InputStream getStream(HttpResponse response) throws IOException {
-		HttpEntity entity = response.getEntity();
-		if (entity == null)
-			throw new IOException("Response has no entity"); //$NON-NLS-1$
-		InputStream stream = entity.getContent();
+		InputStream stream = getEntity(response).getContent();
 		if (stream == null)
 			throw new IOException("Empty body"); //$NON-NLS-1$
 		return stream;
+	}
+
+	/**
+	 * Parse error from response
+	 * 
+	 * @param response
+	 * @return request error
+	 * @throws IOException
+	 */
+	protected RequestError parseError(HttpResponse response) throws IOException {
+		return parseJson(response, RequestError.class);
+	}
+
+	/**
+	 * Create error exception from response and throw it
+	 * 
+	 * @param response
+	 * @param status
+	 * @return non-null newly created {@link IOException}
+	 */
+	protected IOException createException(HttpResponse response,
+			StatusLine status) {
+		final int code = status.getStatusCode();
+		switch (code) {
+		case HttpStatus.SC_BAD_REQUEST:
+		case HttpStatus.SC_UNAUTHORIZED:
+		case HttpStatus.SC_FORBIDDEN:
+		case HttpStatus.SC_NOT_FOUND:
+		case HttpStatus.SC_UNPROCESSABLE_ENTITY:
+		case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+			RequestError error;
+			try {
+				error = parseError(response);
+			} catch (IOException e) {
+				return e;
+			}
+			return new RequestException(error, code);
+		default:
+			return new IOException(status.getReasonPhrase());
+		}
+	}
+
+	/**
+	 * Is the response successful?
+	 * 
+	 * @param response
+	 * @param status
+	 * @return true if okay, false otherwise
+	 */
+	protected boolean isOk(HttpResponse response, StatusLine status) {
+		switch (status.getStatusCode()) {
+		case HttpStatus.SC_OK:
+		case HttpStatus.SC_CREATED:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * Is the response empty?
+	 * 
+	 * @param response
+	 * @param status
+	 * @return true if empty, false otherwise
+	 */
+	protected boolean isEmpty(HttpResponse response, StatusLine status) {
+		return HttpStatus.SC_NO_CONTENT == status.getStatusCode();
 	}
 
 	/**
@@ -277,27 +365,11 @@ public class GitHubClient {
 	 */
 	public InputStream getStream(GitHubRequest request) throws IOException {
 		HttpGet method = createGet(request.generateUri());
-		try {
-			HttpResponse response = client.execute(httpHost, method,
-					httpContext);
-			StatusLine status = getStatus(response);
-			switch (status.getStatusCode()) {
-			case HttpStatus.SC_OK:
-				return getStream(response);
-			case HttpStatus.SC_BAD_REQUEST:
-			case HttpStatus.SC_UNAUTHORIZED:
-			case HttpStatus.SC_FORBIDDEN:
-			case HttpStatus.SC_NOT_FOUND:
-			case HttpStatus.SC_UNPROCESSABLE_ENTITY:
-			case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-				RequestError error = parseJson(response, RequestError.class);
-				throw new RequestException(error, status.getStatusCode());
-			default:
-				throw new IOException(status.getReasonPhrase());
-			}
-		} catch (JsonParseException jpe) {
-			throw new IOException(jpe.getMessage());
-		}
+		HttpResponse response = client.execute(httpHost, method, httpContext);
+		StatusLine status = getStatus(response);
+		if (isOk(response, status))
+			return getStream(response);
+		throw createException(response, status);
 	}
 
 	/**
@@ -309,30 +381,14 @@ public class GitHubClient {
 	 */
 	public GitHubResponse get(GitHubRequest request) throws IOException {
 		HttpGet method = createGet(request.generateUri());
-		try {
-			HttpResponse response = client.execute(httpHost, method,
-					httpContext);
-			StatusLine status = getStatus(response);
-			switch (status.getStatusCode()) {
-			case HttpStatus.SC_OK:
-				return new GitHubResponse(response, parseJson(response,
-						request.getType()));
-			case HttpStatus.SC_NO_CONTENT:
-				return new GitHubResponse(response, null);
-			case HttpStatus.SC_BAD_REQUEST:
-			case HttpStatus.SC_UNAUTHORIZED:
-			case HttpStatus.SC_FORBIDDEN:
-			case HttpStatus.SC_NOT_FOUND:
-			case HttpStatus.SC_UNPROCESSABLE_ENTITY:
-			case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-				RequestError error = parseJson(response, RequestError.class);
-				throw new RequestException(error, status.getStatusCode());
-			default:
-				throw new IOException(status.getReasonPhrase());
-			}
-		} catch (JsonParseException jpe) {
-			throw new IOException(jpe.getMessage());
-		}
+		HttpResponse response = client.execute(httpHost, method, httpContext);
+		StatusLine status = getStatus(response);
+		if (isOk(response, status))
+			return new GitHubResponse(response, parseJson(response,
+					request.getType()));
+		if (isEmpty(response, status))
+			return new GitHubResponse(response, null);
+		throw createException(response, status);
 	}
 
 	/**
@@ -347,33 +403,20 @@ public class GitHubClient {
 	 */
 	protected <V> V sendJson(HttpEntityEnclosingRequestBase method,
 			Object params, Type type) throws IOException {
-		if (params != null) {
-			StringBuilder payload = new StringBuilder();
-			gson.toJson(params, payload);
-			method.setEntity(new StringEntity(payload.toString(),
+		if (params != null)
+			method.setEntity(new StringEntity(toJson(params),
 					IGitHubConstants.CONTENT_TYPE_JSON,
 					IGitHubConstants.CHARSET_UTF8));
-		}
 		HttpResponse response = client.execute(httpHost, method, httpContext);
 		StatusLine status = getStatus(response);
-		switch (status.getStatusCode()) {
-		case HttpStatus.SC_OK:
-		case HttpStatus.SC_CREATED:
+		if (isOk(response, status))
 			if (type != null)
 				return parseJson(response, type);
-		case HttpStatus.SC_NO_CONTENT:
+			else
+				return null;
+		if (isEmpty(response, status))
 			return null;
-		case HttpStatus.SC_BAD_REQUEST:
-		case HttpStatus.SC_UNAUTHORIZED:
-		case HttpStatus.SC_FORBIDDEN:
-		case HttpStatus.SC_NOT_FOUND:
-		case HttpStatus.SC_UNPROCESSABLE_ENTITY:
-		case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-			RequestError error = parseJson(response, RequestError.class);
-			throw new RequestException(error, status.getStatusCode());
-		default:
-			throw new IOException(status.getReasonPhrase());
-		}
+		throw createException(response, status);
 	}
 
 	/**
@@ -405,8 +448,8 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Delete resource at uri. This method will throw an {@link IOException}
-	 * when the response in not a 204 (No Content) status.
+	 * Delete resource at URI. This method will throw an {@link IOException}
+	 * when the response status is not a 204 (No Content).
 	 * 
 	 * @param uri
 	 * @throws IOException
@@ -414,10 +457,9 @@ public class GitHubClient {
 	public void delete(String uri) throws IOException {
 		HttpResponse response = client.execute(httpHost, createDelete(uri),
 				httpContext);
-		int status = getStatus(response).getStatusCode();
-		if (status != HttpStatus.SC_NO_CONTENT) {
-			RequestError error = parseJson(response, RequestError.class);
-			throw new RequestException(error, status);
-		}
+		StatusLine status = getStatus(response);
+		if (!isEmpty(response, status))
+			throw new RequestException(parseError(response),
+					status.getStatusCode());
 	}
 }

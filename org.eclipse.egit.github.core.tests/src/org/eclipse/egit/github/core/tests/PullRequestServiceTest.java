@@ -50,12 +50,7 @@ public class PullRequestServiceTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void getPullRequest_NullRepository() throws IOException {
-		pullRequestService.getPullRequest(null, "not null");
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void getPullRequest_NullId() throws IOException {
-		pullRequestService.getPullRequest(repository, null);
+		pullRequestService.getPullRequest(null, 3);
 	}
 
 	@Test

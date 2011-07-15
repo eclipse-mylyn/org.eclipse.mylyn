@@ -55,7 +55,7 @@ public class PullRequestTest extends LiveTest {
 	public void fetch() throws IOException {
 		PullRequestService service = new PullRequestService(client);
 		PullRequest request = service.getPullRequest(new SearchRepository(
-				"technoweenie", "faraday"), "15");
+				"technoweenie", "faraday"), 15);
 		assertNotNull(request);
 		assertNotNull(request.getHtmlUrl());
 		assertNotNull(request.getDiffUrl());

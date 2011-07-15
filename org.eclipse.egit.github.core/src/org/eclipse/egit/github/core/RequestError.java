@@ -39,7 +39,6 @@ public class RequestError {
 	 * @return list of errors
 	 */
 	public List<FieldError> getErrors() {
-		return this.errors;
+		return errors;
 	}
-
 }
