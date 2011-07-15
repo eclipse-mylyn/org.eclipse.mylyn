@@ -13,12 +13,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
@@ -31,56 +29,39 @@ import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
 
-	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-
 	private final TaskDataModel model;
 
 	private final AttributeEditorToolkit attributeEditorToolkit;
 
-	private final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
+	private final CommonImageManger imageManager;
 
 	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
+		this.imageManager = new CommonImageManger();
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		if (columnIndex == 0) {
 			if (AttachmentUtil.isContext(attachment)) {
-				return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
+				return imageManager.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
-				return CommonImages.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
+				return imageManager.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
 			} else {
-				String filename = attachment.getFileName();
-				if (filename != null) {
-					int dotIndex = filename.lastIndexOf('.');
-					if (dotIndex != -1) {
-						String fileType = filename.substring(dotIndex + 1);
-						for (String element2 : IMAGE_EXTENSIONS) {
-							if (element2.equalsIgnoreCase(fileType)) {
-								return CommonImages.getImage(CommonImages.IMAGE_FILE);
-							}
-						}
-					}
-					return (Image) resourceManager.get(PlatformUI.getWorkbench()
-							.getEditorRegistry()
-							.getImageDescriptor(filename));
-				}
-				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
+				return imageManager.getFileImage(attachment.getFileName());
 			}
 		} else if (columnIndex == 3 && attachment.getAuthor() != null) {
 			return getAuthorImage(attachment.getAuthor(), attachment.getTaskRepository());
@@ -97,9 +78,9 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	 */
 	protected Image getAuthorImage(IRepositoryPerson person, TaskRepository repository) {
 		if (repository != null && person != null && person.getPersonId().equals(repository.getUserName())) {
-			return CommonImages.getImage(CommonImages.PERSON_ME);
+			return imageManager.getImage(CommonImages.PERSON_ME);
 		} else {
-			return CommonImages.getImage(CommonImages.PERSON);
+			return imageManager.getImage(CommonImages.PERSON);
 		}
 	}
 
@@ -153,7 +134,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public void dispose() {
-		resourceManager.dispose();
+		imageManager.dispose();
 	}
 
 	@Override
