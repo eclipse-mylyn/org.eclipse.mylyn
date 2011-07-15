@@ -14,47 +14,44 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.TimeZone;
-
 
 /**
  * Formatter for date formats present in the GitHub v2 and v3 API.
  */
-public class DateFormatter implements JsonDeserializer<Date> {
+public class DateFormatter implements JsonDeserializer<Date>,
+		JsonSerializer<Date> {
 
-	private List<DateFormat> formats;
+	private final Deque<DateFormat> formats;
 
 	/**
 	 * Create date formatter
 	 */
 	public DateFormatter() {
-		this.formats = new LinkedList<DateFormat>();
-		this.formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT));
-		this.formats
-				.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1));
-		this.formats
-				.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2));
-		TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
-		for (DateFormat format : this.formats)
+		formats = new LinkedList<DateFormat>();
+		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT));
+		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1));
+		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2));
+		final TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
+		for (DateFormat format : formats)
 			format.setTimeZone(timeZone);
 	}
 
-	/**
-	 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement,
-	 *      java.lang.reflect.Type, com.google.gson.JsonDeserializationContext)
-	 */
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonParseException exception = null;
-		for (DateFormat format : this.formats)
+		for (DateFormat format : formats)
 			try {
 				synchronized (format) {
 					return format.parse(json.getAsString());
@@ -65,4 +62,8 @@ public class DateFormatter implements JsonDeserializer<Date> {
 		throw exception;
 	}
 
+	public JsonElement serialize(Date date, Type type,
+			JsonSerializationContext context) {
+		return new JsonPrimitive(formats.getFirst().format(date));
+	}
 }

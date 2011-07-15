@@ -131,6 +131,16 @@ public interface IGitHubConstants {
 	String SEGMENT_TEAMS = "/teams"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_COMMITS
+	 */
+	String SEGMENT_COMMITS = "/commits"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_FILES
+	 */
+	String SEGMENT_FILES = "/files"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
@@ -149,6 +159,11 @@ public interface IGitHubConstants {
 	 * HOST_API_V2
 	 */
 	String HOST_API_V2 = "github.com"; //$NON-NLS-1$
+
+	/**
+	 * HOST_DEFAULT
+	 */
+	String HOST_DEFAULT = "github.com"; //$NON-NLS-1$
 
 	/**
 	 * PROTOCOL_HTTPS
@@ -244,5 +259,10 @@ public interface IGitHubConstants {
 	 * META_PREV
 	 */
 	String META_PREV = "prev"; //$NON-NLS-1$
+
+	/**
+	 * SUFFIX_GIT
+	 */
+	String SUFFIX_GIT = ".git"; //$NON-NLS-1$
 
 }
