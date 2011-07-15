@@ -141,7 +141,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	 * @return avatar store
 	 */
 	public AvatarStore getStore() {
-		return this.store;
+		return store;
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class GitHubUi extends AbstractUIPlugin {
 			ObjectInputStream stream = null;
 			try {
 				stream = new ObjectInputStream(new FileInputStream(file));
-				this.store = (AvatarStore) stream.readObject();
+				store = (AvatarStore) stream.readObject();
 			} catch (IOException e) {
 				logError("Error reading avatar store", e); //$NON-NLS-1$
 			} catch (ClassNotFoundException cnfe) {
@@ -179,8 +179,8 @@ public class GitHubUi extends AbstractUIPlugin {
 					}
 			}
 		}
-		if (this.store == null)
-			this.store = new AvatarStore();
+		if (store == null)
+			store = new AvatarStore();
 	}
 
 	/**
@@ -217,5 +217,4 @@ public class GitHubUi extends AbstractUIPlugin {
 		INSTANCE = null;
 		saveAvatars(context);
 	}
-
 }

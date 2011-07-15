@@ -14,13 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
-import java.util.Collections;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.HandlerEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -40,8 +37,6 @@ import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
@@ -50,21 +45,19 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * Clone Gist handler class.
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CloneGistHandler extends AbstractHandler {
+public class CloneGistHandler extends TaskDataHandler {
 
 	/**
 	 * Get gist name for task data used to create projects and Git repositories
@@ -89,25 +82,8 @@ public class CloneGistHandler extends AbstractHandler {
 	 */
 	public static final String ID = "org.eclipse.mylyn.github.ui.command.cloneGist"; //$NON-NLS-1$
 
-	private IEvaluationContext context;
-
 	@Override
-	public void setEnabled(Object evaluationContext) {
-		context = evaluationContext instanceof IEvaluationContext ? (IEvaluationContext) evaluationContext
-				: null;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		if (!super.isEnabled())
-			return false;
-		if (context == null)
-			return false;
-		ExecutionEvent event = new ExecutionEvent(null, Collections.EMPTY_MAP,
-				null, context);
-		TaskData data = getTaskData(event);
-		if (data == null)
-			return false;
+	public boolean isEnabled(TaskData data) {
 		String id = getGistName(data);
 		return !getWorkspaceRoot().getProject(id).exists()
 				&& !getRepoUtil().getConfiguredRepositories().contains(id);
@@ -156,7 +132,8 @@ public class CloneGistHandler extends AbstractHandler {
 	private CloneOperation createCloneOperation(TaskData data, String name)
 			throws IOException, URISyntaxException {
 		String pullUrl = data.getRoot()
-				.getAttribute(GistAttribute.CLONE_URL.getId()).getValue();
+				.getAttribute(GistAttribute.CLONE_URL.getMetadata().getId())
+				.getValue();
 		URIish uri = new URIish(pullUrl);
 		int timeout = Activator.getDefault().getPreferenceStore()
 				.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
@@ -256,41 +233,12 @@ public class CloneGistHandler extends AbstractHandler {
 	}
 
 	/**
-	 * Get task data from event
-	 * 
-	 * @param event
-	 * @return task data
-	 */
-	protected TaskData getTaskData(ExecutionEvent event) {
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection == null || selection.isEmpty())
-			selection = HandlerUtil.getActiveMenuSelection(event);
-
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			Object first = ((IStructuredSelection) selection).getFirstElement();
-			if (first instanceof TaskData)
-				return (TaskData) first;
-			else if (first instanceof ITask)
-				try {
-					return TasksUi.getTaskDataManager().getTaskData(
-							(ITask) first);
-				} catch (CoreException e) {
-					return null;
-				}
-		}
-		return null;
-	}
-
-	/**
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
-		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) activeSite
-				.getService(IWorkbenchSiteProgressService.class);
 		TaskData data = getTaskData(event);
 		if (data != null)
-			service.schedule(createCloneJob(event, data));
+			schedule(createCloneJob(event, data), event);
 		return null;
 	}
 }

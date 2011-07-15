@@ -87,7 +87,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 			RepositoryId repo = GitHub.getRepository(url);
 			if (repo != null)
 				repositoryLabelEditor.setStringValue(repo.getOwner() + '/'
-						+ repo.getName());
+						+ repo.getName() + " issues");
 		}
 	}
 

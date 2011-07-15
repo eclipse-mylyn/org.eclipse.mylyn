@@ -22,6 +22,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * GitHub class
@@ -56,6 +59,23 @@ public class GitHub {
 	 */
 	public static GitHubClient configureClient(GitHubClient client) {
 		return client.setUserAgent(USER_AGENT);
+	}
+
+	/**
+	 * Set credentials on client from task repository
+	 * 
+	 * @param client
+	 * @param repository
+	 * @return specified client
+	 */
+	public static GitHubClient addCredentials(GitHubClient client,
+			TaskRepository repository) {
+		AuthenticationCredentials credentials = repository
+				.getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials != null)
+			client.setCredentials(credentials.getUserName(),
+					credentials.getPassword());
+		return client;
 	}
 
 	/**

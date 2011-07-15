@@ -128,7 +128,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private TaskAttribute getAttribute(IssueAttribute attribute) {
-		return getAttribute(attribute.getId());
+		return getAttribute(attribute.getMetadata().getId());
 	}
 
 	private TaskAttribute getAttribute(String id) {
@@ -162,13 +162,13 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 		layout.verticalSpacing = 3;
 		composite.setLayout(layout);
 
-		TaskAttribute reporter = getAttribute(IssueAttribute.REPORTER);
+		TaskAttribute reporter = getAttribute(TaskAttribute.USER_REPORTER);
 		if (reporter != null) {
 			IRepositoryPerson person = getTaskData().getAttributeMapper()
 					.getRepositoryPerson(reporter);
-			if (this.reporterAvatarId != null
+			if (reporterAvatarId != null
 					&& addAvatarPart(composite, toolkit,
-							getAttribute(this.reporterAvatarId), person))
+							getAttribute(reporterAvatarId), person))
 				layout.numColumns++;
 		}
 		addSummaryText(composite, toolkit);

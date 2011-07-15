@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.github.core.issue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,12 +39,10 @@ import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.egit.github.core.service.MilestoneService;
 import org.eclipse.egit.github.core.util.LabelComparator;
 import org.eclipse.egit.github.core.util.MilestoneComparator;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -53,13 +50,12 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
- * GitHub connector.
+ * GitHub issue repository connector.
  */
-public class IssueConnector extends AbstractRepositoryConnector {
+public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * GitHub kind.
@@ -81,11 +77,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
+		GitHub.addCredentials(client, repository);
 		return GitHub.configureClient(client);
 	}
 
@@ -141,9 +133,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
 		List<Label> labels = new LinkedList<Label>();
 		List<Label> cached = this.repositoryLabels.get(repository);
-		if (cached != null) {
+		if (cached != null)
 			labels.addAll(cached);
-		}
 		return labels;
 	}
 
@@ -154,7 +145,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	 * @return true if contains labels, false otherwise
 	 */
 	public boolean hasCachedLabels(TaskRepository repository) {
-		return this.repositoryLabels.containsKey(repository);
+		return repositoryLabels.containsKey(repository);
 	}
 
 	/**
@@ -177,7 +168,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 			milestones.addAll(service.getMilestones(repo.getOwner(),
 					repo.getName(), IssueService.STATE_CLOSED));
 			Collections.sort(milestones, new MilestoneComparator());
-			this.repositoryMilestones.put(repository, milestones);
+			repositoryMilestones.put(repository, milestones);
 			return milestones;
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
@@ -206,7 +197,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	 * @return true if contains milestones, false otherwise
 	 */
 	public boolean hasCachedMilestones(TaskRepository repository) {
-		return this.repositoryMilestones.containsKey(repository);
+		return repositoryMilestones.containsKey(repository);
 	}
 
 	/**
@@ -252,7 +243,7 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	 */
 	@Override
 	public AbstractTaskDataHandler getTaskDataHandler() {
-		return this.taskDataHandler;
+		return taskDataHandler;
 	}
 
 	@Override
@@ -304,6 +295,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 
 				// collect task data
 				for (Issue issue : issues) {
+					if (issue.getPullRequest() == null)
+						continue;
 					List<Comment> comments = null;
 					if (issue.getComments() > 0)
 						comments = service.getComments(owner, name,
@@ -333,10 +326,9 @@ public class IssueConnector extends AbstractRepositoryConnector {
 			Issue issue = service.getIssue(repo.getOwner(), repo.getName(),
 					taskId);
 			List<Comment> comments = null;
-			if (issue.getComments() > 0) {
+			if (issue.getComments() > 0)
 				comments = service.getComments(repo.getOwner(), repo.getName(),
 						taskId);
-			}
 			return taskDataHandler.createTaskData(repository, monitor,
 					repo.getOwner(), repo.getName(), issue, comments);
 		} catch (IOException e) {
@@ -349,9 +341,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		if (taskFullUrl != null) {
 			Matcher matcher = Pattern.compile(
 					"(http://.+?)/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
-			if (matcher.matches()) {
+			if (matcher.matches())
 				return matcher.group(1);
-			}
 		}
 		return null;
 	}
@@ -361,9 +352,8 @@ public class IssueConnector extends AbstractRepositoryConnector {
 		if (taskFullUrl != null) {
 			Matcher matcher = Pattern
 					.compile(".+?/issues/issue/([^/]+)").matcher(taskFullUrl); //$NON-NLS-1$
-			if (matcher.matches()) {
+			if (matcher.matches())
 				return matcher.group(1);
-			}
 		}
 		return null;
 	}
@@ -387,29 +377,20 @@ public class IssueConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean hasTaskChanged(TaskRepository repository, ITask task,
-			TaskData taskData) {
-		Date dataDate = getTaskMapping(taskData).getModificationDate();
-		Date taskDate = task.getModificationDate();
-		return dataDate == null || !dataDate.equals(taskDate);
-	}
-
-	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository,
 			ITask task, TaskData taskData) {
 		if (!taskData.isNew()) {
-			task.setUrl(getTaskUrl(taskRepository.getUrl(),
-					taskData.getTaskId()));
 			String diffUrl = null;
 			TaskAttribute prDiff = taskData.getRoot().getAttribute(
-					IssueAttribute.PULL_REQUEST_DIFF.getId());
+					IssueAttribute.PULL_REQUEST_DIFF.getMetadata().getId());
 			if (prDiff != null) {
 				diffUrl = taskData.getAttributeMapper().getValue(prDiff);
 				if (diffUrl.length() == 0)
 					diffUrl = null;
 			}
-			task.setAttribute(IssueAttribute.PULL_REQUEST_DIFF.getId(), diffUrl);
+			task.setAttribute(IssueAttribute.PULL_REQUEST_DIFF.getMetadata()
+					.getId(), diffUrl);
 		}
-		new TaskMapper(taskData).applyTo(task);
+		super.updateTaskFromTaskData(taskRepository, task, taskData);
 	}
 }

@@ -13,7 +13,7 @@
 package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -28,32 +28,24 @@ import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.mylyn.internal.github.core.GitHub;
-import org.eclipse.mylyn.internal.github.core.GitHubException;
-import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.internal.github.core.GitHubTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
-import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 /**
  * GitHub issue task data handler
  */
-public class IssueTaskDataHandler extends AbstractTaskDataHandler {
+public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 
 	private static final String DATA_VERSION = "1"; //$NON-NLS-1$
 	private static final String MILESTONE_NONE_KEY = "0"; //$NON-NLS-1$
-	private IssueAttributeMapper taskAttributeMapper = null;
 	private final IssueConnector connector;
 
 	/**
@@ -65,13 +57,16 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		this.connector = connector;
 	}
 
-	@Override
-	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		if (this.taskAttributeMapper == null)
-			this.taskAttributeMapper = new IssueAttributeMapper(taskRepository);
-		return this.taskAttributeMapper;
-	}
-
+	/**
+	 * Create task data
+	 * 
+	 * @param repository
+	 * @param monitor
+	 * @param user
+	 * @param project
+	 * @param issue
+	 * @return task data
+	 */
 	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project, Issue issue) {
 
@@ -82,31 +77,37 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		createOperations(data, issue);
 
-		createAttribute(data, IssueAttribute.KEY, key);
-		createAttribute(data, IssueAttribute.TITLE, issue.getTitle());
-		createAttribute(data, IssueAttribute.BODY, issue.getBody());
-		createAttribute(data, IssueAttribute.STATUS, issue.getState());
-		createAttribute(data, IssueAttribute.CREATION_DATE,
+		createAttribute(data, IssueAttribute.KEY.getMetadata(), key);
+		createAttribute(data, IssueAttribute.TITLE.getMetadata(),
+				issue.getTitle());
+		createAttribute(data, IssueAttribute.BODY.getMetadata(),
+				issue.getBody());
+		createAttribute(data, IssueAttribute.STATUS.getMetadata(),
+				issue.getState());
+		createAttribute(data, IssueAttribute.CREATION_DATE.getMetadata(),
 				issue.getCreatedAt());
-		createAttribute(data, IssueAttribute.MODIFICATION_DATE,
+		createAttribute(data, IssueAttribute.MODIFICATION_DATE.getMetadata(),
 				issue.getUpdatedAt());
-		createAttribute(data, IssueAttribute.CLOSED_DATE, issue.getClosedAt());
+		createAttribute(data, IssueAttribute.CLOSED_DATE.getMetadata(),
+				issue.getClosedAt());
 
 		User reporter = issue.getUser();
-		createAttribute(data, IssueAttribute.REPORTER, reporter, repository);
+		createAttribute(data, IssueAttribute.REPORTER.getMetadata(), reporter,
+				repository);
 		String reporterGravatar = reporter != null ? reporter.getAvatarUrl()
 				: null;
-		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR,
+		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR.getMetadata(),
 				reporterGravatar);
 
 		User assignee = issue.getAssignee();
-		createAttribute(data, IssueAttribute.ASSIGNEE, assignee, repository);
+		createAttribute(data, IssueAttribute.ASSIGNEE.getMetadata(), assignee,
+				repository);
 		String assigneeGravatar = assignee != null ? assignee.getAvatarUrl()
 				: null;
-		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR,
+		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR.getMetadata(),
 				assigneeGravatar);
 
-		createAttribute(data, IssueAttribute.COMMENT_NEW);
+		createAttribute(data, IssueAttribute.COMMENT_NEW.getMetadata());
 
 		createLabels(repository, data, issue);
 
@@ -114,7 +115,11 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 		PullRequest pr = issue.getPullRequest();
 		String prDiffUrl = pr != null ? pr.getDiffUrl() : null;
-		createAttribute(data, IssueAttribute.PULL_REQUEST_DIFF, prDiffUrl);
+		createAttribute(data, IssueAttribute.PULL_REQUEST_DIFF.getMetadata(),
+				prDiffUrl);
+		if (prDiffUrl != null)
+			createAttribute(data,
+					IssueAttribute.PULL_REQUEST_BODY.getMetadata(), ""); //$NON-NLS-1$
 
 		return data;
 	}
@@ -125,17 +130,16 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		String number = current != null ? Integer.toString(current.getNumber())
 				: MILESTONE_NONE_KEY;
 		TaskAttribute milestoneAttribute = createAttribute(data,
-				IssueAttribute.MILESTONE, number);
+				IssueAttribute.MILESTONE.getMetadata(), number);
 
-		if (!this.connector.hasCachedMilestones(repository))
+		if (!connector.hasCachedMilestones(repository))
 			try {
-				this.connector.refreshMilestones(repository);
+				connector.refreshMilestones(repository);
 			} catch (CoreException ignore) {
 				// Ignored
 			}
 
-		List<Milestone> cachedMilestones = this.connector
-				.getMilestones(repository);
+		List<Milestone> cachedMilestones = connector.getMilestones(repository);
 		milestoneAttribute.putOption(MILESTONE_NONE_KEY,
 				Messages.IssueAttribute_MilestoneNone);
 		for (Milestone milestone : cachedMilestones)
@@ -149,22 +153,20 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute labels = createAttribute(data, IssueAttribute.LABELS,
 				issue.getLabels());
 
-		if (!this.connector.hasCachedLabels(repository))
+		if (!connector.hasCachedLabels(repository))
 			try {
-				this.connector.refreshLabels(repository);
+				connector.refreshLabels(repository);
 			} catch (CoreException ignore) {
 				// Ignored
 			}
 
-		List<Label> cachedLabels = this.connector.getLabels(repository);
+		List<Label> cachedLabels = connector.getLabels(repository);
 		for (Label label : cachedLabels)
 			labels.putOption(label.getName(), label.getName());
 	}
 
 	private void createOperations(TaskData data, Issue issue) {
-		TaskAttribute operationAttribute = data.getRoot().createAttribute(
-				TaskAttribute.OPERATION);
-		operationAttribute.getMetaData().setType(TaskAttribute.TYPE_OPERATION);
+		createOperationAttribute(data);
 
 		if (!data.isNew()) {
 			String state = issue.getState();
@@ -179,17 +181,10 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private void addOperation(TaskData data, Issue issue,
-			IssueOperation operation, boolean asDefault) {
-		TaskAttribute attribute = data.getRoot().createAttribute(
-				TaskAttribute.PREFIX_OPERATION + operation.getId());
+			IssueOperation operation, boolean isDefault) {
+		String id = operation.getId();
 		String label = createOperationLabel(issue, operation);
-		TaskOperation.applyTo(attribute, operation.getId(), label);
-
-		if (asDefault) {
-			TaskAttribute operationAttribute = data.getRoot().getAttribute(
-					TaskAttribute.OPERATION);
-			TaskOperation.applyTo(operationAttribute, operation.getId(), label);
-		}
+		addOperation(data, id, label, isDefault);
 	}
 
 	private String createOperationLabel(Issue issue, IssueOperation operation) {
@@ -197,6 +192,17 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 				+ issue.getState() : operation.getLabel();
 	}
 
+	/**
+	 * Create task data for issue
+	 * 
+	 * @param repository
+	 * @param monitor
+	 * @param user
+	 * @param project
+	 * @param issue
+	 * @param comments
+	 * @return task data
+	 */
 	public TaskData createTaskData(TaskRepository repository,
 			IProgressMonitor monitor, String user, String project, Issue issue,
 			List<Comment> comments) {
@@ -204,41 +210,23 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 				issue);
 		taskData.setPartial(false);
 
-		if (comments != null && !comments.isEmpty()) {
-			int count = 1;
-			TaskAttribute root = taskData.getRoot();
-			for (Comment comment : comments) {
-				TaskCommentMapper commentMapper = new TaskCommentMapper();
-				User author = comment.getUser();
-				IRepositoryPerson authorPerson = repository.createPerson(author
-						.getLogin());
-				authorPerson.setName(author.getName());
-				commentMapper.setAuthor(authorPerson);
-				commentMapper.setCreationDate(comment.getCreatedAt());
-				commentMapper.setText(comment.getBody());
-				commentMapper.setCommentId(comment.getUrl());
-				commentMapper.setNumber(count);
-
-				TaskAttribute attribute = root
-						.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
-				commentMapper.applyTo(attribute);
-				count++;
-			}
-		}
+		addComments(taskData.getRoot(), comments, repository);
 
 		return taskData;
 	}
 
 	private Issue createIssue(TaskData taskData) {
 		Issue issue = new Issue();
-		if (!taskData.isNew()) {
+		if (!taskData.isNew())
 			issue.setNumber(Integer.parseInt(taskData.getTaskId()));
-		}
-		issue.setBody(getAttributeValue(taskData, IssueAttribute.BODY));
-		issue.setTitle(getAttributeValue(taskData, IssueAttribute.TITLE));
+
+		issue.setBody(getAttributeValue(taskData,
+				IssueAttribute.BODY.getMetadata()));
+		issue.setTitle(getAttributeValue(taskData,
+				IssueAttribute.TITLE.getMetadata()));
 
 		String assigneeValue = getAttributeValue(taskData,
-				IssueAttribute.ASSIGNEE);
+				IssueAttribute.ASSIGNEE.getMetadata());
 		if (assigneeValue != null) {
 			if (assigneeValue.trim().length() == 0)
 				assigneeValue = null;
@@ -247,7 +235,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		String milestoneValue = getAttributeValue(taskData,
-				IssueAttribute.MILESTONE);
+				IssueAttribute.MILESTONE.getMetadata());
 		if (milestoneValue != null) {
 			Milestone milestone = new Milestone();
 			if (milestoneValue.length() > 0)
@@ -257,53 +245,11 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 		return issue;
 	}
 
-	private String getAttributeValue(TaskData taskData, IssueAttribute attr) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attr.getId());
-		return attribute == null ? null : attribute.getValue();
-	}
-
-	private TaskAttribute createAttribute(TaskData data,
-			IssueAttribute attribute) {
-		TaskAttribute attr = data.getRoot().createAttribute(attribute.getId());
-		TaskAttributeMetaData metaData = attr.getMetaData();
-		metaData.defaults().setType(attribute.getType())
-				.setKind(attribute.getKind()).setLabel(attribute.getLabel())
-				.setReadOnly(attribute.isReadOnly());
-		return attr;
-	}
-
-	private TaskAttribute createAttribute(TaskData data,
-			IssueAttribute attribute, String value) {
-		TaskAttribute attr = createAttribute(data, attribute);
-		if (value != null)
-			data.getAttributeMapper().setValue(attr, value);
-		return attr;
-	}
-
-	private TaskAttribute createAttribute(TaskData data,
-			IssueAttribute attribute, Date value) {
-		TaskAttribute attr = createAttribute(data, attribute);
-		if (value != null)
-			data.getAttributeMapper().setDateValue(attr, value);
-		return attr;
-	}
-
-	private void createAttribute(TaskData data, IssueAttribute attribute,
-			User value, TaskRepository repository) {
-		TaskAttribute attr = createAttribute(data, attribute);
-		if (value != null) {
-			IRepositoryPerson person = repository
-					.createPerson(value.getLogin());
-			person.setName(value.getName());
-			data.getAttributeMapper().setRepositoryPerson(attr, person);
-		}
-	}
-
 	private TaskAttribute createAttribute(TaskData data,
 			IssueAttribute attribute, List<Label> values) {
-		TaskAttribute attr = createAttribute(data, attribute);
+		TaskAttribute attr = createAttribute(data, attribute.getMetadata());
 		if (values != null) {
-			List<String> labels = new LinkedList<String>();
+			List<String> labels = new ArrayList<String>(values.size());
 			for (Label label : values)
 				labels.add(label.getName());
 			data.getAttributeMapper().setValues(attr, labels);
@@ -317,8 +263,8 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		data.setVersion(DATA_VERSION);
 		for (IssueAttribute attr : IssueAttribute.values())
-			if (attr.isInitTask())
-				createAttribute(data, attr, (String) null);
+			if (attr.getMetadata().isInitTask())
+				createAttribute(data, attr.getMetadata(), (String) null);
 		Issue dummy = new Issue();
 		createLabels(repository, data, dummy);
 		createMilestones(repository, data, dummy);
@@ -341,17 +287,17 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 			TaskRepository repository, TaskData data,
 			Set<TaskAttribute> oldAttributes, Issue issue) {
 		TaskAttribute labelsAttribute = data.getRoot().getAttribute(
-				IssueAttribute.LABELS.getId());
+				IssueAttribute.LABELS.getMetadata().getId());
 		if (oldAttributes.contains(labelsAttribute)) {
 			LabelService labelService = new LabelService(client);
 
-			if (!this.connector.hasCachedLabels(repository))
+			if (!connector.hasCachedLabels(repository))
 				try {
-					this.connector.refreshLabels(repository);
+					connector.refreshLabels(repository);
 				} catch (CoreException ignore) {
 					// Ignore
 				}
-			List<Label> currentLabels = this.connector.getLabels(repository);
+			List<Label> currentLabels = connector.getLabels(repository);
 			List<Label> newLabels = new LinkedList<Label>();
 			List<Label> labels = new LinkedList<Label>();
 			for (String value : labelsAttribute.getValues()) {
@@ -370,7 +316,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 
 			if (!newLabels.isEmpty())
 				try {
-					this.connector.refreshLabels(repository);
+					connector.refreshLabels(repository);
 				} catch (CoreException ignore) {
 					// Ignore
 				}
@@ -397,7 +343,7 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 			} else {
 				// Handle new comment
 				String comment = getAttributeValue(taskData,
-						IssueAttribute.COMMENT_NEW);
+						IssueAttribute.COMMENT_NEW.getMetadata());
 				if (comment != null && comment.length() > 0)
 					service.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
@@ -426,11 +372,8 @@ public class IssueTaskDataHandler extends AbstractTaskDataHandler {
 			return new RepositoryResponse(
 					taskData.isNew() ? ResponseKind.TASK_CREATED
 							: ResponseKind.TASK_UPDATED, taskId);
-		} catch (RequestException e) {
-			throw new CoreException(
-					GitHub.createErrorStatus(new GitHubException(e)));
 		} catch (IOException e) {
-			throw new CoreException(GitHub.createErrorStatus(e));
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 
 	}

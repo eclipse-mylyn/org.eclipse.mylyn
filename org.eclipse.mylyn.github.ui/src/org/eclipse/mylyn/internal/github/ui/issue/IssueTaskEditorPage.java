@@ -54,9 +54,9 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
 			public AbstractTaskEditorPart createPart() {
-				return new IssueSummaryPart(
-						IssueAttribute.REPORTER_GRAVATAR.getId(),
-						IssueAttribute.ASSIGNEE_GRAVATAR.getId());
+				return new IssueSummaryPart(IssueAttribute.REPORTER_GRAVATAR
+						.getMetadata().getId(),
+						IssueAttribute.ASSIGNEE_GRAVATAR.getMetadata().getId());
 			}
 		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
@@ -67,5 +67,4 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		}.setPath(PATH_ATTRIBUTES));
 		return partDescriptors;
 	}
-
 }

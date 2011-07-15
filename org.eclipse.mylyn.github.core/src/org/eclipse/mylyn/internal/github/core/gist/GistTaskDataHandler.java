@@ -28,23 +28,21 @@ import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
-import org.eclipse.mylyn.internal.github.core.issue.IssueAttributeMapper;
+import org.eclipse.mylyn.internal.github.core.GitHubTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * Gist task data handler class.
  */
-public class GistTaskDataHandler extends AbstractTaskDataHandler {
+public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Fill task data with comments
@@ -56,30 +54,7 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData fillComments(TaskRepository repository, TaskData data,
 			List<Comment> comments) {
-		if (comments == null || comments.isEmpty())
-			return data;
-
-		int count = 1;
-		TaskAttribute root = data.getRoot();
-		for (Comment comment : comments) {
-			TaskCommentMapper commentMapper = new TaskCommentMapper();
-			User author = comment.getUser();
-			if (author != null) {
-				IRepositoryPerson authorPerson = repository.createPerson(author
-						.getLogin());
-				authorPerson.setName(author.getName());
-				commentMapper.setAuthor(authorPerson);
-			}
-			commentMapper.setCreationDate(comment.getCreatedAt());
-			commentMapper.setText(comment.getBody());
-			commentMapper.setCommentId(comment.getUrl());
-			commentMapper.setNumber(count);
-
-			TaskAttribute attribute = root
-					.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
-			commentMapper.applyTo(attribute);
-			count++;
-		}
+		addComments(data.getRoot(), comments, repository);
 		return data;
 	}
 
@@ -106,35 +81,40 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 			Gist gist) {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
-		TaskAttribute key = GistAttribute.KEY.create(data);
+		TaskAttribute key = GistAttribute.KEY.getMetadata().create(data);
 		mapper.setValue(key, gist.getId());
 
-		TaskAttribute description = GistAttribute.DESCRIPTION.create(data);
+		TaskAttribute description = GistAttribute.DESCRIPTION.getMetadata()
+				.create(data);
 		String gistDescription = gist.getDescription();
 		if (gistDescription != null)
 			mapper.setValue(description, gistDescription);
 
-		TaskAttribute created = GistAttribute.CREATED.create(data);
+		TaskAttribute created = GistAttribute.CREATED.getMetadata()
+				.create(data);
 		mapper.setDateValue(created, gist.getCreatedAt());
 
-		TaskAttribute updated = GistAttribute.UPDATED.create(data);
+		TaskAttribute updated = GistAttribute.UPDATED.getMetadata()
+				.create(data);
 		mapper.setDateValue(updated, gist.getUpdatedAt());
 
-		TaskAttribute url = GistAttribute.URL.create(data);
+		TaskAttribute url = GistAttribute.URL.getMetadata().create(data);
 		url.setValue(gist.getHtmlUrl());
 
-		TaskAttribute pullUrl = GistAttribute.CLONE_URL.create(data);
+		TaskAttribute pullUrl = GistAttribute.CLONE_URL.getMetadata().create(
+				data);
 		pullUrl.setValue(gist.getGitPushUrl());
 
 		IRepositoryPerson reporterPerson = null;
 		User user = gist.getUser();
 		if (user != null) {
-			TaskAttribute reporter = GistAttribute.AUTHOR.create(data);
-			reporterPerson = repository.createPerson(user.getLogin());
-			reporterPerson.setName(user.getName());
+			TaskAttribute reporter = GistAttribute.AUTHOR.getMetadata().create(
+					data);
+			reporterPerson = createPerson(user, repository);
 			mapper.setRepositoryPerson(reporter, reporterPerson);
 
-			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR.create(data);
+			TaskAttribute gravatar = GistAttribute.AUTHOR_GRAVATAR
+					.getMetadata().create(data);
 			mapper.setValue(gravatar, user.getAvatarUrl());
 		}
 
@@ -157,16 +137,17 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 						TaskAttribute.PREFIX_ATTACHMENT + count);
 				attachmentMapper.applyTo(attribute);
 
-				GistAttribute.RAW_FILE_URL.create(attribute).setValue(
-						file.getRawUrl());
+				GistAttribute.RAW_FILE_URL.getMetadata().create(attribute)
+						.setValue(file.getRawUrl());
 
 				count++;
 			}
 		}
 
-		GistAttribute.COMMENT_NEW.create(data);
+		GistAttribute.COMMENT_NEW.getMetadata().create(data);
 
-		TaskAttribute summary = GistAttribute.SUMMARY.create(data);
+		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata()
+				.create(data);
 		mapper.setValue(summary, generateSummary(fileCount, sizeCount));
 
 		return data;
@@ -184,21 +165,20 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private String formatSize(long size) {
-		if (size == 1) {
+		if (size == 1)
 			return Messages.GistTaskDataHandler_SizeByte;
-		} else if (size < 1024) {
+		else if (size < 1024)
 			return new DecimalFormat(Messages.GistTaskDataHandler_SizeBytes)
 					.format(size);
-		} else if (size >= 1024 && size <= 1048575) {
+		else if (size >= 1024 && size <= 1048575)
 			return new DecimalFormat(Messages.GistTaskDataHandler_SizeKilobytes)
 					.format(size / 1024.0);
-		} else if (size >= 1048576 && size <= 1073741823) {
+		else if (size >= 1048576 && size <= 1073741823)
 			return new DecimalFormat(Messages.GistTaskDataHandler_SizeMegabytes)
 					.format(size / 1048576.0);
-		} else {
+		else
 			return new DecimalFormat(Messages.GistTaskDataHandler_SizeGigabytes)
 					.format(size / 1073741824.0);
-		}
 	}
 
 	/**
@@ -224,8 +204,8 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		GistService service = new GistService(client);
 		TaskAttribute root = taskData.getRoot();
 		gist.setId(taskData.getTaskId());
-		gist.setDescription(root
-				.getAttribute(GistAttribute.DESCRIPTION.getId()).getValue());
+		gist.setDescription(root.getAttribute(
+				GistAttribute.DESCRIPTION.getMetadata().getId()).getValue());
 
 		if (taskData.isNew()) {
 			try {
@@ -238,7 +218,8 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 		} else {
 			try {
 				String newComment = root.getAttribute(
-						GistAttribute.COMMENT_NEW.getId()).getValue();
+						GistAttribute.COMMENT_NEW.getMetadata().getId())
+						.getValue();
 				if (newComment.length() > 0)
 					service.createComment(taskData.getTaskId(), newComment);
 
@@ -263,18 +244,11 @@ public class GistTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		TaskAttributeMapper mapper = data.getAttributeMapper();
 
-		TaskAttribute summary = GistAttribute.SUMMARY.create(data);
+		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata()
+				.create(data);
 		mapper.setValue(summary, Messages.GistTaskDataHandler_SummaryNewGist);
-		GistAttribute.DESCRIPTION.create(data);
+		GistAttribute.DESCRIPTION.getMetadata().create(data);
 
 		return true;
 	}
-
-	/**
-	 * @see org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler#getAttributeMapper(org.eclipse.mylyn.tasks.core.TaskRepository)
-	 */
-	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		return new IssueAttributeMapper(taskRepository);
-	}
-
 }

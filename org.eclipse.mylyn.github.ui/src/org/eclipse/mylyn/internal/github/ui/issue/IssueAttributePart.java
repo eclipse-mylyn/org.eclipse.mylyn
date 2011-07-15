@@ -64,12 +64,12 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	@Override
 	protected AbstractAttributeEditor createAttributeEditor(
 			TaskAttribute attribute) {
-		if (IssueAttribute.LABELS.getId().equals(attribute.getId())) {
+		if (IssueAttribute.LABELS.getMetadata().getId()
+				.equals(attribute.getId()))
 			return new IssueLabelAttributeEditor(getModel(), attribute);
-		} else if (IssueAttribute.MILESTONE.getId().equals(
-				attribute.getId())) {
+		if (IssueAttribute.MILESTONE.getMetadata().getId()
+				.equals(attribute.getId()))
 			return super.createAttributeEditor(attribute);
-		}
 		return null;
 	}
 
@@ -194,13 +194,13 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 
 		TaskAttribute root = getTaskData().getRoot();
 		List<TaskAttribute> attributes = new LinkedList<TaskAttribute>();
-		TaskAttribute milestones = root
-				.getAttribute(IssueAttribute.MILESTONE.getId());
+		TaskAttribute milestones = root.getAttribute(IssueAttribute.MILESTONE
+				.getMetadata().getId());
 		if (milestones != null)
 			attributes.add(milestones);
 
 		TaskAttribute labels = root.getAttribute(IssueAttribute.LABELS
-				.getId());
+				.getMetadata().getId());
 		if (labels != null)
 			attributes.add(labels);
 

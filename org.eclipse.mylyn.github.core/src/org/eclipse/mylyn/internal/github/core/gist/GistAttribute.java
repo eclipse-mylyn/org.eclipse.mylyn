@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.core.gist;
 
+import org.eclipse.mylyn.internal.github.core.GitHubAttributeMetadata;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * Gist task attribute enumeration.
@@ -74,7 +74,8 @@ public enum GistAttribute {
 	/**
 	 * CLONE_URL
 	 */
-	CLONE_URL("github.gist.cloneUrl", Messages.GistAttribute_LabelCloneUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
+	CLONE_URL(
+			"github.gist.cloneUrl", Messages.GistAttribute_LabelCloneUrl, TaskAttribute.TYPE_URL, //$NON-NLS-1$
 			true),
 
 	/**
@@ -90,81 +91,24 @@ public enum GistAttribute {
 			Messages.GistAttribute_LabelDescription,
 			TaskAttribute.TYPE_LONG_RICH_TEXT, false);
 
-	private String id;
-	private String label;
-	private String type;
-	private String kind;
-	private boolean readOnly;
+	private final GitHubAttributeMetadata attribute;
 
 	private GistAttribute(String id, String label, String type, boolean readOnly) {
-		this(id, label, TaskAttribute.KIND_DEFAULT, type, readOnly);
+		attribute = new GitHubAttributeMetadata(id, label, type, readOnly);
 	}
 
 	private GistAttribute(String id, String label, String kind, String type,
 			boolean readOnly) {
-		this.id = id;
-		this.label = label;
-		this.kind = kind;
-		this.type = type;
-		this.readOnly = readOnly;
+		attribute = new GitHubAttributeMetadata(id, label, kind, type,
+				readOnly, false);
 	}
 
 	/**
-	 * @return id
-	 */
-	public String getId() {
-		return this.id;
-	}
-
-	/**
-	 * @return label
-	 */
-	public String getLabel() {
-		return this.label;
-	}
-
-	/**
-	 * @return type
-	 */
-	public String getType() {
-		return this.type;
-	}
-
-	/**
-	 * @return kind
-	 */
-	public String getKind() {
-		return this.kind;
-	}
-
-	/**
-	 * @return readOnly
-	 */
-	public boolean isReadOnly() {
-		return this.readOnly;
-	}
-
-	/**
-	 * Create task attribute under root of task data
+	 * Get task attribute metadata
 	 * 
-	 * @param data
-	 * @return created attribute
+	 * @return metadata
 	 */
-	public TaskAttribute create(TaskData data) {
-		return create(data.getRoot());
-	}
-
-	/**
-	 * Create task attribute under parent
-	 * 
-	 * @param parent
-	 * @return created attribute
-	 */
-	public TaskAttribute create(TaskAttribute parent) {
-		TaskAttribute attribute = new TaskAttribute(parent, this.id);
-		attribute.getMetaData().defaults().setLabel(this.label)
-				.setType(this.type).setKind(this.kind)
-				.setReadOnly(this.readOnly);
+	public GitHubAttributeMetadata getMetadata() {
 		return attribute;
 	}
 }

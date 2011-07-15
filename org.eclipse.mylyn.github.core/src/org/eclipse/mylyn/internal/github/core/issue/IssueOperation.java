@@ -65,11 +65,9 @@ public enum IssueOperation {
 	 *         operation
 	 */
 	public static IssueOperation fromId(String opId) {
-		for (IssueOperation op : values()) {
-			if (op.getId().equals(opId)) {
+		for (IssueOperation op : values())
+			if (op.getId().equals(opId))
 				return op;
-			}
-		}
 		return null;
 	}
 

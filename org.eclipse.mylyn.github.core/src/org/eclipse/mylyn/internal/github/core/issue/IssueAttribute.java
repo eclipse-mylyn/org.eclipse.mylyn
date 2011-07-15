@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.core.issue;
 
+import org.eclipse.mylyn.internal.github.core.GitHubAttributeMetadata;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -114,83 +115,36 @@ public enum IssueAttribute {
 	 * URL to diff if issue is a pull request
 	 */
 	PULL_REQUEST_DIFF(Messages.IssueAttribute_LabelPullRequestDiffUrl,
-			"github.issue.pull.diff", //$NON-NLS-2$
-			TaskAttribute.TYPE_URL, null, true, false);
+			"github.issue.pull.diff", //$NON-NLS-2$ //$NON-NLS-1$
+			TaskAttribute.TYPE_URL, null, true, false),
 
-	private final String id;
-	private final String label;
-	private final String kind;
-	private final boolean readOnly;
-	private final boolean initTask;
-	private final String type;
+	/**
+	 * Body of pull request if issue is a pull request
+	 */
+	PULL_REQUEST_BODY(Messages.IssueAttribute_LabelPullRequestBody,
+			"github.issue.pull.body", //$NON-NLS-2$
+			TaskAttribute.TYPE_LONG_TEXT, null, true, false);
+
+	private final GitHubAttributeMetadata metadata;
 
 	private IssueAttribute(String label, String id, String type,
 			boolean readOnly, boolean initTask) {
-		this(label, id, type, TaskAttribute.KIND_DEFAULT, readOnly, initTask);
+		metadata = new GitHubAttributeMetadata(id, label, type, readOnly,
+				initTask);
 	}
 
 	private IssueAttribute(String label, String id, String type, String kind,
 			boolean readOnly, boolean initTask) {
-		this.label = label;
-		this.id = id;
-		this.kind = kind;
-		this.type = type;
-		this.readOnly = readOnly;
-		this.initTask = initTask;
+		metadata = new GitHubAttributeMetadata(id, label, kind, type, readOnly,
+				initTask);
 	}
 
 	/**
-	 * Get attribute label
+	 * Get task attribute metadata
 	 * 
-	 * @return label
+	 * @return metadata
 	 */
-	public String getLabel() {
-		return label;
+	public GitHubAttributeMetadata getMetadata() {
+		return metadata;
 	}
-
-	/**
-	 * Get attribute id
-	 * 
-	 * @return id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Get attribute type
-	 * 
-	 * @return type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * Is attribute read only?
-	 * 
-	 * @return true if read only, false otherwise
-	 */
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-
-	/**
-	 * Get attribute kind
-	 * 
-	 * @return kind
-	 */
-	public String getKind() {
-		return this.kind;
-	}
-
-	/**
-	 * Is this attribute created for new tasks?
-	 * 
-	 * @return true if needed for new tasks, false otherwise
-	 */
-	public boolean isInitTask() {
-		return initTask;
-	}
-
 }

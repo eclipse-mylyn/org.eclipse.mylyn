@@ -63,7 +63,7 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor)
 			throws CoreException {
 		TaskAttribute urlAttribute = attachmentAttribute
-				.getAttribute(GistAttribute.RAW_FILE_URL.getId());
+				.getAttribute(GistAttribute.RAW_FILE_URL.getMetadata().getId());
 		try {
 			if (urlAttribute == null)
 				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
@@ -88,7 +88,8 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 				.createFrom(attachmentAttribute);
 		Gist gist = new Gist().setId(task.getTaskId());
 		gist.setDescription(attachmentAttribute.getParentAttribute()
-				.getAttribute(GistAttribute.DESCRIPTION.getId()).getValue());
+				.getAttribute(GistAttribute.DESCRIPTION.getMetadata().getId())
+				.getValue());
 		GistFile file = new GistFile();
 		file.setFilename(mapper.getFileName());
 		gist.setFiles(Collections.singletonMap(file.getFilename(), file));

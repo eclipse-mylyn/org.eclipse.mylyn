@@ -13,21 +13,7 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.ui.UIIcons;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.issue.IssueSummaryPart;
@@ -38,10 +24,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
@@ -104,7 +87,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 
 				public AbstractTaskEditorPart createPart() {
 					return new IssueSummaryPart(GistAttribute.AUTHOR_GRAVATAR
-							.getId(), null);
+							.getMetadata().getId(), null);
 				}
 			}.setPath(PATH_HEADER));
 			partDescriptors.add(new TaskEditorPartDescriptor(
