@@ -27,8 +27,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -478,8 +476,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUi.getTaskActivityManager().activateTask(task);
-		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(
-				RepositoryTaskHandleUtil.getHandle(repository.getRepositoryUrl(), taskData.getTaskId()));
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"), false);

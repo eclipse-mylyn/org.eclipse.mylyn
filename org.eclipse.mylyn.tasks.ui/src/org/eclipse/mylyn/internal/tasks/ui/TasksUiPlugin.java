@@ -53,11 +53,9 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.commons.identity.IdentityModel;
 import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
 import org.eclipse.mylyn.internal.commons.ui.TaskBarManager;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
@@ -102,6 +100,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -185,6 +184,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	// shared colors for all forms
 	private FormColors formColors;
+
+	private static AbstractTaskContextStore contextStore;
 
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
@@ -1418,4 +1419,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 		return identityModel;
 	}
+
+	public static AbstractTaskContextStore getContextStore() {
+		return contextStore;
+	}
+
 }

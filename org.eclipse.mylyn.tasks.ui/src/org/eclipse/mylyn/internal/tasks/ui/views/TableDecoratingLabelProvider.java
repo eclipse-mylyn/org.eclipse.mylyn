@@ -15,9 +15,9 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -46,7 +46,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 					if (task.isActive()) {
 						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
 					} else {
-						if (ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
+						if (TasksUiPlugin.getContextStore().hasContext(task)) {
 							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE);
 						} else {
 							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);

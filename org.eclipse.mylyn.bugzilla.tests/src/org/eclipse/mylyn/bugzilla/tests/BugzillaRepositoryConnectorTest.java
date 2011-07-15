@@ -31,7 +31,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
@@ -830,7 +829,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		ITask task = generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task);
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
-		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();

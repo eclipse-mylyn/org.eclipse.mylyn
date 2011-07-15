@@ -14,10 +14,10 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
@@ -205,8 +205,7 @@ public class TaskAttachmentPage extends WizardPage {
 		attachContextButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		attachContextButton.setText(Messages.TaskAttachmentPage_ATTACHE_CONTEXT);
 		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
-		attachContextButton.setEnabled(ContextCore.getContextManager()
-				.hasContext(model.getTask().getHandleIdentifier()));
+		attachContextButton.setEnabled(TasksUiPlugin.getContextStore().hasContext(model.getTask()));
 
 		/*
 		 * Attachment file name listener, update the local attachment

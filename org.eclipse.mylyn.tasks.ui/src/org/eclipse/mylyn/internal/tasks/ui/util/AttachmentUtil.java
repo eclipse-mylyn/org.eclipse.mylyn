@@ -36,8 +36,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
@@ -86,9 +84,9 @@ public class AttachmentUtil {
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		ContextCorePlugin.getContextStore().saveActiveContext();
+		TasksUiPlugin.getContextStore().saveActiveContext();
 
-		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		File file = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
 		if (attachmentHandler != null && file != null && file.exists()) {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 			attachment.setDescription(CONTEXT_DESCRIPTION);
@@ -138,7 +136,9 @@ public class AttachmentUtil {
 		try {
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					File targetFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+							task.getRepositoryUrl());
+					File targetFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
 					try {
 						boolean exceptionThrown = true;
 						OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
@@ -182,8 +182,8 @@ public class AttachmentUtil {
 
 	public static boolean uploadContext(final TaskRepository repository, final ITask task, final String comment,
 			final IRunnableContext context) {
-		ContextCorePlugin.getContextStore().saveActiveContext();
-		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		TasksUiPlugin.getContextStore().saveActiveContext();
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
 		if (!sourceContextFile.exists()) {
 			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, Messages.AttachmentUtil_The_context_is_empty));
@@ -224,7 +224,7 @@ public class AttachmentUtil {
 
 	public static boolean hasLocalContext(ITask task) {
 		Assert.isNotNull(task);
-		return ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
+		return TasksUiPlugin.getContextStore().hasContext(task);
 	}
 
 	public static boolean isContext(ITaskAttachment attachment) {

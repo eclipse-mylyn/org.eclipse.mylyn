@@ -28,7 +28,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -260,7 +259,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data", //$NON-NLS-1$
 							e));
 				}
-				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
+				TasksUiPlugin.getContextStore().deleteContext(task);
 			} else if (selectedObject instanceof IRepositoryQuery) {
 				TasksUiInternal.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
 			} else if (selectedObject instanceof TaskCategory) {

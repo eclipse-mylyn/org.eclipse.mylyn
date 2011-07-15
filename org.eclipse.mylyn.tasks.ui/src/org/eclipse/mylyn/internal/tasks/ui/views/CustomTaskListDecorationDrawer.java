@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
@@ -108,7 +107,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 			AbstractTask task = (AbstractTask) data;
 			if (task.isActive()) {
 				activationImage = taskActive;
-			} else if (ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
+			} else if (TasksUiPlugin.getContextStore().hasContext(task)) {
 				activationImage = taskInactiveContext;
 			} else {
 				activationImage = taskInactive;

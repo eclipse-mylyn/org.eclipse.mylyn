@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.ui.ChangeActivityHandleOperation;
@@ -170,7 +168,7 @@ public class TaskMigrator {
 		// delete old task details
 		if (delete()) {
 			TasksUiInternal.getTaskList().deleteTask(oldTask);
-			ContextCore.getContextManager().deleteContext(oldTask.getHandleIdentifier());
+			TasksUiPlugin.getContextStore().deleteContext(oldTask);
 			try {
 				TasksUiPlugin.getTaskDataManager().deleteTaskData(oldTask);
 			} catch (CoreException e) {
@@ -193,8 +191,7 @@ public class TaskMigrator {
 		}
 
 		// migrate context
-		ContextCorePlugin.getContextStore().saveActiveContext();
-		ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(), newTask.getHandleIdentifier());
+		TasksUiPlugin.getContextStore().cloneContext(oldTask, newTask);
 
 		// migrate task activity
 		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(oldTask.getHandleIdentifier(),
