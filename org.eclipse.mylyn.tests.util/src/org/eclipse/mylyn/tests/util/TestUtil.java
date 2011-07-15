@@ -69,10 +69,7 @@ public class TestUtil {
 						throw new AssertionFailedError();
 					}
 				} catch (AssertionFailedError e) {
-					file = getFile(TestUtil.class, "../org.eclipse.mylyn.context.tests/credentials.properties");
-					// lookup may have reverted to this plug-in, try to lookup file in org.eclipse.context.tests plug-in
-					//File path = new File(file.getParentFile().getParentFile(), "org.eclipse.mylyn.context.tests");
-					//file = new File(path, file.getName());
+					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
 				}
 			} else {
 				file = new File(filename);
@@ -80,7 +77,7 @@ public class TestUtil {
 			properties.load(new FileInputStream(file));
 		} catch (Exception e) {
 			AssertionFailedError error = new AssertionFailedError(
-					"must define credentials in <plug-in dir>/credentials.properties");
+					"must define credentials in $HOME/.mylyn/credentials.properties");
 			error.initCause(e);
 			throw error;
 		}
