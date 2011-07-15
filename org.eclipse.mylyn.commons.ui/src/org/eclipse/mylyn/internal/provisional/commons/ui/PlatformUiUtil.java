@@ -172,4 +172,8 @@ public class PlatformUiUtil {
 		return SWT.NONE;
 	}
 
+	public static boolean usesMouseWheelEventsForScrolling() {
+		return "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$
+	}
+
 }
