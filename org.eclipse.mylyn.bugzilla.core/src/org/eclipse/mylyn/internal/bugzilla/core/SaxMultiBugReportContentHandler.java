@@ -506,7 +506,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				IRepositoryPerson author = repositoryTaskData.getAttributeMapper()
 						.getTaskRepository()
 						.createPerson(parsedText);
-				author.setName(parsedText);
 				attachment.setAuthor(author);
 			}
 			break;
