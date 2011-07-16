@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     GitHub - fix for bug 352259
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -17,6 +18,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.internal.builds.ui.editor.ArtifactsPart.ArtifactFolder;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.ui.ISharedImages;
@@ -24,6 +26,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class ArtifactsLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
@@ -33,7 +36,16 @@ public class ArtifactsLabelProvider extends LabelProvider implements IStyledLabe
 		}
 	};
 
+	private final CommonImageManger imageManager;
+
 	public ArtifactsLabelProvider() {
+		imageManager = new CommonImageManger();
+	}
+
+	@Override
+	public void dispose() {
+		imageManager.dispose();
+		super.dispose();
 	}
 
 	@Override
@@ -41,7 +53,7 @@ public class ArtifactsLabelProvider extends LabelProvider implements IStyledLabe
 		if (element instanceof ArtifactFolder) {
 			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
 		} else if (element instanceof IArtifact) {
-			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
+			return imageManager.getFileImage(((IArtifact) element).getName());
 		}
 		return null;
 	}
