@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Shawn Minto
@@ -43,6 +45,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Steffen Pingel
  * @author David Shepherd
  * @author Sam Davis
+ * @author Thomas Ehrnhoefer
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -50,7 +53,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private String currentUser;
 
-	private SortedSet<String> addressSet = null;
+	private SortedSet<String> addressSet;
 
 	private String repositoryUrl;
 
@@ -58,9 +61,13 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private TaskData currentTaskData;
 
-	private Map<String, String> proposals;
+	private final Map<String, String> proposals;
 
 	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
+		this(task, taskData, new HashMap<String, String>(0));
+	}
+
+	public PersonProposalProvider(AbstractTask task, TaskData taskData, Map<String, String> proposals) {
 		this.currentTask = task;
 		this.currentTaskData = taskData;
 		if (task != null) {
@@ -70,22 +77,18 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			repositoryUrl = taskData.getRepositoryUrl();
 			connectorKind = taskData.getConnectorKind();
 		}
-	}
-
-	public PersonProposalProvider(AbstractTask task, TaskData taskData, Map<String, String> proposals) {
-		this(task, taskData);
-		this.proposals = proposals;
+		this.proposals = new HashMap<String, String>(proposals);
 	}
 
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind) {
-		this.currentTask = null;
-		this.repositoryUrl = repositoryUrl;
-		this.connectorKind = repositoryKind;
+		this(repositoryUrl, repositoryKind, new HashMap<String, String>(0));
 	}
 
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind, Map<String, String> proposals) {
-		this(repositoryUrl, repositoryKind);
-		this.proposals = proposals;
+		this.currentTask = null;
+		this.repositoryUrl = repositoryUrl;
+		this.connectorKind = repositoryKind;
+		this.proposals = new HashMap<String, String>(proposals);
 	}
 
 	protected String getRepositoryUrl() {
@@ -114,11 +117,18 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		// retrieve subset of the tree set using key range
 		SortedSet<String> addressSet = getAddressSet();
 		if (!searchText.equals("")) { //$NON-NLS-1$
+			// lower bounds
 			searchText = searchText.toLowerCase();
+
+			// compute the upper bound
 			char[] nextWord = searchText.toCharArray();
 			nextWord[searchText.length() - 1]++;
+
+			// filter matching keys 
 			addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
-			addPrettyNameAddresses(searchText, addressSet);
+
+			// add matching keys based on pretty names 
+			addMatchingProposalsByPrettyName(addressSet, searchText);
 		}
 
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
@@ -131,14 +141,26 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		return result;
 	}
 
-	private void addPrettyNameAddresses(String searchText, SortedSet<String> addressSet) {
-		if (proposals != null) {
-			for (String key : proposals.keySet()) {
-				if (proposals.get(key) != null && proposals.get(key).startsWith(searchText)) {
-					addressSet.add(key);
+	private void addMatchingProposalsByPrettyName(SortedSet<String> addressSet, String searchText) {
+		if (proposals.size() > 0) {
+			for (Map.Entry<String, String> entry : proposals.entrySet()) {
+				if (matchesSubstring(entry.getValue(), searchText)) {
+					addressSet.add(entry.getKey());
 				}
 			}
 		}
+	}
+
+	private boolean matchesSubstring(String value, String searchText) {
+		if (value != null) {
+			String tokens[] = value.split("\\s"); //$NON-NLS-1$
+			for (String token : tokens) {
+				if (token.toLowerCase().startsWith(searchText)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected PersonContentProposal createPersonProposal(String address, boolean isCurrentUser, String replacementText,
@@ -147,8 +169,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	protected String getPrettyName(String address) {
-		if (proposals != null && proposals.get(address) != null) {
-			return proposals.get(address) + " [" + address + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		String value = proposals.get(address);
+		if (value != null) {
+			return NLS.bind("{0} <{1}>", value, address);
 		}
 		return address;
 	}
@@ -183,7 +206,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			}
 		});
 
-		if (proposals != null && !proposals.isEmpty()) {
+		if (proposals.size() > 0) {
 			for (String proposal : proposals.keySet()) {
 				addAddress(addressSet, proposal);
 			}
@@ -276,6 +299,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	private void addPerson(Set<String> addresses, IRepositoryPerson repositoryPerson) {
 		if (repositoryPerson != null) {
 			addresses.add(repositoryPerson.getPersonId());
+			if (repositoryPerson.getName() != null) {
+				proposals.put(repositoryPerson.getPersonId(), repositoryPerson.getName());
+			}
 		}
 	}
 
