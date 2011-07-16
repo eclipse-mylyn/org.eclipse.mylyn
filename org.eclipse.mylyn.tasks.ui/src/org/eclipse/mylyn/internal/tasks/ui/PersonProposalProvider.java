@@ -117,7 +117,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			searchText = searchText.toLowerCase();
 			char[] nextWord = searchText.toCharArray();
 			nextWord[searchText.length() - 1]++;
-			addressSet = addressSet.subSet(searchText, new String(nextWord));
+			addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
+			addPrettyNameAddresses(searchText, addressSet);
 		}
 
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
@@ -128,6 +129,16 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 		Arrays.sort(result);
 		return result;
+	}
+
+	private void addPrettyNameAddresses(String searchText, SortedSet<String> addressSet) {
+		if (proposals != null) {
+			for (String key : proposals.keySet()) {
+				if (proposals.get(key) != null && proposals.get(key).startsWith(searchText)) {
+					addressSet.add(key);
+				}
+			}
+		}
 	}
 
 	protected PersonContentProposal createPersonProposal(String address, boolean isCurrentUser, String replacementText,

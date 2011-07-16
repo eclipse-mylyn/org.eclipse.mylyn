@@ -12,6 +12,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -203,4 +208,80 @@ public class PersonProposalProviderTest extends TestCase {
 		assertTrue(((PersonContentProposal) result[0]).isCurrentUser());
 	}
 
+	public void testGetProposalByPrettyName() throws Exception {
+		Map<String, String> users = new HashMap<String, String>();
+		users.put("11", "foo");
+		users.put("22", "bar");
+		users.put("33", "far");
+		users.put("21", "boo");
+		MockTask task1 = new MockTask(null, "1", null);
+		task1.setOwner("11");
+
+		PersonProposalProvider provider = new PersonProposalProvider(task1, (TaskData) null, users);
+		IContentProposal[] result = provider.getProposals("", 0);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(4, result.length);
+		assertEquals("11", result[0].getContent());
+		assertEquals("21", result[1].getContent());
+		assertEquals("22", result[2].getContent());
+		assertEquals("33", result[3].getContent());
+
+		result = provider.getProposals("f", 1);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(2, result.length);
+		assertEquals("11", result[0].getContent());
+		assertEquals("33", result[1].getContent());
+
+		result = provider.getProposals("b", 1);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(2, result.length);
+		assertEquals("21", result[0].getContent());
+		assertEquals("22", result[1].getContent());
+
+		result = provider.getProposals("1", 1);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("11", result[0].getContent());
+
+		result = provider.getProposals("3", 1);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("33", result[0].getContent());
+
+		result = provider.getProposals("2", 1);
+		Arrays.sort(result, new Comparator<IContentProposal>() {
+			public int compare(IContentProposal o1, IContentProposal o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}
+		});
+		assertNotNull(result);
+		assertEquals(2, result.length);
+		assertEquals("21", result[0].getContent());
+		assertEquals("22", result[1].getContent());
+	}
 }
