@@ -18,12 +18,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.versions.core.ScmArtifact;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.history.provider.FileRevision;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
+import org.tigris.subversion.subclipse.core.commands.GetRemoteResourceCommand;
+import org.tigris.subversion.subclipse.core.resources.RemoteFile;
+import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
 
 /**
@@ -119,10 +124,51 @@ public class SubclipseArtifact extends ScmArtifact {
 		return dBase + dTail;
 	}
 
+	private ISVNRemoteResource resolveRemoteResource(IProgressMonitor monitor, ISVNRepositoryLocation location,
+			SVNRevision revision, SVNUrl url) throws CoreException {
+
+		GetRemoteResourceCommand command = new GetRemoteResourceCommand(location, url, revision);
+
+		command.run(monitor);
+
+		ISVNRemoteResource resource = command.getRemoteResource();
+		if (resource == null) {
+			String msg = "Unable to resolve remote resource for: " + url.toString(); //$NON-NLS-1$
+			Status status = new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID, msg);
+			throw new CoreException(status);
+		}
+
+		return resource;
+	}
+
 	private IStorage resolveStorage(IProgressMonitor monitor, Long revNo, ISVNRepositoryLocation location, String path)
 			throws CoreException {
 
-		//TODO: Implement me
-		throw new UnsupportedOperationException();
+		try {
+			SVNRevision revision = new SVNRevision.Number(revNo);
+
+			SVNUrl url = getRepositoryURL();
+
+			ISVNRemoteResource resource = resolveRemoteResource(monitor, location, revision, url);
+
+			// check if the resource is a file
+			if (resource.isFolder()) {
+				throw new CoreException(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
+						"The path refers to a folder not to a file: " + path)); //$NON-NLS-1$
+			}
+
+			// create remote file with the correct peg revision
+			final RemoteFile file = new RemoteFile(null, location, url, revision, (SVNRevision.Number) revision, null,
+					null);
+			file.setPegRevision(revision);
+			file.fetchContents(monitor);
+
+			return file.getStorage(monitor);
+
+		} catch (Exception e) {
+			logger.log(new Status(IStatus.WARNING, SubclipseCorePlugin.PLUGIN_ID, "Unable to resolve storage, " + revNo //$NON-NLS-1$
+					+ ", " + path)); //$NON-NLS-1$
+			return null;
+		}
 	}
 }
