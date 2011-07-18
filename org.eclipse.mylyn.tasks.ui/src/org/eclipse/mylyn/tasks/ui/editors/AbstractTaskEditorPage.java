@@ -760,6 +760,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				}
 			}.setPath(PATH_ATTACHMENTS));
 		}
+		if (needsPrivateSection() || taskData.isNew()) {
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new TaskEditorPlanningPart();
+				}
+			}.setPath(PATH_PLANNING));
+		}
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_DESCRIPTION) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
@@ -785,16 +793,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				return new TaskEditorNewCommentPart();
 			}
 		}.setPath(PATH_COMMENTS));
-
-		if (needsPrivateSection() || taskData.isNew()) {
-			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
-				@Override
-				public AbstractTaskEditorPart createPart() {
-					return new TaskEditorPlanningPart();
-				}
-			}.setPath(PATH_PLANNING));
-		}
-
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
@@ -821,8 +819,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);
 		createParts(PATH_ATTRIBUTES, editorComposite, descriptors);
-		createParts(PATH_PLANNING, editorComposite, descriptors);
 		createParts(PATH_ATTACHMENTS, editorComposite, descriptors);
+		createParts(PATH_PLANNING, editorComposite, descriptors);
 		createParts(PATH_COMMENTS, editorComposite, descriptors);
 		// two column
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
