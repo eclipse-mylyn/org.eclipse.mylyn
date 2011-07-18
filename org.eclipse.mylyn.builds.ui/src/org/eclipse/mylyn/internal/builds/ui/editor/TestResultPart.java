@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     GitHub, Inc. - fixes for bug 350334
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
@@ -36,6 +37,8 @@ import org.eclipse.mylyn.builds.core.TestCaseResult;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage.Literals;
 import org.eclipse.mylyn.builds.internal.core.TestResult;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.util.TestResultManager;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
@@ -51,27 +54,51 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class TestResultPart extends AbstractBuildEditorPart {
 
 	public class FilterTestFailuresAction extends Action {
 
+		private final TestFailureFilter filter;
+
 		public FilterTestFailuresAction() {
 			super("Show Failures Only", IAction.AS_CHECK_BOX);
+			filter = new TestFailureFilter();
 			setToolTipText("Show Failures Only");
 			setImageDescriptor(BuildImages.FILTER_FAILURES);
+			setChecked(BuildsUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(BuildsUiInternal.PREF_SHOW_TEST_FAILURES_ONLY));
+		}
+
+		public void initialize() {
+			if (isChecked()) {
+				addFilter();
+			}
+		}
+
+		private void addFilter() {
+			viewer.addFilter(filter);
+			viewer.expandAll();
+		}
+
+		private void removeFilter() {
+			viewer.removeFilter(filter);
 		}
 
 		@Override
 		public void run() {
-			if (isChecked()) {
-				viewer.addFilter(testFailureFilter);
-				viewer.expandAll();
+			boolean checked = isChecked();
+			if (checked) {
+				addFilter();
 			} else {
-				viewer.removeFilter(testFailureFilter);
+				removeFilter();
 			}
+			BuildsUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(BuildsUiInternal.PREF_SHOW_TEST_FAILURES_ONLY, checked);
 		}
-
 	}
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.builds.ui.editor.menu.TestResult"; //$NON-NLS-1$
@@ -158,8 +185,6 @@ public class TestResultPart extends AbstractBuildEditorPart {
 
 	private TreeViewer viewer;
 
-	private TestFailureFilter testFailureFilter;
-
 	public TestResultPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Test Results");
@@ -214,8 +239,6 @@ public class TestResultPart extends AbstractBuildEditorPart {
 			}
 		});
 
-		testFailureFilter = new TestFailureFilter();
-
 		menuManager = new MenuManager();
 		WorkbenchUtil.addDefaultGroups(menuManager);
 		getPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, viewer, true);
@@ -223,6 +246,7 @@ public class TestResultPart extends AbstractBuildEditorPart {
 		viewer.getControl().setMenu(menu);
 
 		refresh(testResult);
+		filterTestFailuresAction.initialize();
 
 		toolkit.paintBordersFor(composite);
 		return composite;
