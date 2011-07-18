@@ -198,7 +198,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorSection {
 
 		GridLayout attributesLayout = EditorUtil.createSectionClientLayout();
 		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 7;
+		attributesLayout.horizontalSpacing = 9;
 		attributesLayout.verticalSpacing = 6;
 		attributesComposite.setLayout(attributesLayout);
 
