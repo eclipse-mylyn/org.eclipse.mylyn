@@ -684,9 +684,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		author.setName(comment.authorName);
 		taskComment.setAuthor(author);
 		if (useIsPrivate) {
-			taskComment.setIsPrivate(comment.isPrivate.equals("1")); //$NON-NLS-1$
+			taskComment.setIsPrivate("1".equals(comment.isPrivate)); //$NON-NLS-1$
 		} else {
-			if (comment.isPrivate.equals("1")) { //$NON-NLS-1$
+			if ("1".equals(comment.isPrivate)) { //$NON-NLS-1$
 				TaskRepository taskRepository = mapper.getTaskRepository();
 				taskRepository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, "true"); //$NON-NLS-1$
 				useIsPrivate = true;
