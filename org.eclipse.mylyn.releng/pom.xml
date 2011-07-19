@@ -151,7 +151,7 @@
 		<!--
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
-		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/archive</mylyn-archive>
+		<mylyn-archive>/home/data/httpd/download.eclipse.org/mylyn/drops</mylyn-archive>
       </properties>
     </profile>
     <profile>
