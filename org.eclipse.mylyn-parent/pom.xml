@@ -40,7 +40,7 @@
 	<dist.pack200>${java.home}/bin</dist.pack200>
 
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
-	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/weekly/</mylyn-repository-url>
+	<mylyn-repository-url>https://hudson.eclipse.org/hudson/user/spingel/my-views/view/Mylyn%20Release/job/mylyn-release/lastSuccessfulBuild/artifact/org.eclipse.mylyn/org.eclipse.mylyn-site/target/site/</mylyn-repository-url>
   </properties>
 
   <mailingLists>
