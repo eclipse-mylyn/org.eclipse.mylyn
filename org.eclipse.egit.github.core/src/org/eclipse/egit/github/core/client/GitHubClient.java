@@ -102,7 +102,6 @@ public class GitHubClient {
 		// Preemptive authentication
 		httpContext = new BasicHttpContext();
 		AuthCache authCache = new BasicAuthCache();
-		authCache.put(this.httpHost, new BasicScheme());
 		httpContext.setAttribute(ClientContext.AUTH_CACHE, authCache);
 		client.addRequestInterceptor(new AuthInterceptor(), 0);
 	}
@@ -175,6 +174,23 @@ public class GitHubClient {
 	}
 
 	/**
+	 * Update credential on http client credentials provider
+	 * 
+	 * @param user
+	 * @param password
+	 * @return this client
+	 */
+	protected GitHubClient updateCredentials(String user, String password) {
+		if (user != null && password != null)
+			client.getCredentialsProvider().setCredentials(
+					new AuthScope(httpHost.getHostName(), httpHost.getPort()),
+					new UsernamePasswordCredentials(user, password));
+		else
+			client.getCredentialsProvider().clear();
+		return this;
+	}
+
+	/**
 	 * Set credentials
 	 * 
 	 * @param user
@@ -182,12 +198,24 @@ public class GitHubClient {
 	 * @return this client
 	 */
 	public GitHubClient setCredentials(String user, String password) {
-		if (user != null && password != null)
-			client.getCredentialsProvider().setCredentials(
-					new AuthScope(httpHost.getHostName(), httpHost.getPort()),
-					new UsernamePasswordCredentials(user, password));
-		else
-			client.getCredentialsProvider().clear();
+		updateCredentials(user, password);
+		AuthCache authCache = (AuthCache) httpContext
+				.getAttribute(ClientContext.AUTH_CACHE);
+		authCache.put(httpHost, new BasicScheme());
+		return this;
+	}
+
+	/**
+	 * Set OAuth2 token
+	 * 
+	 * @param token
+	 * @return this client
+	 */
+	public GitHubClient setOAuth2Token(String token) {
+		updateCredentials(IGitHubConstants.AUTH_TOKEN, token);
+		AuthCache authCache = (AuthCache) httpContext
+				.getAttribute(ClientContext.AUTH_CACHE);
+		authCache.put(httpHost, new OAuth2Scheme());
 		return this;
 	}
 
