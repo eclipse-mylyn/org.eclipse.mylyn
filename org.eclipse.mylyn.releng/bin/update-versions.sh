@@ -26,12 +26,11 @@ find -maxdepth 3 -not -path "*feature*" -path "*org.eclipse.mylyn.reviews*" -nam
 update_features 0.8.0 0.8.1
 update_features 1.5.0 1.5.1
 update_features 3.6.0 3.6.1
-update_features 5.2.200 5.2.201
+update_features 5.2.300 5.2.301
 
 update_qualifier 0.8.0 v20110608-1400
 update_qualifier 1.5.0 v20110608-1400
 update_qualifier 3.6.0 v20110608-1400
-update_qualifier 5.2.200 v20110608-1400
 
 echo "Fix version in org.eclipse.mylyn/org.eclipse.mylyn.releng"
 

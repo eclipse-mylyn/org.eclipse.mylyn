@@ -1,3 +1,4 @@
 /org.eclipse.mylyn.tests*/bin
+/org.eclipse.mylyn.releng/main-site/target
 /org.eclipse*/target
 *.rej
