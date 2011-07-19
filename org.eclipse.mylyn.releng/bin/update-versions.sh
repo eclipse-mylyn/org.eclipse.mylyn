@@ -33,4 +33,6 @@ update_qualifier 1.5.0 v20110608-1400
 update_qualifier 3.6.0 v20110608-1400
 update_qualifier 5.2.200 v20110608-1400
 
+echo "Fix version in org.eclipse.mylyn/org.eclipse.mylyn.releng"
+
 #grep Bundle-Version */META-INF/MANIFEST.MF | grep -v 0.9.0 | grep -v 3.7.0 | grep -v 1.5.0

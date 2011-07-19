@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mylyn-mylyn-parent</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
-    <version>3.6.0-SNAPSHOT</version>
+    <version>3.6.1-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn.discovery</artifactId>
