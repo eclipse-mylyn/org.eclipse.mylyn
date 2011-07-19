@@ -193,8 +193,10 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			items.add(item);
 		}
 
-		Separator separator = new Separator();
-		items.add(separator);
+		if (items.size() > 0) {
+			Separator separator = new Separator();
+			items.add(separator);
+		}
 
 		ITask active = TasksUi.getTaskActivityManager().getActiveTask();
 		if (active != null) {
