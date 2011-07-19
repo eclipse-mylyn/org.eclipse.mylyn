@@ -11,6 +11,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -58,7 +59,7 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
-		return new GerritCustomQueryPage(repository, "GerritQueryPage", null);
+		return new GerritCustomQueryPage(repository, "GerritQueryPage", null); //$NON-NLS-1$
 	}
 
 	@Override
@@ -69,6 +70,11 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getTaskKindLabel(ITask task) {
 		return "Change";
+	}
+
+	@Override
+	public ImageDescriptor getTaskKindOverlay(ITask task) {
+		return GerritImages.OVERLAY_REVIEW;
 	}
 
 }

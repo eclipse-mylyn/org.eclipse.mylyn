@@ -27,10 +27,10 @@
 		<specification annotationType="org.eclipse.mylyn.reviews.ui.comment.Annotation" 
 			colorPreferenceKey="comment_color" 
 			colorPreferenceValue="179,215,255" 
-			contributesToHeader="true" 
+			contributesToHeader="false" 
 			highlightPreferenceKey="comment_highlight" 
 			highlightPreferenceValue="true" 
-			icon="icons/gerrit.png" 
+			icon="icons/eview16/annotation-review.gif" 
 			includeOnPreferencePage="true" 
 			isGoToNextNavigationTarget="false" 
 			isGoToNextNavigationTargetKey="comment_isGoToNextNavigationTargetKey" 
@@ -52,7 +52,6 @@
 
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">
 		<column id="org.eclipse.mylyn.reviews.ui.editor.AnnotationRuler" name="Review Comments"
-			icon="icons/gerrit.png"
 			class="org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn"
 			enabled="true"
 			global="true"
