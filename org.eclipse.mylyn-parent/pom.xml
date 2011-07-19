@@ -363,7 +363,7 @@
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
 		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
-		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/archive</dist.archive>
+		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/drops</dist.archive>
 		<maven.test.error.ignore>true</maven.test.error.ignore>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
       </properties>
