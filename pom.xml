@@ -53,6 +53,7 @@
     <module>org.eclipse.mylyn.oslc.core</module>
     <module>org.eclipse.mylyn.oslc.tests</module>
     <module>org.eclipse.mylyn.oslc.ui</module>
+    <module>org.eclipse.mylyn.tasks-site</module>
     <module>org.eclipse.mylyn.tasks.bugs</module>
     <module>org.eclipse.mylyn.tasks.core</module>
     <module>org.eclipse.mylyn.tasks.search</module>
