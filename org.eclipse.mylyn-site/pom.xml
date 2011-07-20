@@ -9,7 +9,7 @@
     <version>3.7.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
-  <artifactId>main-site</artifactId>
+  <artifactId>org.eclipse.mylyn-site</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 3.6, 3.6 and 3.8</name>
