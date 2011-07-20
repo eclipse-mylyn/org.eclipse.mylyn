@@ -47,6 +47,7 @@
     <module>org.eclipse.mylyn.git.core</module>
     <module>org.eclipse.mylyn.git.ui</module>
     <module>org.eclipse.mylyn.versions-feature</module>
+    <module>org.eclipse.mylyn.versions-site</module>
     <module>org.eclipse.mylyn.versions.core</module>
     <module>org.eclipse.mylyn.versions.sdk-feature</module>
     <module>org.eclipse.mylyn.versions.tests</module>
