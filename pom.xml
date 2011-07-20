@@ -41,15 +41,14 @@
     </repository>
   </repositories>
   <modules>
-    <module>org.eclipse.mylyn</module>
     <module>org.eclipse.mylyn.commons-feature</module>
+    <module>org.eclipse.mylyn.commons-site</module>
     <module>org.eclipse.mylyn.commons.core</module>
     <module>org.eclipse.mylyn.commons.http</module>
     <module>org.eclipse.mylyn.commons.identity</module>
     <module>org.eclipse.mylyn.commons.net</module>
     <module>org.eclipse.mylyn.commons.notifications</module>
     <module>org.eclipse.mylyn.commons.repositories</module>
-    <module>org.eclipse.mylyn.commons.screenshots</module>
     <module>org.eclipse.mylyn.commons.sdk-feature</module>
     <module>org.eclipse.mylyn.commons.soap</module>
     <module>org.eclipse.mylyn.commons.team</module>
@@ -62,5 +61,6 @@
     <module>org.eclipse.mylyn.monitor.core</module>
     <module>org.eclipse.mylyn.monitor.tests</module>
     <module>org.eclipse.mylyn.monitor.ui</module>
+    <module>org.eclipse.mylyn</module>
   </modules>
 </project>
