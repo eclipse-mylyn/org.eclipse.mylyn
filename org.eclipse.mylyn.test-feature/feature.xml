@@ -28,14 +28,16 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.sdk_feature" version="3.6.0"/>
+      <import feature="org.eclipse.mylyn.sdk_feature" version="3.7.0"/>
    </requires>
 
+<!--
    <plugin
-         id="org.eclipse.mylyn.bugzilla.tests"
+         id="org.eclipse.mylyn.cdt.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.context.tests"
@@ -56,19 +58,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.monitor.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.mylyn.resources.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.mylyn.tasks.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -80,56 +70,11 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.trac.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.mylyn.discovery.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.mylyn.tests.util"
+         id="org.eclipse.mylyn.cdt.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.oslc.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.commons.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.cdt.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.bugzilla.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.context.tests.source"
@@ -150,19 +95,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.monitor.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.mylyn.resources.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.mylyn.tasks.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -172,29 +105,95 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+-->
 
-   <!--
+<!--
    <plugin
-         id="org.eclipse.mylyn.tests.source"
+         id="org.eclipse.mylyn.commons.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
-   -->
-   
-   <plugin
-         id="org.eclipse.mylyn.trac.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.tests.source"
+         id="org.eclipse.mylyn.discovery.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.monitor.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.discovery.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.monitor.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+-->
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.oslc.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tests.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.trac.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.oslc.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -207,24 +206,9 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.oslc.tests.source"
+         id="org.eclipse.mylyn.trac.tests.source"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.commons.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.cdt.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
