@@ -40,7 +40,7 @@
 	<dist.pack200>${java.home}/bin</dist.pack200>
 
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
-	<mylyn-repository-url>https://hudson.eclipse.org/hudson/user/spingel/my-views/view/Mylyn%20Release/job/mylyn-release/lastSuccessfulBuild/artifact/org.eclipse.mylyn/org.eclipse.mylyn-site/target/site/</mylyn-repository-url>
+	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
   </properties>
 
   <mailingLists>
@@ -131,6 +131,7 @@
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -145,6 +146,7 @@
         <target-version>3.4</target-version>
         <target-platform>mylyn-e3.4</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/ganymede/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/ganymede/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -159,6 +161,7 @@
         <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/galileo/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -173,6 +176,7 @@
         <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/helios/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -187,6 +191,7 @@
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -201,6 +206,7 @@
         <target-version>3.8</target-version>
         <target-platform>mylyn-e3.8</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -215,6 +221,7 @@
         <target-version>4.1</target-version>
         <target-platform>mylyn-e4.1</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
@@ -229,6 +236,7 @@
         <target-version>4.2</target-version>
         <target-platform>mylyn-e4.2</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
 
