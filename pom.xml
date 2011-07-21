@@ -41,6 +41,7 @@
     </repository>
   </repositories>
   <modules>
+    <module>org.eclipse.mylyn.docs-site</module>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
     <module>org.eclipse.mylyn.htmltext</module>
     <module>org.eclipse.mylyn.htmltext-feature</module>

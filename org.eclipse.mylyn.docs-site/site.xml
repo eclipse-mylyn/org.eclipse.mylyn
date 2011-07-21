@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2011 Tasktop Technologies and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+<site pack200="true">
+   <description>
+      Mylyn Docs
+   </description>
+   <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
+      <category name="Features"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.htmltext_0.0.0.jar" id="org.eclipse.mylyn.htmltext" version="0.0.0">
+      <category name="Features"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <category-def name="Features" label="Mylyn Docs Features">
+      <description>
+         Tools.
+      </description>
+   </category-def>
+   <category-def name="Integration" label="Mylyn Docs Integrations">
+      <description>
+         Connectors that integrate with ALM systems.
+      </description>
+   </category-def>
+   <category-def name="SDK" label="Mylyn Docs SDK and Framework">
+      <description>
+         Source code and documentation for integrators.
+      </description>
+   </category-def>
+</site>
