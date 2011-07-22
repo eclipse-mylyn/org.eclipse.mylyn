@@ -20,7 +20,6 @@ import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
-import org.eclipse.mylyn.tasks.tests.ui.ContextPerspectiveManagerTest;
 import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
@@ -69,7 +68,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
-		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskAttachmentTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
@@ -97,7 +95,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskEditorPartDescriptorTest.class);
 		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
 		suite.addTestSuite(CommentGroupStrategyTest.class);
-		suite.addTestSuite(ContextPerspectiveManagerTest.class);
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
 		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(EditorUtilTest.class);

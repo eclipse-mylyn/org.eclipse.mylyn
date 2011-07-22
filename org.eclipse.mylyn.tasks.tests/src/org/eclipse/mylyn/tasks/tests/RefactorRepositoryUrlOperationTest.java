@@ -11,22 +11,15 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.io.File;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -52,17 +45,6 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		super.setUp();
 		taskList = TasksUiPlugin.getTaskList();
 		TaskTestUtil.resetTaskList();
-	}
-
-	public void testMigrateTaskContextFiles() throws Exception {
-		File fileA = ContextCorePlugin.getContextStore().getFileForContext("http://a-1");
-		fileA.createNewFile();
-		fileA.deleteOnExit();
-		assertTrue(fileA.exists());
-		new RefactorRepositoryUrlOperation("http://a", "http://b").run(new NullProgressMonitor());
-		File fileB = ContextCorePlugin.getContextStore().getFileForContext("http://b-1");
-		assertTrue(fileB.exists());
-		assertFalse(fileA.exists());
 	}
 
 	public void testMigrateQueryUrlHandles() throws Exception {
@@ -130,50 +112,6 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertNull(taskList.getTask("http://aa-123"));
 		assertNotNull(taskList.getTask("http://bb-123"));
 		assertEquals("http://bb/task/123", task.getUrl());
-	}
-
-	public void testRefactorMetaContextHandles() throws Exception {
-		String firstUrl = "http://repository1.com/bugs";
-		String secondUrl = "http://repository2.com/bugs";
-		AbstractTask task1 = new MockTask(firstUrl, "1");
-		AbstractTask task2 = new MockTask(firstUrl, "2");
-		taskList.addTask(task1);
-		taskList.addTask(task2);
-		Calendar startDate = Calendar.getInstance();
-		Calendar endDate = Calendar.getInstance();
-		endDate.add(Calendar.MINUTE, 5);
-
-		Calendar startDate2 = Calendar.getInstance();
-		startDate2.add(Calendar.MINUTE, 15);
-		Calendar endDate2 = Calendar.getInstance();
-		endDate2.add(Calendar.MINUTE, 25);
-
-		ContextCorePlugin.getContextManager().resetActivityMetaContext();
-		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
-		assertEquals(0, metaContext.getInteractionHistory().size());
-
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
-						endDate.getTime()));
-
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
-						endDate2.getTime()));
-
-		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
-		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
-		new RefactorRepositoryUrlOperation(firstUrl, secondUrl).run(new NullProgressMonitor());
-		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
-		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
-		assertEquals(2 * 60 * 1000 * 5,
-				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "2")));
-		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
 	public void testMigrateTaskHandlesUnsubmittedTask() throws Exception {

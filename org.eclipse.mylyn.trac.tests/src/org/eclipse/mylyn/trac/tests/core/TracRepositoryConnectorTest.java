@@ -154,7 +154,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testContext() throws Exception {
 		String taskId = data.attachmentTicketId + "";
 		ITask task = TracTestUtil.createTask(repository, taskId);
-		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 

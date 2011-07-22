@@ -86,7 +86,7 @@ public class AttachmentUtil {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		TasksUiPlugin.getContextStore().saveActiveContext();
 
-		File file = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+		File file = TasksUiPlugin.getContextStore().getFileForContext(task);
 		if (attachmentHandler != null && file != null && file.exists()) {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 			attachment.setDescription(CONTEXT_DESCRIPTION);
@@ -138,7 +138,7 @@ public class AttachmentUtil {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 							task.getRepositoryUrl());
-					File targetFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+					File targetFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 					try {
 						boolean exceptionThrown = true;
 						OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
@@ -183,7 +183,7 @@ public class AttachmentUtil {
 	public static boolean uploadContext(final TaskRepository repository, final ITask task, final String comment,
 			final IRunnableContext context) {
 		TasksUiPlugin.getContextStore().saveActiveContext();
-		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		if (!sourceContextFile.exists()) {
 			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, Messages.AttachmentUtil_The_context_is_empty));

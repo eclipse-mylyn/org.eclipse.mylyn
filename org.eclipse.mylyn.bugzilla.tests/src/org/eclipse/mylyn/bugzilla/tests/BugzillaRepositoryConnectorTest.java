@@ -829,7 +829,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		ITask task = generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task);
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
-		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();

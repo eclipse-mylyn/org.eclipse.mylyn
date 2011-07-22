@@ -142,6 +142,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS = create(TOOL, "navigate-previous.gif"); //$NON-NLS-1$
 
+	@Deprecated
 	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_PAUSE = create(TOOL, "navigate-previous-pause.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_ACTIVE = create(TOOL, "navigate-previous-active.gif"); //$NON-NLS-1$

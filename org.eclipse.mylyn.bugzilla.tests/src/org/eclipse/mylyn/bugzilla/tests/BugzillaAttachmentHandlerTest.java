@@ -476,7 +476,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUi.getTaskActivityManager().activateTask(task);
-		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(repository, task);
+		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"), false);

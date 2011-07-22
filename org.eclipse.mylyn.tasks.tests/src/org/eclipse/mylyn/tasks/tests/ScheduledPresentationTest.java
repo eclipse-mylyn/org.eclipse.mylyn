@@ -15,14 +15,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -33,7 +30,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -47,8 +43,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		ContextCorePlugin.getContextManager().saveActivityMetaContext();
+//		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
+//		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
@@ -284,38 +280,4 @@ public class ScheduledPresentationTest extends TestCase {
 //		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 //	}
 
-	public void testScheduledTaskContainer() {
-
-		Calendar startDate = Calendar.getInstance();
-		startDate.setTimeInMillis(1000);
-		Calendar endDate = Calendar.getInstance();
-		endDate.setTimeInMillis(2000);
-
-		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		AbstractTask task2 = new LocalTask("task 2", "Task 2");
-		TasksUiPlugin.getTaskList().addTask(task1);
-		TasksUiPlugin.getTaskList().addTask(task2);
-
-		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
-
-		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
-
-		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1, false);
-		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
-		Calendar start = TaskActivityUtil.getCalendar();
-		start.setTimeInMillis(0);
-		Calendar end = TaskActivityUtil.getCalendar();
-		end.add(Calendar.MINUTE, 2);
-		Set<AbstractTask> tasks = TasksUiPlugin.getTaskActivityManager().getActiveTasks(start, end);
-		assertEquals(2, tasks.size());
-		assertEquals(1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
-		assertEquals(1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
-
-	}
 }

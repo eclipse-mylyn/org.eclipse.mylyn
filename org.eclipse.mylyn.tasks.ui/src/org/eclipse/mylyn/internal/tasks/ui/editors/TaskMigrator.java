@@ -11,19 +11,16 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
-import org.eclipse.mylyn.internal.tasks.ui.ChangeActivityHandleOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -192,18 +189,6 @@ public class TaskMigrator {
 
 		// migrate context
 		TasksUiPlugin.getContextStore().cloneContext(oldTask, newTask);
-
-		// migrate task activity
-		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(oldTask.getHandleIdentifier(),
-				newTask.getHandleIdentifier());
-		try {
-			operation.run(new NullProgressMonitor());
-		} catch (InvocationTargetException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
-		} catch (InterruptedException e) {
-			// ignore
-		}
 	}
 
 	public static boolean isActive() {

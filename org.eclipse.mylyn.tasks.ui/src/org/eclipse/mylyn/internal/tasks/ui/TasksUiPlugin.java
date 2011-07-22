@@ -95,11 +95,10 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
-import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
@@ -256,20 +255,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
-
-		@Override
-		public void taskActivated(final ITask task) {
-			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
-		}
-
-		@Override
-		public void taskDeactivated(final ITask task) {
-			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
-		}
-
-	};
-
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
 		public Set<AbstractNotification> getNotifications() {
@@ -370,15 +355,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private TaskActivityMonitor taskActivityMonitor;
+	private AbstractTaskActivityMonitor taskActivityMonitor;
 
 	private ServiceReference proxyServiceReference;
 
 	private IProxyChangeListener proxyChangeListener;
 
 	private static TaskListExternalizationParticipant taskListExternalizationParticipant;
-
-	private ActiveContextExternalizationParticipant activeContextExternalizationParticipant;
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
@@ -476,10 +459,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			} finally {
 				monitor.done();
 			}
-			activeContextExternalizationParticipant = new ActiveContextExternalizationParticipant(
-					externalizationManager);
-			externalizationManager.addParticipant(activeContextExternalizationParticipant);
-			activeContextExternalizationParticipant.registerListeners();
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
 		}
 	}
@@ -617,10 +596,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			taskJobFactory = new TaskJobFactory(taskList, taskDataManager, repositoryManager, repositoryModel);
 
-			taskActivityManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
-
-			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
-			taskActivityMonitor.start();
+			taskActivityMonitor = TasksUiExtensionReader.loadTaskActivityMonitor();
+			taskActivityMonitor.start(taskActivityManager);
 
 			saveParticipant = new ISaveParticipant() {
 
@@ -640,12 +617,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
-
-			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant(
-					externalizationManager);
-			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
-			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
-			taskActivityMonitor.setExternalizationParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 
 			// initialize externalization for task activation history
 			IPath stateLocation = Platform.getStateLocation(getBundle());
@@ -894,15 +865,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public void initializeDataSources() {
 		taskDataManager.setDataPath(getDataDirectory());
 		externalizationManager.setRootFolderPath(getDataDirectory());
-		ContextCorePlugin.getContextStore().setContextDirectory(getContextStoreDir());
+		getContextStore().setContextDirectory(getContextStoreDir());
 
 		externalizationManager.load();
 		// TODO: Move management of template repositories to TaskRepositoryManager
 		loadTemplateRepositories();
 
 		taskActivityManager.clear();
-		ContextCorePlugin.getContextManager().loadActivityMetaContext();
-		taskActivityMonitor.reloadActivityTime();
+		taskActivityMonitor.loadActivityTime();
 		taskActivityManager.reloadPlanningData();
 
 		if (!activationHistoryFile.exists() && taskActivityManager.getTaskActivationHistory().getSize() == 0) {
@@ -1303,7 +1273,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return externalizationManager;
 	}
 
-	public static TaskActivityMonitor getTaskActivityMonitor() {
+	public static AbstractTaskActivityMonitor getTaskActivityMonitor() {
 		return INSTANCE.taskActivityMonitor;
 	}
 
@@ -1420,7 +1390,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return identityModel;
 	}
 
-	public static AbstractTaskContextStore getContextStore() {
+	public static synchronized AbstractTaskContextStore getContextStore() {
+		if (contextStore == null) {
+			contextStore = TasksUiExtensionReader.loadTaskContextStore();
+		}
 		return contextStore;
 	}
 

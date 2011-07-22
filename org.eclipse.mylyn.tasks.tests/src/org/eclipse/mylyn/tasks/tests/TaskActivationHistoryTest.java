@@ -19,8 +19,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
@@ -69,7 +67,7 @@ public class TaskActivationHistoryTest extends TestCase {
 
 		taskActivityManager.deactivateActiveTask();
 		taskActivityManager.clear();
-		ContextCorePlugin.getContextManager().resetActivityMetaContext();
+//		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 
 		TaskTestUtil.resetTaskList();
 
@@ -146,7 +144,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	}
 
 	private IWorkingSet createWorkingSet(IAdaptable element) {
-		IWorkingSetManager workingSetManager1 = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+		IWorkingSetManager workingSetManager1 = PlatformUI.getWorkbench().getWorkingSetManager();
 		IWorkingSet workingSet = workingSetManager1.createWorkingSet("Task Working Set", new IAdaptable[] { element });
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(element));

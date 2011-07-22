@@ -11,13 +11,13 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import junit.framework.TestCase;
 
 /**
  * @author Jevgeni Holodkov
  */
 //FIXME fix test
-public class TaskExportImportTest extends AbstractContextTest {
+public class TaskExportImportTest extends TestCase {
 
 	public void testRewriteTestCases() {
 	}

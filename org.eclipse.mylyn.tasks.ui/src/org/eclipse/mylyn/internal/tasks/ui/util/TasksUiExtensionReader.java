@@ -30,7 +30,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
+import org.eclipse.mylyn.internal.tasks.core.context.DefaultTaskContextStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -41,6 +44,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
+import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -630,6 +635,74 @@ public class TasksUiExtensionReader {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load dynamic popup menu extension", e)); //$NON-NLS-1$
 		}
+	}
+
+	public static AbstractTaskActivityMonitor loadTaskActivityMonitor() {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
+				+ ".activityMonitor"); //$NON-NLS-1$
+		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
+		for (IExtension extension : extensions) {
+			IConfigurationElement[] elements = extension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if ("activityMonitor".equals(element.getName())) { //$NON-NLS-1$
+					try {
+						Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
+						if (object instanceof AbstractTaskActivityMonitor) {
+							return (AbstractTaskActivityMonitor) object;
+						} else {
+							StatusHandler.log(new Status(
+									IStatus.ERROR,
+									ITasksCoreConstants.ID_PLUGIN,
+									NLS.bind(
+											"Task activity monitor ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+											object.getClass().getCanonicalName(), element.getContributor().getName())));
+						}
+					} catch (Throwable e) {
+						StatusHandler.log(new Status(
+								IStatus.ERROR,
+								ITasksCoreConstants.ID_PLUGIN,
+								NLS.bind(
+										"Task activity monitor failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
+					}
+				}
+			}
+		}
+		return new DefaultTaskActivityMonitor();
+	}
+
+	public static AbstractTaskContextStore loadTaskContextStore() {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
+				+ ".contextStore"); //$NON-NLS-1$
+		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
+		for (IExtension extension : extensions) {
+			IConfigurationElement[] elements = extension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if ("contextStore".equals(element.getName())) { //$NON-NLS-1$
+					try {
+						Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
+						if (object instanceof AbstractTaskContextStore) {
+							return (AbstractTaskContextStore) object;
+						} else {
+							StatusHandler.log(new Status(
+									IStatus.ERROR,
+									ITasksCoreConstants.ID_PLUGIN,
+									NLS.bind(
+											"Task context store ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+											object.getClass().getCanonicalName(), element.getContributor().getName())));
+						}
+					} catch (Throwable e) {
+						StatusHandler.log(new Status(
+								IStatus.ERROR,
+								ITasksCoreConstants.ID_PLUGIN,
+								NLS.bind(
+										"Task context store failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
+					}
+				}
+			}
+		}
+		return new DefaultTaskContextStore();
 	}
 
 }
