@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.java.tests;
+package org.eclipse.mylyn.context.sdk.java;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -32,10 +33,8 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 
 /**
- * @deprecated use {@link org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest} instead
  * @author Mik Kersten
  */
-@Deprecated
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
