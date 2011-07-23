@@ -40,6 +40,23 @@
       <layout>default</layout>
     </repository>
   </repositories>
+  <profiles>
+	<profile>
+	  <id>implicit-target</id>
+      <activation>
+		<property>
+		  <name>!explicit-target</name>
+		</property>
+      </activation>
+	  <repositories>
+		<repository>
+		  <id>eclipse-mylyn-commons</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-commons-repository-url}</url>
+		</repository>
+	  </repositories>
+	</profile>
+  </profiles>
   <modules>
     <module>org.eclipse.mylyn-feature</module>
     <module>org.eclipse.mylyn.bugzilla-feature</module>
@@ -56,6 +73,7 @@
     <module>org.eclipse.mylyn.tasks-site</module>
     <module>org.eclipse.mylyn.tasks.bugs</module>
     <module>org.eclipse.mylyn.tasks.core</module>
+    <module>org.eclipse.mylyn.tasks.ide-feature</module>
     <module>org.eclipse.mylyn.tasks.search</module>
     <module>org.eclipse.mylyn.tasks.tests</module>
     <module>org.eclipse.mylyn.tasks.ui</module>
