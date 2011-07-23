@@ -15,7 +15,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;

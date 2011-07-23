@@ -14,7 +14,7 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;

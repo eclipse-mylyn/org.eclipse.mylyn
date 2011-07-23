@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.notifications.Environment;
 import org.eclipse.mylyn.internal.tasks.core.notifications.FeedEntry;
 import org.eclipse.mylyn.internal.tasks.core.notifications.FeedReader;

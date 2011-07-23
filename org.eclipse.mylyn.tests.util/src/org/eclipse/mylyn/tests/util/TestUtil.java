@@ -19,7 +19,7 @@ import java.util.Properties;
 
 import junit.framework.AssertionFailedError;
 
-import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 
 /**
  * @author Steffen Pingel

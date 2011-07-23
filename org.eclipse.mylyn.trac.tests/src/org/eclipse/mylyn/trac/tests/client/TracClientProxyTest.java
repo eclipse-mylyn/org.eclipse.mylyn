@@ -22,8 +22,8 @@ import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.trac.tests.support.TestProxy;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 

@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.oslc.core.OslcCreationDialogDescriptor;
 import org.eclipse.mylyn.internal.oslc.core.OslcSelectionDialogDescriptor;
 import org.eclipse.mylyn.internal.oslc.core.OslcServiceDescriptor;

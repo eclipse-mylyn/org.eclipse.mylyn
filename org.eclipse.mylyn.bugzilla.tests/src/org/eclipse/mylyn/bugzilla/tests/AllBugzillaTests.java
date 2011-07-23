@@ -21,7 +21,7 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
-import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.tests.util.TestUtil;
 
