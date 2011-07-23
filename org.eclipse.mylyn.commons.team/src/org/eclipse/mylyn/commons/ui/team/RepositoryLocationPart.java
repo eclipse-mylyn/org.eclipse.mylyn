@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     GitHub - fix for bug 352919
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui.team;
@@ -143,7 +144,7 @@ public class RepositoryLocationPart {
 				if (credentials != null) {
 					enabledButton.setSelection(!isEnablementReversed());
 					userText.setText(credentials.getUserName());
-					passwordText.setText(credentials.getUserName());
+					passwordText.setText(credentials.getPassword());
 					savePasswordButton.setSelection(true);
 				} else {
 					enabledButton.setSelection(isEnablementReversed());
