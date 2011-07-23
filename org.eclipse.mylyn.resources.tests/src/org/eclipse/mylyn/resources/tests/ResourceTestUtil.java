@@ -16,8 +16,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil} instead
  * @author Mik Kersten
  */
+@Deprecated
 public class ResourceTestUtil {
 
 	public static void deleteProject(IProject project) throws CoreException {

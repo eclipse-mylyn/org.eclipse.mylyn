@@ -13,12 +13,13 @@ package org.eclipse.mylyn.context.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
+import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -37,7 +38,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 	protected void setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 
-		TaskTestUtil.resetTaskListAndRepositories();
+		TestFixture.resetTaskListAndRepositories();
 		previousSetting = ContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES);
@@ -51,7 +52,7 @@ public class ContextPerspectiveManagerTest extends TestCase {
 		ContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
-		TaskTestUtil.resetTaskListAndRepositories();
+		TestFixture.resetTaskListAndRepositories();
 	}
 
 	public void testRestorePerspective() throws Exception {

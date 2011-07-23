@@ -18,8 +18,10 @@ import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener} instead
  * @author Mik Kersten
  */
+@Deprecated
 public class TestActiveSearchListener implements IActiveSearchListener {
 
 	private AbstractRelationProvider prov = null;

@@ -1,0 +1,4 @@
+bin
+credentials.properties
+target
+mylyn-core-tests.jar

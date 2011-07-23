@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
- * @deprecated use {@link org.eclipse.mylyn.tests.util.TestUtil} instead
+ * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.CommonTestUtil} instead
  */
 @Deprecated
 public class TestUtil {

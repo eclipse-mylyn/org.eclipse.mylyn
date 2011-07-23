@@ -179,4 +179,9 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		reloadActivityTime();
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 }

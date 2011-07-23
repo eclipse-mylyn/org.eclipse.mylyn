@@ -42,15 +42,24 @@
   </repositories>
   <profiles>
 	<profile>
-	  <id>explicit-target</id>
+	  <id>implicit-target</id>
       <activation>
 		<property>
-		  <name>explicit-target</name>
+		  <name>!explicit-target</name>
 		</property>
       </activation>
-	  <modules>
-		<module>org.eclipse.mylyn.context.core</module>
-	  </modules>
+	  <repositories>
+		<repository>
+		  <id>eclipse-mylyn-commons</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-commons-repository-url}</url>
+		</repository>
+		<repository>
+		  <id>eclipse-mylyn-tasks</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-tasks-repository-url}</url>
+		</repository>
+	  </repositories>
 	</profile>
   </profiles>
   <modules>
@@ -60,7 +69,10 @@
     <module>org.eclipse.mylyn.cdt.ui</module>
     <module>org.eclipse.mylyn.context-feature</module>
     <module>org.eclipse.mylyn.context-site</module>
+    <module>org.eclipse.mylyn.context.core</module>
     <module>org.eclipse.mylyn.context.sdk-feature</module>
+    <module>org.eclipse.mylyn.context.sdk.util</module>
+    <module>org.eclipse.mylyn.context.tasks.ui</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>
     <module>org.eclipse.mylyn.ide-feature</module>

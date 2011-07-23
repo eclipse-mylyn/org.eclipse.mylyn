@@ -19,8 +19,10 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractContextTest} instead
  * @author Mik Kersten
  */
+@Deprecated
 public abstract class AbstractContextTest extends TestCase {
 
 	protected static final String MOCK_HANDLE = "<mock-handle>";

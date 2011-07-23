@@ -21,8 +21,10 @@ import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractUserInteractionMonitor} instead
  * @author Mik Kersten
  */
+@Deprecated
 public class TestMonitor extends AbstractUserInteractionMonitor {
 
 	List<IJavaElement> selections = new ArrayList<IJavaElement>();

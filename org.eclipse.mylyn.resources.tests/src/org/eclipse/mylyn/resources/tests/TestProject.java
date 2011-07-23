@@ -20,8 +20,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.TestProxy} instead
  * @author Mik Kersten
  */
+@Deprecated
 public class TestProject {
 
 	public IProject project;

@@ -18,8 +18,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
+ * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest} instead
  * @author Mik Kersten
  */
+@Deprecated
 public interface ISearchPluginTest {
 	public List<?> search(int dos, IInteractionElement node) throws IOException, CoreException;
 }

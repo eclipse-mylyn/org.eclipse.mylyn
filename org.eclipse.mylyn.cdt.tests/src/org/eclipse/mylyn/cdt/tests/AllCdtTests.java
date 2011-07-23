@@ -14,7 +14,7 @@ package org.eclipse.mylyn.cdt.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
+import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 
 /**
  * @author Steffen Pingel

@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
+import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 

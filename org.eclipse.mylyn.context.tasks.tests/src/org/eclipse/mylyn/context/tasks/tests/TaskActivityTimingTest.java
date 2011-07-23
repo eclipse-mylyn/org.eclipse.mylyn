@@ -20,7 +20,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.tests.support.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -38,8 +38,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TestFixture;
 
 /**
  * @author Rob Elves
@@ -56,8 +56,8 @@ public class TaskActivityTimingTest extends TestCase {
 	protected void setUp() throws Exception {
 		activityManager = (TaskActivityManager) TasksUi.getTaskActivityManager();
 		taskList = TasksUiInternal.getTaskList();
-		TaskTestUtil.resetTaskListAndRepositories();
-		TaskTestUtil.saveAndReadTasklist();
+		TestFixture.resetTaskListAndRepositories();
+		TestFixture.saveAndReadTasklist();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 
@@ -68,7 +68,7 @@ public class TaskActivityTimingTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		TaskTestUtil.resetTaskList();
+		TestFixture.resetTaskList();
 	}
 
 	public void testLoadCorruptContext() throws Exception {
@@ -705,7 +705,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
-		TaskTestUtil.saveNow();
+		TestFixture.saveNow();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
@@ -918,7 +918,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		TaskTestUtil.saveNow();
+		TestFixture.saveNow();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());

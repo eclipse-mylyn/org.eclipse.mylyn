@@ -40,12 +40,6 @@
          id="org.eclipse.mylyn.team_feature"
          version="0.0.0"/>
 
-   <!--
-   <includes
-         id="org.eclipse.mylyn.sdk_feature"
-         version="0.0.0"/>
-   -->
-
    <includes
          id="org.eclipse.cdt.mylyn"
          version="0.0.0"/>
@@ -58,6 +52,12 @@
          id="org.eclipse.mylyn.java_feature"
          version="0.0.0"/>
 
+   <!--
+   <includes
+         id="org.eclipse.mylyn.sdk_feature"
+         version="0.0.0"/>
+   -->
+
    <plugin
          id="org.eclipse.mylyn.bugzilla.ide.source"
          download-size="0"
@@ -65,14 +65,40 @@
          version="0.0.0"
          unpack="false"/>
 
-   <!--
+   <plugin
+         id="org.eclipse.cdt.mylyn.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.context.sdk.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
    <plugin
          id="org.eclipse.mylyn.context.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-   -->
+
+   <plugin
+         id="org.eclipse.mylyn.context.sdk.util.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.context.tasks.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.context.ui.source"

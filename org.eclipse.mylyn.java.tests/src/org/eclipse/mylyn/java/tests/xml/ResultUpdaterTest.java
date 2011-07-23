@@ -23,8 +23,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
-import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -89,7 +88,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		Collection<InteractionContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());
 
-		ContextTestUtil.delete(plugin1);
+		WorkspaceSetupHelper.delete(plugin1);
 
 		Collection<InteractionContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());
@@ -114,7 +113,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		Collection<InteractionContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());
 
-		ContextTestUtil.deleteProject(jp1.getProject().getName());
+		WorkspaceSetupHelper.deleteProject(jp1.getProject().getName());
 
 		Collection<InteractionContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());

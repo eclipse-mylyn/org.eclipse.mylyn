@@ -20,13 +20,13 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.mylyn.commons.tests.support.UiTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.resources.tests.ResourceTestUtil;
 import org.eclipse.ui.PartInitException;
 
 /**

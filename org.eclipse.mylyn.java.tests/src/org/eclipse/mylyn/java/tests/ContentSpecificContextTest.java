@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.java.tests;
 
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;

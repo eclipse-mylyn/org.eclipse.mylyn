@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.resources.tests;
 
-import org.eclipse.mylyn.commons.tests.support.UiTestUtil;
-import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -26,7 +26,9 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest} instead
  */
+@Deprecated
 // TODO e3.5
 @SuppressWarnings("deprecation")
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
