@@ -29,6 +29,11 @@ public class DefaultTaskActivityMonitor extends AbstractTaskActivityMonitor {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
+	@Override
 	public void loadActivityTime() {
 		// ignore
 	}

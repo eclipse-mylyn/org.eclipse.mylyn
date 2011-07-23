@@ -461,7 +461,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void updateActiveTime() {
-		boolean show = MonitorUiPlugin.getDefault().isActivityTrackingEnabled() && isActiveTimeEnabled();
+		boolean show = TasksUiInternal.isActivityTrackingEnabled() && isActiveTimeEnabled();
 		long elapsedTime = TasksUiInternal.getActiveTime(getTask());
 		boolean visible = activeTimeComposite != null && activeTimeComposite.isVisible();
 		if (show && (elapsedTime > 0 || getTask().isActive())) {

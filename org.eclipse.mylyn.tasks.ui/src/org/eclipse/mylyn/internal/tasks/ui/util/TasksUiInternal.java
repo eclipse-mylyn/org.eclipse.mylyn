@@ -1281,7 +1281,7 @@ public class TasksUiInternal {
 	}
 
 	public static long getActiveTime(ITask task) {
-		if (MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+		if (TasksUiInternal.isActivityTrackingEnabled()) {
 			return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
 		}
 		return 0;
@@ -1437,6 +1437,11 @@ public class TasksUiInternal {
 		}
 		TaskRepository repository = attribute.getTaskData().getAttributeMapper().getTaskRepository();
 		return account.kind(repository.getConnectorKind()).url(repository.getRepositoryUrl());
+	}
+
+	public static boolean isActivityTrackingEnabled() {
+		return TasksUiPlugin.getTaskActivityMonitor().isEnabled()
+				&& MonitorUiPlugin.getDefault().isActivityTrackingEnabled();
 	}
 
 }

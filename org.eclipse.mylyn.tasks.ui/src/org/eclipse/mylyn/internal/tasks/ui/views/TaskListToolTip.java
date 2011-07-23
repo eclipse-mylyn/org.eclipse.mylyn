@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.DateUtil;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
@@ -246,7 +245,7 @@ public class TaskListToolTip extends GradientToolTip {
 	private void appendEstimateAndActive(StringBuilder sb, int estimateTotal, long activeTotal) {
 		sb.append(NLS.bind(Messages.TaskListToolTip_Estimate, estimateTotal));
 		sb.append("\n"); //$NON-NLS-1$
-		if (MonitorUiPlugin.getDefault().isActivityTrackingEnabled()) {
+		if (TasksUiInternal.isActivityTrackingEnabled()) {
 			sb.append(NLS.bind(Messages.TaskListToolTip_Active_X, DateUtil.getFormattedDurationShort(activeTotal)));
 			sb.append("\n"); //$NON-NLS-1$
 		}

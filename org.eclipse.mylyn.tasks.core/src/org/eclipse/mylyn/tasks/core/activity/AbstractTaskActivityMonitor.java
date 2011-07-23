@@ -30,6 +30,11 @@ public abstract class AbstractTaskActivityMonitor {
 	/**
 	 * @since 3.7
 	 */
+	public abstract boolean isEnabled();
+
+	/**
+	 * @since 3.7
+	 */
 	public abstract void loadActivityTime();
 
 	/**

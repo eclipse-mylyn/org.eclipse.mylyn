@@ -131,7 +131,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		createTaskNavigationGroup(container);
 		createTaskListGroup(container);
 		createTaskEditorGroup(container);
-		createTaskActivityGroup(container);
+		Group taskActivityGroup = createTaskActivityGroup(container);
+		if (!TasksUiPlugin.getTaskActivityMonitor().isEnabled()) {
+			// hide controls but create them to avoid NPEs
+			taskActivityGroup.setVisible(false);
+			((GridData) taskActivityGroup.getLayoutData()).exclude = true;
+		}
+
 		Composite advanced = createAdvancedSection(container);
 		createTaskDataControl(advanced);
 
@@ -521,7 +527,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 	}
 
-	private void createTaskActivityGroup(Composite container) {
+	private Group createTaskActivityGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.TasksUiPreferencePage_Task_Timing);
 		group.setLayout(new GridLayout(3, false));
@@ -583,6 +589,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutLabel2 = new Label(group, SWT.NONE);
 		timeoutLabel2.setText(Messages.TasksUiPreferencePage_minutes_of_inactivity);
 
+		return group;
 	}
 
 	public void updateRefreshGroupEnablements() {
