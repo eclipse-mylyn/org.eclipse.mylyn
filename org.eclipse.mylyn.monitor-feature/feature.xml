@@ -10,7 +10,7 @@
          Tasktop Technologies - initial API and implementation
  -->
 <feature
-      id="org.eclipse.mylyn.commons"
+      id="org.eclipse.mylyn.monitor"
       label="%featureName"
       version="3.7.0.qualifier"
       provider-name="%providerName"
@@ -27,13 +27,6 @@
    <license url="license.html">
       %license
    </license>
-
-   <plugin
-         id="org.eclipse.mylyn"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.commons.core"

@@ -56,9 +56,11 @@
     <module>org.eclipse.mylyn.commons.tests</module>
     <module>org.eclipse.mylyn.commons.ui</module>
     <module>org.eclipse.mylyn.commons.xmlrpc</module>
+    <module>org.eclipse.mylyn.discovery-feature</module>
     <module>org.eclipse.mylyn.discovery.core</module>
     <module>org.eclipse.mylyn.discovery.tests</module>
     <module>org.eclipse.mylyn.discovery.ui</module>
+    <module>org.eclipse.mylyn.monitor-feature</module>
     <module>org.eclipse.mylyn.monitor.core</module>
     <module>org.eclipse.mylyn.monitor.tests</module>
     <module>org.eclipse.mylyn.monitor.ui</module>
