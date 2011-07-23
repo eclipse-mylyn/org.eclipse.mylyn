@@ -40,6 +40,23 @@
       <layout>default</layout>
     </repository>
   </repositories>
+  <profiles>
+	<profile>
+	  <id>implicit-target</id>
+      <activation>
+		<property>
+		  <name>!explicit-target</name>
+		</property>
+      </activation>
+	  <repositories>
+		<repository>
+		  <id>eclipse-mylyn-commons</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-commons-repository-url}</url>
+		</repository>
+	  </repositories>
+	</profile>
+  </profiles>
   <modules>
     <module>org.eclipse.mylyn.cvs-feature</module>
     <module>org.eclipse.mylyn.cvs.core</module>
