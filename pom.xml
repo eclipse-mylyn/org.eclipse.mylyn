@@ -50,6 +50,7 @@
     <module>org.eclipse.mylyn.commons.notifications</module>
     <module>org.eclipse.mylyn.commons.repositories</module>
     <module>org.eclipse.mylyn.commons.sdk-feature</module>
+    <module>org.eclipse.mylyn.commons.sdk.util</module>
     <module>org.eclipse.mylyn.commons.soap</module>
     <module>org.eclipse.mylyn.commons.team</module>
     <module>org.eclipse.mylyn.commons.tests</module>

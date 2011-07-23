@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.tests.support;
+package org.eclipse.mylyn.commons.sdk.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,10 +28,8 @@ import java.util.List;
 import junit.framework.AssertionFailedError;
 
 /**
- * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.TestProxy} instead
  * @author Steffen Pingel
  */
-@Deprecated
 public class TestProxy implements Runnable {
 
 	public static String CRLF = "\r\n";

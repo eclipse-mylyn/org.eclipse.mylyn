@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.tests.support;
+package org.eclipse.mylyn.commons.sdk.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,10 +36,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
 import org.eclipse.osgi.util.NLS;
 
-/**
- * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.CommonTestUtil} instead
- */
-@Deprecated
 @SuppressWarnings("restriction")
 public class CommonTestUtil {
 

@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.tests.support;
+package org.eclipse.mylyn.commons.sdk.util;
 
 import java.net.ProxySelector;
 import java.net.URI;
@@ -38,10 +38,8 @@ import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
  * test takes longer than 10 minutes.
  * 
- * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite} instead
  * @author Steffen Pingel
  */
-@Deprecated
 public class ManagedTestSuite extends TestSuite {
 
 	private class DumpThreadTask extends TimerTask {

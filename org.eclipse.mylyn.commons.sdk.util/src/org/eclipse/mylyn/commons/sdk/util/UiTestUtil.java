@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.tests.support;
+package org.eclipse.mylyn.commons.sdk.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +23,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.UiTestUtil} instead
  * @author Mik Kersten
  */
-@Deprecated
 public class UiTestUtil {
 
 	public static int countItemsInTree(Tree tree) {

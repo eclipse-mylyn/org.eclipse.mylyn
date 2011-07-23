@@ -33,6 +33,14 @@
          version="0.0.0"/>
 
    <plugin
+         id="org.eclipse.mylyn.commons.sdk.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+<!--
+   <plugin
          id="org.eclipse.mylyn.commons.tests"
          download-size="0"
          install-size="0"
@@ -52,6 +60,28 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.discovery.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.monitor.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+-->
 
    <plugin
          id="org.eclipse.mylyn.source"
@@ -96,13 +126,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.screenshots.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.commons.soap.source"
          download-size="0"
          install-size="0"
@@ -110,14 +133,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.team.source"
+         id="org.eclipse.mylyn.commons.screenshots.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.tests.source"
+         id="org.eclipse.mylyn.commons.sdk.util.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.team.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -145,13 +175,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.discovery.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.discovery.ui.source"
          download-size="0"
          install-size="0"
@@ -160,13 +183,6 @@
 
    <plugin
          id="org.eclipse.mylyn.monitor.core.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.monitor.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
