@@ -14,9 +14,11 @@ package org.eclipse.mylyn.hudson.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
+import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
  * @author Steffen Pingel
@@ -24,11 +26,18 @@ import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 public class AllHudsonTests {
 
 	public static Test suite() {
-		return suite(false);
+		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
+		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
+		addTests(defaultOnly, suite);
+		return suite;
+	}
+
+	private static void addTests(boolean defaultOnly, TestSuite suite) {
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
 		for (HudsonFixture fixture : HudsonFixture.ALL) {
@@ -36,7 +45,6 @@ public class AllHudsonTests {
 			fixture.add(HudsonClientTest.class);
 			fixture.done();
 		}
-		return suite;
 	}
 
 }
