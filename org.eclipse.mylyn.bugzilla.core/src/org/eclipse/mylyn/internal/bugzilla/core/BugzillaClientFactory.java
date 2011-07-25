@@ -27,6 +27,16 @@ public class BugzillaClientFactory {
 
 	public static BugzillaClient createClient(TaskRepository taskRepository, BugzillaRepositoryConnector connector)
 			throws MalformedURLException {
+		// to fix bug#349633
+		// (BugzillaRepositoryConnector.getTaskData() fails when repository URL has trailing slash and no path)
+		String repositoryURL = taskRepository.getRepositoryUrl();
+		if (repositoryURL.endsWith("/")) { //$NON-NLS-1$
+			StringBuilder sb = new StringBuilder(repositoryURL.trim());
+			while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
+				sb.setLength(sb.length() - 1);
+			}
+			taskRepository.setRepositoryUrl(sb.toString());
+		}
 		AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
 
 		BugzillaClient client = new BugzillaClient(location, taskRepository, connector);
