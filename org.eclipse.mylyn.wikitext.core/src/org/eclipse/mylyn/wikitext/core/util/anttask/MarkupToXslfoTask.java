@@ -26,6 +26,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 
 /**
  * @author David Green
@@ -42,6 +44,8 @@ public class MarkupToXslfoTask extends MarkupTask {
 	protected File file;
 
 	protected File targetdir;
+
+	private boolean generateBookmarks = true;
 
 	private final XslfoDocumentBuilder.Configuration configuration = new XslfoDocumentBuilder.Configuration();
 
@@ -151,6 +155,11 @@ public class MarkupToXslfoTask extends MarkupTask {
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanguage(markupLanguage);
 				parser.setBuilder(builder);
+
+				if (generateBookmarks) {
+					OutlineItem outline = new OutlineParser(markupLanguage).parse(markupContent);
+					builder.setOutline(outline);
+				}
 
 				parser.parse(markupContent);
 			} finally {
@@ -341,4 +350,19 @@ public class MarkupToXslfoTask extends MarkupTask {
 	public void setVersion(String version) {
 		configuration.setVersion(version);
 	}
+
+	/**
+	 * @since 1.6
+	 */
+	public boolean isGenerateBookmarks() {
+		return generateBookmarks;
+	}
+
+	/**
+	 * @since 1.6
+	 */
+	public void setGenerateBookmarks(boolean generateBookmarks) {
+		this.generateBookmarks = generateBookmarks;
+	}
+
 }

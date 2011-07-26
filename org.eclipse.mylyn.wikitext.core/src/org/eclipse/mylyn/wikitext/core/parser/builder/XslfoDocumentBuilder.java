@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
@@ -38,7 +39,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
  * @author David Green
- * @author Torkild U. Resheim, MARINTEK
+ * @author Torkild U. Resheim, MARINTEK (bug 337405, bug 336592)
  * @since 1.1
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -94,6 +95,8 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private Configuration configuration = new Configuration();
 
+	private OutlineItem outline;
+
 	public XslfoDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -105,6 +108,25 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void acronym(String text, String definition) {
 		characters(text);
+	}
+
+	/**
+	 * @since 1.6
+	 */
+	public OutlineItem getOutline() {
+		return outline;
+	}
+
+	/**
+	 * If an outline item is set, the document builder will output XSL:FO bookmarks at the beginning of the resulting
+	 * document.
+	 * 
+	 * @param outline
+	 *            the root outline item.
+	 * @since 1.6
+	 */
+	public void setOutline(OutlineItem outline) {
+		this.outline = outline;
 	}
 
 	private static class ElementInfo {
@@ -508,6 +530,12 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeEndElement(); // simple-page-master
 		writer.writeEndElement(); // layout-master-set
 
+		if (outline != null && !outline.getChildren().isEmpty()) {
+			writer.writeStartElement("bookmark-tree"); //$NON-NLS-1$
+			emitToc(writer, outline.getChildren());
+			writer.writeEndElement(); // bookmark-tree
+		}
+
 		if (configuration.title != null) {
 			emitTitlePage();
 		}
@@ -627,6 +655,23 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void closePage() {
 		writer.writeEndElement(); // page-sequence
 		pageOpen = false;
+	}
+
+	private void emitToc(XmlStreamWriter writer, List<OutlineItem> children) {
+		for (OutlineItem item : children) {
+			writer.writeStartElement("bookmark"); //$NON-NLS-1$
+			writer.writeAttribute("internal-destination", item.getId()); //$NON-NLS-1$
+
+			writer.writeStartElement("bookmark-title"); //$NON-NLS-1$
+			writer.writeCharacters(item.getLabel());
+			writer.writeEndElement();
+
+			if (!item.getChildren().isEmpty()) {
+				emitToc(writer, item.getChildren());
+			}
+
+			writer.writeEndElement(); // bookmark
+		}
 	}
 
 	@Override
@@ -1149,5 +1194,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		public void setPageWidth(float pageWidth) {
 			this.pageWidth = pageWidth;
 		}
+
 	}
 }

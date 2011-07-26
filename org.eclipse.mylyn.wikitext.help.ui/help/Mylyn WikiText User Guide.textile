@@ -303,6 +303,7 @@ WikiText conversion to XSL-FO is performed using the @wikitext-to-xslfo@ task.  
 | @pageMargin@ |  The page margin in cm.  Defaults to 1.5. |
 | @pageHeight@ | The page height in cm. Defaults to A4 sizing (29.7) |
 | @pageWidth@ | The page width in cm. Defaults to A4 sizing (21.0) |
+| @generateBookmarks@ | When true, generates bookmarks in the form of a @<bookmark-tree>@ in the output.  Defaults to true. | 
 
 h4. PDF from XSL-FO Quick-Start
 

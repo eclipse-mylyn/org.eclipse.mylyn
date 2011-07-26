@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - Generate bookmarks for headers, bug 336592
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
@@ -17,9 +18,12 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 public class XslfoDocumentBuilderTest extends TestCase {
 	private StringWriter out;
@@ -46,5 +50,24 @@ public class XslfoDocumentBuilderTest extends TestCase {
 				+ "== H2 ==\n" + "\n" + "some text");
 //		System.out.println(out);
 		assertFalse(Pattern.compile("<static-content[^>]*></static-content>").matcher(out.toString()).find());
+	}
+
+	public void testForXslFoBookmarks_bug336592() {
+		final String markup = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n= Bookmark H1 =\n== Bookmark H2 ==\n";
+
+		documentBuilder.getConfiguration().setPageNumbering(true);
+		documentBuilder.getConfiguration().setTitle("Title");
+		OutlineItem op = new OutlineParser(new MediaWikiLanguage()).parse(markup);
+		documentBuilder.setOutline(op);
+		parser.setMarkupLanguage(new MediaWikiLanguage());
+		parser.parse(markup, true);
+
+		final String xslfo = out.toString();
+		TestUtil.println(xslfo);
+
+		assertTrue(Pattern.compile(
+				"<bookmark-tree>\\s*<bookmark internal-destination=\"Bookmark_H1\">\\s*<bookmark-title>Bookmark H1</bookmark-title>\\s*<bookmark internal-destination=\"Bookmark_H2\">\\s*<bookmark-title>Bookmark H2</bookmark-title>\\s*</bookmark>\\s*</bookmark>\\s*</bookmark-tree>")
+				.matcher(xslfo)
+				.find());
 	}
 }
