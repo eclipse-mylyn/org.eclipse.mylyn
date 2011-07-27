@@ -414,7 +414,7 @@ public class GerritClient {
 		try {
 			return Integer.parseInt(id);
 		} catch (NumberFormatException e) {
-			throw new GerritException(NLS.bind("Invalid ID ('{0}')", id));
+			throw new GerritException(NLS.bind("Invalid ID (''{0}'')", id));
 		}
 	}
 
