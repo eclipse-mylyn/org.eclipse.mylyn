@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
+import java.beans.Beans;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -46,12 +47,18 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	public AbstractRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
 		super(pageName);
-		Assert.isNotNull(taskRepository);
+		// see http://ekkescorner.wordpress.com/2009/07/07/galileo-enter-the-twilight-zone-between-target-platform-runtime-and-ide-development/
+		if (!Beans.isDesignTime()) {
+			Assert.isNotNull(taskRepository);
+		}
 		this.taskRepository = taskRepository;
 		this.query = query;
 		setTitle(Messages.AbstractRepositoryQueryPage_Enter_query_parameters);
 		setDescription(Messages.AbstractRepositoryQueryPage_If_attributes_are_blank_or_stale_press_the_Update_button);
-		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		// see http://ekkescorner.wordpress.com/2009/07/07/galileo-enter-the-twilight-zone-between-target-platform-runtime-and-ide-development/
+		if (!Beans.isDesignTime()) {
+			setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		}
 		setPageComplete(false);
 	}
 
