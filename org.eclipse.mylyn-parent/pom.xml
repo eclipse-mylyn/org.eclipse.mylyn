@@ -41,13 +41,13 @@
 
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
 	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-	<mylyn-builds-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-builds-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.builds-site/target/site/</mylyn-builds-repository-url>
-	<mylyn-commons-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-commons-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.commons-site/target/site/</mylyn-commons-repository-url>
-	<mylyn-context-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-context-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.context-site/target/site/</mylyn-context-repository-url>
-	<mylyn-docs-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-docs-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.docs-site/target/site/</mylyn-docs-repository-url>
-	<mylyn-reviews-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-reviews-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.reviews.site/target/site/</mylyn-reviews-repository-url>
-	<mylyn-tasks-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-tasks-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.tasks-site/target/site/</mylyn-tasks-repository-url>
-	<mylyn-versions-repository-url>https://hudson.eclipse.org/hudson/job/mylyn-versions-nightly/lastSuccessfulBuild/artifact/org.eclipse.mylyn.versions-site/target/site/</mylyn-versions-repository-url>
+	<mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
+	<mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
+	<mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
+	<mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
+	<mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
+	<mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
+	<mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
