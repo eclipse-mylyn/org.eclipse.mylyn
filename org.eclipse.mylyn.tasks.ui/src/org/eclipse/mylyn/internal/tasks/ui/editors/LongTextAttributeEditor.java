@@ -36,6 +36,10 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
 	private SourceViewer viewer;
 
+	boolean ignoreNotification;
+
+	boolean suppressRefresh;
+
 	public LongTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
@@ -66,8 +70,13 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					setValue(text.getText());
-					CommonFormUtil.ensureVisible(text);
+					try {
+						suppressRefresh = true;
+						setValue(text.getText());
+						CommonFormUtil.ensureVisible(text);
+					} finally {
+						suppressRefresh = false;
+					}
 				}
 			});
 		}
@@ -87,12 +96,18 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void refresh() {
 		if (viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
-			viewer.getDocument().set(getValue());
+			try {
+				ignoreNotification = true;
+				viewer.getDocument().set(getValue());
+			} finally {
+				ignoreNotification = false;
+			}
 		}
 	}
 
 	@Override
 	public boolean shouldAutoRefresh() {
-		return true;
+		return !suppressRefresh;
 	}
+
 }
