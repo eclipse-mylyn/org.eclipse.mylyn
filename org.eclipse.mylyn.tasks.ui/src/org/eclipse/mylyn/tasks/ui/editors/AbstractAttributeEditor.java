@@ -29,6 +29,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Steffen Pingel
+ * @author Sam Davis
  * @since 3.0
  */
 public abstract class AbstractAttributeEditor {
@@ -60,13 +61,18 @@ public abstract class AbstractAttributeEditor {
 
 	private String description;
 
+	private boolean refreshInProgress;
+
 	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
 		@Override
 		public void attributeChanged(TaskDataModelEvent event) {
 			if (shouldAutoRefresh() && getTaskAttribute().equals(event.getTaskAttribute())) {
 				try {
+					refreshInProgress = true;
 					refresh();
 				} catch (UnsupportedOperationException e) {
+				} finally {
+					refreshInProgress = false;
 				}
 			}
 		}
@@ -96,7 +102,9 @@ public abstract class AbstractAttributeEditor {
 	 * @since 3.0
 	 */
 	protected void attributeChanged() {
-		getModel().attributeChanged(getTaskAttribute());
+		if (!refreshInProgress) {
+			getModel().attributeChanged(getTaskAttribute());
+		}
 	}
 
 	/**
