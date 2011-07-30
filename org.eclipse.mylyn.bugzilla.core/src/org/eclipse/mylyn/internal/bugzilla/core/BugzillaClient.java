@@ -39,7 +39,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.security.auth.login.LoginException;
 import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.httpclient.Cookie;
@@ -80,8 +79,6 @@ import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
-import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -1970,43 +1967,6 @@ public class BugzillaClient {
 		} finally {
 			in.close();
 		}
-	}
-
-	public TaskHistory getHistory(String taskId, IProgressMonitor monitor) throws IOException, CoreException {
-		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-		authenticate(monitor);
-		GzipGetMethod method = null;
-		try {
-			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
-			method = getConnectGzip(url, monitor, null);
-			if (method != null) {
-				InputStream in = getResponseStream(method, monitor);
-				try {
-					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, getCharacterEncoding());
-					try {
-						return parser.retrieveHistory(bugzillaLanguageSettings);
-					} catch (LoginException e) {
-						loggedIn = false;
-						throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-								RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-								IBugzillaConstants.INVALID_CREDENTIALS));
-					} catch (ParseException e) {
-						loggedIn = false;
-						throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-								RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " //$NON-NLS-1$
-										+ repositoryUrl.toString() + ".")); //$NON-NLS-1$
-					}
-				} finally {
-					in.close();
-				}
-			}
-
-		} finally {
-			if (method != null) {
-				WebUtil.releaseConnection(method, monitor);
-			}
-		}
-		return null;
 	}
 
 	public void getTaskData(Set<String> taskIds, final TaskDataCollector collector, final TaskAttributeMapper mapper,
