@@ -203,12 +203,12 @@ public class TasksUiImages {
 	 * @since 3.7
 	 */
 
-	public static final ImageDescriptor LOCK_CLOSE = create(TOOL, "lock.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor LOCK_CLOSE = create(TOOL_SMALL, "lock.gif"); //$NON-NLS-1$
 
 	/**
 	 * @since 3.7
 	 */
-	public static final ImageDescriptor LOCK_OPEN = create(TOOL, "unlock.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor LOCK_OPEN = create(TOOL_SMALL, "unlock.gif"); //$NON-NLS-1$
 
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {

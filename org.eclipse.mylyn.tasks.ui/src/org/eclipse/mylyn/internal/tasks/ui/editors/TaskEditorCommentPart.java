@@ -363,6 +363,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			});
 
+			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+			addActionsToToolbarTitle(toolBarManager, taskComment, this);
+			toolBarManager.createControl(titleComposite);
+
 			// only visible when section is expanded
 			final Composite buttonComposite = toolkit.createComposite(titleComposite);
 			RowLayout buttonCompLayout = new RowLayout();
@@ -372,9 +376,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonComposite.setBackground(null);
 			buttonComposite.setVisible(commentComposite.isExpanded());
 
-			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-			addActionsToToolbar(toolBarManager, taskComment, this);
-			toolBarManager.createControl(buttonComposite);
+			ToolBarManager toolBarManager1 = new ToolBarManager(SWT.FLAT);
+			addActionsToToolbarButton(toolBarManager1, taskComment, this);
+			toolBarManager1.createControl(buttonComposite);
 
 			return buttonComposite;
 		}
@@ -554,11 +558,15 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		setPartName(Messages.TaskEditorCommentPart_Comments);
 	}
 
-	protected void addActionsToToolbar(ToolBarManager toolBarManager, final TaskComment taskComment,
+	protected void addActionsToToolbarButton(ToolBarManager toolBarManager, final TaskComment taskComment,
 			CommentViewer commentViewer) {
 		ReplyToCommentAction replyAction = new ReplyToCommentAction(commentViewer, taskComment);
 		replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
 		toolBarManager.add(replyAction);
+	}
+
+	protected void addActionsToToolbarTitle(ToolBarManager toolBarManager, final TaskComment taskComment,
+			CommentViewer commentViewer) {
 	}
 
 	private void collapseAllComments() {
