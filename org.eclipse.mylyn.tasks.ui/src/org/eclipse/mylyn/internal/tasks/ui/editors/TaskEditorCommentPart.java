@@ -363,9 +363,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			});
 
-			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-			addActionsToToolbarTitle(toolBarManager, taskComment, this);
-			toolBarManager.createControl(titleComposite);
+			ToolBarManager toolBarManagerTitle = new ToolBarManager(SWT.FLAT);
+			addActionsToToolbarTitle(toolBarManagerTitle, taskComment, this);
+			toolBarManagerTitle.createControl(titleComposite);
 
 			// only visible when section is expanded
 			final Composite buttonComposite = toolkit.createComposite(titleComposite);
@@ -376,9 +376,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonComposite.setBackground(null);
 			buttonComposite.setVisible(commentComposite.isExpanded());
 
-			ToolBarManager toolBarManager1 = new ToolBarManager(SWT.FLAT);
-			addActionsToToolbarButton(toolBarManager1, taskComment, this);
-			toolBarManager1.createControl(buttonComposite);
+			ToolBarManager toolBarManagerButton = new ToolBarManager(SWT.FLAT);
+			addActionsToToolbarButton(toolBarManagerButton, taskComment, this);
+			toolBarManagerButton.createControl(buttonComposite);
 
 			return buttonComposite;
 		}
