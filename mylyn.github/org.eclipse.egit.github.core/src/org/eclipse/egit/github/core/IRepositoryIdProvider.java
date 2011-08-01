@@ -12,8 +12,8 @@ package org.eclipse.egit.github.core;
 
 /**
  * Interface to provide an ID for a repository. This refers to the unique
- * identified of any GitHub repository. This is the owner and name of the
- * repository joined by a '/'.
+ * identifier of any GitHub repository that is currently the owner and name of
+ * the repository joined by a single '/'.
  */
 public interface IRepositoryIdProvider {
 

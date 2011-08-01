@@ -40,8 +40,8 @@ public class Repository implements IRepositoryIdProvider {
 	 * @return URL
 	 */
 	public static String createRemoteSshUrl(Repository repository, String host) {
-		return "git@" + host + ":" + repository.getOwner().getLogin() + "/"
-				+ repository.getName() + IGitHubConstants.SUFFIX_GIT;
+		return "git@" + host + ":" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class Repository implements IRepositoryIdProvider {
 	 */
 	public static String createRemoteHttpsUrl(Repository repository,
 			String host, String user) {
-		return "https://" + user + "@" + host + "/" + repository.getOwner()
-				+ "/" + repository.getName() + IGitHubConstants.SUFFIX_GIT;
+		return "https://" + user + "@" + host + "/" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class Repository implements IRepositoryIdProvider {
 	 */
 	public static String createRemoteReadOnlyUrl(Repository repository,
 			String host) {
-		return "git://" + host + "/" + repository.getOwner() + "/"
-				+ repository.getName() + IGitHubConstants.SUFFIX_GIT;
+		return "git://" + host + "/" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
 	}
 
 	private boolean fork;

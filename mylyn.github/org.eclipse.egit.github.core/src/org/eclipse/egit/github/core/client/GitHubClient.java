@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.ProxySelector;
+import java.net.URL;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -53,6 +54,25 @@ import org.eclipse.egit.github.core.RequestError;
  * Client class for interacting with GitHub HTTP/JSON API.
  */
 public class GitHubClient {
+
+	/**
+	 * Create API client from URL.
+	 * 
+	 * This creates an HTTPS-based client with a host that contains the host
+	 * value of the given URL prefixed with 'api'.
+	 * 
+	 * @param url
+	 * @return client
+	 */
+	public static GitHubClient createClient(String url) {
+		try {
+			String host = new URL(url).getHost();
+			host = IGitHubConstants.SUBDOMAIN_API + "." + host;
+			return new GitHubClient(host, -1, IGitHubConstants.PROTOCOL_HTTPS);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 
 	private static final Header USER_AGENT = new BasicHeader(HTTP.USER_AGENT,
 			"GitHubJava/1.1.0"); //$NON-NLS-1$

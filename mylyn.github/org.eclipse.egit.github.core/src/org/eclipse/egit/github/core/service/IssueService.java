@@ -286,7 +286,7 @@ public class IssueService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_ISSUES);
 
 		Map<Object, Object> params = createIssueMap(issue, true);
-		return this.client.post(uri.toString(), params, Issue.class);
+		return client.post(uri.toString(), params, Issue.class);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class IssueService extends GitHubService {
 		String state = issue.getState();
 		if (state != null)
 			params.put(FILTER_STATE, state);
-		return this.client.post(uri.toString(), params, Issue.class);
+		return client.post(uri.toString(), params, Issue.class);
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class IssueService extends GitHubService {
 		Map<String, String> params = new HashMap<String, String>(1, 1);
 		params.put(FIELD_BODY, comment);
 
-		return this.client.post(uri.toString(), params, Comment.class);
+		return client.post(uri.toString(), params, Comment.class);
 	}
 
 	/**
@@ -362,5 +362,4 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(comment);
 		client.delete(uri.toString());
 	}
-
 }
