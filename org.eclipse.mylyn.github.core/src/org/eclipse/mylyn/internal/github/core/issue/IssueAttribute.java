@@ -109,21 +109,7 @@ public enum IssueAttribute {
 	 */
 	REPORTER_GRAVATAR(Messages.IssueAttribute_LabelReporterGravatar,
 			"github.issue.reporter.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
-			true, false),
-
-	/**
-	 * URL to diff if issue is a pull request
-	 */
-	PULL_REQUEST_DIFF(Messages.IssueAttribute_LabelPullRequestDiffUrl,
-			"github.issue.pull.diff", //$NON-NLS-2$ //$NON-NLS-1$
-			TaskAttribute.TYPE_URL, null, true, false),
-
-	/**
-	 * Body of pull request if issue is a pull request
-	 */
-	PULL_REQUEST_BODY(Messages.IssueAttribute_LabelPullRequestBody,
-			"github.issue.pull.body", //$NON-NLS-2$
-			TaskAttribute.TYPE_LONG_TEXT, null, true, false);
+			true, false);
 
 	private final GitHubAttributeMetadata metadata;
 

@@ -32,24 +32,27 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class GitHub {
 
 	/** BUNDLE_ID */
-	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.core";
+	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.core"; //$NON-NLS-1$
 
 	/** CONNECTOR_KIND */
-	public static final String CONNECTOR_KIND = "github";
+	public static final String CONNECTOR_KIND = "github"; //$NON-NLS-1$
 
 	/** HTTP_WWW_GITHUB_ORG */
-	public static final String HTTP_WWW_GITHUB_ORG = "http://www.github.org";
+	public static final String HTTP_WWW_GITHUB_ORG = "http://www.github.org"; //$NON-NLS-1$
 
 	/** HTTP_GITHUB_COM */
-	public static final String HTTP_GITHUB_COM = "http://github.com";
+	public static final String HTTP_GITHUB_COM = "http://github.com"; //$NON-NLS-1$
 
 	/** URL_PATTERN */
-	public static final Pattern URL_PATTERN = Pattern.compile("(?:"
-			+ Pattern.quote(HTTP_WWW_GITHUB_ORG) + "|"
-			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)");
+	public static final Pattern URL_PATTERN = Pattern.compile("(?:" //$NON-NLS-1$
+			+ Pattern.quote(HTTP_WWW_GITHUB_ORG) + "|" //$NON-NLS-1$
+			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)"); //$NON-NLS-1$
 
 	/** USER_AGENT */
 	public static final String USER_AGENT = "GitHubEclipse/1.1.0"; //$NON-NLS-1$
+
+	/** REPOSITORY_SEGMENTS */
+	public static final String REPOSITORY_SEGMENTS = "/user/repository"; //$NON-NLS-1$
 
 	/**
 	 * Configure client with standard configuration
@@ -130,7 +133,7 @@ public class GitHub {
 	 */
 	public static IStatus createErrorStatus(Throwable e) {
 		return createStatus(IStatus.ERROR,
-				"Unexpected error: " + e.getLocalizedMessage(), e);
+				"Unexpected error: " + e.getLocalizedMessage(), e); //$NON-NLS-1$
 	}
 
 	/**

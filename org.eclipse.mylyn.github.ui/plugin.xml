@@ -17,6 +17,21 @@
       </connectorUi>
    </extension>
    <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector"
+            id="org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector"
+            name="%pullRequestConnectorCore">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/obj16/github.png"
+            class="org.eclipse.mylyn.internal.github.ui.pr.PullRequestConnectorUi"
+            id="org.eclipse.mylyn.internal.github.ui.pr.PullRequestConnectorUi"
+            name="%pullRequestConnectorUi"
+            overlayIcon="icons/obj16/github_8x8.png">
+      </connectorUi>
+   </extension>
+   <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
             class="org.eclipse.mylyn.internal.github.ui.issue.IssueTaskEditorPageFactory"
@@ -25,6 +40,10 @@
       <pageFactory
             class="org.eclipse.mylyn.internal.github.ui.gist.GistTaskEditorPageFactory"
             id="org.eclipse.mylyn.internal.github.ui.gist.GistTaskEditorPageFactory">
+      </pageFactory>
+      <pageFactory
+            class="org.eclipse.mylyn.internal.github.ui.pr.PullRequestTaskEditorPageFactory"
+            id="org.eclipse.mylyn.internal.github.ui.pr.PullRequestTaskEditorPageFactory">
       </pageFactory>
    </extension>
    <extension
@@ -43,6 +62,16 @@
             description="Clone Gist into Git repository"
             id="org.eclipse.mylyn.github.ui.command.cloneGist"
             name="Clone Gist">
+      </command>
+      <command
+            description="%checkoutPullRequest.description"
+            id="org.eclipse.mylyn.github.ui.command.checkoutPullRequest"
+            name="%checkoutPullRequest.name">
+      </command>
+      <command
+            description="%fetchPullRequest.description"
+            id="org.eclipse.mylyn.github.ui.command.fetchPullRequest"
+            name="%fetchPullRequest.name">
       </command>
    </extension>
    <extension
@@ -138,6 +167,14 @@
             class="org.eclipse.mylyn.internal.github.ui.gist.CloneGistHandler"
             commandId="org.eclipse.mylyn.github.ui.command.cloneGist">
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.github.ui.pr.CheckoutPullRequestHandler"
+            commandId="org.eclipse.mylyn.github.ui.command.checkoutPullRequest">
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.github.ui.pr.FetchPullRequestHandler"
+            commandId="org.eclipse.mylyn.github.ui.command.fetchPullRequest">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.ui.repositories">
@@ -158,7 +195,7 @@
          point="org.eclipse.ui.importWizards">
       <wizard
             category="org.eclipse.mylyn.tasks.ui.wizards.import.category"
-            class="org.eclipse.mylyn.internal.github.ui.ImportRepositoriesWizard"
+            class="org.eclipse.mylyn.internal.github.ui.TaskRepositoryImportWizard"
             icon="icons/obj16/github.png"
             id="org.eclipse.mylyn.github.ui.importRepositoriesWizard"
             name="%importRepositoriesWizardName">
@@ -179,6 +216,14 @@
       <image
             commandId="org.eclipse.mylyn.github.ui.command.cloneGist"
             icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/cloneGit.gif">
+      </image>
+      <image
+            commandId="org.eclipse.mylyn.github.ui.command.checkoutPullRequest"
+            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/checkout.gif">
+      </image>
+      <image
+            commandId="org.eclipse.mylyn.github.ui.command.fetchPullRequest"
+            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/fetch.gif">
       </image>
    </extension>
 </plugin>

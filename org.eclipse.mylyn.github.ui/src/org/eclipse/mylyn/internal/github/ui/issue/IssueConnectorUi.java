@@ -185,8 +185,6 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getTaskKindLabel(ITask task) {
-		return task.getAttribute(IssueAttribute.PULL_REQUEST_DIFF.getMetadata()
-				.getId()) == null ? Messages.IssueConnectorUi_LabelIssueKind
-				: Messages.IssueConnectorUi_LabelPullRequestKind;
+		return Messages.IssueConnectorUi_LabelIssueKind;
 	}
 }

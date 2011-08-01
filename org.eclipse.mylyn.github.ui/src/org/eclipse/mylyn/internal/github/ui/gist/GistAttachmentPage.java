@@ -46,6 +46,7 @@ public class GistAttachmentPage extends WizardPage {
 		model.setAttachContext(false);
 		mapper = TaskAttachmentMapper.createFrom(model.getAttribute());
 		this.model = model;
+		setPageComplete(false);
 	}
 
 	/**

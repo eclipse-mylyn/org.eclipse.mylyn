@@ -20,17 +20,17 @@ public enum IssueOperation {
 	/**
 	 * LEAD
 	 */
-	LEAVE("Leave "),
+	LEAVE("Leave "), //$NON-NLS-1$
 
 	/**
 	 * REOPEN
 	 */
-	REOPEN("Reopen"),
+	REOPEN("Reopen"), //$NON-NLS-1$
 
 	/**
 	 * CLOSE
 	 */
-	CLOSE("Close");
+	CLOSE("Close"); //$NON-NLS-1$
 
 	private final String label;
 

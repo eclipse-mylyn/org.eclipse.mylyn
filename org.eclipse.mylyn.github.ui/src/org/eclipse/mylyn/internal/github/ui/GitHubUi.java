@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.github.ui.pr.PullRequestContextSynchronizer;
+import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -40,6 +43,8 @@ public class GitHubUi extends AbstractUIPlugin {
 	 * STORE_NAME
 	 */
 	public static final String STORE_NAME = "avatars.ser"; //$NON-NLS-1$
+
+	private PullRequestContextSynchronizer prSynchronize = new PullRequestContextSynchronizer();
 
 	/**
 	 * Create status
@@ -151,6 +156,9 @@ public class GitHubUi extends AbstractUIPlugin {
 		super.start(context);
 		INSTANCE = this;
 		loadAvatars(context);
+		ITaskActivityManager activityManager = TasksUi.getTaskActivityManager();
+		if (activityManager != null)
+			activityManager.addActivationListener(prSynchronize);
 	}
 
 	/**
@@ -216,5 +224,8 @@ public class GitHubUi extends AbstractUIPlugin {
 		super.stop(context);
 		INSTANCE = null;
 		saveAvatars(context);
+		ITaskActivityManager activityManager = TasksUi.getTaskActivityManager();
+		if (activityManager != null)
+			activityManager.removeActivationListener(prSynchronize);
 	}
 }

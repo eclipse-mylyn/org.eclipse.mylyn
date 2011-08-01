@@ -53,7 +53,7 @@ public class GitHubException extends IOException {
 		RequestError error = ((RequestException) getCause()).getError();
 		String errorMessage = error.getMessage();
 		if (errorMessage == null)
-			errorMessage = "";
+			errorMessage = ""; //$NON-NLS-1$
 		StringBuilder message = new StringBuilder(errorMessage);
 		List<FieldError> errors = error.getErrors();
 		if (errors != null && errors.size() > 0) {

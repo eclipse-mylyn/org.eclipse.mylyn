@@ -25,8 +25,7 @@ import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
@@ -55,9 +54,9 @@ public class CreateGistHandler extends AbstractHandler {
 	 * TODO replace this with HandlerUtil.getActiveEditorInput(ExecutionEvent)
 	 * as soon as we don't support Eclipse 3.6 anymore copied from HandlerUtil
 	 * in 3.7 to be able to run this on 3.6
-	 *
+	 * 
 	 * Return the input of the active editor.
-	 *
+	 * 
 	 * @param event
 	 *            The execution event that contains the application context
 	 * @return the input of the active editor, or <code>null</code>.
@@ -103,14 +102,11 @@ public class CreateGistHandler extends AbstractHandler {
 		// only use the first repository, in the future provide a
 		// selection if multiple exist
 		TaskRepository repository = repositories.iterator().next();
-		GitHubClient client = new GitHubClient();
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
+		GitHubClient client = GitHub.configureClient(new GitHubClient());
+		GitHub.addCredentials(client, repository);
 		GistService service = new GistService(client);
-		CreateGistJob job = new CreateGistJob(Messages.CreateGistHandler_CreateGistJobName, name, contents,
+		CreateGistJob job = new CreateGistJob(
+				Messages.CreateGistHandler_CreateGistJobName, name, contents,
 				service, isPublic);
 		job.setSystem(true);
 		job.schedule();

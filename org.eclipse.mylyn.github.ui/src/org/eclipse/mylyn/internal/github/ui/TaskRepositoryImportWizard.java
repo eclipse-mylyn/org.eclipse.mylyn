@@ -16,11 +16,13 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
+import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.gist.GistRepositorySettingsPage;
 import org.eclipse.mylyn.internal.github.ui.gist.Messages;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IImportWizard;
@@ -33,7 +35,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
+public class TaskRepositoryImportWizard extends Wizard implements IImportWizard {
 
 	private CredentialsWizardPage credentialsPage;
 
@@ -42,7 +44,7 @@ public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
 	/**
 	 * Create import repositories wizard
 	 */
-	public ImportRepositoriesWizard() {
+	public TaskRepositoryImportWizard() {
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(WorkbenchImages
 				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
@@ -52,10 +54,10 @@ public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void addPages() {
-		this.credentialsPage = new CredentialsWizardPage();
-		addPage(this.credentialsPage);
-		this.reposPage = new RepositorySelectionWizardPage();
-		addPage(this.reposPage);
+		credentialsPage = new CredentialsWizardPage();
+		addPage(credentialsPage);
+		reposPage = new RepositorySelectionWizardPage();
+		addPage(reposPage);
 	}
 
 	/**
@@ -84,19 +86,12 @@ public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
 	public boolean performFinish() {
 		String user = credentialsPage.getUserName();
 		String password = credentialsPage.getPassword();
+		final IRepositoryManager manager = TasksUi.getRepositoryManager();
 		for (Repository repo : reposPage.getRepositories()) {
-			AuthenticationCredentials credentials = new AuthenticationCredentials(
-					user, password);
-			TaskRepository repository = new TaskRepository(
-					GitHub.CONNECTOR_KIND, GitHub.createGitHubUrl(repo
-							.getOwner().getLogin(), repo.getName()));
-			repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
-					repo.generateId());
-			repository.setCredentials(AuthenticationType.REPOSITORY,
-					credentials, true);
-			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-					IRepositoryConstants.CATEGORY_BUGS);
-			TasksUi.getRepositoryManager().addRepository(repository);
+			manager.addRepository(IssueConnector.createTaskRepository(repo,
+					user, password));
+			manager.addRepository(PullRequestConnector.createTaskRepository(
+					repo, user, password));
 		}
 		if (reposPage.createGistRepository()) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(
@@ -109,7 +104,7 @@ public class ImportRepositoriesWizard extends Wizard implements IImportWizard {
 					credentials, true);
 			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 					IRepositoryConstants.CATEGORY_REVIEW);
-			TasksUi.getRepositoryManager().addRepository(repository);
+			manager.addRepository(repository);
 		}
 		return true;
 	}

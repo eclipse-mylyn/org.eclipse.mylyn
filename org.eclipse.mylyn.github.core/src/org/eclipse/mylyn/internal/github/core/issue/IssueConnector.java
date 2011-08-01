@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,26 +27,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.egit.github.core.service.MilestoneService;
 import org.eclipse.egit.github.core.util.LabelComparator;
 import org.eclipse.egit.github.core.util.MilestoneComparator;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
+import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -63,20 +66,48 @@ public class IssueConnector extends RepositoryConnector {
 	public static final String KIND = GitHub.CONNECTOR_KIND;
 
 	/**
+	 * Get repository label for id provider
+	 * 
+	 * @param repo
+	 * @return label
+	 */
+	public static String getRepositoryLabel(IRepositoryIdProvider repo) {
+		return repo.generateId() + Messages.IssueConnector_LabelIssues;
+	}
+
+	/**
+	 * Create issue task repository
+	 * 
+	 * @param repo
+	 * @param username
+	 * @param password
+	 * @return task repository
+	 */
+	public static TaskRepository createTaskRepository(Repository repo,
+			String username, String password) {
+		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(),
+				repo.getName());
+		TaskRepository repository = new TaskRepository(
+				PullRequestConnector.KIND, url);
+		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
+				getRepositoryLabel(repo));
+		if (username != null && password != null)
+			repository.setCredentials(AuthenticationType.REPOSITORY,
+					new AuthenticationCredentials(username, password), true);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
+				IRepositoryConstants.CATEGORY_BUGS);
+		return repository;
+	}
+
+	/**
 	 * Create client for repository
 	 * 
 	 * @param repository
 	 * @return client
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client;
-		try {
-			String host = new URL(repository.getRepositoryUrl()).getHost();
-			host = IGitHubConstants.SUBDOMAIN_API + "." + host;
-			client = new GitHubClient(host, -1, IGitHubConstants.PROTOCOL_HTTPS);
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
+		GitHubClient client = GitHubClient.createClient(repository
+				.getRepositoryUrl());
 		GitHub.addCredentials(client, repository);
 		return GitHub.configureClient(client);
 	}
@@ -295,7 +326,7 @@ public class IssueConnector extends RepositoryConnector {
 
 				// collect task data
 				for (Issue issue : issues) {
-					if (issue.getPullRequest() == null)
+					if (isPullRequest(issue))
 						continue;
 					List<Comment> comments = null;
 					if (issue.getComments() > 0)
@@ -315,6 +346,11 @@ public class IssueConnector extends RepositoryConnector {
 		return result;
 	}
 
+	private boolean isPullRequest(Issue issue) {
+		PullRequest request = issue.getPullRequest();
+		return request != null && request.getDiffUrl() != null;
+	}
+
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
@@ -325,6 +361,8 @@ public class IssueConnector extends RepositoryConnector {
 			IssueService service = new IssueService(client);
 			Issue issue = service.getIssue(repo.getOwner(), repo.getName(),
 					taskId);
+			if (isPullRequest(issue))
+				return null;
 			List<Comment> comments = null;
 			if (issue.getComments() > 0)
 				comments = service.getComments(repo.getOwner(), repo.getName(),
@@ -374,23 +412,5 @@ public class IssueConnector extends RepositoryConnector {
 		monitor.setTaskName(Messages.IssueConnector_TaskUpdatingMilestones);
 		refreshMilestones(taskRepository);
 		monitor.done();
-	}
-
-	@Override
-	public void updateTaskFromTaskData(TaskRepository taskRepository,
-			ITask task, TaskData taskData) {
-		if (!taskData.isNew()) {
-			String diffUrl = null;
-			TaskAttribute prDiff = taskData.getRoot().getAttribute(
-					IssueAttribute.PULL_REQUEST_DIFF.getMetadata().getId());
-			if (prDiff != null) {
-				diffUrl = taskData.getAttributeMapper().getValue(prDiff);
-				if (diffUrl.length() == 0)
-					diffUrl = null;
-			}
-			task.setAttribute(IssueAttribute.PULL_REQUEST_DIFF.getMetadata()
-					.getId(), diffUrl);
-		}
-		super.updateTaskFromTaskData(taskRepository, task, taskData);
 	}
 }

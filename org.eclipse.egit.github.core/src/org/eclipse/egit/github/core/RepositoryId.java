@@ -31,24 +31,23 @@ public class RepositoryId implements IRepositoryIdProvider {
 
 	/**
 	 * Create repository from id. The id is split on the '/' character and the
-	 * last two non-empty segments are interpreted to be the repository owner
+	 * first two non-empty segments are interpreted to be the repository owner
 	 * and name.
 	 * 
 	 * @param id
 	 * @return repository
 	 */
 	public static RepositoryId createFromId(String id) {
-		if (id == null)
+		if (id == null || id.length() == 0)
 			return null;
 		String owner = null;
 		String name = null;
-		String[] segments = id.split("/"); //$NON-NLS-1$
-		for (int i = segments.length - 1; i >= 0; i--)
-			if (segments[i].length() > 0)
-				if (name == null)
-					name = segments[i];
-				else if (owner == null)
-					owner = segments[i];
+		for (String segment : id.split("/")) //$NON-NLS-1$
+			if (segment.length() > 0)
+				if (owner == null)
+					owner = segment;
+				else if (name == null)
+					name = segment;
 				else
 					break;
 

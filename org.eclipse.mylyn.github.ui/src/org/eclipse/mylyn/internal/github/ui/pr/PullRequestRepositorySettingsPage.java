@@ -1,19 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2011 Red Hat and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/******************************************************************************
+ *  Copyright (c) 2011 GitHub Inc.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *     David Green <david.green@tasktop.com> - initial contribution
- *     Christian Trutz <christian.trutz@gmail.com> - initial contribution
- *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
- *******************************************************************************/
-package org.eclipse.mylyn.internal.github.ui.issue;
+ *  Contributors:
+ *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *****************************************************************************/
+package org.eclipse.mylyn.internal.github.ui.pr;
 
 import java.io.IOException;
-import java.net.URL;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,52 +20,51 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.NoSuchPageException;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
+import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * GitHub connector specific extensions.
+ * Pull request task repository settings page.
  */
-public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage {
+public class PullRequestRepositorySettingsPage extends
+		HttpRepositorySettingsPage {
 
 	private boolean syncLabel = true;
 	private boolean editingUrl = false;
 
 	/**
-	 * Populate taskRepository with repository settings.
+	 * Create pull request repository settings page
 	 * 
 	 * @param taskRepository
-	 *            - Object to populate
 	 */
-	public IssueRepositorySettingsPage(final TaskRepository taskRepository) {
-		super(Messages.IssueRepositorySettingsPage_Title,
-				Messages.IssueRepositorySettingsPage_Description,
+	public PullRequestRepositorySettingsPage(final TaskRepository taskRepository) {
+		super(Messages.PullRequestRepositorySettingsPage_Title,
+				Messages.PullRequestRepositorySettingsPage_Description,
 				taskRepository);
-		setHttpAuth(false);
-		setNeedsAdvanced(false);
-		setNeedsAnonymousLogin(true);
-		setNeedsTimeZone(false);
-		setNeedsHttpAuth(false);
 	}
 
 	@Override
 	public String getConnectorKind() {
-		return GitHub.CONNECTOR_KIND;
+		return PullRequestConnector.KIND;
 	}
 
 	/**
-	 * Sync server url combo with repository label editor base on default label
+	 * Sync server URL combo with repository label editor based on default label
 	 * format
 	 */
 	protected void syncRepositoryLabel() {
@@ -76,7 +72,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 			String url = serverUrlCombo.getText();
 			RepositoryId repo = GitHub.getRepository(url);
 			if (repo != null)
-				repositoryLabelEditor.setStringValue(IssueConnector
+				repositoryLabelEditor.setStringValue(PullRequestConnector
 						.getRepositoryLabel(repo));
 		}
 	}
@@ -116,7 +112,9 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 								syncLabel = false;
 						}
 					});
-		}
+		} else
+			serverUrlCombo.setText(PullRequestConnector.stripPulls(repository
+					.getRepositoryUrl()));
 
 		if (getRepository() == null)
 			setAnonymous(false);
@@ -128,50 +126,36 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask(
-						Messages.IssueRepositorySettingsPage_TaskValidating,
+						Messages.PullRequestRepositorySettingsPage_TaskValidating,
 						100);
+				monitor.subTask(Messages.PullRequestRepositorySettingsPage_TaskContacting);
 				try {
-					monitor.subTask(Messages.IssueRepositorySettingsPage_TaskContactingServer);
-					try {
-						GitHubClient client = IssueConnector
-								.createClient(repository);
-						IssueService service = new IssueService(client);
-						RepositoryId repo = GitHub.getRepository(repository
-								.getRepositoryUrl());
-						monitor.worked(50);
-						service.pageIssues(repo.getOwner(), repo.getName(),
-								null, 1).next();
-					} catch (NoSuchPageException e) {
-						String message = MessageFormat
-								.format(Messages.IssueRepositorySettingsPage_StatusError,
-										GitHubException.wrap(e.getCause())
-												.getLocalizedMessage());
-						setStatus(GitHubUi.createErrorStatus(message));
-						return;
-					} finally {
-						monitor.done();
-					}
-
-					setStatus(new Status(IStatus.OK, GitHubUi.BUNDLE_ID,
-							Messages.IssueRepositorySettingsPage_StatusSuccess));
+					GitHubClient client = IssueConnector
+							.createClient(repository);
+					PullRequestService service = new PullRequestService(client);
+					RepositoryId repo = GitHub.getRepository(repository
+							.getRepositoryUrl());
+					monitor.worked(50);
+					service.pagePullRequests(repo, IssueService.STATE_OPEN, 1)
+							.next();
+				} catch (NoSuchPageException e) {
+					String message = MessageFormat
+							.format(Messages.PullRequestRepositorySettingsPage_ValidateError,
+									GitHubException.wrap(e.getCause())
+											.getLocalizedMessage());
+					setStatus(GitHubUi.createErrorStatus(message));
+					return;
 				} finally {
 					monitor.done();
 				}
+
+				setStatus(new Status(
+						IStatus.OK,
+						GitHubUi.BUNDLE_ID,
+						Messages.PullRequestRepositorySettingsPage_ValidateSuccess));
 			}
 		};
 		return validator;
-	}
-
-	@Override
-	protected boolean isValidUrl(final String url) {
-		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
-			try {
-				new URL(url);
-				return GitHub.getRepository(url) != null;
-			} catch (IOException e) {
-				return false;
-			}
-		return false;
 	}
 
 	/**
@@ -179,16 +163,11 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_BUGS);
+				IRepositoryConstants.CATEGORY_REVIEW);
 		super.applyTo(repository);
 	}
 
-	/**
-	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
-	 */
-	public boolean canValidate() {
-		return isPageComplete()
-				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
+	public String getRepositoryUrl() {
+		return PullRequestConnector.appendPulls(super.getRepositoryUrl());
 	}
-
 }

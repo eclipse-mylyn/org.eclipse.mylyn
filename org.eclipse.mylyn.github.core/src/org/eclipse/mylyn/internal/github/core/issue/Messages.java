@@ -23,6 +23,9 @@ public class Messages extends NLS {
 	public static String IssueConnector_LabelConnector;
 
 	/** */
+	public static String IssueConnector_LabelIssues;
+
+	/** */
 	public static String IssueConector_TaskQuerying;
 
 	/** */

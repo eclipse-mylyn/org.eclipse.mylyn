@@ -24,7 +24,6 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -112,14 +111,6 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 		createLabels(repository, data, issue);
 
 		createMilestones(repository, data, issue);
-
-		PullRequest pr = issue.getPullRequest();
-		String prDiffUrl = pr != null ? pr.getDiffUrl() : null;
-		createAttribute(data, IssueAttribute.PULL_REQUEST_DIFF.getMetadata(),
-				prDiffUrl);
-		if (prDiffUrl != null)
-			createAttribute(data,
-					IssueAttribute.PULL_REQUEST_BODY.getMetadata(), ""); //$NON-NLS-1$
 
 		return data;
 	}
