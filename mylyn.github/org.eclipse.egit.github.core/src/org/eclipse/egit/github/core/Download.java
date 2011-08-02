@@ -1,0 +1,144 @@
+/******************************************************************************
+ *  Copyright (c) 2011 GitHub Inc.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *****************************************************************************/
+package org.eclipse.egit.github.core;
+
+/**
+ * Download model class
+ */
+public class Download {
+
+	private int downloadCount;
+
+	private int id;
+
+	private long size;
+
+	private String description;
+
+	private String htmlUrl;
+
+	private String name;
+
+	private String url;
+
+	/**
+	 * @return downloadCount
+	 */
+	public int getDownloadCount() {
+		return downloadCount;
+	}
+
+	/**
+	 * @param downloadCount
+	 * @return this download
+	 */
+	public Download setDownloadCount(int downloadCount) {
+		this.downloadCount = downloadCount;
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this download
+	 */
+	public Download setId(int id) {
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * @return size
+	 */
+	public long getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size
+	 * @return this download
+	 */
+	public Download setSize(long size) {
+		this.size = size;
+		return this;
+	}
+
+	/**
+	 * @return description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description
+	 * @return this download
+	 */
+	public Download setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	/**
+	 * @return htmlUrl
+	 */
+	public String getHtmlUrl() {
+		return htmlUrl;
+	}
+
+	/**
+	 * @param htmlUrl
+	 * @return this download
+	 */
+	public Download setHtmlUrl(String htmlUrl) {
+		this.htmlUrl = htmlUrl;
+		return this;
+	}
+
+	/**
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 * @return this download
+	 */
+	public Download setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url
+	 * @return this download
+	 */
+	public Download setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
+}
