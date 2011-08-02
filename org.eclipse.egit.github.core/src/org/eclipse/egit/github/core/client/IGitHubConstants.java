@@ -141,6 +141,11 @@ public interface IGitHubConstants {
 	String SEGMENT_FILES = "/files"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_DOWNLOADS
+	 */
+	String SEGMENT_DOWNLOADS = "/downloads"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
