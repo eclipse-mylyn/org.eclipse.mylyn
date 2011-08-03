@@ -22,4 +22,30 @@
     <artifactId>org.eclipse.egit.github.core</artifactId>
     <packaging>eclipse-plugin</packaging>
     <name>Eclipse EGit GitHub API Core</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>[4.1,5.0)</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>[4.1,5.0)</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>[4.1,5.0)</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>[1.6,2.0)</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
