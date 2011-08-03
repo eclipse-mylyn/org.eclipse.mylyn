@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2010 Itema AS and others.
+ * Copyright (c) 2010, 2011 Itema AS and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Itema AS - initial API and implementation
+ *     Torkild U. Resheim - initial API and implementation
+ *     Torkild U. Resheim - Uniquely identify Jenkins servers, bug 341725
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.ui;
@@ -37,12 +38,15 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * This class implements a mechanism for discovering Hudson servers through the use of Multicast DNS (MDNS).
+ * This class implements a mechanism for discovering Hudson and Jenkins servers through the use of Multicast DNS (MDNS).
  * 
- * @author Torkild U. Resheim
+ * @author Torkild U. Resheim, Itema AS
  * @since 3.5
  */
 public class HudsonDiscovery extends BuildsUiStartup {
+
+	/** Jenkins server id property name */
+	private static final String JENKINS_SERVER_PROPERTY_ID = "server-id"; //$NON-NLS-1$
 
 	private static final String ECF_DISCOVERY_JMDNS = "ecf.discovery.jmdns"; //$NON-NLS-1$
 
@@ -57,11 +61,24 @@ public class HudsonDiscovery extends BuildsUiStartup {
 				new Object[] { ECF_DISCOVERY_JMDNS });
 	}
 
-	private boolean isNew(URI uri) {
+	/**
+	 * Determines whether or not the detected server is a new server or not.
+	 * 
+	 * @param uri
+	 *            the server URI
+	 * @param id
+	 *            the server identifier
+	 * @return <code>true</code> if the detected server is new.
+	 */
+	private boolean isNew(URI uri, String id) {
 		List<IBuildServer> servers = BuildsUi.getModel().getServers();
 		for (IBuildServer server : servers) {
+
 			try {
 				if (server.getUrl().equalsIgnoreCase(uri.toURL().toExternalForm())) {
+					return false;
+				}
+				if (server.getLocation().getId().equals(id)) {
 					return false;
 				}
 			} catch (MalformedURLException e) {
@@ -89,15 +106,19 @@ public class HudsonDiscovery extends BuildsUiStartup {
 								notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(
 										Messages.HudsonDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
 												.getHost() }));
-
 							} else {
+								// If the server announces itself using an identifier, 
+								// we will use this in the instead of generating one.
+								String id = (String) properties.getProperty(JENKINS_SERVER_PROPERTY_ID);
+								if (id == null) {
+									id = UUID.randomUUID().toString();
+								}
 								URI uri = new URI(properties.getProperty(HUDSON_URL_PROPERTY_ID).toString());
-								if (isNew(uri)) {
+								if (isNew(uri, id)) {
 									notifyMessage(
 											Messages.HudsonDiscovery_MessageTitle,
 											NLS.bind(Messages.HudsonDiscovery_MessageText, new Object[] { uri,
-													Messages.HudsonDiscovery_ServerName, uri.toString(),
-													UUID.randomUUID().toString() }));
+													Messages.HudsonDiscovery_ServerName, uri.toString(), id }));
 								}
 							}
 						} catch (URISyntaxException e) {
