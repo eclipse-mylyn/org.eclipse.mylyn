@@ -51,10 +51,11 @@ public class DateFormatter implements JsonDeserializer<Date>,
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonParseException exception = null;
+		final String value = json.getAsString();
 		for (DateFormat format : formats)
 			try {
 				synchronized (format) {
-					return format.parse(json.getAsString());
+					return format.parse(value);
 				}
 			} catch (ParseException e) {
 				exception = new JsonParseException(e);
