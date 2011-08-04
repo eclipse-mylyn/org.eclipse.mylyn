@@ -274,4 +274,27 @@ public class DownloadService extends GitHubService {
 		if (status != HttpStatus.SC_CREATED)
 			throw new IOException("Unexpected response status of " + status); //$NON-NLS-1$
 	}
+
+	/**
+	 * Create download and set the content to be the content of given input
+	 * stream. This is a convenience method that performs a
+	 * {@link #createResource(IRepositoryIdProvider, Download)} followed by a
+	 * {@link #uploadResource(DownloadResource, InputStream, long)} with the
+	 * results.
+	 * 
+	 * @param repository
+	 * @param download
+	 *            metadata about the download
+	 * @param content
+	 *            raw content of the download
+	 * @param size
+	 *            size of content in the input stream
+	 * @throws IOException
+	 */
+	public void createDownload(IRepositoryIdProvider repository,
+			Download download, InputStream content, long size)
+			throws IOException {
+		DownloadResource resource = createResource(repository, download);
+		uploadResource(resource, content, size);
+	}
 }
