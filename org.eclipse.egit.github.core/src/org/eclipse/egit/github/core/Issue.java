@@ -221,4 +221,8 @@ public class Issue {
 		return this.user;
 	}
 
+	@Override
+	public String toString() {
+		return "Issue " + number; //$NON-NLS-1$
+	}
 }
