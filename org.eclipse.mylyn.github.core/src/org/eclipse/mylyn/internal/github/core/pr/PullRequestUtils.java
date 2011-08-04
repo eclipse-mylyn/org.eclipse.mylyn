@@ -54,7 +54,7 @@ public abstract class PullRequestUtils {
 	 * @return non-null/non-empty branch name
 	 */
 	public static String getBranchName(PullRequest request) {
-		return "pr-" + request.getNumber(); //$NON-NLS-1$
+		return "pull-request-" + request.getNumber(); //$NON-NLS-1$
 	}
 
 	/**
@@ -98,15 +98,56 @@ public abstract class PullRequestUtils {
 	public static void configureTopicBranch(Repository repo, PullRequest request)
 			throws IOException {
 		String branch = getBranchName(request);
-		PullRequestMarker head = request.getHead();
-		String remote = head.getRepository().getOwner().getLogin();
+		String remote = request.getHead().getRepository().getOwner().getLogin();
 		StoredConfig config = repo.getConfig();
 		config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branch,
-				ConfigConstants.CONFIG_KEY_MERGE, Constants.R_REMOTES + remote
-						+ "/" + head.getRef()); //$NON-NLS-1$
+				ConfigConstants.CONFIG_KEY_MERGE, getHeadBranch(request));
 		config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branch,
 				ConfigConstants.CONFIG_KEY_REMOTE, remote);
 		config.save();
+	}
+
+	/**
+	 * Are the given pull request's source and destination repositories the
+	 * same?
+	 * 
+	 * @param request
+	 * @return true if same, false otherwise
+	 */
+	public static boolean isFromSameRepository(PullRequest request) {
+		return request.getHead().getRepository().getOwner()
+				.equals(request.getBase().getRepository().getOwner());
+	}
+
+	/**
+	 * Get remote for given pull request
+	 * 
+	 * @param repo
+	 * @param request
+	 * @return remote config
+	 * @throws URISyntaxException
+	 */
+	public static RemoteConfig getRemote(Repository repo, PullRequest request)
+			throws URISyntaxException {
+		return getRemoteConfig(repo, request.getHead().getRepository()
+				.getOwner().getLogin());
+	}
+
+	/**
+	 * Get remote config with given name
+	 * 
+	 * @param repo
+	 * @param name
+	 * @return remote config
+	 * @throws URISyntaxException
+	 */
+	public static RemoteConfig getRemoteConfig(Repository repo, String name)
+			throws URISyntaxException {
+		for (RemoteConfig candidate : RemoteConfig.getAllRemoteConfigs(repo
+				.getConfig()))
+			if (name.equals(candidate.getName()))
+				return candidate;
+		return null;
 	}
 
 	/**
@@ -114,21 +155,20 @@ public abstract class PullRequestUtils {
 	 * 
 	 * @param repo
 	 * @param request
-	 * @return remote config
+	 * @return remote configuration
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
 	public static RemoteConfig addRemote(Repository repo, PullRequest request)
 			throws IOException, URISyntaxException {
+		RemoteConfig remote = getRemote(repo, request);
+		if (remote != null)
+			return remote;
+
 		StoredConfig config = repo.getConfig();
 		org.eclipse.egit.github.core.Repository head = request.getHead()
 				.getRepository();
-		String name = head.getOwner().getLogin();
-		for (RemoteConfig candidate : RemoteConfig.getAllRemoteConfigs(config))
-			if (name.equals(candidate.getName()))
-				return candidate;
-
-		RemoteConfig remote = new RemoteConfig(config, name);
+		remote = new RemoteConfig(config, head.getOwner().getLogin());
 		if (head.isPrivate())
 			remote.addURI(new URIish(org.eclipse.egit.github.core.Repository
 					.createRemoteSshUrl(head)));
@@ -141,5 +181,32 @@ public abstract class PullRequestUtils {
 		remote.update(config);
 		config.save();
 		return remote;
+	}
+
+	/**
+	 * Is given branch name the currently checked out branch?
+	 * 
+	 * @param name
+	 * @param repo
+	 * @return true if checked out branch, false otherwise
+	 */
+	public static boolean isCurrentBranch(String name, Repository repo) {
+		try {
+			return name.equals(Repository.shortenRefName(repo.getFullBranch()));
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Get head branch ref for outside repository pull requests
+	 * 
+	 * @param request
+	 * @return remote head branch ref name
+	 */
+	public static String getHeadBranch(PullRequest request) {
+		PullRequestMarker head = request.getHead();
+		return Constants.R_REMOTES + head.getRepository().getOwner().getLogin()
+				+ "/" + head.getRef();
 	}
 }

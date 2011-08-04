@@ -13,16 +13,14 @@ package org.eclipse.mylyn.internal.github.ui.pr;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import org.eclipse.core.commands.HandlerEvent;
-import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.commands.common.CommandException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.UIIcons;
 import org.eclipse.egit.ui.UIUtils;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
 import org.eclipse.egit.ui.internal.commit.RepositoryCommit;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -30,6 +28,7 @@ import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -40,9 +39,9 @@ import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestComposite;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestUtils;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
+import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
@@ -53,8 +52,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
@@ -70,6 +67,10 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 	private CommandContributionItem fetchCommits;
 
 	private CommandContributionItem checkoutPr;
+
+	private CommandContributionItem mergePr;
+
+	private CommandContributionItem rebasePr;
 
 	private PullRequestComposite request;
 
@@ -216,8 +217,12 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 
 		checkoutPr = createCommandContributionItem(CheckoutPullRequestHandler.ID);
 		fetchCommits = createCommandContributionItem(FetchPullRequestHandler.ID);
+		mergePr = createCommandContributionItem(MergePullRequestHandler.ID);
+		rebasePr = createCommandContributionItem(RebasePullRequestHandler.ID);
 		toolBarManager.add(checkoutPr);
 		toolBarManager.add(fetchCommits);
+		toolBarManager.add(mergePr);
+		toolBarManager.add(rebasePr);
 	}
 
 	@Override
@@ -234,70 +239,15 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		IHandlerService handlerService = (IHandlerService) getTaskEditorPage()
 				.getEditorSite().getService(IHandlerService.class);
 		try {
-			fetchCommits.getCommand().getCommand().getHandler()
-					.addHandlerListener(new IHandlerListener() {
-
-						public void handlerChanged(HandlerEvent handlerEvent) {
-							PlatformUI.getWorkbench().getDisplay()
-									.asyncExec(new Runnable() {
-
-										public void run() {
-											clearFetchMessage();
-										}
-									});
-							if (postHandler != null)
-								postHandler.run();
-						}
-					});
-			handlerService.executeCommand(fetchCommits.getCommand(),
-					new Event());
+			IEvaluationContext context = TaskDataHandler.createContext(
+					new StructuredSelection(getTaskData()), handlerService);
+			if (postHandler != null)
+				context.addVariable(TaskDataHandler.POST_HANDLER_CALLBACK,
+						postHandler);
+			handlerService.executeCommandInContext(fetchCommits.getCommand(),
+					new Event(), context);
 		} catch (CommandException e) {
 			GitHub.logError(e);
-		}
-	}
-
-	private boolean containsHead() throws IOException {
-		PullRequest pr = request.getRequest();
-		Repository repo = PullRequestUtils.getRepository(pr);
-		if (repo == null)
-			return false;
-		new RevWalk(repo).parseCommit(ObjectId
-				.fromString(pr.getHead().getSha()));
-		return true;
-	}
-
-	private void clearFetchMessage() {
-		TaskEditor editor = getTaskEditorPage().getEditor();
-		if (Messages.CommitAttributePart_MessageClickToFetch.equals(editor
-				.getMessage()))
-			editor.setMessage(null, IMessageProvider.NONE);
-	}
-
-	public void refresh() {
-		final TaskEditor editor = getTaskEditorPage().getEditor();
-		String message = editor.getMessage();
-		if (message != null)
-			return;
-		try {
-			containsHead();
-		} catch (MissingObjectException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-				public void run() {
-					editor.setMessage(
-							Messages.CommitAttributePart_MessageClickToFetch,
-							IMessageProvider.INFORMATION,
-							new HyperlinkAdapter() {
-
-								public void linkActivated(HyperlinkEvent e) {
-									fetchCommits(null);
-								}
-
-							});
-				}
-			});
-		} catch (IOException e) {
-			GitHubUi.logError(e);
 		}
 	}
 }

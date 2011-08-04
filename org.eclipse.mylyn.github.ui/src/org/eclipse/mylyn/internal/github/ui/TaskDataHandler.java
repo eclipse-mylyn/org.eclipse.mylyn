@@ -12,6 +12,8 @@ package org.eclipse.mylyn.internal.github.ui;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,14 +21,40 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * Base handler for working with a {@link TaskData} selection
  */
 public abstract class TaskDataHandler extends AbstractHandler {
+
+	/**
+	 * POST_HANDLER_CALLBACK - variable for post handler callback that is a
+	 * {@link Runnable}
+	 */
+	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback";
+
+	/**
+	 * Create context with given selection
+	 * 
+	 * @param selection
+	 * @param handlerService
+	 * @return context
+	 */
+	public static IEvaluationContext createContext(
+			IStructuredSelection selection, IHandlerService handlerService) {
+		IEvaluationContext context = new EvaluationContext(
+				handlerService.createContextSnapshot(false), selection.toList());
+		context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, selection);
+		context.removeVariable(ISources.ACTIVE_MENU_SELECTION_NAME);
+		return context;
+	}
 
 	/**
 	 * Get task data from event
@@ -73,13 +101,29 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 * @param event
 	 */
 	protected void schedule(Job job, ExecutionEvent event) {
-		IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
-		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) activeSite
-				.getService(IWorkbenchSiteProgressService.class);
-		if (service != null)
-			service.schedule(job);
+		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
+		if (site == null) {
+			IWorkbenchPart part = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage().getActivePart();
+			if (part != null)
+				site = part.getSite();
+		}
+		IWorkbenchSiteProgressService progress = site != null ? (IWorkbenchSiteProgressService) site
+				.getService(IWorkbenchSiteProgressService.class) : null;
+		if (progress != null)
+			progress.schedule(job);
 		else
 			job.schedule();
 	}
 
+	/**
+	 * Execute callback on trigger if configured
+	 * 
+	 * @param event
+	 */
+	protected void executeCallback(ExecutionEvent event) {
+		Object callback = HandlerUtil.getVariable(event, POST_HANDLER_CALLBACK);
+		if (callback instanceof Runnable)
+			((Runnable) callback).run();
+	}
 }

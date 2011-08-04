@@ -28,13 +28,13 @@ public class Messages extends NLS {
 	/** */
 	public static String CheckoutPullRequestHandler_TaskCreateBranch;
 	/** */
-	public static String CheckoutPullRequestHandler_TaskPullChanges;
+	public static String CheckoutPullRequestHandler_TaskFetching;
+	/** */
+	public static String CheckoutPullRequestHandler_TaskMerging;
 	/** */
 	public static String CommitAttributePart_LabelDestination;
 	/** */
 	public static String CommitAttributePart_LabelSource;
-	/** */
-	public static String CommitAttributePart_MessageClickToFetch;
 	/** */
 	public static String CommitAttributePart_MessageFetch;
 	/** */
@@ -45,6 +45,12 @@ public class Messages extends NLS {
 	public static String CommitAttributePart_TitleFetch;
 	/** */
 	public static String FetchPullRequestHandler_JobName;
+	/** */
+	public static String MergePullRequestHandler_MergeJob;
+	/** */
+	public static String MergePullRequestHandler_TaskCheckout;
+	/** */
+	public static String MergePullRequestHandler_TaskMerge;
 	/** */
 	public static String PullRequestCommitAdapter_AuthorWithDate;
 	/** */
@@ -75,6 +81,12 @@ public class Messages extends NLS {
 	public static String PullRequestRepositorySettingsPage_ValidateSuccess;
 	/** */
 	public static String PullRequestTaskEditorPageFactory_PageText;
+	/** */
+	public static String RebasePullRequestHandler_RebaseJob;
+	/** */
+	public static String RebasePullRequestHandler_TaskCheckout;
+	/** */
+	public static String RebasePullRequestHandler_TaskRebase;
 
 	static {
 		// initialize resource bundle
