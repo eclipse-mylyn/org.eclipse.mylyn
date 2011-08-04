@@ -16,11 +16,11 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.hudson.ui.messages"; //$NON-NLS-1$
 
-	public static String HudsonDiscovery_CannotConvertURI;
+	public static String Discovery_CannotConvertURI;
 
-	public static String HudsonDiscovery_CouldNotStartService;
+	public static String Discovery_CouldNotStartService;
 
-	public static String HudsonDiscovery_IncorrectURI;
+	public static String Discovery_IncorrectURI;
 
 	public static String HudsonDiscovery_MessageText;
 
@@ -30,9 +30,17 @@ public class Messages extends NLS {
 
 	public static String HudsonDiscovery_ServerName;
 
-	public static String NewHudsonServerWizard_Message;
+	public static String JenkinsDiscovery_MessageText;
 
-	public static String NewHudsonServerWizard_Title;
+	public static String JenkinsDiscovery_MessageTitle;
+
+	public static String JenkinsDiscovery_MissingURL;
+
+	public static String JenkinsDiscovery_ServerName;
+
+	public static String NewServerWizard_Message;
+
+	public static String NewServerWizard_Title;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

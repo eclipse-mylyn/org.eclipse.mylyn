@@ -40,8 +40,8 @@ public class NewHudsonServerWizard extends BuildServerWizard {
 
 	@Override
 	protected void initPage(BuildServerWizardPage page) {
-		page.setTitle(Messages.NewHudsonServerWizard_Title);
-		page.setMessage(Messages.NewHudsonServerWizard_Message);
+		page.setTitle(Messages.NewServerWizard_Title);
+		page.setMessage(Messages.NewServerWizard_Message);
 	}
 
 }

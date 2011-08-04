@@ -8,6 +8,7 @@
  * Contributors:
  *     Torkild U. Resheim - initial API and implementation
  *     Torkild U. Resheim - Uniquely identify Jenkins servers, bug 341725
+ *     Torkild U. Resheim - Distinguish between Hudson and Jenkins, bug 353861
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.hudson.ui;
@@ -46,7 +47,7 @@ import org.eclipse.osgi.util.NLS;
 public class HudsonDiscovery extends BuildsUiStartup {
 
 	/** Jenkins server id property name */
-	private static final String JENKINS_SERVER_PROPERTY_ID = "server-id"; //$NON-NLS-1$
+	private static final String JENKINS_SERVER_ID_PROPERTY = "server-id"; //$NON-NLS-1$
 
 	private static final String ECF_DISCOVERY_JMDNS = "ecf.discovery.jmdns"; //$NON-NLS-1$
 
@@ -54,7 +55,9 @@ public class HudsonDiscovery extends BuildsUiStartup {
 
 	private static final String HUDSON_MDNS_ID = "_hudson._tcp.local._iana"; //$NON-NLS-1$
 
-	private static final String HUDSON_URL_PROPERTY_ID = "url"; //$NON-NLS-1$
+	private static final String JENKINS_MDNS_ID = "_jenkins._tcp.local._iana"; //$NON-NLS-1$
+
+	private static final String URL_PROPERTY = "url"; //$NON-NLS-1$
 
 	protected IContainer getContainer() throws ContainerCreateException {
 		return ContainerFactory.getDefault().createContainer(ECF_SINGLETON_DISCOVERY,
@@ -83,7 +86,7 @@ public class HudsonDiscovery extends BuildsUiStartup {
 				}
 			} catch (MalformedURLException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN,
-						Messages.HudsonDiscovery_CannotConvertURI, e));
+						Messages.Discovery_CannotConvertURI, e));
 			}
 		}
 		return true;
@@ -99,32 +102,38 @@ public class HudsonDiscovery extends BuildsUiStartup {
 					IServiceInfo serviceInfo = anEvent.getServiceInfo();
 					IServiceID serviceId = serviceInfo.getServiceID();
 					IServiceTypeID serviceTypeId = serviceId.getServiceTypeID();
+					// Note that Jenkins will claim that it's both Jenkins and
+					// Hudson for backward compatibility.
+					if (serviceTypeId.getName().equals(JENKINS_MDNS_ID)) {
+						IServiceProperties properties = serviceInfo.getServiceProperties();
+						try {
+							if (properties.getProperty(URL_PROPERTY) == null) {
+								notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(
+										Messages.JenkinsDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
+												.getHost() }));
+							} else {
+								issueJenkinsNotification(properties);
+							}
+						} catch (URISyntaxException e) {
+							StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
+									Messages.Discovery_IncorrectURI,
+									new Object[] { properties.getProperty(URL_PROPERTY).toString() }), e));
+						}
+					}
 					if (serviceTypeId.getName().equals(HUDSON_MDNS_ID)) {
 						IServiceProperties properties = serviceInfo.getServiceProperties();
 						try {
-							if (properties.getProperty(HUDSON_URL_PROPERTY_ID) == null) {
+							if (properties.getProperty(URL_PROPERTY) == null) {
 								notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(
 										Messages.HudsonDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
 												.getHost() }));
 							} else {
-								// If the server announces itself using an identifier, 
-								// we will use this in the instead of generating one.
-								String id = (String) properties.getProperty(JENKINS_SERVER_PROPERTY_ID);
-								if (id == null) {
-									id = UUID.randomUUID().toString();
-								}
-								URI uri = new URI(properties.getProperty(HUDSON_URL_PROPERTY_ID).toString());
-								if (isNew(uri, id)) {
-									notifyMessage(
-											Messages.HudsonDiscovery_MessageTitle,
-											NLS.bind(Messages.HudsonDiscovery_MessageText, new Object[] { uri,
-													Messages.HudsonDiscovery_ServerName, uri.toString(), id }));
-								}
+								issueHudsonNotification(properties);
 							}
 						} catch (URISyntaxException e) {
 							StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
-									Messages.HudsonDiscovery_IncorrectURI,
-									new Object[] { properties.getProperty(HUDSON_URL_PROPERTY_ID).toString() }), e));
+									Messages.Discovery_IncorrectURI,
+									new Object[] { properties.getProperty(URL_PROPERTY).toString() }), e));
 						}
 					}
 				}
@@ -137,15 +146,42 @@ public class HudsonDiscovery extends BuildsUiStartup {
 
 		} catch (ContainerCreateException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, HudsonConnectorUi.ID_PLUGIN,
-					Messages.HudsonDiscovery_CouldNotStartService, e));
+					Messages.Discovery_CouldNotStartService, e));
 		} catch (ContainerConnectException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, HudsonConnectorUi.ID_PLUGIN,
-					Messages.HudsonDiscovery_CouldNotStartService, e));
+					Messages.Discovery_CouldNotStartService, e));
 		}
 	}
 
 	private void notifyMessage(String title, String description) {
 		BuildsUi.serverDiscovered(title, description);
+	}
+
+	private void issueHudsonNotification(IServiceProperties properties) throws URISyntaxException {
+		String id = UUID.randomUUID().toString();
+		URI uri = new URI(properties.getProperty(URL_PROPERTY).toString());
+		if (isNew(uri, id)) {
+			notifyMessage(
+					Messages.HudsonDiscovery_MessageTitle,
+					NLS.bind(Messages.HudsonDiscovery_MessageText, new Object[] { uri,
+							Messages.HudsonDiscovery_ServerName, uri.toString(), id }));
+		}
+	}
+
+	private void issueJenkinsNotification(IServiceProperties properties) throws URISyntaxException {
+		String id = (String) properties.getProperty(JENKINS_SERVER_ID_PROPERTY);
+		if (id == null) {
+			id = UUID.randomUUID().toString();
+		}
+		URI uri = new URI(properties.getProperty(URL_PROPERTY).toString());
+		if (isNew(uri, id)) {
+			// Change the first segment (org.eclipse.mylyn.hudson) to the id of 
+			// the new repository type when we start differentiation between the two
+			notifyMessage(
+					Messages.JenkinsDiscovery_MessageTitle,
+					NLS.bind(Messages.JenkinsDiscovery_MessageText, new Object[] { uri,
+							Messages.JenkinsDiscovery_ServerName, uri.toString(), id }));
+		}
 	}
 
 }
