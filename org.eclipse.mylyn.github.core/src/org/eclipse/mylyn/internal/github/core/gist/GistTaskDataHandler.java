@@ -45,6 +45,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
+	 * SUMMARY_LENGTH
+	 */
+	public static final int SUMMARY_LENGTH = 80;
+
+	/**
 	 * Fill task data with comments
 	 * 
 	 * @param repository
@@ -148,13 +153,37 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 		TaskAttribute summary = GistAttribute.SUMMARY.getMetadata()
 				.create(data);
-		mapper.setValue(summary, generateSummary(fileCount, sizeCount));
+		mapper.setValue(summary,
+				generateSummary(fileCount, sizeCount, gist.getDescription()));
 
 		return data;
 	}
 
-	private String generateSummary(int files, long size) {
+	private String generateSummary(int files, long size, String description) {
 		StringBuilder summaryText = new StringBuilder();
+		if (description != null && description.length() > 0) {
+			description = description.trim();
+			int firstLine = description.indexOf('\n');
+			if (firstLine != -1)
+				description = description.substring(0, firstLine).trim();
+			if (description.length() > SUMMARY_LENGTH) {
+				// Break on last whitespace if maximum length is in the middle
+				// of a word
+				if (!Character.isWhitespace(description.charAt(SUMMARY_LENGTH))
+						&& !Character.isWhitespace(description
+								.charAt(SUMMARY_LENGTH - 1))) {
+					int lastWhitespace = description.lastIndexOf(' ');
+					if (lastWhitespace > 0)
+						description = description.substring(0, lastWhitespace);
+					else
+						description = description.substring(0, SUMMARY_LENGTH);
+				} else
+					description = description.substring(0, SUMMARY_LENGTH);
+				description = description.trim();
+			}
+			if (description.length() > 0)
+				summaryText.append(description).append(' ');
+		}
 		if (files != 1)
 			summaryText.append(MessageFormat.format(
 					Messages.GistTaskDataHandler_FilesMultiple, files));
