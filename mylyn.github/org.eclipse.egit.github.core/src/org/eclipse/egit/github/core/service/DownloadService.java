@@ -12,6 +12,8 @@ package org.eclipse.egit.github.core.service;
 
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ProxySelector;
@@ -296,5 +298,23 @@ public class DownloadService extends GitHubService {
 			throws IOException {
 		DownloadResource resource = createResource(repository, download);
 		uploadResource(resource, content, size);
+	}
+
+	/**
+	 * Create download from content of given file.
+	 * 
+	 * @see #createDownload(IRepositoryIdProvider, Download, InputStream, long)
+	 * @param repository
+	 * @param download
+	 *            metadata about the download
+	 * @param file
+	 *            must be non-null
+	 * @throws IOException
+	 */
+	public void createDownload(IRepositoryIdProvider repository,
+			Download download, File file) throws IOException {
+		Assert.notNull("File cannot be null", file);
+		createDownload(repository, download, new FileInputStream(file),
+				file.length());
 	}
 }
