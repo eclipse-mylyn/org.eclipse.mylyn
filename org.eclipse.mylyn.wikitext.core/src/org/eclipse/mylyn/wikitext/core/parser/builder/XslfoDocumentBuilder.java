@@ -8,6 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - Support image sizes in percent, bug 337405 
+ *     Torkild U. Resheim - Allow for basic page styling, bug 336683
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
@@ -39,7 +40,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
  * @author David Green
- * @author Torkild U. Resheim, MARINTEK (bug 337405, bug 336592)
+ * @author Torkild U. Resheim, MARINTEK (bug 337405, bug 336592, bug 336683)
  * @since 1.1
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -504,6 +505,28 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		return null;
 	}
 
+	private void writeMargins(Margins margins, XmlStreamWriter writer) {
+		if (margins == null) {
+			return;
+		}
+		writer.writeAttribute("margin-top", String.format("%scm", margins.marginTop)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("margin-bottom", String.format("%scm", margins.marginBottom)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("margin-left", String.format("%scm", margins.marginLeft)); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("margin-right", String.format("%scm", margins.marginRight)); //$NON-NLS-1$ //$NON-NLS-2$		
+	}
+
+	private void writeRegion(Region region, XmlStreamWriter writer) {
+		if (region == null) {
+			return;
+		}
+		writer.writeEmptyElement(foNamespaceUri, "region-" + region.location); //$NON-NLS-1$
+		writer.writeAttribute("extent", String.format("%scm", configuration.pageHeight)); //$NON-NLS-1$//$NON-NLS-2$
+		writer.writeAttribute("precedence", Boolean.toString(region.precedence)); //$NON-NLS-1$
+		if (region.name != null) {
+			writer.writeAttribute("region-name", region.name); //$NON-NLS-1$
+		}
+	}
+
 	@Override
 	public void beginDocument() {
 		writer.setDefaultNamespace(foNamespaceUri);
@@ -516,16 +539,33 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeAttribute("master-name", "page-layout"); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("page-height", String.format("%scm", configuration.pageHeight)); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("page-width", String.format("%scm", configuration.pageWidth)); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("margin", String.format("%scm", configuration.pageMargin)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (configuration.getPageMargins() == null) {
+			writer.writeAttribute("margin", String.format("%scm", configuration.pageMargin)); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			writeMargins(configuration.getPageMargins(), writer);
+		}
+
 		writer.writeEmptyElement(foNamespaceUri, "region-body"); //$NON-NLS-1$
-		if (hasPageFooter()) {
-			writer.writeAttribute("margin-bottom", "3cm"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (configuration.getBodyMargins() == null) {
+			if (hasPageFooter()) {
+				writer.writeAttribute("margin-bottom", "3cm"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		} else {
+			writeMargins(configuration.getBodyMargins(), writer);
 		}
-		if (hasPageFooter()) {
-			writer.writeEmptyElement(foNamespaceUri, "region-after"); //$NON-NLS-1$
-			writer.writeAttribute("extent", "2cm"); //$NON-NLS-1$//$NON-NLS-2$
-			writer.writeAttribute("region-name", "footer"); //$NON-NLS-1$//$NON-NLS-2$
+		if (configuration.bodyAfterRegion == null) {
+			if (hasPageFooter()) {
+				writeRegion(new Region("after", "footer", 2, false), writer); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		} else {
+			writeRegion(configuration.getBodyAfterRegion(), writer);
 		}
+
+		writeRegion(configuration.getBodyBeforeRegion(), writer);
+		writeRegion(configuration.getBodyEndRegion(), writer);
+		writeRegion(configuration.getBodyStartRegion(), writer);
 
 		writer.writeEndElement(); // simple-page-master
 		writer.writeEndElement(); // layout-master-set
@@ -536,7 +576,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEndElement(); // bookmark-tree
 		}
 
-		if (configuration.title != null) {
+		if (configuration.getTitle() != null) {
 			emitTitlePage();
 		}
 
@@ -897,10 +937,226 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
+	 * This type represents a XSL:FO page region.
+	 * 
+	 * @author Torkild U. Resheim, MARINTEK
+	 * @since 1.6
+	 */
+	public static class Region implements Cloneable {
+
+		private float extent = 3.0f;
+
+		private boolean precedence = false;
+
+		private String location = null;
+
+		private String name = null;
+
+		/**
+		 * Creates a new region with default values.
+		 */
+		public Region() {
+			// Only use default values here
+		}
+
+		public Region(String name, float extent, boolean precedence) {
+			this.name = name;
+			this.extent = extent;
+			this.precedence = precedence;
+		}
+
+		public Region(String location, String name, float extent, boolean precedence) {
+			this.location = location;
+			this.extent = extent;
+			this.precedence = precedence;
+			this.name = name;
+		}
+
+		/**
+		 * Sets the extent of the region in cm.
+		 * 
+		 * @param extent
+		 *            the region extent in cm
+		 */
+		public void setExtent(float extent) {
+			this.extent = extent;
+		}
+
+		/**
+		 * Return the region extent in cm. Defaults to 3cm.
+		 * 
+		 * @return value of the region extent in cms
+		 */
+		public float getExtent() {
+			return extent;
+		}
+
+		/**
+		 * Sets the precedence of the region. Defaults to <code>false</code>
+		 * 
+		 * @param precedence
+		 *            the new precedence value
+		 */
+		public void setPrecedence(boolean precedence) {
+			this.precedence = precedence;
+		}
+
+		/**
+		 * Returns whether or not the region has precedence. Defaults to <code>false</code>.
+		 * 
+		 * @return the region precedence
+		 */
+		public boolean isPrecedence() {
+			return precedence;
+		}
+
+		/**
+		 * Assigns a name to the region. The default is to have no name.
+		 * 
+		 * @param name
+		 *            the region name
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		/**
+		 * Returns the name of the region. The default is to have no name.
+		 * 
+		 * @return the region name
+		 */
+		public String getName() {
+			return name;
+		}
+
+	}
+
+	/**
+	 * This type represents a XSL:FO page or body margin.
+	 * 
+	 * @author Torkild U. Resheim, MARINTEK
+	 * @since 1.6
+	 */
+	public static class Margins implements Cloneable {
+
+		private float marginTop = 1.5f;
+
+		private float marginBottom = 1.5f;
+
+		private float marginLeft = 1.5f;
+
+		private float marginRight = 1.5f;
+
+		/**
+		 * Creates a new set of margins with the default values.
+		 */
+		public Margins() {
+			// Use default values
+		}
+
+		/**
+		 * Creates a new set of margins with the specified values.
+		 * 
+		 * @param top
+		 *            value of the top margin in cm
+		 * @param bottom
+		 *            value of the bottom margin in cm
+		 * @param left
+		 *            value of the left margin in cm
+		 * @param right
+		 *            value of the right margin in cm
+		 */
+		public Margins(float top, float bottom, float left, float right) {
+			this.marginTop = top;
+			this.marginBottom = bottom;
+			this.marginLeft = left;
+			this.marginRight = right;
+		}
+
+		/**
+		 * Sets the <b>margin-top</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @param marginTop
+		 *            new value of the top margin in cm
+		 */
+		public void setMarginTop(float marginTop) {
+			this.marginTop = marginTop;
+		}
+
+		/**
+		 * Returns the <b>margin-top</b> propert in cm. Defaults to 1.5cm.
+		 * 
+		 * @return value of the top margin in cm.
+		 */
+		public float getMarginTop() {
+			return marginTop;
+		}
+
+		/**
+		 * Sets the <b>margin-bottom</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @param marginBottom
+		 *            new value of the top margin in cm
+		 */
+		public void setMarginBottom(float marginBottom) {
+			this.marginBottom = marginBottom;
+		}
+
+		/**
+		 * Returns the <b>margin-bottom</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @return value of the bottom margin in cm.
+		 */
+		public float getMarginBottom() {
+			return marginBottom;
+		}
+
+		/**
+		 * Sets the <b>margin-left</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @param marginLeft
+		 *            new value of the left margin in cm
+		 */
+		public void setMarginLeft(float marginLeft) {
+			this.marginLeft = marginLeft;
+		}
+
+		/**
+		 * Returns the <b>margin-left</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @return value of the left margin in cm.
+		 */
+		public float getMarginLeft() {
+			return marginLeft;
+		}
+
+		/**
+		 * Sets the <b>margin-right</b> property in cm. Defaults to 1.5cm.
+		 * 
+		 * @param marginRight
+		 *            new value of the right margin in cm
+		 */
+		public void setMarginRight(float marginRight) {
+			this.marginRight = marginRight;
+		}
+
+		/**
+		 * Returns the <b>margin-right</b> property of the master page in cm. Defaults to 1.5cm.
+		 * 
+		 * @return the master page right margin in cm.
+		 */
+		public float getMarginRight() {
+			return marginRight;
+		}
+
+	}
+
+	/**
 	 * A class that encapsulates all configurable settings of the {@link XslfoDocumentBuilder}. This class implements
 	 * the template design pattern via {@link Configuration#clone()}.
 	 * 
 	 * @author David Green
+	 * @author Torkild U. Resheim, MARINTEK
 	 */
 	public static class Configuration implements Cloneable {
 
@@ -935,6 +1191,20 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		private float pageHeight = 29.7f;
 
 		private float pageWidth = 21.0f;
+
+		private Margins pageMargins = null;
+
+		private Margins bodyMargins = null;
+
+		private Region bodyBeforeRegion = null;
+
+		private Region bodyAfterRegion = null;
+
+		private Region bodyStartRegion = null;
+
+		private Region bodyEndRegion = null;
+
+		private float referenceOrientation = 90f;
 
 		public Configuration() {
 			setFontSize(10.0f);
@@ -1193,6 +1463,130 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 */
 		public void setPageWidth(float pageWidth) {
 			this.pageWidth = pageWidth;
+		}
+
+		/**
+		 * Sets the <b>reference-orientation</b> property of the master page in degrees. Defaults to 90 degrees.
+		 * 
+		 * @param referenceOrientation
+		 *            the master page orientation in degrees.
+		 * @since 1.6
+		 */
+		public void setReferenceOrientation(float referenceOrientation) {
+			this.referenceOrientation = referenceOrientation;
+		}
+
+		/**
+		 * The <b>reference-orientation</b> property of the master page in degrees. Defaults to 90 degrees.
+		 * 
+		 * @return the master page orientation in degrees.
+		 * @since 1.6
+		 */
+		public float getReferenceOrientation() {
+			return referenceOrientation;
+		}
+
+		/**
+		 * Returns the margins of the master page.
+		 * 
+		 * @return master page margins
+		 * @since 1.6
+		 */
+		public Margins getPageMargins() {
+			return pageMargins;
+		}
+
+		/**
+		 * Returns the body margins.
+		 * 
+		 * @return body margins
+		 * @since 1.6
+		 */
+		public Margins getBodyMargins() {
+			return bodyMargins;
+		}
+
+		/**
+		 * Sets the page margins. This method allows each margin to be specified individually.
+		 * 
+		 * @param pageMargins
+		 *            the page margins.
+		 * @see #setPageMargin(float)
+		 * @since 1.6
+		 */
+		public void setPageMargins(Margins pageMargins) {
+			this.pageMargins = pageMargins;
+		}
+
+		/**
+		 * Sets the body margins. This method allows each margin to be specified individually.
+		 * 
+		 * @param boduMargins
+		 *            the page margins.
+		 * @since 1.6
+		 */
+		public void setBodyMargins(Margins bodyMargins) {
+			this.bodyMargins = bodyMargins;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public void setBodyBeforeRegion(Region region) {
+			region.setName("before"); //$NON-NLS-1$
+			this.bodyBeforeRegion = region;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public Region getBodyBeforeRegion() {
+			return bodyBeforeRegion;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public void setBodyAfterRegion(Region region) {
+			region.setName("after"); //$NON-NLS-1$
+			this.bodyAfterRegion = region;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public Region getBodyAfterRegion() {
+			return bodyAfterRegion;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public void setBodyStartRegion(Region region) {
+			region.setName("start"); //$NON-NLS-1$
+			this.bodyStartRegion = region;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public Region getBodyStartRegion() {
+			return bodyStartRegion;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public void setBodyEndRegion(Region region) {
+			region.setName("end"); //$NON-NLS-1$
+			this.bodyEndRegion = region;
+		}
+
+		/**
+		 * @since 1.6
+		 */
+		public Region getBodyEndRegion() {
+			return bodyEndRegion;
 		}
 
 	}
