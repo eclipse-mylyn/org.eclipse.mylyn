@@ -23,8 +23,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.TimeZone;
 
 /**
@@ -33,16 +31,16 @@ import java.util.TimeZone;
 public class DateFormatter implements JsonDeserializer<Date>,
 		JsonSerializer<Date> {
 
-	private final Deque<DateFormat> formats;
+	private final DateFormat[] formats;
 
 	/**
 	 * Create date formatter
 	 */
 	public DateFormatter() {
-		formats = new LinkedList<DateFormat>();
-		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT));
-		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1));
-		formats.add(new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2));
+		formats = new DateFormat[3];
+		formats[0] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT);
+		formats[1] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1);
+		formats[2] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2);
 		final TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
 		for (DateFormat format : formats)
 			format.setTimeZone(timeZone);
@@ -65,6 +63,11 @@ public class DateFormatter implements JsonDeserializer<Date>,
 
 	public JsonElement serialize(Date date, Type type,
 			JsonSerializationContext context) {
-		return new JsonPrimitive(formats.getFirst().format(date));
+		final DateFormat primary = formats[0];
+		String formatted;
+		synchronized (primary) {
+			formatted = primary.format(date);
+		}
+		return new JsonPrimitive(formatted);
 	}
 }
