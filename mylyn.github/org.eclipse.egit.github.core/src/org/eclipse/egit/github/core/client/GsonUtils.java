@@ -39,6 +39,15 @@ public abstract class GsonUtils {
 	}
 
 	/**
+	 * Get reusable pre-configured {@link Gson} instance
+	 * 
+	 * @return Gson instance
+	 */
+	public static final Gson getGson() {
+		return GSON;
+	}
+
+	/**
 	 * Convert object to json
 	 * 
 	 * @param object

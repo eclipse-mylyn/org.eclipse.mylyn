@@ -85,7 +85,7 @@ public class GitHubClient {
 
 	private Header userAgent = USER_AGENT;
 
-	private final Gson gson = GsonUtils.createGson();
+	private final Gson gson = GsonUtils.getGson();
 
 	/**
 	 * Create default client
