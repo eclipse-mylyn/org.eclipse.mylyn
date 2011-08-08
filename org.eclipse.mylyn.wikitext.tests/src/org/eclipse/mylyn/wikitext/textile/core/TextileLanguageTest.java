@@ -1433,9 +1433,14 @@ public class TextileLanguageTest extends TestCase {
 
 	public void testMarkupContainingCDATA() {
 		// bug 302291 text containing CDATA produces invalid HTML
-		String html = parser.parseToHtml("pre. <![CDATA[123 456]]>");
-		TestUtil.println(html);
-		assertTrue(html.contains("&lt;![CDATA[123 456]]&gt;"));
+
+		for (String blockType : new String[] { "pre", "bc" }) {
+
+			String html = parser.parseToHtml(blockType + ". <![CDATA[123 456]]>");
+			TestUtil.println(html);
+			assertTrue(html.contains("&lt;![CDATA[123 456]]&gt;"));
+
+		}
 	}
 
 	public void testEntityReferences() {
