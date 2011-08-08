@@ -10,7 +10,7 @@ for i in $(find -name site.xml); do
  DIR=$(pwd)
  DIR=${DIR##*drops/}
  DIR=${DIR%%/*}
- if [ -z "$VERSION" ]; then
+ if [ -z "$DIR" ]; then
    echo "Failed to determine version for $i. Exiting."
    exit 1
  fi
