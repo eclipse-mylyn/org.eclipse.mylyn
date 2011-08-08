@@ -125,6 +125,8 @@ public class Repository implements IRepositoryIdProvider {
 
 	private String description;
 
+	private String homepage;
+
 	private String gitUrl;
 
 	private String htmlUrl;
@@ -380,6 +382,22 @@ public class Repository implements IRepositoryIdProvider {
 	 */
 	public Repository setDescription(String description) {
 		this.description = description;
+		return this;
+	}
+
+	/**
+	 * @return homepage
+	 */
+	public String getHomepage() {
+		return homepage;
+	}
+
+	/**
+	 * @param homepage
+	 * @return this repository
+	 */
+	public Repository setHomepage(String homepage) {
+		this.homepage = homepage;
 		return this;
 	}
 
