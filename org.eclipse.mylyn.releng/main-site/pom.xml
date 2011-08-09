@@ -15,10 +15,10 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>mylyn-parent</artifactId>
-    <version>3.6.1-SNAPSHOT</version>
+    <version>3.6.2-SNAPSHOT</version>
   </parent>
   <artifactId>main-site</artifactId>
-  <version>3.6.1-SNAPSHOT</version>
+  <version>3.6.2-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
   <name>Mylyn for Eclipse 3.5, 3.6 and 3.7</name>
   <properties>
