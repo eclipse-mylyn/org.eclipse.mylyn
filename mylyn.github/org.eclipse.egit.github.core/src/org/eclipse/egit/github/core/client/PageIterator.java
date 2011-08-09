@@ -27,7 +27,8 @@ import org.eclipse.egit.github.core.IResourceProvider;
  * 
  * @param <V>
  */
-public class PageIterator<V> implements Iterator<Collection<V>> {
+public class PageIterator<V> implements Iterator<Collection<V>>,
+		Iterable<Collection<V>> {
 
 	/**
 	 * Request
@@ -173,4 +174,10 @@ public class PageIterator<V> implements Iterator<Collection<V>> {
 		return request;
 	}
 
+	/**
+	 * @return this page iterator
+	 */
+	public Iterator<Collection<V>> iterator() {
+		return this;
+	}
 }
