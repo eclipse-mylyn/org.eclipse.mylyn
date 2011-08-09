@@ -255,11 +255,16 @@ public class TestResultPart extends AbstractBuildEditorPart {
 	void refresh(ITestResult testResult) {
 		if (testResult != null) {
 			viewer.setInput(testResult);
-			filterTestFailuresAction.setEnabled(testResult.getFailCount() > 0);
+			boolean hasFailures = testResult.getFailCount() > 0;
+			filterTestFailuresAction.setEnabled(hasFailures);
+			if (!hasFailures) {
+				filterTestFailuresAction.setChecked(false);
+			}
 			showTestResultsAction.setEnabled(true);
 		} else {
 			viewer.setInput("No test results generated.");
 			filterTestFailuresAction.setEnabled(false);
+			filterTestFailuresAction.setChecked(false);
 			showTestResultsAction.setEnabled(false);
 		}
 	}
