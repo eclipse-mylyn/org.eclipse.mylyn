@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;
 
+import java.text.MessageFormat;
+import java.util.regex.Pattern;
+
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
@@ -20,6 +23,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * @author David Green
  */
 public class HyperlinkPhraseModifier extends PatternBasedElement {
+
+	private static final Pattern QUALIFIED_HREF_PATTERN = Pattern.compile(
+			"(#|([a-z]{2,6}:)).*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	@Override
 	protected String getPattern(int groupOffset) {
@@ -58,16 +64,16 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 				}
 				if (text == null || text.length() == 0) {
 					text = href;
-					if (text.length() > 0 && text.charAt(0) == '#') {
+					if (text != null && text.length() > 0 && text.charAt(0) == '#') {
 						text = text.substring(1);
 					}
 					Attributes attributes = new LinkAttributes();
 					attributes.setTitle(tip);
-					getBuilder().link(attributes, href, text);
+					getBuilder().link(attributes, toInternalHref(href), text);
 				} else {
 					LinkAttributes attributes = new LinkAttributes();
 					attributes.setTitle(tip);
-					attributes.setHref(href);
+					attributes.setHref(toInternalHref(href));
 					getBuilder().beginSpan(SpanType.LINK, attributes);
 
 					getMarkupLanguage().emitMarkupLine(parser, state, start(1), text, 0);
@@ -76,5 +82,20 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 				}
 			}
 		}
+
+		private String toInternalHref(String href) {
+			//	Skip if internal anchor or qualified URL
+			if (QUALIFIED_HREF_PATTERN.matcher(href).matches()) {
+				return href;
+			}
+
+			String internalLinkPattern = getMarkupLanguage().getInternalLinkPattern();
+
+			if (internalLinkPattern != null) {
+				return MessageFormat.format(internalLinkPattern, href);
+			}
+			return href;
+		}
 	}
+
 }

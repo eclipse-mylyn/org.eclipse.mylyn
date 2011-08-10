@@ -231,6 +231,42 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a  hyperlink</p></body>"));
 	}
 
+	public void testHyperlinkInternal() {
+		String oldPattern = parser.getMarkupLanguage().getInternalLinkPattern();
+		parser.getMarkupLanguage().setInternalLinkPattern("/display/{0}"); //$NON-NLS-1$
+		String html = parser.parseToHtml("a [Page Example] hyperlink");
+		TestUtil.println("HTML: \n" + html);
+		parser.getMarkupLanguage().setInternalLinkPattern(oldPattern);
+		assertTrue(html.contains("<body><p>a <a href=\"/display/Page Example\">Page Example</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkInternalWithAnchor() {
+		String oldPattern = parser.getMarkupLanguage().getInternalLinkPattern();
+		parser.getMarkupLanguage().setInternalLinkPattern("/display/{0}"); //$NON-NLS-1$
+		String html = parser.parseToHtml("a [#Page Example] hyperlink");
+		TestUtil.println("HTML: \n" + html);
+		parser.getMarkupLanguage().setInternalLinkPattern(oldPattern);
+		assertTrue(html.contains("<body><p>a <a href=\"#Page Example\">Page Example</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkInternalWithName() {
+		String oldPattern = parser.getMarkupLanguage().getInternalLinkPattern();
+		parser.getMarkupLanguage().setInternalLinkPattern("/display/{0}"); //$NON-NLS-1$
+		String html = parser.parseToHtml("a [Another Page Example|Page Example] hyperlink");
+		TestUtil.println("HTML: \n" + html);
+		parser.getMarkupLanguage().setInternalLinkPattern(oldPattern);
+		assertTrue(html.contains("<body><p>a <a href=\"/display/Page Example\">Another Page Example</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkInternalWithNameAndTip() {
+		String oldPattern = parser.getMarkupLanguage().getInternalLinkPattern();
+		parser.getMarkupLanguage().setInternalLinkPattern("/display/{0}"); //$NON-NLS-1$
+		String html = parser.parseToHtml("a [Another Page Example|Page Example| Some tip] hyperlink");
+		TestUtil.println("HTML: \n" + html);
+		parser.getMarkupLanguage().setInternalLinkPattern(oldPattern);
+		assertTrue(html.contains("<body><p>a <a href=\"/display/Page Example\" title=\"Some tip\">Another Page Example</a> hyperlink</p></body>"));
+	}
+
 	public void testHyperlinkWithTitle() {
 		String html = parser.parseToHtml("a [Example|http://example.com] hyperlink");
 		TestUtil.println("HTML: \n" + html);
