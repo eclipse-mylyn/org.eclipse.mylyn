@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-    Copyright (c) 2009 Tasktop Technologies and others.
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2009, 2011 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -8,7 +9,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-
 <project name="org.eclipse.mylyn.wikitext-standalone" default="all">
     <description>
      Enable standalone usage of WikiText by creating a download archive that may be used outside of Eclipse
@@ -68,7 +68,7 @@
 			</classpath>
 			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
 			<header><![CDATA[Mylyn WikiText version ${wikitext.version}]]></header>
-			<bottom><![CDATA[<i>Copyright &#169; 2007, 2009 David Green and others.<br/>
+			<bottom><![CDATA[<i>Copyright &#169; 2007, 2011 David Green and others.<br/>
 				All rights reserved. This program and the accompanying materials<br/>
 				are made available under the terms of the Eclipse Public License v1.0<br/>
 				which accompanies this distribution, and is available at<br/>
