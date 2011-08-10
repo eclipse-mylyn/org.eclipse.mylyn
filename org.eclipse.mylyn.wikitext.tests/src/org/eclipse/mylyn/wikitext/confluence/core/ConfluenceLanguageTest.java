@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Patrick Boisclair - tests for bug 354077
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.confluence.core;
 
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * @author David Green
+ * @author Patrick Boisclair
  */
 public class ConfluenceLanguageTest extends TestCase {
 
