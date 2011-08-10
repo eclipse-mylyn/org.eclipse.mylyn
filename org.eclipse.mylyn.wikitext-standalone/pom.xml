@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+    <groupId>org.eclipse.mylyn.docs</groupId>
+    <version>1.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>org.eclipse.mylyn.wikitext-standalone</artifactId>
+  <packaging>pom</packaging>
+  <build>
+    <plugins>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.6</version>
+		<executions>
+		  <execution>
+			<id>pack</id>
+			<phase>package</phase>
+			<configuration>
+			  <target>
+				<ant antfile="build.xml">
+				  <property name="wikitext.standalone.archive" value="${project.build.directory}/wikitext-standalone-latest.zip"/>
+				  <property name="wikitext.standalone.dir" value="wikitext-standalone-${project.version}"/>
+				  <property name="wikitext.sources.location" value="${basedir}/.."/>
+				  <property name="wikitext.plugin.jars.location" value="${basedir}/../org.eclipse.mylyn.docs-site/target/site/plugins"/>
+				  <property name="wikitext.version" value="${project.version}"/>
+				  <property name="buildDirectory" value="${project.build.directory}"/>
+				</ant>
+			  </target>
+			</configuration>
+			<goals>
+			  <goal>run</goal>
+			</goals>
+		  </execution>
+		</executions>
+	  </plugin>
+    </plugins>
+  </build>
+</project>

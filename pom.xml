@@ -90,5 +90,7 @@
     <module>org.eclipse.mylyn.wikitext.twiki.core</module>
     <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.ui</module>
+	<!-- needs to be last -->
+    <module>org.eclipse.mylyn.wikitext-standalone</module>
   </modules>
 </project>
