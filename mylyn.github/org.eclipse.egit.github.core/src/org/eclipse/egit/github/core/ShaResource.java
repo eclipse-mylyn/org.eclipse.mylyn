@@ -10,34 +10,12 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
-import java.util.List;
-
 /**
- * Tree model class
+ * Model class for resources identified bya SHA-1
  */
-public class Tree {
-
-	private List<TreeEntry> tree;
+public class ShaResource {
 
 	private String sha;
-
-	private String url;
-
-	/**
-	 * @return tree
-	 */
-	public List<TreeEntry> getTree() {
-		return tree;
-	}
-
-	/**
-	 * @param tree
-	 * @return this tree
-	 */
-	public Tree setTree(List<TreeEntry> tree) {
-		this.tree = tree;
-		return this;
-	}
 
 	/**
 	 * @return sha
@@ -48,26 +26,10 @@ public class Tree {
 
 	/**
 	 * @param sha
-	 * @return this tree
+	 * @return this resource
 	 */
-	public Tree setSha(String sha) {
+	public ShaResource setSha(String sha) {
 		this.sha = sha;
-		return this;
-	}
-
-	/**
-	 * @return url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url
-	 * @return this tree
-	 */
-	public Tree setUrl(String url) {
-		this.url = url;
 		return this;
 	}
 }

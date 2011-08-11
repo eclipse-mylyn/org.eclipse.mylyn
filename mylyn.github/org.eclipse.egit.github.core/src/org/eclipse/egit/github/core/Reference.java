@@ -10,48 +10,30 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
-import java.util.List;
-
 /**
- * Tree model class
+ * Reference model class
  */
-public class Tree {
+public class Reference {
 
-	private List<TreeEntry> tree;
-
-	private String sha;
+	private String ref;
 
 	private String url;
 
+	private TypedResource object;
+
 	/**
-	 * @return tree
+	 * @return ref
 	 */
-	public List<TreeEntry> getTree() {
-		return tree;
+	public String getRef() {
+		return ref;
 	}
 
 	/**
-	 * @param tree
-	 * @return this tree
+	 * @param ref
+	 * @return this reference
 	 */
-	public Tree setTree(List<TreeEntry> tree) {
-		this.tree = tree;
-		return this;
-	}
-
-	/**
-	 * @return sha
-	 */
-	public String getSha() {
-		return sha;
-	}
-
-	/**
-	 * @param sha
-	 * @return this tree
-	 */
-	public Tree setSha(String sha) {
-		this.sha = sha;
+	public Reference setRef(String ref) {
+		this.ref = ref;
 		return this;
 	}
 
@@ -64,10 +46,26 @@ public class Tree {
 
 	/**
 	 * @param url
-	 * @return this tree
+	 * @return this reference
 	 */
-	public Tree setUrl(String url) {
+	public Reference setUrl(String url) {
 		this.url = url;
+		return this;
+	}
+
+	/**
+	 * @return object
+	 */
+	public TypedResource getObject() {
+		return object;
+	}
+
+	/**
+	 * @param object
+	 * @return this reference
+	 */
+	public Reference setObject(TypedResource object) {
+		this.object = object;
 		return this;
 	}
 }
