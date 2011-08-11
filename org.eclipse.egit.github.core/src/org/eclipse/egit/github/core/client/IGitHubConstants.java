@@ -146,6 +146,31 @@ public interface IGitHubConstants {
 	String SEGMENT_DOWNLOADS = "/downloads"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_GIT
+	 */
+	String SEGMENT_GIT = "/git"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_BLOBS
+	 */
+	String SEGMENT_BLOBS = "/blobs"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_TREES
+	 */
+	String SEGMENT_TREES = "/trees"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_REFS
+	 */
+	String SEGMENT_REFS = "/refs"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_TAGS
+	 */
+	String SEGMENT_TAGS = "/tags"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
