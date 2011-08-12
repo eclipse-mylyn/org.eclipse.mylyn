@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import java.io.IOException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -152,7 +151,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 						// ignore, handled by SafeRunner						
 					}
 				});
-			} catch (CoreException e) {
+			} catch (Throwable e) {
 				StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Startup extension failed", e)); //$NON-NLS-1$
 			}
 		}

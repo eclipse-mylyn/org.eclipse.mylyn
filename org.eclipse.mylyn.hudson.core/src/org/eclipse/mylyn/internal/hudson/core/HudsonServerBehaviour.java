@@ -655,6 +655,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	private ITestResult parseTestResult(HudsonTasksJunitTestResult hudsonTestReport) {
 		ITestResult testResult = createTestResult();
 		testResult.setFailCount(hudsonTestReport.getFailCount());
+		testResult.setIgnoredCount(hudsonTestReport.getSkipCount());
 		testResult.setPassCount(hudsonTestReport.getPassCount());
 		testResult.setDuration(parseDuration((Node) hudsonTestReport.getDuration()));
 		for (HudsonTasksJunitSuiteResult hudsonSuite : hudsonTestReport.getSuite()) {
@@ -702,6 +703,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	private ITestResult parseTestResult(HudsonTasksTestAggregatedTestResultAction hudsonTestReport) {
 		ITestResult testResult = createTestResult();
 		testResult.setFailCount(hudsonTestReport.getFailCount());
+		testResult.setIgnoredCount(hudsonTestReport.getSkipCount());
 		testResult.setPassCount(hudsonTestReport.getTotalCount() - hudsonTestReport.getFailCount()
 				- hudsonTestReport.getSkipCount());
 		for (HudsonTasksTestAggregatedTestResultActionChildReport child : hudsonTestReport.getChildReport()) {

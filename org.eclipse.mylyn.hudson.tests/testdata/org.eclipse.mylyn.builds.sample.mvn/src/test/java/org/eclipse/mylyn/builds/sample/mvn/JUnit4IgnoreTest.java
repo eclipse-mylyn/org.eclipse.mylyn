@@ -23,4 +23,8 @@ public class JUnit4IgnoreTest {
 	public void ignoredTest() {
 	}
 
+	@Test
+	public void emptyTest() {
+	}
+	
 }

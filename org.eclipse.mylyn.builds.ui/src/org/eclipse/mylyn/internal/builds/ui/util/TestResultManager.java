@@ -150,6 +150,7 @@ public class TestResultManager {
 				CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
 					public void run(IProgressMonitor monitor) throws CoreException {
 						JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
+						generator.setIncludeIgnored(jUnitSupportIgnoredTests());
 						TestRunHandler handler = new TestRunHandler(testRunSession);
 						try {
 							generator.write(handler);
@@ -173,10 +174,14 @@ public class TestResultManager {
 			WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
 			getJUnitModel().addTestRunSession(testRunSession);
 		}
-
 	}
 
 	public static boolean isJUnitAvailable() {
+		return Platform.getBundle("org.eclipse.jdt.junit") != null; //$NON-NLS-1$
+	}
+
+	static boolean jUnitSupportIgnoredTests() {
+		// supported on Eclipse 3.6 and later
 		return Platform.getBundle("org.eclipse.jdt.junit.core") != null; //$NON-NLS-1$
 	}
 

@@ -42,6 +42,8 @@ public class JUnitResultGenerator {
 
 	private static final String PROJECT = "project"; //$NON-NLS-1$
 
+	private static final String SKIPPED = "skipped"; //$NON-NLS-1$
+
 	private static final String STARTED = "started"; //$NON-NLS-1$
 
 	private static final String TESTCASE = "testcase"; //$NON-NLS-1$
@@ -56,8 +58,21 @@ public class JUnitResultGenerator {
 
 	private final ITestResult result;
 
+	/**
+	 * True, if ignored test cases should be included (supported by Eclipse 3.6 and later).
+	 */
+	private boolean includeIgnored;
+
 	public JUnitResultGenerator(ITestResult result) {
 		this.result = result;
+	}
+
+	public boolean includeIgnored() {
+		return includeIgnored;
+	}
+
+	public void setIncludeIgnored(boolean includeIgnored) {
+		this.includeIgnored = includeIgnored;
 	}
 
 	public void write(ContentHandler handler) throws SAXException {
@@ -102,29 +117,37 @@ public class JUnitResultGenerator {
 					childSuite = test.getClassName();
 				}
 
-				attributes.clear();
-				attributes.addAttribute(null, null, NAME, null, test.getLabel());
-				attributes.addAttribute(null, null, CLASS_NAME, null, test.getClassName());
-				attributes.addAttribute(null, null, TIME, null, Double.toString(test.getDuration() / 1000.0d));
-				handler.startElement(null, null, TESTCASE, attributes);
-
-				if (test.getStatus() == TestCaseResult.FAILED || test.getStatus() == TestCaseResult.REGRESSION) {
+				if (!test.isSkipped() || includeIgnored()) {
 					attributes.clear();
-					//attributes.addAttribute(null, TYPE, TYPE, null, test.getFailureType());
-					attributes.addAttribute(null, null, MESSAGE, null, test.getMessage());
+					attributes.addAttribute(null, null, NAME, null, test.getLabel());
+					attributes.addAttribute(null, null, CLASS_NAME, null, test.getClassName());
+					attributes.addAttribute(null, null, TIME, null, Double.toString(test.getDuration() / 1000.0d));
+					handler.startElement(null, null, TESTCASE, attributes);
 
-					String element = (test.getMessage() != null) ? FAILURE : ERROR;
-					handler.startElement(null, null, element, attributes);
+					if (test.getStatus() == TestCaseResult.FAILED || test.getStatus() == TestCaseResult.REGRESSION) {
+						attributes.clear();
+						//attributes.addAttribute(null, TYPE, TYPE, null, test.getFailureType());
+						attributes.addAttribute(null, null, MESSAGE, null, test.getMessage());
 
-					if (test.getStackTrace() != null) {
-						char[] charArray = test.getStackTrace().toCharArray();
-						handler.characters(charArray, 0, charArray.length);
+						String element = (test.getMessage() != null) ? FAILURE : ERROR;
+						handler.startElement(null, null, element, attributes);
+
+						if (test.getStackTrace() != null) {
+							char[] charArray = test.getStackTrace().toCharArray();
+							handler.characters(charArray, 0, charArray.length);
+						}
+
+						handler.endElement(null, null, element);
 					}
 
-					handler.endElement(null, null, element);
-				}
+					if (test.isSkipped()) {
+						attributes.clear();
+						handler.startElement(null, null, SKIPPED, attributes);
+						handler.endElement(null, null, SKIPPED);
+					}
 
-				handler.endElement(null, null, TESTCASE);
+					handler.endElement(null, null, TESTCASE);
+				}
 			}
 
 			if (childSuite != null) {
