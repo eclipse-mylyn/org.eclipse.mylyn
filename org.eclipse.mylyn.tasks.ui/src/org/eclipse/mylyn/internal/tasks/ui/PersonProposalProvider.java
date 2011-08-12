@@ -46,6 +46,7 @@ import org.eclipse.osgi.util.NLS;
  * @author David Shepherd
  * @author Sam Davis
  * @author Thomas Ehrnhoefer
+ * @author Mike Wu
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -207,8 +208,15 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		});
 
 		if (proposals.size() > 0) {
+			String user = null;
+			if (repositoryUrl != null && connectorKind != null) {
+				user = getCurrentUser(repositoryUrl, connectorKind);
+			}
 			for (String proposal : proposals.keySet()) {
 				addAddress(addressSet, proposal);
+				if (user != null && user.equals(proposal)) {
+					currentUser = user;
+				}
 			}
 			return addressSet;
 		}
@@ -227,14 +235,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				tasks.add(currentTask);
 			}
 
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
-
-			if (repository != null) {
-				AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
-				if (credentials != null && credentials.getUserName().length() > 0) {
-					currentUser = credentials.getUserName();
-					addressSet.add(currentUser);
-				}
+			currentUser = getCurrentUser(repositoryUrl, connectorKind);
+			if (currentUser != null) {
+				addressSet.add(currentUser);
 			}
 
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
@@ -250,6 +253,18 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 
 		return addressSet;
+	}
+
+	private String getCurrentUser(String repositoryUrl, String connectorKind) {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
+
+		if (repository != null) {
+			AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials != null && credentials.getUserName().length() > 0) {
+				return credentials.getUserName();
+			}
+		}
+		return null;
 	}
 
 	private void addAddresses(ITask task, Set<String> addressSet) {
