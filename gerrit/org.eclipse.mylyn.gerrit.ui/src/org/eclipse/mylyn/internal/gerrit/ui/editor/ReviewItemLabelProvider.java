@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Git Hub, Inc. - fixes for bug 354570
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
@@ -27,6 +28,7 @@ import org.eclipse.swt.graphics.TextStyle;
 
 /**
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class ReviewItemLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
