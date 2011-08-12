@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-e4.1" sequenceNumber="13">
+<target name="mylyn-e4.2" sequenceNumber="12">
 <locations>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
@@ -40,18 +40,18 @@
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.1"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.2milestones"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201106081058"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="3.5.1.v20110531-2218"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20110605-0747"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.7.0.v20110605-0747"/>
-<unit id="org.eclipse.emf.common.ui.feature.group" version="2.7.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.7.0.v20110606-0949"/>
-<repository location="http://download.eclipse.org/releases/indigo"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.common.ui.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edit.ui.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/staging"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
