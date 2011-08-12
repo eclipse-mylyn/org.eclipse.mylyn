@@ -35,7 +35,7 @@ import org.eclipse.jgit.transport.URIish;
 import org.junit.Test;
 
 public class GerritProjectToGitRepositoryMappingTest {
-	private static final String GERRIT_HOST = "egit.eclipse.org"; //$NON-NLS-1$
+	private static final String GERRIT_GIT_HOST = "egit.eclipse.org"; //$NON-NLS-1$
 
 	private static final String GERRIT_PROJECT = "jgit"; //$NON-NLS-1$
 
@@ -74,7 +74,7 @@ public class GerritProjectToGitRepositoryMappingTest {
 		when(config.getSubsections(remoteSection)).thenReturn(configSubSections);
 		when(config.getStringList(eq(remoteSection), eq(remoteName), anyString())).thenReturn(new String[0]);
 		when(config.getStringList(eq(remoteSection), eq(remoteName), matches("url"))).thenReturn( //$NON-NLS-1$
-				new String[] { "git://" + GERRIT_HOST + "/" + project }); //$NON-NLS-1$//$NON-NLS-2$
+				new String[] { "git://" + GERRIT_GIT_HOST + "/" + project }); //$NON-NLS-1$//$NON-NLS-2$
 		Repository repo = mock(Repository.class);
 		when(repo.getConfig()).thenReturn(config);
 		return repo;
@@ -90,7 +90,7 @@ public class GerritProjectToGitRepositoryMappingTest {
 		for (String dir : repoDirList) {
 			when(cache.lookupRepository(new File(dir))).thenReturn(repositories[Integer.parseInt(dir)]);
 		}
-		return new GerritProjectToGitRepositoryMapping(GERRIT_HOST, GERRIT_PROJECT) {
+		return new GerritProjectToGitRepositoryMapping(GERRIT_GIT_HOST, GERRIT_PROJECT) {
 
 			@Override
 			RepositoryCache getRepositoryCache() {

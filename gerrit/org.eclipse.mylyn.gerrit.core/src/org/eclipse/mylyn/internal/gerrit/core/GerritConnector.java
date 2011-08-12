@@ -70,7 +70,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	 */
 	public static final String CONNECTOR_LABEL = "Gerrit Code Review"; //$NON-NLS-1$
 
-	private static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
+	public static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 

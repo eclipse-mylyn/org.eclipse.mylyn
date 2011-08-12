@@ -13,8 +13,8 @@
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +84,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.PatchSetPublishDetail;
 import com.google.gerrit.reviewdb.ApprovalCategory;
@@ -332,9 +333,9 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {
-		String gerritHost = getGerritHost(getGerritUrl());
+		String gerritGitHost = getHostFromUrl(getGerritGitUrl());
 		String gerritProject = getGerritProject(changeDetail);
-		Repository repository = findGitRepository(gerritHost, gerritProject);
+		Repository repository = findGitRepository(gerritGitHost, gerritProject);
 		if (repository != null) {
 			String refName = patchSetDetail.getPatchSet().getRefName();
 			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(repository, refName);
@@ -343,7 +344,7 @@ public class PatchSetSection extends AbstractGerritSection {
 			wizardDialog.open();
 		} else {
 			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
-			String reason = "No remote config found that has fetch URL with host '" + gerritHost
+			String reason = "No remote config found that has fetch URL with host '" + gerritGitHost
 					+ "' and path matching '" + gerritProject + "'";
 			GerritCorePlugin.logError(message, null);
 			ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
@@ -351,10 +352,10 @@ public class PatchSetSection extends AbstractGerritSection {
 		}
 	}
 
-	protected Repository findGitRepository(String gerritHost, String gerritProject) {
+	protected Repository findGitRepository(String gerritGitHost, String gerritProject) {
 		try {
-			if (gerritHost != null && gerritProject != null) {
-				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritHost,
+			if (gerritGitHost != null && gerritProject != null) {
+				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritGitHost,
 						gerritProject);
 				return mapper.findRepository();
 			}
@@ -368,15 +369,17 @@ public class PatchSetSection extends AbstractGerritSection {
 		return changeDetail.getChange().getProject().get();
 	}
 
-	private String getGerritUrl() {
-		return getTaskEditorPage().getTaskRepository().getRepositoryUrl();
+	private String getGerritGitUrl() {
+		GerritConfig config = GerritClient.configFromString(getTaskEditorPage().getTaskRepository().getProperty(
+				GerritConnector.KEY_REPOSITORY_CONFIG));
+		return config.getGitDaemonUrl();
 	}
 
-	private String getGerritHost(String gerritUrl) {
+	private String getHostFromUrl(String url) {
 		try {
-			return new URL(gerritUrl).getHost();
-		} catch (MalformedURLException e) {
-			GerritCorePlugin.logWarning("Error in task repository URL " + gerritUrl, e);
+			return new URI(url).getHost();
+		} catch (URISyntaxException e) {
+			GerritCorePlugin.logWarning("Error in task repository URL " + url, e);
 			return null;
 		}
 	}

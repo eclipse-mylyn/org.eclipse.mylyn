@@ -29,8 +29,8 @@ public class GerritProjectToGitRepositoryMapping {
 
 	private final String gerritProjectName;
 
-	public GerritProjectToGitRepositoryMapping(String gerritHostName, String gerritProjectName) {
-		this.gerritHostName = gerritHostName;
+	public GerritProjectToGitRepositoryMapping(String gerritGitHostName, String gerritProjectName) {
+		this.gerritHostName = gerritGitHostName;
 		this.gerritProjectName = gerritProjectName;
 	}
 
