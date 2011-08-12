@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Mylyn Reviews Target" sequenceNumber="74">
+<target name="Mylyn Reviews Target" sequenceNumber="76">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110606-0949"/>
-<repository location="http://download.eclipse.org/releases/indigo/"/>
-</location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
 <unit id="org.eclipse.egit.source.feature.group" version="1.0.0.201106090707-r"/>
@@ -47,12 +43,18 @@
 <unit id="org.objenesis" version="0.0.0"/>
 <unit id="org.mockito" version="0.0.0"/>
 <unit id="org.mockito.source" version="0.0.0"/>
+<unit id="org.apache.commons.io" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.test_feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.wb.swt.feature.feature.group" version="1.0.0.r37x201106081643"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110606-0949"/>
+<repository location="http://download.eclipse.org/releases/indigo/"/>
 </location>
 </locations>
 </target>
