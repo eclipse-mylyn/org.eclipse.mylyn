@@ -208,15 +208,11 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		});
 
 		if (proposals.size() > 0) {
-			String user = null;
 			if (repositoryUrl != null && connectorKind != null) {
-				user = getCurrentUser(repositoryUrl, connectorKind);
+				currentUser = getCurrentUser(repositoryUrl, connectorKind);
 			}
 			for (String proposal : proposals.keySet()) {
 				addAddress(addressSet, proposal);
-				if (user != null && user.equals(proposal)) {
-					currentUser = user;
-				}
 			}
 			return addressSet;
 		}
