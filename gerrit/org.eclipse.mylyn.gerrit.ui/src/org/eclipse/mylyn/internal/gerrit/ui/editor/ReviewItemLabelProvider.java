@@ -17,14 +17,13 @@ import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelP
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Steffen Pingel
@@ -37,13 +36,23 @@ public class ReviewItemLabelProvider extends LabelProvider implements IStyledLab
 		}
 	};
 
+	private final CommonImageManger imageManager;
+
 	public ReviewItemLabelProvider() {
+		imageManager = new CommonImageManger();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		imageManager.dispose();
 	}
 
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IReviewItem) {
-			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
+			IReviewItem item = (IReviewItem) element;
+			return imageManager.getFileImage(item.getName());
 		}
 		return null;
 	}
