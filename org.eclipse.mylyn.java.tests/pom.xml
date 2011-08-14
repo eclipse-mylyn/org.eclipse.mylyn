@@ -20,8 +20,13 @@
 		<artifactId>tycho-surefire-plugin</artifactId>
 		<version>${tycho-version}</version>
 		<configuration>
+		  <!-- see bug 353222
 		  <testSuite>${project.artifactId}</testSuite>
 		  <testClass>${test.suite}</testClass>
+		  -->
+          <includes>
+            <include>**/AllJavaTests.class</include>
+          </includes>
 		</configuration>
 	  </plugin>
       <plugin>
