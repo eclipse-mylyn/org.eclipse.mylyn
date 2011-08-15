@@ -118,7 +118,7 @@ public abstract class GitHubService {
 	 */
 	protected boolean check(String uri) throws IOException {
 		try {
-			client.get(new GitHubRequest().setUri(uri));
+			client.get(createRequest().setUri(uri));
 			return true;
 		} catch (RequestException e) {
 			if (e.getStatus() == HttpStatus.SC_NOT_FOUND)

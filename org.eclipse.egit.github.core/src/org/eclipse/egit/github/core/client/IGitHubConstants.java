@@ -181,6 +181,16 @@ public interface IGitHubConstants {
 	String SEGMENT_FORKS = "/forks"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_WATCHED
+	 */
+	String SEGMENT_WATCHED = "/watched"; //$NON-NLS-1$
+
+	/**
+	 * SEGMENT_WATCHERS
+	 */
+	String SEGMENT_WATCHERS = "/watchers"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
