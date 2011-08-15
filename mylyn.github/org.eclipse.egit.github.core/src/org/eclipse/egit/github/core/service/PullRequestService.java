@@ -220,9 +220,10 @@ public class PullRequestService extends GitHubService {
 	public PullRequest createPullRequest(IRepositoryIdProvider repository,
 			PullRequest request) throws IOException {
 		String id = getId(repository);
-		Assert.notNull("Request cannot be null", request);
+		if (request == null)
+			throw new IllegalArgumentException("Request cannot be null");
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
-		uri.append(id);
+		uri.append('/').append(id);
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		Map<String, String> params = createPrMap(request);
 		return client.post(uri.toString(), params, PullRequest.class);
