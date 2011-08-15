@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
@@ -25,10 +26,16 @@ import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Repository service class.
+ * 
+ * @see <a href="http://developer.github.com/v3/repos">GitHub repository API
+ *      documentation</a>
+ * @see <a href="http://developer.github.com/v3/repos/forks">GitHub forks API
+ *      documentation</a>
  */
 public class RepositoryService extends GitHubService {
 
@@ -228,5 +235,116 @@ public class RepositoryService extends GitHubService {
 		request.setUri(IGitHubConstants.SEGMENT_REPOS + "/" + id);
 		request.setType(Repository.class);
 		return (Repository) client.get(request).getBody();
+	}
+
+	/**
+	 * Create paged request for iterating over repositories forks
+	 * 
+	 * @param repository
+	 * @param start
+	 * @param size
+	 * @return paged request
+	 */
+	protected PagedRequest<Repository> createPagedForkRequest(
+			IRepositoryIdProvider repository, int start, int size) {
+		final String id = getId(repository);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_FORKS);
+		PagedRequest<Repository> request = createPagedRequest(start, size);
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
+		return request;
+	}
+
+	/**
+	 * Get all the forks of the given repository
+	 * 
+	 * @see <a href="http://developer.github.com/v3/repos/forks">GitHub forks
+	 *      API documentation</a>
+	 * 
+	 * @param repository
+	 * @return non-null but possibly empty list of repository
+	 * @throws IOException
+	 */
+	public List<Repository> getForks(IRepositoryIdProvider repository)
+			throws IOException {
+		PagedRequest<Repository> request = createPagedForkRequest(repository,
+				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		return getAll(request);
+	}
+
+	/**
+	 * Page forks of given repository
+	 * 
+	 * @param repository
+	 * @return iterator over repositories
+	 */
+	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository) {
+		return pageForks(repository, PagedRequest.PAGE_SIZE);
+	}
+
+	/**
+	 * Page forks of given repository
+	 * 
+	 * @param repository
+	 * @param size
+	 * @return iterator over repositories
+	 */
+	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository,
+			int size) {
+		return pageForks(repository, PagedRequest.PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page forks of given repository
+	 * 
+	 * @param repository
+	 * @param start
+	 * @param size
+	 * @return iterator over repositories
+	 */
+	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository,
+			int start, int size) {
+		PagedRequest<Repository> request = createPagedForkRequest(repository,
+				start, size);
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Fork given repository into new repository under the currently
+	 * authenticated user.
+	 * 
+	 * @param repository
+	 * @return forked repository
+	 * @throws IOException
+	 */
+	public Repository forkRepository(IRepositoryIdProvider repository)
+			throws IOException {
+		return forkRepository(repository, null);
+	}
+
+	/**
+	 * Fork given repository into new repository.
+	 * 
+	 * The new repository will be under the given organization if non-null, else
+	 * it will be under the currently authenticated user.
+	 * 
+	 * @param repository
+	 * @param organization
+	 * @return forked repository
+	 * @throws IOException
+	 */
+	public Repository forkRepository(IRepositoryIdProvider repository,
+			String organization) throws IOException {
+		final String id = getId(repository);
+		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(IGitHubConstants.SEGMENT_FORKS);
+		Map<String, String> params = null;
+		if (organization != null)
+			params = Collections.singletonMap("org", organization);
+		return client.post(uri.toString(), params, Repository.class);
 	}
 }

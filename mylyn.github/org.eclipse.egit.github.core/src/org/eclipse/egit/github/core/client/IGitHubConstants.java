@@ -176,6 +176,11 @@ public interface IGitHubConstants {
 	String SEGMENT_KEYS = "/keys"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_FORKS
+	 */
+	String SEGMENT_FORKS = "/forks"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$

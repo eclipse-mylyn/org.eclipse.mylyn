@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.junit.Ignore;
@@ -74,6 +75,37 @@ public class RepositoryTest extends LiveTest {
 		assertTrue(created.isPrivate());
 		assertEquals(repository.getOwner(), created.getOwner());
 		assertEquals(repository.getName(), created.getName());
+	}
+
+	/**
+	 * Test forking a repository
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	@Ignore
+	public void forkRepository() throws Exception {
+		assertNotNull("Client user is required", client.getUser());
+		RepositoryService service = new RepositoryService(client);
+		service.forkRepository(new RepositoryId(client.getUser(), "resque"));
+	}
+
+	/**
+	 * Test fetching forks of a repository
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void fetchForks() throws IOException {
+		RepositoryService service = new RepositoryService(client);
+		List<Repository> repos = service.getForks(new RepositoryId("defunkt",
+				"resque"));
+		assertNotNull(repos);
+		assertFalse(repos.isEmpty());
+		for (Repository repo : repos) {
+			assertNotNull(repo);
+			assertTrue(repo.isFork());
+		}
 	}
 
 }
