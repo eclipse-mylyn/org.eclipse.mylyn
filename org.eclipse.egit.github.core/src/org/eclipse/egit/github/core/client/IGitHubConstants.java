@@ -191,6 +191,11 @@ public interface IGitHubConstants {
 	String SEGMENT_WATCHERS = "/watchers"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_COLLABORATORS
+	 */
+	String SEGMENT_COLLABORATORS = "/collaborators"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
