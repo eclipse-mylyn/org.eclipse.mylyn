@@ -171,6 +171,11 @@ public interface IGitHubConstants {
 	String SEGMENT_TAGS = "/tags"; //$NON-NLS-1$
 
 	/**
+	 * SEGMENT_KEYS
+	 */
+	String SEGMENT_KEYS = "/keys"; //$NON-NLS-1$
+
+	/**
 	 * SEGMENT_V2_API
 	 */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$

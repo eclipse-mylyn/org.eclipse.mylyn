@@ -421,7 +421,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Get response from uri and bind to specified type
+	 * Get response from URI and bind to specified type
 	 * 
 	 * @param request
 	 * @return response
@@ -431,9 +431,13 @@ public class GitHubClient {
 		HttpGet method = createGet(request.generateUri());
 		HttpResponse response = client.execute(httpHost, method, httpContext);
 		StatusLine status = getStatus(response);
-		if (isOk(response, status))
-			return new GitHubResponse(response, parseJson(response,
-					request.getType()));
+		if (isOk(response, status)) {
+			Object body = null;
+			Type type = request.getType();
+			if (type != null)
+				body = parseJson(response, type);
+			return new GitHubResponse(response, body);
+		}
 		if (isEmpty(response, status))
 			return new GitHubResponse(response, null);
 		throw createException(response, status);
