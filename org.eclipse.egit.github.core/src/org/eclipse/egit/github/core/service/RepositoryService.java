@@ -228,6 +228,5 @@ public class RepositoryService extends GitHubService {
 		request.setUri(IGitHubConstants.SEGMENT_REPOS + "/" + id);
 		request.setType(Repository.class);
 		return (Repository) client.get(request).getBody();
-
 	}
 }
