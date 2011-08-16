@@ -10,16 +10,21 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWING;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -37,15 +42,17 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Get user with given login name
-	 * 
+	 *
 	 * @param login
 	 * @return user
 	 * @throws IOException
 	 */
 	public User getUser(String login) throws IOException {
-		Assert.notNull("Login name cannot be null", login);
-		GitHubRequest request = new GitHubRequest();
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
+		if (login == null)
+			throw new IllegalArgumentException("Login name cannot be null"); //$NON-NLS-1$
+
+		GitHubRequest request = createRequest();
+		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(login);
 		request.setUri(uri);
 		request.setType(User.class);
@@ -54,32 +61,34 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Get currently authenticate user
-	 * 
+	 *
 	 * @return user
 	 * @throws IOException
 	 */
 	public User getUser() throws IOException {
-		GitHubRequest request = new GitHubRequest();
-		request.setUri(IGitHubConstants.SEGMENT_USER);
+		GitHubRequest request = createRequest();
+		request.setUri(SEGMENT_USER);
 		request.setType(User.class);
 		return (User) client.get(request).getBody();
 	}
 
 	/**
 	 * Edit given user
-	 * 
+	 *
 	 * @param user
 	 * @return edited user
 	 * @throws IOException
 	 */
 	public User editUser(User user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		return client.post(IGitHubConstants.SEGMENT_USER, user, User.class);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		return client.post(SEGMENT_USER, user, User.class);
 	}
 
 	/**
 	 * Create follower request
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @param user
@@ -89,13 +98,11 @@ public class UserService extends GitHubService {
 			String user) {
 		PagedRequest<User> request = createPagedRequest(start, size);
 		if (user == null)
-			request.setUri(IGitHubConstants.SEGMENT_USER
-					+ IGitHubConstants.SEGMENT_FOLLOWERS);
+			request.setUri(SEGMENT_USER + SEGMENT_FOLLOWERS);
 		else {
-			StringBuilder uri = new StringBuilder(
-					IGitHubConstants.SEGMENT_USERS);
+			StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 			uri.append('/').append(user);
-			uri.append(IGitHubConstants.SEGMENT_FOLLOWERS);
+			uri.append(SEGMENT_FOLLOWERS);
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
@@ -105,7 +112,7 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Create following request
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @param user
@@ -115,13 +122,11 @@ public class UserService extends GitHubService {
 			String user) {
 		PagedRequest<User> request = createPagedRequest(start, size);
 		if (user == null)
-			request.setUri(IGitHubConstants.SEGMENT_USER
-					+ IGitHubConstants.SEGMENT_FOLLOWING);
+			request.setUri(SEGMENT_USER + SEGMENT_FOLLOWING);
 		else {
-			StringBuilder uri = new StringBuilder(
-					IGitHubConstants.SEGMENT_USERS);
+			StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 			uri.append('/').append(user);
-			uri.append(IGitHubConstants.SEGMENT_FOLLOWING);
+			uri.append(SEGMENT_FOLLOWING);
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
@@ -131,37 +136,36 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Get all followers of the currently authenticated user
-	 * 
+	 *
 	 * @return list of followers
 	 * @throws IOException
 	 */
 	public List<User> getFollowers() throws IOException {
-		return getAll(createFollowersRequest(PagedRequest.PAGE_FIRST,
-				PagedRequest.PAGE_SIZE, null));
+		return getAll(createFollowersRequest(PAGE_FIRST, PAGE_SIZE, null));
 	}
 
 	/**
 	 * Page followers of the currently authenticated user
-	 * 
+	 *
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowers() {
-		return pageFollowers(PagedRequest.PAGE_SIZE);
+		return pageFollowers(PAGE_SIZE);
 	}
 
 	/**
 	 * Page followers of the currently authenticated user
-	 * 
+	 *
 	 * @param size
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowers(final int size) {
-		return pageFollowers(PagedRequest.PAGE_FIRST, size);
+		return pageFollowers(PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page followers of the currently authenticated user
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @return page iterator
@@ -173,42 +177,44 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Get all followers of the given user
-	 * 
+	 *
 	 * @param user
 	 * @return list of followers
 	 * @throws IOException
 	 */
 	public List<User> getFollowers(final String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		PagedRequest<User> request = createFollowersRequest(
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE, user);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		PagedRequest<User> request = createFollowersRequest(PAGE_FIRST,
+				PAGE_SIZE, user);
 		return getAll(request);
 	}
 
 	/**
 	 * Page followers of the given user
-	 * 
+	 *
 	 * @param user
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowers(final String user) {
-		return pageFollowers(user, PagedRequest.PAGE_SIZE);
+		return pageFollowers(user, PAGE_SIZE);
 	}
 
 	/**
 	 * Page followers of the given user
-	 * 
+	 *
 	 * @param size
 	 * @param user
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowers(final String user, final int size) {
-		return pageFollowers(user, PagedRequest.PAGE_FIRST, size);
+		return pageFollowers(user, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page followers of the given user
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @param user
@@ -216,45 +222,47 @@ public class UserService extends GitHubService {
 	 */
 	public PageIterator<User> pageFollowers(final String user, final int start,
 			final int size) {
-		Assert.notNull("User cannot be null", user);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
 		PagedRequest<User> request = createFollowersRequest(start, size, user);
 		return createPageIterator(request);
 	}
 
 	/**
 	 * Get all users being followed by the currently authenticated user
-	 * 
+	 *
 	 * @return list of users being followed
 	 * @throws IOException
 	 */
 	public List<User> getFollowing() throws IOException {
-		PagedRequest<User> request = createFollowingRequest(
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE, null);
+		PagedRequest<User> request = createFollowingRequest(PAGE_FIRST,
+				PAGE_SIZE, null);
 		return getAll(request);
 	}
 
 	/**
 	 * Page users being followed by the currently authenticated user
-	 * 
+	 *
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowing() {
-		return pageFollowing(PagedRequest.PAGE_SIZE);
+		return pageFollowing(PAGE_SIZE);
 	}
 
 	/**
 	 * Page users being followed by the currently authenticated user
-	 * 
+	 *
 	 * @param size
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowing(final int size) {
-		return pageFollowing(PagedRequest.PAGE_FIRST, size);
+		return pageFollowing(PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page users being followed by the currently authenticated user
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @return page iterator
@@ -266,42 +274,44 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Get all users being followed by the given user
-	 * 
+	 *
 	 * @param user
 	 * @return list of users being followed
 	 * @throws IOException
 	 */
 	public List<User> getFollowing(final String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		PagedRequest<User> request = createFollowingRequest(
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE, user);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		PagedRequest<User> request = createFollowingRequest(PAGE_FIRST,
+				PAGE_SIZE, user);
 		return getAll(request);
 	}
 
 	/**
 	 * Page users being followed by the given user
-	 * 
+	 *
 	 * @param user
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowing(final String user) {
-		return pageFollowing(user, PagedRequest.PAGE_SIZE);
+		return pageFollowing(user, PAGE_SIZE);
 	}
 
 	/**
 	 * Page users being followed by the given user
-	 * 
+	 *
 	 * @param user
 	 * @param size
 	 * @return page iterator
 	 */
 	public PageIterator<User> pageFollowing(final String user, final int size) {
-		return pageFollowing(user, PagedRequest.PAGE_FIRST, size);
+		return pageFollowing(user, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page users being followed by the given user
-	 * 
+	 *
 	 * @param user
 	 * @param start
 	 * @param size
@@ -315,43 +325,49 @@ public class UserService extends GitHubService {
 
 	/**
 	 * Check if the currently authenticated user is following the given user
-	 * 
+	 *
 	 * @param user
 	 * @return true if following, false if not following
 	 * @throws IOException
 	 */
 	public boolean isFollowing(final String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USER);
-		uri.append(IGitHubConstants.SEGMENT_FOLLOWING);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_USER);
+		uri.append(SEGMENT_FOLLOWING);
 		uri.append('/').append(user);
 		return check(uri.toString());
 	}
 
 	/**
 	 * Follow the given user
-	 * 
+	 *
 	 * @param user
 	 * @throws IOException
 	 */
 	public void follow(final String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USER);
-		uri.append(IGitHubConstants.SEGMENT_FOLLOWING);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_USER);
+		uri.append(SEGMENT_FOLLOWING);
 		uri.append('/').append(user);
 		client.put(uri.toString(), null, null);
 	}
 
 	/**
 	 * Unfollow the given user
-	 * 
+	 *
 	 * @param user
 	 * @throws IOException
 	 */
 	public void unfollow(final String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USER);
-		uri.append(IGitHubConstants.SEGMENT_FOLLOWING);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_USER);
+		uri.append(SEGMENT_FOLLOWING);
 		uri.append('/').append(user);
 		client.delete(uri.toString());
 	}

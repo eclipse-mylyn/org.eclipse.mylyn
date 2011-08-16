@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -40,7 +39,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create gist service
-	 * 
+	 *
 	 * @param client
 	 */
 	public GistService(GitHubClient client) {
@@ -49,7 +48,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Check that gist id is non-null and non-empty
-	 * 
+	 *
 	 * @param gistId
 	 * @return gist id
 	 */
@@ -63,7 +62,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Get gist
-	 * 
+	 *
 	 * @param id
 	 * @return gist
 	 * @throws IOException
@@ -80,7 +79,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Get starred gists for currently authenticated user
-	 * 
+	 *
 	 * @return list of gists
 	 * @throws IOException
 	 */
@@ -94,7 +93,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create user gist paged request
-	 * 
+	 *
 	 * @param user
 	 * @param start
 	 * @param size
@@ -102,7 +101,9 @@ public class GistService extends GitHubService {
 	 */
 	protected PagedRequest<Gist> createUserGistRequest(String user, int start,
 			int size) {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
 		uri.append(SEGMENT_GISTS);
@@ -114,7 +115,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Get gists for specified user
-	 * 
+	 *
 	 * @param user
 	 * @return list of gists
 	 * @throws IOException
@@ -127,7 +128,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for given user's gists
-	 * 
+	 *
 	 * @param user
 	 * @return gist page iterator
 	 */
@@ -137,7 +138,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for given user's gists
-	 * 
+	 *
 	 * @param user
 	 * @param size
 	 *            size of page
@@ -149,7 +150,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for given user's gists
-	 * 
+	 *
 	 * @param user
 	 * @param size
 	 *            size of page
@@ -165,7 +166,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for all public gists
-	 * 
+	 *
 	 * @return gist page iterator
 	 */
 	public PageIterator<Gist> pagePublicGists() {
@@ -174,7 +175,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for all public gists
-	 * 
+	 *
 	 * @param size
 	 *            size of page
 	 * @return gist page iterator
@@ -185,7 +186,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create page iterator for all public gists
-	 * 
+	 *
 	 * @param start
 	 *            starting page number
 	 * @param size
@@ -202,27 +203,32 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create a gist
-	 * 
+	 *
 	 * @param gist
 	 * @return created gist
 	 * @throws IOException
 	 */
 	public Gist createGist(Gist gist) throws IOException {
-		Assert.notNull("Gist cannot be null", gist);
+		if (gist == null)
+			throw new IllegalArgumentException("Gist cannot be null"); //$NON-NLS-1$
+
 		return client.post(SEGMENT_GISTS, gist, Gist.class);
 	}
 
 	/**
 	 * Update a gist
-	 * 
+	 *
 	 * @param gist
 	 * @return updated gist
 	 * @throws IOException
 	 */
 	public Gist updateGist(Gist gist) throws IOException {
-		Assert.notNull("Gist cannot be null", gist); //$NON-NLS-1$
+		if (gist == null)
+			throw new IllegalArgumentException("Gist cannot be null"); //$NON-NLS-1$
 		String id = gist.getId();
-		Assert.notNull("Gist id cannot be null", id); //$NON-NLS-1$
+		if (id == null)
+			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(id);
 		return client.post(uri.toString(), gist, Gist.class);
@@ -230,7 +236,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create comment on specified gist id
-	 * 
+	 *
 	 * @param gistId
 	 * @param comment
 	 * @return created issue
@@ -238,8 +244,11 @@ public class GistService extends GitHubService {
 	 */
 	public Comment createComment(String gistId, String comment)
 			throws IOException {
-		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
-		Assert.notNull("Gist comment cannot be null", comment);
+		if (gistId == null)
+			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+		if (comment == null)
+			throw new IllegalArgumentException("Gist comment cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(SEGMENT_COMMENTS);
@@ -251,13 +260,15 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Get comments for specified gist id
-	 * 
+	 *
 	 * @param gistId
 	 * @return list of comments
 	 * @throws IOException
 	 */
 	public List<Comment> getComments(String gistId) throws IOException {
-		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		if (gistId == null)
+			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(SEGMENT_COMMENTS);
@@ -269,12 +280,14 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Delete the Gist with the given id
-	 * 
+	 *
 	 * @param gistId
 	 * @throws IOException
 	 */
 	public void deleteGist(String gistId) throws IOException {
-		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
+		if (gistId == null)
+			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		client.delete(uri.toString());
@@ -282,12 +295,14 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Delete the Gist comment with the given id
-	 * 
+	 *
 	 * @param commentId
 	 * @throws IOException
 	 */
 	public void deleteComment(String commentId) throws IOException {
-		Assert.notNull("Gist comment id cannot be null", commentId); //$NON-NLS-1$
+		if (commentId == null)
+			throw new IllegalArgumentException("Gist comment id cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());
@@ -295,13 +310,12 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Star the gist with the given id
-	 * 
+	 *
 	 * @param gistId
 	 * @throws IOException
 	 */
 	public void starGist(String gistId) throws IOException {
 		checkGistId(gistId);
-		Assert.notNull("Gist id cannot be null", gistId); //$NON-NLS-1$
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(SEGMENT_STAR);
@@ -310,7 +324,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Unstar the gist with the given id
-	 * 
+	 *
 	 * @param gistId
 	 * @throws IOException
 	 */
@@ -324,7 +338,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Check if a gist is starred
-	 * 
+	 *
 	 * @param gistId
 	 * @return true if starred, false if not starred
 	 * @throws IOException
@@ -339,7 +353,7 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Fork gist with given id
-	 * 
+	 *
 	 * @param gistId
 	 * @return forked gist
 	 * @throws IOException

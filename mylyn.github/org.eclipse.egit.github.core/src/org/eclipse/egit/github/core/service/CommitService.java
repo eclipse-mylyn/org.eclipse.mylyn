@@ -10,6 +10,12 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -23,13 +29,12 @@ import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Service for interacting with repository commits
- * 
+ *
  * @see <a href="http://developer.github.com/v3/repos/commits">GitHub commit API
  *      documentation</a>
  */
@@ -44,7 +49,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Get all commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of repository commits
 	 * @throws IOException
@@ -56,7 +61,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Get all commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param path
@@ -70,7 +75,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Page commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return page iterator
 	 */
@@ -81,7 +86,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Page commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param size
 	 * @return page iterator
@@ -93,7 +98,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Page commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param path
@@ -101,12 +106,12 @@ public class CommitService extends GitHubService {
 	 */
 	public PageIterator<RepositoryCommit> pageCommits(
 			IRepositoryIdProvider repository, String sha, String path) {
-		return pageCommits(repository, sha, path, PagedRequest.PAGE_SIZE);
+		return pageCommits(repository, sha, path, PAGE_SIZE);
 	}
 
 	/**
 	 * Page commits in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param path
@@ -116,11 +121,11 @@ public class CommitService extends GitHubService {
 	public PageIterator<RepositoryCommit> pageCommits(
 			IRepositoryIdProvider repository, String sha, String path, int size) {
 		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
-		PagedRequest<RepositoryCommit> request = createPagedRequest(
-				PagedRequest.PAGE_FIRST, size);
+		uri.append(SEGMENT_COMMITS);
+		PagedRequest<RepositoryCommit> request = createPagedRequest(PAGE_FIRST,
+				size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryCommit>>() {
 		}.getType());
@@ -128,9 +133,9 @@ public class CommitService extends GitHubService {
 		if (sha != null || path != null) {
 			Map<String, String> params = new HashMap<String, String>();
 			if (sha != null)
-				params.put("sha", sha);
+				params.put("sha", sha); //$NON-NLS-1$
 			if (path != null)
-				params.put("path", path);
+				params.put("path", path); //$NON-NLS-1$
 			request.setParams(params);
 		}
 
@@ -139,7 +144,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Get commit with given SHA-1 from given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return repository commit
@@ -149,12 +154,13 @@ public class CommitService extends GitHubService {
 			String sha) throws IOException {
 		String id = getId(repository);
 		if (sha == null)
-			throw new IllegalArgumentException("Sha cannot be null");
+			throw new IllegalArgumentException("Sha cannot be null"); //$NON-NLS-1$
 		if (sha.length() == 0)
-			throw new IllegalArgumentException("Sha cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Sha cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
@@ -164,7 +170,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Get all comments on commit with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return non-null but possibly empty list of commits
@@ -177,19 +183,19 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Page comments on commit with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return page iterator over comments
 	 */
 	public PageIterator<CommitComment> pageComments(
 			IRepositoryIdProvider repository, String sha) {
-		return pageComments(repository, sha, PagedRequest.PAGE_SIZE);
+		return pageComments(repository, sha, PAGE_SIZE);
 	}
 
 	/**
 	 * Page comments on commit with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param size
@@ -197,12 +203,12 @@ public class CommitService extends GitHubService {
 	 */
 	public PageIterator<CommitComment> pageComments(
 			IRepositoryIdProvider repository, String sha, int size) {
-		return pageComments(repository, sha, PagedRequest.PAGE_FIRST, size);
+		return pageComments(repository, sha, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page comments on commit with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param start
@@ -213,14 +219,15 @@ public class CommitService extends GitHubService {
 			IRepositoryIdProvider repository, String sha, int start, int size) {
 		String id = getId(repository);
 		if (sha == null)
-			throw new IllegalArgumentException("Sha cannot be null");
+			throw new IllegalArgumentException("Sha cannot be null"); //$NON-NLS-1$
 		if (sha.length() == 0)
-			throw new IllegalArgumentException("Sha cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Sha cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
@@ -230,7 +237,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Get commit comment with given id
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @return commit comment
@@ -240,12 +247,13 @@ public class CommitService extends GitHubService {
 			throws IOException {
 		String repoId = getId(repository);
 		if (id == null)
-			throw new IllegalArgumentException("Id cannot be null");
+			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
 		if (id.length() == 0)
-			throw new IllegalArgumentException("Id cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 		uri.append('/').append(id);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
@@ -255,7 +263,7 @@ public class CommitService extends GitHubService {
 
 	/**
 	 * Add comment to given commit
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param comment
@@ -266,20 +274,21 @@ public class CommitService extends GitHubService {
 			String sha, CommitComment comment) throws IOException {
 		String id = getId(repository);
 		if (sha == null)
-			throw new IllegalArgumentException("Sha cannot be null");
+			throw new IllegalArgumentException("Sha cannot be null"); //$NON-NLS-1$
 		if (sha.length() == 0)
-			throw new IllegalArgumentException("Sha cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Sha cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 		return client.post(uri.toString(), comment, CommitComment.class);
 	}
 
 	/**
 	 * Edit given comment
-	 * 
+	 *
 	 * @param repository
 	 * @param comment
 	 * @return edited comment
@@ -289,24 +298,25 @@ public class CommitService extends GitHubService {
 			CommitComment comment) throws IOException {
 		String id = getId(repository);
 		if (comment == null)
-			throw new IllegalArgumentException("Comment cannot be null");
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 		String commentId = comment.getId();
 		if (commentId == null)
-			throw new IllegalArgumentException("Comment id cannot be null");
+			throw new IllegalArgumentException("Comment id cannot be null"); //$NON-NLS-1$
 		if (commentId.length() == 0)
-			throw new IllegalArgumentException("Comment id cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Comment id cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
-		return client.post(uri.toString(),
-				Collections.singletonMap("body", comment.getBody()),
-				CommitComment.class);
+		Map<String, String> params = Collections.singletonMap(
+				"body", comment.getBody()); //$NON-NLS-1$
+		return client.post(uri.toString(), params, CommitComment.class);
 	}
 
 	/**
 	 * Delete commit comment with given id from given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param commentId
 	 * @throws IOException
@@ -315,12 +325,13 @@ public class CommitService extends GitHubService {
 			throws IOException {
 		String id = getId(repository);
 		if (commentId == null)
-			throw new IllegalArgumentException("Comment Id cannot be null");
+			throw new IllegalArgumentException("Comment Id cannot be null"); //$NON-NLS-1$
 		if (commentId.length() == 0)
-			throw new IllegalArgumentException("Comment Id cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Comment Id cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());
 	}

@@ -28,7 +28,7 @@ import org.eclipse.egit.github.core.service.IssueService;
 import org.junit.Test;
 
 /**
- * 
+ * Unit tests of {@link IssueService}
  */
 public class IssueTest extends LiveTest {
 

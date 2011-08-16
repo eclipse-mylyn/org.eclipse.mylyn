@@ -10,6 +10,16 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -17,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
@@ -31,7 +40,7 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Repository service class.
- * 
+ *
  * @see <a href="http://developer.github.com/v3/repos">GitHub repository API
  *      documentation</a>
  * @see <a href="http://developer.github.com/v3/repos/forks">GitHub forks API
@@ -68,14 +77,14 @@ public class RepositoryService extends GitHubService {
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
 		public List<SearchRepository> getResources() {
-			return this.repositories;
+			return repositories;
 		}
 
 	}
 
 	/**
 	 * Create repository service
-	 * 
+	 *
 	 * @param client
 	 *            cannot be null
 	 */
@@ -85,14 +94,13 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Get repositories for the currently authenticated user
-	 * 
+	 *
 	 * @return list of repositories
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories() throws IOException {
 		PagedRequest<Repository> request = createPagedRequest();
-		request.setUri(IGitHubConstants.SEGMENT_USER
-				+ IGitHubConstants.SEGMENT_REPOS);
+		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return getAll(request);
@@ -100,17 +108,20 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Get repositories for the given user
-	 * 
+	 *
 	 * @param user
 	 * @return list of repositories
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories(String user) throws IOException {
-		Assert.notNull("User cannot be null", user);
-		Assert.notEmpty("User cannot be empty", user);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_USERS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
@@ -120,18 +131,21 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Get organization repositories for the given organization
-	 * 
+	 *
 	 * @param organization
 	 * @return list of repositories
 	 * @throws IOException
 	 */
 	public List<Repository> getOrgRepositories(String organization)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization);
-		Assert.notEmpty("Organization cannot be empty", organization);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
@@ -141,7 +155,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search repositories
-	 * 
+	 *
 	 * @param query
 	 * @return list of repositories
 	 * @throws IOException
@@ -153,7 +167,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching language and query
-	 * 
+	 *
 	 * @param query
 	 * @param language
 	 * @return list of repositories
@@ -161,9 +175,9 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<SearchRepository> searchRepositories(final String query,
 			final String language) throws IOException {
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_V2_API);
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
-		uri.append(IGitHubConstants.SEGMENT_SEARCH);
+		StringBuilder uri = new StringBuilder(SEGMENT_V2_API);
+		uri.append(SEGMENT_REPOS);
+		uri.append(SEGMENT_SEARCH);
 		uri.append('/').append(query);
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
@@ -178,21 +192,23 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Create a new repository
-	 * 
+	 *
 	 * @param repository
 	 * @return created repository
 	 * @throws IOException
 	 */
 	public Repository createRepository(Repository repository)
 			throws IOException {
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		return client.post(IGitHubConstants.SEGMENT_USER
-				+ IGitHubConstants.SEGMENT_REPOS, repository, Repository.class);
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		return client.post(SEGMENT_USER + SEGMENT_REPOS, repository,
+				Repository.class);
 	}
 
 	/**
 	 * Create a new repository
-	 * 
+	 *
 	 * @param organization
 	 * @param repository
 	 * @return created repository
@@ -200,17 +216,20 @@ public class RepositoryService extends GitHubService {
 	 */
 	public Repository createRepository(String organization,
 			Repository repository) throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		return client.post(uri.toString(), repository, Repository.class);
 	}
 
 	/**
 	 * Get repository
-	 * 
+	 *
 	 * @param owner
 	 * @param name
 	 * @return repository
@@ -223,7 +242,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Get repository
-	 * 
+	 *
 	 * @param provider
 	 * @return repository
 	 * @throws IOException
@@ -232,14 +251,14 @@ public class RepositoryService extends GitHubService {
 			throws IOException {
 		final String id = getId(provider);
 		GitHubRequest request = createRequest();
-		request.setUri(IGitHubConstants.SEGMENT_REPOS + "/" + id);
+		request.setUri(SEGMENT_REPOS + '/' + id);
 		request.setType(Repository.class);
 		return (Repository) client.get(request).getBody();
 	}
 
 	/**
 	 * Create paged request for iterating over repositories forks
-	 * 
+	 *
 	 * @param repository
 	 * @param start
 	 * @param size
@@ -248,9 +267,9 @@ public class RepositoryService extends GitHubService {
 	protected PagedRequest<Repository> createPagedForkRequest(
 			IRepositoryIdProvider repository, int start, int size) {
 		final String id = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_FORKS);
+		uri.append(SEGMENT_FORKS);
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
@@ -260,10 +279,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Get all the forks of the given repository
-	 * 
-	 * @see <a href="http://developer.github.com/v3/repos/forks">GitHub forks
-	 *      API documentation</a>
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of repository
 	 * @throws IOException
@@ -271,35 +287,35 @@ public class RepositoryService extends GitHubService {
 	public List<Repository> getForks(IRepositoryIdProvider repository)
 			throws IOException {
 		PagedRequest<Repository> request = createPagedForkRequest(repository,
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+				PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Page forks of given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return iterator over repositories
 	 */
 	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository) {
-		return pageForks(repository, PagedRequest.PAGE_SIZE);
+		return pageForks(repository, PAGE_SIZE);
 	}
 
 	/**
 	 * Page forks of given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param size
 	 * @return iterator over repositories
 	 */
 	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository,
 			int size) {
-		return pageForks(repository, PagedRequest.PAGE_FIRST, size);
+		return pageForks(repository, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page forks of given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param start
 	 * @param size
@@ -315,7 +331,7 @@ public class RepositoryService extends GitHubService {
 	/**
 	 * Fork given repository into new repository under the currently
 	 * authenticated user.
-	 * 
+	 *
 	 * @param repository
 	 * @return forked repository
 	 * @throws IOException
@@ -327,10 +343,10 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Fork given repository into new repository.
-	 * 
+	 *
 	 * The new repository will be under the given organization if non-null, else
 	 * it will be under the currently authenticated user.
-	 * 
+	 *
 	 * @param repository
 	 * @param organization
 	 * @return forked repository
@@ -339,12 +355,12 @@ public class RepositoryService extends GitHubService {
 	public Repository forkRepository(IRepositoryIdProvider repository,
 			String organization) throws IOException {
 		final String id = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_FORKS);
+		uri.append(SEGMENT_FORKS);
 		Map<String, String> params = null;
 		if (organization != null)
-			params = Collections.singletonMap("org", organization);
+			params = Collections.singletonMap("org", organization); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Repository.class);
 	}
 }

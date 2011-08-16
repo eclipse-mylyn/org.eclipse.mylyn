@@ -47,7 +47,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.RequestError;
 
 /**
@@ -57,10 +56,10 @@ public class GitHubClient {
 
 	/**
 	 * Create API client from URL.
-	 * 
+	 *
 	 * This creates an HTTPS-based client with a host that contains the host
 	 * value of the given URL prefixed with 'api'.
-	 * 
+	 *
 	 * @param url
 	 * @return client
 	 */
@@ -96,7 +95,7 @@ public class GitHubClient {
 
 	/**
 	 * Create client for host configuration
-	 * 
+	 *
 	 * @param hostname
 	 * @param port
 	 * @param scheme
@@ -107,11 +106,13 @@ public class GitHubClient {
 
 	/**
 	 * Create client for host configuration
-	 * 
+	 *
 	 * @param httpHost
 	 */
 	public GitHubClient(HttpHost httpHost) {
-		Assert.notNull("Http host cannot be null", httpHost); //$NON-NLS-1$
+		if (httpHost == null)
+			throw new IllegalArgumentException("Http host cannot be null"); //$NON-NLS-1$
+
 		this.httpHost = httpHost;
 
 		// Support JVM configured proxy servers
@@ -130,7 +131,7 @@ public class GitHubClient {
 	 * Set the value to set as the user agent header on every request created.
 	 * Specifying a null or empty agent parameter will reset this client to use
 	 * the default user agent header value.
-	 * 
+	 *
 	 * @param agent
 	 * @return this client
 	 */
@@ -144,7 +145,7 @@ public class GitHubClient {
 
 	/**
 	 * Configure request with standard headers
-	 * 
+	 *
 	 * @param request
 	 * @return configured request
 	 */
@@ -155,7 +156,7 @@ public class GitHubClient {
 
 	/**
 	 * Create standard post method
-	 * 
+	 *
 	 * @param uri
 	 * @return post
 	 */
@@ -165,7 +166,7 @@ public class GitHubClient {
 
 	/**
 	 * Create standard post method
-	 * 
+	 *
 	 * @param uri
 	 * @return post
 	 */
@@ -175,7 +176,7 @@ public class GitHubClient {
 
 	/**
 	 * Create get method
-	 * 
+	 *
 	 * @param uri
 	 * @return get method
 	 */
@@ -185,7 +186,7 @@ public class GitHubClient {
 
 	/**
 	 * Create delete method
-	 * 
+	 *
 	 * @param uri
 	 * @return get method
 	 */
@@ -195,7 +196,7 @@ public class GitHubClient {
 
 	/**
 	 * Update credential on http client credentials provider
-	 * 
+	 *
 	 * @param user
 	 * @param password
 	 * @return this client
@@ -212,7 +213,7 @@ public class GitHubClient {
 
 	/**
 	 * Set credentials
-	 * 
+	 *
 	 * @param user
 	 * @param password
 	 * @return this client
@@ -227,7 +228,7 @@ public class GitHubClient {
 
 	/**
 	 * Set OAuth2 token
-	 * 
+	 *
 	 * @param token
 	 * @return this client
 	 */
@@ -241,7 +242,7 @@ public class GitHubClient {
 
 	/**
 	 * Get the user that this client is currently authenticating as
-	 * 
+	 *
 	 * @return user or null if not authentication
 	 */
 	public String getUser() {
@@ -255,7 +256,7 @@ public class GitHubClient {
 
 	/**
 	 * Parse json to specified type
-	 * 
+	 *
 	 * @param <V>
 	 * @param response
 	 * @param type
@@ -280,7 +281,7 @@ public class GitHubClient {
 
 	/**
 	 * Convert object to a JSON string
-	 * 
+	 *
 	 * @param object
 	 * @return JSON string
 	 * @throws IOException
@@ -295,7 +296,7 @@ public class GitHubClient {
 
 	/**
 	 * Get {@link HttpEntity} from response
-	 * 
+	 *
 	 * @param response
 	 * @return non-null entity
 	 * @throws IOException
@@ -309,7 +310,7 @@ public class GitHubClient {
 
 	/**
 	 * Get {@link InputStream} from response
-	 * 
+	 *
 	 * @param response
 	 * @return non-null input stream
 	 * @throws IOException
@@ -323,7 +324,7 @@ public class GitHubClient {
 
 	/**
 	 * Parse error from response
-	 * 
+	 *
 	 * @param response
 	 * @return request error
 	 * @throws IOException
@@ -334,7 +335,7 @@ public class GitHubClient {
 
 	/**
 	 * Create error exception from response and throw it
-	 * 
+	 *
 	 * @param response
 	 * @param status
 	 * @return non-null newly created {@link IOException}
@@ -363,7 +364,7 @@ public class GitHubClient {
 
 	/**
 	 * Is the response successful?
-	 * 
+	 *
 	 * @param response
 	 * @param status
 	 * @return true if okay, false otherwise
@@ -380,7 +381,7 @@ public class GitHubClient {
 
 	/**
 	 * Is the response empty?
-	 * 
+	 *
 	 * @param response
 	 * @param status
 	 * @return true if empty, false otherwise
@@ -391,7 +392,7 @@ public class GitHubClient {
 
 	/**
 	 * Get status line from response
-	 * 
+	 *
 	 * @param response
 	 * @return Non-null status line
 	 * @throws IOException
@@ -406,7 +407,7 @@ public class GitHubClient {
 	/**
 	 * Get response stream from uri. It is the responsibility of the calling
 	 * method to close the returned stream.
-	 * 
+	 *
 	 * @param request
 	 * @return stream
 	 * @throws IOException
@@ -422,7 +423,7 @@ public class GitHubClient {
 
 	/**
 	 * Get response from URI and bind to specified type
-	 * 
+	 *
 	 * @param request
 	 * @return response
 	 * @throws IOException
@@ -445,7 +446,7 @@ public class GitHubClient {
 
 	/**
 	 * Send json using specified method
-	 * 
+	 *
 	 * @param <V>
 	 * @param method
 	 * @param params
@@ -473,7 +474,7 @@ public class GitHubClient {
 
 	/**
 	 * Post data to uri
-	 * 
+	 *
 	 * @param <V>
 	 * @param uri
 	 * @param params
@@ -487,7 +488,7 @@ public class GitHubClient {
 
 	/**
 	 * Put data to uri
-	 * 
+	 *
 	 * @param <V>
 	 * @param uri
 	 * @param params
@@ -502,7 +503,7 @@ public class GitHubClient {
 	/**
 	 * Delete resource at URI. This method will throw an {@link IOException}
 	 * when the response status is not a 204 (No Content).
-	 * 
+	 *
 	 * @param uri
 	 * @throws IOException
 	 */

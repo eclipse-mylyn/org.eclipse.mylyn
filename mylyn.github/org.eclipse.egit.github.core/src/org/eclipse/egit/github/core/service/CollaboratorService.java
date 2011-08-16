@@ -10,6 +10,9 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COLLABORATORS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -18,12 +21,11 @@ import java.util.List;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Service for interacting with the collaborators on a GitHub repository
- * 
+ *
  * @see <a href="http://developer.github.com/v3/repos/collaborators/">GitHub
  *      collaborator API documentation</a>
  */
@@ -38,7 +40,7 @@ public class CollaboratorService extends GitHubService {
 
 	/**
 	 * Get collaborators for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null list of collaborators
 	 * @throws IOException
@@ -46,9 +48,9 @@ public class CollaboratorService extends GitHubService {
 	public List<User> getCollaborators(IRepositoryIdProvider repository)
 			throws IOException {
 		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COLLABORATORS);
+		uri.append(SEGMENT_COLLABORATORS);
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
@@ -58,7 +60,7 @@ public class CollaboratorService extends GitHubService {
 
 	/**
 	 * Create URI for updating collaborators
-	 * 
+	 *
 	 * @param repository
 	 * @param user
 	 * @return URI
@@ -67,19 +69,20 @@ public class CollaboratorService extends GitHubService {
 			String user) {
 		String id = getId(repository);
 		if (user == null)
-			throw new IllegalArgumentException("User cannot be null");
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
 		if (user.length() == 0)
-			throw new IllegalArgumentException("User cannot be empty");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COLLABORATORS);
+		uri.append(SEGMENT_COLLABORATORS);
 		uri.append('/').append(user);
 		return uri.toString();
 	}
 
 	/**
 	 * Is given user a collaborator on the given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param user
 	 * @return true if collaborator, false otherwise
@@ -92,7 +95,7 @@ public class CollaboratorService extends GitHubService {
 
 	/**
 	 * Add given user as a collaborator on the given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param user
 	 * @throws IOException
@@ -104,7 +107,7 @@ public class CollaboratorService extends GitHubService {
 
 	/**
 	 * Remove given user as a collaborator on the given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param user
 	 * @throws IOException

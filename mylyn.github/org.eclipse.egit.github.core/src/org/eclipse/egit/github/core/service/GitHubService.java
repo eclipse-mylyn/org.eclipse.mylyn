@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpStatus;
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -36,18 +38,19 @@ public abstract class GitHubService {
 
 	/**
 	 * Create service for client
-	 * 
+	 *
 	 * @param client
 	 */
 	public GitHubService(GitHubClient client) {
-		Assert.notNull("Client cannot be null", client); //$NON-NLS-1$
+		if (client == null)
+			throw new IllegalArgumentException("Client cannot be null"); //$NON-NLS-1$
 		this.client = client;
 	}
 
 	/**
 	 * Unified request creation method that all sub-classes should use so
 	 * overriding classes can extend and configure the default request.
-	 * 
+	 *
 	 * @return request
 	 */
 	protected GitHubRequest createRequest() {
@@ -57,18 +60,17 @@ public abstract class GitHubService {
 	/**
 	 * Unified paged request creation method that all sub-classes should use so
 	 * overriding classes can extend and configure the default request.
-	 * 
+	 *
 	 * @return request
 	 */
 	protected <V> PagedRequest<V> createPagedRequest() {
-		return createPagedRequest(PagedRequest.PAGE_FIRST,
-				PagedRequest.PAGE_SIZE);
+		return createPagedRequest(PAGE_FIRST, PAGE_SIZE);
 	}
 
 	/**
 	 * Unified paged request creation method that all sub-classes should use so
 	 * overriding classes can extend and configure the default request.
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 * @return request
@@ -80,7 +82,7 @@ public abstract class GitHubService {
 	/**
 	 * Unified page iterator creation method that all sub-classes should use so
 	 * overriding classes can extend and configure the default iterator.
-	 * 
+	 *
 	 * @param request
 	 * @return iterator
 	 */
@@ -91,7 +93,7 @@ public abstract class GitHubService {
 	/**
 	 * Get paged request by performing multiple requests until no more pages are
 	 * available or an exception occurs.
-	 * 
+	 *
 	 * @param <V>
 	 * @param request
 	 * @return list of all elements
@@ -104,7 +106,7 @@ public abstract class GitHubService {
 	/**
 	 * Get paged request by performing multiple requests until no more pages are
 	 * available or an exception occurs.
-	 * 
+	 *
 	 * @param <V>
 	 * @param iterator
 	 * @return list of all elements
@@ -123,7 +125,7 @@ public abstract class GitHubService {
 
 	/**
 	 * Check if the uri returns a non-404
-	 * 
+	 *
 	 * @param uri
 	 * @return true if no exception, false if 404
 	 * @throws IOException
@@ -133,7 +135,7 @@ public abstract class GitHubService {
 			client.get(createRequest().setUri(uri));
 			return true;
 		} catch (RequestException e) {
-			if (e.getStatus() == HttpStatus.SC_NOT_FOUND)
+			if (e.getStatus() == SC_NOT_FOUND)
 				return false;
 			throw e;
 		}
@@ -141,15 +143,19 @@ public abstract class GitHubService {
 
 	/**
 	 * Get id for repository
-	 * 
+	 *
 	 * @param provider
 	 * @return non-null id
 	 */
 	protected String getId(IRepositoryIdProvider provider) {
-		Assert.notNull("Repository provider cannot be null", provider); //$NON-NLS-1$
+		if (provider == null)
+			throw new IllegalArgumentException(
+					"Repository provider cannot be null"); //$NON-NLS-1$
 		final String id = provider.generateId();
-		Assert.notNull("Repository id cannot be null", id); //$NON-NLS-1$
-		Assert.notEmpty("Repository id cannot be empty", id); //$NON-NLS-1$
+		if (id == null)
+			throw new IllegalArgumentException("Repository id cannot be null"); //$NON-NLS-1$
+		if (id.length() == 0)
+			throw new IllegalArgumentException("Repository id cannot be empty"); //$NON-NLS-1$
 		return id;
 	}
 }

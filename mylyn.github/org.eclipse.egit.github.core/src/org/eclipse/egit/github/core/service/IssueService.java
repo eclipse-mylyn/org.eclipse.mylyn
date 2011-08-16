@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ISSUES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -18,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
@@ -26,15 +31,15 @@ import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Issue service class for listing, searching, and fetching {@link Issue}
  * objects using a {@link GitHubClient}.
- * 
- * @author Kevin Sawicki (kevin@github.com)
+ *
+ * @see <a href="http://developer.github.com/v3/issues">GitHub issue API
+ *      documentation</a>
  */
 public class IssueService extends GitHubService {
 
@@ -85,7 +90,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Create issue service
-	 * 
+	 *
 	 * @param client
 	 *            cannot be null
 	 */
@@ -95,7 +100,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Get issue
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param id
@@ -104,21 +109,26 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue getIssue(String user, String repository, String id)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Id cannot be null", id); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (id == null)
+			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(id);
-		GitHubRequest request = createRequest().setUri(uri)
-				.setType(Issue.class);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		request.setType(Issue.class);
 		return (Issue) client.get(request).getBody();
 	}
 
 	/**
 	 * Get an issue's comments
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param id
@@ -127,25 +137,28 @@ public class IssueService extends GitHubService {
 	 */
 	public List<Comment> getComments(String user, String repository, String id)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Id cannot be null", id); //$NON-NLS-1$
-		StringBuilder builder = new StringBuilder(
-				IGitHubConstants.SEGMENT_REPOS);
-		builder.append('/').append(user).append('/').append(repository);
-		builder.append(IGitHubConstants.SEGMENT_ISSUES);
-		builder.append('/').append(id);
-		builder.append(IGitHubConstants.SEGMENT_COMMENTS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (id == null)
+			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<Comment> request = createPagedRequest();
-		request.setUri(builder.toString()).setType(
-				new TypeToken<List<Comment>>() {
-				}.getType());
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Comment>>() {
+		}.getType());
 		return getAll(request);
 	}
 
 	/**
 	 * Get bulk issues request
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -156,11 +169,14 @@ public class IssueService extends GitHubService {
 	protected PagedRequest<Issue> createIssuesRequest(String user,
 			String repository, Map<String, String> filterData, int start,
 			int size) {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(SEGMENT_ISSUES);
 		PagedRequest<Issue> request = createPagedRequest(start, size);
 		request.setParams(filterData).setUri(uri);
 		request.setType(new TypeToken<List<Issue>>() {
@@ -170,7 +186,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Get a list of {@link Issue} objects that match the specified filter data
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -180,13 +196,13 @@ public class IssueService extends GitHubService {
 	public List<Issue> getIssues(String user, String repository,
 			Map<String, String> filterData) throws IOException {
 		PagedRequest<Issue> request = createIssuesRequest(user, repository,
-				filterData, PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+				filterData, PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Get page iterator over issues query
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -194,12 +210,12 @@ public class IssueService extends GitHubService {
 	 */
 	public PageIterator<Issue> pageIssues(String user, String repository,
 			Map<String, String> filterData) {
-		return pageIssues(user, repository, filterData, PagedRequest.PAGE_SIZE);
+		return pageIssues(user, repository, filterData, PAGE_SIZE);
 	}
 
 	/**
 	 * Get page iterator over issues query
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -208,13 +224,12 @@ public class IssueService extends GitHubService {
 	 */
 	public PageIterator<Issue> pageIssues(String user, String repository,
 			Map<String, String> filterData, int size) {
-		return pageIssues(user, repository, filterData,
-				PagedRequest.PAGE_FIRST, size);
+		return pageIssues(user, repository, filterData, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Get page iterator over issues query
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param filterData
@@ -233,7 +248,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Create issue map for issue
-	 * 
+	 *
 	 * @param issue
 	 * @param newIssue
 	 * @return map
@@ -270,7 +285,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Create issue
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param issue
@@ -279,11 +294,14 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue createIssue(String user, String repository, Issue issue)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(SEGMENT_ISSUES);
 
 		Map<Object, Object> params = createIssueMap(issue, true);
 		return client.post(uri.toString(), params, Issue.class);
@@ -291,7 +309,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Edit issue
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param issue
@@ -300,12 +318,16 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue editIssue(String user, String repository, Issue issue)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Issue cannot be null", issue); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (issue == null)
+			throw new IllegalArgumentException("Issue cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(issue.getNumber());
 
 		Map<Object, Object> params = createIssueMap(issue, false);
@@ -317,7 +339,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Create comment on specified issue id
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param issueId
@@ -327,14 +349,18 @@ public class IssueService extends GitHubService {
 	 */
 	public Comment createComment(String user, String repository,
 			String issueId, String comment) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Issue id cannot be null", issueId); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (issueId == null)
+			throw new IllegalArgumentException("Issue id cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
+		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(issueId);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_COMMENTS);
 
 		Map<String, String> params = new HashMap<String, String>(1, 1);
 		params.put(FIELD_BODY, comment);
@@ -344,7 +370,7 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Delete the issue comment with the given id
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param comment
@@ -352,13 +378,16 @@ public class IssueService extends GitHubService {
 	 */
 	public void deleteComment(String user, String repository, String comment)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Comment cannot be null", comment); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (comment == null)
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES);
-		uri.append(IGitHubConstants.SEGMENT_COMMENTS);
+		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
 		uri.append('/').append(comment);
 		client.delete(uri.toString());
 	}
