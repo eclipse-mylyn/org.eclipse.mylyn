@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Frank Becker
  */
 
-public abstract class BottomButtonWizardDialog extends WizardDialog {
+public abstract class EnhancedWizardDialog extends WizardDialog {
 
-	public BottomButtonWizardDialog(Shell parentShell, IWizard newWizard) {
+	public EnhancedWizardDialog(Shell parentShell, IWizard newWizard) {
 		super(parentShell, newWizard);
 	}
 

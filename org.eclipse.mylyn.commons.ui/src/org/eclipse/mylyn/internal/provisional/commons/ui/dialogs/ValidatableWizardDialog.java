@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Helen Bershadskaya
  */
-public class ValidatableWizardDialog extends BottomButtonWizardDialog {
+public class ValidatableWizardDialog extends EnhancedWizardDialog {
 
 	private static final String VALIDATE_BUTTON_KEY = "validate"; //$NON-NLS-1$
 
