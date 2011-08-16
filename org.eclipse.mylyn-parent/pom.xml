@@ -34,7 +34,7 @@
 	<promote.skip>true</promote.skip>
 
 	<dist.qualifier>'I'yyyyMMdd-HHmm</dist.qualifier>
-	<dist.repository>Mylyn for Eclipse 3.6, 3.7 and 3.8</dist.repository>
+	<dist.repository>${project.name}</dist.repository>
 	<dist.archive>${basedir}/target/drops</dist.archive>
 	<dist.site></dist.site>
 	<dist.pack200>${java.home}/bin</dist.pack200>
@@ -380,7 +380,6 @@
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
 		-->
 		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
-		<dist.archive>/home/data/httpd/download.eclipse.org/mylyn/drops</dist.archive>
 		<maven.test.error.ignore>true</maven.test.error.ignore>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
       </properties>
