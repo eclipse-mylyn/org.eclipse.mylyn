@@ -31,6 +31,7 @@ import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
+import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -57,6 +58,11 @@ public class IssueService extends GitHubService {
 	 * Filter by user mentioned in issue
 	 */
 	public static final String FILTER_MENTIONED = "mentioned"; //$NON-NLS-1$
+
+	/**
+	 * Filter by subscribed issues for user
+	 */
+	public static final String FILTER_SUBSCRIBED = "subscribed"; //$NON-NLS-1$
 
 	/**
 	 * Filter by issue's labels
@@ -89,6 +95,26 @@ public class IssueService extends GitHubService {
 	public static final String FIELD_TITLE = "title"; //$NON-NLS-1$
 
 	/**
+	 * Since date field
+	 */
+	public static final String FIELD_SINCE = "since"; //$NON-NLS-1$
+
+	/**
+	 * Sort direction of output
+	 */
+	public static final String FIELD_DIRECTION = "direction"; //$NON-NLS-1$
+
+	/**
+	 * Ascending direction sort order
+	 */
+	public static final String DIRECTION_ASCENDING = "asc"; //$NON-NLS-1$
+
+	/**
+	 * Descending direction sort order
+	 */
+	public static final String DIRECTION_DESCENDING = "desc"; //$NON-NLS-1$
+
+	/**
 	 * Create issue service
 	 *
 	 * @param client
@@ -96,6 +122,77 @@ public class IssueService extends GitHubService {
 	 */
 	public IssueService(GitHubClient client) {
 		super(client);
+	}
+
+	/**
+	 * Get issues for currently authenticated user
+	 *
+	 * @return non-null but possibly empty list of issues
+	 * @throws IOException
+	 */
+	public List<Issue> getIssues() throws IOException {
+		return getIssues(null);
+	}
+
+	/**
+	 * Get issues for currently authenticated user
+	 *
+	 * @param filterData
+	 * @return non-null but possibly empty list of issues
+	 * @throws IOException
+	 */
+	public List<Issue> getIssues(Map<String, String> filterData)
+			throws IOException {
+		return getAll(pageIssues(filterData));
+	}
+
+	/**
+	 * Page issues for currently authenticated user
+	 *
+	 * @return iterator over pages of issues
+	 */
+	public PageIterator<Issue> pageIssues() {
+		return pageIssues(null);
+	}
+
+	/**
+	 * Page issues for currently authenticated user
+	 *
+	 * @param filterData
+	 * @return iterator over pages of issues
+	 */
+	public PageIterator<Issue> pageIssues(Map<String, String> filterData) {
+		return pageIssues(filterData, PAGE_SIZE);
+	}
+
+	/**
+	 * Page issues for currently authenticated user
+	 *
+	 * @param filterData
+	 * @param size
+	 * @return iterator over pages of issues
+	 */
+	public PageIterator<Issue> pageIssues(Map<String, String> filterData,
+			int size) {
+		return pageIssues(filterData, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page issues for currently authenticated user
+	 *
+	 * @param filterData
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of issues
+	 */
+	public PageIterator<Issue> pageIssues(Map<String, String> filterData,
+			int start, int size) {
+		PagedRequest<Issue> request = createPagedRequest(start, size);
+		request.setParams(filterData);
+		request.setUri(IGitHubConstants.SEGMENT_ISSUES);
+		request.setType(new TypeToken<List<Issue>>() {
+		}.getType());
+		return createPageIterator(request);
 	}
 
 	/**
