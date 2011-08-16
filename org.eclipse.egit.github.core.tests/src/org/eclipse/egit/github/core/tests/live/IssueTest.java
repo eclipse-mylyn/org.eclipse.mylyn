@@ -104,4 +104,18 @@ public class IssueTest extends LiveTest {
 		assertEquals(pages, read);
 	}
 
+	/**
+	 * Testing page current user's issues
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void pageCurrentUsersIssues() throws Exception {
+		checkUser();
+		IssueService service = new IssueService(client);
+		Collection<Issue> issues = service.pageIssues(null, 1).next();
+		assertNotNull(issues);
+		assertEquals(1, issues.size());
+		assertNotNull(issues.toArray()[0]);
+	}
 }
