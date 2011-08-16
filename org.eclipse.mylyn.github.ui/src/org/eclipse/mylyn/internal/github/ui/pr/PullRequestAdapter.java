@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.github.ui.pr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.egit.github.core.PullRequestCommit;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestComposite;
 import org.eclipse.ui.model.WorkbenchAdapter;
 
@@ -31,9 +31,9 @@ public class PullRequestAdapter extends WorkbenchAdapter {
 	 */
 	public PullRequestAdapter(PullRequestComposite request) {
 		List<PullRequestCommitAdapter> prCommits = new ArrayList<PullRequestCommitAdapter>();
-		List<PullRequestCommit> requestCommits = request.getCommits();
+		List<RepositoryCommit> requestCommits = request.getCommits();
 		if (requestCommits != null)
-			for (PullRequestCommit commit : requestCommits)
+			for (RepositoryCommit commit : requestCommits)
 				prCommits.add(new PullRequestCommitAdapter(commit));
 		commits = prCommits.toArray(new PullRequestCommitAdapter[prCommits
 				.size()]);

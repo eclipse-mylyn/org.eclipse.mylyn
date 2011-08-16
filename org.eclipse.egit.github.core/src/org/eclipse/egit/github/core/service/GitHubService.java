@@ -90,7 +90,7 @@ public abstract class GitHubService {
 
 	/**
 	 * Get paged request by performing multiple requests until no more pages are
-	 * available or the request collector no longer accepts resource results.
+	 * available or an exception occurs.
 	 * 
 	 * @param <V>
 	 * @param request
@@ -98,8 +98,20 @@ public abstract class GitHubService {
 	 * @throws IOException
 	 */
 	protected <V> List<V> getAll(PagedRequest<V> request) throws IOException {
+		return getAll(createPageIterator(request));
+	}
+
+	/**
+	 * Get paged request by performing multiple requests until no more pages are
+	 * available or an exception occurs.
+	 * 
+	 * @param <V>
+	 * @param iterator
+	 * @return list of all elements
+	 * @throws IOException
+	 */
+	protected <V> List<V> getAll(PageIterator<V> iterator) throws IOException {
 		List<V> elements = new ArrayList<V>();
-		PageIterator<V> iterator = createPageIterator(request);
 		try {
 			while (iterator.hasNext())
 				elements.addAll(iterator.next());

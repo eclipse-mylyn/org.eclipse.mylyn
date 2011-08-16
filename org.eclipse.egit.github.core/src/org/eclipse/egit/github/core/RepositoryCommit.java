@@ -13,9 +13,11 @@ package org.eclipse.egit.github.core;
 import java.util.List;
 
 /**
- * Pull request commit model class.
+ * Repository commit model class. This class contains GitHub-specific
+ * information about the commit and also provides access to the raw Git
+ * {@link Commit} object.
  */
-public class PullRequestCommit {
+public class RepositoryCommit {
 
 	private Commit commit;
 
@@ -40,7 +42,7 @@ public class PullRequestCommit {
 	 * @param commit
 	 * @return this commit
 	 */
-	public PullRequestCommit setCommit(Commit commit) {
+	public RepositoryCommit setCommit(Commit commit) {
 		this.commit = commit;
 		return this;
 	}
@@ -56,7 +58,7 @@ public class PullRequestCommit {
 	 * @param parents
 	 * @return this commit
 	 */
-	public PullRequestCommit setParents(List<Commit> parents) {
+	public RepositoryCommit setParents(List<Commit> parents) {
 		this.parents = parents;
 		return this;
 	}
@@ -72,7 +74,7 @@ public class PullRequestCommit {
 	 * @param sha
 	 * @return this commit
 	 */
-	public PullRequestCommit setSha(String sha) {
+	public RepositoryCommit setSha(String sha) {
 		this.sha = sha;
 		return this;
 	}
@@ -88,7 +90,7 @@ public class PullRequestCommit {
 	 * @param url
 	 * @return this commit
 	 */
-	public PullRequestCommit setUrl(String url) {
+	public RepositoryCommit setUrl(String url) {
 		this.url = url;
 		return this;
 	}
@@ -104,7 +106,7 @@ public class PullRequestCommit {
 	 * @param author
 	 * @return this commit
 	 */
-	public PullRequestCommit setAuthor(User author) {
+	public RepositoryCommit setAuthor(User author) {
 		this.author = author;
 		return this;
 	}
@@ -120,7 +122,7 @@ public class PullRequestCommit {
 	 * @param committer
 	 * @return this commit
 	 */
-	public PullRequestCommit setCommitter(User committer) {
+	public RepositoryCommit setCommitter(User committer) {
 		this.committer = committer;
 		return this;
 	}

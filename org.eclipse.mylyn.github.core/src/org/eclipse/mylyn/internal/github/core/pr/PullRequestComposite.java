@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.github.core.pr;
 import java.util.List;
 
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.PullRequestCommit;
+import org.eclipse.egit.github.core.RepositoryCommit;
 
 /**
  * Pull request composite that includes commits
@@ -22,7 +22,7 @@ public class PullRequestComposite {
 
 	private PullRequest request;
 
-	private List<PullRequestCommit> commits;
+	private List<RepositoryCommit> commits;
 
 	/**
 	 * @return request
@@ -43,7 +43,7 @@ public class PullRequestComposite {
 	/**
 	 * @return commits
 	 */
-	public List<PullRequestCommit> getCommits() {
+	public List<RepositoryCommit> getCommits() {
 		return commits;
 	}
 
@@ -51,7 +51,7 @@ public class PullRequestComposite {
 	 * @param commits
 	 * @return this pull request composite
 	 */
-	public PullRequestComposite setCommits(List<PullRequestCommit> commits) {
+	public PullRequestComposite setCommits(List<RepositoryCommit> commits) {
 		this.commits = commits;
 		return this;
 	}

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.github.ui.pr;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 
-import org.eclipse.egit.github.core.PullRequestCommit;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.ui.UIIcons;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
@@ -27,12 +27,12 @@ public class PullRequestCommitAdapter extends WorkbenchAdapter {
 	private static final DateFormat DATE_FORMAT = DateFormat
 			.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
-	private final PullRequestCommit commit;
+	private final RepositoryCommit commit;
 
 	/**
 	 * @param commit
 	 */
-	public PullRequestCommitAdapter(PullRequestCommit commit) {
+	public PullRequestCommitAdapter(RepositoryCommit commit) {
 		this.commit = commit;
 	}
 
@@ -41,7 +41,7 @@ public class PullRequestCommitAdapter extends WorkbenchAdapter {
 	 * 
 	 * @return commit
 	 */
-	public PullRequestCommit getCommit() {
+	public RepositoryCommit getCommit() {
 		return commit;
 	}
 
