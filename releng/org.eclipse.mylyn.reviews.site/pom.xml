@@ -11,7 +11,7 @@
   </parent>
   <artifactId>org.eclipse.mylyn.reviews.site</artifactId>
   <packaging>eclipse-update-site</packaging>
-  <name>Mylyn Reviews for Eclipse 3.5, 3.6 and 3.7</name>
+  <name>Mylyn Reviews</name>
   <build>
     <plugins>
       <plugin>
