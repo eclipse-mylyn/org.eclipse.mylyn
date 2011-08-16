@@ -18,7 +18,6 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.auth.MalformedChallengeException;
 import org.apache.http.impl.auth.RFC2617Scheme;
 import org.apache.http.message.BasicHeader;
-import org.eclipse.egit.github.core.Assert;
 
 /**
  * OAuth2 authorization scheme. Sets an authorization header with a value of the
@@ -48,7 +47,8 @@ public class OAuth2Scheme extends RFC2617Scheme {
 
 	public Header authenticate(Credentials credentials, HttpRequest request)
 			throws AuthenticationException {
-		Assert.notNull(credentials);
+		if (credentials == null)
+			throw new IllegalArgumentException("Credentials cannot be null"); //$NON-NLS-1$
 		return new BasicHeader(HttpHeaders.AUTHORIZATION, credentials
 				.getUserPrincipal().getName() + ' ' + credentials.getPassword());
 	}

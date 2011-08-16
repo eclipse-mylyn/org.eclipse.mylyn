@@ -10,6 +10,14 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BLOBS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_GIT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REFS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TREES;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -48,7 +56,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get blob for given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return blob
@@ -59,11 +67,12 @@ public class DataService extends GitHubService {
 		final String id = getId(repository);
 		if (sha == null)
 			throw new IllegalArgumentException("SHA-1 cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_BLOBS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_BLOBS);
 		uri.append('/').append(sha);
 		GitHubRequest request = createRequest();
 		request.setType(Blob.class);
@@ -73,7 +82,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Create blob with given content
-	 * 
+	 *
 	 * @param repository
 	 * @param blob
 	 * @return SHA-1 of created blob
@@ -84,11 +93,12 @@ public class DataService extends GitHubService {
 		final String id = getId(repository);
 		if (blob == null)
 			throw new IllegalArgumentException("Blob cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_BLOBS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_BLOBS);
 		ShaResource created = client.post(uri.toString(), blob,
 				ShaResource.class);
 		return created.getSha();
@@ -96,7 +106,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get tree with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return tree
@@ -109,7 +119,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get tree with given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @param recursive
@@ -121,23 +131,24 @@ public class DataService extends GitHubService {
 		final String id = getId(repository);
 		if (sha == null)
 			throw new IllegalArgumentException("SHA-1 cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_TREES);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_TREES);
 		uri.append('/').append(sha);
 		GitHubRequest request = createRequest();
 		request.setType(Tree.class);
 		request.setUri(uri);
 		if (recursive)
-			request.setParams(Collections.singletonMap("recursive", "1"));
+			request.setParams(Collections.singletonMap("recursive", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 		return (Tree) client.get(request).getBody();
 	}
 
 	/**
 	 * Create tree
-	 * 
+	 *
 	 * @param repository
 	 * @param entries
 	 * @return created tree
@@ -150,7 +161,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Create tree
-	 * 
+	 *
 	 * @param repository
 	 * @param entries
 	 * @param baseTree
@@ -162,24 +173,25 @@ public class DataService extends GitHubService {
 		final String id = getId(repository);
 		if (entries == null)
 			throw new IllegalArgumentException("Tree cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_TREES);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_TREES);
 		GitHubRequest request = createRequest();
 		request.setType(Tree.class);
 		request.setUri(uri);
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tree", entries.toArray());
+		params.put("tree", entries.toArray()); //$NON-NLS-1$
 		if (baseTree != null)
-			params.put("base_tree", baseTree);
+			params.put("base_tree", baseTree); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Tree.class);
 	}
 
 	/**
 	 * Get reference with given name
-	 * 
+	 *
 	 * @param repository
 	 * @param name
 	 * @return reference
@@ -192,10 +204,11 @@ public class DataService extends GitHubService {
 			throw new IllegalArgumentException("Name cannot be null"); //$NON-NLS-1$
 		if (name.length() == 0)
 			throw new IllegalArgumentException("Name cannot be empty"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
+		uri.append(SEGMENT_GIT);
 		if (!name.startsWith("refs/")) //$NON-NLS-1$
 			uri.append(IGitHubConstants.SEGMENT_REFS);
 		uri.append('/').append(name);
@@ -207,7 +220,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get references for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of references
 	 * @throws IOException
@@ -216,10 +229,10 @@ public class DataService extends GitHubService {
 			throws IOException {
 		final String id = getId(repository);
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_REFS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_REFS);
 		PagedRequest<Reference> request = createPagedRequest();
 		request.setType(new TypeToken<List<Reference>>() {
 		}.getType());
@@ -229,7 +242,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Create reference
-	 * 
+	 *
 	 * @param repository
 	 * @param reference
 	 * @throws IOException
@@ -248,11 +261,12 @@ public class DataService extends GitHubService {
 		String ref = reference.getRef();
 		if (ref == null)
 			throw new IllegalArgumentException("Ref cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_REFS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_REFS);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ref", ref); //$NON-NLS-1$
 		params.put("sha", sha); //$NON-NLS-1$
@@ -261,7 +275,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Edit reference
-	 * 
+	 *
 	 * @param repository
 	 * @param reference
 	 * @return updated reference
@@ -274,7 +288,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Edit reference
-	 * 
+	 *
 	 * @param repository
 	 * @param reference
 	 * @param force
@@ -292,12 +306,13 @@ public class DataService extends GitHubService {
 		String ref = reference.getRef();
 		if (ref == null)
 			throw new IllegalArgumentException("Ref cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
+		uri.append(SEGMENT_GIT);
 		if (!ref.startsWith("refs/")) //$NON-NLS-1$
-			uri.append(IGitHubConstants.SEGMENT_REFS);
+			uri.append(SEGMENT_REFS);
 		uri.append('/').append(ref);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("sha", object.getSha()); //$NON-NLS-1$
@@ -308,7 +323,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get commit for given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return commit
@@ -321,11 +336,12 @@ public class DataService extends GitHubService {
 			throw new IllegalArgumentException("SHA-1 cannot be null"); //$NON-NLS-1$
 		if (sha.length() == 0)
 			throw new IllegalArgumentException("SHA-1 cannot be empty"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
 		GitHubRequest request = createRequest();
 		request.setType(Commit.class);
@@ -335,7 +351,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Create commit in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param commit
 	 * @return created commit
@@ -346,11 +362,12 @@ public class DataService extends GitHubService {
 		final String id = getId(repository);
 		if (commit == null)
 			throw new IllegalArgumentException("Commit cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_COMMITS);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("author", commit.getAuthor()); //$NON-NLS-1$
 		params.put("committer", commit.getCommitter()); //$NON-NLS-1$
@@ -370,7 +387,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Get tag for given SHA-1
-	 * 
+	 *
 	 * @param repository
 	 * @param sha
 	 * @return tag
@@ -383,11 +400,12 @@ public class DataService extends GitHubService {
 			throw new IllegalArgumentException("SHA-1 cannot be null"); //$NON-NLS-1$
 		if (sha.length() == 0)
 			throw new IllegalArgumentException("SHA-1 cannot be empty"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_TAGS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_TAGS);
 		uri.append('/').append(sha);
 		GitHubRequest request = createRequest();
 		request.setType(Tag.class);
@@ -397,7 +415,7 @@ public class DataService extends GitHubService {
 
 	/**
 	 * Create tag object in given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param tag
 	 * @return created tag
@@ -407,21 +425,22 @@ public class DataService extends GitHubService {
 			throws IOException {
 		final String id = getId(repository);
 		if (tag == null)
-			throw new IllegalArgumentException("Tag cannot be null");
+			throw new IllegalArgumentException("Tag cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_REPOS);
+		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_GIT);
-		uri.append(IGitHubConstants.SEGMENT_TAGS);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_TAGS);
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tag", tag.getTag());
-		params.put("message", tag.getMessage());
+		params.put("tag", tag.getTag()); //$NON-NLS-1$
+		params.put("message", tag.getMessage()); //$NON-NLS-1$
 		TypedResource object = tag.getObject();
 		if (object != null) {
-			params.put("object", object.getSha());
-			params.put("type", object.getType());
+			params.put("object", object.getSha()); //$NON-NLS-1$
+			params.put("type", object.getType()); //$NON-NLS-1$
 		}
-		params.put("tagger", tag.getTagger());
+		params.put("tagger", tag.getTagger()); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Tag.class);
 	}
 }

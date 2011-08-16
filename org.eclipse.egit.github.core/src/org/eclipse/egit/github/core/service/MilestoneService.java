@@ -10,17 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MILESTONES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -31,7 +32,7 @@ public class MilestoneService extends GitHubService {
 
 	/**
 	 * Create milestone service
-	 * 
+	 *
 	 * @param client
 	 *            cannot be null
 	 */
@@ -41,7 +42,7 @@ public class MilestoneService extends GitHubService {
 
 	/**
 	 * Get milestones
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param state
@@ -50,11 +51,14 @@ public class MilestoneService extends GitHubService {
 	 */
 	public List<Milestone> getMilestones(String user, String repository,
 			String state) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
+		uri.append(SEGMENT_MILESTONES);
 		PagedRequest<Milestone> request = createPagedRequest();
 		if (state != null)
 			request.setParams(Collections.singletonMap(
@@ -66,7 +70,7 @@ public class MilestoneService extends GitHubService {
 
 	/**
 	 * Create a milestone
-	 * 
+	 *
 	 * @param user
 	 *            must be non-null
 	 * @param repository
@@ -78,18 +82,22 @@ public class MilestoneService extends GitHubService {
 	 */
 	public Milestone createMilestone(String user, String repository,
 			Milestone milestone) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Milestone cannot be null", milestone); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (milestone == null)
+			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
+		uri.append(SEGMENT_MILESTONES);
 		return client.post(uri.toString(), milestone, Milestone.class);
 	}
 
 	/**
 	 * Get a milestone
-	 * 
+	 *
 	 * @param user
 	 *            must be non-null
 	 * @param repository
@@ -101,21 +109,26 @@ public class MilestoneService extends GitHubService {
 	 */
 	public Milestone getMilestone(String user, String repository, String number)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Milestone cannot be null", number); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (number == null)
+			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_MILESTONES).append('/')
-				.append(number);
-		GitHubRequest request = new GitHubRequest().setUri(uri);
+		uri.append(SEGMENT_MILESTONES);
+		uri.append('/').append(number);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
 		request.setType(Milestone.class);
 		return (Milestone) client.get(request).getBody();
 	}
 
 	/**
 	 * Delete a milestone with the given id from the given repository
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param milestone
@@ -123,14 +136,17 @@ public class MilestoneService extends GitHubService {
 	 */
 	public void deleteMilestone(String user, String repository, String milestone)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Milestone cannot be null", milestone); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (milestone == null)
+			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_MILESTONES);
+		uri.append(SEGMENT_MILESTONES);
 		uri.append('/').append(milestone);
 		client.delete(uri.toString());
 	}
-
 }

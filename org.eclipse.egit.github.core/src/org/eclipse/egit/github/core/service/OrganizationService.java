@@ -10,16 +10,22 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MEMBERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_PUBLIC_MEMBERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -36,7 +42,7 @@ public class OrganizationService extends GitHubService {
 
 	/**
 	 * Create org request
-	 * 
+	 *
 	 * @param user
 	 * @param start
 	 * @param size
@@ -46,13 +52,12 @@ public class OrganizationService extends GitHubService {
 			int size) {
 		PagedRequest<User> request = new PagedRequest<User>(start, size);
 		if (user == null)
-			request.setUri(IGitHubConstants.SEGMENT_USER
-					+ IGitHubConstants.SEGMENT_ORGS);
+			request.setUri(SEGMENT_USER + SEGMENT_ORGS);
 		else {
 			StringBuilder uri = new StringBuilder();
-			uri.append(IGitHubConstants.SEGMENT_USERS);
+			uri.append(SEGMENT_USERS);
 			uri.append('/').append(user);
-			uri.append(IGitHubConstants.SEGMENT_ORGS);
+			uri.append(SEGMENT_ORGS);
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
@@ -62,43 +67,47 @@ public class OrganizationService extends GitHubService {
 
 	/**
 	 * Get organizations that the currently authenticated user is a member of
-	 * 
+	 *
 	 * @return list of organizations
 	 * @throws IOException
 	 */
 	public List<User> getOrganizations() throws IOException {
-		PagedRequest<User> request = createOrgRequest(null,
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		PagedRequest<User> request = createOrgRequest(null, PAGE_FIRST,
+				PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Get organizations that the given user is a member of
-	 * 
+	 *
 	 * @param user
 	 * @return list of organizations
 	 * @throws IOException
 	 */
 	public List<User> getOrganizations(String user) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		PagedRequest<User> request = createOrgRequest(user,
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		PagedRequest<User> request = createOrgRequest(user, PAGE_FIRST,
+				PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Get organization with the given name
-	 * 
+	 *
 	 * @param name
 	 * @return organization
 	 * @throws IOException
 	 */
 	public User getOrganization(String name) throws IOException {
-		Assert.notNull("Name cannot be null", name); //$NON-NLS-1$
+		if (name == null)
+			throw new IllegalArgumentException("Name cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_ORGS);
+		uri.append(SEGMENT_ORGS);
 		uri.append('/').append(name);
-		GitHubRequest request = new GitHubRequest();
+		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(User.class);
 		return (User) client.get(request).getBody();
@@ -106,33 +115,39 @@ public class OrganizationService extends GitHubService {
 
 	/**
 	 * Edit given organization
-	 * 
+	 *
 	 * @param organization
 	 * @return edited user
 	 * @throws IOException
 	 */
 	public User editOrganization(User organization) throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
 		final String name = organization.getLogin();
-		Assert.notNull("Organization login cannot be null", name); //$NON-NLS-1$
+		if (name == null)
+			throw new IllegalArgumentException(
+					"Organization login cannot be null"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder();
-		uri.append(IGitHubConstants.SEGMENT_ORGS);
+		uri.append(SEGMENT_ORGS);
 		uri.append('/').append(name);
 		return client.post(uri.toString(), organization, User.class);
 	}
 
 	/**
 	 * Get members of organization
-	 * 
+	 *
 	 * @param organization
 	 * @return list of all organization members
 	 * @throws IOException
 	 */
 	public List<User> getMembers(String organization) throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_MEMBERS);
+		uri.append(SEGMENT_MEMBERS);
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
@@ -142,16 +157,18 @@ public class OrganizationService extends GitHubService {
 
 	/**
 	 * Get public members of organization
-	 * 
+	 *
 	 * @param organization
 	 * @return list of public organization members
 	 * @throws IOException
 	 */
 	public List<User> getPublicMembers(String organization) throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append(SEGMENT_PUBLIC_MEMBERS);
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
@@ -161,7 +178,7 @@ public class OrganizationService extends GitHubService {
 
 	/**
 	 * Check if the given user is a member of the given organization
-	 * 
+	 *
 	 * @param organization
 	 * @param user
 	 * @return true if member, false if not member
@@ -169,18 +186,21 @@ public class OrganizationService extends GitHubService {
 	 */
 	public boolean isMember(String organization, String user)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_MEMBERS);
+		uri.append(SEGMENT_MEMBERS);
 		uri.append('/').append(user);
 		return check(uri.toString());
 	}
 
 	/**
 	 * Check if the given user is a public member of the given organization
-	 * 
+	 *
 	 * @param organization
 	 * @param user
 	 * @return true if public member, false if not public member
@@ -188,65 +208,77 @@ public class OrganizationService extends GitHubService {
 	 */
 	public boolean isPublicMember(String organization, String user)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append(SEGMENT_PUBLIC_MEMBERS);
 		uri.append('/').append(user);
 		return check(uri.toString());
 	}
 
 	/**
 	 * Publicize membership of given user in given organization
-	 * 
+	 *
 	 * @param organization
 	 * @param user
 	 * @throws IOException
 	 */
 	public void showMembership(String organization, String user)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append(SEGMENT_PUBLIC_MEMBERS);
 		uri.append('/').append(user);
 		client.put(uri.toString(), null, null);
 	}
 
 	/**
 	 * Conceal membership of given user in given organization
-	 * 
+	 *
 	 * @param organization
 	 * @param user
 	 * @throws IOException
 	 */
 	public void hideMembership(String organization, String user)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_PUBLIC_MEMBERS);
+		uri.append(SEGMENT_PUBLIC_MEMBERS);
 		uri.append('/').append(user);
 		client.delete(uri.toString());
 	}
 
 	/**
 	 * Remove the given member from the given organization
-	 * 
+	 *
 	 * @param organization
 	 * @param user
 	 * @throws IOException
 	 */
 	public void removeMember(String organization, String user)
 			throws IOException {
-		Assert.notNull("Organization cannot be null", organization); //$NON-NLS-1$
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_ORGS);
+		if (organization == null)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_MEMBERS);
+		uri.append(SEGMENT_MEMBERS);
 		uri.append('/').append(user);
 		client.delete(uri.toString());
 	}

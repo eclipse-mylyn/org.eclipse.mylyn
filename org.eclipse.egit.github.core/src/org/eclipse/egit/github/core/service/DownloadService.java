@@ -10,6 +10,11 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_DOWNLOADS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -28,13 +33,11 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Download;
 import org.eclipse.egit.github.core.DownloadResource;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -110,7 +113,7 @@ public class DownloadService extends GitHubService {
 
 	/**
 	 * Get download metadata for given repository and id
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @return download
@@ -119,9 +122,9 @@ public class DownloadService extends GitHubService {
 	public Download getDownload(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_DOWNLOADS);
+		uri.append(SEGMENT_DOWNLOADS);
 		uri.append('/').append(id);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
@@ -131,7 +134,7 @@ public class DownloadService extends GitHubService {
 
 	/**
 	 * Create paged downloads request
-	 * 
+	 *
 	 * @param repository
 	 * @param start
 	 * @param size
@@ -140,9 +143,9 @@ public class DownloadService extends GitHubService {
 	protected PagedRequest<Download> createDownloadsRequest(
 			IRepositoryIdProvider repository, int start, int size) {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_DOWNLOADS);
+		uri.append(SEGMENT_DOWNLOADS);
 		PagedRequest<Download> request = createPagedRequest(start, size);
 		request.setType(new TypeToken<List<Download>>() {
 		}.getType());
@@ -152,7 +155,7 @@ public class DownloadService extends GitHubService {
 
 	/**
 	 * Get metadata for all downloads for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of download metadata
 	 * @throws IOException
@@ -160,35 +163,35 @@ public class DownloadService extends GitHubService {
 	public List<Download> getDownloads(IRepositoryIdProvider repository)
 			throws IOException {
 		PagedRequest<Download> request = createDownloadsRequest(repository,
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+				PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Page metadata for downloads for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @return iterator over pages of downloads
 	 */
 	public PageIterator<Download> pageDownloads(IRepositoryIdProvider repository) {
-		return pageDownloads(repository, PagedRequest.PAGE_SIZE);
+		return pageDownloads(repository, PAGE_SIZE);
 	}
 
 	/**
 	 * Page downloads for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param size
 	 * @return iterator over pages of downloads
 	 */
 	public PageIterator<Download> pageDownloads(
 			IRepositoryIdProvider repository, int size) {
-		return pageDownloads(repository, PagedRequest.PAGE_FIRST, size);
+		return pageDownloads(repository, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page downloads for given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param start
 	 * @param size
@@ -203,7 +206,7 @@ public class DownloadService extends GitHubService {
 
 	/**
 	 * Delete download with given id from given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @throws IOException
@@ -211,16 +214,16 @@ public class DownloadService extends GitHubService {
 	public void deleteDownload(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_DOWNLOADS);
+		uri.append(SEGMENT_DOWNLOADS);
 		uri.append('/').append(id);
 		client.delete(uri.toString());
 	}
 
 	/**
 	 * Create a new resource for download associated with the given repository
-	 * 
+	 *
 	 * @param repository
 	 * @param download
 	 * @return download resource
@@ -229,10 +232,12 @@ public class DownloadService extends GitHubService {
 	public DownloadResource createResource(IRepositoryIdProvider repository,
 			Download download) throws IOException {
 		final String repoId = getId(repository);
-		Assert.notNull("Download cannot be null", download);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (download == null)
+			throw new IllegalArgumentException("Download cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_DOWNLOADS);
+		uri.append(SEGMENT_DOWNLOADS);
 		return (DownloadResource) client.post(uri.toString(), download,
 				DownloadResource.class);
 	}
@@ -240,7 +245,7 @@ public class DownloadService extends GitHubService {
 	/**
 	 * Upload a resource to be available as the download described by the given
 	 * resource.
-	 * 
+	 *
 	 * @param resource
 	 * @param content
 	 * @param size
@@ -248,7 +253,10 @@ public class DownloadService extends GitHubService {
 	 */
 	public void uploadResource(DownloadResource resource, InputStream content,
 			long size) throws IOException {
-		Assert.notNull("Download resource cannot be null", resource);
+		if (resource == null)
+			throw new IllegalArgumentException(
+					"Download resource cannot be null"); //$NON-NLS-1$
+
 		DefaultHttpClient client = new DefaultHttpClient();
 		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
 				.getConnectionManager().getSchemeRegistry(), ProxySelector
@@ -283,7 +291,7 @@ public class DownloadService extends GitHubService {
 	 * {@link #createResource(IRepositoryIdProvider, Download)} followed by a
 	 * {@link #uploadResource(DownloadResource, InputStream, long)} with the
 	 * results.
-	 * 
+	 *
 	 * @param repository
 	 * @param download
 	 *            metadata about the download
@@ -302,7 +310,7 @@ public class DownloadService extends GitHubService {
 
 	/**
 	 * Create download from content of given file.
-	 * 
+	 *
 	 * @see #createDownload(IRepositoryIdProvider, Download, InputStream, long)
 	 * @param repository
 	 * @param download
@@ -313,7 +321,9 @@ public class DownloadService extends GitHubService {
 	 */
 	public void createDownload(IRepositoryIdProvider repository,
 			Download download, File file) throws IOException {
-		Assert.notNull("File cannot be null", file);
+		if (file == null)
+			throw new IllegalArgumentException("File cannot be null"); //$NON-NLS-1$
+
 		createDownload(repository, download, new FileInputStream(file),
 				file.length());
 	}

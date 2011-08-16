@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * GitHub Repository class.
@@ -23,7 +23,7 @@ public class SearchRepository implements IRepositoryIdProvider {
 
 	/**
 	 * Create repository from url.
-	 * 
+	 *
 	 * @see SearchRepository#createFromId(String)
 	 * @param url
 	 * @return repository or null if parsing fails
@@ -36,7 +36,7 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * Create repository from id. The id is split on the '/' character and the
 	 * last two non-empty segments are interpreted to be the repository owner
 	 * and name.
-	 * 
+	 *
 	 * @param id
 	 * @return repository
 	 */
@@ -61,7 +61,7 @@ public class SearchRepository implements IRepositoryIdProvider {
 
 	/**
 	 * Create from string url
-	 * 
+	 *
 	 * @see SearchRepository#createFromUrl(URL)
 	 * @param url
 	 * @return repository or null if it could not be parsed from url path
@@ -98,15 +98,19 @@ public class SearchRepository implements IRepositoryIdProvider {
 
 	/**
 	 * Create repository with owner and name
-	 * 
+	 *
 	 * @param owner
 	 * @param name
 	 */
 	public SearchRepository(String owner, String name) {
-		Assert.notNull("Owner cannot be null", owner); //$NON-NLS-1$
-		Assert.notEmpty("Owner cannot be empty", owner); //$NON-NLS-1$
-		Assert.notNull("Name cannot be null", name); //$NON-NLS-1$
-		Assert.notEmpty("Name cannot be empty", name); //$NON-NLS-1$
+		if (owner == null)
+			throw new IllegalArgumentException("Owner cannot be null");
+		if (owner.length() == 0)
+			throw new IllegalArgumentException("Owner cannot be empty");
+		if (name == null)
+			throw new IllegalArgumentException("Name cannot be null");
+		if (name.length() == 0)
+			throw new IllegalArgumentException("Name cannot be empty");
 
 		this.owner = owner;
 		this.name = name;
@@ -147,7 +151,7 @@ public class SearchRepository implements IRepositoryIdProvider {
 
 	/**
 	 * Get unique identifier for repository
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {

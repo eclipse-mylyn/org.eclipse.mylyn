@@ -4,11 +4,18 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
+
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FILES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_PULLS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -18,12 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.PullRequestMarker;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -71,7 +77,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Create request for single pull request
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @return request
@@ -80,9 +86,9 @@ public class PullRequestService extends GitHubService {
 	public PullRequest getPullRequest(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(id);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
@@ -92,7 +98,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Create paged request for fetching pull requests
-	 * 
+	 *
 	 * @param provider
 	 * @param state
 	 * @param start
@@ -102,8 +108,10 @@ public class PullRequestService extends GitHubService {
 	protected PagedRequest<PullRequest> createdPullsRequest(
 			IRepositoryIdProvider provider, String state, int start, int size) {
 		final String id = getId(provider);
-		Assert.notNull("State cannot be null", state); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (state == null)
+			throw new IllegalArgumentException("State cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		PagedRequest<PullRequest> request = createPagedRequest();
@@ -117,7 +125,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Get pull requests from repository matching state
-	 * 
+	 *
 	 * @param repository
 	 * @param state
 	 * @return list of pull requests
@@ -126,25 +134,25 @@ public class PullRequestService extends GitHubService {
 	public List<PullRequest> getPullRequests(IRepositoryIdProvider repository,
 			String state) throws IOException {
 		PagedRequest<PullRequest> request = createdPullsRequest(repository,
-				state, PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+				state, PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
 	 * Page pull requests with given state
-	 * 
+	 *
 	 * @param repository
 	 * @param state
 	 * @return iterator over pages of pull requests
 	 */
 	public PageIterator<PullRequest> pagePullRequests(
 			IRepositoryIdProvider repository, String state) {
-		return pagePullRequests(repository, state, PagedRequest.PAGE_SIZE);
+		return pagePullRequests(repository, state, PAGE_SIZE);
 	}
 
 	/**
 	 * Page pull requests with given state
-	 * 
+	 *
 	 * @param repository
 	 * @param state
 	 * @param size
@@ -152,13 +160,12 @@ public class PullRequestService extends GitHubService {
 	 */
 	public PageIterator<PullRequest> pagePullRequests(
 			IRepositoryIdProvider repository, String state, int size) {
-		return pagePullRequests(repository, state, PagedRequest.PAGE_FIRST,
-				size);
+		return pagePullRequests(repository, state, PAGE_FIRST, size);
 	}
 
 	/**
 	 * Page pull requests with given state
-	 * 
+	 *
 	 * @param repository
 	 * @param state
 	 * @param start
@@ -211,7 +218,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Create pull request
-	 * 
+	 *
 	 * @param repository
 	 * @param request
 	 * @return created pull request
@@ -221,17 +228,18 @@ public class PullRequestService extends GitHubService {
 			PullRequest request) throws IOException {
 		String id = getId(repository);
 		if (request == null)
-			throw new IllegalArgumentException("Request cannot be null");
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+			throw new IllegalArgumentException("Request cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		Map<String, String> params = createPrMap(request);
 		return client.post(uri.toString(), params, PullRequest.class);
 	}
 
 	/**
 	 * Edit pull request
-	 * 
+	 *
 	 * @param repository
 	 * @param request
 	 * @return edited pull request
@@ -240,10 +248,12 @@ public class PullRequestService extends GitHubService {
 	public PullRequest editPullRequest(IRepositoryIdProvider repository,
 			PullRequest request) throws IOException {
 		String id = getId(repository);
-		Assert.notNull("Request cannot be null", request);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (request == null)
+			throw new IllegalArgumentException("Request cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(request.getNumber());
 		Map<String, String> params = editPrMap(request);
 		return client.post(uri.toString(), params, PullRequest.class);
@@ -251,7 +261,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Get all commits associated with given pull request id
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @return list of commits
@@ -260,11 +270,11 @@ public class PullRequestService extends GitHubService {
 	public List<RepositoryCommit> getCommits(IRepositoryIdProvider repository,
 			int id) throws IOException {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_COMMITS);
+		uri.append(SEGMENT_COMMITS);
 		PagedRequest<RepositoryCommit> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryCommit>>() {
@@ -274,7 +284,7 @@ public class PullRequestService extends GitHubService {
 
 	/**
 	 * Get all changed files associated with given pull request id
-	 * 
+	 *
 	 * @param repository
 	 * @param id
 	 * @return list of commit files
@@ -283,11 +293,11 @@ public class PullRequestService extends GitHubService {
 	public List<CommitFile> getFiles(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		final String repoId = getId(repository);
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_FILES);
+		uri.append(SEGMENT_FILES);
 		PagedRequest<CommitFile> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitFile>>() {

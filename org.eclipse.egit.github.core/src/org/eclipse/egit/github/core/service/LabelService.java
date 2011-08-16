@@ -10,16 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ISSUES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LABELS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -30,7 +32,7 @@ public class LabelService extends GitHubService {
 
 	/**
 	 * Create label service for client
-	 * 
+	 *
 	 * @param client
 	 */
 	public LabelService(GitHubClient client) {
@@ -39,7 +41,7 @@ public class LabelService extends GitHubService {
 
 	/**
 	 * Get labels
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @return list of labels
@@ -47,20 +49,24 @@ public class LabelService extends GitHubService {
 	 */
 	public List<Label> getLabels(String user, String repository)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		uri.append(SEGMENT_LABELS);
 		PagedRequest<Label> request = createPagedRequest();
-		request.setUri(uri).setType(new TypeToken<List<Label>>() {
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Label>>() {
 		}.getType());
 		return getAll(request);
 	}
 
 	/**
 	 * Set the labels for an issue
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param issueId
@@ -70,22 +76,26 @@ public class LabelService extends GitHubService {
 	 */
 	public List<Label> setLabels(String user, String repository,
 			String issueId, List<Label> labels) throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Issue id cannot be null", issueId); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_ISSUES).append('/').append(issueId);
-		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (issueId == null)
+			throw new IllegalArgumentException("Issue id cannot be null"); //$NON-NLS-1$
 
-		return this.client.put(uri.toString(), labels,
-				new TypeToken<List<Label>>() {
-				}.getType());
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES);
+		uri.append('/').append(issueId);
+		uri.append(SEGMENT_LABELS);
+
+		return client.put(uri.toString(), labels, new TypeToken<List<Label>>() {
+		}.getType());
 	}
 
 	/**
 	 * Create label
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param label
@@ -94,18 +104,22 @@ public class LabelService extends GitHubService {
 	 */
 	public Label createLabel(String user, String repository, Label label)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Label cannot be null", label); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (label == null)
+			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS);
-		return this.client.post(uri.toString(), label, Label.class);
+		uri.append(SEGMENT_LABELS);
+		return client.post(uri.toString(), label, Label.class);
 	}
 
 	/**
 	 * Get label with given name
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param label
@@ -114,21 +128,26 @@ public class LabelService extends GitHubService {
 	 */
 	public Label getLabel(String user, String repository, String label)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Label cannot be null", label); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (label == null)
+			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		uri.append(SEGMENT_LABELS);
 		uri.append('/').append(label);
-		GitHubRequest request = createRequest().setUri(uri)
-				.setType(Label.class);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		request.setType(Label.class);
 		return (Label) client.get(request).getBody();
 	}
 
 	/**
 	 * Delete a label with the given id from the given repository
-	 * 
+	 *
 	 * @param user
 	 * @param repository
 	 * @param label
@@ -136,14 +155,17 @@ public class LabelService extends GitHubService {
 	 */
 	public void deleteLabel(String user, String repository, String label)
 			throws IOException {
-		Assert.notNull("User cannot be null", user); //$NON-NLS-1$
-		Assert.notNull("Repository cannot be null", repository); //$NON-NLS-1$
-		Assert.notNull("Label cannot be null", label); //$NON-NLS-1$
-		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (label == null)
+			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
-		uri.append(IGitHubConstants.SEGMENT_LABELS);
+		uri.append(SEGMENT_LABELS);
 		uri.append('/').append(label);
 		client.delete(uri.toString());
 	}
-
 }
