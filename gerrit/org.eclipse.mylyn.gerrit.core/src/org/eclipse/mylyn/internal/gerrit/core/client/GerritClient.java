@@ -9,6 +9,7 @@
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
  *      Sascha Scholz (SAP) - improvements
+ *      GitHub, Inc. - fixes for bug 354753
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -600,7 +601,10 @@ public class GerritClient {
 		return sl.getChanges();
 	}
 
-	private Account getAccount(IProgressMonitor monitor) throws GerritException {
+	/**
+	 * Returns the (possibly cached) account for this client.
+	 */
+	public Account getAccount(IProgressMonitor monitor) throws GerritException {
 //		LoginResult result = execute(monitor, new GerritOperation<LoginResult>() {
 //			@Override
 //			public void execute(IProgressMonitor monitor) throws GerritException {

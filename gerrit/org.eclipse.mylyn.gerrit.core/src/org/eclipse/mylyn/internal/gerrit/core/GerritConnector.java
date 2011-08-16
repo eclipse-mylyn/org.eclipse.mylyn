@@ -8,6 +8,7 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      GitHub, Inc. - fixes for bug 354753
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
@@ -71,6 +72,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	public static final String CONNECTOR_LABEL = "Gerrit Code Review"; //$NON-NLS-1$
 
 	public static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
+
+	public static final String KEY_REPOSITORY_ACCOUNT_ID = CONNECTOR_KIND + ".accountId"; //$NON-NLS-1$
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 

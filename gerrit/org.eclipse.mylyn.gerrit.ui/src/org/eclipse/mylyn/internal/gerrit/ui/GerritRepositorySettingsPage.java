@@ -8,6 +8,7 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      GitHub, Inc. - fixes for bug 354753      
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -55,6 +56,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_REVIEW);
+		repository.removeProperty(GerritConnector.KEY_REPOSITORY_ACCOUNT_ID);
 	}
 
 	@Override

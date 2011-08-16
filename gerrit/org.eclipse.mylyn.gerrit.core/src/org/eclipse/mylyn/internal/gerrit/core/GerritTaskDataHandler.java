@@ -8,8 +8,16 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      GitHub, Inc. - fixes for bug 354753
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
+
+import com.google.gerrit.common.data.AccountInfo;
+import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.common.data.ChangeInfo;
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.ChangeMessage;
 
 import java.util.Date;
 import java.util.Set;
@@ -31,16 +39,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-import com.google.gerrit.common.data.AccountInfo;
-import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.ChangeInfo;
-import com.google.gerrit.reviewdb.Change;
-import com.google.gerrit.reviewdb.ChangeMessage;
-
 /**
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
@@ -78,13 +81,40 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		try {
 			GerritClient client = connector.getClient(repository);
 			client.refreshConfigOnce(monitor);
+			boolean anonymous = client.isAnonymous();
+			String id = null;
+			if (!anonymous) {
+				id = getAccountId(client, repository, monitor);
+			}
 			GerritChange review = client.getChange(taskId, monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
-			updateTaskData(repository, taskData, review, !client.isAnonymous());
+			updateTaskData(repository, taskData, review, !anonymous, id);
 			return taskData;
 		} catch (GerritException e) {
 			throw connector.toCoreException(repository, e);
 		}
+	}
+
+	/**
+	 * Get account id for repository
+	 * 
+	 * @param client
+	 * @param repository
+	 * @param monitor
+	 * @return account id or null if not found
+	 * @throws GerritException
+	 */
+	protected String getAccountId(GerritClient client, TaskRepository repository, IProgressMonitor monitor)
+			throws GerritException {
+		String id = repository.getProperty(GerritConnector.KEY_REPOSITORY_ACCOUNT_ID);
+		if (id == null) {
+			Account account = client.getAccount(monitor);
+			if (account != null) {
+				id = account.getId().toString();
+				repository.setProperty(GerritConnector.KEY_REPOSITORY_ACCOUNT_ID, id);
+			}
+		}
+		return id;
 	}
 
 	@Override
@@ -100,7 +130,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		throw new UnsupportedOperationException();
 	}
 
-	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange review, boolean canPublish) {
+	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange review, boolean canPublish,
+			String accountId) {
 		GerritTaskSchema schema = GerritTaskSchema.getDefault();
 
 		ChangeDetail changeDetail = review.getChangeDetail();
@@ -117,13 +148,20 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			setAttributeValue(data, schema.COMPLETED, dateToString(change.getLastUpdatedOn()));
 		}
 		int i = 1;
+		String accountName = repository.getUserName();
 		for (ChangeMessage message : changeDetail.getMessages()) {
 			TaskCommentMapper mapper = new TaskCommentMapper();
 			if (message.getAuthor() != null) {
 				AccountInfo author = changeDetail.getAccounts().get(message.getAuthor());
-				IRepositoryPerson person = repository.createPerson((author.getPreferredEmail() != null)
-						? author.getPreferredEmail()
-						: author.getId() + ""); //$NON-NLS-1$
+				String userName;
+				String id = author.getId().toString();
+				if (id.equals(accountId)) {
+					userName = accountName;
+				} else {
+					String email = author.getPreferredEmail();
+					userName = (email != null) ? email : id;
+				}
+				IRepositoryPerson person = repository.createPerson(userName);
 				person.setName(author.getFullName());
 				mapper.setAuthor(person);
 			}
