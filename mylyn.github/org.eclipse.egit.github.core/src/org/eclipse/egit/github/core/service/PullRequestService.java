@@ -22,7 +22,7 @@ import org.eclipse.egit.github.core.Assert;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.PullRequestCommit;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -257,7 +257,7 @@ public class PullRequestService extends GitHubService {
 	 * @return list of commits
 	 * @throws IOException
 	 */
-	public List<PullRequestCommit> getCommits(IRepositoryIdProvider repository,
+	public List<RepositoryCommit> getCommits(IRepositoryIdProvider repository,
 			int id) throws IOException {
 		final String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(IGitHubConstants.SEGMENT_REPOS);
@@ -265,9 +265,9 @@ public class PullRequestService extends GitHubService {
 		uri.append(IGitHubConstants.SEGMENT_PULLS);
 		uri.append('/').append(id);
 		uri.append(IGitHubConstants.SEGMENT_COMMITS);
-		PagedRequest<PullRequestCommit> request = createPagedRequest();
+		PagedRequest<RepositoryCommit> request = createPagedRequest();
 		request.setUri(uri);
-		request.setType(new TypeToken<List<PullRequestCommit>>() {
+		request.setType(new TypeToken<List<RepositoryCommit>>() {
 		}.getType());
 		return getAll(request);
 	}
