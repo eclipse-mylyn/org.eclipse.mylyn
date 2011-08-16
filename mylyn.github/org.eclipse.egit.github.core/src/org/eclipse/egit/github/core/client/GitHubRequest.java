@@ -32,6 +32,13 @@ public class GitHubRequest {
 	private Type type;
 
 	/**
+	 * Create empty request
+	 */
+	public GitHubRequest() {
+
+	}
+
+	/**
 	 * @return uri
 	 */
 	public String getUri() {

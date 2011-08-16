@@ -40,7 +40,7 @@ public class GistTest extends LiveTest {
 	 */
 	@Test
 	public void listGists() throws IOException {
-		assertNotNull("Test requires user with gists", client.getUser());
+		checkUser();
 
 		GistService service = new GistService(client);
 		Collection<Gist> gists = service.getGists(client.getUser());
@@ -73,7 +73,7 @@ public class GistTest extends LiveTest {
 	 */
 	@Test
 	public void createDeleteGist() throws IOException {
-		assertNotNull("Test requires user", client.getUser());
+		checkUser();
 
 		Gist gist = new Gist().setDescription("testing");
 		gist.setPublic(false);
@@ -93,7 +93,7 @@ public class GistTest extends LiveTest {
 	 */
 	@Test
 	public void createDeleteGistComment() throws IOException {
-		assertNotNull("Test requires user", client.getUser());
+		checkUser();
 
 		Gist gist = new Gist().setDescription("testing");
 		gist.setPublic(false);
@@ -121,7 +121,7 @@ public class GistTest extends LiveTest {
 	 */
 	@Test
 	public void starUnstarGist() throws IOException {
-		assertNotNull("Test requires user", client.getUser());
+		checkUser();
 
 		Gist gist = new Gist().setDescription("star test");
 		gist.setPublic(false);
@@ -187,5 +187,23 @@ public class GistTest extends LiveTest {
 			assertFalse(ids.contains(gist.getId()));
 			ids.add(gist.getId());
 		}
+	}
+
+	/**
+	 * Test forking a gist
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void forkGist() throws Exception {
+		checkUser();
+
+		GistService service = new GistService(client);
+		Gist forked = service.forkGist("1");
+		assertNotNull(forked);
+		assertNotNull(forked.getId());
+		assertFalse("1".equals(forked.getId()));
+		assertNotNull(forked.getDescription());
+		service.deleteGist(forked.getId());
 	}
 }
