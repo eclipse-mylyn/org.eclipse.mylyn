@@ -25,8 +25,11 @@ import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
- * Label service class for listing {@link Label} objects in use for a given user
- * and repository.
+ * Label service class for listing {@link Label} objects in use for a given
+ * repository.
+ *
+ * @see <a href="http://developer.github.com/v3/issues/labels">GitHub labels API
+ *      documentation</a>
  */
 public class LabelService extends GitHubService {
 

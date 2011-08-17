@@ -43,6 +43,9 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Service for accessing, creating, and deleting repositories downloads.
+ *
+ * @see <a href="http://developer.github.com/v3/repos/downloads">GitHub
+ *      downloads API documentation</a>
  */
 public class DownloadService extends GitHubService {
 

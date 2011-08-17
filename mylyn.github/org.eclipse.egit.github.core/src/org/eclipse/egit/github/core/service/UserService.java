@@ -30,6 +30,9 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * User service class.
+ *
+ * @see <a href="http://developer.github.com/v3/users">GitHub users API
+ *      documentation</a>
  */
 public class UserService extends GitHubService {
 

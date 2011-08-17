@@ -44,6 +44,9 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Date service class for low-level access to Git repository data.
+ *
+ * @see <a href="http://developer.github.com/v3/repos/git">GitHub data API
+ *      documentation</a>
  */
 public class DataService extends GitHubService {
 

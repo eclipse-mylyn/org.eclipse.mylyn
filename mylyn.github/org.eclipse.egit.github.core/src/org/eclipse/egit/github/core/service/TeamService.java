@@ -28,6 +28,9 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Service class for working with organization teams
+ *
+ * @see <a href="http://developer.github.com/v3/orgs/teams">GitHub team API
+ *      documentation</a>
  */
 public class TeamService extends GitHubService {
 
