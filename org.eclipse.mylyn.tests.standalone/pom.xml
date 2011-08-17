@@ -48,6 +48,11 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
+      <artifactId>org.eclipse.mylyn.commons.sdk.util</artifactId>
+      <version>3.7.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.tests</artifactId>
       <version>3.7.0-SNAPSHOT</version>
     </dependency>
@@ -79,6 +84,11 @@
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.tasks.tests</artifactId>
+      <version>3.7.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.tasks</groupId>
+      <artifactId>org.eclipse.mylyn.tasks.sdk.util</artifactId>
       <version>3.7.0-SNAPSHOT</version>
     </dependency>
     <dependency>
