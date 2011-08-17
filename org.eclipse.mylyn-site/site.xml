@@ -67,6 +67,9 @@
    <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.commons.sdk_0.0.0.jar" id="org.eclipse.mylyn.commons.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.context.sdk_0.0.0.jar" id="org.eclipse.mylyn.context.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
