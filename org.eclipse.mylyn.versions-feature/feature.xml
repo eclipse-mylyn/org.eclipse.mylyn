@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.commons.core" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.core" version="3.7.0" match="compatible"/>
    </requires>
 
    <plugin

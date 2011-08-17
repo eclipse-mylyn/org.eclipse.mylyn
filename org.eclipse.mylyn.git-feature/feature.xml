@@ -29,8 +29,8 @@
    </license>
 
    <requires>
+      <import feature="org.eclipse.mylyn.versions" version="0.9.0" match="compatible"/>
       <import feature="org.eclipse.egit" version="1.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.versions" version="0.8.0" match="compatible"/>
    </requires>
 
    <plugin
