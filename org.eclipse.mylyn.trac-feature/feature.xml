@@ -29,7 +29,6 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.context.core" version="3.7.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.7.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.ui" version="3.7.0" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.7.0" match="compatible"/>
