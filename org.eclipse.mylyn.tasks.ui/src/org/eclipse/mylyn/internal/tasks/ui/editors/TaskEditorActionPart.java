@@ -23,7 +23,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskContainerComparator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -150,7 +149,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		attachContextButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Attach_Context,
 				SWT.CHECK);
 		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
-		attachContextButton.setEnabled(TasksUiPlugin.getContextStore().hasContext(this.getModel().getTask()));
 	}
 
 	/**
