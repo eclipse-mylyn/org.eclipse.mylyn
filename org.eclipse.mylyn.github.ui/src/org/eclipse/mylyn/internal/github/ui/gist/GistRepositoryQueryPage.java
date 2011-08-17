@@ -72,12 +72,14 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			}
 		};
 
-		new Label(displayArea, SWT.NONE)
-				.setText(Messages.GistRepositoryQueryPage_LabelTitle);
-		titleText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
-		titleText.addModifyListener(completeListener);
-		titleText.setFocus();
+		if (!inSearchContainer()) {
+			new Label(displayArea, SWT.NONE)
+					.setText(Messages.GistRepositoryQueryPage_LabelTitle);
+			titleText = new Text(displayArea, SWT.SINGLE | SWT.BORDER);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
+			titleText.addModifyListener(completeListener);
+			titleText.setFocus();
+		}
 
 		new Label(displayArea, SWT.NONE)
 				.setText(Messages.GistRepositoryQueryPage_LabelUser);
@@ -87,13 +89,11 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 		IRepositoryQuery query = getQuery();
 		if (query != null) {
-			if (query.getSummary() != null)
+			if (titleText != null && query.getSummary() != null)
 				titleText.setText(query.getSummary());
 			if (query.getAttribute(IGistQueryConstants.USER) != null)
 				userText.setText(query.getAttribute(IGistQueryConstants.USER));
-		} else if (TasksUiPlugin.getTaskList()
-				.getRepositoryQueries(getTaskRepository().getRepositoryUrl())
-				.isEmpty()) {
+		} else if (!inSearchContainer() && !hasQueries()) {
 			titleText.setText(Messages.GistRepositoryQueryPage_TitleDefault);
 			AuthenticationCredentials credentials = getTaskRepository()
 					.getCredentials(AuthenticationType.REPOSITORY);
@@ -107,20 +107,27 @@ public class GistRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	/**
+	 * @return true if queries existing for this repository, false otherwise
+	 */
+	protected boolean hasQueries() {
+		String url = getTaskRepository().getRepositoryUrl();
+		return !TasksUiPlugin.getTaskList().getRepositoryQueries(url).isEmpty();
+	}
+
+	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle()
 	 */
 	public String getQueryTitle() {
-		return this.titleText.getText();
+		return titleText != null ? titleText.getText() : null;
 	}
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete()
 	 */
 	public boolean isPageComplete() {
-		boolean complete = super.isPageComplete();
+		boolean complete = inSearchContainer() ? true : super.isPageComplete();
 		if (complete)
 			complete = userText.getText().trim().length() > 0;
-
 		return complete;
 	}
 

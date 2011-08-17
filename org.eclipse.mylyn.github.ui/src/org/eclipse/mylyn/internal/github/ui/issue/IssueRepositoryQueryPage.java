@@ -37,12 +37,12 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubImages;
+import org.eclipse.mylyn.internal.github.ui.GitHubRepositoryQueryPage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -65,7 +65,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * GitHub issue repository query page class.
  */
-public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
+public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private Button openButton;
 	private Button closedButton;
@@ -149,12 +149,12 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 		openButton = new Button(statusArea, SWT.CHECK);
 		openButton.setSelection(true);
 		openButton.setText(Messages.IssueRepositoryQueryPage_StatusOpen);
-		openButton.addSelectionListener(this.completeListener);
+		openButton.addSelectionListener(completeListener);
 
 		closedButton = new Button(statusArea, SWT.CHECK);
 		closedButton.setSelection(true);
 		closedButton.setText(Messages.IssueRepositoryQueryPage_StatusClosed);
-		closedButton.addSelectionListener(this.completeListener);
+		closedButton.addSelectionListener(completeListener);
 
 		ToolBar toolbar = new ToolBar(statusArea, SWT.FLAT);
 		ToolItem updateItem = new ToolItem(toolbar, SWT.PUSH);
@@ -245,13 +245,13 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
 		String milestoneNumber = query
 				.getAttribute(IssueService.FILTER_MILESTONE);
-		if (milestoneNumber != null && this.milestones != null) {
+		if (milestoneNumber != null && milestones != null) {
 			int index = 0;
-			for (Milestone milestone : this.milestones) {
+			for (Milestone milestone : milestones) {
 				index++;
 				if (milestoneNumber.equals(Integer.toString(milestone
 						.getNumber()))) {
-					this.milestoneCombo.select(index);
+					milestoneCombo.select(index);
 					break;
 				}
 			}
@@ -275,7 +275,7 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	private boolean updateLabels() {
-		if (this.labelsViewer.getControl().isDisposed())
+		if (labelsViewer.getControl().isDisposed())
 			return false;
 
 		IssueConnector connector = IssueConnectorUi.getCoreConnector();
@@ -288,33 +288,32 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			List<String> labelNames = new ArrayList<String>(labels.size());
 			for (org.eclipse.egit.github.core.Label label : labels)
 				labelNames.add(label.getName());
-			this.labelsViewer.setInput(labelNames);
+			labelsViewer.setInput(labelNames);
 		}
 		return hasLabels;
 	}
 
 	private boolean updateMilestones() {
-		if (this.milestoneCombo.isDisposed())
+		if (milestoneCombo.isDisposed())
 			return false;
 
 		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
 		boolean hasMilestones = connector.hasCachedMilestones(repository);
 		if (hasMilestones) {
-			this.milestones = connector.getMilestones(repository);
-			this.milestoneCombo.removeAll();
-			this.milestoneCombo
-					.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
-			Collections.sort(this.milestones, new Comparator<Milestone>() {
+			milestones = connector.getMilestones(repository);
+			milestoneCombo.removeAll();
+			milestoneCombo.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
+			Collections.sort(milestones, new Comparator<Milestone>() {
 
 				public int compare(Milestone m1, Milestone m2) {
 					return m1.getTitle().compareToIgnoreCase(m2.getTitle());
 				}
 			});
 			for (Milestone milestone : milestones)
-				this.milestoneCombo.add(milestone.getTitle());
+				milestoneCombo.add(milestone.getTitle());
 
-			this.milestoneCombo.select(0);
+			milestoneCombo.select(0);
 		}
 		return hasMilestones;
 	}
@@ -375,7 +374,7 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete()
 	 */
 	public boolean isPageComplete() {
-		boolean complete = super.isPageComplete();
+		boolean complete = inSearchContainer() ? true : super.isPageComplete();
 		if (complete) {
 			String message = null;
 			if (!openButton.getSelection() && !closedButton.getSelection())
@@ -391,7 +390,7 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle()
 	 */
 	public String getQueryTitle() {
-		return this.titleText != null ? this.titleText.getText() : null;
+		return titleText != null ? titleText.getText() : null;
 	}
 
 	/**
@@ -407,23 +406,22 @@ public class IssueRepositoryQueryPage extends AbstractRepositoryQueryPage {
 			statuses.add(IssueService.STATE_CLOSED);
 		QueryUtils.setAttribute(IssueService.FILTER_STATE, statuses, query);
 
-		String assignee = this.assigneeText.getText().trim();
+		String assignee = assigneeText.getText().trim();
 		if (assignee.length() > 0)
 			query.setAttribute(IssueService.FILTER_ASSIGNEE, assignee);
 		else
 			query.setAttribute(IssueService.FILTER_ASSIGNEE, null);
 
-		String mentions = this.mentionText.getText().trim();
+		String mentions = mentionText.getText().trim();
 		if (mentions.length() > 0)
 			query.setAttribute(IssueService.FILTER_MENTIONED, mentions);
 		else
 			query.setAttribute(IssueService.FILTER_MENTIONED, null);
 
-		int milestoneSelected = this.milestoneCombo.getSelectionIndex() - 1;
+		int milestoneSelected = milestoneCombo.getSelectionIndex() - 1;
 		if (milestoneSelected >= 0)
 			query.setAttribute(IssueService.FILTER_MILESTONE, Integer
-					.toString(this.milestones.get(milestoneSelected)
-							.getNumber()));
+					.toString(milestones.get(milestoneSelected).getNumber()));
 		else
 			query.setAttribute(IssueService.FILTER_MILESTONE, null);
 

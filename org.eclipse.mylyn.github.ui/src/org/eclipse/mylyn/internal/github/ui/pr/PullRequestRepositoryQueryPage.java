@@ -17,9 +17,9 @@ import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
+import org.eclipse.mylyn.internal.github.ui.GitHubRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * GitHub pull request repository query page class.
  */
-public class PullRequestRepositoryQueryPage extends AbstractRepositoryQueryPage {
+public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private Button openButton;
 	private Button closedButton;
@@ -80,7 +80,8 @@ public class PullRequestRepositoryQueryPage extends AbstractRepositoryQueryPage 
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
 				.applyTo(statusArea);
 
-		new Label(statusArea, SWT.NONE).setText(Messages.PullRequestRepositoryQueryPage_LabelStatus);
+		new Label(statusArea, SWT.NONE)
+				.setText(Messages.PullRequestRepositoryQueryPage_LabelStatus);
 
 		openButton = new Button(statusArea, SWT.CHECK);
 		openButton.setSelection(true);
@@ -89,7 +90,8 @@ public class PullRequestRepositoryQueryPage extends AbstractRepositoryQueryPage 
 
 		closedButton = new Button(statusArea, SWT.CHECK);
 		closedButton.setSelection(true);
-		closedButton.setText(Messages.PullRequestRepositoryQueryPage_StatusClosed);
+		closedButton
+				.setText(Messages.PullRequestRepositoryQueryPage_StatusClosed);
 		closedButton.addSelectionListener(this.completeListener);
 	}
 
@@ -108,7 +110,8 @@ public class PullRequestRepositoryQueryPage extends AbstractRepositoryQueryPage 
 			GridDataFactory.fillDefaults().grab(true, false).span(2, 1)
 					.applyTo(titleArea);
 
-			new Label(titleArea, SWT.NONE).setText(Messages.PullRequestRepositoryQueryPage_LabelTitle);
+			new Label(titleArea, SWT.NONE)
+					.setText(Messages.PullRequestRepositoryQueryPage_LabelTitle);
 			titleText = new Text(titleArea, SWT.SINGLE | SWT.BORDER);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(new ModifyListener() {
