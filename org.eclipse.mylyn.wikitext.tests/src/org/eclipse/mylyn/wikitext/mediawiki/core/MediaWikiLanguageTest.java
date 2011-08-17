@@ -316,7 +316,7 @@ public class MediaWikiLanguageTest extends TestCase {
 	public void testHtmlComment() {
 		String html = parser.parseToHtml("normal para <!-- test comment --> normal *foo*");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>normal para <!-- test comment --> normal *foo*</p></body>"));
+		assertTrue(html.contains("<body><p>normal para  normal *foo*</p></body>"));
 	}
 
 	public void testHtmlCodeWithNestedFormatting() {
@@ -707,6 +707,66 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
 		assertTrue(html.contains("href=\"#Subhead_4\""));
 		assertTrue(html.contains("<h3 id=\"Subhead_4\">"));
+	}
+
+	public void testComment_SingleLine() throws IOException {
+		String html = parser.parseToHtml("<!-- comment -->");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body></body>"));
+	}
+
+	public void testComment_SingleLine_TrailingText() throws IOException {
+		String html = parser.parseToHtml("<!-- comment --> not a comment");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p> not a comment</p></body>"));
+	}
+
+	public void testComment_SingleLine_LeadingText() throws IOException {
+		String html = parser.parseToHtml("not a comment <!-- comment -->");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>not a comment </p></body>"));
+	}
+
+	public void testComment_SingleLine_LeadingTrailingText() throws IOException {
+		String html = parser.parseToHtml("not a comment <!-- comment --> more text");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>not a comment  more text</p></body>"));
+	}
+
+	public void testComment_MultiLine() throws IOException {
+		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->\n");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body></body>"));
+	}
+
+	public void testComment_MultiLine_Multiple() throws IOException {
+		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->\n<!-- another comment -->");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body></body>"));
+	}
+
+	public void testComment_MultiLine_Multiple2() throws IOException {
+		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->abc<!-- another\ncomment -->");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>abc</p></body>"));
+	}
+
+	public void testComment_MultiLine_TrailingText() throws IOException {
+		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text --> not a comment");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p> not a comment</p></body>"));
+	}
+
+	public void testComment_MultiLine_LeadingText() throws IOException {
+		String html = parser.parseToHtml("not a comment <!-- comment\nwith\nMultiple lines of text -->");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>not a comment </p></body>"));
+	}
+
+	public void testComment_MultiLine_LeadingTrailingText() throws IOException {
+		String html = parser.parseToHtml("not a comment <!-- comment\nwith\nMultiple lines of text --> more text");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("<body><p>not a comment\\s+more text</p></body>").matcher(html).find());
 	}
 
 	private String readFully(String resource) throws IOException {

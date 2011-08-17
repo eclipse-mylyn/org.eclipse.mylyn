@@ -164,13 +164,21 @@ public abstract class MarkupLanguage implements Cloneable {
 							}
 						}
 						if (currentBlock == null) {
-							currentBlock = startBlock(line, lineOffset);
-							if (currentBlock == null) {
-								break;
+							if (nestedBlocks != null && !nestedBlocks.isEmpty()) {
+								Block nestedParent = nestedBlocks.peek();
+								if (nestedParent.canResume(line, lineOffset)) {
+									currentBlock = nestedParent;
+								}
 							}
-							currentBlock.setMarkupLanguage(this);
-							currentBlock.setState(state);
-							currentBlock.setParser(parser);
+							if (currentBlock == null) {
+								currentBlock = startBlock(line, lineOffset);
+								if (currentBlock == null) {
+									break;
+								}
+								currentBlock.setMarkupLanguage(this);
+								currentBlock.setState(state);
+								currentBlock.setParser(parser);
+							}
 						}
 						lineOffset = currentBlock.processLineContent(line, lineOffset);
 						if (currentBlock.isClosed()) {

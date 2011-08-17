@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.AbstractMediaWikiLanguage;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.BuiltInTemplateResolver;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.MediaWikiIdGenerationStrategy;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.CommentBlock;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.EscapeBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ParagraphBlock;
@@ -96,6 +98,8 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 		blocks.add(new TableBlock());
 		blocks.add(new TableOfContentsBlock());
+		blocks.add(new EscapeBlock());
+		blocks.add(new CommentBlock());
 
 		for (Block block : blocks) {
 			if (block instanceof ParagraphBlock) {

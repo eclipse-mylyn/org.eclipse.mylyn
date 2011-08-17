@@ -70,6 +70,7 @@ public abstract class Block extends Processor implements Cloneable {
 	 * 
 	 * @return true if nesting should start, otherwise false.
 	 * @see #findCloseOffset(String, int)
+	 * @see #canResume(String, int)
 	 * @since 1.1
 	 */
 	public boolean beginNesting() {
@@ -86,10 +87,28 @@ public abstract class Block extends Processor implements Cloneable {
 	 *            the 0-based offset into the line
 	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
 	 * @see #beginNesting()
+	 * @see #canResume(String, int)
 	 * @since 1.1
 	 */
 	public int findCloseOffset(String line, int lineOffset) {
 		return -1;
+	}
+
+	/**
+	 * Indicate if the block can continue on the given line at the given offset. blocks that implement a nesting
+	 * protocol should implement this method.
+	 * 
+	 * @param line
+	 *            the line of content
+	 * @param lineOffset
+	 *            the 0-based offset into the line
+	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
+	 * @see #beginNesting()
+	 * @see #canResume(String, int)
+	 * @since 1.6
+	 */
+	public boolean canResume(String line, int lineOffset) {
+		return false;
 	}
 
 	/**
