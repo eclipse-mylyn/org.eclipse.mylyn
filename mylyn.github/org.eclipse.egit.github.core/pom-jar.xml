@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.eclipse.mylyn.github</groupId>
+	<artifactId>org.eclipse.egit.github.core</artifactId>
+	<version>1.1.0-SNAPSHOT</version>
+
+	<packaging>jar</packaging>
+	<name>Eclipse EGit GitHub API Core</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<target-manifest-path>${project.build.directory}/META-INF/SOURCE-MANIFEST.MF</target-manifest-path>
+	</properties>
+	<build>
+		<sourceDirectory>src/</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<configuration>
+							<tasks>
+								<copy file="META-INF/SOURCE-MANIFEST.MF" tofile="${target-manifest-path}"
+									overwrite="true" />
+								<replace file="${target-manifest-path}">
+									<replacefilter token=".qualifier" value=".${maven.build.timestamp}" />
+								</replace>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<inherited>true</inherited>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifestFile>${target-manifest-path}</manifestFile>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${target-manifest-path}</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>[4.1,5.0)</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>[4.1,5.0)</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>[4.1,5.0)</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>[1.6,2.0)</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
