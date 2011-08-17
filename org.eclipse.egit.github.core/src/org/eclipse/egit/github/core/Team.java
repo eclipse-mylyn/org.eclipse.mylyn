@@ -10,8 +10,6 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
-import java.util.List;
-
 /**
  * Team model class.
  */
@@ -22,8 +20,6 @@ public class Team {
 	private int membersCount;
 
 	private int reposCount;
-
-	private List<String> repoNames;
 
 	private String name;
 
@@ -76,22 +72,6 @@ public class Team {
 	 */
 	public Team setReposCount(int reposCount) {
 		this.reposCount = reposCount;
-		return this;
-	}
-
-	/**
-	 * @return repoNames
-	 */
-	public List<String> getRepoNames() {
-		return repoNames;
-	}
-
-	/**
-	 * @param repoNames
-	 * @return this team
-	 */
-	public Team setRepoNames(List<String> repoNames) {
-		this.repoNames = repoNames;
 		return this;
 	}
 
