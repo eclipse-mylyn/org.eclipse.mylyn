@@ -64,6 +64,12 @@
 		  <layout>p2</layout>
 		  <url>${mylyn-tasks-repository-url}</url>
 		</repository>
+		<!-- consider moving team api to tasks -->
+		<repository>
+		  <id>eclipse-mylyn-context</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-context-repository-url}</url>
+		</repository>
 	  </repositories>
 	</profile>
   </profiles>
