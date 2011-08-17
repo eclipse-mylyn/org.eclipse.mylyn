@@ -12,13 +12,18 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MEMBERS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEAMS;
 
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -87,6 +92,20 @@ public class TeamService extends GitHubService {
 	 * @throws IOException
 	 */
 	public Team createTeam(String organization, Team team) throws IOException {
+		return createTeam(organization, team, null);
+	}
+
+	/**
+	 * Create the given team
+	 *
+	 * @param organization
+	 * @param team
+	 * @param repoNames
+	 * @return created team
+	 * @throws IOException
+	 */
+	public Team createTeam(String organization, Team team,
+			List<String> repoNames) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
 		if (team == null)
@@ -95,7 +114,13 @@ public class TeamService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
 		uri.append(IGitHubConstants.SEGMENT_TEAMS);
-		return client.post(uri.toString(), team, Team.class);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("name", team.getName()); //$NON-NLS-1$
+		params.put("permission", team.getPermission()); //$NON-NLS-1$
+		if (repoNames != null)
+			params.put("repo_names", repoNames); //$NON-NLS-1$
+		return client.post(uri.toString(), params, Team.class);
 	}
 
 	/**
@@ -196,6 +221,76 @@ public class TeamService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_MEMBERS);
 		uri.append('/').append(user);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Get all repositories for given team
+	 *
+	 * @param id
+	 * @return non-null list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getRepositories(int id) throws IOException {
+		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_REPOS);
+		PagedRequest<Repository> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Is given repository managed by given team
+	 *
+	 * @param id
+	 * @param repository
+	 * @return true if managed by team, false otherwise
+	 * @throws IOException
+	 */
+	public boolean isTeamRepository(int id, IRepositoryIdProvider repository)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		return check(uri.toString());
+	}
+
+	/**
+	 * Add repository to team
+	 *
+	 * @param id
+	 * @param repository
+	 * @throws IOException
+	 */
+	public void addRepository(int id, IRepositoryIdProvider repository)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		client.put(uri.toString(), null, null);
+	}
+
+	/**
+	 * Remove repository from team
+	 *
+	 * @param id
+	 * @param repository
+	 * @throws IOException
+	 */
+	public void removeRepository(int id, IRepositoryIdProvider repository)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
 		client.delete(uri.toString());
 	}
 }

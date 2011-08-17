@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.OrganizationService;
@@ -87,6 +88,35 @@ public class TeamTest extends LiveTest {
 			assertNotNull(member);
 			assertNotNull(member.getLogin());
 			assertTrue(teamService.isMember(first.getId(), member.getLogin()));
+		}
+	}
+
+	/**
+	 * Test getting team repositories
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void teamRepository() throws Exception {
+		checkUser();
+
+		OrganizationService orgService = new OrganizationService(client);
+		List<User> orgs = orgService.getOrganizations();
+		assertNotNull(orgs);
+		assertFalse(orgs.isEmpty());
+		User org = orgs.get(0);
+		assertNotNull(org);
+		assertNotNull(org.getLogin());
+		TeamService teamService = new TeamService(client);
+		List<Team> teams = teamService.getTeams(org.getLogin());
+		assertNotNull(teams);
+		assertFalse(teams.isEmpty());
+		for (Team team : teams) {
+			List<Repository> repos = teamService.getRepositories(team.getId());
+			assertNotNull(repos);
+			assertFalse(repos.isEmpty());
+			for (Repository repo : repos)
+				assertTrue(teamService.isTeamRepository(team.getId(), repo));
 		}
 	}
 }
