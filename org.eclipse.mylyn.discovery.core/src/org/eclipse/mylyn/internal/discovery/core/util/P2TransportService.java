@@ -59,9 +59,10 @@ public class P2TransportService implements ITransportService {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object getTransportEclipse37() throws Exception {
 		BundleContext bundleContext = Platform.getBundle(Platform.PI_RUNTIME).getBundleContext();
-		ServiceReference<?> serviceReference = bundleContext.getServiceReference("org.eclipse.equinox.p2.core.IProvisioningAgent"); //$NON-NLS-1$
+		ServiceReference serviceReference = bundleContext.getServiceReference("org.eclipse.equinox.p2.core.IProvisioningAgent"); //$NON-NLS-1$
 		if (serviceReference != null) {
 			try {
 				Object agent = bundleContext.getService(serviceReference);
