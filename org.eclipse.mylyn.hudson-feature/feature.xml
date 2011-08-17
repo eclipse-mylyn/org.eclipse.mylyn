@@ -29,15 +29,15 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.8.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.7.0" match="compatible"/>
       <import plugin="com.google.gson" version="1.6.0" match="compatible"/>
       <import plugin="com.sun.xml.bind" version="2.2.0" match="compatible"/>
       <import plugin="javax.xml" version="1.3.4" match="compatible"/>
       <import plugin="javax.xml.bind" version="2.1.0" match="compatible"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="compatible"/>
-      <import feature="org.eclipse.mylyn.builds" version="0.7.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.builds" version="0.9.0" match="compatible"/>
    </requires>
 
    <plugin

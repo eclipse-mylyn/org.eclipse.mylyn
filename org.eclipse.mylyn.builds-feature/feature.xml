@@ -29,12 +29,12 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.4.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.5.0.I2011" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.team_feature" version="3.5.0.I2011" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.versions" version="0.7.0.I2011" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.repositories" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.7.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.7.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.team_feature" version="3.7.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions" version="0.9.0" match="compatible"/>
    </requires>
 
    <plugin
