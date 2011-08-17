@@ -11,9 +11,9 @@
 package org.eclipse.egit.github.core;
 
 /**
- * Repository deploy key model class.
+ * Key model class.
  */
-public class DeployKey {
+public class Key {
 
 	private int id;
 
@@ -34,7 +34,7 @@ public class DeployKey {
 	 * @param id
 	 * @return this deploy key
 	 */
-	public DeployKey setId(int id) {
+	public Key setId(int id) {
 		this.id = id;
 		return this;
 	}
@@ -50,7 +50,7 @@ public class DeployKey {
 	 * @param key
 	 * @return this deploy key
 	 */
-	public DeployKey setKey(String key) {
+	public Key setKey(String key) {
 		this.key = key;
 		return this;
 	}
@@ -66,7 +66,7 @@ public class DeployKey {
 	 * @param title
 	 * @return this deploy key
 	 */
-	public DeployKey setTitle(String title) {
+	public Key setTitle(String title) {
 		this.title = title;
 		return this;
 	}
@@ -82,7 +82,7 @@ public class DeployKey {
 	 * @param url
 	 * @return this deploy key
 	 */
-	public DeployKey setUrl(String url) {
+	public Key setUrl(String url) {
 		this.url = url;
 		return this;
 	}

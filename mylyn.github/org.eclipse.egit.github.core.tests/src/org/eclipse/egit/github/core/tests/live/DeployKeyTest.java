@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.eclipse.egit.github.core.DeployKey;
+import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.DeployKeyService;
@@ -42,28 +42,28 @@ public class DeployKeyTest extends LiveTest {
 
 		RepositoryId repo = RepositoryId.create(client.getUser(), writableRepo);
 		DeployKeyService service = new DeployKeyService(client);
-		DeployKey key = new DeployKey();
+		Key key = new Key();
 		key.setTitle("key" + System.currentTimeMillis());
 		key.setKey("ssh-rsa " + System.nanoTime());
-		DeployKey created = service.createKey(repo, key);
+		Key created = service.createKey(repo, key);
 		assertNotNull(created);
 		assertEquals(key.getTitle(), created.getTitle());
 		assertEquals(key.getKey(), created.getKey());
 		assertNotNull(created.getUrl());
 		assertTrue(created.getId() > 0);
 
-		DeployKey fetch = service.getKey(repo, created.getId());
+		Key fetch = service.getKey(repo, created.getId());
 		assertNotNull(fetch);
 		assertEquals(created.getTitle(), fetch.getTitle());
 		assertEquals(created.getKey(), fetch.getKey());
 		assertEquals(created.getUrl(), fetch.getUrl());
 		assertEquals(created.getId(), fetch.getId());
 
-		DeployKey found = null;
-		List<DeployKey> keys = service.getKeys(repo);
+		Key found = null;
+		List<Key> keys = service.getKeys(repo);
 		assertNotNull(keys);
 		assertFalse(keys.isEmpty());
-		for (DeployKey possible : service.getKeys(repo)) {
+		for (Key possible : service.getKeys(repo)) {
 			if (created.getId() == possible.getId()) {
 				found = possible;
 				break;
@@ -96,17 +96,17 @@ public class DeployKeyTest extends LiveTest {
 
 		RepositoryId repo = RepositoryId.create(client.getUser(), writableRepo);
 		DeployKeyService service = new DeployKeyService(client);
-		DeployKey key = new DeployKey();
+		Key key = new Key();
 		key.setTitle("key" + System.currentTimeMillis());
 		key.setKey("ssh-rsa " + System.nanoTime());
-		DeployKey created = service.createKey(repo, key);
+		Key created = service.createKey(repo, key);
 		assertNotNull(created);
 		assertEquals(key.getTitle(), created.getTitle());
 		assertEquals(key.getKey(), created.getKey());
 		assertNotNull(created.getUrl());
 		assertTrue(created.getId() > 0);
 
-		DeployKey fetch = service.getKey(repo, created.getId());
+		Key fetch = service.getKey(repo, created.getId());
 		assertNotNull(fetch);
 		assertEquals(created.getTitle(), fetch.getTitle());
 		assertEquals(created.getKey(), fetch.getKey());
@@ -114,7 +114,7 @@ public class DeployKeyTest extends LiveTest {
 		assertEquals(created.getId(), fetch.getId());
 		fetch.setTitle("new title");
 
-		DeployKey edited = service.editKey(repo, fetch);
+		Key edited = service.editKey(repo, fetch);
 		assertNotNull(edited);
 		assertNotSame(fetch, edited);
 		assertEquals(fetch.getTitle(), edited.getTitle());

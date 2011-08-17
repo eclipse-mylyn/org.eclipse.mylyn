@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.egit.github.core.DeployKey;
+import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -46,15 +46,15 @@ public class DeployKeyService extends GitHubService {
 	 * @return non-null but possibly empty list of deploy keys
 	 * @throws IOException
 	 */
-	public List<DeployKey> getKeys(IRepositoryIdProvider repository)
+	public List<Key> getKeys(IRepositoryIdProvider repository)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_KEYS);
-		PagedRequest<DeployKey> request = createPagedRequest();
+		PagedRequest<Key> request = createPagedRequest();
 		request.setUri(uri);
-		request.setType(new TypeToken<List<DeployKey>>() {
+		request.setType(new TypeToken<List<Key>>() {
 		}.getType());
 		return getAll(request);
 	}
@@ -67,7 +67,7 @@ public class DeployKeyService extends GitHubService {
 	 * @return deploy key
 	 * @throws IOException
 	 */
-	public DeployKey getKey(IRepositoryIdProvider repository, int id)
+	public Key getKey(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
@@ -76,8 +76,8 @@ public class DeployKeyService extends GitHubService {
 		uri.append('/').append(id);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
-		request.setType(DeployKey.class);
-		return (DeployKey) client.get(request).getBody();
+		request.setType(Key.class);
+		return (Key) client.get(request).getBody();
 	}
 
 	/**
@@ -88,13 +88,13 @@ public class DeployKeyService extends GitHubService {
 	 * @return created deploy key
 	 * @throws IOException
 	 */
-	public DeployKey createKey(IRepositoryIdProvider repository, DeployKey key)
+	public Key createKey(IRepositoryIdProvider repository, Key key)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_KEYS);
-		return client.post(uri.toString(), key, DeployKey.class);
+		return client.post(uri.toString(), key, Key.class);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class DeployKeyService extends GitHubService {
 	 * @return edited deploy key
 	 * @throws IOException
 	 */
-	public DeployKey editKey(IRepositoryIdProvider repository, DeployKey key)
+	public Key editKey(IRepositoryIdProvider repository, Key key)
 			throws IOException {
 		if (key == null)
 			throw new IllegalArgumentException("Key cannot be null"); //$NON-NLS-1$
@@ -114,7 +114,7 @@ public class DeployKeyService extends GitHubService {
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_KEYS);
 		uri.append('/').append(key.getId());
-		return client.post(uri.toString(), key, DeployKey.class);
+		return client.post(uri.toString(), key, Key.class);
 	}
 
 	/**
