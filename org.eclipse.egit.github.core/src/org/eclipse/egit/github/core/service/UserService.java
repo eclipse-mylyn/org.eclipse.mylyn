@@ -10,8 +10,10 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_EMAILS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWERS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWING;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_KEYS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
@@ -22,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -32,6 +35,12 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  * User service class.
  *
  * @see <a href="http://developer.github.com/v3/users">GitHub users API
+ *      documentation</a>
+ * @see <a href="http://developer.github.com/v3/users/followers">GitHub
+ *      followers API documentation</a>
+ * @see <a href="http://developer.github.com/v3/users/emails">GitHub user email
+ *      API documentation</a>
+ * @see <a href="http://developer.github.com/v3/users/keys">GitHub user keys API
  *      documentation</a>
  */
 public class UserService extends GitHubService {
@@ -372,6 +381,118 @@ public class UserService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_USER);
 		uri.append(SEGMENT_FOLLOWING);
 		uri.append('/').append(user);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Get all e-mail addresses for the currently authenticated user
+	 *
+	 * @return list of e-mail address
+	 * @throws IOException
+	 */
+	public List<String> getEmails() throws IOException {
+		PagedRequest<String> request = createPagedRequest();
+		request.setUri(SEGMENT_USER + SEGMENT_EMAILS);
+		request.setType(new TypeToken<List<String>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Add one or more e-mail addresses to the currently authenticated user's
+	 * account
+	 *
+	 * @param emails
+	 * @throws IOException
+	 */
+	public void addEmail(String... emails) throws IOException {
+		if (emails == null)
+			throw new IllegalArgumentException("Emails cannot be null"); //$NON-NLS-1$
+		if (emails.length == 0)
+			throw new IllegalArgumentException("Emails cannot be empty"); //$NON-NLS-1$
+		client.post(SEGMENT_USER + SEGMENT_EMAILS, emails, null);
+	}
+
+	/**
+	 * Delete one or more e-mail addresses from the currently authenticated
+	 * user's account
+	 *
+	 * @param emails
+	 * @throws IOException
+	 */
+	public void deleteEmail(String... emails) throws IOException {
+		if (emails == null)
+			throw new IllegalArgumentException("Emails cannot be null"); //$NON-NLS-1$
+		if (emails.length == 0)
+			throw new IllegalArgumentException("Emails cannot be empty"); //$NON-NLS-1$
+		client.delete(SEGMENT_USER + SEGMENT_EMAILS, emails);
+	}
+
+	/**
+	 * Get all public keys for currently authenticated user
+	 *
+	 * @return non-null list of public keys
+	 * @throws IOException
+	 */
+	public List<Key> getKeys() throws IOException {
+		PagedRequest<Key> request = createPagedRequest();
+		request.setUri(SEGMENT_USER + SEGMENT_KEYS);
+		request.setType(new TypeToken<List<Key>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get key with given id
+	 *
+	 * @param id
+	 * @return key
+	 * @throws IOException
+	 */
+	public Key getKey(int id) throws IOException {
+		GitHubRequest request = createRequest();
+		StringBuilder uri = new StringBuilder(SEGMENT_USER + SEGMENT_KEYS);
+		uri.append('/').append(id);
+		request.setUri(uri);
+		request.setType(Key.class);
+		return (Key) client.get(request).getBody();
+	}
+
+	/**
+	 * Create key for currently authenticated user
+	 *
+	 * @param key
+	 * @return created key
+	 * @throws IOException
+	 */
+	public Key createKey(Key key) throws IOException {
+		return client.post(SEGMENT_USER + SEGMENT_KEYS, key, Key.class);
+	}
+
+	/**
+	 * Edit key for currently authenticated user
+	 *
+	 * @param key
+	 * @return edited key
+	 * @throws IOException
+	 */
+	public Key editKey(Key key) throws IOException {
+		if (key == null)
+			throw new IllegalArgumentException("Key cannot be null"); //$NON-NLS-1$
+		StringBuilder uri = new StringBuilder(SEGMENT_USER + SEGMENT_KEYS);
+		uri.append('/').append(key.getId());
+		return client.post(uri.toString(), key, Key.class);
+	}
+
+	/**
+	 * Delete key with given id
+	 *
+	 * @param id
+	 * @throws IOException
+	 */
+	public void deleteKey(int id) throws IOException {
+		StringBuilder uri = new StringBuilder(SEGMENT_USER + SEGMENT_KEYS);
+		uri.append('/').append(id);
 		client.delete(uri.toString());
 	}
 }

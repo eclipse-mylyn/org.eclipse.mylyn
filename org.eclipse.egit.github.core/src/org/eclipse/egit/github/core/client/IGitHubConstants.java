@@ -63,10 +63,10 @@ public interface IGitHubConstants {
 	String PARAM_PER_PAGE = "per_page"; //$NON-NLS-1$
 
 	/** */
-	String SCHEME_OAUTH2 = "oauth2"; //$NON-NLS-1$
+	String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
 
 	/** */
-	String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
+	String SCHEME_OAUTH2 = "oauth2"; //$NON-NLS-1$
 
 	/** */
 	String SEGMENT_BLOBS = "/blobs"; //$NON-NLS-1$
@@ -80,6 +80,8 @@ public interface IGitHubConstants {
 	String SEGMENT_CREATE = "/create"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_DOWNLOADS = "/downloads"; //$NON-NLS-1$
+	/** */
+	String SEGMENT_EMAILS = "/emails"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_FILES = "/files"; //$NON-NLS-1$
 	/** */

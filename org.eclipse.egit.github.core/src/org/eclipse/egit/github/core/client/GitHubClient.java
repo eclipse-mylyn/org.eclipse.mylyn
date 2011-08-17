@@ -25,6 +25,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpMessage;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -47,6 +48,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.egit.github.core.RequestError;
 
 /**
@@ -437,6 +439,8 @@ public class GitHubClient {
 			Type type = request.getType();
 			if (type != null)
 				body = parseJson(response, type);
+			else
+				EntityUtils.consume(response.getEntity());
 			return new GitHubResponse(response, body);
 		}
 		if (isEmpty(response, status))
@@ -462,11 +466,12 @@ public class GitHubClient {
 					IGitHubConstants.CHARSET_UTF8));
 		HttpResponse response = client.execute(httpHost, method, httpContext);
 		StatusLine status = getStatus(response);
-		if (isOk(response, status))
+		if (isOk(response, status)) {
 			if (type != null)
 				return parseJson(response, type);
-			else
-				return null;
+			EntityUtils.consume(response.getEntity());
+			return null;
+		}
 		if (isEmpty(response, status))
 			return null;
 		throw createException(response, status);
@@ -505,14 +510,37 @@ public class GitHubClient {
 	 * when the response status is not a 204 (No Content).
 	 *
 	 * @param uri
+	 * @param params
 	 * @throws IOException
 	 */
-	public void delete(String uri) throws IOException {
-		HttpResponse response = client.execute(httpHost, createDelete(uri),
-				httpContext);
+	public void delete(String uri, Object params) throws IOException {
+		HttpRequest method;
+		if (params == null)
+			method = createDelete(uri);
+		else {
+			EntityDeleteMethod delete = configureRequest(new EntityDeleteMethod(
+					uri));
+			delete.setEntity(new StringEntity(toJson(params),
+					IGitHubConstants.CONTENT_TYPE_JSON,
+					IGitHubConstants.CHARSET_UTF8));
+			method = delete;
+		}
+
+		HttpResponse response = client.execute(httpHost, method, httpContext);
 		StatusLine status = getStatus(response);
 		if (!isEmpty(response, status))
 			throw new RequestException(parseError(response),
 					status.getStatusCode());
+	}
+
+	/**
+	 * Delete resource at URI. This method will throw an {@link IOException}
+	 * when the response status is not a 204 (No Content).
+	 *
+	 * @param uri
+	 * @throws IOException
+	 */
+	public void delete(String uri) throws IOException {
+		delete(uri, null);
 	}
 }

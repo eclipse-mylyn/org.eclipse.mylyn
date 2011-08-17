@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.UserService;
 import org.junit.Test;
@@ -111,5 +112,86 @@ public class UserTest extends LiveTest {
 		assertFalse(users.isEmpty());
 		assertTrue(service.isFollowing(users.get(0).getLogin()));
 		assertFalse(service.isFollowing(client.getUser()));
+	}
+
+	/**
+	 * Test adding, fetching, and deleting an e-mail address to a user account
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addFetchDeleteEmail() throws Exception {
+		checkUser();
+
+		String email1 = "first" + System.nanoTime() + "@email.com";
+		UserService service = new UserService(client);
+
+		List<String> emails = service.getEmails();
+		assertFalse(emails.contains(email1));
+		service.addEmail(email1);
+
+		emails = service.getEmails();
+		assertTrue(emails.contains(email1));
+
+		service.deleteEmail(email1);
+		emails = service.getEmails();
+		assertFalse(emails.contains(email1));
+	}
+
+	/**
+	 * Test adding, fetching, and deleting an e-mail addresses to a user account
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addFetchDeleteEmails() throws Exception {
+		checkUser();
+
+		String email1 = "first" + System.nanoTime() + "@email.com";
+		String email2 = "second" + System.nanoTime() + "@email.com";
+		UserService service = new UserService(client);
+
+		List<String> emails = service.getEmails();
+		assertFalse(emails.contains(email1));
+		assertFalse(emails.contains(email2));
+
+		service.addEmail(email1, email2);
+		emails = service.getEmails();
+		assertTrue(emails.contains(email1));
+		assertTrue(emails.contains(email2));
+
+		service.deleteEmail(email1, email2);
+		emails = service.getEmails();
+		assertFalse(emails.contains(email1));
+		assertFalse(emails.contains(email2));
+	}
+
+	/**
+	 * Test adding, fetching, and deleting a key to a user account
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addFetchDeleteKey() throws Exception {
+		checkUser();
+
+		Key key = new Key();
+		key.setTitle("key" + System.currentTimeMillis());
+		key.setKey("ssh-rsa " + System.nanoTime());
+		UserService service = new UserService(client);
+
+		Key created = service.createKey(key);
+		assertNotNull(created);
+		assertNotNull(created.getUrl());
+		assertEquals(key.getTitle(), created.getTitle());
+		assertEquals(key.getKey(), created.getKey());
+
+		Key fetched = service.getKey(created.getId());
+		assertNotNull(fetched);
+		assertEquals(created.getUrl(), fetched.getUrl());
+		assertEquals(key.getTitle(), fetched.getTitle());
+		assertEquals(key.getKey(), fetched.getKey());
+
+		service.deleteKey(created.getId());
 	}
 }
