@@ -40,6 +40,11 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  * Service class for creating, updating, getting, and listing pull requests as
  * well as getting the commits associated with a pull request and the files
  * modified by a pull request.
+ *
+ * @see <a href="http://developer.github.com/v3/pulls">GitHub Pull Requests API
+ *      documentation</a>
+ * @see <a href="http://developer.github.com/v3/pulls/comments">GitHub Pull
+ *      Request comments API documentation</a>
  */
 public class PullRequestService extends GitHubService {
 

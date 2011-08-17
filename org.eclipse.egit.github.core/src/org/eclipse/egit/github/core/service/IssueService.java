@@ -39,7 +39,7 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  * Issue service class for listing, searching, and fetching {@link Issue}
  * objects using a {@link GitHubClient}.
  *
- * @see <a href="http://developer.github.com/v3/issues">GitHub issue API
+ * @see <a href="http://developer.github.com/v3/issues">GitHub Issues API
  *      documentation</a>
  */
 public class IssueService extends GitHubService {

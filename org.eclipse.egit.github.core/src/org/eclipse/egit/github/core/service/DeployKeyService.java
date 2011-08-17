@@ -27,7 +27,7 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 /**
  * Service for interacting with a repository's deploy keys
  *
- * @see <a href="http://developer.github.com/v3/repos/keys">GitHub Deploy Key
+ * @see <a href="http://developer.github.com/v3/repos/keys">GitHub deploy key
  *      API documentation</a>
  */
 public class DeployKeyService extends GitHubService {

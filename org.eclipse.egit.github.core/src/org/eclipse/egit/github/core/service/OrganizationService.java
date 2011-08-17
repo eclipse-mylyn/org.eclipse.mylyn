@@ -30,6 +30,11 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
  * Organization service class
+ *
+ * @see <a href="http://developer.github.com/v3/orgs">GitHub organization API
+ *      documentation</a>
+ * @see <a href="http://developer.github.com/v3/orgs/members">GitHub
+ *      organization membership API documentation</a>
  */
 public class OrganizationService extends GitHubService {
 

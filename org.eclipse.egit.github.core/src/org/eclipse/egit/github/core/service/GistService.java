@@ -33,7 +33,12 @@ import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
- * Service class for getting and list gists.
+ * Service class for interacting with Gists and Gist comments.
+ *
+ * @see <a href="http://developer.github.com/v3/gists">GitHub Gist API
+ *      documentation</a>
+ * @see <a href="http://developer.github.com/v3/gists/comments">GitHub Gist
+ *      comments API documentation</a>
  */
 public class GistService extends GitHubService {
 
