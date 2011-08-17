@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FILES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MERGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_PULLS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.MergeStatus;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.RepositoryCommit;
@@ -308,5 +310,43 @@ public class PullRequestService extends GitHubService {
 		request.setType(new TypeToken<List<CommitFile>>() {
 		}.getType());
 		return getAll(request);
+	}
+
+	/**
+	 * Is the given pull request id merged?
+	 *
+	 * @param repository
+	 * @param id
+	 * @return true if merge, false otherwise
+	 * @throws IOException
+	 */
+	public boolean isMerged(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_MERGE);
+		return check(uri.toString());
+	}
+
+	/**
+	 * Merge given pull request
+	 *
+	 * @param repository
+	 * @param id
+	 * @return status of merge
+	 * @throws IOException
+	 */
+	public MergeStatus merge(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_MERGE);
+		return client.put(uri.toString(), null, MergeStatus.class);
 	}
 }
