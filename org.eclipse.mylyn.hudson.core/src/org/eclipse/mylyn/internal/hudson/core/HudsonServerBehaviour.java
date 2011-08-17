@@ -372,13 +372,13 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	private IChange parseChange(Node node) {
 		// addedPath* [M]
 		// author [C, G, M]
-		// comment [G]
+		// comment [G]: full commit message
 		// date [C:2010-09-02, G:2010-08-26 17:43:17 -0700, M:1283761613.0-7200, S:2010-07-28T09:11:55.720801Z]
 		// file*: dead, editType, fullName, name, prerevision?, revision [C]
 		// id [G] (SHA1)
 		// merge [M] (Boolean)
 		// modifiedPath* [M]
-		// msg [C, G, M, S]
+		// msg [C, G, M, S]: shortened commit message
 		// node [M] (SHA1?)
 		// path*: editType, file [G, S]
 		// rev [M]
@@ -397,6 +397,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				change.getArtifacts().add(artifact);
 			} else if ("author".equals(tagName)) { //$NON-NLS-1$
 				change.setAuthor(parseUser(child));
+			} else if ("comment".equals(tagName)) { //$NON-NLS-1$
+				change.setMessage(child.getTextContent());
 			} else if ("date".equals(tagName)) {
 				change.setDate(parseDate(child));
 			} else if ("file".equals(tagName)) {
@@ -409,7 +411,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				artifact.setEditType(EditType.EDIT);
 				change.getArtifacts().add(artifact);
 			} else if ("msg".equals(tagName)) { //$NON-NLS-1$
-				change.setMessage(child.getTextContent());
+				// check if full comment was already retrieved from "comment" tag
+				if (change.getMessage() == null) {
+					change.setMessage(child.getTextContent());
+				}
 			} else if ("node".equals(tagName)) { //$NON-NLS-1$
 				change.setRevision(child.getTextContent());
 			} else if ("rev".equals(tagName)) {
