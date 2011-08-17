@@ -684,6 +684,14 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	public void testPhraseModifierDeletedWithHyphens_bug321538() {
+		String html = parser.parseToHtml("as I said, -hello oh-so-cruel world- again.\n\nThis works: -hell world-\n\nThis doesn't: -hello oh-so-cruel world-");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>as I said, <del>hello oh-so-cruel world</del> again.</p>"));
+		assertTrue(html.contains("<p>This works: <del>hell world</del></p>"));
+		assertTrue(html.contains("<p>This doesn&#8217;t: <del>hello oh-so-cruel world</del></p>"));
+	}
+
 	public void testImage() throws IOException {
 		String html = parser.parseToHtml("Here comes an !imageUrl! with more text");
 
