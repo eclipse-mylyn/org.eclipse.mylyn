@@ -51,7 +51,7 @@ public class ShowTasksConnectorDiscoveryWizardCommandHandler extends AbstractHan
 					button.setSelection(TasksUiPlugin.getDefault()
 							.getPreferenceStore()
 							.getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
-					button.setText(Messages.ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_new_connectors_are_available);
+					button.setText(Messages.ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_updates_are_available_Text);
 					button.setFont(JFaceResources.getDialogFont());
 					button.addSelectionListener(new SelectionAdapter() {
 						@Override
@@ -67,7 +67,8 @@ public class ShowTasksConnectorDiscoveryWizardCommandHandler extends AbstractHan
 			};
 			dialog.open();
 		} else {
-			MessageDialog.openWarning(WorkbenchUtil.getShell(), Messages.ShowTasksConnectorDiscoveryWizardCommandHandler_Install_Connectors,
+			MessageDialog.openWarning(WorkbenchUtil.getShell(),
+					Messages.ShowTasksConnectorDiscoveryWizardCommandHandler_Install_Connectors,
 					Messages.ShowTasksConnectorDiscoveryWizardCommandHandler_Unable_to_launch_connector_install);
 		}
 

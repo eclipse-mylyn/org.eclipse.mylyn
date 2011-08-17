@@ -51,5 +51,7 @@ public class Messages extends NLS {
 
 	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_new_connectors_are_available;
 
+	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_updates_are_available_Text;
+
 	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Unable_to_launch_connector_install;
 }
