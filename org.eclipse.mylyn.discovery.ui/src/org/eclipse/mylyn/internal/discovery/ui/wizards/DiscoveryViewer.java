@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -1103,6 +1104,10 @@ public class DiscoveryViewer {
 		}
 	}
 
+	public String getFilterText() {
+		return filterText.getText();
+	}
+
 	public List<ConnectorDescriptor> getInstallableConnectors() {
 		return installableConnectors;
 	}
@@ -1405,6 +1410,12 @@ public class DiscoveryViewer {
 			throw new IllegalArgumentException();
 		}
 		this.environment = environment;
+	}
+
+	public void setFilterText(String text) {
+		Assert.isNotNull(text);
+		filterText.setText(text);
+		filterTextChanged();
 	}
 
 	public void setSelection(IStructuredSelection selection) {

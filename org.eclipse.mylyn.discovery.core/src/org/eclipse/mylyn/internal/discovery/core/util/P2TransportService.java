@@ -21,6 +21,9 @@ import java.net.URI;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * @author Steffen Pingel
@@ -37,9 +40,15 @@ public class P2TransportService implements ITransportService {
 
 	public P2TransportService() throws ClassNotFoundException {
 		try {
-			Class<?> clazz = Class.forName("org.eclipse.equinox.internal.p2.repository.RepositoryTransport"); //$NON-NLS-1$
-			Method getInstanceMethod = clazz.getDeclaredMethod("getInstance"); //$NON-NLS-1$
-			transport = getInstanceMethod.invoke(null);
+			Class<?> clazz;
+			try {
+				clazz = Class.forName("org.eclipse.equinox.internal.p2.repository.RepositoryTransport"); //$NON-NLS-1$
+				Method getInstanceMethod = clazz.getDeclaredMethod("getInstance"); //$NON-NLS-1$
+				transport = getInstanceMethod.invoke(null);
+			} catch (ClassNotFoundException e) {
+				clazz = Class.forName("org.eclipse.equinox.internal.p2.repository.Transport"); //$NON-NLS-1$
+				transport = getTransportEclipse37();
+			}
 			downloadMethod = clazz.getDeclaredMethod("download", URI.class, OutputStream.class, IProgressMonitor.class); //$NON-NLS-1$
 			streamMethod = clazz.getDeclaredMethod("stream", URI.class, IProgressMonitor.class); //$NON-NLS-1$
 			getLastModifiedMethod = clazz.getDeclaredMethod("getLastModified", URI.class, IProgressMonitor.class); //$NON-NLS-1$
@@ -47,6 +56,26 @@ public class P2TransportService implements ITransportService {
 			throw new ClassNotFoundException("Failed to load P2 transport", e); //$NON-NLS-1$
 		} catch (Exception e) {
 			throw new ClassNotFoundException("Failed to load P2 transport", e); //$NON-NLS-1$
+		}
+	}
+
+	private Object getTransportEclipse37() throws Exception {
+		BundleContext bundleContext = Platform.getBundle(Platform.PI_RUNTIME).getBundleContext();
+		ServiceReference<?> serviceReference = bundleContext.getServiceReference("org.eclipse.equinox.p2.core.IProvisioningAgent"); //$NON-NLS-1$
+		if (serviceReference != null) {
+			try {
+				Object agent = bundleContext.getService(serviceReference);
+				if (agent != null) {
+					Method method = agent.getClass().getDeclaredMethod("getService", String.class); //$NON-NLS-1$
+					return method.invoke(agent, "org.eclipse.equinox.internal.p2.repository.Transport"); //$NON-NLS-1$
+				} else {
+					throw new Exception("Provisioning agent instance not available"); //$NON-NLS-1$
+				}
+			} finally {
+				bundleContext.ungetService(serviceReference);
+			}
+		} else {
+			throw new Exception("Service reference for org.eclipse.equinox.p2.core.IProvisioningAgent not available"); //$NON-NLS-1$
 		}
 	}
 
