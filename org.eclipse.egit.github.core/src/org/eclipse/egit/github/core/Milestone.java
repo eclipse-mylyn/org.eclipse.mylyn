@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * GitHub issue milestone class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Milestone {
@@ -43,15 +43,14 @@ public class Milestone {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return createdAt != null ? new Date(createdAt.getTime()) : null;
 	}
 
 	/**
 	 * @return dueOn
 	 */
 	public Date getDueOn() {
-		return this.dueOn != null ? new Date(this.dueOn.getTime()) : null;
+		return dueOn != null ? new Date(dueOn.getTime()) : null;
 	}
 
 	/**
@@ -67,14 +66,14 @@ public class Milestone {
 	 * @return closedIssues
 	 */
 	public int getClosedIssues() {
-		return this.closedIssues;
+		return closedIssues;
 	}
 
 	/**
 	 * @return number
 	 */
 	public int getNumber() {
-		return this.number;
+		return number;
 	}
 
 	/**
@@ -90,14 +89,14 @@ public class Milestone {
 	 * @return openIssues
 	 */
 	public int getOpenIssues() {
-		return this.openIssues;
+		return openIssues;
 	}
 
 	/**
 	 * @return description
 	 */
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	/**
@@ -113,7 +112,7 @@ public class Milestone {
 	 * @return state
 	 */
 	public String getState() {
-		return this.state;
+		return state;
 	}
 
 	/**
@@ -129,7 +128,7 @@ public class Milestone {
 	 * @return title
 	 */
 	public String getTitle() {
-		return this.title;
+		return title;
 	}
 
 	/**
@@ -145,14 +144,13 @@ public class Milestone {
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
 	 * @return creator
 	 */
 	public User getCreator() {
-		return this.creator;
+		return creator;
 	}
-
 }

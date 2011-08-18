@@ -23,7 +23,7 @@ public class GitHubResponse {
 
 	/**
 	 * Create response
-	 * 
+	 *
 	 * @param response
 	 * @param body
 	 */
@@ -34,47 +34,46 @@ public class GitHubResponse {
 
 	/**
 	 * Get link uri to first page
-	 * 
+	 *
 	 * @return possibly null uri
 	 */
 	public String getFirst() {
-		return this.links.getFirst();
+		return links.getFirst();
 	}
 
 	/**
 	 * Get link uri to previous page
-	 * 
+	 *
 	 * @return possibly null uri
 	 */
 	public String getPrevious() {
-		return this.links.getPrev();
+		return links.getPrev();
 	}
 
 	/**
 	 * Get link uri to next page
-	 * 
+	 *
 	 * @return possibly null uri
 	 */
 	public String getNext() {
-		return this.links.getNext();
+		return links.getNext();
 	}
 
 	/**
 	 * Get link uri to last page
-	 * 
+	 *
 	 * @return possibly null uri
 	 */
 	public String getLast() {
-		return this.links.getLast();
+		return links.getLast();
 	}
 
 	/**
 	 * Parsed response body
-	 * 
+	 *
 	 * @return body
 	 */
 	public Object getBody() {
-		return this.body;
+		return body;
 	}
-
 }

@@ -52,7 +52,7 @@ public class Gist {
 	 * @return isPublic
 	 */
 	public boolean isPublic() {
-		return this.isPublic;
+		return isPublic;
 	}
 
 	/**
@@ -68,22 +68,21 @@ public class Gist {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return createdAt != null ? new Date(createdAt.getTime()) : null;
 	}
 
 	/**
 	 * @return comments
 	 */
 	public int getComments() {
-		return this.comments;
+		return comments;
 	}
 
 	/**
 	 * @return files
 	 */
 	public Map<String, GistFile> getFiles() {
-		return this.files;
+		return files;
 	}
 
 	/**
@@ -99,7 +98,7 @@ public class Gist {
 	 * @return description
 	 */
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	/**
@@ -115,35 +114,35 @@ public class Gist {
 	 * @return gitPullUrl
 	 */
 	public String getGitPullUrl() {
-		return this.gitPullUrl;
+		return gitPullUrl;
 	}
 
 	/**
 	 * @return gitPushUrl
 	 */
 	public String getGitPushUrl() {
-		return this.gitPushUrl;
+		return gitPushUrl;
 	}
 
 	/**
 	 * @return history
 	 */
 	public List<GistRevision> getHistory() {
-		return this.history;
+		return history;
 	}
 
 	/**
 	 * @return htmlUrl
 	 */
 	public String getHtmlUrl() {
-		return this.htmlUrl;
+		return htmlUrl;
 	}
 
 	/**
 	 * @return id
 	 */
 	public String getId() {
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -159,22 +158,21 @@ public class Gist {
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
-				: null;
+		return updatedAt != null ? new Date(updatedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
 	 * @return user
 	 */
 	public User getUser() {
-		return this.user;
+		return user;
 	}
 
 	/**
@@ -185,5 +183,4 @@ public class Gist {
 		this.user = user;
 		return this;
 	}
-
 }

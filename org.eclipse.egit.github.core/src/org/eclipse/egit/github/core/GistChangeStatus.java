@@ -25,21 +25,20 @@ public class GistChangeStatus {
 	 * @return additions
 	 */
 	public int getAdditions() {
-		return this.additions;
+		return additions;
 	}
 
 	/**
 	 * @return deletions
 	 */
 	public int getDeletions() {
-		return this.deletions;
+		return deletions;
 	}
 
 	/**
 	 * @return total
 	 */
 	public int getTotal() {
-		return this.total;
+		return total;
 	}
-
 }
