@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * GitHub issue class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Issue {

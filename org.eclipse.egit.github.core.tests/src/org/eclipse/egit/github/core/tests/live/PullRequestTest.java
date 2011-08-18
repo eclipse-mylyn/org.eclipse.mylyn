@@ -10,15 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.IssueService;
@@ -84,6 +87,30 @@ public class PullRequestTest extends LiveTest {
 			assertNotNull(request.getHtmlUrl());
 			assertNotNull(request.getDiffUrl());
 			assertNotNull(request.getPatchUrl());
+		}
+	}
+
+	/**
+	 * Test getting pull request comments
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void fetchComments() throws IOException {
+		PullRequestService service = new PullRequestService(client);
+		RepositoryId repo = RepositoryId.create("defunkt", "resque");
+		List<CommitComment> comments = service.getComments(repo, 277);
+		assertNotNull(comments);
+		assertFalse(comments.isEmpty());
+		for (CommitComment comment : comments) {
+			assertNotNull(comment);
+			assertNotNull(comment.getUrl());
+			assertNotNull(comment.getBody());
+			CommitComment fetched = service.getComment(repo, comment.getId());
+			assertNotNull(fetched);
+			assertEquals(comment.getId(), fetched.getId());
+			assertEquals(comment.getUrl(), fetched.getUrl());
+			assertEquals(comment.getBody(), fetched.getBody());
 		}
 	}
 }

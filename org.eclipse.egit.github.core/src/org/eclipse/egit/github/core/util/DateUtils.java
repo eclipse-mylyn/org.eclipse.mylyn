@@ -13,13 +13,13 @@ package org.eclipse.egit.github.core.util;
 import java.util.Date;
 
 /**
- * 
+ * Date utilities
  */
 public class DateUtils {
 
 	/**
 	 * Clone date if non-null
-	 * 
+	 *
 	 * @param date
 	 * @return copied date
 	 */
@@ -28,5 +28,4 @@ public class DateUtils {
 			return null;
 		return new Date(date.getTime());
 	}
-
 }
