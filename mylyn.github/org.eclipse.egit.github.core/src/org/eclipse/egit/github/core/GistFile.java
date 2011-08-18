@@ -27,14 +27,14 @@ public class GistFile {
 	 * @return size
 	 */
 	public int getSize() {
-		return this.size;
+		return size;
 	}
 
 	/**
 	 * @return content
 	 */
 	public String getContent() {
-		return this.content;
+		return content;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class GistFile {
 	 * @return filename
 	 */
 	public String getFilename() {
-		return this.filename;
+		return filename;
 	}
 
 	/**
@@ -64,7 +64,6 @@ public class GistFile {
 	 * @return rawUrl
 	 */
 	public String getRawUrl() {
-		return this.rawUrl;
+		return rawUrl;
 	}
-
 }

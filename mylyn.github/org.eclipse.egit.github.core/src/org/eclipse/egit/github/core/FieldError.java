@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
-
 /**
  * Field error
  */
@@ -48,28 +47,27 @@ public class FieldError {
 	 * @return code
 	 */
 	public String getCode() {
-		return this.code;
+		return code;
 	}
 
 	/**
 	 * @return field
 	 */
 	public String getField() {
-		return this.field;
+		return field;
 	}
 
 	/**
 	 * @return resource
 	 */
 	public String getResource() {
-		return this.resource;
+		return resource;
 	}
 
 	/**
 	 * @return value
 	 */
 	public String getValue() {
-		return this.value;
+		return value;
 	}
-
 }

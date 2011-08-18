@@ -31,36 +31,34 @@ public class GistRevision {
 	 * @return committedAt
 	 */
 	public Date getCommittedAt() {
-		return this.committedAt != null ? new Date(this.committedAt.getTime())
-				: null;
+		return committedAt != null ? new Date(committedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return changeStatus
 	 */
 	public GistChangeStatus getChangeStatus() {
-		return this.changeStatus;
+		return changeStatus;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
 	 * @return version
 	 */
 	public String getVersion() {
-		return this.version;
+		return version;
 	}
 
 	/**
 	 * @return user
 	 */
 	public User getUser() {
-		return this.user;
+		return user;
 	}
-
 }

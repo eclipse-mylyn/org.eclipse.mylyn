@@ -31,7 +31,7 @@ public class PageLinks {
 
 	/**
 	 * Parse links from executed method
-	 * 
+	 *
 	 * @param response
 	 */
 	public PageLinks(HttpResponse response) {
@@ -86,27 +86,27 @@ public class PageLinks {
 	 * @return first
 	 */
 	public String getFirst() {
-		return this.first;
+		return first;
 	}
 
 	/**
 	 * @return last
 	 */
 	public String getLast() {
-		return this.last;
+		return last;
 	}
 
 	/**
 	 * @return next
 	 */
 	public String getNext() {
-		return this.next;
+		return next;
 	}
 
 	/**
 	 * @return prev
 	 */
 	public String getPrev() {
-		return this.prev;
+		return prev;
 	}
 }

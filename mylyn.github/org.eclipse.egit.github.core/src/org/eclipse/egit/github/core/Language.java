@@ -256,10 +256,10 @@ public enum Language {
 
 	/**
 	 * Get value
-	 * 
+	 *
 	 * @return value
 	 */
 	public String getValue() {
-		return this.value;
+		return value;
 	}
 }

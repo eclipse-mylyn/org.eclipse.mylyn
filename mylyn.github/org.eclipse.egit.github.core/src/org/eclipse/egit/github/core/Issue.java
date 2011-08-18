@@ -55,37 +55,35 @@ public class Issue {
 	 * @return closedAt
 	 */
 	public Date getClosedAt() {
-		return this.closedAt != null ? new Date(this.closedAt.getTime()) : null;
+		return closedAt != null ? new Date(closedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return createdAt != null ? new Date(createdAt.getTime()) : null;
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
-				: null;
+		return updatedAt != null ? new Date(updatedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return comments
 	 */
 	public int getComments() {
-		return this.comments;
+		return comments;
 	}
 
 	/**
 	 * @return number
 	 */
 	public int getNumber() {
-		return this.number;
+		return number;
 	}
 
 	/**
@@ -101,7 +99,7 @@ public class Issue {
 	 * @return labels
 	 */
 	public List<Label> getLabels() {
-		return this.labels;
+		return labels;
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class Issue {
 	 * @return milestone
 	 */
 	public Milestone getMilestone() {
-		return this.milestone;
+		return milestone;
 	}
 
 	/**
@@ -133,14 +131,14 @@ public class Issue {
 	 * @return pullRequest
 	 */
 	public PullRequest getPullRequest() {
-		return this.pullRequest;
+		return pullRequest;
 	}
 
 	/**
 	 * @return body
 	 */
 	public String getBody() {
-		return this.body;
+		return body;
 	}
 
 	/**
@@ -156,14 +154,14 @@ public class Issue {
 	 * @return htmlUrl
 	 */
 	public String getHtmlUrl() {
-		return this.htmlUrl;
+		return htmlUrl;
 	}
 
 	/**
 	 * @return state
 	 */
 	public String getState() {
-		return this.state;
+		return state;
 	}
 
 	/**
@@ -179,7 +177,7 @@ public class Issue {
 	 * @return title
 	 */
 	public String getTitle() {
-		return this.title;
+		return title;
 	}
 
 	/**
@@ -195,14 +193,14 @@ public class Issue {
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
 	 * @return assignee
 	 */
 	public User getAssignee() {
-		return this.assignee;
+		return assignee;
 	}
 
 	/**
@@ -218,7 +216,7 @@ public class Issue {
 	 * @return user
 	 */
 	public User getUser() {
-		return this.user;
+		return user;
 	}
 
 	@Override

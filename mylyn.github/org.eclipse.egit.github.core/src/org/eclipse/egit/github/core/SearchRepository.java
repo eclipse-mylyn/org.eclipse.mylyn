@@ -155,21 +155,21 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * @return id
 	 */
 	public String getId() {
-		return this.owner + '/' + this.name;
+		return owner + '/' + name;
 	}
 
 	/**
 	 * @return owner
 	 */
 	public String getOwner() {
-		return this.owner;
+		return owner;
 	}
 
 	/**
 	 * @return name
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -185,35 +185,35 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * @return fork
 	 */
 	public boolean isFork() {
-		return this.fork;
+		return fork;
 	}
 
 	/**
 	 * @return hasDownloads
 	 */
 	public boolean isHasDownloads() {
-		return this.hasDownloads;
+		return hasDownloads;
 	}
 
 	/**
 	 * @return hasIssues
 	 */
 	public boolean isHasIssues() {
-		return this.hasIssues;
+		return hasIssues;
 	}
 
 	/**
 	 * @return hasWiki
 	 */
 	public boolean isHasWiki() {
-		return this.hasWiki;
+		return hasWiki;
 	}
 
 	/**
 	 * @return isPrivate
 	 */
 	public boolean isPrivate() {
-		return this.isPrivate;
+		return isPrivate;
 	}
 
 	/**
@@ -229,22 +229,21 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return createdAt != null ? new Date(createdAt.getTime()) : null;
 	}
 
 	/**
 	 * @return pushedAt
 	 */
 	public Date getPushedAt() {
-		return this.pushedAt != null ? new Date(this.pushedAt.getTime()) : null;
+		return pushedAt != null ? new Date(pushedAt.getTime()) : null;
 	}
 
 	/**
 	 * @return description
 	 */
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	/**
@@ -260,7 +259,7 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * @return homepage
 	 */
 	public String getHomepage() {
-		return this.homepage;
+		return homepage;
 	}
 
 	/**
@@ -276,42 +275,42 @@ public class SearchRepository implements IRepositoryIdProvider {
 	 * @return language
 	 */
 	public String getLanguage() {
-		return this.language;
+		return language;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	/**
 	 * @return forks
 	 */
 	public int getForks() {
-		return this.forks;
+		return forks;
 	}
 
 	/**
 	 * @return openIssues
 	 */
 	public int getOpenIssues() {
-		return this.openIssues;
+		return openIssues;
 	}
 
 	/**
 	 * @return size
 	 */
 	public int getSize() {
-		return this.size;
+		return size;
 	}
 
 	/**
 	 * @return watchers
 	 */
 	public int getWatchers() {
-		return this.watchers;
+		return watchers;
 	}
 
 	public String generateId() {
@@ -323,5 +322,4 @@ public class SearchRepository implements IRepositoryIdProvider {
 			return null;
 		return owner + "/" + name;
 	}
-
 }

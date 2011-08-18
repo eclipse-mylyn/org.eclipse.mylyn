@@ -28,36 +28,36 @@ public class Label {
 		if (obj == this)
 			return true;
 
-		return obj instanceof Label && this.name != null
-				&& this.name.equals(((Label) obj).name);
+		return obj instanceof Label && name != null
+				&& name.equals(((Label) obj).name);
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return this.name.hashCode();
+		return name.hashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.name;
+		return name;
 	}
 
 	/**
 	 * @return color
 	 */
 	public String getColor() {
-		return this.color;
+		return color;
 	}
 
 	/**
 	 * @return name
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -73,7 +73,6 @@ public class Label {
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
-
 }

@@ -140,5 +140,4 @@ public class Download {
 		this.url = url;
 		return this;
 	}
-
 }
