@@ -12,6 +12,8 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * Extension of {@link Download} to represent the initiation of a download with
  * metadata about where to put the actual content when uploading.
@@ -58,7 +60,7 @@ public class DownloadResource extends Download {
 	 * @return expirationdate
 	 */
 	public Date getExpirationdate() {
-		return expirationdate;
+		return DateUtils.clone(expirationdate);
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class DownloadResource extends Download {
 	 * @return this download resource
 	 */
 	public DownloadResource setExpirationdate(Date expirationdate) {
-		this.expirationdate = expirationdate;
+		this.expirationdate = DateUtils.clone(expirationdate);
 		return this;
 	}
 

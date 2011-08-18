@@ -12,9 +12,11 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * GitHub user class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class User {
@@ -85,7 +87,7 @@ public class User {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return createdAt;
+		return DateUtils.clone(createdAt);
 	}
 
 	/**
@@ -93,7 +95,7 @@ public class User {
 	 * @return this user
 	 */
 	public User setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+		this.createdAt = DateUtils.clone(createdAt);
 		return this;
 	}
 

@@ -4,7 +4,7 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
@@ -111,7 +111,7 @@ public class PullRequest {
 	 * @return this pull request
 	 */
 	public PullRequest setClosedAt(Date closedAt) {
-		this.closedAt = closedAt;
+		this.closedAt = DateUtils.clone(closedAt);
 		return this;
 	}
 
@@ -127,7 +127,7 @@ public class PullRequest {
 	 * @return this pull request
 	 */
 	public PullRequest setMergedAt(Date mergedAt) {
-		this.mergedAt = mergedAt;
+		this.mergedAt = DateUtils.clone(mergedAt);
 		return this;
 	}
 
@@ -143,7 +143,7 @@ public class PullRequest {
 	 * @return this pull request
 	 */
 	public PullRequest setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
+		this.updatedAt = DateUtils.clone(updatedAt);
 		return this;
 	}
 
@@ -159,7 +159,7 @@ public class PullRequest {
 	 * @return this pull request
 	 */
 	public PullRequest setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+		this.createdAt = DateUtils.clone(createdAt);
 		return this;
 	}
 

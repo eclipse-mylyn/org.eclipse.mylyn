@@ -12,6 +12,8 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * Gist revision class.
  */
@@ -31,7 +33,7 @@ public class GistRevision {
 	 * @return committedAt
 	 */
 	public Date getCommittedAt() {
-		return committedAt != null ? new Date(committedAt.getTime()) : null;
+		return DateUtils.clone(committedAt);
 	}
 
 	/**

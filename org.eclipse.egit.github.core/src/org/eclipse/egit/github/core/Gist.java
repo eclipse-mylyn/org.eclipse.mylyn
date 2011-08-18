@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * GitHub gist class.
  */
@@ -68,7 +70,7 @@ public class Gist {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return createdAt != null ? new Date(createdAt.getTime()) : null;
+		return DateUtils.clone(createdAt);
 	}
 
 	/**
@@ -158,7 +160,7 @@ public class Gist {
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return updatedAt != null ? new Date(updatedAt.getTime()) : null;
+		return DateUtils.clone(updatedAt);
 	}
 
 	/**
