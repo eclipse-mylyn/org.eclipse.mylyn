@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * GitHub issue class.
  *
@@ -55,21 +57,21 @@ public class Issue {
 	 * @return closedAt
 	 */
 	public Date getClosedAt() {
-		return closedAt != null ? new Date(closedAt.getTime()) : null;
+		return DateUtils.clone(closedAt);
 	}
 
 	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return createdAt != null ? new Date(createdAt.getTime()) : null;
+		return DateUtils.clone(createdAt);
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return updatedAt != null ? new Date(updatedAt.getTime()) : null;
+		return DateUtils.clone(updatedAt);
 	}
 
 	/**

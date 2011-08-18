@@ -12,6 +12,8 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * GitHub issue milestone class.
  *
@@ -43,14 +45,14 @@ public class Milestone {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return createdAt != null ? new Date(createdAt.getTime()) : null;
+		return DateUtils.clone(createdAt);
 	}
 
 	/**
 	 * @return dueOn
 	 */
 	public Date getDueOn() {
-		return dueOn != null ? new Date(dueOn.getTime()) : null;
+		return DateUtils.clone(dueOn);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class Milestone {
 	 * @return this milestone
 	 */
 	public Milestone setDueOn(Date dueOn) {
-		this.dueOn = dueOn != null ? new Date(dueOn.getTime()) : null;
+		this.dueOn = DateUtils.clone(dueOn);
 		return this;
 	}
 

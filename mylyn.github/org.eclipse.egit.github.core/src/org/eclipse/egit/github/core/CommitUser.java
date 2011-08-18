@@ -12,8 +12,10 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
- * 
+ *
  */
 public class CommitUser {
 
@@ -27,7 +29,7 @@ public class CommitUser {
 	 * @return date
 	 */
 	public Date getDate() {
-		return date;
+		return DateUtils.clone(date);
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class CommitUser {
 	 * @return this commit user
 	 */
 	public CommitUser setDate(Date date) {
-		this.date = date;
+		this.date = DateUtils.clone(date);
 		return this;
 	}
 
