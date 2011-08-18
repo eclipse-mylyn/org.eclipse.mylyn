@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FILES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MERGE;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.MergeStatus;
@@ -348,5 +350,154 @@ public class PullRequestService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_MERGE);
 		return client.put(uri.toString(), null, MergeStatus.class);
+	}
+
+	/**
+	 * Get all comments on commits in given pull request
+	 *
+	 * @param repository
+	 * @param id
+	 * @return non-null list of comments
+	 * @throws IOException
+	 */
+	public List<CommitComment> getComments(IRepositoryIdProvider repository,
+			int id) throws IOException {
+		return getAll(pageComments(repository, id));
+	}
+
+	/**
+	 * Page pull request commit comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @return iterator over pages of commit comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository, int id) {
+		return pageComments(repository, id, PAGE_SIZE);
+	}
+
+	/**
+	 * Page pull request commit comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @param size
+	 * @return iterator over pages of commit comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository, int id, int size) {
+		return pageComments(repository, id, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page pull request commit comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of commit comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository, int id, int start, int size) {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_COMMENTS);
+		PagedRequest<CommitComment> request = createPagedRequest(start, size);
+		request.setUri(uri);
+		request.setType(new TypeToken<List<CommitComment>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Get commit comment with given id
+	 *
+	 * @param repository
+	 * @param id
+	 * @return commit comment
+	 * @throws IOException
+	 */
+	public CommitComment getComment(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append(SEGMENT_COMMENTS);
+		uri.append('/').append(id);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		request.setType(CommitComment.class);
+		return (CommitComment) client.get(request).getBody();
+	}
+
+	/**
+	 * Create comment on given pull request
+	 *
+	 * @param repository
+	 * @param id
+	 * @param comment
+	 * @return created commit comment
+	 * @throws IOException
+	 */
+	public CommitComment createComment(IRepositoryIdProvider repository,
+			int id, CommitComment comment) throws IOException {
+		String repoId = getId(repository);
+		if (comment == null)
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_COMMENTS);
+		return client.post(uri.toString(), comment, CommitComment.class);
+	}
+
+	/**
+	 * Reply to given comment
+	 *
+	 * @param repository
+	 * @param pullRequestId
+	 * @param commentId
+	 * @param body
+	 * @return created comment
+	 * @throws IOException
+	 */
+	public CommitComment replyToComment(IRepositoryIdProvider repository,
+			int pullRequestId, int commentId, String body) throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append('/').append(pullRequestId);
+		uri.append(SEGMENT_COMMENTS);
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("in_reply_to", Integer.toString(commentId)); //$NON-NLS-1$
+		params.put("body", body); //$NON-NLS-1$
+		return client.post(uri.toString(), params, CommitComment.class);
+	}
+
+	/**
+	 * Delete commit comment with given id
+	 *
+	 * @param repository
+	 * @param id
+	 * @throws IOException
+	 */
+	public void deleteComment(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append(SEGMENT_COMMENTS);
+		uri.append('/').append(id);
+		client.delete(uri.toString());
 	}
 }

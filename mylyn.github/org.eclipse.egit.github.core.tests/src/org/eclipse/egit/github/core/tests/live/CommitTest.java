@@ -76,7 +76,6 @@ public class CommitTest extends LiveTest {
 			assertNotNull(comment);
 			assertNotNull(comment.getBody());
 			assertEquals(commit, comment.getCommitId());
-			assertNotNull(comment.getId());
 			assertNotNull(comment.getCreatedAt());
 			assertNotNull(comment.getUpdatedAt());
 			assertNotNull(comment.getUrl());

@@ -12,10 +12,10 @@ package org.eclipse.egit.github.core;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
  * GitHub issue and gist comment class.
- * 
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class Comment {
 
@@ -25,7 +25,7 @@ public class Comment {
 
 	private String body;
 
-	private String id;
+	private int id;
 
 	private String url;
 
@@ -35,44 +35,95 @@ public class Comment {
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return this.createdAt != null ? new Date(this.createdAt.getTime())
-				: null;
+		return DateUtils.clone(createdAt);
+	}
+
+	/**
+	 * @param createdAt
+	 * @return this comment
+	 */
+	public Comment setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
+		return this;
 	}
 
 	/**
 	 * @return updatedAt
 	 */
 	public Date getUpdatedAt() {
-		return this.updatedAt != null ? new Date(this.updatedAt.getTime())
-				: null;
+		return DateUtils.clone(updatedAt);
+	}
+
+	/**
+	 * @param updatedAt
+	 * @return this comment
+	 */
+	public Comment setUpdatedAt(Date updatedAt) {
+		this.updatedAt = DateUtils.clone(updatedAt);
+		return this;
 	}
 
 	/**
 	 * @return body
 	 */
 	public String getBody() {
-		return this.body;
+		return body;
+	}
+
+	/**
+	 * @param body
+	 * @return this comment
+	 */
+	public Comment setBody(String body) {
+		this.body = body;
+		return this;
 	}
 
 	/**
 	 * @return id
 	 */
-	public String getId() {
-		return this.id;
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this comment
+	 */
+	public Comment setId(int id) {
+		this.id = id;
+		return this;
 	}
 
 	/**
 	 * @return url
 	 */
 	public String getUrl() {
-		return this.url;
+		return url;
+	}
+
+	/**
+	 * @param url
+	 * @return this comment
+	 */
+	public Comment setUrl(String url) {
+		this.url = url;
+		return this;
 	}
 
 	/**
 	 * @return user
 	 */
 	public User getUser() {
-		return this.user;
+		return user;
 	}
 
+	/**
+	 * @param user
+	 * @return this comment
+	 */
+	public Comment setUser(User user) {
+		this.user = user;
+		return this;
+	}
 }

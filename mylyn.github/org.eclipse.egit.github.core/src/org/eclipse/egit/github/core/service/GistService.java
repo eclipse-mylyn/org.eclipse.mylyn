@@ -304,10 +304,7 @@ public class GistService extends GitHubService {
 	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(String commentId) throws IOException {
-		if (commentId == null)
-			throw new IllegalArgumentException("Gist comment id cannot be null"); //$NON-NLS-1$
-
+	public void deleteComment(int commentId) throws IOException {
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());

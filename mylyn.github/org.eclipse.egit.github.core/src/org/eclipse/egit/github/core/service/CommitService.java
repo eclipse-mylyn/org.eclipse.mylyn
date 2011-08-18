@@ -243,14 +243,9 @@ public class CommitService extends GitHubService {
 	 * @return commit comment
 	 * @throws IOException
 	 */
-	public CommitComment getComment(IRepositoryIdProvider repository, String id)
+	public CommitComment getComment(IRepositoryIdProvider repository, int id)
 			throws IOException {
 		String repoId = getId(repository);
-		if (id == null)
-			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
-		if (id.length() == 0)
-			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
-
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_COMMENTS);
@@ -299,16 +294,11 @@ public class CommitService extends GitHubService {
 		String id = getId(repository);
 		if (comment == null)
 			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
-		String commentId = comment.getId();
-		if (commentId == null)
-			throw new IllegalArgumentException("Comment id cannot be null"); //$NON-NLS-1$
-		if (commentId.length() == 0)
-			throw new IllegalArgumentException("Comment id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMENTS);
-		uri.append('/').append(commentId);
+		uri.append('/').append(comment.getId());
 		Map<String, String> params = Collections.singletonMap(
 				"body", comment.getBody()); //$NON-NLS-1$
 		return client.post(uri.toString(), params, CommitComment.class);
