@@ -338,18 +338,21 @@ public class PullRequestService extends GitHubService {
 	 *
 	 * @param repository
 	 * @param id
+	 * @param commitMessage
 	 * @return status of merge
 	 * @throws IOException
 	 */
-	public MergeStatus merge(IRepositoryIdProvider repository, int id)
-			throws IOException {
+	public MergeStatus merge(IRepositoryIdProvider repository, int id,
+			String commitMessage) throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_MERGE);
-		return client.put(uri.toString(), null, MergeStatus.class);
+		return client.put(uri.toString(),
+				Collections.singletonMap("commit_message", commitMessage), //$NON-NLS-1$
+				MergeStatus.class);
 	}
 
 	/**
