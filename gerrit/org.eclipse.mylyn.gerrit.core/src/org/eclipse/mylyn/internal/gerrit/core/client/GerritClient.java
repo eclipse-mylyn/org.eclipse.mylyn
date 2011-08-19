@@ -391,7 +391,18 @@ public class GerritClient {
 
 	public GerritChange getChange(String reviewId, IProgressMonitor monitor) throws GerritException {
 		GerritChange change = new GerritChange();
-		ChangeDetail changeDetail = getChangeDetail(id(reviewId), monitor);
+		int id;
+		try {
+			id = id(reviewId);
+		} catch (GerritException e) {
+			List<ChangeInfo> result = executeQuery(monitor, reviewId);
+			if (result.size() == 1) {
+				id = result.get(0).getId().get();
+			} else {
+				throw e;
+			}
+		}
+		ChangeDetail changeDetail = getChangeDetail(id, monitor);
 		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
 		Map<PatchSet.Id, PatchSetPublishDetail> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetail>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
