@@ -228,6 +228,10 @@ public class TracHyperlinkUtilTest extends TestCase {
 
 		links = findTracHyperlinks(repository, "a !WikiPage is here", 4, 0);
 		assertNull(links);
+
+		// bug 350931 (two upper case characters in camel case word)
+		links = findTracHyperlinks(repository, "aWIkiPage is here", 4, 0);
+		assertNull(links);
 	}
 
 	public void testFindHyperlinksMilestone() {
