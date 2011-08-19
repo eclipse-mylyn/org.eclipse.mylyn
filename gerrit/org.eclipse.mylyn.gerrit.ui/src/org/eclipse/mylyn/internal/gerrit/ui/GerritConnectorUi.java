@@ -8,10 +8,18 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      GitHub Inc. - fixes for bug 355179      
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -21,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
@@ -32,8 +41,11 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
+ * @author Kevin Sawicki
  */
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
+
+	private static final Pattern PATTERN_CHANGE_ID = Pattern.compile("(?:\\W||^)(Change-Id: (I[0-9a-f]{40}))"); //$NON-NLS-1$
 
 	@Override
 	public String getConnectorKind() {
@@ -75,6 +87,28 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public ImageDescriptor getTaskKindOverlay(ITask task) {
 		return GerritImages.OVERLAY_REVIEW;
+	}
+
+	@Override
+	public IHyperlink[] findHyperlinks(final TaskRepository repository, ITask task, String text, int index,
+			int textOffset) {
+		List<IHyperlink> links = null;
+		Matcher matcher = PATTERN_CHANGE_ID.matcher(text);
+		while (matcher.find()) {
+			if (index != -1 && (index < matcher.start() || index > matcher.end())) {
+				continue;
+			}
+			if (links == null) {
+				links = new ArrayList<IHyperlink>();
+			}
+			String key = matcher.group(2);
+			if (task == null || !key.startsWith(task.getTaskKey())) {
+				int start = matcher.start(1);
+				Region region = new Region(textOffset + start, matcher.end(1) - start);
+				links.add(new TaskHyperlink(region, repository, key));
+			}
+		}
+		return links != null ? links.toArray(new IHyperlink[links.size()]) : null;
 	}
 
 }
