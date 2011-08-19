@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.versions.core.spi;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -40,6 +41,10 @@ public abstract class ScmConnector {
 
 	public abstract List<ChangeSet> getChangeSets(ScmRepository repository, IProgressMonitor monitor)
 			throws CoreException;
+
+	public Iterator<ChangeSet> getChangeSetsIterator(ScmRepository repository, IProgressMonitor monitor) {
+		throw new UnsupportedOperationException();
+	}
 
 	public abstract String getProviderId();
 
