@@ -61,7 +61,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern wikiPattern1 = createPattern("wiki:(\\w+)"); //$NON-NLS-1$
 
-	static Pattern wikiPattern2 = Pattern.compile("(?<![!.a-z])[A-Z][a-z0-9]+[A-Z]\\w*"); //$NON-NLS-1$
+	static Pattern wikiPattern2 = Pattern.compile("(?<![!.a-zA-Z])[A-Z][a-z0-9]+[A-Z]\\w*"); //$NON-NLS-1$
 
 	static Pattern milestonePattern = createPattern("milestone:([\\w\\.]+)"); //$NON-NLS-1$
 

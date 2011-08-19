@@ -8,6 +8,7 @@
  * Contributors:
  *     Steffen Pingel - initial API and implementation
  *     David Green - improvements
+ *     Jan Mauersberger - fixes for bug 350931
  *******************************************************************************/
 
 package org.eclipse.mylyn.trac.tests.ui;
@@ -228,8 +229,12 @@ public class TracHyperlinkUtilTest extends TestCase {
 
 		links = findTracHyperlinks(repository, "a !WikiPage is here", 4, 0);
 		assertNull(links);
+	}
 
-		// bug 350931 (two upper case characters in camel case word)
+	public void testFindHyperlinksWikiTwoCamelCaseWork() {
+		IHyperlink[] links = findTracHyperlinks(repository, "aWIkiPage is here", 2, 0);
+		assertNull(links);
+
 		links = findTracHyperlinks(repository, "aWIkiPage is here", 4, 0);
 		assertNull(links);
 	}
