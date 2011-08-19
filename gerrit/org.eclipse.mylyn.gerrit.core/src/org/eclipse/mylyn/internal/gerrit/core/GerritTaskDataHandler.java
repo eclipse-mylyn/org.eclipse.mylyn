@@ -12,13 +12,6 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
-import com.google.gerrit.common.data.AccountInfo;
-import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.ChangeInfo;
-import com.google.gerrit.reviewdb.Account;
-import com.google.gerrit.reviewdb.Change;
-import com.google.gerrit.reviewdb.ChangeMessage;
-
 import java.util.Date;
 import java.util.Set;
 
@@ -38,6 +31,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import com.google.gerrit.common.data.AccountInfo;
+import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.common.data.ChangeInfo;
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.ChangeMessage;
 
 /**
  * @author Mikael Kober
@@ -87,7 +87,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				id = getAccountId(client, repository, monitor);
 			}
 			GerritChange review = client.getChange(taskId, monitor);
-			TaskData taskData = createTaskData(repository, taskId, monitor);
+			int reviewId = review.getChangeDetail().getChange().getId().get();
+			TaskData taskData = createTaskData(repository, Integer.toString(reviewId), monitor);
 			updateTaskData(repository, taskData, review, !anonymous, id);
 			return taskData;
 		} catch (GerritException e) {
