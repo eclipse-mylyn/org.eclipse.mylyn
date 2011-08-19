@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Gerrit Connector (Incubation)
+Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui.tests;singleton:=true
+Bundle-Version: 0.9.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Fragment-Host: org.eclipse.mylyn.gerrit.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.mylyn.tests.util;bundle-version="3.5.0",
+ org.junit4;bundle-version="[4.5.0,5.0.0)",
+ org.mockito;bundle-version="[1.8.4,2.0.0)",
+ org.objenesis;bundle-version="[1.0.0,2.0.0)",
+ org.hamcrest;bundle-version="[1.0.0,2.0.0)"
