@@ -1520,6 +1520,12 @@ public class DiscoveryViewer {
 			// cancelled by user so nothing to do here.
 			wasCancelled = true;
 		}
+
+		// check if control was closed
+		if (body.isDisposed()) {
+			return;
+		}
+
 		if (discovery != null) {
 			discoveryUpdated(wasCancelled);
 			if (verifyUpdateSiteAvailability && !discovery.getConnectors().isEmpty()) {
@@ -1539,6 +1545,12 @@ public class DiscoveryViewer {
 					wasCancelled = true;
 				}
 			}
+
+			// check if control was closed
+			if (body.isDisposed()) {
+				return;
+			}
+
 			// createBodyContents() shouldn't be necessary but for some
 			// reason checkboxes don't
 			// regain their enabled state
