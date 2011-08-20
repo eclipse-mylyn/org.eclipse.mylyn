@@ -666,7 +666,12 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			addValidOperationsBefore4(bugReport);
 		} else {
-			addValidOperationsAfter4(bugReport);
+			if (getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.UNCONFIRMED.toString())) {
+				addValidOperationsAfter4(bugReport);
+			} else {
+				addValidOperationsBefore4(bugReport);
+			}
+
 		}
 	}
 
