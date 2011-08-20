@@ -14,20 +14,15 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.EnhancedWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -36,7 +31,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Helen Bershadskaya
  * @since 3.1
  */
-public class TaskRepositoryWizardDialog extends WizardDialog {
+public class TaskRepositoryWizardDialog extends EnhancedWizardDialog {
 
 	private static final String VALIDATE_BUTTON_KEY = "validate"; //$NON-NLS-1$
 
@@ -57,42 +52,22 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 	 * Overridden so we can add a validate button to the wizard button bar, if a repository settings page requires it.
 	 * Validate button is added left justified at button bar bottom (next to help image).
 	 * 
-	 * @since 3.1
+	 * @since 3.7
 	 */
 	@Override
-	protected Control createButtonBar(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 0; // create 
-		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		// create help control if needed
-		if (isHelpAvailable()) {
-			createHelpControl(composite);
-		}
-
+	protected void createExtraButtons(Composite composite) {
 		validateServerButton = createButton(composite, VALIDATE_BUTTON_ID,
 				Messages.AbstractRepositorySettingsPage_Validate_Settings, false);
 		validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_VALIDATE));
 		validateServerButton.setVisible(false);
 		setButtonLayoutData(validateServerButton);
-		Label filler = new Label(composite, SWT.NONE);
-		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		((GridLayout) composite.getLayout()).numColumns++;
-
-		super.createButtonsForButtonBar(composite);
-
-		return composite;
 	}
 
+	/**
+	 * @since 3.7
+	 */
 	@Override
-	public void updateButtons() {
+	public void updateExtraButtons() {
 		if (getCurrentPage() instanceof AbstractRepositorySettingsPage
 				&& ((AbstractRepositorySettingsPage) getCurrentPage()).needsValidation()) {
 
@@ -105,7 +80,6 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 				validateServerButton.setVisible(false);
 			}
 		}
-		super.updateButtons();
 	}
 
 	/**
@@ -113,17 +87,17 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 	 * selection listener in the creation method above, but this is more consistent with how the other buttons work in
 	 * the wizard dialog.
 	 * 
-	 * @since 3.1
+	 * @since 3.7
 	 */
 	@Override
-	protected void buttonPressed(int buttonId) {
+	protected boolean handleExtraButtonPressed(int buttonId) {
 		if (buttonId == VALIDATE_BUTTON_ID) {
 			if (getCurrentPage() instanceof AbstractRepositorySettingsPage) {
 				((AbstractRepositorySettingsPage) getCurrentPage()).validateSettings();
+				return true;
 			}
-		} else {
-			super.buttonPressed(buttonId);
 		}
+		return false;
 	}
 
 	/**
@@ -146,8 +120,11 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 
 	/**
 	 * Modeled after super.saveAndSetEnabledState(), but that one is private, so create our own
+	 * 
+	 * @since 3.7
 	 */
-	private HashMap<String, Boolean> saveAndSetEnabledStateMylyn() {
+	@Override
+	protected HashMap<String, Boolean> saveAndSetEnabledStateMylyn() {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
 			savedEnabledState = new HashMap<String, Boolean>();
@@ -162,8 +139,11 @@ public class TaskRepositoryWizardDialog extends WizardDialog {
 	/**
 	 * Modeled after super.restoreEnabledState() and super.restoreUIState() -- couldn't override those since they are
 	 * private, so create our own. Currently only single button to work with, so don't create two separate methods
+	 * 
+	 * @since 3.7
 	 */
-	private void restoreEnabledStateMylyn(HashMap<String, Boolean> savedEnabledState) {
+	@Override
+	protected void restoreEnabledStateMylyn(HashMap<String, Boolean> savedEnabledState) {
 		if (savedEnabledState != null) {
 			Boolean savedValidateEnabledState = savedEnabledState.get(VALIDATE_BUTTON_KEY);
 			if (validateServerButton != null && savedValidateEnabledState != null) {
