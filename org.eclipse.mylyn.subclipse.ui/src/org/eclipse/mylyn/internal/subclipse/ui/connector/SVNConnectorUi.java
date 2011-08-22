@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.subclipse.ui.connector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.subclipse.ui.GetChangeSetDialog;
 import org.eclipse.mylyn.versions.core.ChangeSet;
@@ -48,8 +50,13 @@ public class SVNConnectorUi extends ScmConnectorUi {
 			throw new RuntimeException("No Subclipse connector: " + scmConnector.getProviderId());
 		}
 
-		final GetChangeSetDialog dialog = new GetChangeSetDialog(null, project);
+		final IProgressMonitor monitor = new NullProgressMonitor();
+		final GetChangeSetDialog dialog = new GetChangeSetDialog(null, project, monitor);
 		final int result = dialog.open();
+
+		//Cancel any ongoing tasks operations
+		monitor.setCanceled(true);
+
 		if (result == Window.OK) {
 			return dialog.getChangeSet();
 		} // else Window.CANCEL

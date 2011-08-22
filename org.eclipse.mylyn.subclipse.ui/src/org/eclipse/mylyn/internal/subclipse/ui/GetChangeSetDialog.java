@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.subclipse.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -94,6 +95,11 @@ public class GetChangeSetDialog extends FormDialog {
 	private static final String NEWLINE = "\n";
 
 	/**
+	 * Field COMMIT_CHUNK_SIZE.
+	 */
+	private static final int COMMIT_CHUNK_SIZE = 1;
+
+	/**
 	 * Field NUM_COMMIT_SHOWN. (value is 10)
 	 */
 	private static final int NUM_COMMIT_SHOWN = 10;
@@ -168,25 +174,14 @@ public class GetChangeSetDialog extends FormDialog {
 	 */
 	private ScmRepository repository = null;
 
-	/**
-	 * Field changeSets - The ChangeSets fetched from the repository
-	 */
-	private List<ChangeSet> changeSets = null;
+	private Iterator<ChangeSet> changeSetsIter = null;
 
 	/**
 	 * Field filteredChangeSets - The ChangeSets that will be displayed
 	 */
 	private final List<ChangeSet> filteredChangeSets = new ArrayList<ChangeSet>();
 
-	/**
-	 * Field currentChangeSetIndex - The current index in the fetched ChangeSet List
-	 */
-	private int currentChangeSetIndex;
-
-	/**
-	 * Field currentCommitListIndex - The current index in the filtered ChangeSet List
-	 */
-	private int currentCommitListIndex;
+	private final IProgressMonitor changeSetIterMonitor;
 
 	/**
 	 * Constructor for R4EReviewGroupInputDialog.
@@ -195,11 +190,17 @@ public class GetChangeSetDialog extends FormDialog {
 	 *            Shell
 	 * @param aInputProject
 	 *            IProject
+	 * @param monitor
 	 */
-	public GetChangeSetDialog(Shell aParentShell, IProject aInputProject) {
+	public GetChangeSetDialog(Shell aParentShell, IProject aInputProject, IProgressMonitor monitor) {
 		super(aParentShell);
 		setBlockOnOpen(true);
 		inputProject = aInputProject;
+		if (monitor == null) {
+			changeSetIterMonitor = new NullProgressMonitor();
+		} else {
+			changeSetIterMonitor = monitor;
+		}
 	}
 
 	/**
@@ -225,9 +226,7 @@ public class GetChangeSetDialog extends FormDialog {
 		try {
 			connector = ScmCore.getConnector(inputProject);
 			repository = connector.getRepository(inputProject, new NullProgressMonitor());
-			changeSets = connector.getChangeSets(repository, new NullProgressMonitor());
-			currentChangeSetIndex = 0;
-			currentCommitListIndex = 0;
+			changeSetsIter = connector.getChangeSetsIterator(repository, changeSetIterMonitor);
 
 			final FormToolkit toolkit = mform.getToolkit();
 			final ScrolledForm sform = mform.getForm();
@@ -279,17 +278,17 @@ public class GetChangeSetDialog extends FormDialog {
 	 */
 	protected void populateNextChangeSets() {
 		ChangeSet updatedChangeSet = null;
-		ChangeSet changeSet = null;
 		String repoProject = null;
+		int addedCount = 0;
 
-		// Remove extension item first if present
-		if (currentCommitListIndex > 0) {
-			commitList.remove(currentCommitListIndex);
+		// Remove more items entry
+		int selIndex = commitList.getSelectionIndex();
+		if (selIndex > 0) {
+			commitList.remove(selIndex);
 		}
 
-		while (currentChangeSetIndex < changeSets.size()) {
-			changeSet = changeSets.get(currentChangeSetIndex);
-			updatedChangeSet = updateChangeSet(changeSet);
+		while (changeSetsIter.hasNext()) {
+			updatedChangeSet = changeSetsIter.next();
 
 			// Only display commits that contains at least one file from the
 			// selected project
@@ -304,19 +303,18 @@ public class GetChangeSetDialog extends FormDialog {
 					commitList.add((tokens[0].length() > DIALOG_COMBO_MAX_CHARACTERS) ? tokens[0].substring(0,
 							DIALOG_COMBO_MAX_CHARACTERS - 3) + "..." : tokens[0]);
 					filteredChangeSets.add(updatedChangeSet);
-					currentCommitListIndex++;
+
+					addedCount++;
 
 					// If we already have all the commits from the current batch
 					// exit
-					if (currentCommitListIndex % NUM_COMMIT_SHOWN == 0) {
+					if (addedCount % COMMIT_CHUNK_SIZE == 0) {
 						commitList.add(MORE_ITEMS_LABEL);
-						currentChangeSetIndex++;
 						return;
 					}
 					break;
 				}
 			}
-			currentChangeSetIndex++;
 		}
 		return;
 	}
@@ -443,27 +441,6 @@ public class GetChangeSetDialog extends FormDialog {
 		}
 		final GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
 		changeList.setLayoutData(data);
-	}
-
-	/**
-	 * Fetches and updates the local ChangeSet information
-	 * 
-	 * @param aSelectedChangeSet
-	 *            ChangeSet
-	 */
-	private ChangeSet updateChangeSet(ChangeSet aSelectedChangeSet) {
-		String changeSetId = aSelectedChangeSet.getId();
-		ChangeSet updatedChangeSet = null;
-
-		// IFileRevision
-		IFileRevision fileRevision = createFileRevision(changeSetId);
-		try {
-			updatedChangeSet = connector.getChangeSet(repository, fileRevision, new NullProgressMonitor());
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, IStatus.OK, e.toString(), e));
-			return aSelectedChangeSet; // return non-updated ChangeSet
-		}
-		return updatedChangeSet;
 	}
 
 	/**
