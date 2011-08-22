@@ -16,9 +16,13 @@ import java.net.URI;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
@@ -51,6 +55,7 @@ import org.tigris.subversion.svnclientadapter.ISVNLogMessage;
 import org.tigris.subversion.svnclientadapter.ISVNLogMessageChangePath;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
+import org.tigris.subversion.svnclientadapter.SVNRevision.Number;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
 
 /**
@@ -60,6 +65,10 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
 public class SubclipseConnector extends ScmConnector {
 
 	private final ILog logger = SubclipseCorePlugin.getDefault().getLog();
+
+	private final Map<IProject, SubclipseRepository> mapProjToRepo = new HashMap<IProject, SubclipseRepository>();
+
+	private Integer threadBookNum = new Integer(0);
 
 	/**
 	 * allow mapping from local url project folders to works space project
@@ -106,11 +115,16 @@ public class SubclipseConnector extends ScmConnector {
 		//resolve the revision to SVNRevision
 		SVNRevision sRevision = resolveSvnRevision(revision);
 
+		return getChangeSet(repo, sRevision, monitor);
+	}
+
+	private ChangeSet getChangeSet(SubclipseRepository repository, SVNRevision sRevision, IProgressMonitor monitor)
+			throws CoreException {
 		//Get the commit message data for the single revision provided 
-		SVNUrl repoLocationUrl = repo.getProjectSVNFolder();
+		SVNUrl repoLocationUrl = repository.getProjectSVNFolder();
 		boolean fetchChangePaths = true;
-		ISVNLogMessage[] messages = resolveChangeSets(repo, repoLocationUrl, sRevision, sRevision, fetchChangePaths,
-				null);
+		ISVNLogMessage[] messages = resolveChangeSets(repository, repoLocationUrl, sRevision, sRevision,
+				fetchChangePaths, null);
 
 		if (messages == null) {
 			return null;
@@ -121,12 +135,19 @@ public class SubclipseConnector extends ScmConnector {
 
 		ISVNLogMessage isvnLogMessage = messages[0];
 
+		List<Change> changes = buildChanges(repository, isvnLogMessage);
+
+		return changeSet(repository, isvnLogMessage, changes);
+	}
+
+	private List<Change> buildChanges(SubclipseRepository repo, ISVNLogMessage isvnLogMessage) throws CoreException {
 		//Prepare the list of changes adapted from ISVNLogMessageChangePath
 		ISVNLogMessageChangePath[] changePaths = isvnLogMessage.getChangedPaths();
 		List<Change> changes = new ArrayList<Change>();
 
+		Number sRevision = isvnLogMessage.getRevision();
 		//One Change instance created per changePath, needs to resolve base commit for each path
-		String id = String.valueOf(isvnLogMessage.getRevision().getNumber());
+		String id = String.valueOf(sRevision.getNumber());
 		for (ISVNLogMessageChangePath isvnLogMessageChangePath : changePaths) {
 			//Resolve change type
 			ChangeType ctype = mapChangeType(isvnLogMessageChangePath);
@@ -155,8 +176,7 @@ public class SubclipseConnector extends ScmConnector {
 			}
 
 		}
-
-		return changeSet(repo, isvnLogMessage, changes);
+		return changes;
 	}
 
 	@Override
@@ -188,6 +208,56 @@ public class SubclipseConnector extends ScmConnector {
 	}
 
 	@Override
+	public Iterator<ChangeSet> getChangeSetsIterator(ScmRepository repository, final IProgressMonitor monitor) {
+		//resolve and keep references to all workspace subclipse project URLs
+		resolveSubclipseProjects();
+
+		final SubclipseRepository repo = (SubclipseRepository) repository;
+		final ChangeSetsIterator niterator = scheduleIterator(monitor, repo);
+
+		return niterator;
+	}
+
+	private ChangeSetsIterator scheduleIterator(final IProgressMonitor monitor, final SubclipseRepository repo) {
+		final ChangeSetsIterator niterator = new ChangeSetsIterator(repo, monitor);
+		Thread monitorThread = new Thread(new Runnable() {
+			public void run() {
+				//start potentially blocking task Using a blocking queue
+				Thread thread = new Thread(niterator);
+				String name = repo.getName() + "-" + ++threadBookNum; //$NON-NLS-1$
+				thread.setName(name);
+				thread.start();
+				niterator.setRunnableThread(thread);
+
+				try {
+					//monitor cancellation to make sure we unblock 
+					//thread to be able to process the cancellation flag
+					while (thread.isAlive()) {
+						if (monitor.isCanceled()) {
+							thread.interrupt();
+							break;
+						}
+
+						//Ugly. periodic poll for user cancellation
+						//TODO: Discuss the definition of mylyn versions implementation of an IProgressMonitor
+						//with an instance variable thread 
+						//and Interrupt upon cancellation. Other options?
+						Thread.sleep(100);
+					}
+
+					thread.join();
+				} catch (InterruptedException e) {
+					thread.interrupt();
+				}
+			}
+
+		});
+
+		monitorThread.start();
+		return niterator;
+	}
+
+	@Override
 	public String getProviderId() {
 		return SVNProviderPlugin.getTypeId();
 	}
@@ -201,9 +271,16 @@ public class SubclipseConnector extends ScmConnector {
 	public ScmRepository getRepository(IResource resource, IProgressMonitor monitor) throws CoreException {
 		IProject project = resource.getProject();
 
-		ISVNRepositoryLocation location = SVNWorkspaceRoot.getRepositoryFor(project.getLocation());
+		//check if it's cached
+		SubclipseRepository repo = mapProjToRepo.get(project);
 
-		return getRepository(location, project);
+		if (repo == null) {
+			ISVNRepositoryLocation location = SVNWorkspaceRoot.getRepositoryFor(project.getLocation());
+			repo = getRepository(location, project);
+			mapProjToRepo.put(project, repo);
+		}
+
+		return repo;
 	}
 
 	@Override
@@ -392,6 +469,151 @@ public class SubclipseConnector extends ScmConnector {
 				String folderUrlStr = SVNWorkspaceRoot.getSVNFolderFor(iProject).getUrl().toString();
 				mapSvnFolderToProject.put(folderUrlStr, iProject);
 			}
+		}
+	}
+
+	class ChangeSetsIterator implements Iterator<ChangeSet>, Runnable {
+		private final int QUEUE_MAX = 40;
+
+		private final Long CHUNKSIZE = 20L;
+
+		private boolean dataProcessingStarted = false;
+
+		private final SVNRevision earliestRevision = new SVNRevision.Number(1L);
+
+		private final ArrayBlockingQueue<ChangeSet> changeSetQueue = new ArrayBlockingQueue<ChangeSet>(QUEUE_MAX);
+
+		private final SubclipseRepository repo;
+
+		private volatile AtomicBoolean done = new AtomicBoolean(false);
+
+		private volatile AtomicBoolean cancelled = new AtomicBoolean(false);
+
+		private Thread thread = null;
+
+		private final IProgressMonitor monitor;
+
+		public ChangeSetsIterator(SubclipseRepository repository, IProgressMonitor aMonitor) {
+			this.repo = repository;
+			this.monitor = aMonitor;
+		}
+
+		public void run() {
+			ISVNLogMessage[] msgList = null;
+			ISVNLogMessage messageBeingProcessed = null;
+			Number headRevisionNum = new Number(Long.MAX_VALUE);
+
+			//while head revision > earliest and ...
+			while ((headRevisionNum.compareTo(earliestRevision) == 1) && !cancelled.get() && !done.get()) {
+				try {
+					//initialise start Revision
+					SVNRevision startRevision;
+					if (dataProcessingStarted) {
+						startRevision = headRevisionNum;
+					} else {
+						startRevision = SVNRevision.HEAD;
+					}
+
+					//Resolve the changes for the max chunk size 
+					msgList = resolveChangeSets(repo, repo.getProjectSVNFolder(), startRevision, earliestRevision,
+							true, CHUNKSIZE);
+
+					//adapt to ChangeSet
+					int size = msgList.length;
+					for (int i = 0; i < size && !cancelled.get() && !done.get(); i++) {
+						messageBeingProcessed = msgList[i];
+						ChangeSet changeset;
+//						ChangeSet changeset = getChangeSet(repo, messageBeingProcessed.getRevision(), monitor);
+						List<Change> changes = buildChanges(repo, messageBeingProcessed);
+						changeset = changeSet(repo, messageBeingProcessed, changes);
+						try {
+							changeSetQueue.put(changeset);
+						} catch (InterruptedException e) {
+							//Exit
+							cancelled.set(true);
+							monitor.done();
+							return;
+						}
+
+						// UI is done
+						if (monitor.isCanceled()) {
+							cancelled.set(true);
+						}
+					}
+
+					//reduce by one to avoid repeated entries
+					headRevisionNum = moveProcessingHead(msgList[size - 1]);
+
+				} catch (CoreException e) {
+					e.printStackTrace();
+					//attempt to continue processing next message
+					if (messageBeingProcessed != null) {
+						headRevisionNum = moveProcessingHead(messageBeingProcessed);
+					} else {
+						cancelled.set(true);
+					}
+				}
+
+				//increment worked items
+				monitor.worked(1);
+
+				// UI is done
+				if (monitor.isCanceled()) {
+					cancelled.set(true);
+				}
+			}
+
+			done.set(true);
+			monitor.done();
+		}
+
+		private Number moveProcessingHead(ISVNLogMessage messageBeingProcessed) {
+			long nextRevisionValue = messageBeingProcessed.getRevision().getNumber() - 1;
+			dataProcessingStarted = true;
+			return new Number(nextRevisionValue);
+		}
+
+		public boolean hasNext() {
+			if (changeSetQueue.size() > 0) {
+				return true;
+			}
+
+			if (cancelled.get() || done.get()) {
+				return false;
+			}
+
+			return true;
+		}
+
+		public ChangeSet next() {
+			try {
+				return changeSetQueue.poll(2, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				Thread.currentThread().interrupt();
+			}
+
+			return null;
+		}
+
+		public void remove() {
+			changeSetQueue.poll();
+		}
+
+		public Thread getRunnableThread() {
+			return thread;
+		}
+
+		public void setRunnableThread(Thread thread) {
+			this.thread = thread;
+		}
+
+		public void setCancelled(boolean cancelled) {
+			this.cancelled.set(cancelled);
+		}
+
+		public boolean isCancelled() {
+			return cancelled.get();
 		}
 	}
 
