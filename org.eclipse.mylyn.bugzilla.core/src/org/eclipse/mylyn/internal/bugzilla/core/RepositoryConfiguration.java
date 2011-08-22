@@ -767,6 +767,22 @@ public class RepositoryConfiguration implements Serializable {
 			}
 			addOperation(bugReport, BugzillaOperation.duplicate);
 		}
+		BugzillaAttribute key = BugzillaAttribute.SET_DEFAULT_ASSIGNEE;
+		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(key.getKey());
+		if (operationAttribute == null) {
+			operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
+			operationAttribute.getMetaData()
+					.defaults()
+					.setReadOnly(key.isReadOnly())
+					.setKind(key.getKind())
+					.setLabel(key.toString())
+					.setType(key.getType());
+			operationAttribute.setValue("0"); //$NON-NLS-1$
+		}
+		operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		if (operationAttribute != null) {
+			operationAttribute.getMetaData().setReadOnly(false);
+		}
 
 	}
 
