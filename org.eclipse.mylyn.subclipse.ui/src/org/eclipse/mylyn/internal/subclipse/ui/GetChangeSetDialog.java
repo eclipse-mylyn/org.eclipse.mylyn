@@ -97,7 +97,7 @@ public class GetChangeSetDialog extends FormDialog {
 	/**
 	 * Field COMMIT_CHUNK_SIZE.
 	 */
-	private static final int COMMIT_CHUNK_SIZE = 1;
+	private static final int COMMIT_CHUNK_SIZE = 9;
 
 	/**
 	 * Field NUM_COMMIT_SHOWN. (value is 10)
@@ -444,6 +444,29 @@ public class GetChangeSetDialog extends FormDialog {
 	}
 
 	/**
+	 * Fetches and updates the local ChangeSet information with resolution of base changes
+	 * 
+	 * @param aSelectedChangeSet
+	 *            ChangeSet
+	 * @throws CoreException
+	 */
+	private ChangeSet updateChangeSet(ChangeSet aSelectedChangeSet) {
+		String changeSetId = aSelectedChangeSet.getId();
+		ChangeSet updatedChangeSet = null;
+
+		// IFileRevision
+		IFileRevision fileRevision = createFileRevision(changeSetId);
+		try {
+			updatedChangeSet = connector.getChangeSet(repository, fileRevision, new NullProgressMonitor());
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, "Unable to resolve changeSet " //$NON-NLS-1$
+					+ changeSetId, e));
+			return aSelectedChangeSet; // return non-updated ChangeSet
+		}
+		return updatedChangeSet;
+	}
+
+	/**
 	 * @param changeSetId
 	 *            String
 	 * @return IFileRevision
@@ -500,11 +523,10 @@ public class GetChangeSetDialog extends FormDialog {
 		return true;
 	}
 
-	/**
-	 * @return ChangeSet
-	 */
+
 	public ChangeSet getChangeSet() {
-		return selectedChangeSet;
+		//return a deep parsed version of the changeset
+		return updateChangeSet(selectedChangeSet);
 	}
 
 	/**

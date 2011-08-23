@@ -135,12 +135,21 @@ public class SubclipseConnector extends ScmConnector {
 
 		ISVNLogMessage isvnLogMessage = messages[0];
 
-		List<Change> changes = buildChanges(repository, isvnLogMessage);
+		List<Change> changes = buildChanges(repository, isvnLogMessage, true);
 
 		return changeSet(repository, isvnLogMessage, changes);
 	}
 
-	private List<Change> buildChanges(SubclipseRepository repo, ISVNLogMessage isvnLogMessage) throws CoreException {
+	/**
+	 * @param repository
+	 * @param isvnLogMessage
+	 * @param withBaseVersions
+	 *            - resolve base revisions
+	 * @return
+	 * @throws CoreException
+	 */
+	private List<Change> buildChanges(SubclipseRepository repository, ISVNLogMessage isvnLogMessage,
+			boolean withBaseVersions) throws CoreException {
 		//Prepare the list of changes adapted from ISVNLogMessageChangePath
 		ISVNLogMessageChangePath[] changePaths = isvnLogMessage.getChangedPaths();
 		List<Change> changes = new ArrayList<Change>();
@@ -153,7 +162,7 @@ public class SubclipseConnector extends ScmConnector {
 			ChangeType ctype = mapChangeType(isvnLogMessageChangePath);
 
 			//Initialise target and base artifact
-			SubclipseArtifact newArtifact = getArtifact(repo, isvnLogMessageChangePath, id);
+			SubclipseArtifact newArtifact = getArtifact(repository, isvnLogMessageChangePath, id);
 			SubclipseArtifact oldArtifact = null;
 
 			//TODO: Implement the resolution of the replaced version
@@ -162,13 +171,17 @@ public class SubclipseConnector extends ScmConnector {
 				continue;
 			}
 
-			//Resolve the base artifact
-			try {
-				oldArtifact = resolveBaseArtifact(repo, newArtifact.getRepositoryURL(), sRevision,
-						isvnLogMessageChangePath);
-			} catch (MalformedURLException e) {
-				logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID, "Error resolving an artifact url" //$NON-NLS-1$
-						+ isvnLogMessageChangePath.getPath(), e));
+			//Deep parsing is only needed when the item has been selected by the user
+			if (withBaseVersions) {
+				//Resolve the base artifact
+				try {
+					oldArtifact = resolveBaseArtifact(repository, newArtifact.getRepositoryURL(), sRevision,
+							isvnLogMessageChangePath);
+				} catch (MalformedURLException e) {
+					logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
+							"Error resolving an artifact url" //$NON-NLS-1$
+									+ isvnLogMessageChangePath.getPath(), e));
+				}
 			}
 
 			if (newArtifact != null || oldArtifact != null) {
@@ -524,7 +537,7 @@ public class SubclipseConnector extends ScmConnector {
 						messageBeingProcessed = msgList[i];
 						ChangeSet changeset;
 //						ChangeSet changeset = getChangeSet(repo, messageBeingProcessed.getRevision(), monitor);
-						List<Change> changes = buildChanges(repo, messageBeingProcessed);
+						List<Change> changes = buildChanges(repo, messageBeingProcessed, false);
 						changeset = changeSet(repo, messageBeingProcessed, changes);
 						try {
 							changeSetQueue.put(changeset);
