@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -41,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Manages task elapsed time, scheduling, due dates, and the date ranges
@@ -96,6 +96,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 	};
 
+	private static final String ID_EXTENSION_TASK_ACTIVATION_LISTENERS = ITasksCoreConstants.ID_PLUGIN
+			+ ".taskActivationListeners"; //$NON-NLS-1$
+
 	public TaskActivityManager(TaskRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
@@ -103,35 +106,43 @@ public class TaskActivityManager implements ITaskActivityManager {
 		clear();
 	}
 
+	/**
+	 * Reads task activation listeners from an extension point.
+	 * <p>
+	 * Note: The method is not synchronizes since task activation and de-activation are expected to occur sequentially.
+	 */
 	private void initTaskListeners() {
 		if (!listenersInitialized) {
-			try {
-				IExtensionRegistry registry = Platform.getExtensionRegistry();
+			listenersInitialized = true;
 
-				IExtensionPoint listenerExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.TASK_ACTIVATION_LISTENER_EP_ID);
-				IExtension[] listenerExtensions = listenerExtensionPoint.getExtensions();
-
-				for (IExtension extension : listenerExtensions) {
-					IConfigurationElement[] configurationElements = extension.getConfigurationElements();
-					for (IConfigurationElement config : configurationElements) {
-						if ("listener".equals(config.getName())) { //$NON-NLS-1$
-							Object object;
-							object = config.createExecutableExtension("listenerClass");//$NON-NLS-1$
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint listenerExtensionPoint = registry.getExtensionPoint(TaskActivityManager.ID_EXTENSION_TASK_ACTIVATION_LISTENERS);
+			IExtension[] listenerExtensions = listenerExtensionPoint.getExtensions();
+			for (IExtension extension : listenerExtensions) {
+				IConfigurationElement[] elements = extension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if ("listener".equals(element.getName())) { //$NON-NLS-1$
+						try {
+							Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
 							if (object instanceof ITaskActivationListener) {
 								addActivationListener((ITaskActivationListener) object);
 							} else {
-								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-										"Registering of task activation listener failed: \"" + object + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
+								StatusHandler.log(new Status(
+										IStatus.ERROR,
+										ITasksCoreConstants.ID_PLUGIN,
+										NLS.bind(
+												"Unexpected error registering listener contributed by {0}: ''{1}'' does not extend expected class", //$NON-NLS-1$
+												element.getContributor().getName(), object.getClass()
+														.getCanonicalName())));
 							}
+						} catch (Throwable e) {
+							StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+									"Unexpected error registering listener contributed by {0}", //$NON-NLS-1$
+									element.getContributor().getName()), e));
 						}
 					}
 				}
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Registering of task activation listener failed: \"" + e.getMessage() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-
-			listenersInitialized = true;
 		}
 	}
 

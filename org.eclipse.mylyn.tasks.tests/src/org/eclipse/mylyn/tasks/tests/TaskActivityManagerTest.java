@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Manuel Doninger - fixes for bug 349924
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -34,8 +35,60 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 /**
  * @author Shawn Minto
  * @author Robert Elves
+ * @author Manuel Doninger
+ * @author Steffen Pingel
  */
 public class TaskActivityManagerTest extends TestCase {
+
+	public static class MockTaskActivationListenerExtension extends TaskActivationAdapter {
+
+		public static MockTaskActivationListenerExtension INSTANCE;
+
+		public static int INSTANCE_COUNT;
+
+		public boolean hasActivated = false;
+
+		public boolean hasPreActivated = false;
+
+		public boolean hasDeactivated = false;
+
+		public boolean hasPreDeactivated = false;
+
+		public MockTaskActivationListenerExtension() {
+			INSTANCE = this;
+			INSTANCE_COUNT++;
+		}
+
+		public void reset() {
+			hasActivated = false;
+			hasPreActivated = false;
+
+			hasDeactivated = false;
+			hasPreDeactivated = false;
+
+		}
+
+		@Override
+		public void preTaskActivated(ITask task) {
+			hasPreActivated = true;
+		}
+
+		@Override
+		public void preTaskDeactivated(ITask task) {
+			hasPreDeactivated = true;
+		}
+
+		@Override
+		public void taskActivated(ITask task) {
+			hasActivated = true;
+		}
+
+		@Override
+		public void taskDeactivated(ITask task) {
+			hasDeactivated = true;
+		}
+
+	}
 
 	private class MockTaskActivationListener extends TaskActivationAdapter {
 
@@ -137,12 +190,7 @@ public class TaskActivityManagerTest extends TestCase {
 				assertTrue(listener.hasActivated);
 				assertFalse(listener.hasPreDeactivated);
 				assertFalse(listener.hasDeactivated);
-				assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
-				assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
-				assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
-				assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
 
-				MockTaskActivationListenerExtension.INSTANCE.reset();
 				listener.reset();
 			} finally {
 				taskActivityManager.deactivateTask(task);
@@ -151,12 +199,45 @@ public class TaskActivityManagerTest extends TestCase {
 			assertFalse(listener.hasActivated);
 			assertTrue(listener.hasPreDeactivated);
 			assertTrue(listener.hasDeactivated);
-			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
-			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
-			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
-			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
 		} finally {
 			taskActivityManager.removeActivationListener(listener);
+		}
+	}
+
+	public void testTaskActivationExtension() {
+		if (MockTaskActivationListenerExtension.INSTANCE != null) {
+			MockTaskActivationListenerExtension.INSTANCE.reset();
+		}
+
+		MockTask task = new MockTask("test:activation");
+		try {
+			taskActivityManager.activateTask(task);
+			assertNotNull("Expected creation of task activation listener instance",
+					MockTaskActivationListenerExtension.INSTANCE);
+			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
+			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
+			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
+			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
+
+			MockTaskActivationListenerExtension.INSTANCE.reset();
+		} finally {
+			taskActivityManager.deactivateTask(task);
+		}
+		assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
+		assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
+		assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
+		assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
+	}
+
+	public void testTaskActivationExtensionInstanceCount() {
+		MockTask task = new MockTask("test:activation");
+		try {
+			taskActivityManager.activateTask(task);
+			assertNotNull("Expected creation of task activation listener instance",
+					MockTaskActivationListenerExtension.INSTANCE);
+			assertEquals(1, MockTaskActivationListenerExtension.INSTANCE_COUNT);
+		} finally {
+			taskActivityManager.deactivateTask(task);
 		}
 	}
 

@@ -91,7 +91,7 @@
          point="org.eclipse.mylyn.tasks.core.taskActivationListeners">
       <listener
             id="org.eclipse.mylyn.tasks.tests.listenerTest"
-            listenerClass="org.eclipse.mylyn.tasks.tests.MockTaskActivationListenerExtension">
+            class="org.eclipse.mylyn.tasks.tests.TaskActivityManagerTest$MockTaskActivationListenerExtension">
       </listener>
    </extension>  
    
