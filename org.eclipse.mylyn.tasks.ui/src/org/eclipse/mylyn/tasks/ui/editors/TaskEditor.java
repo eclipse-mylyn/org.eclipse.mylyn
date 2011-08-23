@@ -721,7 +721,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			getHeaderForm().getForm().setRedraw(false);
 
 			Form form = getHeaderForm().getForm().getForm();
-			form.setMessage(message, type);
+			form.setMessage(message.replace('\n', ' '), type, null);
 			if (messageHyperLinkListener != null) {
 				form.removeMessageHyperlinkListener(messageHyperLinkListener);
 				if (messageHyperLinkListener instanceof IDisposable) {
