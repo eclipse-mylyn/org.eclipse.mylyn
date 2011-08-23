@@ -600,7 +600,7 @@ public class SubclipseConnector extends ScmConnector {
 
 		public ChangeSet next() {
 			try {
-				return changeSetQueue.poll(2, TimeUnit.MINUTES);
+				return changeSetQueue.poll(120, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				Thread.currentThread().interrupt();
