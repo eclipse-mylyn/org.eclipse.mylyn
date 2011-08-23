@@ -137,7 +137,12 @@ public class TaskActivityManagerTest extends TestCase {
 				assertTrue(listener.hasActivated);
 				assertFalse(listener.hasPreDeactivated);
 				assertFalse(listener.hasDeactivated);
+				assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
+				assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
+				assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
+				assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
 
+				MockTaskActivationListenerExtension.INSTANCE.reset();
 				listener.reset();
 			} finally {
 				taskActivityManager.deactivateTask(task);
@@ -146,6 +151,10 @@ public class TaskActivityManagerTest extends TestCase {
 			assertFalse(listener.hasActivated);
 			assertTrue(listener.hasPreDeactivated);
 			assertTrue(listener.hasDeactivated);
+			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
+			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
+			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
+			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
 		} finally {
 			taskActivityManager.removeActivationListener(listener);
 		}

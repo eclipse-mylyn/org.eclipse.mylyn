@@ -67,6 +67,8 @@ public interface ITasksCoreConstants {
 
 	public static final String PROPERTY_USE_SECURE_STORAGE = "org.eclipse.mylyn.tasklist.repositories.configuration.securestorage"; //$NON-NLS-1$
 
+	public static final String TASK_ACTIVATION_LISTENER_EP_ID = ID_PLUGIN + ".taskActivationListeners"; //$NON-NLS-1$
+
 	/**
 	 * Jobs that have the same instances of this rule set are mutually exclusive.
 	 */
