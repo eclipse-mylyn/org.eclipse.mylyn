@@ -445,11 +445,12 @@ public class SubclipseConnector extends ScmConnector {
 			if (limit == null || limit < 1) {
 				messages = adapter.getLogMessages(urlLocation, start, end, fetchChangePath);
 			} else {
-				messages = adapter.getLogMessages(urlLocation, start, start, end, false, fetchChangePath, limit);
+				messages = adapter.getLogMessages(urlLocation, start, start, end, true, fetchChangePath, limit);
 			}
 
 		} catch (SVNClientException e) {
-			StringBuilder sb = new StringBuilder("Unable to resolve ChangeSets for location"); //$NON-NLS-1$
+
+			StringBuilder sb = new StringBuilder("Unable to resolve ChangeSet:" + start.toString() + " for location"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (urlLocation != null) {
 				sb.append(": " + urlLocation.toString()); //$NON-NLS-1$
 			}
@@ -488,7 +489,7 @@ public class SubclipseConnector extends ScmConnector {
 	class ChangeSetsIterator implements Iterator<ChangeSet>, Runnable {
 		private final int QUEUE_MAX = 40;
 
-		private final Long CHUNKSIZE = 20L;
+		private final Long CHUNKSIZE = 21L;
 
 		private boolean dataProcessingStarted = false;
 
@@ -515,18 +516,20 @@ public class SubclipseConnector extends ScmConnector {
 			ISVNLogMessage[] msgList = null;
 			ISVNLogMessage messageBeingProcessed = null;
 			Number headRevisionNum = new Number(Long.MAX_VALUE);
+			int failedAttemptsCount = 0;
 
 			//while head revision > earliest and ...
 			while ((headRevisionNum.compareTo(earliestRevision) == 1) && !cancelled.get() && !done.get()) {
-				try {
-					//initialise start Revision
-					SVNRevision startRevision;
-					if (dataProcessingStarted) {
-						startRevision = headRevisionNum;
-					} else {
-						startRevision = SVNRevision.HEAD;
-					}
+				messageBeingProcessed = null;
+				SVNRevision startRevision = null;
+				//initialise start Revision
+				if (dataProcessingStarted) {
+					startRevision = headRevisionNum;
+				} else {
+					startRevision = SVNRevision.HEAD;
+				}
 
+				try {
 					//Resolve the changes for the max chunk size 
 					msgList = resolveChangeSets(repo, repo.getProjectSVNFolder(), startRevision, earliestRevision,
 							true, CHUNKSIZE);
@@ -535,6 +538,12 @@ public class SubclipseConnector extends ScmConnector {
 					int size = msgList.length;
 					for (int i = 0; i < size && !cancelled.get() && !done.get(); i++) {
 						messageBeingProcessed = msgList[i];
+
+						if (i == CHUNKSIZE - 1) {
+							//Don't add last entry to the queue as this will be the start of the next chunk
+							continue;
+						}
+
 						ChangeSet changeset;
 //						ChangeSet changeset = getChangeSet(repo, messageBeingProcessed.getRevision(), monitor);
 						List<Change> changes = buildChanges(repo, messageBeingProcessed, false);
@@ -554,21 +563,34 @@ public class SubclipseConnector extends ScmConnector {
 						}
 					}
 
-					//reduce by one to avoid repeated entries
-					headRevisionNum = moveProcessingHead(msgList[size - 1]);
+					//update chunk head revision
+					headRevisionNum = updateProcessingHead(msgList[size - 1], headRevisionNum, false);
 
+					//increment worked items
+					monitor.worked(1);
+					failedAttemptsCount = 0;
+
+					if (size < CHUNKSIZE) {
+						//no more items to fetch
+						done.set(true);
+					}
 				} catch (CoreException e) {
-					e.printStackTrace();
+					if (failedAttemptsCount == 0) {
+						e.printStackTrace();
+						logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
+								"Unable to resolve changeSets", e)); //$NON-NLS-1$
+					}
+
+					failedAttemptsCount++;
 					//attempt to continue processing next message
-					if (messageBeingProcessed != null) {
-						headRevisionNum = moveProcessingHead(messageBeingProcessed);
+
+					if (headRevisionNum != SVNRevision.HEAD && failedAttemptsCount < 11) {
+						headRevisionNum = updateProcessingHead(messageBeingProcessed, headRevisionNum, true);
 					} else {
 						cancelled.set(true);
+						done.set(true);
 					}
 				}
-
-				//increment worked items
-				monitor.worked(1);
 
 				// UI is done
 				if (monitor.isCanceled()) {
@@ -580,8 +602,21 @@ public class SubclipseConnector extends ScmConnector {
 			monitor.done();
 		}
 
-		private Number moveProcessingHead(ISVNLogMessage messageBeingProcessed) {
-			long nextRevisionValue = messageBeingProcessed.getRevision().getNumber() - 1;
+		private Number updateProcessingHead(ISVNLogMessage messageBeingProcessed, Number current, boolean next) {
+			long nextRevisionValue;
+
+			if (messageBeingProcessed != null) {
+				//Take the latest processed message to start the new request
+				nextRevisionValue = messageBeingProcessed.getRevision().getNumber();
+			} else {
+				//if the last processed message is invalid then use the current chunk start
+				nextRevisionValue = current.getNumber();
+			}
+
+			if (next) {
+				nextRevisionValue--;
+			}
+
 			dataProcessingStarted = true;
 			return new Number(nextRevisionValue);
 		}
@@ -600,7 +635,7 @@ public class SubclipseConnector extends ScmConnector {
 
 		public ChangeSet next() {
 			try {
-				return changeSetQueue.poll(120, TimeUnit.SECONDS);
+				return changeSetQueue.poll(60, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				Thread.currentThread().interrupt();
