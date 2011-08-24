@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     GitHub Inc. - fix for bug 355557
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -53,7 +54,7 @@ public class GerritTaskSchema extends AbstractTaskSchema {
 
 	public final Field URL = inheritFrom(parent.TASK_URL).create();
 
-	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).create();
+	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.READ_ONLY).create();
 
 	public final Field OBJ_REVIEW = createField("org.eclipse.gerrit.Review", "Review", TaskAttribute.TYPE_LONG_TEXT);
 
