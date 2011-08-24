@@ -129,10 +129,21 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	protected void createButtons(final Composite control) {
+		Button clearButton = new Button(control, SWT.PUSH);
+		clearButton.setText(Messages.AbstractRepositoryQueryPage2_Clear_Fields);
+		clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		clearButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				clearFields();
+			}
+
+		});
 		if (needsRepositoryConfiguration) {
 			updateButton = new Button(control, SWT.PUSH);
 			updateButton.setText(Messages.AbstractRepositoryQueryPage2__Refresh_From_Repository);
-			updateButton.setLayoutData(new GridData());
+			updateButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+//			updateButton.setImage(TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION.createImage());
 			updateButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -281,7 +292,13 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 					button.setVisible(false);
 				}
 			}
+		} else if (obj == QueryWizardDialog.CLEAR_BUTTON_ID) {
+			if (!button.isVisible()) {
+				button.setVisible(true);
+			}
+			button.setEnabled(true);
 		}
+
 	}
 
 	public boolean handleExtraButtonPressed(int buttonId) {
@@ -295,7 +312,12 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 						Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 			}
 			return true;
+		} else if (buttonId == QueryWizardDialog.CLEAR_BUTTON_ID) {
+			clearFields();
+			return true;
 		}
 		return false;
 	}
+
+	abstract public void clearFields();
 }

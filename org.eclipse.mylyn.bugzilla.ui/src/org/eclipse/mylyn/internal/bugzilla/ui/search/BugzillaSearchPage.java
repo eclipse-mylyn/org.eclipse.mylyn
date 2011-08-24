@@ -63,7 +63,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBox
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.QueryWizardDialog;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -513,20 +512,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		if (originalQuery != null) {
 			return;
 		}
-		Button clearButton = new Button(control, SWT.PUSH);
-		clearButton.setText(Messages.BugzillaSearchPage_ClearFields);
-		clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		clearButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				clearFields();
-			}
-
-		});
 		super.createButtons(control);
 	}
 
-	private void clearFields() {
+	@Override
+	public void clearFields() {
 		product.deselectAll();
 		component.deselectAll();
 		version.deselectAll();
@@ -2505,10 +2495,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@Override
 	protected void createPageContent(Composite parent) {
-		Composite composite = new Composite(parent, SWT.BORDER);
-		composite.setLayout(new GridLayout(2, false));
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
 		createOptionsGroup(composite);
-//		createButtons(composite);
 	}
 
 	@Override
@@ -2541,29 +2533,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 		query.setSummary(getQueryTitle());
 		saveState();
-	}
-
-	@Override
-	public void setExtraButtonState(Button button) {
-		Integer obj = (Integer) button.getData();
-		if (obj == QueryWizardDialog.CLEAR_BUTTON_ID) {
-			if (!button.isVisible()) {
-				button.setVisible(true);
-			}
-			button.setEnabled(true);
-		} else {
-			super.setExtraButtonState(button);
-		}
-	}
-
-	@Override
-	public boolean handleExtraButtonPressed(int buttonId) {
-		if (buttonId == QueryWizardDialog.CLEAR_BUTTON_ID) {
-			clearFields();
-			return true;
-		} else {
-			return super.handleExtraButtonPressed(buttonId);
-		}
 	}
 
 }

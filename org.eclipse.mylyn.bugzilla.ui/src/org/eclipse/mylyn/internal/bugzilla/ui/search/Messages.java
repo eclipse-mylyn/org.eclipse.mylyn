@@ -75,11 +75,7 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Add_Chart_Button;
 
-	public static String BugzillaSearchPage_No_repository_available;
-
 	public static String BugzillaSearchPage_none;
-
-	public static String BugzillaSearchPage_notregexp;
 
 	public static String BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
 
@@ -157,10 +153,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_qacontact;
 
-	public static String BugzillaSearchPage_Query_Title;
-
-	public static String BugzillaSearchPage_regexp;
-
 	public static String BugzillaSearchPage_reporter;
 
 	public static String BugzillaSearchPage_Resolution;
@@ -173,17 +165,11 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Status;
 
-	public static String BugzillaSearchPage_substring;
-
 	public static String BugzillaSearchPage_Summary;
-
-	public static String BugzillaSearchPage_Update_Attributes_from_Repository;
 
 	public static String BugzillaSearchPage_Updating_search_options_;
 
 	public static String BugzillaSearchPage_Version;
-
-	public static String BugzillaSearchPage_ClearFields;
 
 	public static String BugzillaSearchPage_BooleanChart;
 

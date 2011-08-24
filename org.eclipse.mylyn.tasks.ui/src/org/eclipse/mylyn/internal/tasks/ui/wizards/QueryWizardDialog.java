@@ -72,16 +72,6 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 	protected boolean handleExtraButtonPressed(int buttonId) {
 		if (abstractRepositoryQueryPage != null) {
 			abstractRepositoryQueryPage.handleExtraButtonPressed(buttonId);
-//		if (buttonId == CLEAR_BUTTON_ID) {
-////			if (getCurrentPage() instanceof IQueryButtomButtons) {
-////				((IQueryButtomButtons) getCurrentPage()).performClearFields();
-////				return true;
-////			}
-//		} else if (buttonId == UPDATE_BUTTON_ID) {
-////			if (getCurrentPage() instanceof IQueryButtomButtons) {
-////				((IQueryButtomButtons) getCurrentPage()).performUpdateConfiguration();
-////				return true;
-////			}
 		}
 		return false;
 	}
