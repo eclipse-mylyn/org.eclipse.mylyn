@@ -523,7 +523,6 @@ public class GetChangeSetDialog extends FormDialog {
 		return true;
 	}
 
-
 	public ChangeSet getChangeSet() {
 		//return a deep parsed version of the changeset
 		return updateChangeSet(selectedChangeSet);
@@ -537,12 +536,13 @@ public class GetChangeSetDialog extends FormDialog {
 	 * @return String
 	 */
 	private String getAdjustedPath(Change aChange) {
+		String path = aChange.getTarget().getPath();
 		if (aChange.getChangeType().equals(ChangeType.DELETED)) {
-			return "[-] " + aChange.getBase().getPath();
+			return "[-] " + path;
 		} else if (aChange.getChangeType().equals(ChangeType.ADDED)) {
-			return "[+] " + aChange.getTarget().getPath();
+			return "[+] " + path;
 		} else {
-			return "     " + aChange.getTarget().getPath();
+			return "     " + path;
 		}
 	}
 }
