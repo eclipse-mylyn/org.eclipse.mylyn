@@ -176,11 +176,17 @@ public class SubclipseConnector extends ScmConnector {
 				//Resolve the base artifact
 				try {
 					oldArtifact = resolveBaseArtifact(repository, newArtifact.getRepositoryURL(), sRevision,
-							isvnLogMessageChangePath);
+							isvnLogMessageChangePath, ctype);
 				} catch (MalformedURLException e) {
 					logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
 							"Error resolving an artifact url" //$NON-NLS-1$
 									+ isvnLogMessageChangePath.getPath(), e));
+				}
+
+				//Only applicable when resolution of base is requested
+				if (ctype == ChangeType.DELETED) {
+					//Target element does not contain a valid revision where the deleted element existed. base version does
+					newArtifact = null;
 				}
 			}
 
@@ -354,10 +360,15 @@ public class SubclipseConnector extends ScmConnector {
 		return artifact;
 	}
 
-	private SubclipseArtifact resolveBaseArtifact(SubclipseRepository repo, SVNUrl pathUrl, SVNRevision sRevision,
-			ISVNLogMessageChangePath targetMessageChangePath) throws CoreException {
+	private SubclipseArtifact resolveBaseArtifact(SubclipseRepository repo, SVNUrl pathUrl, Number sRevision,
+			ISVNLogMessageChangePath targetMessageChangePath, ChangeType ctype) throws CoreException {
 
 		SubclipseArtifact oldArtifact = null;
+
+		if (ctype == ChangeType.DELETED) {
+			//Deleted items can only resolve from previous version to deletion, as the item no longer exists
+			sRevision = new Number(sRevision.getNumber() - 1);
+		}
 
 		//Initialise the end revision to 1, although it will be limited to 2 entries to resolve the predecessor
 		SVNRevision eRevision = null;
@@ -375,23 +386,18 @@ public class SubclipseConnector extends ScmConnector {
 
 		String revisionId = null;
 		if (filePreviousCommits != null && filePreviousCommits.length > 1) {
-			//Position 0 is for the requested target, position one shall carry the base log message for the file
-			ISVNLogMessage aBaseCommitMessage = filePreviousCommits[1];
+			ISVNLogMessage aBaseCommitMessage;
+			if (ctype != ChangeType.DELETED) {
+				//Position 0 is for the requested target, position one shall carry the base log message for the file
+				aBaseCommitMessage = filePreviousCommits[1];
+			} else {
+				//For deleted items the request started from target version -1
+				aBaseCommitMessage = filePreviousCommits[0];
+			}
 			revisionId = aBaseCommitMessage.getRevision().toString();
 			assert (revisionId != null);
 
 			oldArtifact = getArtifact(repo, targetMessageChangePath, revisionId);
-
-			//The Validation below shall not be needed, kept as comment for troubleshooting in initial version
-			//			ISVNLogMessageChangePath[] abaseCommitchangePaths = aBaseCommitMessage.getChangedPaths();
-			//			for (ISVNLogMessageChangePath potentialBasePath : abaseCommitchangePaths) {
-			//				String potentialPath = potentialBasePath.getPath();
-			//				if (potentialPath.equals(targetMessageChangePath.getPath())) {
-			//					//The base path was properly resolved in the base commit for this artifact.
-			//					oldArtifact = getArtifact(repo, targetMessageChangePath, revisionId);
-			//					break;
-			//				}
-			//			}
 		}
 
 		return oldArtifact;
