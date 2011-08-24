@@ -902,30 +902,31 @@ public class RepositoryConfiguration implements Serializable {
 			productAttribute.getMetaData().setReadOnly(true);
 		}
 
-		if (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
-				|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED) {
-			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) <= 0) {
+		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_0) <= 0) {
+			if (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
+					|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED) {
 				// old bugzilla workflow is used
 				addOperation(bugReport, BugzillaOperation.reassign);
 				addOperation(bugReport, BugzillaOperation.reassignbycomponent);
-			} else {
-				BugzillaAttribute key = BugzillaAttribute.SET_DEFAULT_ASSIGNEE;
-				TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(key.getKey());
-				if (operationAttribute == null) {
-					operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
-					operationAttribute.getMetaData()
-							.defaults()
-							.setReadOnly(key.isReadOnly())
-							.setKind(key.getKind())
-							.setLabel(key.toString())
-							.setType(key.getType());
-					operationAttribute.setValue("0"); //$NON-NLS-1$
-				}
-				operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-				if (operationAttribute != null) {
-					operationAttribute.getMetaData().setReadOnly(false);
-				}
 			}
+		} else {
+			BugzillaAttribute key = BugzillaAttribute.SET_DEFAULT_ASSIGNEE;
+			TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(key.getKey());
+			if (operationAttribute == null) {
+				operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
+				operationAttribute.getMetaData()
+						.defaults()
+						.setReadOnly(key.isReadOnly())
+						.setKind(key.getKind())
+						.setLabel(key.toString())
+						.setType(key.getType());
+				operationAttribute.setValue("0"); //$NON-NLS-1$
+			}
+			operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+			if (operationAttribute != null) {
+				operationAttribute.getMetaData().setReadOnly(false);
+			}
+
 		}
 	}
 
