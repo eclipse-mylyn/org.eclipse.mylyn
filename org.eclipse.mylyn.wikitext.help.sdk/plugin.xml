@@ -17,10 +17,6 @@
             file="toc.xml"
             primary="true">
       </toc>
-      <toc
-            file="toc-reference.xml"
-            primary="false">
-      </toc>
    </extension>
 
 </plugin>
