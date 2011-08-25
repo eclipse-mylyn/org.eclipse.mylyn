@@ -57,6 +57,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private boolean needsRepositoryConfiguration = true;
 
+	private boolean needsClearButton = false;
+
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
@@ -65,6 +67,10 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	public void setNeedsRepositoryConfiguration(boolean needsRepositoryConfiguration) {
 		this.needsRepositoryConfiguration = needsRepositoryConfiguration;
+	}
+
+	public void setNeedsClearButton(boolean needsClearButton) {
+		this.needsClearButton = needsClearButton;
 	}
 
 	public void createControl(Composite parent) {
@@ -129,16 +135,21 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	protected void createButtons(final Composite control) {
-		Button clearButton = new Button(control, SWT.PUSH);
-		clearButton.setText(Messages.AbstractRepositoryQueryPage2_Clear_Fields);
-		clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		clearButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				clearFields();
-			}
+		if (getSearchContainer() == null) {
+			return;
+		}
+		if (needsClearButton) {
+			Button clearButton = new Button(control, SWT.PUSH);
+			clearButton.setText(Messages.AbstractRepositoryQueryPage2_Clear_Fields);
+			clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+			clearButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					clearFields();
+				}
 
-		});
+			});
+		}
 		if (needsRepositoryConfiguration) {
 			updateButton = new Button(control, SWT.PUSH);
 			updateButton.setText(Messages.AbstractRepositoryQueryPage2__Refresh_From_Repository);
@@ -319,5 +330,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		return false;
 	}
 
-	abstract public void clearFields();
+	public void clearFields() {
+
+	}
 }

@@ -2477,6 +2477,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, null);
 
 		toolkit = new FormToolkit(Display.getCurrent());
+		setNeedsClearButton(true);
 		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
 		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
 		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
@@ -2485,7 +2486,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
 		originalQuery = origQuery;
-
+		setNeedsClearButton(true);
 		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
 		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
 		toolkit = new FormToolkit(Display.getCurrent());
