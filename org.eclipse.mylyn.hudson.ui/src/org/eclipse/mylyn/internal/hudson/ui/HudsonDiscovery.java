@@ -59,9 +59,20 @@ public class HudsonDiscovery extends BuildsUiStartup {
 
 	private static final String URL_PROPERTY = "url"; //$NON-NLS-1$
 
+	private static HudsonDiscovery instance;
+
+	private IContainer container;
+
+	public static HudsonDiscovery getInstance() {
+		return instance;
+	}
+
+	public HudsonDiscovery() {
+		instance = this;
+	}
+
 	protected IContainer getContainer() throws ContainerCreateException {
-		return ContainerFactory.getDefault().createContainer(ECF_SINGLETON_DISCOVERY,
-				new Object[] { ECF_DISCOVERY_JMDNS });
+		return ContainerFactory.getDefault().createContainer(ECF_DISCOVERY_JMDNS);
 	}
 
 	/**
@@ -95,8 +106,8 @@ public class HudsonDiscovery extends BuildsUiStartup {
 	@Override
 	public void lazyStartup() {
 		try {
-			final IContainer container = getContainer();
-			final IDiscoveryLocator adapter = (IDiscoveryLocator) getContainer().getAdapter(IDiscoveryLocator.class);
+			container = getContainer();
+			final IDiscoveryLocator adapter = (IDiscoveryLocator) container.getAdapter(IDiscoveryLocator.class);
 			adapter.addServiceListener(new IServiceListener() {
 				public void serviceDiscovered(IServiceEvent anEvent) {
 					IServiceInfo serviceInfo = anEvent.getServiceInfo();
@@ -150,6 +161,13 @@ public class HudsonDiscovery extends BuildsUiStartup {
 		} catch (ContainerConnectException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, HudsonConnectorUi.ID_PLUGIN,
 					Messages.Discovery_CouldNotStartService, e));
+		}
+	}
+
+	public void stop() {
+		if (container != null) {
+			container.disconnect();
+			container = null;
 		}
 	}
 
