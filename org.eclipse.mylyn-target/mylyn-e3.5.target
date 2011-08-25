@@ -41,6 +41,7 @@
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.0.1.v20090916-2238"/>
+<unit id="org.eclipse.equinox.concurrent" version="1.0.1.R35x_v20100209"/>
 <unit id="org.eclipse.sdk.ide" version="3.5.2.M20100211-1343"/>
 <unit id="org.eclipse.emf.common.feature.group" version="2.5.0.v200906151043"/>
 <unit id="org.eclipse.emf.common.ui.feature.group" version="2.5.0.v200906151043"/>
