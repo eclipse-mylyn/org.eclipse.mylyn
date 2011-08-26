@@ -513,6 +513,8 @@ public class SubclipseConnector extends ScmConnector {
 
 		private final IProgressMonitor monitor;
 
+		private final String[] EXIT_ERROR_MESSAGES = new String[] { "connection refused", "Connection timed out" };
+
 		public ChangeSetsIterator(SubclipseRepository repository, IProgressMonitor aMonitor) {
 			this.repo = repository;
 			this.monitor = aMonitor;
@@ -581,20 +583,31 @@ public class SubclipseConnector extends ScmConnector {
 						done.set(true);
 					}
 				} catch (CoreException e) {
+					StringBuilder sb = new StringBuilder("Unable to resolve changeSets, ");
+					String cause = e.getCause().getMessage();
+					for (String errMessage : EXIT_ERROR_MESSAGES) {
+						if (cause.contains(errMessage)) {
+							//Network connection problems, exit
+							cancelled.set(true);
+							sb.append(cause);
+						}
+					}
+
 					if (failedAttemptsCount == 0) {
 						e.printStackTrace();
-						logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID,
-								"Unable to resolve changeSets", e)); //$NON-NLS-1$
+						logger.log(new Status(IStatus.ERROR, SubclipseCorePlugin.PLUGIN_ID, sb.toString(), e));
 					}
 
 					failedAttemptsCount++;
-					//attempt to continue processing next message
 
-					if (headRevisionNum != SVNRevision.HEAD && failedAttemptsCount < 11) {
-						headRevisionNum = updateProcessingHead(messageBeingProcessed, headRevisionNum, true);
-					} else {
-						cancelled.set(true);
-						done.set(true);
+					if (!cancelled.get()) {
+						//attempt to continue processing next message
+						if (headRevisionNum != SVNRevision.HEAD && failedAttemptsCount < 11) {
+							headRevisionNum = updateProcessingHead(messageBeingProcessed, headRevisionNum, true);
+						} else {
+							cancelled.set(true);
+							done.set(true);
+						}
 					}
 				}
 

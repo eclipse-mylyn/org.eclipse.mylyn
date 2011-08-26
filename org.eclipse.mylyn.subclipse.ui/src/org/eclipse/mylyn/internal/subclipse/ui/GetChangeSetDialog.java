@@ -254,7 +254,13 @@ public class GetChangeSetDialog extends FormDialog {
 				public void widgetSelected(SelectionEvent e) {
 					int selectedIndex = commitList.getSelectionIndex();
 					if (commitList.getItem(selectedIndex).equals(MORE_ITEMS_LABEL)) {
-						populateNextChangeSets();
+						try {
+							populateNextChangeSets();
+						} catch (CoreException e1) {
+							StatusHandler.log(new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, IStatus.OK,
+									e.toString(), e1));
+							return;
+						}
 						commitList.select(selectedIndex);
 						selectedChangeSet = filteredChangeSets.get(selectedIndex);
 					} else {
@@ -275,8 +281,10 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Gets the information and populates the local data structure with the next round of commit informations
+	 * 
+	 * @throws CoreException
 	 */
-	protected void populateNextChangeSets() {
+	protected void populateNextChangeSets() throws CoreException {
 		ChangeSet updatedChangeSet = null;
 		String repoProject = null;
 		int addedCount = 0;
@@ -289,6 +297,14 @@ public class GetChangeSetDialog extends FormDialog {
 
 		while (changeSetsIter.hasNext()) {
 			updatedChangeSet = changeSetsIter.next();
+			if (updatedChangeSet == null) {
+				String message = "No input received, check connectivity";
+				commitList.add(message);
+				commitList.select(0);
+
+				//Error case
+				throw new CoreException(new Status(IStatus.ERROR, SVNConnectorUi.ID_PLUGIN, message));
+			}
 
 			// Only display commits that contains at least one file from the
 			// selected project
@@ -524,6 +540,10 @@ public class GetChangeSetDialog extends FormDialog {
 	}
 
 	public ChangeSet getChangeSet() {
+		if (selectedChangeSet == null) {
+			return null;
+		}
+
 		//return a deep parsed version of the changeset
 		return updateChangeSet(selectedChangeSet);
 	}
