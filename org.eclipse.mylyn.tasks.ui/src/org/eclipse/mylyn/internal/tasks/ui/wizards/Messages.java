@@ -286,4 +286,8 @@ public class Messages extends NLS {
 	public static String LocalRepositorySettingsPage_Configure_the_local_repository;
 
 	public static String LocalRepositorySettingsPage_Local_Repository_Settings;
+
+	public static String QueryWizardDialog_Clear_Fields;
+
+	public static String QueryWizardDialog_Update_Attributes_from_Repository;
 }

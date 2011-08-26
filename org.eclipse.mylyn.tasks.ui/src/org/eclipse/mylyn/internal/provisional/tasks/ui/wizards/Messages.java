@@ -29,6 +29,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositoryQueryPage2__Title_;
 
+	public static String AbstractRepositoryQueryPage2_Clear_Fields;
+
 	public static String AbstractRepositoryQueryPage2_Create_a_Query_Page_Description;
 
 	public static String AbstractRepositoryQueryPage2_Enter_a_title;

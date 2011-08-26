@@ -61,12 +61,12 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlace
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
+import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -103,7 +103,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  * @author Frank Becker
  */
 @SuppressWarnings("restriction")
-public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
+public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements Listener {
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;
 
@@ -478,8 +478,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	};
 
-	private Text queryTitle;
-
 	private final class ModifyListenerImplementation implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			if (isControlCreated()) {
@@ -509,107 +507,50 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 
-	public BugzillaSearchPage(TaskRepository repository) {
-		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository);
-
-		toolkit = new FormToolkit(Display.getCurrent());
-		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
+	@Override
+	protected void createButtons(Composite control) {
+		if (originalQuery != null) {
+			return;
+		}
+		super.createButtons(control);
 	}
 
-	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
-		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
-		originalQuery = origQuery;
-		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
-		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
-		toolkit = new FormToolkit(Display.getCurrent());
-	}
+	@Override
+	public void clearFields() {
+		product.deselectAll();
+		component.deselectAll();
+		version.deselectAll();
+		target.deselectAll();
+		status.deselectAll();
+		resolution.deselectAll();
+		severity.deselectAll();
+		priority.deselectAll();
+		hardware.deselectAll();
+		os.deselectAll();
+		summaryOperation.select(0);
+		commentOperation.select(0);
+		emailOperation.select(0);
 
-	public void createControl(Composite parent) {
-		initializeDialogUnits(parent);
-		readConfiguration();
+		for (Button emailButton : emailButtons) {
+			emailButton.setSelection(false);
+		}
+		summaryPattern.setText(""); //$NON-NLS-1$
+		commentPattern.setText(""); //$NON-NLS-1$
+		emailPattern.setText(""); //$NON-NLS-1$
+		emailOperation2.select(0);
+		for (Button element : emailButtons2) {
+			element.setSelection(false);
+		}
+		emailPattern2.setText(""); //$NON-NLS-1$
+		keywords.setText(""); //$NON-NLS-1$
+		keywordsOperation.select(0);
+		whiteboardPattern.setText(""); //$NON-NLS-1$
+		whiteboardOperation.select(0);
+		daysText.setText(""); //$NON-NLS-1$
 
-		Composite control = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginHeight = 0;
-		control.setLayout(layout);
-		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		createOptionsGroup(control);
-		createButtons(control);
-
-		Dialog.applyDialogFont(control);
-		setControl(control);
-
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
-	}
-
-	private void createButtons(Composite control) {
-		Composite buttonComposite = new Composite(control, SWT.NONE);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 0;
-		buttonComposite.setLayout(layout);
-		GridData g = new GridData(GridData.FILL_HORIZONTAL);
-		Button clearButton = new Button(buttonComposite, SWT.PUSH);
-		clearButton.setText(Messages.BugzillaSearchPage_ClearFields);
-		clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		clearButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				product.deselectAll();
-				component.deselectAll();
-				version.deselectAll();
-				target.deselectAll();
-				status.deselectAll();
-				resolution.deselectAll();
-				severity.deselectAll();
-				priority.deselectAll();
-				hardware.deselectAll();
-				os.deselectAll();
-				summaryOperation.select(0);
-				commentOperation.select(0);
-				emailOperation.select(0);
-
-				for (Button emailButton : emailButtons) {
-					emailButton.setSelection(false);
-				}
-				summaryPattern.setText(""); //$NON-NLS-1$
-				commentPattern.setText(""); //$NON-NLS-1$
-				emailPattern.setText(""); //$NON-NLS-1$
-				emailOperation2.select(0);
-				for (Button element : emailButtons2) {
-					element.setSelection(false);
-				}
-				emailPattern2.setText(""); //$NON-NLS-1$
-				keywords.setText(""); //$NON-NLS-1$
-				keywordsOperation.select(0);
-				whiteboardPattern.setText(""); //$NON-NLS-1$
-				whiteboardOperation.select(0);
-				daysText.setText(""); //$NON-NLS-1$
-
-				charts.clear();
-				charts.add(0, new Chart());
-				recreateChartControls();
-
-			}
-		});
-
-		Button updateButton = new Button(buttonComposite, SWT.PUSH);
-		updateButton.setText(Messages.BugzillaSearchPage_Update_Attributes_from_Repository);
-		updateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		updateButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (getTaskRepository() != null) {
-					updateConfiguration(true);
-				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-							Messages.BugzillaSearchPage_No_repository_available);
-				}
-			}
-		});
-
-		buttonComposite.setLayoutData(g);
+		charts.clear();
+		charts.add(0, new Chart());
+		recreateChartControls();
 	}
 
 	private void createOptionsGroup(Composite control) {
@@ -645,18 +586,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		basicComposite.setLayoutData(g);
 		Dialog.applyDialogFont(basicComposite);
 
-		if (!inSearchContainer()) {
-			final Label queryTitleLabel = new Label(basicComposite, SWT.NONE);
-			queryTitleLabel.setText(Messages.BugzillaSearchPage_Query_Title);
-
-			queryTitle = new Text(basicComposite, SWT.BORDER);
-			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-			if (originalQuery != null) {
-				queryTitle.setText(originalQuery.getSummary());
-			}
-			queryTitle.addModifyListener(new ModifyListenerImplementation());
-			queryTitle.setFocus();
-		}
 		// Info text
 		Label labelSummary = new Label(basicComposite, SWT.LEFT);
 		labelSummary.setText(Messages.BugzillaSearchPage_Summary);
@@ -2312,11 +2241,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		return shell;
 	}
 
-	@Override
-	public String getQueryTitle() {
-		return (queryTitle != null) ? queryTitle.getText() : ""; //$NON-NLS-1$
-	}
-
 	private void setSelection(List listControl, String[] selection) {
 		for (String item : selection) {
 			int index = listControl.indexOf(item);
@@ -2332,12 +2256,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			listControl.deselectAll();
 		}
 
-	}
-
-	@Override
-	public void applyTo(IRepositoryQuery query) {
-		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
-		query.setSummary(getQueryTitle());
 	}
 
 	@Override
@@ -2554,4 +2472,68 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		refreshChartControls();
 		Dialog.applyDialogFont(chartSection);
 	}
+
+	public BugzillaSearchPage(TaskRepository repository) {
+		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, null);
+
+		toolkit = new FormToolkit(Display.getCurrent());
+		setNeedsClearButton(true);
+		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
+		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
+	}
+
+	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
+		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
+		originalQuery = origQuery;
+		setNeedsClearButton(true);
+		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
+		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
+		toolkit = new FormToolkit(Display.getCurrent());
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
+		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
+	}
+
+	@Override
+	protected void createPageContent(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+		createOptionsGroup(composite);
+	}
+
+	@Override
+	protected boolean hasRepositoryConfiguration() {
+		return repositoryConfiguration != null;
+	}
+
+	@Override
+	protected void doRefresh() {
+		// ignore
+
+	}
+
+	@Override
+	protected boolean restoreState(IRepositoryQuery query) {
+		if (originalQuery != null) {
+			try {
+				updateDefaults(originalQuery.getUrl());
+				refreshChartControls();
+			} catch (UnsupportedEncodingException e) {
+				// ignore
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
+		query.setSummary(getQueryTitle());
+		saveState();
+	}
+
 }

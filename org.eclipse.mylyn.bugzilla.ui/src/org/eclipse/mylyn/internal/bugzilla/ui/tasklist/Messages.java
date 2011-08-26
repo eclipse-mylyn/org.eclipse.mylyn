@@ -59,8 +59,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_All;
 
-	public static String BugzillaRepositorySettingsPage_AutodetectWorkflow;
-
 	public static String BugzillaRepositorySettingsPage_AUTOTETECT_PLATFORM_AND_OS;
 
 	public static String BugzillaRepositorySettingsPage_admin_parameter;
