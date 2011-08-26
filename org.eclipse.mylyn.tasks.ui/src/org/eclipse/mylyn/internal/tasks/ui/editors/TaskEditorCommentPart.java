@@ -226,10 +226,16 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return renderedInSubSection;
 		}
 
+		public void setExpanded(boolean expanded) {
+			if (groupSection != null && groupSection.isExpanded() != expanded) {
+				CommonFormUtil.setExpanded(groupSection, expanded);
+			}
+		}
+
 		/**
 		 * Expands this group and all comments in it.
 		 */
-		public void setExpanded(boolean expanded) {
+		public void setFullyExpanded(boolean expanded) {
 			if (groupSection != null && groupSection.isExpanded() != expanded) {
 				CommonFormUtil.setExpanded(groupSection, expanded);
 			}
@@ -578,7 +584,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			List<CommentGroupViewer> viewers = getCommentGroupViewers();
 			for (int i = 0; i < viewers.size(); i++) {
 				if (viewers.get(i).isExpanded()) {
-					viewers.get(i).setExpanded(false);
+					viewers.get(i).setFullyExpanded(false);
 					collapsed = viewers.get(i).isRenderedInSubSection();
 					// bug 280152: collapse all groups
 					//break;
@@ -697,10 +703,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				CommonFormUtil.setExpanded(section, true);
 
 				if (expandViewers) {
-					List<CommentGroupViewer> viewers = getCommentGroupViewers();
-					for (int i = viewers.size() - 1; i >= 0; i--) {
-						if (!viewers.get(i).isFullyExpanded()) {
-							viewers.get(i).setExpanded(true);
+					List<CommentGroupViewer> groupViewers = getCommentGroupViewers();
+					for (int i = groupViewers.size() - 1; i >= 0; i--) {
+						if (!groupViewers.get(i).isFullyExpanded()) {
+							groupViewers.get(i).setFullyExpanded(true);
 						}
 					}
 				}
@@ -828,7 +834,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		for (CommentGroupViewer groupViewer : groupViewers) {
 			for (CommentViewer viewer : groupViewer.getCommentViewers()) {
 				if (viewer.getTaskAttribute().equals(commentAttribute)) {
-					//CommonFormUtil.ensureVisible(viewer.getControl());
+					// expand section
+					groupViewer.setExpanded(true);
+
 					// EditorUtil is consistent with behavior of outline 
 					EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(), commentAttribute.getId());
 					return viewer;
