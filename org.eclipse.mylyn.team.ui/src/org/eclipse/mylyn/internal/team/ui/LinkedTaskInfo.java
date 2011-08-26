@@ -39,7 +39,7 @@ public class LinkedTaskInfo extends AbstractTaskReference {
 
 	public LinkedTaskInfo(String repositoryUrl, String taskId, String taskFullUrl, String comment, long timestamp,
 			ITask task) {
-		this(repositoryUrl, taskId, taskFullUrl, comment);
+		this(repositoryUrl, taskId, taskFullUrl, comment, timestamp);
 		this.task = task;
 	}
 
