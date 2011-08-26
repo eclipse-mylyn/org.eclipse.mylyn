@@ -83,6 +83,9 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		editor.createControl(parent, toolkit);
 		editor.getViewer().getTextWidget().setToolTipText(getDescription());
 
+		// refresh again, in case the value changed in the mean time
+		refresh();
+
 		setControl(editor.getControl());
 	}
 

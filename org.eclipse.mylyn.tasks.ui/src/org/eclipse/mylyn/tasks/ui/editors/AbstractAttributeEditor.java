@@ -95,7 +95,6 @@ public abstract class AbstractAttributeEditor {
 		setDecorationEnabled(true);
 		setReadOnly(taskAttribute.getMetaData().isReadOnly());
 		setDescription(taskAttribute.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
-		getModel().addModelListener(modelListener);
 	}
 
 	/**
@@ -199,11 +198,13 @@ public abstract class AbstractAttributeEditor {
 	protected void setControl(Control control) {
 		if (this.control != null && !this.control.isDisposed()) {
 			this.control.removeDisposeListener(disposeListener);
+			getModel().removeModelListener(modelListener);
 		}
 		this.control = control;
 		if (control != null) {
 			control.setData(KEY_TASK_ATTRIBUTE, taskAttribute);
 			control.addDisposeListener(disposeListener);
+			getModel().addModelListener(modelListener);
 		}
 	}
 
