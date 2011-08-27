@@ -10,7 +10,7 @@
         Tasktop Techonologies - initial API and implementation
  -->
 <feature
-      id="org.eclipse.mylyn.htmltext"
+      id="org.eclipse.mylyn.htmltext.feature"
       label="%featureName"
       version="0.9.0.qualifier"
       provider-name="%providerName"
