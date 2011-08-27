@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.builds.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +141,23 @@ public class BuildsUi {
 		}
 		// fall back to opening builds view
 		BuildsView.openInActivePerspective();
+	}
+
+	/**
+	 * Returns a list of existing server locations. It is safe to call this method from any thread.
+	 */
+	public static List<RepositoryLocation> getServerLocations() {
+		final List<RepositoryLocation> locations = new ArrayList<RepositoryLocation>();
+		final IBuildModel model = BuildsUi.getModel();
+		BuildsUiInternal.getOperationService().getRealm().syncExec(new Runnable() {
+			public void run() {
+				List<IBuildServer> servers = model.getServers();
+				for (IBuildServer server : servers) {
+					locations.add(server.getLocation());
+				}
+			}
+		});
+		return locations;
 	}
 
 }

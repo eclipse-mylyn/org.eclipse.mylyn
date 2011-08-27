@@ -98,12 +98,12 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 	 * @param data
 	 */
 	private void openRepositoryWizard(String data) {
-		String id = data;
+		String connectorKind = data;
 		if (data.indexOf('?') > -1) {
-			id = data.substring(0, data.indexOf('?'));
+			connectorKind = data.substring(0, data.indexOf('?'));
 		}
 		// Get the Mylyn repository wizard
-		IWizardDescriptor descriptor = NewRepositoryWizardRegistry.getInstance().findWizard(id);
+		IWizardDescriptor descriptor = NewRepositoryWizardRegistry.getInstance().findWizard(connectorKind);
 		try {
 			// Then if we have a wizard, open it.
 			if (descriptor != null) {
@@ -116,16 +116,15 @@ public class BuildsServiceMessageControl extends ServiceMessageControl {
 						// Set data we got from the discovery mechanism. This 
 						// comes as a list of properties with keys and values.
 						HashMap<String, String> properties = new HashMap<String, String>();
-						if (data.indexOf('?') > -1) {
-							id = data.substring(0, data.indexOf('?'));
-							data = data.substring(id.length() + 1);
-							String[] props = data.split("&"); //$NON-NLS-1$
+						int i = data.indexOf('?');
+						if (i > -1) {
+							String[] props = data.substring(i + 1).split("&"); //$NON-NLS-1$
 							for (String set : props) {
 								String[] kv = set.split("="); //$NON-NLS-1$
 								properties.put(kv[0], kv[1]);
 							}
 						}
-						IBuildServer bs = BuildsUi.createServer(id);
+						IBuildServer bs = BuildsUi.createServer(connectorKind);
 						RepositoryLocation rl = new RepositoryLocation(properties);
 						bs.getLocation().apply(rl);
 						((BuildServerWizard) wizard).setBuildServer(bs);
