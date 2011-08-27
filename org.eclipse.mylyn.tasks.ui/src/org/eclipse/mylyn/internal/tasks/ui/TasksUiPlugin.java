@@ -51,7 +51,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.commons.identity.IdentityModel;
 import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
@@ -715,7 +714,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
 							if (template.anonymous) {
-								taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, true);
+								taskRepository.setProperty(
+										"org.eclipse.mylyn.tasklist.repositories.enabled", String.valueOf(false)); //$NON-NLS-1$
+								// bug 332747: avoid reseting password in shared keystore
+								//taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, true);
 							}
 							taskRepository.setCreatedFromTemplate(true);
 							repositoryManager.addRepository(taskRepository);
