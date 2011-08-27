@@ -80,11 +80,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		// refresh again, in case the value changed in the mean time, needs to be invoked before control is 
+		// created otherwise WikiText rendering breaks 
+		refresh();
+
 		editor.createControl(parent, toolkit);
 		editor.getViewer().getTextWidget().setToolTipText(getDescription());
-
-		// refresh again, in case the value changed in the mean time
-		refresh();
 
 		setControl(editor.getControl());
 	}
