@@ -13,6 +13,8 @@ package org.eclipse.mylyn.commons.repositories;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -343,6 +345,22 @@ public class RepositoryLocation extends PlatformObject {
 		setProperty(RepositoryLocation.PROPERTY_ID, id);
 		if (this.credentialsStore == null) {
 			setCredentialsStore(store);
+		}
+	}
+
+	/**
+	 * Returns true if a normalized form of <code>url</code> matches the URL of this location.
+	 */
+	public boolean hasUrl(String url) {
+		Assert.isNotNull(url);
+		String myUrl = getUrl();
+		if (myUrl == null) {
+			return false;
+		}
+		try {
+			return new URI(url + "/").normalize().equals(new URI(myUrl + "/").normalize()); //$NON-NLS-1$//$NON-NLS-2$
+		} catch (URISyntaxException e) {
+			return false;
 		}
 	}
 
