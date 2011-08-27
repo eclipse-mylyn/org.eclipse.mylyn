@@ -13,11 +13,9 @@
 package org.eclipse.mylyn.commons.http;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpStatus;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -52,34 +50,36 @@ public abstract class HttpOperation<T> {
 	protected int execute(HttpMethod method, IOperationMonitor monitor) throws IOException {
 		monitor = ProgressUtil.convert(monitor);
 
-		for (int attempt = 0; attempt < 2; attempt++) {
-			// force authentication
-			if (needsAuthentication()) {
-				client.authenticate(monitor);
-			}
-
-			int code;
-			try {
-				code = WebUtil.execute(client.getHttpClient(), client.getHostConfiguration(monitor), method, monitor);
-			} catch (IOException e) {
-				WebUtil.releaseConnection((HttpMethodBase) method, monitor);
-				throw e;
-			} catch (RuntimeException e) {
-				WebUtil.releaseConnection((HttpMethodBase) method, monitor);
-				throw e;
-			}
-
-			if (isSuccess(method)) {
-				return code;
-			} else {
-				WebUtil.releaseConnection((HttpMethodBase) method, monitor);
-				if (needsReauthentication(code, monitor)) {
-					client.authenticate(monitor);
-				}
-			}
+		// force authentication
+		if (needsAuthentication()) {
+			client.authenticate(monitor);
 		}
 
-		return HttpStatus.SC_FORBIDDEN;
+		// first attempt
+		int code = executeInternal(method, monitor);
+		if (needsReauthentication(code, monitor)) {
+			WebUtil.releaseConnection((HttpMethodBase) method, monitor);
+			client.authenticate(monitor);
+
+			// second attempt
+			return executeInternal(method, monitor);
+		} else {
+			return code;
+		}
+	}
+
+	private int executeInternal(HttpMethod method, IOperationMonitor monitor) throws IOException {
+		int code;
+		try {
+			code = WebUtil.execute(client.getHttpClient(), client.getHostConfiguration(monitor), method, monitor);
+		} catch (IOException e) {
+			WebUtil.releaseConnection((HttpMethodBase) method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection((HttpMethodBase) method, monitor);
+			throw e;
+		}
+		return code;
 	}
 
 	protected final CommonHttpClient getClient() {
@@ -88,10 +88,6 @@ public abstract class HttpOperation<T> {
 
 	protected boolean hasCredentials(AuthenticationCredentials credentials) {
 		return credentials != null;
-	}
-
-	private boolean isSuccess(HttpMethod method) {
-		return method.getStatusCode() == HttpURLConnection.HTTP_OK;
 	}
 
 	protected boolean needsAuthentication() {
