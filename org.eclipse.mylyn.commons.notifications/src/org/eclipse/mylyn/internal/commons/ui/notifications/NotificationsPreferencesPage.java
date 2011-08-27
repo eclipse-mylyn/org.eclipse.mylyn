@@ -49,8 +49,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -153,7 +151,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	}
 
-	public final class NotificationLabelProvider extends LabelProvider {
+	public final class EventLabelProvider extends LabelProvider {
 
 		@Override
 		public String getText(Object element) {
@@ -166,17 +164,19 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 		@Override
 		public Image getImage(Object element) {
+			if (element instanceof NotificationEvent) {
+				NotificationEvent item = (NotificationEvent) element;
+				if (model.isSelected(item)) {
+					return CommonImages.getImage(CommonImages.CHECKED);
+				} else {
+					return null;
+				}
+			}
 			if (element instanceof NotificationElement) {
 				NotificationElement item = (NotificationElement) element;
 				ImageDescriptor imageDescriptor = item.getImageDescriptor();
 				if (imageDescriptor != null) {
 					return CommonImages.getImage(imageDescriptor);
-				}
-			}
-			if (element instanceof NotificationEvent) {
-				NotificationEvent item = (NotificationEvent) element;
-				if (item.isSelected()) {
-					return CommonImages.getImage(CommonImages.CHECKED);
 				}
 			}
 			return super.getImage(element);
@@ -233,7 +233,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		GridDataFactory.fillDefaults().span(1, 2).grab(false, true).applyTo(tree);
 		eventsViewer.setComparer(new NotificationEventComparer());
 		eventsViewer.setContentProvider(new EventContentProvider());
-		eventsViewer.setLabelProvider(new NotificationLabelProvider());
+		eventsViewer.setLabelProvider(new EventLabelProvider());
 		eventsViewer.setInput(model.getCategories().toArray());
 		eventsViewer.expandAll();
 		eventsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -263,12 +263,11 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		notifiersViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(notifiersViewer.getControl());
 		notifiersViewer.setContentProvider(new NotifiersContentProvider());
-		notifiersViewer.setLabelProvider(new NotificationLabelProvider());
+		notifiersViewer.setLabelProvider(new EventLabelProvider());
 		notifiersViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				NotificationAction action = (NotificationAction) event.getElement();
 				action.setSelected(event.getChecked());
-				model.updateStates();
 				model.setDirty(true);
 				eventsViewer.refresh();
 			}
@@ -361,16 +360,6 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		if (!enabled) {
 			eventsViewer.setSelection(StructuredSelection.EMPTY);
 		}
-		// Update the tree from the model
-		Tree tree = eventsViewer.getTree();
-		TreeItem[] categories = tree.getItems();
-		for (TreeItem category : categories) {
-			TreeItem[] events = category.getItems();
-			for (TreeItem event : events) {
-				NotificationEvent tEvent = (NotificationEvent) event.getData();
-				event.setChecked(tEvent.isSelected());
-			}
-		}
 	}
 
 	public void init(IWorkbench workbench) {
@@ -406,10 +395,9 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 				}
 			}
 		}
-		// Assume that the model has become dirty
-		model.updateStates();
+		// assume that the model has become dirty
 		model.setDirty(true);
-		// Update from the model
+		// refresh UI
 		eventsViewer.refresh();
 		notifiersViewer.refresh();
 		updateEnablement();

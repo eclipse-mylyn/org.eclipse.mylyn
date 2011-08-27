@@ -86,13 +86,10 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 	}
 
 	public void saveWorkingCopy(NotificationModel workingCopy) {
+		XMLMemento memento = save(workingCopy);
 		if (this.model != null) {
-			// persist working copy to temporary memento and reload model
-			XMLMemento memento = XMLMemento.createWriteRoot("notifications"); //$NON-NLS-1$
-			workingCopy.save(memento);
+			// reload model
 			this.model.initialize(memento);
-		} else {
-			save(workingCopy);
 		}
 	}
 
@@ -108,7 +105,7 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 		instance = null;
 	}
 
-	private void save(NotificationModel model) {
+	private XMLMemento save(NotificationModel model) {
 		XMLMemento memento = XMLMemento.createWriteRoot("notifications"); //$NON-NLS-1$
 		model.save(memento);
 		FileWriter writer;
@@ -122,6 +119,7 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 		} catch (IOException e) {
 			getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error saving notification state", e)); //$NON-NLS-1$
 		}
+		return memento;
 	}
 
 	protected IPath getModelFile() {

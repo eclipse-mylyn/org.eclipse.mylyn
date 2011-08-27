@@ -12,9 +12,11 @@
 package org.eclipse.mylyn.internal.commons.ui.notifications;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
 
 /**
- * Describes how to handle a {@link NotificationEvent}.
+ * Describes how a {@link NotificationEvent} is handled. {@link NotificationAction}s store enablement and parameters
+ * that determine how the {@link NotificationSink} executes the action.
  * 
  * @author Steffen Pingel
  */

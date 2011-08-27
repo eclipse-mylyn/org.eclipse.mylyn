@@ -49,24 +49,21 @@ public class NotificationService implements INotificationService {
 		// For each sink assemble a list of notifications that are not blocked
 		// and pass these along.
 		HashMap<NotificationSink, ArrayList<AbstractNotification>> filtered = new HashMap<NotificationSink, ArrayList<AbstractNotification>>();
-		for (AbstractNotification abstractNotification : notifications) {
-			String id = abstractNotification.getEventId();
+		for (AbstractNotification notification : notifications) {
+			String id = notification.getEventId();
 			NotificationHandler handler = NotificationsPlugin.getDefault().getModel().getNotificationHandler(id);
 			if (handler != null) {
-				//Assert.isNotNull(handler, NLS.bind("Notification handler for event ''{0}'' has not been initialized", id)); //$NON-NLS-1$
-				if (handler.getEvent().isSelected()) {
-					List<NotificationAction> actions = handler.getActions();
-					for (NotificationAction notificationAction : actions) {
-						if (notificationAction.isSelected()) {
-							NotificationSink sink = notificationAction.getSinkDescriptor().getSink();
-							if (sink != null) {
-								ArrayList<AbstractNotification> list = filtered.get(sink);
-								if (list == null) {
-									list = new ArrayList<AbstractNotification>();
-									filtered.put(sink, list);
-								}
-								list.add(abstractNotification);
+				List<NotificationAction> actions = handler.getActions();
+				for (NotificationAction action : actions) {
+					if (action.isSelected()) {
+						NotificationSink sink = action.getSinkDescriptor().getSink();
+						if (sink != null) {
+							ArrayList<AbstractNotification> list = filtered.get(sink);
+							if (list == null) {
+								list = new ArrayList<AbstractNotification>();
+								filtered.put(sink, list);
 							}
+							list.add(notification);
 						}
 					}
 				}

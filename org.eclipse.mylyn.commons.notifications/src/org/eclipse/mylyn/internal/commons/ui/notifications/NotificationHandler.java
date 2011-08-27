@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.commons.ui.notifications;
 import java.util.List;
 
 /**
+ * Manages actions that are triggered when a {@link NotificationEvent} occurs.
+ * 
  * @author Steffen Pingel
  */
 public class NotificationHandler {

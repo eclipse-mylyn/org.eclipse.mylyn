@@ -54,12 +54,10 @@ public class NotificationEvent extends NotificationElement {
 
 	public NotificationEvent(IConfigurationElement element) {
 		super(element);
-		String selectedValue = element.getAttribute("selected"); //$NON-NLS-1$
-		setSelected(selectedValue == null || Boolean.parseBoolean(selectedValue));
 		defaultSinks = new ArrayList<String>();
-		IConfigurationElement[] matches = element.getChildren("defaultHandler"); //$NON-NLS-1$
-		for (IConfigurationElement match : matches) {
-			defaultSinks.add(match.getAttribute("sinkId")); //$NON-NLS-1$
+		IConfigurationElement[] children = element.getChildren("defaultHandler"); //$NON-NLS-1$
+		for (IConfigurationElement child : children) {
+			defaultSinks.add(child.getAttribute("sinkId")); //$NON-NLS-1$
 		}
 		doEventMappings();
 	}
@@ -116,10 +114,12 @@ public class NotificationEvent extends NotificationElement {
 		this.category = category;
 	}
 
+	@Deprecated
 	public boolean isSelected() {
 		return selected;
 	}
 
+	@Deprecated
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}

@@ -84,6 +84,16 @@ public class NotificationModel {
 		return dirty;
 	}
 
+	public boolean isSelected(NotificationEvent event) {
+		NotificationHandler handler = getOrCreateNotificationHandler(event);
+		for (NotificationAction action : handler.getActions()) {
+			if (action.isSelected()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Stores the selected state of events and sinks.
 	 * 
@@ -115,10 +125,6 @@ public class NotificationModel {
 			for (NotificationCategory category : getCategories()) {
 				for (NotificationEvent event : category.getEvents()) {
 					if (event.getId().equals(mEvent.getString("id"))) { //$NON-NLS-1$
-						// The selected state will be controlled by the child 
-						// "action" items. If any of these are active, the event
-						// will also be active.
-						event.setSelected(false);
 						NotificationHandler handler = getOrCreateNotificationHandler(event);
 						List<NotificationAction> actions = handler.getActions();
 						for (NotificationAction notificationAction : actions) {
@@ -127,9 +133,6 @@ public class NotificationModel {
 								if (notificationAction.getSinkDescriptor().getId().equals(mAction.getString("sink"))) { //$NON-NLS-1$
 									notificationAction.setSelected(mAction.getBoolean("selected")); //$NON-NLS-1$
 								}
-							}
-							if (notificationAction.isSelected()) {
-								event.setSelected(true);
 							}
 						}
 					}
@@ -145,6 +148,7 @@ public class NotificationModel {
 	/**
 	 * Updates the state of the notification handlers depending on their child notification action states.
 	 */
+	@Deprecated
 	public void updateStates() {
 		Collection<NotificationHandler> handlers = handlerByEventId.values();
 		for (NotificationHandler notificationHandler : handlers) {
@@ -153,6 +157,7 @@ public class NotificationModel {
 			for (NotificationAction notificationAction : actions) {
 				if (notificationAction.isSelected()) {
 					selected = true;
+					break;
 				}
 			}
 			notificationHandler.getEvent().setSelected(selected);
