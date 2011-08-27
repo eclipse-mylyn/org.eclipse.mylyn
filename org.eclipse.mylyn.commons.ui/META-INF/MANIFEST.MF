@@ -7,9 +7,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.jface.text,
  org.eclipse.ui,
- org.eclipse.ui.editors;resolution:=optional,
- org.eclipse.ui.forms;resolution:=optional,
- org.eclipse.ui.browser;resolution:=optional,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.browser,
  org.eclipse.mylyn.commons.screenshots;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
