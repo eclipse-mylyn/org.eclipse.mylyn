@@ -8,6 +8,7 @@
  * Contributors:
  *     Markus Knittig - initial API and implementation
  *     Benjamin Muskalla - bug 324039: [build] tests fail with NPE
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.hudson.tests.support;
@@ -17,8 +18,10 @@ import java.net.Proxy;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.tests.util.TestUtil;
@@ -30,24 +33,25 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  * the repository for each test method would take too long.
  * 
  * @author Markus Knittig
+ * @author Steffen Pingel
  */
 public class HudsonFixture extends TestFixture {
 
-	public static final String SERVER = System.getProperty("mylyn.hudson.server", "mylyn.eclipse.org/hudson");
-
-	public final static String HUDSON_TEST_URL = "http://" + SERVER;
-
 	private static HudsonFixture current;
 
-	private static final HudsonFixture DEFAULT = new HudsonFixture(HUDSON_TEST_URL, "1.367", "REST");
+	private static final HudsonFixture HUDSON_2_1 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.1"),
+			"2.1.0", Type.HUDSON, "REST");
+
+	private static final HudsonFixture JENKINS_1_427 = new HudsonFixture(
+			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.427", Type.JENKINS, "REST");
 
 	/**
 	 * Standard configurations for running all test against.
 	 */
-	public static final HudsonFixture[] ALL = new HudsonFixture[] { DEFAULT };
+	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, JENKINS_1_427 };
 
 	public static HudsonFixture current() {
-		return current(DEFAULT);
+		return current(HUDSON_2_1);
 	}
 
 	public static HudsonFixture current(HudsonFixture fixture) {
@@ -57,16 +61,15 @@ public class HudsonFixture extends TestFixture {
 		return current;
 	}
 
-	private String version;
+	private final String version;
 
-	public HudsonFixture() {
-		super(HudsonCorePlugin.CONNECTOR_KIND, HUDSON_TEST_URL);
-	}
+	private final Type type;
 
-	public HudsonFixture(String url, String version, String info) {
+	public HudsonFixture(String url, String version, Type type, String info) {
 		super(HudsonCorePlugin.CONNECTOR_KIND, url);
 		this.version = version;
-		setInfo("Hudson", version, info);
+		this.type = type;
+		setInfo(type.toString(), version, info);
 	}
 
 	@Override
@@ -74,6 +77,10 @@ public class HudsonFixture extends TestFixture {
 		current = this;
 		setUpFramework();
 		return this;
+	}
+
+	public HudsonHarness createHarness() {
+		return new HudsonHarness(this);
 	}
 
 	public RestfulHudsonClient connect() throws Exception {
@@ -113,7 +120,11 @@ public class HudsonFixture extends TestFixture {
 
 	@Override
 	protected HudsonFixture getDefault() {
-		return DEFAULT;
+		return HUDSON_2_1;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public String getVersion() {

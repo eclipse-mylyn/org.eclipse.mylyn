@@ -16,10 +16,21 @@ package org.eclipse.mylyn.internal.hudson.core.client;
  */
 public class HudsonServerInfo {
 
+	public enum Type {
+		HUDSON, JENKINS
+	};
+
 	private final String version;
 
-	public HudsonServerInfo(String version) {
+	private final Type type;
+
+	public HudsonServerInfo(Type type, String version) {
+		this.type = type;
 		this.version = version;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public String getVersion() {

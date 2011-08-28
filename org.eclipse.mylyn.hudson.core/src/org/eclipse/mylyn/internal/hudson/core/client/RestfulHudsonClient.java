@@ -46,6 +46,7 @@ import org.eclipse.mylyn.commons.http.CommonHttpClient;
 import org.eclipse.mylyn.commons.http.CommonHttpMethod;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.commons.http.CommonPostMethod;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.model.HudsonMavenReportersSurefireAggregatedReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHudson;
@@ -440,12 +441,20 @@ public class RestfulHudsonClient {
 				try {
 					execute(method, monitor);
 					checkResponse(method);
-					Header header = method.getResponseHeader("X-Hudson"); //$NON-NLS-1$
+					Header header = method.getResponseHeader("X-Jenkins"); //$NON-NLS-1$
+					Type type;
 					if (header == null) {
-						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson instance",
-								client.getLocation().getUrl()));
+						type = Type.HUDSON;
+						header = method.getResponseHeader("X-Hudson"); //$NON-NLS-1$
+						if (header == null) {
+							throw new HudsonException(NLS.bind(
+									"{0} does not appear to be a Hudson or Jenkins instance", client.getLocation()
+											.getUrl()));
+						}
+					} else {
+						type = Type.JENKINS;
 					}
-					HudsonServerInfo info = new HudsonServerInfo(header.getValue());
+					HudsonServerInfo info = new HudsonServerInfo(type, header.getValue());
 					return info;
 				} finally {
 					method.releaseConnection(monitor);
