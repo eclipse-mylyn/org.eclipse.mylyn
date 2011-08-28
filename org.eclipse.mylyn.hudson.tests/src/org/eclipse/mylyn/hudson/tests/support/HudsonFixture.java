@@ -18,6 +18,7 @@ import java.net.Proxy;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
@@ -88,11 +89,11 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
-		return connect(repositoryUrl, Proxy.NO_PROXY, level);
+		return connect(repositoryUrl, WebUtil.getProxyForUrl(repositoryUrl), level);
 	}
 
 	public RestfulHudsonClient connect(String url) throws Exception {
-		return connect(url, Proxy.NO_PROXY, PrivilegeLevel.USER);
+		return connect(url, WebUtil.getProxyForUrl(repositoryUrl), PrivilegeLevel.USER);
 	}
 
 	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
@@ -101,7 +102,7 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password) throws Exception {
-		return connect(url, username, password, Proxy.NO_PROXY);
+		return connect(url, username, password, WebUtil.getProxyForUrl(repositoryUrl));
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy)
