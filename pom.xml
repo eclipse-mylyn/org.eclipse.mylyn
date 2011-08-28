@@ -70,8 +70,8 @@
   <modules>
     <module>org.eclipse.mylyn.docs-site</module>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
-    <module>org.eclipse.mylyn.htmltext</module>
     <module>org.eclipse.mylyn.htmltext-feature</module>
+    <module>org.eclipse.mylyn.htmltext.ui</module>
     <module>org.eclipse.mylyn.wikitext-feature</module>
     <module>org.eclipse.mylyn.wikitext.confluence.core</module>
     <module>org.eclipse.mylyn.wikitext.confluence.ui</module>

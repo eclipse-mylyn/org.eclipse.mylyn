@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
 public class HtmlTextActivator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.htmltext";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.htmltext.ui";
 
 	// The shared instance
 	private static HtmlTextActivator plugin;

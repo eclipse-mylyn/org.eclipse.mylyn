@@ -7,7 +7,7 @@
     <groupId>org.eclipse.mylyn.docs</groupId>
     <version>1.6.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.eclipse.mylyn.htmltext</artifactId>
+  <artifactId>org.eclipse.mylyn.htmltext.ui</artifactId>
   <version>0.9.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>

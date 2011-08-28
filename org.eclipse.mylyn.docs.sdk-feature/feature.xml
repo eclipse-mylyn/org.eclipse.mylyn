@@ -33,11 +33,11 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.mylyn.htmltext.feature"
+         id="org.eclipse.mylyn.htmltext"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.mylyn.htmltext.source"
+         id="org.eclipse.mylyn.htmltext.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
