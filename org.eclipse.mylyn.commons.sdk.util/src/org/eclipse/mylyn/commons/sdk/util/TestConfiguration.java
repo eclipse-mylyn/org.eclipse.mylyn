@@ -19,7 +19,12 @@ public class TestConfiguration {
 	private static final String SERVER = System.getProperty("mylyn.test.server", "mylyn.org");
 
 	public static String getRepositoryUrl(String service) {
-		return "http://" + SERVER + "/" + service;
+		return getRepositoryUrl(service, false);
+	}
+
+	public static String getRepositoryUrl(String service, boolean secure) {
+		// FIXME support https
+		return ((secure) ? "https://" : "http://") + SERVER + "/" + service;
 	}
 
 }
