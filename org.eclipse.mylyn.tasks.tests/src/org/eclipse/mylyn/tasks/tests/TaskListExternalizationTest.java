@@ -497,11 +497,11 @@ public class TaskListExternalizationTest extends TestCase {
 
 	public void testRepositoryUrlHandles() throws Exception {
 		String taskId = "123";
-		String repositoryUrl = "http://bugs.eclipse.org";
+		String repositoryUrl = "http://mock.eclipse.org";
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, repositoryUrl);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
-		ITask bugTask = new TaskTask("bugzilla", repositoryUrl, taskId);
+		ITask bugTask = new TaskTask("mock", repositoryUrl, taskId);
 		bugTask.setSummary("Summary");
 		assertEquals(repositoryUrl, bugTask.getRepositoryUrl());
 

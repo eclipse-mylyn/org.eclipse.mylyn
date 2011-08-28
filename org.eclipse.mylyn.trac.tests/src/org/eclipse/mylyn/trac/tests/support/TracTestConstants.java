@@ -11,29 +11,27 @@
 
 package org.eclipse.mylyn.trac.tests.support;
 
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+
 /**
  * @author Steffen Pingel
  */
 public class TracTestConstants {
 
-	public static final String SERVER = System.getProperty("mylyn.trac.server", "mylyn.eclipse.org");
+	public static final String TEST_TRAC_010_URL = TestConfiguration.getRepositoryUrl("trac010");
 
-//	public static final String TEST_TRAC_096_URL = "http://" + SERVER + "/trac096";
+	public static final String TEST_TRAC_010_SSL_URL = TestConfiguration.getRepositoryUrl("trac010", true);
 
-	public static final String TEST_TRAC_010_URL = "http://" + SERVER + "/trac010";
+	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = TestConfiguration.getRepositoryUrl("trac010digest");
 
-	public static final String TEST_TRAC_010_SSL_URL = "https://" + SERVER + "/trac010";
+	public static final String TEST_TRAC_010_FORM_AUTH_URL = TestConfiguration.getRepositoryUrl("trac010formauth");
 
-	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://" + SERVER + "/trac010digest";
+	public static final String TEST_TRAC_011_URL = TestConfiguration.getRepositoryUrl("trac011");
 
-	public static final String TEST_TRAC_010_FORM_AUTH_URL = "http://" + SERVER + "/trac010formauth";
+	public static final String TEST_TRAC_012_URL = TestConfiguration.getRepositoryUrl("trac012");
 
-	public static final String TEST_TRAC_011_URL = "http://" + SERVER + "/trac011";
+	public static final String TEST_TRAC_TRUNK_URL = TestConfiguration.getRepositoryUrl("tractrunk");
 
-	public static final String TEST_TRAC_012_URL = "http://" + SERVER + "/trac012";
-
-	public static final String TEST_TRAC_TRUNK_URL = "http://" + SERVER + "/tractrunk";
-
-	public static final String TEST_TRAC_INVALID_URL = "http://" + SERVER + "/doesnotexist";
+	public static final String TEST_TRAC_INVALID_URL = TestConfiguration.getRepositoryUrl("doesnotexist");
 
 }

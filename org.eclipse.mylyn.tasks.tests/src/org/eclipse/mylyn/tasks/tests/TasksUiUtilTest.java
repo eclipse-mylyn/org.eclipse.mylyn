@@ -16,6 +16,7 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -92,6 +93,9 @@ public class TasksUiUtilTest extends TestCase {
 //	}
 
 	public void testOpenTaskFromString() {
+		if (!PlatformUiUtil.hasInternalBrowser()) {
+			return;
+		}
 		TasksUiUtil.openTask((String) null);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
@@ -99,6 +103,10 @@ public class TasksUiUtilTest extends TestCase {
 	}
 
 	public void testOpenUrl() {
+		if (!PlatformUiUtil.hasInternalBrowser()) {
+			return;
+		}
+
 		TasksUiUtil.openUrl(null);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
@@ -120,8 +128,11 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
 	}
 
-	public void testFlagNoRichEditor() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
-			IllegalAccessException {
+	public void testFlagNoRichEditor() throws Exception {
+		if (!PlatformUiUtil.hasInternalBrowser()) {
+			return;
+		}
+
 		TasksUiUtil.openUrl(null);
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);

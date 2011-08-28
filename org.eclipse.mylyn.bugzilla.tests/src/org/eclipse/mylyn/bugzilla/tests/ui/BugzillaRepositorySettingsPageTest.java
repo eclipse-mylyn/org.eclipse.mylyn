@@ -48,7 +48,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current().getRepositoryUrl());
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), false);
@@ -175,7 +175,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.TEST_BUGZILLA_222_URL);
+				BugzillaFixture.current().getRepositoryUrl());
 		assertNotNull(repositoryTest);
 		wizard = new EditRepositoryWizard(repositoryTest);
 		dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);

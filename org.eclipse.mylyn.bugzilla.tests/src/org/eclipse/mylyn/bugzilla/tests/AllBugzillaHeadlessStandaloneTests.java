@@ -36,7 +36,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 	}
 
 	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.bugzilla.tests");
+		TestSuite suite = new TestSuite(AllBugzillaHeadlessStandaloneTests.class.getName());
 		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);

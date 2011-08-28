@@ -12,7 +12,13 @@
 package org.eclipse.mylyn.internal.tasks.core.context;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 
@@ -21,22 +27,57 @@ import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
  */
 public class DefaultTaskContextStore extends AbstractTaskContextStore {
 
-	@Override
-	public boolean hasContext(ITask task) {
-		return false;
-	}
+	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8"; //$NON-NLS-1$
+
+	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip"; //$NON-NLS-1$
+
+	private File contextDirectory;
 
 	@Override
 	public void cloneContext(ITask sourceTask, ITask destinationTask) {
+		// ignore
+	}
+
+	@Override
+	public void deleteContext(ITask task) {
+		File file = getFileForContext(task);
+		if (file.exists()) {
+			file.delete();
+		}
+	}
+
+	public File getContextDirectory() {
+		return contextDirectory;
 	}
 
 	@Override
 	public File getFileForContext(ITask task) {
+		String handleIdentifier = task.getHandleIdentifier();
+		String encoded;
+		try {
+			encoded = URLEncoder.encode(handleIdentifier, CONTEXT_FILENAME_ENCODING);
+			File contextDirectory = getContextDirectory();
+			File contextFile = new File(contextDirectory, encoded + CONTEXT_FILE_EXTENSION);
+			return contextFile;
+		} catch (UnsupportedEncodingException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Could not determine path for context", e)); //$NON-NLS-1$
+		}
 		return null;
 	}
 
 	@Override
-	public void deleteContext(ITask oldTask) {
+	public boolean hasContext(ITask task) {
+		File file = getFileForContext(task);
+		return file.exists();
+	}
+
+	/**
+	 * @since 3.7
+	 */
+	@Override
+	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
+		// ignore
 	}
 
 	@Override
@@ -45,13 +86,8 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	}
 
 	@Override
-	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
-		// ignore
-	}
-
-	@Override
-	public void setContextDirectory(File contextStoreDir) {
-		// ignore
+	public synchronized void setContextDirectory(File directory) {
+		this.contextDirectory = directory;
 	}
 
 }

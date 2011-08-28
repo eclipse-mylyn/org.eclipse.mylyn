@@ -128,10 +128,10 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		long mostRecentlyModified = 0;
 		// try changing ticket 3x to make sure it gets a new change time
 		for (int i = 0; i < 3; i++) {
+			ticket = client.getTicket(ticket.getId(), null);
 			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
 			client.updateTicket(ticket, "comment", null);
-			TracTicket updateTicket = client.getTicket(ticket.getId(), null);
-			mostRecentlyModified = TracUtil.toTracTime(updateTicket.getLastChanged());
+			mostRecentlyModified = TracUtil.toTracTime(ticket.getLastChanged());
 			// needs to be at least one second ahead of repository time stamp   
 			if (mostRecentlyModified > lastModified + 1) {
 				break;

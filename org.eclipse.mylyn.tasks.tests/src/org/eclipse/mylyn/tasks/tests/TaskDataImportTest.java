@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
@@ -124,7 +125,12 @@ public class TaskDataImportTest extends TestCase {
 //		historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 //		assertNotNull(historyContext);
 //		assertTrue(historyContext.getInteractionHistory().size() > 0);
-		assertTrue(TasksUiPlugin.getRepositoryManager().getAllRepositories().size() > 2);
+		if (TasksUi.getRepositoryConnector("bugzilla") != null) {
+			assertEquals(3, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
+		} else {
+			// Bugzilla repositories are not imported if connector is not available
+			assertEquals(1, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
+		}
 	}
 
 	public void testImportOverwritesAllTasks() {
@@ -151,7 +157,12 @@ public class TaskDataImportTest extends TestCase {
 //		historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 //		assertNotNull(historyContext);
 //		assertTrue(historyContext.getInteractionHistory().size() > 0);
-		assertTrue(TasksUiPlugin.getRepositoryManager().getAllRepositories().size() > 2);
+		if (TasksUi.getRepositoryConnector("bugzilla") != null) {
+			assertEquals(3, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
+		} else {
+			// Bugzilla repositories are not imported if connector is not available
+			assertEquals(1, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
+		}
 	}
 
 	public void testImportBackupWithOldTaskList() {
