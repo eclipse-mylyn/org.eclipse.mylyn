@@ -15,6 +15,8 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.forms.widgets.Section;
 import org.osgi.framework.Bundle;
@@ -24,6 +26,8 @@ import org.osgi.framework.Version;
  * @author Steffen Pingel
  */
 public class PlatformUiUtil {
+
+	private static Boolean internalBrowserAvailable;
 
 	private static class Eclipse36Checker {
 		public static final boolean result;
@@ -174,6 +178,19 @@ public class PlatformUiUtil {
 
 	public static boolean usesMouseWheelEventsForScrolling() {
 		return "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$
+	}
+
+	public static boolean hasInternalBrowser() {
+		if (internalBrowserAvailable == null) {
+			try {
+				Browser browser = new Browser(WorkbenchUtil.getShell(), SWT.NONE);
+				browser.dispose();
+				internalBrowserAvailable = Boolean.TRUE;
+			} catch (SWTError er) {
+				internalBrowserAvailable = Boolean.FALSE;
+			}
+		}
+		return internalBrowserAvailable.booleanValue();
 	}
 
 }
