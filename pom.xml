@@ -70,13 +70,15 @@
 		  <url>${mylyn-context-repository-url}</url>
 		</repository>
 	  </repositories>
+	  <modules>
+		<module>r4e</module>
+		<module>releng/org.eclipse.mylyn.reviews.site</module>
+	  </modules>
 	</profile>
   </profiles>
   <modules>
     <module>tbr</module>
     <module>gerrit</module>
-    <module>r4e</module>
     <module>framework</module>
-    <module>releng/org.eclipse.mylyn.reviews.site</module>
   </modules>
 </project>

@@ -35,10 +35,11 @@
    <includes
          id="org.eclipse.mylyn.gerrit.feature"
          version="0.0.0"/>
-
+<!--
    <includes
          id="org.eclipse.mylyn.reviews.r4e.feature"
          version="0.0.0"/>
+-->
 
    <includes
          id="org.eclipse.mylyn.versions.sdk"
