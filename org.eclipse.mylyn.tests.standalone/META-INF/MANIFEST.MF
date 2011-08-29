@@ -7,24 +7,20 @@ Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true
 Bundle-ClassPath: .
 Require-Bundle: org.junit4,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
+ org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.context.tests,
  org.eclipse.mylyn.discovery.tests,
  org.eclipse.mylyn.resources.tests,
  org.eclipse.mylyn.java.tests,
  org.eclipse.mylyn.tasks.tests,
  org.eclipse.mylyn.monitor.tests,
- org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.bugzilla.tests,
- org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.ide.tests,
  org.eclipse.mylyn.trac.tests,
  org.eclipse.mylyn.team.tests,
  org.eclipse.mylyn.commons.tests,
  org.eclipse.mylyn.wikitext.tests,
- org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.hudson.tests,
  org.eclipse.mylyn.builds.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

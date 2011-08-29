@@ -15,9 +15,10 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
-import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
+import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.DefaultTaskSchemaTest;
@@ -78,7 +79,7 @@ public class AllHeadlessStandaloneTest {
 		suite.addTest(AllTracHeadlessStandaloneTests.suite(defaultOnly));
 
 		// hudson
-		//suite.addTest(AllHudsonTests.suite(defaultOnly));
+		suite.addTest(AllHudsonTests.suite(defaultOnly));
 
 		return suite;
 	}

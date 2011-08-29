@@ -14,7 +14,7 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 
 /**
  * @author Steffen Pingel

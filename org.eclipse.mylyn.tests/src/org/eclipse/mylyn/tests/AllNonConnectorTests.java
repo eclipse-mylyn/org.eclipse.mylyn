@@ -16,8 +16,8 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.builds.tests.AllBuildsTests;
 import org.eclipse.mylyn.cdt.tests.AllCdtTests;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
-import org.eclipse.mylyn.commons.tests.support.ManagedTestSuite;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
