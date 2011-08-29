@@ -22,10 +22,9 @@ import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 public class AllContextTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.context.tests");
-
 		ContextTestUtil.triggerContextUiLazyStart();
 
+		TestSuite suite = new TestSuite(AllContextTests.class.getName());
 		suite.addTestSuite(InteractionContextListeningTest.class);
 		suite.addTestSuite(ScalingFactorsTest.class);
 		suite.addTestSuite(InteractionContextTest.class);

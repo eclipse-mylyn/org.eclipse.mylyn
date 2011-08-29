@@ -14,20 +14,22 @@ package org.eclipse.mylyn.team.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+
 /**
  * @author Mik Kersten
  */
 public class AllTeamTests {
 
 	public static Test suite() {
+		ContextTestUtil.triggerContextUiLazyStart();
+
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.team.tests");
-		//$JUnit-BEGIN$
 		suite.addTestSuite(TestSyncViewRefresh.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
 		suite.addTestSuite(TaskFinderTest.class);
-		//$JUnit-END$
 		return suite;
 	}
 

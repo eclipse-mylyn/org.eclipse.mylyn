@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -135,6 +137,11 @@ public class ContextCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		contextStore = new LocalContextStore(commonContextScaling);
+		File storeFile = getDefaultContextLocation().toFile();
+		if (!storeFile.exists()) {
+			storeFile.mkdirs();
+		}
+		contextStore.setContextDirectory(storeFile);
 		contextManager = new InteractionContextManager(contextStore);
 	}
 
@@ -149,6 +156,12 @@ public class ContextCorePlugin extends Plugin {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Mylyn Core stop failed", e)); //$NON-NLS-1$
 		}
+	}
+
+	public IPath getDefaultContextLocation() {
+		IPath stateLocation = Platform.getStateLocation(getBundle());
+		IPath cacheFile = stateLocation.append("contexts"); //$NON-NLS-1$
+		return cacheFile;
 	}
 
 	/**
