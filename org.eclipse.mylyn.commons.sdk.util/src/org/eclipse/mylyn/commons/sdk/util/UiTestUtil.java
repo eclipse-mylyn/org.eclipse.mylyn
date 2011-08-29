@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -75,6 +76,14 @@ public class UiTestUtil {
 
 	public static void closeAllEditors() {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+	}
+
+	public static void waitForDisplay() {
+		if (Display.getCurrent() != null) {
+			while (Display.getDefault().readAndDispatch()) {
+				// do nothing
+			}
+		}
 	}
 
 }
