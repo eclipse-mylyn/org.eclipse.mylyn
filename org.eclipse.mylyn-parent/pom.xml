@@ -374,7 +374,7 @@
 		</property>
       </activation>
       <properties>
-		<mylyn-credentials>/home/data/httpd/download-staging.priv/tools/mylyn/hudson/.credentials.properties</mylyn-credentials>
+		<mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
 		<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org</test.vmargs>
 		<!--
 		<mylyn-test-append>@e${target-version}</mylyn-test-append>
