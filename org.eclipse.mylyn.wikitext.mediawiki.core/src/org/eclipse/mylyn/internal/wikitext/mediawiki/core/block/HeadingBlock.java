@@ -55,7 +55,11 @@ public class HeadingBlock extends Block {
 			attributes.setId(state.getIdGenerator().newId("h" + level, text)); //$NON-NLS-1$
 		}
 		builder.beginHeading(level, attributes);
-		builder.characters(text);
+
+		offset = matcher.start(2);
+		line = text;
+		getMarkupLanguage().emitMarkupLine(getParser(), state, offset, line, 0);
+
 		builder.endHeading();
 
 		setClosed(true);

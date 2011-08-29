@@ -112,6 +112,14 @@ public class MediaWikiLanguageTest extends TestCase {
 		}
 	}
 
+	public void testHeadingWithStyles_bug355713() {
+		String html = parser.parseToHtml("== '''bold''' ''italic'' <u>underlined</u> <s>strikethrough</s> ==");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<h2.*?><b>bold</b> <i>italic</i> <u>underlined</u> <s>strikethrough</s></h2>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testHeadingsWithPara() {
 		String html = parser.parseToHtml("\n== H1 ==\n\npa\n\n=== H3 ===\n\nabc");
 		TestUtil.println(html);
