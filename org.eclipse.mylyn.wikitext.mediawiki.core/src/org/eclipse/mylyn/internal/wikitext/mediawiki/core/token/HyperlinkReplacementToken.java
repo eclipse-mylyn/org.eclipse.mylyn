@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
  * @author David Green
@@ -43,8 +44,13 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 			if (hyperlinkBoundaryText.equals("\"")) { //$NON-NLS-1$
 				builder.link(href, hyperlinkSrc);
 			} else {
-				builder.imageLink(href, hyperlinkSrc);
+				builder.imageLink(href, getMarkupLanguage().mapImageName(hyperlinkSrc));
 			}
+		}
+
+		@Override
+		public MediaWikiLanguage getMarkupLanguage() {
+			return (MediaWikiLanguage) super.getMarkupLanguage();
 		}
 	}
 

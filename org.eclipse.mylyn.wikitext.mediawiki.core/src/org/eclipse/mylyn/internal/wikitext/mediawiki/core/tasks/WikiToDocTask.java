@@ -253,17 +253,20 @@ public class WikiToDocTask extends MarkupTask {
 			if (isValidate()) {
 				performValidation(markupLanguage, path, markupContent);
 			}
-			markupToDoc(markupLanguage, path, markupContent, pathNameToOutline);
+
+			Set<String> imageFilenames = null;
+			if (!fetchImages) {
+				getProject().log(Messages.getString("WikiToDocTask_skipping_images"), Project.MSG_WARN); //$NON-NLS-1$
+			} else {
+				imageFilenames = fetchImages(markupLanguage, path);
+			}
+
+			markupToDoc(markupLanguage, path, markupContent, pathNameToOutline, imageFilenames);
 
 			if (path.isGenerateToc()) {
 				createToc(path, pathNameToOutline.get(path.name));
 			}
 
-			if (!fetchImages) {
-				getProject().log(Messages.getString("WikiToDocTask_skipping_images"), Project.MSG_WARN); //$NON-NLS-1$
-			} else {
-				fetchImages(markupLanguage, path);
-			}
 		}
 		if (generateUnifiedToc) {
 			createToc(paths, pathNameToOutline);
@@ -440,7 +443,7 @@ public class WikiToDocTask extends MarkupTask {
 		return internalLinkPattern;
 	}
 
-	private void fetchImages(MarkupLanguage markupLanguage, Path path) {
+	private Set<String> fetchImages(MarkupLanguage markupLanguage, Path path) {
 		File dest = computeDestDir(path);
 		if (prependImagePrefix != null) {
 			dest = new File(dest, prependImagePrefix);
@@ -462,7 +465,7 @@ public class WikiToDocTask extends MarkupTask {
 		} catch (MalformedURLException e) {
 			throw new BuildException(e);
 		}
-		imageFetchingStrategy.fetchImages();
+		return imageFetchingStrategy.fetchImages();
 	}
 
 	private String preprocessMarkup(Path path, String content) {
@@ -482,7 +485,7 @@ public class WikiToDocTask extends MarkupTask {
 	}
 
 	private void markupToDoc(MarkupLanguage markupLanguage, Path path, String markupContent,
-			Map<String, SplitOutlineItem> pathNameToOutline) throws BuildException {
+			Map<String, SplitOutlineItem> pathNameToOutline, Set<String> imageFilenames) throws BuildException {
 		File pathDir = computeDestDir(path);
 		if (!pathDir.exists()) {
 			if (!pathDir.mkdirs()) {
@@ -501,6 +504,7 @@ public class WikiToDocTask extends MarkupTask {
 					Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
 					e.getMessage()), e);
 		}
+
 		try {
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 			for (Stylesheet stylesheet : stylesheets) {
@@ -540,8 +544,11 @@ public class WikiToDocTask extends MarkupTask {
 
 			MarkupLanguage markupLanguageClone = markupLanguage.clone();
 			if (markupLanguageClone instanceof MediaWikiLanguage) {
-				((MediaWikiLanguage) markupLanguageClone).setPageMapping(new PathPageMapping(path, paths,
-						pathNameToOutline));
+				MediaWikiLanguage mediaWikiLanguage = (MediaWikiLanguage) markupLanguageClone;
+				mediaWikiLanguage.setPageMapping(new PathPageMapping(path, paths, pathNameToOutline));
+				if (imageFilenames != null) {
+					mediaWikiLanguage.setImageNames(imageFilenames);
+				}
 			}
 
 			SplitOutlineItem item = pathNameToOutline.get(path.name);
@@ -1050,5 +1057,4 @@ public class WikiToDocTask extends MarkupTask {
 	public void setTemplateExcludes(String templateExcludes) {
 		this.templateExcludes = templateExcludes;
 	}
-
 }

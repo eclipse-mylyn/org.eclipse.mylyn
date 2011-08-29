@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -775,6 +776,20 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("not a comment <!-- comment\nwith\nMultiple lines of text --> more text");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<body><p>not a comment\\s+more text</p></body>").matcher(html).find());
+	}
+
+	public void testImageFilenameCaseInsensitivity() {
+		String html = parser.parseToHtml("[[Image:foo.gif]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<img border=\"0\" src=\"foo.gif\"/>"));
+
+		Set<String> imageNames = new HashSet<String>();
+		imageNames.add("Foo.gif");
+		markupLanaguage.setImageNames(imageNames);
+
+		html = parser.parseToHtml("[[Image:foo.gif]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<img border=\"0\" src=\"Foo.gif\"/>"));
 	}
 
 	private String readFully(String resource) throws IOException {

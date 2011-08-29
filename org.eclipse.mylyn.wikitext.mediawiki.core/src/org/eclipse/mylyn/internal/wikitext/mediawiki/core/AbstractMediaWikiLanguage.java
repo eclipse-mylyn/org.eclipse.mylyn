@@ -12,12 +12,18 @@
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
@@ -32,6 +38,8 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)"); //$NON-NLS-1$
 
 	private PageMapping pageMapping;
+
+	private Map<String, String> imageMapping;
 
 	protected String mapPageNameToHref(String pageName) {
 		if (pageMapping != null) {
@@ -91,4 +99,38 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 	public abstract List<TemplateResolver> getTemplateProviders();
 
 	public abstract String getTemplateExcludes();
+
+	public Set<String> getImageNames() {
+		if (imageMapping == null) {
+			return Collections.emptySet();
+		}
+		return Collections.unmodifiableSet(new HashSet<String>(imageMapping.values()));
+	}
+
+	public void setImageNames(Set<String> imageNames) {
+		if (imageMapping == null) {
+			imageMapping = new HashMap<String, String>();
+		} else {
+			imageMapping.clear();
+		}
+		for (String name : imageNames) {
+			imageMapping.put(name.toLowerCase(), name);
+		}
+	}
+
+	public String mapImageName(String imageName) {
+		String substitute = imageMapping == null ? null : imageMapping.get(imageName.toLowerCase());
+		if (substitute != null) {
+			imageName = substitute;
+		}
+		return imageName;
+	}
+
+	@Override
+	public MarkupLanguage clone() {
+		AbstractMediaWikiLanguage copy = (AbstractMediaWikiLanguage) super.clone();
+		copy.imageMapping = this.imageMapping;
+		copy.pageMapping = this.pageMapping;
+		return copy;
+	}
 }

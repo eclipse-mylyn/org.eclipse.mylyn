@@ -21,7 +21,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +51,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 	private String pageName;
 
 	@Override
-	public void fetchImages() {
+	public Set<String> fetchImages() {
 		if (pageName == null || pageName.length() == 0) {
 			throw new BuildException("please specify @pageName"); //$NON-NLS-1$
 		}
@@ -75,15 +77,19 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		} catch (Exception e) {
 			throw new BuildException("Cannot compose API URL", e); //$NON-NLS-1$
 		}
+
+		Set<String> filenames = new HashSet<String>();
+
+		final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		parserFactory.setNamespaceAware(true);
+		parserFactory.setValidating(false);
+
 		Reader input;
 		try {
 			input = new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), "UTF-8"); //$NON-NLS-1$
 		} catch (IOException e) {
 			throw new BuildException(String.format("Cannot contact %s: %s", apiUrl, e.getMessage()), e); //$NON-NLS-1$
 		}
-		final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		parserFactory.setValidating(false);
 		try {
 			SAXParser saxParser = parserFactory.newSAXParser();
 			XMLReader xmlReader = saxParser.getXMLReader();
@@ -134,6 +140,8 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 					}
 					get.setDest(new File(dest, name));
 					get.execute();
+
+					filenames.add(name);
 					++fileCount;
 				} else {
 					log(String.format("Unexpected title format: %s", title), Project.MSG_WARN); //$NON-NLS-1$
@@ -145,6 +153,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		} catch (ParserConfigurationException e) {
 			throw new BuildException("Cannot configure SAX parser", e); //$NON-NLS-1$
 		}
+		return filenames;
 	}
 
 	public URL getUrl() {
@@ -217,4 +226,5 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		}
 
 	}
+
 }

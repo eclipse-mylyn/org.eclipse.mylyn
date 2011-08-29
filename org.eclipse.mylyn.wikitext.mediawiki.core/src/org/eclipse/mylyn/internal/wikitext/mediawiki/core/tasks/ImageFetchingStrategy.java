@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;
 
 import java.io.File;
+import java.util.Set;
 
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
@@ -23,7 +24,12 @@ abstract class ImageFetchingStrategy {
 
 	protected File dest;
 
-	public abstract void fetchImages();
+	/**
+	 * Fetch images
+	 * 
+	 * @return the set of images filenames that were retrieved
+	 */
+	public abstract Set<String> fetchImages();
 
 	public Task getTask() {
 		return task;

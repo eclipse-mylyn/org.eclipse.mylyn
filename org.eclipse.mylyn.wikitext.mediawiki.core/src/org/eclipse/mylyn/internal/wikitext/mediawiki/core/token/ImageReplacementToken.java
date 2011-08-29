@@ -14,12 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
  * match [[Image:someImage.png]]
@@ -49,6 +50,12 @@ public class ImageReplacementToken extends PatternBasedElement {
 	}
 
 	private static class ImageReplacementTokenProcessor extends PatternBasedElementProcessor {
+
+		@Override
+		public MediaWikiLanguage getMarkupLanguage() {
+			return (MediaWikiLanguage) super.getMarkupLanguage();
+		}
+
 		@Override
 		public void emit() {
 			String imageUrl = group(1);
@@ -61,6 +68,8 @@ public class ImageReplacementToken extends PatternBasedElement {
 				// the image fetching strategy.
 				imageUrl = imageUrl.replace(' ', '_');
 			}
+			imageUrl = getMarkupLanguage().mapImageName(imageUrl);
+
 			String optionsString = group(2);
 
 			boolean thumbnail = false;

@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +34,7 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 	private File src;
 
 	@Override
-	public void fetchImages() {
+	public Set<String> fetchImages() {
 		if (!src.exists()) {
 			throw new BuildException("@src does not exist: " + src); //$NON-NLS-1$
 		}
@@ -46,6 +48,8 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 		if (base.endsWith("/")) { //$NON-NLS-1$
 			base = base.substring(0, base.length() - 1);
 		}
+		Set<String> filenames = new HashSet<String>();
+
 		Pattern fragmentUrlPattern = Pattern.compile("src=\"([^\"]+)\""); //$NON-NLS-1$
 		Pattern imagePattern = Pattern.compile("alt=\"Image:([^\"]*)\"([^>]+)", Pattern.MULTILINE); //$NON-NLS-1$
 		String htmlSrc;
@@ -81,11 +85,14 @@ class HtmlSourceImageFetchingStrategy extends ImageFetchingStrategy {
 					name = name.replace(' ', '_');
 					get.setDest(new File(dest, name));
 					get.execute();
+					filenames.add(name);
 					++fileCount;
 				}
 			}
 		}
 		log("Fetched " + fileCount + " image files for " + src, Project.MSG_INFO); //$NON-NLS-1$ //$NON-NLS-2$
+
+		return filenames;
 	}
 
 	private String readSrc() throws IOException {
