@@ -118,7 +118,7 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
 			"4.0.1", "");
 
-	public static BugzillaFixture DEFAULT = BUGS_HEAD;
+	public static BugzillaFixture DEFAULT = BUGS_4_0;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { /*BUGS_2_22, BUGS_3_0, BUGS_3_2, */BUGS_3_4,
 			BUGS_3_6, BUGS_4_0, BUGS_HEAD };
