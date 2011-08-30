@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
     Copyright (c) 2009 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -8,7 +9,6 @@
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-
 <project name="org.eclipse.mylyn.help.ui" default="all">
     <description>
             Generate Eclipse help content for the Mylyn user guide
@@ -18,19 +18,20 @@
 	<property name="mylyn.wiki.url.base" value="${mylyn.help.doc.url.base}/Mylyn"/>
 	<property name="imageFolder" value="images"/>
 	
+	<!-- used by pom.xml, currently disabled due to lack of Tycho integration
 	<path id="wikitext.tasks.classpath">
 		<pathelement path="${wikitext.tasks.classpath.path}"/>
 	</path>
-	<!--
-	<path id="wikitext.tasks.classpath">
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
-	</path>
 	-->
+	
+	<path id="wikitext.tasks.classpath">
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/@dot"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin_ant"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
+	</path>
 
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
