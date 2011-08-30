@@ -152,11 +152,11 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
-		page.setUrl(BugzillaFixture.TEST_BUGZILLA_218_URL);
+		page.setUrl(BugzillaFixture.current().getRepositoryUrl());
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.TEST_BUGZILLA_218_URL);
+				BugzillaFixture.current().getRepositoryUrl());
 		assertNotNull(repositoryTest);
 		assertEquals(tempUid, repositoryTest.getUserName());
 		assertEquals(tempPass, repositoryTest.getPassword());
