@@ -100,8 +100,8 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 					if (!PullRequestUtils.isFromSameRepository(request)) {
 						monitor.subTask(MessageFormat
 								.format(Messages.CheckoutPullRequestHandler_TaskAddRemote,
-										request.getHead().getRepository()
-												.getOwner().getLogin()));
+										request.getHead().getRepo().getOwner()
+												.getLogin()));
 						remote = PullRequestUtils.addRemote(repo, request);
 						headBranch = PullRequestUtils.getHeadBranch(request);
 					} else {

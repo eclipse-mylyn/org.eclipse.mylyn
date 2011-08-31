@@ -65,7 +65,7 @@ public abstract class PullRequestUtils {
 	 */
 	public static Repository getRepository(PullRequest request) {
 		org.eclipse.egit.github.core.Repository remoteRepo = request.getBase()
-				.getRepository();
+				.getRepo();
 		String id = remoteRepo.getOwner().getLogin() + '/'
 				+ remoteRepo.getName() + Constants.DOT_GIT;
 		RepositoryCache cache = Activator.getDefault().getRepositoryCache();
@@ -98,7 +98,7 @@ public abstract class PullRequestUtils {
 	public static void configureTopicBranch(Repository repo, PullRequest request)
 			throws IOException {
 		String branch = getBranchName(request);
-		String remote = request.getHead().getRepository().getOwner().getLogin();
+		String remote = request.getHead().getRepo().getOwner().getLogin();
 		StoredConfig config = repo.getConfig();
 		config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branch,
 				ConfigConstants.CONFIG_KEY_MERGE, getHeadBranch(request));
@@ -115,8 +115,8 @@ public abstract class PullRequestUtils {
 	 * @return true if same, false otherwise
 	 */
 	public static boolean isFromSameRepository(PullRequest request) {
-		return request.getHead().getRepository().getOwner()
-				.equals(request.getBase().getRepository().getOwner());
+		return request.getHead().getRepo().getOwner()
+				.equals(request.getBase().getRepo().getOwner());
 	}
 
 	/**
@@ -129,8 +129,8 @@ public abstract class PullRequestUtils {
 	 */
 	public static RemoteConfig getRemote(Repository repo, PullRequest request)
 			throws URISyntaxException {
-		return getRemoteConfig(repo, request.getHead().getRepository()
-				.getOwner().getLogin());
+		return getRemoteConfig(repo, request.getHead().getRepo().getOwner()
+				.getLogin());
 	}
 
 	/**
@@ -167,7 +167,7 @@ public abstract class PullRequestUtils {
 
 		StoredConfig config = repo.getConfig();
 		org.eclipse.egit.github.core.Repository head = request.getHead()
-				.getRepository();
+				.getRepo();
 		remote = new RemoteConfig(config, head.getOwner().getLogin());
 		if (head.isPrivate())
 			remote.addURI(new URIish(org.eclipse.egit.github.core.Repository
@@ -206,7 +206,7 @@ public abstract class PullRequestUtils {
 	 */
 	public static String getHeadBranch(PullRequest request) {
 		PullRequestMarker head = request.getHead();
-		return Constants.R_REMOTES + head.getRepository().getOwner().getLogin()
-				+ "/" + head.getRef();
+		return Constants.R_REMOTES + head.getRepo().getOwner().getLogin() + "/"
+				+ head.getRef();
 	}
 }

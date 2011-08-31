@@ -43,7 +43,7 @@ public class PullRequestTest extends LiveTest {
 		assertNotNull(user);
 		assertNotNull(user.getLogin());
 
-		Repository repo = marker.getRepository();
+		Repository repo = marker.getRepo();
 		assertNotNull(repo);
 		assertNotNull(repo.getOwner());
 		assertNotNull(repo.getName());
