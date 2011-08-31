@@ -10,6 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HEADER_LAST;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HEADER_LINK;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HEADER_NEXT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.META_FIRST;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.META_LAST;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.META_NEXT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.META_PREV;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.META_REL;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
@@ -35,8 +44,7 @@ public class PageLinks {
 	 * @param response
 	 */
 	public PageLinks(HttpResponse response) {
-		Header[] linkHeaders = response
-				.getHeaders(IGitHubConstants.HEADER_LINK);
+		Header[] linkHeaders = response.getHeaders(HEADER_LINK);
 		if (linkHeaders.length > 0) {
 			String[] links = linkHeaders[0].getValue().split(DELIM_LINKS);
 			for (String link : links) {
@@ -51,32 +59,29 @@ public class PageLinks {
 
 				for (int i = 1; i < segments.length; i++) {
 					String[] rel = segments[i].trim().split("="); //$NON-NLS-1$
-					if (rel.length < 2
-							|| !IGitHubConstants.META_REL.equals(rel[0]))
+					if (rel.length < 2 || !META_REL.equals(rel[0]))
 						continue;
 
 					String relValue = rel[1];
 					if (relValue.startsWith("\"") && relValue.endsWith("\"")) //$NON-NLS-1$ //$NON-NLS-2$
 						relValue = relValue.substring(1, relValue.length() - 1);
 
-					if (IGitHubConstants.META_FIRST.equals(relValue))
+					if (META_FIRST.equals(relValue))
 						first = linkPart;
-					else if (IGitHubConstants.META_LAST.equals(relValue))
+					else if (META_LAST.equals(relValue))
 						last = linkPart;
-					else if (IGitHubConstants.META_NEXT.equals(relValue))
+					else if (META_NEXT.equals(relValue))
 						next = linkPart;
-					else if (IGitHubConstants.META_PREV.equals(relValue))
+					else if (META_PREV.equals(relValue))
 						prev = linkPart;
 				}
 			}
 		} else {
-			Header[] nextHeaders = response
-					.getHeaders(IGitHubConstants.HEADER_NEXT);
+			Header[] nextHeaders = response.getHeaders(HEADER_NEXT);
 			if (nextHeaders.length > 0)
 				next = nextHeaders[0].getValue();
 
-			Header[] lastHeaders = response
-					.getHeaders(IGitHubConstants.HEADER_LAST);
+			Header[] lastHeaders = response.getHeaders(HEADER_LAST);
 			if (lastHeaders.length > 0)
 				last = lastHeaders[0].getValue();
 		}

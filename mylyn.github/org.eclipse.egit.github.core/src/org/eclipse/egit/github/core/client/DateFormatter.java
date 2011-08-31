@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.DATE_FORMAT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.DATE_FORMAT_V2_1;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.DATE_FORMAT_V2_2;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -38,9 +42,9 @@ public class DateFormatter implements JsonDeserializer<Date>,
 	 */
 	public DateFormatter() {
 		formats = new DateFormat[3];
-		formats[0] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT);
-		formats[1] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_1);
-		formats[2] = new SimpleDateFormat(IGitHubConstants.DATE_FORMAT_V2_2);
+		formats[0] = new SimpleDateFormat(DATE_FORMAT);
+		formats[1] = new SimpleDateFormat(DATE_FORMAT_V2_1);
+		formats[2] = new SimpleDateFormat(DATE_FORMAT_V2_2);
 		final TimeZone timeZone = TimeZone.getTimeZone("Zulu"); //$NON-NLS-1$
 		for (DateFormat format : formats)
 			format.setTimeZone(timeZone);

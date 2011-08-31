@@ -11,6 +11,23 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CONTENT_TYPE_JSON;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PROTOCOL_HTTPS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SUBDOMAIN_API;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
@@ -27,7 +44,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpMessage;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -38,7 +54,6 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
@@ -68,8 +83,8 @@ public class GitHubClient {
 	public static GitHubClient createClient(String url) {
 		try {
 			String host = new URL(url).getHost();
-			host = IGitHubConstants.SUBDOMAIN_API + "." + host;
-			return new GitHubClient(host, -1, IGitHubConstants.PROTOCOL_HTTPS);
+			host = SUBDOMAIN_API + "." + host;
+			return new GitHubClient(host, -1, PROTOCOL_HTTPS);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -92,7 +107,7 @@ public class GitHubClient {
 	 * Create default client
 	 */
 	public GitHubClient() {
-		this(IGitHubConstants.HOST_API, -1, IGitHubConstants.PROTOCOL_HTTPS);
+		this(HOST_API, -1, PROTOCOL_HTTPS);
 	}
 
 	/**
@@ -125,7 +140,7 @@ public class GitHubClient {
 		// Preemptive authentication
 		httpContext = new BasicHttpContext();
 		AuthCache authCache = new BasicAuthCache();
-		httpContext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+		httpContext.setAttribute(AUTH_CACHE, authCache);
 		client.addRequestInterceptor(new AuthInterceptor(), 0);
 	}
 
@@ -222,8 +237,7 @@ public class GitHubClient {
 	 */
 	public GitHubClient setCredentials(String user, String password) {
 		updateCredentials(user, password);
-		AuthCache authCache = (AuthCache) httpContext
-				.getAttribute(ClientContext.AUTH_CACHE);
+		AuthCache authCache = (AuthCache) httpContext.getAttribute(AUTH_CACHE);
 		authCache.put(httpHost, new BasicScheme());
 		return this;
 	}
@@ -235,9 +249,8 @@ public class GitHubClient {
 	 * @return this client
 	 */
 	public GitHubClient setOAuth2Token(String token) {
-		updateCredentials(IGitHubConstants.AUTH_TOKEN, token);
-		AuthCache authCache = (AuthCache) httpContext
-				.getAttribute(ClientContext.AUTH_CACHE);
+		updateCredentials(AUTH_TOKEN, token);
+		AuthCache authCache = (AuthCache) httpContext.getAttribute(AUTH_CACHE);
 		authCache.put(httpHost, new OAuth2Scheme());
 		return this;
 	}
@@ -346,12 +359,12 @@ public class GitHubClient {
 			StatusLine status) {
 		final int code = status.getStatusCode();
 		switch (code) {
-		case HttpStatus.SC_BAD_REQUEST:
-		case HttpStatus.SC_UNAUTHORIZED:
-		case HttpStatus.SC_FORBIDDEN:
-		case HttpStatus.SC_NOT_FOUND:
-		case HttpStatus.SC_UNPROCESSABLE_ENTITY:
-		case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+		case SC_BAD_REQUEST:
+		case SC_UNAUTHORIZED:
+		case SC_FORBIDDEN:
+		case SC_NOT_FOUND:
+		case SC_UNPROCESSABLE_ENTITY:
+		case SC_INTERNAL_SERVER_ERROR:
 			RequestError error;
 			try {
 				error = parseError(response);
@@ -373,8 +386,8 @@ public class GitHubClient {
 	 */
 	protected boolean isOk(HttpResponse response, StatusLine status) {
 		switch (status.getStatusCode()) {
-		case HttpStatus.SC_OK:
-		case HttpStatus.SC_CREATED:
+		case SC_OK:
+		case SC_CREATED:
 			return true;
 		default:
 			return false;
@@ -389,7 +402,7 @@ public class GitHubClient {
 	 * @return true if empty, false otherwise
 	 */
 	protected boolean isEmpty(HttpResponse response, StatusLine status) {
-		return HttpStatus.SC_NO_CONTENT == status.getStatusCode();
+		return SC_NO_CONTENT == status.getStatusCode();
 	}
 
 	/**
@@ -462,8 +475,7 @@ public class GitHubClient {
 			Object params, Type type) throws IOException {
 		if (params != null)
 			method.setEntity(new StringEntity(toJson(params),
-					IGitHubConstants.CONTENT_TYPE_JSON,
-					IGitHubConstants.CHARSET_UTF8));
+					CONTENT_TYPE_JSON, CHARSET_UTF8));
 		HttpResponse response = client.execute(httpHost, method, httpContext);
 		StatusLine status = getStatus(response);
 		if (isOk(response, status)) {
@@ -521,8 +533,7 @@ public class GitHubClient {
 			EntityDeleteMethod delete = configureRequest(new EntityDeleteMethod(
 					uri));
 			delete.setEntity(new StringEntity(toJson(params),
-					IGitHubConstants.CONTENT_TYPE_JSON,
-					IGitHubConstants.CHARSET_UTF8));
+					CONTENT_TYPE_JSON, CHARSET_UTF8));
 			method = delete;
 		}
 

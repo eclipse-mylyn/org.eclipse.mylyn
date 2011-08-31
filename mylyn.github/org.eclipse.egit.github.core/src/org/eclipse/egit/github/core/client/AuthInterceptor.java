@@ -10,6 +10,11 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
+import static org.apache.http.client.protocol.ClientContext.CREDS_PROVIDER;
+import static org.apache.http.client.protocol.ClientContext.TARGET_AUTH_STATE;
+import static org.apache.http.protocol.ExecutionContext.HTTP_TARGET_HOST;
+
 import java.io.IOException;
 
 import org.apache.http.HttpException;
@@ -22,8 +27,6 @@ import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
 /**
@@ -34,20 +37,18 @@ public class AuthInterceptor implements HttpRequestInterceptor {
 	public void process(final HttpRequest request, final HttpContext context)
 			throws HttpException, IOException {
 		AuthState authState = (AuthState) context
-				.getAttribute(ClientContext.TARGET_AUTH_STATE);
+				.getAttribute(TARGET_AUTH_STATE);
 		if (authState == null || authState.getAuthScheme() != null)
 			return;
-		HttpHost targetHost = (HttpHost) context
-				.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+		HttpHost targetHost = (HttpHost) context.getAttribute(HTTP_TARGET_HOST);
 		if (targetHost == null)
 			return;
-		AuthCache cache = (AuthCache) context
-				.getAttribute(ClientContext.AUTH_CACHE);
+		AuthCache cache = (AuthCache) context.getAttribute(AUTH_CACHE);
 		AuthScheme authScheme = cache.get(targetHost);
 		if (authScheme == null)
 			return;
 		CredentialsProvider provider = (CredentialsProvider) context
-				.getAttribute(ClientContext.CREDS_PROVIDER);
+				.getAttribute(CREDS_PROVIDER);
 		if (provider == null)
 			return;
 		Credentials creds = provider.getCredentials(new AuthScope(targetHost
