@@ -73,7 +73,7 @@
           <application>org.eclipse.ui.ide.workbench</application>
           <testSuite>org.eclipse.mylyn.tests</testSuite>
           <testClass>${mylyn-test-suite}</testClass>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${mylyn-test-args}</argLine>
+          <argLine>-Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${mylyn-test-args}</argLine>
           <appArgLine>${mylyn-test-app-args}</appArgLine> 
 		  <explodedBundles>
 			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>

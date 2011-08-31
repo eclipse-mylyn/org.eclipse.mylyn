@@ -21,6 +21,7 @@
     </profile>
   </profiles>
   <modules>
+    <module>org.eclipse.mylyn.tests</module>
     <module>org.eclipse.mylyn.discovery-directory</module>
   </modules>
 </project>
