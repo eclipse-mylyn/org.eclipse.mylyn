@@ -11,10 +11,6 @@
 package org.eclipse.egit.github.core;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 
 /**
  * Blob model class
@@ -33,31 +29,6 @@ public class Blob implements Serializable {
 	 * ENCODING_UTF8
 	 */
 	public static final String ENCODING_UTF8 = "utf-8"; //$NON-NLS-1$
-
-	/**
-	 * Decode base64 encoded string
-	 *
-	 * @param content
-	 * @return byte array
-	 */
-	public static final byte[] decodeBase64(String content) {
-		try {
-			return Base64.decodeBase64(content
-					.getBytes(IGitHubConstants.CHARSET_UTF8));
-		} catch (UnsupportedEncodingException e) {
-			return Base64.decodeBase64(content.getBytes());
-		}
-	}
-
-	/**
-	 * Decode base64 encoded string
-	 *
-	 * @param content
-	 * @return byte array
-	 */
-	public static final byte[] encodeBase64(byte[] content) {
-		return Base64.encodeBase64(content);
-	}
 
 	private String content;
 

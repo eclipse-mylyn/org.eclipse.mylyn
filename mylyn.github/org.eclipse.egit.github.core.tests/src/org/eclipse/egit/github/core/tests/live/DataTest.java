@@ -26,6 +26,7 @@ import org.eclipse.egit.github.core.Tree;
 import org.eclipse.egit.github.core.TreeEntry;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.DataService;
+import org.eclipse.egit.github.core.util.EncodingUtils;
 import org.junit.Test;
 
 /**
@@ -53,7 +54,7 @@ public class DataTest extends LiveTest {
 		Blob fetch = service.getBlob(repo, sha);
 		assertNotNull(fetch);
 		assertEquals(blob.getContent(),
-				new String(Blob.decodeBase64(fetch.getContent()),
+				new String(EncodingUtils.fromBase64(fetch.getContent()),
 						IGitHubConstants.CHARSET_UTF8));
 		assertEquals(Blob.ENCODING_BASE64, fetch.getEncoding());
 	}
