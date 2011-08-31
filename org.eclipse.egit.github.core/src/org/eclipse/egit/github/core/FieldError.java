@@ -56,10 +56,28 @@ public class FieldError implements Serializable {
 	}
 
 	/**
+	 * @param code
+	 * @return this field error
+	 */
+	public FieldError setCode(String code) {
+		this.code = code;
+		return this;
+	}
+
+	/**
 	 * @return field
 	 */
 	public String getField() {
 		return field;
+	}
+
+	/**
+	 * @param field
+	 * @return this field error
+	 */
+	public FieldError setField(String field) {
+		this.field = field;
+		return this;
 	}
 
 	/**
@@ -70,9 +88,27 @@ public class FieldError implements Serializable {
 	}
 
 	/**
+	 * @param resource
+	 * @return this field error
+	 */
+	public FieldError setResource(String resource) {
+		this.resource = resource;
+		return this;
+	}
+
+	/**
 	 * @return value
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	/**
+	 * @param value
+	 * @return this field error
+	 */
+	public FieldError setValue(String value) {
+		this.value = value;
+		return this;
 	}
 }
