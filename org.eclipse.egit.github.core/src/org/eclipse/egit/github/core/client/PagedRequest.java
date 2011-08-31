@@ -19,7 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 /**
  * Paged request class that contains the initial page size and page number of
  * the request.
- * 
+ *
  * @param <V>
  */
 public class PagedRequest<V> extends GitHubRequest {
@@ -47,7 +47,7 @@ public class PagedRequest<V> extends GitHubRequest {
 
 	/**
 	 * Create paged request with given starting page and page size.
-	 * 
+	 *
 	 * @param start
 	 * @param size
 	 */
@@ -73,7 +73,7 @@ public class PagedRequest<V> extends GitHubRequest {
 		int number = getPage();
 		if (number > 0)
 			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PAGE,
-					Integer.toBinaryString(number)));
+					Integer.toString(number)));
 		return pairs;
 	}
 
@@ -83,5 +83,4 @@ public class PagedRequest<V> extends GitHubRequest {
 	public int getPage() {
 		return page;
 	}
-
 }
