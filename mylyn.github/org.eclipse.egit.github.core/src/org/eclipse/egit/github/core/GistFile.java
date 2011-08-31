@@ -36,6 +36,15 @@ public class GistFile implements Serializable {
 	}
 
 	/**
+	 * @param size
+	 * @return this gist file
+	 */
+	public GistFile setSize(int size) {
+		this.size = size;
+		return this;
+	}
+
+	/**
 	 * @return content
 	 */
 	public String getContent() {
@@ -60,9 +69,11 @@ public class GistFile implements Serializable {
 
 	/**
 	 * @param filename
+	 * @return this gist file
 	 */
-	public void setFilename(String filename) {
+	public GistFile setFilename(String filename) {
 		this.filename = filename;
+		return this;
 	}
 
 	/**
@@ -70,5 +81,14 @@ public class GistFile implements Serializable {
 	 */
 	public String getRawUrl() {
 		return rawUrl;
+	}
+
+	/**
+	 * @param rawUrl
+	 * @return this gist file
+	 */
+	public GistFile setRawUrl(String rawUrl) {
+		this.rawUrl = rawUrl;
+		return this;
 	}
 }

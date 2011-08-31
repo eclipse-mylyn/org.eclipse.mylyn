@@ -30,4 +30,13 @@ public class Id implements Serializable {
 	public String getId() {
 		return id;
 	}
+
+	/**
+	 * @param id
+	 * @return this id
+	 */
+	public Id setId(String id) {
+		this.id = id;
+		return this;
+	}
 }
