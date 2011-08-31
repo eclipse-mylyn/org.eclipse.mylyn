@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Tree entry model class
  */
-public class TreeEntry {
+public class TreeEntry implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -6181332657279059683L;
 
 	/**
 	 * TYPE_BLOB

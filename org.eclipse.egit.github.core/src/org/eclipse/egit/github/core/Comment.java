@@ -10,14 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
- * GitHub issue and gist comment class.
+ * GitHub {@link Issue} and {@link Gist} comment class.
  */
-public class Comment {
+public class Comment implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 5128896032791651031L;
 
 	private Date createdAt;
 

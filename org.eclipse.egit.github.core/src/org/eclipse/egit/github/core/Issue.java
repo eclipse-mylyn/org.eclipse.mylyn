@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +18,12 @@ import java.util.List;
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
- * GitHub issue class.
- *
- * @author Kevin Sawicki (kevin@github.com)
+ * GitHub issue model class.
  */
-public class Issue {
+public class Issue implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 6358575015023539051L;
 
 	private Date closedAt;
 

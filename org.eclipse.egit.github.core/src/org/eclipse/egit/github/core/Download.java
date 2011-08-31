@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Download model class
  */
-public class Download {
+public class Download implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 6554996867709945406L;
 
 	private int downloadCount;
 

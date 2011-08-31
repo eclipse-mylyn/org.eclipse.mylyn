@@ -10,16 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
- * GitHub user class.
- *
- * @author Kevin Sawicki (kevin@github.com)
+ * GitHub user model class.
  */
-public class User {
+public class User implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -1211802439119529774L;
 
 	private boolean hireable;
 

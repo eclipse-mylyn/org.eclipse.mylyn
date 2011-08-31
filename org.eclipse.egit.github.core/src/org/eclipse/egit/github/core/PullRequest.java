@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
@@ -17,7 +18,10 @@ import org.eclipse.egit.github.core.util.DateUtils;
 /**
  * Pull request model class.
  */
-public class PullRequest {
+public class PullRequest implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 7858604768525096763L;
 
 	private boolean mergeable;
 

@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Tag model class
  */
-public class Tag {
+public class Tag implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 8505182933582492676L;
 
 	private CommitUser tagger;
 

@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Gist file class.
  */
-public class GistFile {
+public class GistFile implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 2067939890126207032L;
 
 	private int size;
 

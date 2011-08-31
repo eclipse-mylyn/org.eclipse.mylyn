@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
- * Model class for resources identified bya SHA-1
+ * Model class for resources identified by a SHA-1
  */
-public class ShaResource {
+public class ShaResource implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 7029184412278953778L;
 
 	private String sha;
 

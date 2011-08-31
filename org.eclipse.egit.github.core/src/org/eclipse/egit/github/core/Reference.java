@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Reference model class
  */
-public class Reference {
+public class Reference implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -4092126502387796380L;
 
 	private String ref;
 

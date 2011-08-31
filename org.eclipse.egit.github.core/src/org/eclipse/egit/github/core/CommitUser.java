@@ -10,14 +10,18 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
- *
+ * Commit user model class
  */
-public class CommitUser {
+public class CommitUser implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -180887492938484405L;
 
 	private Date date;
 

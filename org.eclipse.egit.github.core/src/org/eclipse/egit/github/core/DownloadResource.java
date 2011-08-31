@@ -20,6 +20,9 @@ import org.eclipse.egit.github.core.util.DateUtils;
  */
 public class DownloadResource extends Download {
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = 4522843864589481490L;
+
 	private boolean redirect;
 
 	private Date expirationdate;

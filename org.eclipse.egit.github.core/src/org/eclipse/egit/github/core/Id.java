@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
- * Id class.
+ * Id model class.
  */
-public class Id {
+public class Id implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -1074145490136786429L;
 
 	private String id;
 

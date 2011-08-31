@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
@@ -17,7 +18,10 @@ import org.eclipse.egit.github.core.util.DateUtils;
 /**
  * Gist revision class.
  */
-public class GistRevision {
+public class GistRevision implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -7863453407918499259L;
 
 	private Date committedAt;
 

@@ -15,6 +15,9 @@ package org.eclipse.egit.github.core;
  */
 public class TypedResource extends ShaResource {
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = -7285665432528832240L;
+
 	/**
 	 * TYPE_COMMIT
 	 */

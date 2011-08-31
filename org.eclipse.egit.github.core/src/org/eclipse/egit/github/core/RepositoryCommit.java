@@ -10,6 +10,7 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,10 @@ import java.util.List;
  * information about the commit and also provides access to the raw Git
  * {@link Commit} object.
  */
-public class RepositoryCommit {
+public class RepositoryCommit implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -8911733018395257250L;
 
 	private Commit commit;
 

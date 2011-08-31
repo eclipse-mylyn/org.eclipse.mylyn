@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -19,7 +20,10 @@ import java.util.Date;
 /**
  * GitHub Repository class.
  */
-public class SearchRepository implements IRepositoryIdProvider {
+public class SearchRepository implements IRepositoryIdProvider, Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 978627174722864632L;
 
 	/**
 	 * Create repository from url.
