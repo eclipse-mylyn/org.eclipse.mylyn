@@ -19,7 +19,7 @@ import org.eclipse.egit.github.core.RequestError;
 
 /**
  * Request exception class that wraps an {@link RequestError} object.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class RequestException extends IOException {
@@ -42,7 +42,7 @@ public class RequestException extends IOException {
 
 	/**
 	 * Create request exception
-	 * 
+	 *
 	 * @param error
 	 * @param status
 	 */
@@ -54,7 +54,7 @@ public class RequestException extends IOException {
 
 	/**
 	 * Get error
-	 * 
+	 *
 	 * @return error
 	 */
 	public RequestError getError() {
@@ -63,7 +63,7 @@ public class RequestException extends IOException {
 
 	/**
 	 * Get status
-	 * 
+	 *
 	 * @return status
 	 */
 	public int getStatus() {
@@ -72,7 +72,7 @@ public class RequestException extends IOException {
 
 	/**
 	 * Format field error into human-readable message
-	 * 
+	 *
 	 * @param error
 	 * @return formatted field error
 	 */
@@ -85,7 +85,7 @@ public class RequestException extends IOException {
 				return MessageFormat.format(FIELD_INVALID_WITH_VALUE, value,
 						field);
 			else
-				return MessageFormat.format(FIELD_INVALID, field, value);
+				return MessageFormat.format(FIELD_INVALID, field);
 		else if (FieldError.CODE_MISSING_FIELD.equals(code))
 			return MessageFormat.format(FIELD_MISSING, field);
 		else
@@ -95,7 +95,7 @@ public class RequestException extends IOException {
 
 	/**
 	 * Format all fields error into single human-readable message.
-	 * 
+	 *
 	 * @return formatted message
 	 */
 	public String formatErrors() {
