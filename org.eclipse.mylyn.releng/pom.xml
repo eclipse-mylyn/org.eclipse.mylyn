@@ -21,8 +21,8 @@
     <target-platform>mylyn-e3.7</target-platform>
 
     <mylyn-credentials></mylyn-credentials>
-    <mylyn-keyring>${basedir}/eclipse.keyring</mylyn-keyring>
-    <mylyn-keyring-password>${basedir}/eclipse.keyring.password</mylyn-keyring-password>
+    <mylyn-keyring>${project.build.directory}/.eclipse.keyring</mylyn-keyring>
+    <mylyn-keyring-password>${project.build.directory}/work/configuration/config.ini</mylyn-keyring-password>
 
     <mylyn-skip-source-check>true</mylyn-skip-source-check>
 	<mylyn-skip-sign>true</mylyn-skip-sign>
