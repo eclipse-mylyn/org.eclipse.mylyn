@@ -78,10 +78,60 @@ public class Gist implements Serializable {
 	}
 
 	/**
+	 * @param createdAt
+	 * @return this gist
+	 */
+	public Gist setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
+		return this;
+	}
+
+	/**
+	 * @return updatedAt
+	 */
+	public Date getUpdatedAt() {
+		return DateUtils.clone(updatedAt);
+	}
+
+	/**
+	 * @param updatedAt
+	 * @return this gist
+	 */
+	public Gist setUpdatedAt(Date updatedAt) {
+		this.updatedAt = DateUtils.clone(updatedAt);
+		return this;
+	}
+
+	/**
 	 * @return comments
 	 */
 	public int getComments() {
 		return comments;
+	}
+
+	/**
+	 * @param comments
+	 * @return this gist
+	 */
+	public Gist setComments(int comments) {
+		this.comments = comments;
+		return this;
+	}
+
+	/**
+	 * @return history
+	 */
+	public List<GistRevision> getHistory() {
+		return history;
+	}
+
+	/**
+	 * @param history
+	 * @return this gist
+	 */
+	public Gist setHistory(List<GistRevision> history) {
+		this.history = history;
+		return this;
 	}
 
 	/**
@@ -124,6 +174,15 @@ public class Gist implements Serializable {
 	}
 
 	/**
+	 * @param gitPullUrl
+	 * @return this gist
+	 */
+	public Gist setGitPullUrl(String gitPullUrl) {
+		this.gitPullUrl = gitPullUrl;
+		return this;
+	}
+
+	/**
 	 * @return gitPushUrl
 	 */
 	public String getGitPushUrl() {
@@ -131,10 +190,12 @@ public class Gist implements Serializable {
 	}
 
 	/**
-	 * @return history
+	 * @param gitPushUrl
+	 * @return this gist
 	 */
-	public List<GistRevision> getHistory() {
-		return history;
+	public Gist setGitPushUrl(String gitPushUrl) {
+		this.gitPushUrl = gitPushUrl;
+		return this;
 	}
 
 	/**
@@ -142,6 +203,15 @@ public class Gist implements Serializable {
 	 */
 	public String getHtmlUrl() {
 		return htmlUrl;
+	}
+
+	/**
+	 * @param htmlUrl
+	 * @return this gist
+	 */
+	public Gist setHtmlUrl(String htmlUrl) {
+		this.htmlUrl = htmlUrl;
+		return this;
 	}
 
 	/**
@@ -161,17 +231,19 @@ public class Gist implements Serializable {
 	}
 
 	/**
-	 * @return updatedAt
-	 */
-	public Date getUpdatedAt() {
-		return DateUtils.clone(updatedAt);
-	}
-
-	/**
 	 * @return url
 	 */
 	public String getUrl() {
 		return url;
+	}
+
+	/**
+	 * @param url
+	 * @return this gist
+	 */
+	public Gist setUrl(String url) {
+		this.url = url;
+		return this;
 	}
 
 	/**

@@ -41,10 +41,28 @@ public class GistRevision implements Serializable {
 	}
 
 	/**
+	 * @param committedAt
+	 * @return this gist revision
+	 */
+	public GistRevision setCommittedAt(Date committedAt) {
+		this.committedAt = DateUtils.clone(committedAt);
+		return this;
+	}
+
+	/**
 	 * @return changeStatus
 	 */
 	public GistChangeStatus getChangeStatus() {
 		return changeStatus;
+	}
+
+	/**
+	 * @param changeStatus
+	 * @return this gist revision
+	 */
+	public GistRevision setChangeStatus(GistChangeStatus changeStatus) {
+		this.changeStatus = changeStatus;
+		return this;
 	}
 
 	/**
@@ -55,6 +73,15 @@ public class GistRevision implements Serializable {
 	}
 
 	/**
+	 * @param url
+	 * @return this gist revision
+	 */
+	public GistRevision setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
+	/**
 	 * @return version
 	 */
 	public String getVersion() {
@@ -62,9 +89,27 @@ public class GistRevision implements Serializable {
 	}
 
 	/**
+	 * @param version
+	 * @return this gist revision
+	 */
+	public GistRevision setVersion(String version) {
+		this.version = version;
+		return this;
+	}
+
+	/**
 	 * @return user
 	 */
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * @param user
+	 * @return this gist revision
+	 */
+	public GistRevision setUser(User user) {
+		this.user = user;
+		return this;
 	}
 }

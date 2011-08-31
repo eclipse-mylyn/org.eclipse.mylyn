@@ -31,10 +31,19 @@ public class PullRequestMarker implements Serializable {
 	private User user;
 
 	/**
-	 * @return repository
+	 * @return repo
 	 */
-	public Repository getRepository() {
+	public Repository getRepo() {
 		return repo;
+	}
+
+	/**
+	 * @param repo
+	 * @return this marker
+	 */
+	public PullRequestMarker setRepo(Repository repo) {
+		this.repo = repo;
+		return this;
 	}
 
 	/**
@@ -45,10 +54,28 @@ public class PullRequestMarker implements Serializable {
 	}
 
 	/**
+	 * @param label
+	 * @return this marker
+	 */
+	public PullRequestMarker setLabel(String label) {
+		this.label = label;
+		return this;
+	}
+
+	/**
 	 * @return ref
 	 */
 	public String getRef() {
 		return ref;
+	}
+
+	/**
+	 * @param ref
+	 * @return this marker
+	 */
+	public PullRequestMarker setRef(String ref) {
+		this.ref = ref;
+		return this;
 	}
 
 	/**
@@ -59,9 +86,27 @@ public class PullRequestMarker implements Serializable {
 	}
 
 	/**
+	 * @param sha
+	 * @return this marker
+	 */
+	public PullRequestMarker setSha(String sha) {
+		this.sha = sha;
+		return this;
+	}
+
+	/**
 	 * @return user
 	 */
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * @param user
+	 * @return this marker
+	 */
+	public PullRequestMarker setUser(User user) {
+		this.user = user;
+		return this;
 	}
 }
