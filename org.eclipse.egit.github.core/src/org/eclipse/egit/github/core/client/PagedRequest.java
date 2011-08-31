@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PAGE;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PER_PAGE;
+
 import java.util.List;
 import java.util.Map;
 
@@ -68,12 +71,12 @@ public class PagedRequest<V> extends GitHubRequest {
 		List<NameValuePair> pairs = super.getPairs(data);
 		int size = getPageSize();
 		if (size > 0)
-			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PER_PAGE,
-					Integer.toString(size)));
+			pairs.add(new BasicNameValuePair(PARAM_PER_PAGE, Integer
+					.toString(size)));
 		int number = getPage();
 		if (number > 0)
-			pairs.add(new BasicNameValuePair(IGitHubConstants.PARAM_PAGE,
-					Integer.toString(number)));
+			pairs.add(new BasicNameValuePair(PARAM_PAGE, Integer
+					.toString(number)));
 		return pairs;
 	}
 

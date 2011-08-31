@@ -10,6 +10,8 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PAGE;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,7 +26,7 @@ import org.eclipse.egit.github.core.IResourceProvider;
 
 /**
  * Iterator for getting paged responses
- * 
+ *
  * @param <V>
  */
 public class PageIterator<V> implements Iterator<Collection<V>>,
@@ -62,7 +64,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Create page iterator
-	 * 
+	 *
 	 * @param request
 	 * @param client
 	 */
@@ -75,7 +77,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Parse page number from uri
-	 * 
+	 *
 	 * @param uri
 	 * @return page number
 	 */
@@ -84,7 +86,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 			return -1;
 		try {
 			for (NameValuePair pair : URLEncodedUtils.parse(new URI(uri), null))
-				if (IGitHubConstants.PARAM_PAGE.equals(pair.getName()))
+				if (PARAM_PAGE.equals(pair.getName()))
 					return Integer.parseInt(pair.getValue());
 		} catch (URISyntaxException e) {
 			return -1;
@@ -96,7 +98,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Get number of next page to be read
-	 * 
+	 *
 	 * @return next page
 	 */
 	public int getNextPage() {
@@ -105,7 +107,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Get number of last page
-	 * 
+	 *
 	 * @return page number
 	 */
 	public int getLastPage() {
@@ -114,7 +116,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Get URI of next request
-	 * 
+	 *
 	 * @return next page uri
 	 */
 	public String getNextUri() {
@@ -123,7 +125,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Get uri of last page
-	 * 
+	 *
 	 * @return last page uri
 	 */
 	public String getLastUri() {
@@ -167,7 +169,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 
 	/**
 	 * Get request being executed
-	 * 
+	 *
 	 * @return request
 	 */
 	public PagedRequest<V> getRequest() {

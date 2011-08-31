@@ -10,8 +10,10 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SCHEME_OAUTH2;
+
 import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpRequest;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.Credentials;
@@ -34,7 +36,7 @@ public class OAuth2Scheme extends RFC2617Scheme {
 	}
 
 	public String getSchemeName() {
-		return IGitHubConstants.SCHEME_OAUTH2;
+		return SCHEME_OAUTH2;
 	}
 
 	public boolean isConnectionBased() {
@@ -49,7 +51,7 @@ public class OAuth2Scheme extends RFC2617Scheme {
 			throws AuthenticationException {
 		if (credentials == null)
 			throw new IllegalArgumentException("Credentials cannot be null"); //$NON-NLS-1$
-		return new BasicHeader(HttpHeaders.AUTHORIZATION, credentials
-				.getUserPrincipal().getName() + ' ' + credentials.getPassword());
+		return new BasicHeader(AUTHORIZATION, credentials.getUserPrincipal()
+				.getName() + ' ' + credentials.getPassword());
 	}
 }

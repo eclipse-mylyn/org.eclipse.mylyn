@@ -10,7 +10,8 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import com.google.gson.FieldNamingPolicy;
+import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,20 +28,19 @@ public abstract class GsonUtils {
 
 	/**
 	 * Create the standard {@link Gson} configuration
-	 * 
+	 *
 	 * @return created gson, never null
 	 */
 	public static final Gson createGson() {
 		return new GsonBuilder()
 				.registerTypeAdapter(Date.class, new DateFormatter())
-				.setFieldNamingPolicy(
-						FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
 				.serializeNulls().create();
 	}
 
 	/**
 	 * Get reusable pre-configured {@link Gson} instance
-	 * 
+	 *
 	 * @return Gson instance
 	 */
 	public static final Gson getGson() {
@@ -49,7 +49,7 @@ public abstract class GsonUtils {
 
 	/**
 	 * Convert object to json
-	 * 
+	 *
 	 * @param object
 	 * @return json string
 	 */
@@ -59,7 +59,7 @@ public abstract class GsonUtils {
 
 	/**
 	 * Convert string to given type
-	 * 
+	 *
 	 * @param json
 	 * @param type
 	 * @return instance of type
@@ -70,7 +70,7 @@ public abstract class GsonUtils {
 
 	/**
 	 * Convert string to given type
-	 * 
+	 *
 	 * @param json
 	 * @param type
 	 * @return instance of type
@@ -81,7 +81,7 @@ public abstract class GsonUtils {
 
 	/**
 	 * Convert content of reader to given type
-	 * 
+	 *
 	 * @param reader
 	 * @param type
 	 * @return instance of type
@@ -92,7 +92,7 @@ public abstract class GsonUtils {
 
 	/**
 	 * Convert content of reader to given type
-	 * 
+	 *
 	 * @param reader
 	 * @param type
 	 * @return instance of type
