@@ -10,12 +10,16 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Tree model class
  */
-public class Tree {
+public class Tree implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 6518261551932913340L;
 
 	private List<TreeEntry> tree;
 

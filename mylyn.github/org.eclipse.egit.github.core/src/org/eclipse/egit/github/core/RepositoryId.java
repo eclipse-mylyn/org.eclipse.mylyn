@@ -10,13 +10,17 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * Repository id
  */
-public class RepositoryId implements IRepositoryIdProvider {
+public class RepositoryId implements IRepositoryIdProvider, Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -57313931704393200L;
 
 	/**
 	 * Create repository from url.

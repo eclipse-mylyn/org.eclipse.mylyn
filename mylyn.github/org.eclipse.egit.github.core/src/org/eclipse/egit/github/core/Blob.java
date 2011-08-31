@@ -10,6 +10,7 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.codec.binary.Base64;
@@ -18,7 +19,10 @@ import org.eclipse.egit.github.core.client.IGitHubConstants;
 /**
  * Blob model class
  */
-public class Blob {
+public class Blob implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -7538850340225102994L;
 
 	/**
 	 * ENCODING_BASE64
@@ -32,7 +36,7 @@ public class Blob {
 
 	/**
 	 * Decode base64 encoded string
-	 * 
+	 *
 	 * @param content
 	 * @return byte array
 	 */
@@ -47,7 +51,7 @@ public class Blob {
 
 	/**
 	 * Decode base64 encoded string
-	 * 
+	 *
 	 * @param content
 	 * @return byte array
 	 */

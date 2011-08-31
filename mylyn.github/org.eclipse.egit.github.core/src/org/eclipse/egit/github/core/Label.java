@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * GitHub issue label class.
  */
-public class Label {
+public class Label implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 859851442075061861L;
 
 	private String color;
 

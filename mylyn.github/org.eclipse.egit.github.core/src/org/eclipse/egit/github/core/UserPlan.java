@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
- * User plan
+ * User plan model class.
  */
-public class UserPlan {
+public class UserPlan implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 4759542049129654659L;
 
 	private int collaborators;
 
@@ -86,5 +91,4 @@ public class UserPlan {
 		this.name = name;
 		return this;
 	}
-
 }

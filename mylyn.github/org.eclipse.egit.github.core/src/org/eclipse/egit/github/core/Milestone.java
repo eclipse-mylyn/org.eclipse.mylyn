@@ -10,16 +10,18 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
  * GitHub issue milestone class.
- *
- * @author Kevin Sawicki (kevin@github.com)
  */
-public class Milestone {
+public class Milestone implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 8017385076255266092L;
 
 	private Date createdAt;
 

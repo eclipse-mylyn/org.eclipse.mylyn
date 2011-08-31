@@ -4,16 +4,21 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Pull request marker model class.
  */
-public class PullRequestMarker {
+public class PullRequestMarker implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 5052026861072656918L;
 
 	private Repository repo;
 
@@ -59,5 +64,4 @@ public class PullRequestMarker {
 	public User getUser() {
 		return user;
 	}
-
 }

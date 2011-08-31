@@ -10,12 +10,16 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Commit model class.
  */
-public class Commit {
+public class Commit implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -1893280210470143372L;
 
 	private CommitUser author;
 

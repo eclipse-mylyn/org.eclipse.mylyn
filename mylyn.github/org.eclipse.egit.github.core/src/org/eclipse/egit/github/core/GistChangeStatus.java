@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Gist change status class.
  */
-public class GistChangeStatus {
+public class GistChangeStatus implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 9189375293271905239L;
 
 	private int additions;
 

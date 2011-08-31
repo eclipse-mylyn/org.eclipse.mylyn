@@ -10,14 +10,16 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * GitHub request error class
- * 
- * @author Kevin Sawicki (kevin@github.com)
  */
-public class RequestError {
+public class RequestError implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -7842670602124573940L;
 
 	// This field is required for legacy v2 error support
 	private String error;
@@ -35,7 +37,7 @@ public class RequestError {
 
 	/**
 	 * Get errors
-	 * 
+	 *
 	 * @return list of errors
 	 */
 	public List<FieldError> getErrors() {

@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,12 @@ import java.util.Map;
 import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
- * GitHub gist class.
+ * GitHub gist model class.
  */
-public class Gist {
+public class Gist implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -2221817463228217456L;
 
 	@SerializedName("public")
 	private boolean isPublic;

@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Team model class.
  */
-public class Team {
+public class Team implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -1844276044857264413L;
 
 	private int id;
 

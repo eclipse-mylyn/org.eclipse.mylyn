@@ -15,6 +15,9 @@ package org.eclipse.egit.github.core;
  */
 public class CommitComment extends Comment {
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = 5932088388457362322L;
+
 	private int line;
 
 	private int position;

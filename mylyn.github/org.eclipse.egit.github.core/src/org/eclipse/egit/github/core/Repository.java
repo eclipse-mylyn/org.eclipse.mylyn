@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.client.IGitHubConstants;
@@ -20,11 +21,14 @@ import org.eclipse.egit.github.core.util.DateUtils;
 /**
  * Repository model class
  */
-public class Repository implements IRepositoryIdProvider {
+public class Repository implements IRepositoryIdProvider, Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 406671816413754925L;
 
 	/**
 	 * Create SSH URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @return URL
 	 */
@@ -34,7 +38,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Create SSH URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @param host
 	 * @return URL
@@ -46,7 +50,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Create HTTPS URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @param user
 	 * @return URL
@@ -58,7 +62,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Create HTTPS URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @param host
 	 * @param user
@@ -72,7 +76,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Create read-only URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @return URL
 	 */
@@ -83,7 +87,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Create read-only URL used for repository remote configs
-	 * 
+	 *
 	 * @param repository
 	 * @param host
 	 * @return URL
@@ -547,7 +551,7 @@ public class Repository implements IRepositoryIdProvider {
 
 	/**
 	 * Generate id for this repository
-	 * 
+	 *
 	 * @see IRepositoryIdProvider#generateId()
 	 */
 	public String generateId() {

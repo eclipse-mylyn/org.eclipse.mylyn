@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
- * Field error
+ * Field error model class
  */
-public class FieldError {
+public class FieldError implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 1447694681624322597L;
 
 	/**
 	 * CODE_INVALID
