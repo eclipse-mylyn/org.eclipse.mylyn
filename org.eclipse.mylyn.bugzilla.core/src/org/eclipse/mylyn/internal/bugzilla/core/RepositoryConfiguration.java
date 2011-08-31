@@ -749,18 +749,20 @@ public class RepositoryConfiguration implements Serializable {
 				break;
 			case RESOLVED:
 				addOperation(bugReport, BugzillaOperation.none);
-				if (everConfirmed != null && "0".equals(everConfirmed.getValue()) && unconfirmedAllowed) { //$NON-NLS-1$
+				if (unconfirmedAllowed) {
 					addOperation(bugReport, BugzillaOperation.unconfirmed);
-				} else {
+				}
+				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) {
 					addOperation(bugReport, BugzillaOperation.confirmed);
 				}
 				addOperation(bugReport, BugzillaOperation.verify_with_resolution);
 				break;
 			case VERIFIED:
 				addOperation(bugReport, BugzillaOperation.none);
-				if (everConfirmed != null && "0".equals(everConfirmed.getValue()) && unconfirmedAllowed) { //$NON-NLS-1$
+				if (unconfirmedAllowed) {
 					addOperation(bugReport, BugzillaOperation.unconfirmed);
-				} else {
+				}
+				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) {
 					addOperation(bugReport, BugzillaOperation.confirmed);
 				}
 				addOperation(bugReport, BugzillaOperation.resolve);
