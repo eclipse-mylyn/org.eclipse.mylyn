@@ -32,23 +32,27 @@ public class Label implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
+		if (!(obj instanceof Label))
+			return false;
 
-		return obj instanceof Label && name != null
-				&& name.equals(((Label) obj).name);
+		final String name = this.name;
+		return name != null && name.equals(((Label) obj).name);
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return name.hashCode();
+		final String name = this.name;
+		return name != null ? name.hashCode() : super.hashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return name;
+		final String name = this.name;
+		return name != null ? name : super.toString();
 	}
 
 	/**
@@ -56,6 +60,15 @@ public class Label implements Serializable {
 	 */
 	public String getColor() {
 		return color;
+	}
+
+	/**
+	 * @param color
+	 * @return this label
+	 */
+	public Label setColor(String color) {
+		this.color = color;
+		return this;
 	}
 
 	/**
@@ -79,5 +92,14 @@ public class Label implements Serializable {
 	 */
 	public String getUrl() {
 		return url;
+	}
+
+	/**
+	 * @param url
+	 * @return this label
+	 */
+	public Label setUrl(String url) {
+		this.url = url;
+		return this;
 	}
 }
