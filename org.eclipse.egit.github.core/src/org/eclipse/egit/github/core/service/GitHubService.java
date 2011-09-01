@@ -37,6 +37,13 @@ public abstract class GitHubService {
 	protected final GitHubClient client;
 
 	/**
+	 * Create service using default {@link GitHubClient}
+	 */
+	public GitHubService() {
+		this(new GitHubClient());
+	}
+
+	/**
 	 * Create service for client
 	 *
 	 * @param client
@@ -45,6 +52,15 @@ public abstract class GitHubService {
 		if (client == null)
 			throw new IllegalArgumentException("Client cannot be null"); //$NON-NLS-1$
 		this.client = client;
+	}
+
+	/**
+	 * Get configured client
+	 *
+	 * @return non-null client
+	 */
+	public GitHubClient getClient() {
+		return client;
 	}
 
 	/**

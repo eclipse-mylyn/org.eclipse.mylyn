@@ -46,6 +46,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class UserService extends GitHubService {
 
 	/**
+	 * Create user service
+	 */
+	public UserService() {
+		super();
+	}
+
+	/**
+	 * Create user service
+	 *
 	 * @param client
 	 */
 	public UserService(GitHubClient client) {

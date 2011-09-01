@@ -18,8 +18,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.Key;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PagedRequest;
@@ -33,6 +33,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class DeployKeyService extends GitHubService {
 
 	/**
+	 * Create deploy key service
+	 */
+	public DeployKeyService() {
+		super();
+	}
+
+	/**
+	 * Create deploy key service
+	 *
 	 * @param client
 	 */
 	public DeployKeyService(GitHubClient client) {

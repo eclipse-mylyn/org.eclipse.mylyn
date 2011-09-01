@@ -78,6 +78,15 @@ public class PullRequestService extends GitHubService {
 	public static final String PR_STATE = "state"; //$NON-NLS-1$
 
 	/**
+	 * Create pull request service
+	 */
+	public PullRequestService() {
+		super();
+	}
+
+	/**
+	 * Create pull request service
+	 *
 	 * @param client
 	 */
 	public PullRequestService(GitHubClient client) {

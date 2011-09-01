@@ -32,6 +32,14 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class CollaboratorService extends GitHubService {
 
 	/**
+	 * Create collaborator service
+	 */
+	public CollaboratorService() {
+		super();
+	}
+
+	/**
+	 * Create collaborator service
 	 * @param client
 	 */
 	public CollaboratorService(GitHubClient client) {

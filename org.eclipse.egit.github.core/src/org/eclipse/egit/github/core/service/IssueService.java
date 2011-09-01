@@ -116,6 +116,13 @@ public class IssueService extends GitHubService {
 
 	/**
 	 * Create issue service
+	 */
+	public IssueService() {
+		super();
+	}
+
+	/**
+	 * Create issue service
 	 *
 	 * @param client
 	 *            cannot be null
