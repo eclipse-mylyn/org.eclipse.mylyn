@@ -84,7 +84,7 @@ public class GitHubClient {
 		try {
 			String host = new URL(url).getHost();
 			host = SUBDOMAIN_API + "." + host;
-			return new GitHubClient(host, -1, PROTOCOL_HTTPS);
+			return new GitHubClient(host);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -107,11 +107,20 @@ public class GitHubClient {
 	 * Create default client
 	 */
 	public GitHubClient() {
-		this(HOST_API, -1, PROTOCOL_HTTPS);
+		this(HOST_API);
 	}
 
 	/**
-	 * Create client for host configuration
+	 * Create client for host name
+	 *
+	 * @param hostname
+	 */
+	public GitHubClient(String hostname) {
+		this(hostname, -1, PROTOCOL_HTTPS);
+	}
+
+	/**
+	 * Create client for host, port, and scheme
 	 *
 	 * @param hostname
 	 * @param port
