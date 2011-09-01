@@ -16,15 +16,9 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
-import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -39,102 +33,32 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
-	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
-
 	private final TaskDataModel model;
 
 	private final AttributeEditorToolkit attributeEditorToolkit;
 
-	private final CommonImageManger imageManager;
+	private final AttachmentColumnDefinition[] definitions;
 
-	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
+	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit,
+			AttachmentColumnDefinition[] definitions) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
-		this.imageManager = new CommonImageManger();
+		this.definitions = definitions;
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
-		if (columnIndex == 0) {
-			if (AttachmentUtil.isContext(attachment)) {
-				return imageManager.getImage(TasksUiImages.CONTEXT_TRANSFER);
-			} else if (attachment.isPatch()) {
-				return imageManager.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
-			} else {
-				return imageManager.getFileImage(attachment.getFileName());
-			}
-		} else if (columnIndex == 3 && attachment.getAuthor() != null) {
-			return getAuthorImage(attachment.getAuthor(), attachment.getTaskRepository());
-		}
-		return null;
-	}
-
-	/**
-	 * Get author image for a specified repository person and task repository
-	 * 
-	 * @param person
-	 * @param repository
-	 * @return author image
-	 */
-	protected Image getAuthorImage(IRepositoryPerson person, TaskRepository repository) {
-		if (repository != null && person != null && person.getPersonId().equals(repository.getUserName())) {
-			return imageManager.getImage(CommonImages.PERSON_ME);
-		} else {
-			return imageManager.getImage(CommonImages.PERSON);
-		}
+		return definitions[columnIndex].getColumnImage(attachment, columnIndex);
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
-		switch (columnIndex) {
-		case 0:
-			if (AttachmentUtil.isContext(attachment)) {
-				return Messages.AttachmentTableLabelProvider_Task_Context;
-			} else if (attachment.isPatch()) {
-				return Messages.AttachmentTableLabelProvider_Patch;
-			} else {
-				return " " + attachment.getFileName(); //$NON-NLS-1$
-			}
-		case 1:
-			return attachment.getDescription();
-		case 2:
-			Long length = attachment.getLength();
-			if (length < 0) {
-				return "-"; //$NON-NLS-1$
-			}
-			return sizeFormatter.format(length);
-		case 3:
-			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
-		case 4:
-			return (attachment.getCreationDate() != null)
-					? EditorUtil.formatDateTime(attachment.getCreationDate())
-					: ""; //$NON-NLS-1$
-		case 5:
-			// FIXME add id to ITaskAttachment
-			return getAttachmentId(attachment);
-		}
-		return "unrecognized column"; //$NON-NLS-1$
-	}
-
-	static String getAttachmentId(ITaskAttachment attachment) {
-		String a = attachment.getUrl();
-		if (a != null) {
-			int i = a.indexOf("?id="); //$NON-NLS-1$
-			if (i != -1) {
-				return a.substring(i + 4);
-			}
-		}
-		return ""; //$NON-NLS-1$
+		return definitions[columnIndex].getColumnText(attachment, columnIndex);
 	}
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
-	}
-
-	@Override
-	public void dispose() {
-		imageManager.dispose();
 	}
 
 	@Override
