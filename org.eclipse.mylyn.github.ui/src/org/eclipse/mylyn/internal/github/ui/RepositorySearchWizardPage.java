@@ -150,8 +150,10 @@ public class RepositorySearchWizardPage extends WizardPage {
 						StyledString styled = new StyledString();
 						SearchRepository repo = (SearchRepository) element;
 						styled.append(repo.getOwner() + "/" + repo.getName()); //$NON-NLS-1$
-						styled.append(" (" + repo.getLanguage() + ")", //$NON-NLS-1$ //$NON-NLS-2$
-								StyledString.QUALIFIER_STYLER);
+						String language = repo.getLanguage();
+						if (language != null && language.length() > 0)
+							styled.append(" (" + language + ")", //$NON-NLS-1$ //$NON-NLS-2$
+									StyledString.QUALIFIER_STYLER);
 
 						int forks = repo.getForks();
 						if (forks != 1)
