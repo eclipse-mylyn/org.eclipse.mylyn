@@ -99,6 +99,26 @@
 
 	<profiles>
 		<profile>
+			<id>shade</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>android-shade</id>
 			<build>
 				<plugins>
@@ -115,6 +135,9 @@
 								<configuration>
 									<relocations>
 										<relocation>
+											<!-- Apache classes are relocated since Android ships with a specific
+												version of some of them and won't load bundled ones unless they have a different
+												package name -->
 											<pattern>org.apache</pattern>
 											<shadedPattern>shade.org.apache</shadedPattern>
 										</relocation>
