@@ -211,6 +211,20 @@ public class IssueService extends GitHubService {
 	 * @return issue
 	 * @throws IOException
 	 */
+	public Issue getIssue(String user, String repository, int id)
+			throws IOException {
+		return getIssue(user, repository, Integer.toString(id));
+	}
+
+	/**
+	 * Get issue
+	 *
+	 * @param user
+	 * @param repository
+	 * @param id
+	 * @return issue
+	 * @throws IOException
+	 */
 	public Issue getIssue(String user, String repository, String id)
 			throws IOException {
 		if (user == null)
@@ -236,7 +250,21 @@ public class IssueService extends GitHubService {
 	 * @param user
 	 * @param repository
 	 * @param id
-	 * @return list of matching issues
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	public List<Comment> getComments(String user, String repository, int id)
+			throws IOException {
+		return getComments(user, repository, Integer.toString(id));
+	}
+
+	/**
+	 * Get an issue's comments
+	 *
+	 * @param user
+	 * @param repository
+	 * @param id
+	 * @return list of comments
 	 * @throws IOException
 	 */
 	public List<Comment> getComments(String user, String repository, String id)
@@ -451,6 +479,22 @@ public class IssueService extends GitHubService {
 	 * @return created issue
 	 * @throws IOException
 	 */
+	public Comment createComment(String user, String repository, int issueId,
+			String comment) throws IOException {
+		return createComment(user, repository, Integer.toString(issueId),
+				comment);
+	}
+
+	/**
+	 * Create comment on specified issue id
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
 	public Comment createComment(String user, String repository,
 			String issueId, String comment) throws IOException {
 		if (user == null)
@@ -470,6 +514,19 @@ public class IssueService extends GitHubService {
 		params.put(FIELD_BODY, comment);
 
 		return client.post(uri.toString(), params, Comment.class);
+	}
+
+	/**
+	 * Delete the issue comment with the given id
+	 *
+	 * @param user
+	 * @param repository
+	 * @param comment
+	 * @throws IOException
+	 */
+	public void deleteComment(String user, String repository, int comment)
+			throws IOException {
+		deleteComment(user, repository, Integer.toString(comment));
 	}
 
 	/**

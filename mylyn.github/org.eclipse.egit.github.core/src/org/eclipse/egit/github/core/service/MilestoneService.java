@@ -113,6 +113,22 @@ public class MilestoneService extends GitHubService {
 	 * @param repository
 	 *            must be non-null
 	 * @param number
+	 * @return created milestone
+	 * @throws IOException
+	 */
+	public Milestone getMilestone(String user, String repository, int number)
+			throws IOException {
+		return getMilestone(user, repository, Integer.toString(number));
+	}
+
+	/**
+	 * Get a milestone
+	 *
+	 * @param user
+	 *            must be non-null
+	 * @param repository
+	 *            must be non-null
+	 * @param number
 	 *            must be non-null
 	 * @return created milestone
 	 * @throws IOException
@@ -134,6 +150,19 @@ public class MilestoneService extends GitHubService {
 		request.setUri(uri);
 		request.setType(Milestone.class);
 		return (Milestone) client.get(request).getBody();
+	}
+
+	/**
+	 * Delete a milestone with the given id from the given repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param milestone
+	 * @throws IOException
+	 */
+	public void deleteMilestone(String user, String repository, int milestone)
+			throws IOException {
+		deleteMilestone(user, repository, Integer.toString(milestone));
 	}
 
 	/**
