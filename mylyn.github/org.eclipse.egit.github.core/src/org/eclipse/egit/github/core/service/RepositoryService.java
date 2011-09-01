@@ -79,7 +79,13 @@ public class RepositoryService extends GitHubService {
 		public List<SearchRepository> getResources() {
 			return repositories;
 		}
+	}
 
+	/**
+	 * Create repository service
+	 */
+	public RepositoryService() {
+		super();
 	}
 
 	/**

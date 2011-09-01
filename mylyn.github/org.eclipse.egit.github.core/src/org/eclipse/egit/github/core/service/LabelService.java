@@ -34,6 +34,13 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class LabelService extends GitHubService {
 
 	/**
+	 * Create label service
+	 */
+	public LabelService() {
+		super();
+	}
+
+	/**
 	 * Create label service for client
 	 *
 	 * @param client

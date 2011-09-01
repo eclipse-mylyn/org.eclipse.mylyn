@@ -40,6 +40,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class TeamService extends GitHubService {
 
 	/**
+	 * Create team service
+	 */
+	public TeamService() {
+		super();
+	}
+
+	/**
+	 * Create team service
+	 *
 	 * @param client
 	 */
 	public TeamService(GitHubClient client) {

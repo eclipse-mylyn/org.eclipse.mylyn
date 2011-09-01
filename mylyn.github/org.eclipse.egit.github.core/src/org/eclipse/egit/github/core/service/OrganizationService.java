@@ -39,6 +39,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class OrganizationService extends GitHubService {
 
 	/**
+	 * Create organization service
+	 */
+	public OrganizationService() {
+		super();
+	}
+
+	/**
+	 * Create organization service
+	 *
 	 * @param client
 	 */
 	public OrganizationService(GitHubClient client) {

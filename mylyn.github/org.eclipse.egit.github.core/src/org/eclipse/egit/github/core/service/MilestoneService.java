@@ -35,6 +35,13 @@ public class MilestoneService extends GitHubService {
 
 	/**
 	 * Create milestone service
+	 */
+	public MilestoneService() {
+		super();
+	}
+
+	/**
+	 * Create milestone service
 	 *
 	 * @param client
 	 *            cannot be null

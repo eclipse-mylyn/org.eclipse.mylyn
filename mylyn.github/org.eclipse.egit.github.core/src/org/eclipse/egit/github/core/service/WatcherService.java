@@ -31,7 +31,7 @@ import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
- * Service class for dealing with user's watching GitHub repositories.
+ * Service class for dealing with users watching GitHub repositories.
  *
  * @see <a href="http://developer.github.com/v3/repos/watching">GitHub watcher
  *      API documentation</a>
@@ -39,6 +39,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class WatcherService extends GitHubService {
 
 	/**
+	 * Create watcher service
+	 */
+	public WatcherService() {
+		super();
+	}
+
+	/**
+	 * Create watcher service
+	 *
 	 * @param client
 	 */
 	public WatcherService(GitHubClient client) {

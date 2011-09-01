@@ -108,6 +108,15 @@ public class DownloadService extends GitHubService {
 	}
 
 	/**
+	 * Create download service
+	 */
+	public DownloadService() {
+		super();
+	}
+
+	/**
+	 * Create download service
+	 *
 	 * @param client
 	 */
 	public DownloadService(GitHubClient client) {

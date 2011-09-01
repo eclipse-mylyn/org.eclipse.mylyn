@@ -44,6 +44,13 @@ public class GistService extends GitHubService {
 
 	/**
 	 * Create gist service
+	 */
+	public GistService() {
+		super();
+	}
+
+	/**
+	 * Create gist service
 	 *
 	 * @param client
 	 */

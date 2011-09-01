@@ -51,6 +51,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class DataService extends GitHubService {
 
 	/**
+	 * Create data service
+	 */
+	public DataService() {
+		super();
+	}
+
+	/**
+	 * Create data service
+	 *
 	 * @param client
 	 */
 	public DataService(GitHubClient client) {

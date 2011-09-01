@@ -41,6 +41,15 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class CommitService extends GitHubService {
 
 	/**
+	 * Create commit service
+	 */
+	public CommitService() {
+		super();
+	}
+
+	/**
+	 * Create commit service
+	 *
 	 * @param client
 	 */
 	public CommitService(GitHubClient client) {
