@@ -40,22 +40,14 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.gist.GistAttribute;
-import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Clone Gist handler class.
- * 
- * @author Kevin Sawicki (kevin@github.com)
  */
 public class CloneGistHandler extends TaskDataHandler {
 
@@ -148,19 +140,6 @@ public class CloneGistHandler extends TaskDataHandler {
 				+ Constants.MASTER, Constants.DEFAULT_REMOTE_NAME, timeout);
 	}
 
-	private void updateCredentials(TaskData data, CloneOperation operation) {
-		TaskRepository repository = TasksUi.getRepositoryManager()
-				.getRepository(GistConnector.KIND, data.getRepositoryUrl());
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null) {
-			UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(
-					credentials.getUserName(), credentials.getPassword()
-							.toCharArray());
-			operation.setCredentialsProvider(provider);
-		}
-	}
-
 	private Job createCloneJob(final ExecutionEvent event, final TaskData data) {
 		Job job = new Job(Messages.CloneGistHandler_TaskCloning) {
 
@@ -169,7 +148,6 @@ public class CloneGistHandler extends TaskDataHandler {
 					final String name = getGistName(data);
 
 					CloneOperation operation = createCloneOperation(data, name);
-					updateCredentials(data, operation);
 
 					operation.addPostCloneTask(new PostCloneTask() {
 
