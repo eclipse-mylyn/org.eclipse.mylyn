@@ -91,6 +91,8 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 		TaskAttribute description = GistAttribute.DESCRIPTION.getMetadata()
 				.create(data);
+		description.getMetaData().setReadOnly(
+				!isOwner(repository, gist.getUser()));
 		String gistDescription = gist.getDescription();
 		if (gistDescription != null)
 			mapper.setValue(description, gistDescription);
@@ -251,8 +253,10 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 						.getValue();
 				if (newComment.length() > 0)
 					service.createComment(taskData.getTaskId(), newComment);
-
-				service.updateGist(gist);
+				String author = GistAttribute.AUTHOR.getMetadata().getValue(
+						taskData);
+				if (isOwner(repository, author))
+					service.updateGist(gist);
 			} catch (IOException e) {
 				throw new CoreException(GitHub.createWrappedStatus(e));
 			}
@@ -279,5 +283,36 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		GistAttribute.DESCRIPTION.getMetadata().create(data);
 
 		return true;
+	}
+
+	/**
+	 * Is the given Gist author the same user as configured via the task
+	 * repository's credentials?
+	 * 
+	 * @param repository
+	 * @param author
+	 * @return true if owner, false otherwise
+	 */
+	protected boolean isOwner(TaskRepository repository, User author) {
+		if (author == null)
+			return false;
+		return isOwner(repository, author.getLogin());
+	}
+
+	/**
+	 * Is the given Gist author the same user as configured via the task
+	 * repository's credentials?
+	 * 
+	 * @param repository
+	 * @param author
+	 * @return true if owner, false otherwise
+	 */
+	protected boolean isOwner(TaskRepository repository, String author) {
+		AuthenticationCredentials creds = repository
+				.getCredentials(AuthenticationType.REPOSITORY);
+		if (creds == null)
+			return false;
+		return author != null && author.length() > 0
+				&& author.equals(creds.getUserName());
 	}
 }
