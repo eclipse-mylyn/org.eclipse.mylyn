@@ -279,7 +279,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, Issue issue) {
 		TaskAttribute labelsAttribute = data.getRoot().getAttribute(
 				IssueAttribute.LABELS.getMetadata().getId());
-		if (oldAttributes.contains(labelsAttribute)) {
+		if (oldAttributes.contains(labelsAttribute) || data.isNew()) {
 			LabelService labelService = new LabelService(client);
 
 			if (!connector.hasCachedLabels(repository))

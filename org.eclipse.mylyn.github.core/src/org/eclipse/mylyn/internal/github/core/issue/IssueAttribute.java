@@ -82,7 +82,7 @@ public enum IssueAttribute {
 	 * Labels applied to issue
 	 */
 	LABELS(Messages.IssueAttribute_LabelLabels, "github.issue.labels", //$NON-NLS-1$
-			TaskAttribute.TYPE_MULTI_SELECT, true, true),
+			TaskAttribute.TYPE_MULTI_SELECT, false, true),
 
 	/**
 	 * Issue assignee
@@ -102,7 +102,7 @@ public enum IssueAttribute {
 	 */
 	ASSIGNEE_GRAVATAR(Messages.IssueAttribute_LabelAssigneeGravatar,
 			"github.issue.assignee.gravatar", TaskAttribute.TYPE_URL, null, //$NON-NLS-1$
-			true, false),
+			false, true),
 
 	/**
 	 * Issue reporter gravatar
