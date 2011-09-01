@@ -49,7 +49,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create GitHub issue task data handler for connector
-	 * 
+	 *
 	 * @param connector
 	 */
 	public IssueTaskDataHandler(IssueConnector connector) {
@@ -58,7 +58,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create task data
-	 * 
+	 *
 	 * @param repository
 	 * @param monitor
 	 * @param user
@@ -185,7 +185,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create task data for issue
-	 * 
+	 *
 	 * @param repository
 	 * @param monitor
 	 * @param user
@@ -265,7 +265,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	/**
 	 * Create any new labels that have been added to the issue and set the
 	 * issues labels to the current value of labels attribute.
-	 * 
+	 *
 	 * @param user
 	 * @param repo
 	 * @param client
@@ -323,8 +323,10 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
-			updateLabels(repo.getOwner(), repo.getName(), client, repository,
-					taskData, oldAttributes, issue);
+			boolean collaborator = isCollaborator(client, repo);
+			if (collaborator)
+				updateLabels(repo.getOwner(), repo.getName(), client,
+						repository, taskData, oldAttributes, issue);
 			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
 				issue.setState(IssueService.STATE_OPEN);
@@ -339,26 +341,27 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					service.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
 
-				// Handle state change
-				TaskAttribute operationAttribute = taskData.getRoot()
-						.getAttribute(TaskAttribute.OPERATION);
-				if (operationAttribute != null) {
-					IssueOperation operation = IssueOperation
-							.fromId(operationAttribute.getValue());
-					if (operation != IssueOperation.LEAVE)
-						switch (operation) {
-						case REOPEN:
-							issue.setState(IssueService.STATE_OPEN);
-							break;
-						case CLOSE:
-							issue.setState(IssueService.STATE_CLOSED);
-							break;
-						default:
-							break;
-						}
+				if (collaborator) {
+					// Handle state change
+					TaskAttribute operationAttribute = taskData.getRoot()
+							.getAttribute(TaskAttribute.OPERATION);
+					if (operationAttribute != null) {
+						IssueOperation operation = IssueOperation
+								.fromId(operationAttribute.getValue());
+						if (operation != IssueOperation.LEAVE)
+							switch (operation) {
+							case REOPEN:
+								issue.setState(IssueService.STATE_OPEN);
+								break;
+							case CLOSE:
+								issue.setState(IssueService.STATE_CLOSED);
+								break;
+							default:
+								break;
+							}
+					}
+					service.editIssue(repo.getOwner(), repo.getName(), issue);
 				}
-
-				service.editIssue(repo.getOwner(), repo.getName(), issue);
 			}
 			return new RepositoryResponse(
 					taskData.isNew() ? ResponseKind.TASK_CREATED
@@ -366,6 +369,5 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
-
 	}
 }
