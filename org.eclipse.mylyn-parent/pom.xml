@@ -39,6 +39,9 @@
 	<dist.site></dist.site>
 	<dist.pack200>${java.home}/bin</dist.pack200>
 
+	<dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
+	<dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.snapshots.url>
+
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
 	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
 	<mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
@@ -70,13 +73,13 @@
 	  <uniqueVersion>false</uniqueVersion>
 	  <id>mylyn-releases</id>
 	  <name>Mylyn Release Repository</name>
-	  <url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</url>
+	  <url>${dist.releases.url}</url>
 	</repository>
 	<snapshotRepository>
 	  <uniqueVersion>false</uniqueVersion>
 	  <id>mylyn-snapshot</id>
 	  <name>Mylyn Snapshot Repository</name>
-	  <url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</url>
+	  <url>${dist.snapshots.url}</url>
 	</snapshotRepository>
   </distributionManagement>
 
