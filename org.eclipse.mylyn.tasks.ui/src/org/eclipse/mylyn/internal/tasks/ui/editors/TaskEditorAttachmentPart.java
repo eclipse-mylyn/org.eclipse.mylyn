@@ -41,6 +41,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -72,26 +73,46 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Steffen Pingel
  */
 public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
-	public AttachmentColumnDefinition[] columnDefinitions;
-
-	public AttachmentColumnDefinition[] getColumnDefinitions() {
-		return new AttachmentColumnDefinition[] { new AttachmentColumnName(0), new AttachmentColumnDescription(1),
-				new AttachmentColumnSize(2), new AttachmentColumnCreator(3), new AttachmentColumnCreated(4),
-				new AttachmentColumnID(5) };
-	}
 
 	private class AttachmentTableSorter extends TableSorter {
+
+		TaskKeyComparator keyComparator = new TaskKeyComparator();
 
 		@Override
 		public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
 			ITaskAttachment attachment1 = (ITaskAttachment) e1;
 			ITaskAttachment attachment2 = (ITaskAttachment) e2;
-			return columnDefinitions[columnIndex].compare(viewer, attachment1, attachment2, columnIndex);
+			switch (columnIndex) {
+			case 0:
+				return compare(attachment1.getFileName(), attachment2.getFileName());
+			case 1:
+				String description1 = attachment1.getDescription();
+				String description2 = attachment2.getDescription();
+				return compare(description1, description2);
+			case 2:
+				return compare(attachment1.getLength(), attachment2.getLength());
+			case 3:
+				return compare(attachment1.getAuthor().toString(), attachment2.getAuthor().toString());
+			case 4:
+				return compare(attachment1.getCreationDate(), attachment2.getCreationDate());
+			case 5:
+				String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
+				String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
+				return keyComparator.compare2(key1, key2);
+			}
+			return super.compare(viewer, e1, e2, columnIndex);
 		}
 
 	}
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
+
+	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name,
+			Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size,
+			Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created,
+			Messages.TaskEditorAttachmentPart_ID };
+
+	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100, 0 };
 
 	private List<TaskAttribute> attachments;
 
@@ -105,7 +126,6 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	public TaskEditorAttachmentPart() {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
-		columnDefinitions = getColumnDefinitions();
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
@@ -120,19 +140,18 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				.applyTo(attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
-		String[] attachmentsColumns = new String[columnDefinitions.length];
-		for (int i = 0; i < columnDefinitions.length; i++) {
+		for (int i = 0; i < attachmentsColumns.length; i++) {
 			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
-			column.setText(columnDefinitions[i].getLabel());
-			attachmentsColumns[i] = columnDefinitions[i].getLabel();
-			column.setWidth(columnDefinitions[i].getWidth());
-			column.setAlignment(columnDefinitions[i].getAlignment());
+			column.setText(attachmentsColumns[i]);
+			column.setWidth(attachmentsColumnWidths[i]);
 			column.setMoveable(true);
-			if (columnDefinitions[i].isSortColumn()) {
+			if (i == 4) {
 				attachmentsTable.setSortColumn(column);
-				attachmentsTable.setSortDirection(columnDefinitions[i].getSortDirection());
+				attachmentsTable.setSortDirection(SWT.DOWN);
 			}
 		}
+		// size column
+		attachmentsTable.getColumn(2).setAlignment(SWT.RIGHT);
 
 		TableViewer attachmentsViewer = new TableViewer(attachmentsTable);
 		attachmentsViewer.setUseHashlookup(true);
@@ -150,7 +169,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		}
 		attachmentsViewer.setContentProvider(new ArrayContentProvider());
 		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider(getModel(),
-				getTaskEditorPage().getAttributeEditorToolkit(), columnDefinitions));
+				getTaskEditorPage().getAttributeEditorToolkit()));
 		attachmentsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				openAttachments(event);

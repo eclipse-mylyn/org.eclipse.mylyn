@@ -99,7 +99,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		boolean hasPartComments = false;
 		boolean hasPartNewComment = false;
-		boolean hasPartAttachments = false;
 		// remove unnecessary default editor parts
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
@@ -118,13 +117,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_NEW_COMMENT)) {
 				descriptors.remove(taskEditorPartDescriptor);
 				hasPartNewComment = true;
-				break;
-			}
-		}
-		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
-			if (taskEditorPartDescriptor.getId().equals(ID_PART_ATTACHMENTS)) {
-				descriptors.remove(taskEditorPartDescriptor);
-				hasPartAttachments = true;
 				break;
 			}
 		}
@@ -165,14 +157,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						return new BugzillaTaskEditorCommentPart();
 					}
 				}.setPath(PATH_COMMENTS));
-			}
-			if (hasPartAttachments) {
-				descriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTACHMENTS) {
-					@Override
-					public AbstractTaskEditorPart createPart() {
-						return new BugzillaTaskEditorAttachmentPart();
-					}
-				}.setPath(PATH_ATTACHMENTS));
+
 			}
 		} catch (CoreException e) {
 			// ignore
