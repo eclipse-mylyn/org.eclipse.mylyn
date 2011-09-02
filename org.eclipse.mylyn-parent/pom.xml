@@ -40,7 +40,7 @@
 	<dist.pack200>${java.home}/bin</dist.pack200>
 
 	<dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
-	<dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.snapshots.url>
+	<dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</dist.snapshots.url>
 
 	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-repository-url>
 	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
