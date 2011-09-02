@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import org.apache.http.HttpHost;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,7 @@ public class GitHubClientTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor_NullArgument() {
-		new GitHubClient(null);
+		new GitHubClient((HttpHost)null);
 	}
 
 }
