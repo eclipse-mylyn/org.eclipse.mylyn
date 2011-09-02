@@ -32,6 +32,21 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.mylyn.builds</groupId>
+      <artifactId>org.eclipse.mylyn.builds.core</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.builds</groupId>
+      <artifactId>org.eclipse.mylyn.hudson.core</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.builds</groupId>
+      <artifactId>org.eclipse.mylyn.hudson.tests</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.core</artifactId>
       <version>3.7.0-SNAPSHOT</version>
@@ -40,6 +55,11 @@
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.net</artifactId>
       <version>3.7.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.commons</groupId>
+      <artifactId>org.eclipse.mylyn.commons.repositories</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
@@ -125,6 +145,16 @@
       <groupId>p2.osgi.bundle</groupId>
       <artifactId>org.eclipse.osgi</artifactId>
       <version>3.6.2.R36x_v20110210</version>
+    </dependency>
+    <dependency>
+      <groupId>p2.osgi.bundle</groupId>
+      <artifactId>org.eclipse.emf.ecore</artifactId>
+      <version>2.6.1.v20100914-1218</version>
+    </dependency>
+    <dependency>
+      <groupId>p2.osgi.bundle</groupId>
+      <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+      <version>2.5.0.v20100521-1846</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
