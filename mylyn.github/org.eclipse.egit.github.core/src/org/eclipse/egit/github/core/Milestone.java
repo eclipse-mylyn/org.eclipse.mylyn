@@ -51,6 +51,15 @@ public class Milestone implements Serializable {
 	}
 
 	/**
+	 * @param createdAt
+	 * @return this milestone
+	 */
+	public Milestone setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
+		return this;
+	}
+
+	/**
 	 * @return dueOn
 	 */
 	public Date getDueOn() {
@@ -74,6 +83,15 @@ public class Milestone implements Serializable {
 	}
 
 	/**
+	 * @param closedIssues
+	 * @return this milestone
+	 */
+	public Milestone setClosedIssues(int closedIssues) {
+		this.closedIssues = closedIssues;
+		return this;
+	}
+
+	/**
 	 * @return number
 	 */
 	public int getNumber() {
@@ -94,6 +112,15 @@ public class Milestone implements Serializable {
 	 */
 	public int getOpenIssues() {
 		return openIssues;
+	}
+
+	/**
+	 * @param openIssues
+	 * @return this milestone
+	 */
+	public Milestone setOpenIssues(int openIssues) {
+		this.openIssues = openIssues;
+		return this;
 	}
 
 	/**
@@ -152,9 +179,27 @@ public class Milestone implements Serializable {
 	}
 
 	/**
+	 * @param url
+	 * @return this milestone
+	 */
+	public Milestone setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
+	/**
 	 * @return creator
 	 */
 	public User getCreator() {
 		return creator;
+	}
+
+	/**
+	 * @param creator
+	 * @return this milestone
+	 */
+	public Milestone setCreator(User creator) {
+		this.creator = creator;
+		return this;
 	}
 }
