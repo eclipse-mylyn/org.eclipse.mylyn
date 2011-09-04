@@ -12,8 +12,7 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 import org.eclipse.egit.github.core.GistRevision;
 import org.junit.Test;
@@ -21,18 +20,18 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link GistRevision}
+ * Unit tests of {@link GistRevision}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GistRevisionTest {
 
-	private static final Gson gson = new GsonBuilder().setDateFormat(
-			"yyyy-MM-dd").create();
-
+	/**
+	 * Test non-mutable committed at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		GistRevision gistRevision = gson.fromJson(
-				"{committedAt : '2003-10-10'}", GistRevision.class);
+	public void getCreatedAReferenceMutableObject() {
+		GistRevision gistRevision = new GistRevision();
+		gistRevision.setCommittedAt(new Date(10000));
 		gistRevision.getCommittedAt().setTime(0);
 		assertTrue(gistRevision.getCommittedAt().getTime() != 0);
 	}

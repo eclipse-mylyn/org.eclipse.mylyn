@@ -19,27 +19,32 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Tests for {@link SearchRepository}.
+ * Unit tests of {@link SearchRepository}
  */
 public class RepositoryTest {
 
 	private static final Gson gson = new GsonBuilder().setDateFormat(
 			"yyyy-MM-dd").create();
 
+	/**
+	 * Test non-mutable created at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		SearchRepository repository = gson.fromJson("{createdAt : '2003-10-10'}",
-				SearchRepository.class);
+	public void getCreatedAtReferenceMutableObject() {
+		SearchRepository repository = gson.fromJson(
+				"{createdAt : '2003-10-10'}", SearchRepository.class);
 		repository.getCreatedAt().setTime(0);
 		assertTrue(repository.getCreatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable pushed at date
+	 */
 	@Test
-	public void getPushedAt_ReferenceMutableObject() {
-		SearchRepository repository = gson.fromJson("{pushedAt : '2003-10-10'}",
-				SearchRepository.class);
+	public void getPushedAtReferenceMutableObject() {
+		SearchRepository repository = gson.fromJson(
+				"{pushedAt : '2003-10-10'}", SearchRepository.class);
 		repository.getPushedAt().setTime(0);
 		assertTrue(repository.getPushedAt().getTime() != 0);
 	}
-
 }

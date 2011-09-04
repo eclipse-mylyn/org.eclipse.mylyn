@@ -10,22 +10,20 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Tests for {@link PullRequestService}
+ * Unit tests of {@link PullRequestService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PullRequestServiceTest {
@@ -38,46 +36,64 @@ public class PullRequestServiceTest {
 
 	private PullRequestService pullRequestService;
 
+	/**
+	 * Test case set up
+	 */
 	@Before
 	public void before() {
 		pullRequestService = new PullRequestService(gitHubClient);
 	}
 
+	/**
+	 * Create pull request service with null client
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
+	public void constructorNullArgument() {
 		new PullRequestService(null);
 	}
 
+	/**
+	 * Get pull request with null repository
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getPullRequest_NullRepository() throws IOException {
+	public void getPullRequestNullRepository() throws IOException {
 		pullRequestService.getPullRequest(null, 3);
 	}
 
-	@Test
-	@Ignore
-	public void getPullRequest_OK() throws IOException {
-		// the OK unit test is not possible with Mockito, but with JMockit
-	}
-
+	/**
+	 * Get pull requests with null repository
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getPullRequests_NullRepository() throws IOException {
+	public void getPullRequestsNullRepository() throws IOException {
 		pullRequestService.getPullRequests(null, "not null");
 	}
 
+	/**
+	 * Get pull requests with null state
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getPullRequests_NullState() throws IOException {
+	public void getPullRequestsNullState() throws IOException {
 		pullRequestService.getPullRequests(repository, null);
 	}
 
+	/**
+	 * Get pull request with repository that generates a null id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getPullRequests_NullRepositoryId() throws IOException {
-		when(repository.getId()).thenReturn(null);
-		pullRequestService.getPullRequests(repository, "test_state");
-	}
+	public void getPullRequestsNullRepositoryId() throws IOException {
+		pullRequestService.getPullRequests(new IRepositoryIdProvider() {
 
-	@Test
-	@Ignore
-	public void getPullRequests_OK() throws IOException {
-		// the OK unit test is not possible with Mockito, but with JMockit
+			public String generateId() {
+				return null;
+			}
+		}, "test_state");
 	}
 }

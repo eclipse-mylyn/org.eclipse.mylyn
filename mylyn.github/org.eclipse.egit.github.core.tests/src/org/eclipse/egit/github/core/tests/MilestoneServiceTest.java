@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link MilestoneService}
+ * Unit tests of {@link MilestoneService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class MilestoneServiceTest {
@@ -40,38 +40,65 @@ public class MilestoneServiceTest {
 
 	private MilestoneService milestoneService;
 
+	/**
+	 * Test case set up
+	 *
+	 * @throws IOException
+	 */
 	@Before
 	public void before() throws IOException {
 		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		milestoneService = new MilestoneService(gitHubClient);
 	}
 
+	/**
+	 * Create milestone service with null client
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
+	public void constructorNullArgument() {
 		new MilestoneService(null);
 	}
 
+	/**
+	 * Get milestones with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getMilestones_NullUser() throws IOException {
+	public void getMilestonesNullUser() throws IOException {
 		milestoneService.getMilestones(null, "not null", "not null");
 	}
 
+	/**
+	 * Get milestones with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getMilestones_NullRepository() throws IOException {
+	public void getMilestonesNullRepositoryName() throws IOException {
 		milestoneService.getMilestones("not null", null, "not null");
 	}
 
+	/**
+	 * Get milestones with null state
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getMilestones_NullState() throws IOException {
+	public void getMilestonesNullState() throws IOException {
 		milestoneService.getMilestones("test_user", "test_repository", null);
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Create milestones with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getMilestones_OK() throws IOException {
+	public void getMilestonesOK() throws IOException {
 		milestoneService.getMilestones("test_user", "test_repository",
 				"test_state");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
-
 }

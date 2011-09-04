@@ -12,35 +12,34 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 import org.eclipse.egit.github.core.Comment;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link Comment}
+ * Unit tests of {@link Comment}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class CommentTest {
 
-	private static final Gson gson = new GsonBuilder().setDateFormat(
-			"yyyy-MM-dd").create();
-
+	/**
+	 * Test non-mutable created at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		Comment comment = gson.fromJson("{createdAt : '2003-10-10'}",
-				Comment.class);
+	public void getCreatedAtReferenceMutableObject() {
+		Comment comment = new Comment();
+		comment.setCreatedAt(new Date(12345));
 		comment.getCreatedAt().setTime(0);
 		assertTrue(comment.getCreatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable updated at date
+	 */
 	@Test
-	public void getUpdatedAt_ReferenceMutableObject() {
-		Comment comment = gson.fromJson("{updatedAt : '2003-10-10'}",
-				Comment.class);
+	public void getUpdatedAtReferenceMutableObject() {
+		Comment comment = new Comment();
+		comment.setUpdatedAt(new Date(54321));
 		comment.getUpdatedAt().setTime(0);
 		assertTrue(comment.getUpdatedAt().getTime() != 0);
 	}

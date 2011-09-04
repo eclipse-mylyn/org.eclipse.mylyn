@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -33,7 +32,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link GistService}
+ * Unit tests of {@link GistService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GistServiceTest {
@@ -46,84 +45,152 @@ public class GistServiceTest {
 
 	private GistService gistService;
 
+	/**
+	 * Test case set up
+	 *
+	 * @throws IOException
+	 */
 	@Before
 	public void before() throws IOException {
 		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		gistService = new GistService(gitHubClient);
 	}
 
+	/**
+	 * Create service with null client
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
+	public void constructorNullArgument() {
 		new GistService(null);
 	}
 
+	/**
+	 * Get gist with null id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getGist_NullId() throws IOException {
+	public void getGistNullId() throws IOException {
 		gistService.getGist(null);
 	}
 
+	/**
+	 * Get gist with valid id
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getGist_OK() throws IOException {
+	public void getGistOK() throws IOException {
 		gistService.getGist("1");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Get gists for null login name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getGists_NullUser() throws IOException {
+	public void getGistsNullUser() throws IOException {
 		gistService.getGists(null);
 	}
 
+	/**
+	 * Get gists for valid login name
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getGists_OK() throws IOException {
+	public void getGistsOK() throws IOException {
 		gistService.getGists("test_user");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Create gist with null model
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createGist_NullGist() throws IOException {
+	public void createGistNullGist() throws IOException {
 		gistService.createGist(null);
 	}
 
+	/**
+	 * Get gist with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void createGist_NullUser() throws IOException {
+	public void createGistNullUser() throws IOException {
 		Gist gist = new Gist();
 		gist.setUser(null);
 		gistService.createGist(gist);
 		verify(gitHubClient).post("/gists", gist, Gist.class);
 	}
 
+	/**
+	 * Update null gist
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void updateGist_NullGist() throws IOException {
+	public void updateGistNullGist() throws IOException {
 		gistService.updateGist(null);
 	}
 
+	/**
+	 * Update gist with null id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void updateGist_NullId() throws IOException {
+	public void updateGistNullId() throws IOException {
 		Gist gist = new Gist();
 		gist.setId(null);
 		gistService.updateGist(gist);
 	}
 
+	/**
+	 * Update valid gist
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void updateGist_OK() throws IOException {
+	public void updateGistOK() throws IOException {
 		Gist gist = new Gist();
 		gist.setId("123");
 		gistService.updateGist(gist);
 		verify(gitHubClient).post("/gists/123", gist, Gist.class);
 	}
 
+	/**
+	 * Create comment for with null gist id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createComment_NullGistId() throws IOException {
+	public void createCommentNullGistId() throws IOException {
 		gistService.createComment(null, "not null");
 	}
 
+	/**
+	 * Create null comment
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createComment_NullComment() throws IOException {
+	public void createCommentNullComment() throws IOException {
 		gistService.createComment("not null", null);
 	}
 
+	/**
+	 * Create valid comment
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void createComment_OK() throws IOException {
+	public void createCommentOK() throws IOException {
 		gistService.createComment("1", "test_comment");
 
 		Map<String, String> params = new HashMap<String, String>(1, 1);
@@ -131,13 +198,23 @@ public class GistServiceTest {
 		verify(gitHubClient).post("/gists/1/comments", params, Comment.class);
 	}
 
+	/**
+	 * Get comments for null gist id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getComments_NullGistId() throws IOException {
+	public void getCommentsNullGistId() throws IOException {
 		gistService.getComments(null);
 	}
 
+	/**
+	 * Get comment with valid gist id
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getComments_OK() throws IOException {
+	public void getCommentsOK() throws IOException {
 		gistService.getComments("1");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}

@@ -20,12 +20,17 @@ import org.eclipse.egit.github.core.RequestError;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link RequestError} class
+ * Unit tests of {@link RequestError}
  */
 public class RequestErrorTest {
 
+	/**
+	 * Get request error message for JSON that contains error property
+	 *
+	 * @throws Exception
+	 */
 	@Test
-	public void testErrorField() throws Exception {
+	public void requestErrorWithErrorField() throws Exception {
 		Gson gson = new Gson();
 		RequestError error = gson.fromJson("{\"error\":\"not authorized\"}",
 				RequestError.class);
@@ -34,8 +39,13 @@ public class RequestErrorTest {
 		assertNull(error.getErrors());
 	}
 
+	/**
+	 * Get request error message for JSON that contains message property
+	 *
+	 * @throws Exception
+	 */
 	@Test
-	public void testMessageField() throws Exception {
+	public void requestErrorWithMessageField() throws Exception {
 		Gson gson = new Gson();
 		RequestError error = gson.fromJson("{\"message\":\"not authorized\"}",
 				RequestError.class);
@@ -44,8 +54,14 @@ public class RequestErrorTest {
 		assertNull(error.getErrors());
 	}
 
+	/**
+	 * Get request error message for JSON that contains error and message
+	 * property
+	 *
+	 * @throws Exception
+	 */
 	@Test
-	public void testErrorAndMessageField() throws Exception {
+	public void requestErrorWithErrorAndMessageField() throws Exception {
 		Gson gson = new Gson();
 		RequestError error = gson.fromJson(
 				"{\"message\":\"not authorized\",\"error\":\"bad username\"}",

@@ -32,7 +32,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link LabelService}.
+ * Unit tests of {@link LabelService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LabelServiceTest {
@@ -45,53 +45,96 @@ public class LabelServiceTest {
 
 	private LabelService labelService;
 
+	/**
+	 * Test case set up
+	 *
+	 * @throws IOException
+	 */
 	@Before
 	public void before() throws IOException {
 		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		labelService = new LabelService(gitHubClient);
 	}
 
+	/**
+	 * Create label service with null client
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
+	public void constructorNullArgument() {
 		new LabelService(null);
 	}
 
+	/**
+	 * Get labels with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getLabels_NullUser() throws IOException {
+	public void getLabelsNullUser() throws IOException {
 		labelService.getLabels(null, "not null");
 	}
 
+	/**
+	 * Get labels with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getLabels_NullRepository() throws IOException {
+	public void getLabelsNullRepositoryName() throws IOException {
 		labelService.getLabels("not null", null);
 	}
 
+	/**
+	 * Get labels with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getLabels_OK() throws IOException {
+	public void getLabelsOK() throws IOException {
 		labelService.getLabels("test_user", "test_repository");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Set labels with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void setLabels_NullUser() throws IOException {
+	public void setLabelsNullUser() throws IOException {
 		labelService.setLabels(null, "not null", "not null",
 				new LinkedList<Label>());
 	}
 
+	/**
+	 * Set labels with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void setLabels_NullRepository() throws IOException {
+	public void setLabelsNullRepositoryName() throws IOException {
 		labelService.setLabels("not null", null, "not null",
 				new LinkedList<Label>());
 	}
 
+	/**
+	 * Set labels with null issue id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void setLabels_NullIssueId() throws IOException {
+	public void setLabelsNullIssueId() throws IOException {
 		labelService.setLabels("not null", "not null", null,
 				new LinkedList<Label>());
 	}
 
+	/**
+	 * Set labels with null labels list
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void setLabels_NullLabels() throws IOException {
+	public void setLabelsNullLabels() throws IOException {
 		labelService.setLabels("test_user", "test_repository", "1", null);
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
@@ -100,8 +143,13 @@ public class LabelServiceTest {
 				labelsToken.getType());
 	}
 
+	/**
+	 * Set labels with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void setLabels_OK() throws IOException {
+	public void setLabelsOK() throws IOException {
 		List<Label> labels = new LinkedList<Label>();
 		labelService.setLabels("test_user", "test_repository", "1", labels);
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
@@ -111,27 +159,46 @@ public class LabelServiceTest {
 				labelsToken.getType());
 	}
 
+	/**
+	 * Create label with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createLabel_NullUser() throws IOException {
+	public void createLabelNullUser() throws IOException {
 		labelService.createLabel(null, "not null", new Label());
 	}
 
+	/**
+	 * Create label with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createLabel_NullRepository() throws IOException {
+	public void createLabelNullRepositoryName() throws IOException {
 		labelService.createLabel("not null", null, new Label());
 	}
 
+	/**
+	 * Create label with null label
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createLabel_NullLabel() throws IOException {
+	public void createLabelNullLabel() throws IOException {
 		labelService.createLabel("not null", "not null", null);
 	}
 
+	/**
+	 * Create label with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void createLabel_OK() throws IOException {
+	public void createLabelOK() throws IOException {
 		Label label = new Label();
 		labelService.createLabel("test_user", "test_repository", label);
-		verify(gitHubClient).post(
-				"/repos/test_user/test_repository/labels", label,
-				Label.class);
+		verify(gitHubClient).post("/repos/test_user/test_repository/labels",
+				label, Label.class);
 	}
 }

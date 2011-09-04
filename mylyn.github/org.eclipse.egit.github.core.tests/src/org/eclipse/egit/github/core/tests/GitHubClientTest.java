@@ -13,15 +13,17 @@ package org.eclipse.egit.github.core.tests;
 import org.apache.http.HttpHost;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+/**
+ * Unit tests of {@link GitHubClient}
+ */
 public class GitHubClientTest {
 
+	/**
+	 * Create client with null host
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
-		new GitHubClient((HttpHost)null);
+	public void constructorNullArgument() {
+		new GitHubClient((HttpHost) null);
 	}
-
 }
