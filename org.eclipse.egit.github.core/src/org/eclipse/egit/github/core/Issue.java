@@ -63,10 +63,28 @@ public class Issue implements Serializable {
 	}
 
 	/**
+	 * @param closedAt
+	 * @return this issue
+	 */
+	public Issue setClosedAt(Date closedAt) {
+		this.closedAt = DateUtils.clone(closedAt);
+		return this;
+	}
+
+	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
 		return DateUtils.clone(createdAt);
+	}
+
+	/**
+	 * @param createdAt
+	 * @return this issue
+	 */
+	public Issue setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
+		return this;
 	}
 
 	/**
@@ -77,10 +95,28 @@ public class Issue implements Serializable {
 	}
 
 	/**
+	 * @param updatedAt
+	 * @return this issue
+	 */
+	public Issue setUpdatedAt(Date updatedAt) {
+		this.updatedAt = DateUtils.clone(updatedAt);
+		return this;
+	}
+
+	/**
 	 * @return comments
 	 */
 	public int getComments() {
 		return comments;
+	}
+
+	/**
+	 * @param comments
+	 * @return this issue
+	 */
+	public Issue setComments(int comments) {
+		this.comments = comments;
+		return this;
 	}
 
 	/**
@@ -139,6 +175,15 @@ public class Issue implements Serializable {
 	}
 
 	/**
+	 * @param pullRequest
+	 * @return this issue
+	 */
+	public Issue setPullRequest(PullRequest pullRequest) {
+		this.pullRequest = pullRequest;
+		return this;
+	}
+
+	/**
 	 * @return body
 	 */
 	public String getBody() {
@@ -159,6 +204,15 @@ public class Issue implements Serializable {
 	 */
 	public String getHtmlUrl() {
 		return htmlUrl;
+	}
+
+	/**
+	 * @param htmlUrl
+	 * @return this issue
+	 */
+	public Issue setHtmlUrl(String htmlUrl) {
+		this.htmlUrl = htmlUrl;
+		return this;
 	}
 
 	/**
@@ -201,6 +255,15 @@ public class Issue implements Serializable {
 	}
 
 	/**
+	 * @param url
+	 * @return this issue
+	 */
+	public Issue setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
+	/**
 	 * @return assignee
 	 */
 	public User getAssignee() {
@@ -221,6 +284,15 @@ public class Issue implements Serializable {
 	 */
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * @param user
+	 * @return this issue
+	 */
+	public Issue setUser(User user) {
+		this.user = user;
+		return this;
 	}
 
 	@Override
