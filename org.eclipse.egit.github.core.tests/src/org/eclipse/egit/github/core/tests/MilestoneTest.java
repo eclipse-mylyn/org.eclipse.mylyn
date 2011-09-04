@@ -16,45 +16,43 @@ import java.util.Date;
 
 import org.eclipse.egit.github.core.Milestone;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
- * Unit tests for {@link Milestone}
+ * Unit tests of {@link Milestone}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class MilestoneTest {
 
-	private static final Gson gson = new GsonBuilder().setDateFormat(
-			"yyyy-MM-dd").create();
-
+	/**
+	 * Test non-mutable created at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		Milestone milestone = gson.fromJson("{createdAt : '2003-10-10'}",
-				Milestone.class);
+	public void getCreatedAtReferenceMutableObject() {
+		Milestone milestone = new Milestone();
+		milestone.setCreatedAt(new Date(5000));
 		milestone.getCreatedAt().setTime(0);
 		assertTrue(milestone.getCreatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable due on date
+	 */
 	@Test
 	public void getDueOn_ReferenceMutableObject() {
-		Milestone milestone = gson.fromJson("{dueOn : '2003-10-10'}",
-				Milestone.class);
+		Milestone milestone = new Milestone();
+		milestone.setDueOn(new Date(2000));
 		milestone.getDueOn().setTime(0);
 		assertTrue(milestone.getDueOn().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable due on date
+	 */
 	@Test
-	public void setDueOn_ReferenceMutableObject()
-			throws IllegalAccessException, NoSuchFieldException {
+	public void setDueOnReferenceMutableObject() {
 		Milestone milestone = new Milestone();
 		Date longTimeAgo = new Date(0L);
 		milestone.setDueOn(longTimeAgo);
 		longTimeAgo.setTime(10000L);
 		assertTrue(milestone.getDueOn().getTime() == 0L);
 	}
-
 }

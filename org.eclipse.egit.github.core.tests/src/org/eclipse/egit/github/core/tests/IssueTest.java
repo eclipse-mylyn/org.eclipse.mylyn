@@ -12,42 +12,46 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 import org.eclipse.egit.github.core.Issue;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link Issue}
+ * Unit tests of {@link Issue}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class IssueTest {
 
-	private static final Gson gson = new GsonBuilder().setDateFormat(
-			"yyyy-MM-dd").create();
-
+	/**
+	 * Test non-mutable created at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		Issue issue = gson.fromJson("{createdAt : '2003-10-10'}", Issue.class);
+	public void getCreatedAtReferenceMutableObject() {
+		Issue issue = new Issue();
+		issue.setCreatedAt(new Date(55555555));
 		issue.getCreatedAt().setTime(0);
 		assertTrue(issue.getCreatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable updated at date
+	 */
 	@Test
-	public void getUpdatedAt_ReferenceMutableObject() {
-		Issue issue = gson.fromJson("{updatedAt : '2003-10-10'}", Issue.class);
+	public void getUpdatedAtReferenceMutableObject() {
+		Issue issue = new Issue();
+		issue.setUpdatedAt(new Date(44444444));
 		issue.getUpdatedAt().setTime(0);
 		assertTrue(issue.getUpdatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable closed at date
+	 */
 	@Test
-	public void getClosedAt_ReferenceMutableObject() {
-		Issue issue = gson.fromJson("{closedAt : '2003-10-10'}", Issue.class);
+	public void getClosedAtReferenceMutableObject() {
+		Issue issue = new Issue();
+		issue.setClosedAt(new Date(99999999));
 		issue.getClosedAt().setTime(0);
 		assertTrue(issue.getClosedAt().getTime() != 0);
 	}
-
 }

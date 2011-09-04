@@ -27,13 +27,13 @@ import org.eclipse.egit.github.core.service.CommitService;
 import org.junit.Test;
 
 /**
- * 
+ * Unit tests of {@link CommitService}
  */
 public class CommitTest extends LiveTest {
 
 	/**
 	 * Test paging commits
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -61,7 +61,7 @@ public class CommitTest extends LiveTest {
 
 	/**
 	 * Test getting comments for a commit
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -89,7 +89,7 @@ public class CommitTest extends LiveTest {
 
 	/**
 	 * Test getting commit by SHA-1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

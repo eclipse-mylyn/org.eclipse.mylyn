@@ -16,6 +16,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * All headless unit tests of GitHub Java API
+ */
 @RunWith(Suite.class)
 @SuiteClasses({ RepositoryTest.class, PullRequestTest.class, CommentTest.class,
 		GistTest.class, GistRevisionTest.class, IssueTest.class,

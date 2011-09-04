@@ -31,7 +31,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link IssueService}
+ * Unit tests of {@link IssueService}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest {
@@ -44,109 +44,207 @@ public class IssueServiceTest {
 
 	private IssueService issueService;
 
+	/**
+	 * Test case set up
+	 *
+	 * @throws IOException
+	 */
 	@Before
 	public void before() throws IOException {
 		doReturn(response).when(gitHubClient).get(any(GitHubRequest.class));
 		issueService = new IssueService(gitHubClient);
 	}
 
+	/**
+	 * Create issue service with null client
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void constructor_NullArgument() {
+	public void constructorNullArgument() {
 		new IssueService(null);
 	}
 
+	/**
+	 * Get issue with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getIssue_NullUser() throws IOException {
+	public void getIssueNullUser() throws IOException {
 		issueService.getIssue(null, "not null", "not null");
 	}
 
+	/**
+	 * Get issue with null name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getIssue_NullRepository() throws IOException {
+	public void getIssueNullRepositoryName() throws IOException {
 		issueService.getIssue("not null", null, "not null");
 	}
 
+	/**
+	 * Get issue with null id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getIssue_NullId() throws IOException {
+	public void getIssueNullId() throws IOException {
 		issueService.getIssue("not null", "not null", null);
 	}
 
+	/**
+	 * Get issue with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
 	public void getIssue_OK() throws IOException {
 		issueService.getIssue("test_user", "test_repository", "test_id");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Get issue comments with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getComments_NullUser() throws IOException {
+	public void getCommentsNullUser() throws IOException {
 		issueService.getComments(null, "not null", "not null");
 	}
 
+	/**
+	 * Get issue comments with null name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getComments_NullRepository() throws IOException {
+	public void getCommentsNullRepositoryName() throws IOException {
 		issueService.getComments("not null", null, "not null");
 	}
 
+	/**
+	 * Get issue comments with null issue id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getComments_NullId() throws IOException {
+	public void getCommentsNullId() throws IOException {
 		issueService.getComments("not null", "not null", null);
 	}
 
+	/**
+	 * Get issue comments with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getComments_OK() throws IOException {
+	public void getCommentsOK() throws IOException {
 		issueService.getComments("test_user", "test_repository", "test_id");
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Get issues with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getIssues_NullUser() throws IOException {
+	public void getIssuesNullUser() throws IOException {
 		issueService.getIssues(null, "not null", null);
 	}
 
+	/**
+	 * Get issues with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getIssues_NullRepository() throws IOException {
+	public void getIssuesNullRepositoryName() throws IOException {
 		issueService.getIssues("not null", null, null);
 	}
 
+	/**
+	 * Get issues with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void getIssues_OK() throws IOException {
+	public void getIssuesOK() throws IOException {
 		issueService.getIssues("test_user", "test_repository", null);
 		verify(gitHubClient).get(any(GitHubRequest.class));
 	}
 
+	/**
+	 * Create issue with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createIssue_NullUser() throws IOException {
+	public void createIssueNullUser() throws IOException {
 		issueService.createIssue(null, "not null", null);
 	}
 
+	/**
+	 * Create issue with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createIssue_NullRepository() throws IOException {
+	public void createIssueNullRepositoryName() throws IOException {
 		issueService.createIssue("not null", null, null);
 	}
 
+	/**
+	 * Create issue with null issue
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void createIssue_NullIssue() throws IOException {
+	public void createIssueNullIssue() throws IOException {
 		issueService.createIssue("test_user", "test_repository", null);
 		verify(gitHubClient).post("/repos/test_user/test_repository/issues",
 				new HashMap<String, String>(), Issue.class);
 	}
 
+	/**
+	 * Edit issue with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void editIssue_NullUser() throws IOException {
+	public void editIssueNullUser() throws IOException {
 		issueService.editIssue(null, "not null", null);
 	}
 
+	/**
+	 * Edit issue with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void editIssue_NullRepository() throws IOException {
+	public void editIssueNullRepositoryName() throws IOException {
 		issueService.editIssue("not null", null, null);
 	}
 
+	/**
+	 * Edit issue with null issue
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void editIssue_NullIssue() throws IOException {
+	public void editIssueNullIssue() throws IOException {
 		issueService.editIssue("not null", "not null", null);
 	}
 
+	/**
+	 * Edit issue with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void editIssue_OK() throws IOException {
+	public void editIssueOK() throws IOException {
 		Issue issue = new Issue();
 		issue.setNumber(1);
 		issue.setTitle("test_title");
@@ -162,23 +260,43 @@ public class IssueServiceTest {
 				params, Issue.class);
 	}
 
+	/**
+	 * Create issue comment with null user
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createComment_NullUser() throws IOException {
+	public void createCommentNullUser() throws IOException {
 		issueService.createComment(null, "not null", "not null", "not null");
 	}
 
+	/**
+	 * Create issue comment with null repository name
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createComment_NullRepository() throws IOException {
+	public void createCommentNullRepositoryName() throws IOException {
 		issueService.createComment("not null", null, "not null", "not null");
 	}
 
+	/**
+	 * Create issue comment with null issue id
+	 *
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createComment_NullIssueId() throws IOException {
+	public void createCommentNullIssueId() throws IOException {
 		issueService.createComment("not null", "not null", null, "not null");
 	}
 
+	/**
+	 * Create issue comment with valid parameters
+	 *
+	 * @throws IOException
+	 */
 	@Test
-	public void createComment_OK() throws IOException {
+	public void createCommentOK() throws IOException {
 		issueService.createComment("test_user", "test_repository", "1",
 				"test_comment");
 

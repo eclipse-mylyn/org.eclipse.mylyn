@@ -12,35 +12,35 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 import org.eclipse.egit.github.core.Gist;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link Gist}
+ * Unit tests of {@link Gist}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class GistTest {
 
-	private static final Gson gson = new GsonBuilder().setDateFormat(
-			"yyyy-MM-dd").create();
-
+	/**
+	 * Test non-mutable created at date
+	 */
 	@Test
-	public void getCreatedAt_ReferenceMutableObject() {
-		Gist gist = gson.fromJson("{createdAt : '2003-10-10'}", Gist.class);
+	public void getCreatedAtReferenceMutableObject() {
+		Gist gist = new Gist();
+		gist.setCreatedAt(new Date(11111));
 		gist.getCreatedAt().setTime(0);
 		assertTrue(gist.getCreatedAt().getTime() != 0);
 	}
 
+	/**
+	 * Test non-mutable updated at date
+	 */
 	@Test
-	public void getUpdatedAt_ReferenceMutableObject() {
-		Gist gist = gson.fromJson("{updatedAt : '2003-10-10'}", Gist.class);
+	public void getUpdatedAtReferenceMutableObject() {
+		Gist gist = new Gist();
+		gist.setUpdatedAt(new Date(22222));
 		gist.getUpdatedAt().setTime(0);
 		assertTrue(gist.getUpdatedAt().getTime() != 0);
 	}
-
 }
