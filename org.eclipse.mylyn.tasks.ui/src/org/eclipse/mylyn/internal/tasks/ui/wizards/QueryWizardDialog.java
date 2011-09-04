@@ -17,7 +17,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.EnhancedWizardDialog;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractRepositoryQueryPage2;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -55,7 +54,7 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 		setButtonLayoutData(clearButton);
 		updateButton = createButton(composite, UPDATE_BUTTON_ID,
 				Messages.QueryWizardDialog_Update_Attributes_from_Repository, false);
-		updateButton.setImage(TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION.createImage());
+//		updateButton.setImage(TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION_SMALL.createImage());
 		updateButton.setVisible(false);
 		setButtonLayoutData(updateButton);
 	}
