@@ -370,8 +370,7 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	private String getGerritGitUrl() {
-		GerritConfig config = GerritClient.configFromString(getTaskEditorPage().getTaskRepository().getProperty(
-				GerritConnector.KEY_REPOSITORY_CONFIG));
+		GerritConfig config = getConfig();
 		return config.getGitDaemonUrl();
 	}
 

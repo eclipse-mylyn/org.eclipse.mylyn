@@ -13,10 +13,13 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.GerritOperationDialog;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -25,6 +28,8 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
+import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Steffen Pingel
@@ -62,6 +67,11 @@ public abstract class AbstractGerritSection extends AbstractTaskEditorSection {
 			action.selectionChanged(new StructuredSelection(getTaskEditorPage().getEditor()));
 			action.run();
 		}
+	}
+
+	protected GerritConfig getConfig() {
+		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getTaskData().getConnectorKind());
+		return connector.getConfig(getTaskEditorPage().getTaskRepository());
 	}
 
 }

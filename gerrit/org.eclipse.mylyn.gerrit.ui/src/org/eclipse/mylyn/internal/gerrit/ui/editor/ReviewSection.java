@@ -17,12 +17,9 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AddReviewersDialog;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -263,12 +260,6 @@ public class ReviewSection extends AbstractGerritSection {
 				}
 			});
 		}
-	}
-
-	private GerritConfig getConfig() {
-		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getTaskData().getConnectorKind());
-		GerritClient client = connector.getClient(getTaskEditorPage().getTaskRepository());
-		return client.getConfig();
 	}
 
 	@Override
