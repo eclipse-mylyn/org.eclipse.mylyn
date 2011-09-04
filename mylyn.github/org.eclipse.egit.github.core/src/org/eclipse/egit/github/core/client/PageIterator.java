@@ -144,26 +144,30 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	public Collection<V> next() {
 		if (!hasNext())
 			throw new NoSuchElementException();
-		Collection<V> resources = null;
+		if (next != null)
+			request.setUri(next);
+		GitHubResponse response;
 		try {
-			if (next != null)
-				request.setUri(next);
-			GitHubResponse response = client.get(request);
-			Object body = response.getBody();
+			response = client.get(request);
+		} catch (IOException e) {
+			throw new NoSuchPageException(e);
+		}
+		Collection<V> resources = null;
+		Object body = response.getBody();
+		if (body != null)
 			if (body instanceof Collection)
 				resources = (Collection<V>) body;
 			else if (body instanceof IResourceProvider)
 				resources = ((IResourceProvider<V>) body).getResources();
 			else
 				resources = (Collection<V>) Collections.singletonList(body);
-			nextPage++;
-			next = response.getNext();
-			nextPage = parsePageNumber(next);
-			last = response.getLast();
-			lastPage = parsePageNumber(last);
-		} catch (IOException e) {
-			throw new NoSuchPageException(e);
-		}
+		if (resources == null)
+			resources = Collections.emptyList();
+		nextPage++;
+		next = response.getNext();
+		nextPage = parsePageNumber(next);
+		last = response.getLast();
+		lastPage = parsePageNumber(last);
 		return resources;
 	}
 
