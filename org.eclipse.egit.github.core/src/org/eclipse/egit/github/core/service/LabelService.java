@@ -59,10 +59,7 @@ public class LabelService extends GitHubService {
 	 */
 	public List<Label> getLabels(String user, String repository)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -86,12 +83,11 @@ public class LabelService extends GitHubService {
 	 */
 	public List<Label> setLabels(String user, String repository,
 			String issueId, List<Label> labels) throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (issueId == null)
 			throw new IllegalArgumentException("Issue id cannot be null"); //$NON-NLS-1$
+		if (issueId.length() == 0)
+			throw new IllegalArgumentException("Issue id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -114,10 +110,7 @@ public class LabelService extends GitHubService {
 	 */
 	public Label createLabel(String user, String repository, Label label)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (label == null)
 			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
 
@@ -138,12 +131,11 @@ public class LabelService extends GitHubService {
 	 */
 	public Label getLabel(String user, String repository, String label)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (label == null)
 			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+		if (label.length() == 0)
+			throw new IllegalArgumentException("Label cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -165,12 +157,11 @@ public class LabelService extends GitHubService {
 	 */
 	public void deleteLabel(String user, String repository, String label)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (label == null)
 			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+		if (label.length() == 0)
+			throw new IllegalArgumentException("Label cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
