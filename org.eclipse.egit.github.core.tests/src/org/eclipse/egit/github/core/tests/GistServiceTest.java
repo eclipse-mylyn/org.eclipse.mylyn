@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
@@ -23,6 +27,7 @@ import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
+import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.junit.Before;
@@ -65,6 +70,14 @@ public class GistServiceTest {
 	}
 
 	/**
+	 * Create default service
+	 */
+	@Test
+	public void defaultContructor() {
+		assertNotNull(new GistService().getClient());
+	}
+
+	/**
 	 * Get gist with null id
 	 *
 	 * @throws IOException
@@ -75,14 +88,202 @@ public class GistServiceTest {
 	}
 
 	/**
+	 * Get gist with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getGistEmptyId() throws IOException {
+		gistService.getGist("");
+	}
+
+	/**
 	 * Get gist with valid id
 	 *
 	 * @throws IOException
 	 */
 	@Test
-	public void getGistOK() throws IOException {
+	public void getGist() throws IOException {
 		gistService.getGist("1");
 		verify(gitHubClient).get(any(GitHubRequest.class));
+	}
+
+	/**
+	 * Delete gist with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteGistNullId() throws IOException {
+		gistService.deleteGist(null);
+	}
+
+	/**
+	 * Delete gist with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteGistEmptyId() throws IOException {
+		gistService.deleteGist("");
+	}
+
+	/**
+	 * Delete gist with valid id
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteGist() throws IOException {
+		gistService.deleteGist("1");
+		verify(gitHubClient).delete("/gists/1");
+	}
+
+	/**
+	 * Star gist with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void starGistNullId() throws IOException {
+		gistService.starGist(null);
+	}
+
+	/**
+	 * Star gist with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void starGistEmptyId() throws IOException {
+		gistService.starGist("");
+	}
+
+	/**
+	 * Star gist with valid id
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void starGist() throws IOException {
+		gistService.starGist("1");
+		verify(gitHubClient).put("/gists/1/star");
+	}
+
+	/**
+	 * Unstar gist with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void unstarGistNullId() throws IOException {
+		gistService.unstarGist(null);
+	}
+
+	/**
+	 * Unstar gist with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void unstarGistEmptyId() throws IOException {
+		gistService.unstarGist("");
+	}
+
+	/**
+	 * Unstar gist with valid id
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void unstarGist() throws IOException {
+		gistService.unstarGist("1");
+		verify(gitHubClient).delete("/gists/1/star");
+	}
+
+	/**
+	 * Is gist starred with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void isStarredGistNullId() throws IOException {
+		gistService.isStarred(null);
+	}
+
+	/**
+	 * Is gist starred with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void isStarredGistEmptyId() throws IOException {
+		gistService.isStarred("");
+	}
+
+	/**
+	 * Is gist starred with valid id
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void isStarredGist() throws IOException {
+		gistService.isStarred("1");
+		verify(gitHubClient).get(any(GitHubRequest.class));
+	}
+
+	/**
+	 * Fork gist with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void forkGistNullId() throws IOException {
+		gistService.forkGist(null);
+	}
+
+	/**
+	 * Fork gist with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void forkGistEmptyId() throws IOException {
+		gistService.forkGist("");
+	}
+
+	/**
+	 * Fork gist with valid id
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void forkGist() throws IOException {
+		gistService.forkGist("1");
+		verify(gitHubClient).post("/gists/1/fork", null, Gist.class);
+	}
+
+	/**
+	 * Delete gist comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteGistComment() throws IOException {
+		gistService.deleteComment(1234);
+		verify(gitHubClient).delete("/gists/comments/1234");
+	}
+
+	/**
+	 * Get starred gists
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getStarredGists() throws IOException {
+		List<Gist> starred = gistService.getStarredGists();
+		assertNotNull(starred);
+		assertEquals(0, starred.size());
 	}
 
 	/**
@@ -93,6 +294,16 @@ public class GistServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getGistsNullUser() throws IOException {
 		gistService.getGists(null);
+	}
+
+	/**
+	 * Get gists for empty login name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getGistsEmptyUser() throws IOException {
+		gistService.getGists("");
 	}
 
 	/**
@@ -217,5 +428,49 @@ public class GistServiceTest {
 	public void getCommentsOK() throws IOException {
 		gistService.getComments("1");
 		verify(gitHubClient).get(any(GitHubRequest.class));
+	}
+
+	/**
+	 * Page gists with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void pageUserGistsNullId() throws IOException {
+		gistService.pageGists(null);
+	}
+
+	/**
+	 * Page gists with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void pageUserGistsEmptyId() throws IOException {
+		gistService.pageGists("");
+	}
+
+	/**
+	 * Page gists with valid user
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageUserGists() throws IOException {
+		PageIterator<Gist> iterator = gistService.pageGists("user");
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+	}
+
+	/**
+	 * Page public gists
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pagePublicGists() throws IOException {
+		PageIterator<Gist> iterator = gistService.pagePublicGists();
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
 	}
 }

@@ -10,17 +10,51 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.User;
 import org.junit.Test;
 
 /**
  * Unit tests of {@link Comment}
  */
 public class CommentTest {
+
+	/**
+	 * Test default state of comment
+	 */
+	@Test
+	public void defaultState() {
+		Comment comment = new Comment();
+		assertNull(comment.getBody());
+		assertNull(comment.getCreatedAt());
+		assertEquals(0, comment.getId());
+		assertNull(comment.getUpdatedAt());
+		assertNull(comment.getUrl());
+		assertNull(comment.getUser());
+	}
+
+	/**
+	 * Test updating comment fields
+	 */
+	@Test
+	public void updateFields() {
+		Comment comment = new Comment();
+		assertEquals("body", comment.setBody("body").getBody());
+		assertEquals(new Date(1234), comment.setCreatedAt(new Date(1234))
+				.getCreatedAt());
+		assertEquals(100, comment.setId(100).getId());
+		assertEquals(new Date(2345), comment.setUpdatedAt(new Date(2345))
+				.getUpdatedAt());
+		assertEquals("http", comment.setUrl("http").getUrl());
+		User user = new User().setLogin("auser");
+		assertEquals(user, comment.setUser(user).getUser());
+	}
 
 	/**
 	 * Test non-mutable created at date
