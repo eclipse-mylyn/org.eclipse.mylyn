@@ -115,6 +115,8 @@ public class GistService extends GitHubService {
 			int size) {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
@@ -297,9 +299,7 @@ public class GistService extends GitHubService {
 	 * @throws IOException
 	 */
 	public void deleteGist(String gistId) throws IOException {
-		if (gistId == null)
-			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
-
+		checkGistId(gistId);
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		client.delete(uri.toString());
@@ -328,7 +328,7 @@ public class GistService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
 		uri.append(SEGMENT_STAR);
-		client.put(uri.toString(), null, null);
+		client.put(uri.toString());
 	}
 
 	/**

@@ -10,20 +10,50 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.GistChangeStatus;
 import org.eclipse.egit.github.core.GistRevision;
+import org.eclipse.egit.github.core.User;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Unit tests of {@link GistRevision}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class GistRevisionTest {
+
+	/**
+	 * Test default state of gist revision
+	 */
+	@Test
+	public void defaultState() {
+		GistRevision revision = new GistRevision();
+		assertNull(revision.getChangeStatus());
+		assertNull(revision.getCommittedAt());
+		assertNull(revision.getUrl());
+		assertNull(revision.getUser());
+		assertNull(revision.getVersion());
+	}
+
+	/**
+	 * Test updating fields of a gist revision
+	 */
+	@Test
+	public void updateFields() {
+		GistRevision revision = new GistRevision();
+		GistChangeStatus status = new GistChangeStatus();
+		assertEquals(status, revision.setChangeStatus(status).getChangeStatus());
+		assertEquals(new Date(5000), revision.setCommittedAt(new Date(5000))
+				.getCommittedAt());
+		assertEquals("url", revision.setUrl("url").getUrl());
+		User user = new User().setLogin("testuser");
+		assertEquals(user, revision.setUser(user).getUser());
+		assertEquals("abc", revision.setVersion("abc").getVersion());
+	}
 
 	/**
 	 * Test non-mutable committed at date
@@ -31,8 +61,11 @@ public class GistRevisionTest {
 	@Test
 	public void getCreatedAReferenceMutableObject() {
 		GistRevision gistRevision = new GistRevision();
-		gistRevision.setCommittedAt(new Date(10000));
+		Date date = new Date(10000);
+		gistRevision.setCommittedAt(date);
 		gistRevision.getCommittedAt().setTime(0);
 		assertTrue(gistRevision.getCommittedAt().getTime() != 0);
+		date.setTime(1000);
+		assertEquals(10000, gistRevision.getCommittedAt().getTime());
 	}
 }
