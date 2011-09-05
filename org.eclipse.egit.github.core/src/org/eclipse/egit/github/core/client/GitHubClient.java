@@ -221,7 +221,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Update credential on http client credentials provider
+	 * Update credential on HTTP client credentials provider
 	 *
 	 * @param user
 	 * @param password
@@ -279,7 +279,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Parse json to specified type
+	 * Parse JSON to specified type
 	 *
 	 * @param <V>
 	 * @param response
@@ -429,7 +429,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Get response stream from uri. It is the responsibility of the calling
+	 * Get response stream from URI. It is the responsibility of the calling
 	 * method to close the returned stream.
 	 *
 	 * @param request
@@ -471,7 +471,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Send json using specified method
+	 * Send JSON using specified method
 	 *
 	 * @param <V>
 	 * @param method
@@ -499,7 +499,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Post data to uri
+	 * Post data to URI
 	 *
 	 * @param <V>
 	 * @param uri
@@ -513,7 +513,17 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Put data to uri
+	 * Post to URI
+	 *
+	 * @param uri
+	 * @throws IOException
+	 */
+	public void post(String uri) throws IOException {
+		post(uri, null, null);
+	}
+
+	/**
+	 * Put data to URI
 	 *
 	 * @param <V>
 	 * @param uri
@@ -524,6 +534,16 @@ public class GitHubClient {
 	 */
 	public <V> V put(String uri, Object params, Type type) throws IOException {
 		return sendJson(createPut(uri), params, type);
+	}
+
+	/**
+	 * Put to URI
+	 *
+	 * @param uri
+	 * @throws IOException
+	 */
+	public void put(String uri) throws IOException {
+		put(uri, null, null);
 	}
 
 	/**
