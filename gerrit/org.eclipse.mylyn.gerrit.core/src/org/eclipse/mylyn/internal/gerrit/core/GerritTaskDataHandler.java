@@ -140,14 +140,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 
 		updateTaskData(repository, data, new ChangeInfo(change));
-		setAttributeValue(data, schema.CHANGE_ID, change.getKey().get());
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
 		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
 		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
 		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
-		if (change.getStatus() != null && change.getStatus().isClosed()) {
-			setAttributeValue(data, schema.COMPLETED, dateToString(change.getLastUpdatedOn()));
-		}
 		int i = 1;
 		String accountName = repository.getUserName();
 		for (ChangeMessage message : changeDetail.getMessages()) {
@@ -187,6 +183,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
 		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
 		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getLastUpdatedOn()));
+		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getKey().get());
+		if (changeInfo.getStatus() != null && changeInfo.getStatus().isClosed()) {
+			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getLastUpdatedOn()));
+		}
 	}
 
 	/**
