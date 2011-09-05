@@ -102,10 +102,6 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return createClient(repository);
 	}
 
-	public GerritConfig getConfig(final TaskRepository repository) {
-		return GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
-	}
-
 	@Override
 	public String getConnectorKind() {
 		return CONNECTOR_KIND;
@@ -245,7 +241,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	private GerritClient createClient(final TaskRepository repository) {
-		GerritConfig config = getConfig(repository);
+		GerritConfig config = GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
 		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config) {
 			@Override
 			protected void configurationChanged(GerritConfig config) {

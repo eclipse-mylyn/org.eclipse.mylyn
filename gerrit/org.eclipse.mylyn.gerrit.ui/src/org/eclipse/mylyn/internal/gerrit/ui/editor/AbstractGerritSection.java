@@ -71,7 +71,8 @@ public abstract class AbstractGerritSection extends AbstractTaskEditorSection {
 
 	protected GerritConfig getConfig() {
 		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getTaskData().getConnectorKind());
-		return connector.getConfig(getTaskEditorPage().getTaskRepository());
+		GerritClient client = connector.getClient(getTaskEditorPage().getTaskRepository());
+		return client.getConfig();
 	}
 
 }

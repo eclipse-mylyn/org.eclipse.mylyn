@@ -333,9 +333,9 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {
-		String gerritGitHost = getHostFromUrl(getGerritGitUrl());
+		String gerritHost = getHostFromUrl(getGerritUrl());
 		String gerritProject = getGerritProject(changeDetail);
-		Repository repository = findGitRepository(gerritGitHost, gerritProject);
+		Repository repository = findGitRepository(gerritHost, gerritProject);
 		if (repository != null) {
 			String refName = patchSetDetail.getPatchSet().getRefName();
 			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(repository, refName);
@@ -344,7 +344,7 @@ public class PatchSetSection extends AbstractGerritSection {
 			wizardDialog.open();
 		} else {
 			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
-			String reason = "No remote config found that has fetch URL with host '" + gerritGitHost
+			String reason = "No remote config found that has fetch URL with host '" + gerritHost
 					+ "' and path matching '" + gerritProject + "'";
 			GerritCorePlugin.logError(message, null);
 			ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
@@ -352,10 +352,10 @@ public class PatchSetSection extends AbstractGerritSection {
 		}
 	}
 
-	protected Repository findGitRepository(String gerritGitHost, String gerritProject) {
+	protected Repository findGitRepository(String gerritHost, String gerritProject) {
 		try {
-			if (gerritGitHost != null && gerritProject != null) {
-				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritGitHost,
+			if (gerritHost != null && gerritProject != null) {
+				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritHost,
 						gerritProject);
 				return mapper.findRepository();
 			}
@@ -369,9 +369,22 @@ public class PatchSetSection extends AbstractGerritSection {
 		return changeDetail.getChange().getProject().get();
 	}
 
-	private String getGerritGitUrl() {
+	private String getGerritUrl() {
+		String gitDaemonUrl = getGitDeamonUrl();
+		if (gitDaemonUrl != null && !gitDaemonUrl.isEmpty()) {
+			return getConfig().getGitDaemonUrl();
+		} else {
+			return getTaskEditorPage().getTaskRepository().getRepositoryUrl();
+		}
+	}
+
+	private String getGitDeamonUrl() {
 		GerritConfig config = getConfig();
-		return config.getGitDaemonUrl();
+		if (config != null) {
+			return config.getGitDaemonUrl();
+		} else {
+			return null;
+		}
 	}
 
 	private String getHostFromUrl(String url) {
