@@ -10,17 +10,59 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.User;
 import org.junit.Test;
 
 /**
  * Unit tests of {@link Milestone}
  */
 public class MilestoneTest {
+
+	/**
+	 * Test default state of milestone
+	 */
+	@Test
+	public void defaultState() {
+		Milestone milestone = new Milestone();
+		assertEquals(0, milestone.getClosedIssues());
+		assertNull(milestone.getCreatedAt());
+		assertNull(milestone.getCreator());
+		assertNull(milestone.getDescription());
+		assertNull(milestone.getDueOn());
+		assertEquals(0, milestone.getNumber());
+		assertEquals(0, milestone.getOpenIssues());
+		assertNull(milestone.getState());
+		assertNull(milestone.getTitle());
+		assertNull(milestone.getUrl());
+	}
+
+	/**
+	 * Test updating milestone fields
+	 */
+	@Test
+	public void updateFields() {
+		Milestone milestone = new Milestone();
+		assertEquals(1, milestone.setClosedIssues(1).getClosedIssues());
+		assertEquals(new Date(10000), milestone.setCreatedAt(new Date(10000))
+				.getCreatedAt());
+		User creator = new User().setLogin("creator");
+		assertEquals(creator, milestone.setCreator(creator).getCreator());
+		assertEquals("desc", milestone.setDescription("desc").getDescription());
+		assertEquals(new Date(20000), milestone.setDueOn(new Date(20000))
+				.getDueOn());
+		assertEquals(4, milestone.setNumber(4).getNumber());
+		assertEquals(10, milestone.setOpenIssues(10).getOpenIssues());
+		assertEquals("state", milestone.setState("state").getState());
+		assertEquals("title", milestone.setTitle("title").getTitle());
+		assertEquals("url", milestone.setUrl("url").getUrl());
+	}
 
 	/**
 	 * Test non-mutable created at date

@@ -61,10 +61,7 @@ public class MilestoneService extends GitHubService {
 	 */
 	public List<Milestone> getMilestones(String user, String repository,
 			String state) throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -92,10 +89,7 @@ public class MilestoneService extends GitHubService {
 	 */
 	public Milestone createMilestone(String user, String repository,
 			Milestone milestone) throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (milestone == null)
 			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
 
@@ -135,12 +129,11 @@ public class MilestoneService extends GitHubService {
 	 */
 	public Milestone getMilestone(String user, String repository, String number)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (number == null)
 			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+		if (number.length() == 0)
+			throw new IllegalArgumentException("Milestone cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -175,12 +168,11 @@ public class MilestoneService extends GitHubService {
 	 */
 	public void deleteMilestone(String user, String repository, String milestone)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (milestone == null)
 			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+		if (milestone.length() == 0)
+			throw new IllegalArgumentException("Milestone cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
