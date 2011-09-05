@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 
+import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -60,6 +62,14 @@ public class MilestoneServiceTest {
 	}
 
 	/**
+	 * Create service using default constructor
+	 */
+	@Test
+	public void defaultConstructor() {
+		assertNotNull(new MilestoneService().getClient());
+	}
+
+	/**
 	 * Get milestones with null user
 	 *
 	 * @throws IOException
@@ -70,6 +80,16 @@ public class MilestoneServiceTest {
 	}
 
 	/**
+	 * Get milestones with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestonesEmptyUser() throws IOException {
+		milestoneService.getMilestones("", "not null", "not null");
+	}
+
+	/**
 	 * Get milestones with null repository name
 	 *
 	 * @throws IOException
@@ -77,6 +97,16 @@ public class MilestoneServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getMilestonesNullRepositoryName() throws IOException {
 		milestoneService.getMilestones("not null", null, "not null");
+	}
+
+	/**
+	 * Get milestones with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestonesEmptyRepositoryName() throws IOException {
+		milestoneService.getMilestones("not null", "", "not null");
 	}
 
 	/**
@@ -102,6 +132,213 @@ public class MilestoneServiceTest {
 		milestoneService.getMilestones("mu", "mr", "open");
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/mu/mr/milestones?state=open"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Create milestone with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createMilestoneNullUser() throws IOException {
+		milestoneService.createMilestone(null, "repo", new Milestone());
+	}
+
+	/**
+	 * Create milestone with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createMilestoneEmptyUser() throws IOException {
+		milestoneService.createMilestone("", "repo", new Milestone());
+	}
+
+	/**
+	 * Create milestone with null repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createMilestoneNullRepositoryName() throws IOException {
+		milestoneService.createMilestone("user", null, new Milestone());
+	}
+
+	/**
+	 * Create milestone with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createMilestoneEmptyRepositoryName() throws IOException {
+		milestoneService.createMilestone("user", "", new Milestone());
+	}
+
+	/**
+	 * Create milestone with null milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createMilestoneNullMilestone() throws IOException {
+		milestoneService.createMilestone("user", "repo", null);
+	}
+
+	/**
+	 * Create valid milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createMilestone() throws IOException {
+		Milestone milestone = new Milestone();
+		milestoneService.createMilestone("user", "repo", milestone);
+		verify(gitHubClient).post("/repos/user/repo/milestones", milestone,
+				Milestone.class);
+	}
+
+	/**
+	 * Delete milestone with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneNullUser() throws IOException {
+		milestoneService.deleteMilestone(null, "repo", 1);
+	}
+
+	/**
+	 * Delete milestone with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneEmptyUser() throws IOException {
+		milestoneService.deleteMilestone("", "repo", 2);
+	}
+
+	/**
+	 * Delete milestone with null repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneNullRepositoryName() throws IOException {
+		milestoneService.deleteMilestone("user", null, 3);
+	}
+
+	/**
+	 * Delete milestone with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneEmptyRepositoryName() throws IOException {
+		milestoneService.deleteMilestone("user", "", 4);
+	}
+
+	/**
+	 * Delete milestone with null milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneNullMilestone() throws IOException {
+		milestoneService.deleteMilestone("user", "repo", null);
+	}
+
+	/**
+	 * Delete milestone with empty milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteMilestoneEmptyMilestone() throws IOException {
+		milestoneService.deleteMilestone("user", "repo", "");
+	}
+
+	/**
+	 * Delete valid milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteMilestone() throws IOException {
+		milestoneService.deleteMilestone("user", "repo", 40);
+		verify(gitHubClient).delete("/repos/user/repo/milestones/40");
+	}
+
+	/**
+	 * Get milestone with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneNullUser() throws IOException {
+		milestoneService.getMilestone(null, "repo", 1);
+	}
+
+	/**
+	 * Get milestone with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneEmptyUser() throws IOException {
+		milestoneService.getMilestone("", "repo", 2);
+	}
+
+	/**
+	 * Get milestone with null repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneNullRepositoryName() throws IOException {
+		milestoneService.getMilestone("user", null, 3);
+	}
+
+	/**
+	 * Get milestone with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneEmptyRepositoryName() throws IOException {
+		milestoneService.getMilestone("user", "", 4);
+	}
+
+	/**
+	 * Get milestone with null id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneNullId() throws IOException {
+		milestoneService.getMilestone("user", "repo", null);
+	}
+
+	/**
+	 * Get milestone with empty id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getMilestoneEmptyId() throws IOException {
+		milestoneService.getMilestone("user", "repo", "");
+	}
+
+	/**
+	 * Get milestone with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getMilestone() throws IOException {
+		milestoneService.getMilestone("user", "repo", 15);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/milestones/15");
 		verify(gitHubClient).get(request);
 	}
 }
