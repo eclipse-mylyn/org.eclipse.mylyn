@@ -38,6 +38,8 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private Button myChangesButton;
 
+	private Button watchedChangesButton;
+
 	private Button allOpenChangesButton;
 
 	private Button byProjectButton;
@@ -86,12 +88,18 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		Label typeLabel = new Label(control, SWT.NONE);
 		typeLabel.setText("Query type:");
+
 		// radio button to select query type
 		myChangesButton = new Button(control, SWT.RADIO);
 		myChangesButton.setText("My changes");
 		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		gd2.horizontalSpan = 2;
 		myChangesButton.setLayoutData(gd2);
+
+		new Label(control, SWT.NONE);
+		watchedChangesButton = new Button(control, SWT.RADIO);
+		watchedChangesButton.setText("My watched changes");
+		watchedChangesButton.setLayoutData(gd2);
 
 		new Label(control, SWT.NONE);
 		allOpenChangesButton = new Button(control, SWT.RADIO);
@@ -112,6 +120,8 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 			if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				myChangesButton.setSelection(true);
+			} else if (GerritQuery.MY_WATCHED_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
+				watchedChangesButton.setSelection(true);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				byProjectButton.setSelection(true);
 			} else {
@@ -160,6 +170,8 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		query.setSummary(getTitleText());
 		if (myChangesButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_CHANGES);
+		} else if (watchedChangesButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_WATCHED_CHANGES);
 		} else if (byProjectButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
 		} else {

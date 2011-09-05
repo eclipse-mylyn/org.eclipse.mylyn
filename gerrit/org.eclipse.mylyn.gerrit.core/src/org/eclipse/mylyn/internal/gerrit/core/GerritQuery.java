@@ -29,6 +29,11 @@ public class GerritQuery {
 	public static final String MY_CHANGES = "my changes";
 
 	/**
+	 * query type: my watched changes
+	 */
+	public static final String MY_WATCHED_CHANGES = "my watched changes";
+
+	/**
 	 * query type: all open changes
 	 */
 	public static final String ALL_OPEN_CHANGES = "all open changes";

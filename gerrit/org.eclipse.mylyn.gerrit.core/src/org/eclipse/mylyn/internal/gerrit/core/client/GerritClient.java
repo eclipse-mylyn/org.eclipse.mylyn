@@ -486,6 +486,13 @@ public class GerritClient {
 	}
 
 	/**
+	 * Returns watched changes of the currently logged in user
+	 */
+	public List<ChangeInfo> queryWatchedReviews(IProgressMonitor monitor) throws GerritException {
+		return executeQuery(monitor, "is:watched status:open"); //$NON-NLS-1$
+	}
+
+	/**
 	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
 	 * portion of the page.
 	 */
