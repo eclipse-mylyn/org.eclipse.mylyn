@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -62,6 +63,14 @@ public class LabelServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void constructorNullArgument() {
 		new LabelService(null);
+	}
+
+	/**
+	 * Create label service using default constructor
+	 */
+	@Test
+	public void defaultConstuctor() {
+		assertNotNull(new LabelService().getClient());
 	}
 
 	/**
@@ -127,6 +136,17 @@ public class LabelServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void setLabelsNullIssueId() throws IOException {
 		labelService.setLabels("not null", "not null", null,
+				new LinkedList<Label>());
+	}
+
+	/**
+	 * Set labels with empty issue id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void setLabelsEmptyIssueId() throws IOException {
+		labelService.setLabels("not null", "not null", "",
 				new LinkedList<Label>());
 	}
 
@@ -202,5 +222,149 @@ public class LabelServiceTest {
 		labelService.createLabel("test_user", "test_repository", label);
 		verify(gitHubClient).post("/repos/test_user/test_repository/labels",
 				label, Label.class);
+	}
+
+	/**
+	 * Delete label with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteNullUser() throws IOException {
+		labelService.deleteLabel(null, "repo", "label");
+	}
+
+	/**
+	 * Delete label with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteEmptyUser() throws IOException {
+		labelService.deleteLabel("", "repo", "label");
+	}
+
+	/**
+	 * Delete label with null repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteNullRepositoryName() throws IOException {
+		labelService.deleteLabel("user", null, "label");
+	}
+
+	/**
+	 * Delete label with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteEmptyRepositoryName() throws IOException {
+		labelService.deleteLabel("user", "", "label");
+	}
+
+	/**
+	 * Delete label with null name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteNullLabel() throws IOException {
+		labelService.deleteLabel("user", "repo", null);
+	}
+
+	/**
+	 * Delete label with empty name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteEmptyLabel() throws IOException {
+		labelService.deleteLabel("user", "repo", "");
+	}
+
+	/**
+	 * Get label with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteLabel() throws IOException {
+		labelService.deleteLabel("user", "repo", "label");
+		verify(gitHubClient).delete("/repos/user/repo/labels/label");
+	}
+
+	/**
+	 * Get label with null user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getNullUser() throws IOException {
+		labelService.getLabel(null, "repo", "label");
+	}
+
+	/**
+	 * Get label with empty user
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getEmptyUser() throws IOException {
+		labelService.getLabel("", "repo", "label");
+	}
+
+	/**
+	 * Get label with null repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getNullRepositoryName() throws IOException {
+		labelService.getLabel("user", null, "label");
+	}
+
+	/**
+	 * Get label with empty repository name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getEmptyRepositoryName() throws IOException {
+		labelService.getLabel("user", "", "label");
+	}
+
+	/**
+	 * Get label with null name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getNullLabel() throws IOException {
+		labelService.getLabel("user", "repo", null);
+	}
+
+	/**
+	 * Get label with empty name
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getEmptyLabel() throws IOException {
+		labelService.getLabel("user", "repo", "");
+	}
+
+	/**
+	 * Get label with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getLabel() throws IOException {
+		labelService.getLabel("user", "repo", "bugs");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/labels/bugs");
+		verify(gitHubClient).get(request);
 	}
 }
