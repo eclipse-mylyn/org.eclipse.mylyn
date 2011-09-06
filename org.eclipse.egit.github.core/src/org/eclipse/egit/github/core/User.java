@@ -436,5 +436,4 @@ public class User implements Serializable {
 		this.plan = plan;
 		return this;
 	}
-
 }

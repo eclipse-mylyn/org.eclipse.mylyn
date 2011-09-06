@@ -11,6 +11,7 @@
 package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -50,6 +51,7 @@ public class IssueTest {
 		assertNull(issue.getUpdatedAt());
 		assertNull(issue.getUrl());
 		assertNull(issue.getUser());
+		assertNotNull(issue.toString());
 	}
 
 	/**
@@ -81,6 +83,7 @@ public class IssueTest {
 		assertEquals("url", issue.setUrl("url").getUrl());
 		User user = new User().setLogin("user");
 		assertEquals(user, issue.setUser(user).getUser());
+		assertNull(issue.setLabels(null).getLabels());
 	}
 
 	/**

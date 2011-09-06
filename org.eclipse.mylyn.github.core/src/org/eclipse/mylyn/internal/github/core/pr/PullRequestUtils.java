@@ -18,6 +18,7 @@ import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
+import org.eclipse.egit.github.core.util.UrlUtils;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
@@ -39,7 +40,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get destination ref spec
-	 * 
+	 *
 	 * @param remote
 	 * @return ref spec
 	 */
@@ -49,7 +50,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get branch name for pull request
-	 * 
+	 *
 	 * @param request
 	 * @return non-null/non-empty branch name
 	 */
@@ -59,7 +60,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get Git repository for pull request
-	 * 
+	 *
 	 * @param request
 	 * @return repository or null if none found
 	 */
@@ -90,7 +91,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Configure pull request topic branch to use head remote
-	 * 
+	 *
 	 * @param repo
 	 * @param request
 	 * @throws IOException
@@ -110,7 +111,7 @@ public abstract class PullRequestUtils {
 	/**
 	 * Are the given pull request's source and destination repositories the
 	 * same?
-	 * 
+	 *
 	 * @param request
 	 * @return true if same, false otherwise
 	 */
@@ -121,7 +122,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get remote for given pull request
-	 * 
+	 *
 	 * @param repo
 	 * @param request
 	 * @return remote config
@@ -135,7 +136,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get remote config with given name
-	 * 
+	 *
 	 * @param repo
 	 * @param name
 	 * @return remote config
@@ -152,7 +153,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Add remote for the head of a pull request if it doesn't exist
-	 * 
+	 *
 	 * @param repo
 	 * @param request
 	 * @return remote configuration
@@ -170,14 +171,12 @@ public abstract class PullRequestUtils {
 				.getRepo();
 		remote = new RemoteConfig(config, head.getOwner().getLogin());
 		if (head.isPrivate())
-			remote.addURI(new URIish(org.eclipse.egit.github.core.Repository
-					.createRemoteSshUrl(head)));
+			remote.addURI(new URIish(UrlUtils.createRemoteSshUrl(head)));
 		else
-			remote.addURI(new URIish(org.eclipse.egit.github.core.Repository
-					.createRemoteReadOnlyUrl(head)));
+			remote.addURI(new URIish(UrlUtils.createRemoteReadOnlyUrl(head)));
 
 		remote.addFetchRefSpec(new RefSpec(HEAD_SOURCE
-				+ ":" + getDesintationRef(remote))); //$NON-NLS-1$ 
+				+ ":" + getDesintationRef(remote))); //$NON-NLS-1$
 		remote.update(config);
 		config.save();
 		return remote;
@@ -185,7 +184,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Is given branch name the currently checked out branch?
-	 * 
+	 *
 	 * @param name
 	 * @param repo
 	 * @return true if checked out branch, false otherwise
@@ -200,7 +199,7 @@ public abstract class PullRequestUtils {
 
 	/**
 	 * Get head branch ref for outside repository pull requests
-	 * 
+	 *
 	 * @param request
 	 * @return remote head branch ref name
 	 */

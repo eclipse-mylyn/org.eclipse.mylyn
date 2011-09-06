@@ -13,70 +13,17 @@ package org.eclipse.egit.github.core;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 
+import org.eclipse.egit.github.core.util.DateUtils;
+
 /**
- * GitHub Repository class.
+ * GitHub v2 repository model class.
  */
 public class SearchRepository implements IRepositoryIdProvider, Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 978627174722864632L;
-
-	/**
-	 * Create repository from url.
-	 *
-	 * @see SearchRepository#createFromId(String)
-	 * @param url
-	 * @return repository or null if parsing fails
-	 */
-	public static SearchRepository createFromUrl(URL url) {
-		return url != null ? createFromId(url.getPath()) : null;
-	}
-
-	/**
-	 * Create repository from id. The id is split on the '/' character and the
-	 * last two non-empty segments are interpreted to be the repository owner
-	 * and name.
-	 *
-	 * @param id
-	 * @return repository
-	 */
-	public static SearchRepository createFromId(String id) {
-		if (id == null)
-			return null;
-		String owner = null;
-		String name = null;
-		String[] segments = id.split("/"); //$NON-NLS-1$
-		for (int i = segments.length - 1; i >= 0; i--)
-			if (segments[i].length() > 0)
-				if (name == null)
-					name = segments[i];
-				else if (owner == null)
-					owner = segments[i];
-				else
-					break;
-
-		return owner != null && name != null ? new SearchRepository(owner, name)
-				: null;
-	}
-
-	/**
-	 * Create from string url
-	 *
-	 * @see SearchRepository#createFromUrl(URL)
-	 * @param url
-	 * @return repository or null if it could not be parsed from url path
-	 */
-	public static SearchRepository createFromUrl(String url) {
-		try {
-			return url != null ? createFromUrl(new URL(url)) : null;
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
 
 	private boolean fork;
 	private boolean hasDownloads;
@@ -177,15 +124,6 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
-	 * @param name
-	 * @return this repository
-	 */
-	public SearchRepository setName(String name) {
-		this.name = name;
-		return this;
-	}
-
-	/**
 	 * @return fork
 	 */
 	public boolean isFork() {
@@ -221,26 +159,17 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
-	 * @param isPrivate
-	 * @return this repository
-	 */
-	public SearchRepository setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
-		return this;
-	}
-
-	/**
 	 * @return createdAt
 	 */
 	public Date getCreatedAt() {
-		return createdAt != null ? new Date(createdAt.getTime()) : null;
+		return DateUtils.clone(createdAt);
 	}
 
 	/**
 	 * @return pushedAt
 	 */
 	public Date getPushedAt() {
-		return pushedAt != null ? new Date(pushedAt.getTime()) : null;
+		return DateUtils.clone(pushedAt);
 	}
 
 	/**
@@ -251,28 +180,10 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
-	 * @param description
-	 * @return this repository
-	 */
-	public SearchRepository setDescription(String description) {
-		this.description = description;
-		return this;
-	}
-
-	/**
 	 * @return homepage
 	 */
 	public String getHomepage() {
 		return homepage;
-	}
-
-	/**
-	 * @param homepage
-	 * @return this repository
-	 */
-	public SearchRepository setHomepage(String homepage) {
-		this.homepage = homepage;
-		return this;
 	}
 
 	/**
