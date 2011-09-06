@@ -39,7 +39,9 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * Dialog to show the contents of an html page to the user
  * 
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.WebBrowserDialog} instead
  */
+@Deprecated
 public class WebBrowserDialog extends MessageDialog {
 
 	private String data = null;
