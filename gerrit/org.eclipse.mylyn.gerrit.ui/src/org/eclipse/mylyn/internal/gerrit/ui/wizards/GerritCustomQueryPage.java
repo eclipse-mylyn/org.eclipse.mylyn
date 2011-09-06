@@ -7,6 +7,7 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 

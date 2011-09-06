@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Jan Lohre (SAP) - improvements
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;

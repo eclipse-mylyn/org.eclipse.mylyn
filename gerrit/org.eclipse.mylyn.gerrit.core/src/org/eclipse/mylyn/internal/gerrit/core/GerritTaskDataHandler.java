@@ -9,6 +9,7 @@
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
  *      GitHub, Inc. - fixes for bug 354753
+ *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
