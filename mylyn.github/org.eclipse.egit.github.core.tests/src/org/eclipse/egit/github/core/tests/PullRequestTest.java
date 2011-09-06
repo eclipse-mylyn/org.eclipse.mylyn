@@ -10,17 +10,98 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.PullRequestMarker;
+import org.eclipse.egit.github.core.User;
 import org.junit.Test;
 
 /**
  * Unit tests of {@link PullRequest}
  */
 public class PullRequestTest {
+
+	/**
+	 * Test default state of pull request
+	 */
+	@Test
+	public void defaultState() {
+		PullRequest request = new PullRequest();
+		assertFalse(request.isMergeable());
+		assertFalse(request.isMerged());
+		assertEquals(0, request.getAdditions());
+		assertNull(request.getBase());
+		assertNull(request.getBody());
+		assertEquals(0, request.getChangedFiles());
+		assertNull(request.getClosedAt());
+		assertEquals(0, request.getComments());
+		assertEquals(0, request.getCommits());
+		assertNull(request.getCreatedAt());
+		assertEquals(0, request.getDeletions());
+		assertNull(request.getDiffUrl());
+		assertNull(request.getHead());
+		assertNull(request.getHtmlUrl());
+		assertNull(request.getIssueUrl());
+		assertNull(request.getMergedAt());
+		assertNull(request.getMergedBy());
+		assertEquals(0, request.getNumber());
+		assertNull(request.getPatchUrl());
+		assertNull(request.getState());
+		assertNull(request.getTitle());
+		assertNull(request.getUpdatedAt());
+		assertNull(request.getUrl());
+		assertNull(request.getUser());
+		assertNotNull(request.toString());
+	}
+
+	/**
+	 * Test updating pull request fields
+	 */
+	@Test
+	public void updateFields() {
+		PullRequest request = new PullRequest();
+		assertTrue(request.setMerged(true).isMerged());
+		assertTrue(request.setMergeable(true).isMergeable());
+		assertEquals(15, request.setAdditions(15).getAdditions());
+		PullRequestMarker base = new PullRequestMarker();
+		assertEquals(base, request.setBase(base).getBase());
+		assertEquals("a pr", request.setBody("a pr").getBody());
+		assertEquals(20, request.setChangedFiles(20).getChangedFiles());
+		assertEquals(new Date(1000), request.setClosedAt(new Date(1000))
+				.getClosedAt());
+		assertEquals(30, request.setComments(30).getComments());
+		assertEquals(40, request.setCommits(40).getCommits());
+		assertEquals(new Date(2000), request.setCreatedAt(new Date(2000))
+				.getCreatedAt());
+		assertEquals(50, request.setDeletions(50).getDeletions());
+		assertEquals("/diff/url", request.setDiffUrl("/diff/url").getDiffUrl());
+		PullRequestMarker head = new PullRequestMarker();
+		assertEquals(head, request.setHead(head).getHead());
+		assertEquals("/html/url", request.setHtmlUrl("/html/url").getHtmlUrl());
+		assertEquals("/issue/url", request.setIssueUrl("/issue/url")
+				.getIssueUrl());
+		assertEquals(new Date(3000), request.setMergedAt(new Date(3000))
+				.getMergedAt());
+		User merge = new User().setLogin("merge user");
+		assertEquals(merge, request.setMergedBy(merge).getMergedBy());
+		assertEquals(60, request.setNumber(60).getNumber());
+		assertEquals("/patch/url", request.setPatchUrl("/patch/url")
+				.getPatchUrl());
+		assertEquals("open", request.setState("open").getState());
+		assertEquals("pull title", request.setTitle("pull title").getTitle());
+		assertEquals(new Date(4000), request.setUpdatedAt(new Date(4000))
+				.getUpdatedAt());
+		assertEquals("/url", request.setUrl("/url").getUrl());
+		User user = new User().setLogin("cuser");
+		assertEquals(user, request.setUser(user).getUser());
+	}
 
 	/**
 	 * Test non-mutable created at date

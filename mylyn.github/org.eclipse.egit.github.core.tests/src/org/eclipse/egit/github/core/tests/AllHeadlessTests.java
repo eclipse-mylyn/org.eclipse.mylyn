@@ -20,15 +20,24 @@ import org.junit.runners.Suite.SuiteClasses;
  * All headless unit tests of GitHub Java API
  */
 @RunWith(Suite.class)
-@SuiteClasses({ CommentTest.class, DateUtilTests.class,
-		EncodingUtilsTest.class, GistChangeStatusTest.class,
-		GistFileTest.class, GistRevisionTest.class, GistServiceTest.class,
-		GistTest.class, GitHubClientTest.class, IssueServiceTest.class,
-		IssueTest.class, LabelComparatorTest.class, LabelServiceTest.class,
-		LabelTest.class, MilestoneComparatorTest.class,
-		MilestoneServiceTest.class, MilestoneTest.class,
+@SuiteClasses({ BlobTest.class, CommentTest.class, CommitCommentTest.class,
+		CommitFileTest.class, CommitTest.class, CommitUserTest.class,
+		DateUtilTests.class, DownloadTest.class, DownloadResourceTest.class,
+		EncodingUtilsTest.class, FieldErrorTest.class,
+		GistChangeStatusTest.class, GistFileTest.class, GistRevisionTest.class,
+		GistServiceTest.class, GistTest.class, GitHubClientTest.class,
+		IdTest.class, IssueServiceTest.class, IssueTest.class, KeyTest.class,
+		LabelComparatorTest.class, LabelServiceTest.class, LabelTest.class,
+		LanguageTest.class, MergeStatusTest.class,
+		MilestoneComparatorTest.class, MilestoneServiceTest.class,
+		MilestoneTest.class, PullRequestMarkerTest.class,
 		PullRequestServiceTest.class, PullRequestTest.class,
-		RepositoryTest.class, RequestErrorTest.class, UrlUtilsTest.class })
+		ReferenceTest.class, RepositoryCommitTest.class,
+		RepositoryIdTest.class, RepositoryTest.class, RequestErrorTest.class,
+		SearchRepositoryTest.class, ShaResourceTest.class, TagTest.class,
+		TeamTest.class, TreeEntryTest.class, TreeTest.class,
+		TypedResourceTest.class, UrlUtilsTest.class, UserPlanTest.class,
+		UserTest.class })
 public class AllHeadlessTests {
 
 }

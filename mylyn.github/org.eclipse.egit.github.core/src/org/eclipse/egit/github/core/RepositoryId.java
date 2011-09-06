@@ -60,38 +60,30 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
-	 * Create from string url
+	 * Create from string URL
 	 *
 	 * @see #createFromUrl(URL)
 	 * @param url
-	 * @return repository or null if it could not be parsed from url path
+	 * @return repository or null if it could not be parsed from URL path
 	 */
 	public static RepositoryId createFromUrl(String url) {
+		if (url == null || url.length() == 0)
+			return null;
 		try {
-			return url != null ? createFromUrl(new URL(url)) : null;
+			return createFromUrl(new URL(url));
 		} catch (MalformedURLException e) {
 			return null;
 		}
 	}
 
 	/**
-	 * Create repository id from given owner and name. This method validates the
-	 * parameters and throws an {@link IllegalArgumentException} if either is
-	 * null or empty.
+	 * Create repository id from given owner and name.
 	 *
 	 * @param owner
 	 * @param name
 	 * @return repository id
 	 */
 	public static RepositoryId create(String owner, String name) {
-		if (owner == null)
-			throw new IllegalArgumentException("Owner cannot be null");
-		if (owner.length() == 0)
-			throw new IllegalArgumentException("Owner cannot be empty");
-		if (name == null)
-			throw new IllegalArgumentException("Name cannot be null");
-		if (name.length() == 0)
-			throw new IllegalArgumentException("Name cannot be empty");
 		return new RepositoryId(owner, name);
 	}
 
@@ -100,14 +92,25 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 	private final String name;
 
 	/**
-	 * Create repository id with given owner and name
+	 * Create repository id with given owner and name. This constructor
+	 * validates the parameters and throws an {@link IllegalArgumentException}
+	 * if either is null or empty.
 	 *
 	 * @param owner
 	 *            must be non-null and non-empty
 	 * @param name
 	 *            must be non-null and non-empty
 	 */
-	public RepositoryId(String owner, String name) {
+	public RepositoryId(final String owner, final String name) {
+		if (owner == null)
+			throw new IllegalArgumentException("Owner cannot be null");
+		if (owner.length() == 0)
+			throw new IllegalArgumentException("Owner cannot be empty");
+		if (name == null)
+			throw new IllegalArgumentException("Name cannot be null");
+		if (name.length() == 0)
+			throw new IllegalArgumentException("Name cannot be empty");
+
 		this.owner = owner;
 		this.name = name;
 	}
@@ -139,11 +142,10 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (obj instanceof RepositoryId) {
-			RepositoryId other = (RepositoryId) obj;
-			return name.equals(other.name) && owner.equals(other.owner);
-		}
-		return false;
+		if (!(obj instanceof RepositoryId))
+			return false;
+		RepositoryId other = (RepositoryId) obj;
+		return name.equals(other.name) && owner.equals(other.owner);
 	}
 
 	@Override

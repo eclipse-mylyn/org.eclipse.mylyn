@@ -11,7 +11,10 @@
 package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.egit.github.core.Label;
 import org.junit.Test;
@@ -41,5 +44,25 @@ public class LabelTest {
 		assertEquals("red", label.setColor("red").getColor());
 		assertEquals("bug", label.setName("bug").getName());
 		assertEquals("url", label.setUrl("url").getUrl());
+	}
+
+	/**
+	 * Test equality of labels
+	 */
+	@Test
+	public void equality() {
+		Label l1 = new Label();
+		assertEquals(l1.hashCode(), l1.hashCode());
+		assertNotNull(l1.toString());
+		Label l2 = new Label().setName("b");
+		assertFalse(l1.equals(l2));
+		l1.setName("a");
+		Label l3 = new Label().setName("a");
+		assertTrue(l1.equals(l1));
+		assertFalse(l1.equals("a"));
+		assertFalse(l1.equals(l2));
+		assertTrue(l1.equals(l3));
+		assertEquals(l1.hashCode(), l3.hashCode());
+		assertEquals(l1.toString(), l3.toString());
 	}
 }

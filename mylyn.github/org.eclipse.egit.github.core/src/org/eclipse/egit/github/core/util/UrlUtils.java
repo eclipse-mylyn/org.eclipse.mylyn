@@ -14,6 +14,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.http.protocol.HTTP;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.client.IGitHubConstants;
 
 /**
  * URL utilities
@@ -22,7 +24,7 @@ public abstract class UrlUtils {
 
 	/**
 	 * Encode given url
-	 * 
+	 *
 	 * @param url
 	 * @return encoded url
 	 */
@@ -34,4 +36,75 @@ public abstract class UrlUtils {
 		}
 	}
 
+	/**
+	 * Create SSH URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @return URL
+	 */
+	public static String createRemoteSshUrl(Repository repository) {
+		return createRemoteSshUrl(repository, IGitHubConstants.HOST_DEFAULT);
+	}
+
+	/**
+	 * Create SSH URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @param host
+	 * @return URL
+	 */
+	public static String createRemoteSshUrl(Repository repository, String host) {
+		return "git@" + host + ":" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
+	}
+
+	/**
+	 * Create HTTPS URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @param user
+	 * @return URL
+	 */
+	public static String createRemoteHttpsUrl(Repository repository, String user) {
+		return createRemoteHttpsUrl(repository, IGitHubConstants.HOST_DEFAULT,
+				user);
+	}
+
+	/**
+	 * Create HTTPS URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @param host
+	 * @param user
+	 * @return URL
+	 */
+	public static String createRemoteHttpsUrl(Repository repository,
+			String host, String user) {
+		return "https://" + user + "@" + host + "/" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
+	}
+
+	/**
+	 * Create read-only URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @return URL
+	 */
+	public static String createRemoteReadOnlyUrl(Repository repository) {
+		return createRemoteReadOnlyUrl(repository,
+				IGitHubConstants.HOST_DEFAULT);
+	}
+
+	/**
+	 * Create read-only URL used for repository remote configs
+	 *
+	 * @param repository
+	 * @param host
+	 * @return URL
+	 */
+	public static String createRemoteReadOnlyUrl(Repository repository,
+			String host) {
+		return "git://" + host + "/" + repository.generateId()
+				+ IGitHubConstants.SUFFIX_GIT;
+	}
 }
