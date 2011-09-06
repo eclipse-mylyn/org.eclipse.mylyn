@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jgit.diff.Edit;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 
+import com.google.gerrit.reviewdb.AuthType;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -125,6 +127,23 @@ public class JSonSupport {
 					public Timestamp deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 							throws JsonParseException {
 						return new JavaSqlTimestamp_JsonSerializer().fromJson(json.getAsString());
+					}
+				})
+				// ignore GerritForge specific AuthType "TEAMFORGE" which is unknown to Gerrit
+				.registerTypeAdapter(AuthType.class, new JsonDeserializer<AuthType>() {
+
+					@Override
+					public AuthType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+							throws JsonParseException {
+						String jsonString = json.getAsString();
+						if (jsonString != null) {
+							try {
+								return AuthType.valueOf(jsonString);
+							} catch (IllegalArgumentException e) {
+								GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
+							}
+						}
+						return null;
 					}
 				})
 				.setExclusionStrategies(exclustionStrategy)
