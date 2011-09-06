@@ -150,6 +150,7 @@ public class GerritHttpClient {
 	}
 
 	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
+		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 		GetMethod method = new GetMethod(getUrl() + serviceUri);
 		try {
 			// Execute the method.
