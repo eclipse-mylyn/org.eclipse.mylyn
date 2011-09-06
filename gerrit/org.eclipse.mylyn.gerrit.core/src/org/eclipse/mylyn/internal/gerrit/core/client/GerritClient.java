@@ -609,7 +609,7 @@ public class GerritClient {
 		}
 	}
 
-	private List<ChangeInfo> executeQuery(IProgressMonitor monitor, final String queryString) throws GerritException {
+	public List<ChangeInfo> executeQuery(IProgressMonitor monitor, final String queryString) throws GerritException {
 		SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {

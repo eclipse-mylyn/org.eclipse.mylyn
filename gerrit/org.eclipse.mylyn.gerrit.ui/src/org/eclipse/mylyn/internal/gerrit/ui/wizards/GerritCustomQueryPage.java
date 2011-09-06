@@ -45,17 +45,14 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private Button byProjectButton;
 
+	private Button customQueryButton;
+
 	private Text titleText;
 
 	private Text projectText;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param repository
-	 * @param pageName
-	 * @param query
-	 */
+	private Text queryText;
+
 	public GerritCustomQueryPage(TaskRepository repository, String pageName, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.query = query;
@@ -115,6 +112,14 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		projectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		projectText.addModifyListener(modifyListener);
 
+		new Label(control, SWT.NONE);
+		customQueryButton = new Button(control, SWT.RADIO);
+		customQueryButton.setText("Custom query");
+
+		queryText = new Text(control, SWT.BORDER);
+		queryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		queryText.addModifyListener(modifyListener);
+
 		if (query != null) {
 			if (titleText != null) {
 				titleText.setText(query.getSummary());
@@ -125,11 +130,16 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 				watchedChangesButton.setSelection(true);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				byProjectButton.setSelection(true);
+			} else if (GerritQuery.CUSTOM.equals(query.getAttribute(GerritQuery.TYPE))) {
+				customQueryButton.setSelection(true);
 			} else {
 				allOpenChangesButton.setSelection(true);
 			}
 			if (query.getAttribute(GerritQuery.PROJECT) != null) {
 				projectText.setText(query.getAttribute(GerritQuery.PROJECT));
+			}
+			if (query.getAttribute(GerritQuery.QUERY_STRING) != null) {
+				queryText.setText(query.getAttribute(GerritQuery.QUERY_STRING));
 			}
 		} else {
 			myChangesButton.setSelection(true);
@@ -139,11 +149,13 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectText.setEnabled(byProjectButton.getSelection());
+				queryText.setEnabled(customQueryButton.getSelection());
 				updateButtons();
 			}
 		};
 		buttonSelectionListener.widgetSelected(null);
 		byProjectButton.addSelectionListener(buttonSelectionListener);
+		customQueryButton.addSelectionListener(buttonSelectionListener);
 
 		setControl(control);
 	}
@@ -161,6 +173,9 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		if (byProjectButton != null && byProjectButton.getSelection()) {
 			ret &= (projectText != null && projectText.getText().length() > 0);
 		}
+		if (customQueryButton != null && customQueryButton.getSelection()) {
+			ret &= (queryText != null && queryText.getText().length() > 0);
+		}
 		return ret;
 	}
 
@@ -175,10 +190,13 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_WATCHED_CHANGES);
 		} else if (byProjectButton.getSelection()) {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
+		} else if (customQueryButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.CUSTOM);
 		} else {
 			query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
 		}
 		query.setAttribute(GerritQuery.PROJECT, projectText.getText());
+		query.setAttribute(GerritQuery.QUERY_STRING, queryText.getText());
 	}
 
 	private String getTitleText() {

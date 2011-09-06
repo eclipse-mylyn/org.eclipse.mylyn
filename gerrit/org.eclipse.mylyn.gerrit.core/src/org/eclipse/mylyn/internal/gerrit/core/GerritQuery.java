@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.core;
 
 /**
- * Constants for the query type. Currently two supported query types: all open changes and all my open changes
+ * Constants for the query type.
  * 
  * @author Mikael Kober
  * @author Thomas Westling
@@ -22,25 +22,25 @@ public class GerritQuery {
 	/**
 	 * Key for the query attribute.
 	 */
-	public static final String TYPE = "gerrit query type";
+	public static final String TYPE = "gerrit query type"; //$NON-NLS-1$
 
 	/**
-	 * query type: my open changes
+	 * Query type: my changes
 	 */
-	public static final String MY_CHANGES = "my changes";
+	public static final String MY_CHANGES = "my changes"; //$NON-NLS-1$
 
 	/**
-	 * query type: my watched changes
+	 * Query type: my watched changes
 	 */
-	public static final String MY_WATCHED_CHANGES = "my watched changes";
+	public static final String MY_WATCHED_CHANGES = "my watched changes"; //$NON-NLS-1$
 
 	/**
-	 * query type: all open changes
+	 * Query type: all open changes
 	 */
-	public static final String ALL_OPEN_CHANGES = "all open changes";
+	public static final String ALL_OPEN_CHANGES = "all open changes"; //$NON-NLS-1$
 
 	/**
-	 * query type: all open changes
+	 * Query type: open changes by project
 	 */
 	public static final String OPEN_CHANGES_BY_PROJECT = "open changes by project"; //$NON-NLS-1$
 
@@ -48,5 +48,15 @@ public class GerritQuery {
 	 * Key for the project attribute
 	 */
 	public static final String PROJECT = "gerrit query project"; //$NON-NLS-1$
+
+	/**
+	 * Query type: custom
+	 */
+	public static final String CUSTOM = "custom"; //$NON-NLS-1$
+
+	/**
+	 * Key for the query string attribute
+	 */
+	public static final String QUERY_STRING = "gerrit query string"; //$NON-NLS-1$
 
 }
