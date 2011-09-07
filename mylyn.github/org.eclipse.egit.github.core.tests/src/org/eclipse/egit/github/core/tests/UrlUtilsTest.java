@@ -13,6 +13,7 @@ package org.eclipse.egit.github.core.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.util.UrlUtils;
 import org.junit.Test;
 
@@ -41,4 +42,33 @@ public class UrlUtilsTest {
 		assertEquals(-1, encoded.indexOf(' '));
 	}
 
+	/**
+	 * Verify generation of HTTPS URL
+	 */
+	@Test
+	public void gererateHttpsUrl() {
+		RepositoryId repo = new RepositoryId("person", "project");
+		assertEquals("https://me@github.com/person/project.git",
+				UrlUtils.createRemoteHttpsUrl(repo, "me"));
+	}
+
+	/**
+	 * Verify generation of SSH URL
+	 */
+	@Test
+	public void gererateSshUrl() {
+		RepositoryId repo = new RepositoryId("person", "project");
+		assertEquals("git@github.com:person/project.git",
+				UrlUtils.createRemoteSshUrl(repo));
+	}
+
+	/**
+	 * Verify generation of read only URL
+	 */
+	@Test
+	public void gererateReadOnlyUrl() {
+		RepositoryId repo = new RepositoryId("person", "project");
+		assertEquals("git://github.com/person/project.git",
+				UrlUtils.createRemoteReadOnlyUrl(repo));
+	}
 }

@@ -10,12 +10,14 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.util;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_DEFAULT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SUFFIX_GIT;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.http.protocol.HTTP;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 
 /**
  * URL utilities
@@ -42,8 +44,8 @@ public abstract class UrlUtils {
 	 * @param repository
 	 * @return URL
 	 */
-	public static String createRemoteSshUrl(Repository repository) {
-		return createRemoteSshUrl(repository, IGitHubConstants.HOST_DEFAULT);
+	public static String createRemoteSshUrl(IRepositoryIdProvider repository) {
+		return createRemoteSshUrl(repository, HOST_DEFAULT);
 	}
 
 	/**
@@ -53,9 +55,9 @@ public abstract class UrlUtils {
 	 * @param host
 	 * @return URL
 	 */
-	public static String createRemoteSshUrl(Repository repository, String host) {
-		return "git@" + host + ":" + repository.generateId()
-				+ IGitHubConstants.SUFFIX_GIT;
+	public static String createRemoteSshUrl(IRepositoryIdProvider repository,
+			String host) {
+		return "git@" + host + ":" + repository.generateId() + SUFFIX_GIT;
 	}
 
 	/**
@@ -65,9 +67,9 @@ public abstract class UrlUtils {
 	 * @param user
 	 * @return URL
 	 */
-	public static String createRemoteHttpsUrl(Repository repository, String user) {
-		return createRemoteHttpsUrl(repository, IGitHubConstants.HOST_DEFAULT,
-				user);
+	public static String createRemoteHttpsUrl(IRepositoryIdProvider repository,
+			String user) {
+		return createRemoteHttpsUrl(repository, HOST_DEFAULT, user);
 	}
 
 	/**
@@ -78,10 +80,10 @@ public abstract class UrlUtils {
 	 * @param user
 	 * @return URL
 	 */
-	public static String createRemoteHttpsUrl(Repository repository,
+	public static String createRemoteHttpsUrl(IRepositoryIdProvider repository,
 			String host, String user) {
 		return "https://" + user + "@" + host + "/" + repository.generateId()
-				+ IGitHubConstants.SUFFIX_GIT;
+				+ SUFFIX_GIT;
 	}
 
 	/**
@@ -90,9 +92,9 @@ public abstract class UrlUtils {
 	 * @param repository
 	 * @return URL
 	 */
-	public static String createRemoteReadOnlyUrl(Repository repository) {
-		return createRemoteReadOnlyUrl(repository,
-				IGitHubConstants.HOST_DEFAULT);
+	public static String createRemoteReadOnlyUrl(
+			IRepositoryIdProvider repository) {
+		return createRemoteReadOnlyUrl(repository, HOST_DEFAULT);
 	}
 
 	/**
@@ -102,9 +104,8 @@ public abstract class UrlUtils {
 	 * @param host
 	 * @return URL
 	 */
-	public static String createRemoteReadOnlyUrl(Repository repository,
-			String host) {
-		return "git://" + host + "/" + repository.generateId()
-				+ IGitHubConstants.SUFFIX_GIT;
+	public static String createRemoteReadOnlyUrl(
+			IRepositoryIdProvider repository, String host) {
+		return "git://" + host + "/" + repository.generateId() + SUFFIX_GIT;
 	}
 }
