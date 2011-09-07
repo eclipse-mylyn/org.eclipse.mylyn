@@ -39,7 +39,7 @@
       <import plugin="org.eclipse.mylyn.commons.identity" version="0.9.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.repositories" version="0.9.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.team" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.ui" version="3.7.0.I20110907" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.7.0.I20110906" match="compatible"/>
       <import plugin="org.apache.commons.codec" version="1.3.0" match="compatible"/>
       <import plugin="org.apache.commons.lang" version="2.3.0" match="compatible"/>
       <import plugin="org.apache.commons.logging" version="1.0.4" match="compatible"/>
