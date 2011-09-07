@@ -63,7 +63,8 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @return label
 	 */
 	public static String getRepositoryLabel(IRepositoryIdProvider repo) {
-		return repo.generateId() + Messages.PullRequestConnector_LabelPullRequests;
+		return repo.generateId()
+				+ Messages.PullRequestConnector_LabelPullRequests;
 	}
 
 	/**
@@ -78,8 +79,7 @@ public class PullRequestConnector extends RepositoryConnector {
 			String username, String password) {
 		String url = PullRequestConnector.appendPulls(GitHub.createGitHubUrl(
 				repo.getOwner().getLogin(), repo.getName()));
-		TaskRepository repository = new TaskRepository(
-				PullRequestConnector.KIND, url);
+		TaskRepository repository = new TaskRepository(KIND, url);
 		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
 				getRepositoryLabel(repo));
 		if (username != null && password != null)

@@ -87,8 +87,7 @@ public class IssueConnector extends RepositoryConnector {
 			String username, String password) {
 		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(),
 				repo.getName());
-		TaskRepository repository = new TaskRepository(
-				PullRequestConnector.KIND, url);
+		TaskRepository repository = new TaskRepository(KIND, url);
 		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL,
 				getRepositoryLabel(repo));
 		if (username != null && password != null)
