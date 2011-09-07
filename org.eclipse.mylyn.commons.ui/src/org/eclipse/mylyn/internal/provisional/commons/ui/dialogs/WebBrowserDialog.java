@@ -18,19 +18,24 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.StatusTextEvent;
+import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -46,6 +51,8 @@ public class WebBrowserDialog extends MessageDialog {
 	private String text;
 
 	private Browser browser;
+
+	private Label statusLabel;
 
 	public WebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
@@ -98,25 +105,37 @@ public class WebBrowserDialog extends MessageDialog {
 
 	@Override
 	public Control createCustomArea(Composite parent) {
-		GridLayout layout = new GridLayout();
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		parent.setLayout(layout);
-		layout.numColumns = 1;
 
-		browser = new Browser(parent, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 1;
-		gd.verticalSpan = 50;
-		browser.setLayoutData(gd);
+		browser = new Browser(parent, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
 
+		statusLabel = new Label(parent, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(statusLabel);
+
+		browser.addStatusTextListener(new StatusTextListener() {
+			public void changed(StatusTextEvent event) {
+				statusLabel.setText((event.text != null) ? event.text : ""); //$NON-NLS-1$
+			}
+		});
 		if (text != null) {
 			browser.setText(text);
 		}
 
+		Dialog.applyDialogFont(parent);
 		return parent;
 	}
 
 	public Browser getBrowser() {
 		return browser;
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		return new Point(500, 500);
 	}
 
 }
