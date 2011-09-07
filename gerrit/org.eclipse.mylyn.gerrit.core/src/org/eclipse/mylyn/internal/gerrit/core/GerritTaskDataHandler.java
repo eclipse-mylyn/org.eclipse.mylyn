@@ -153,7 +153,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				AccountInfo author = changeDetail.getAccounts().get(message.getAuthor());
 				String userName;
 				String id = author.getId().toString();
-				if (id.equals(accountId)) {
+				if (id.equals(accountId) && accountName != null) {
 					userName = accountName;
 				} else {
 					String email = author.getPreferredEmail();
