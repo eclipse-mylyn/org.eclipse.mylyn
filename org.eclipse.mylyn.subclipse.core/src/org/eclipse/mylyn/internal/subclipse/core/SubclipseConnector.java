@@ -484,7 +484,7 @@ public class SubclipseConnector extends ScmConnector {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (IProject iProject : projects) {
 			RepositoryProvider provider = RepositoryProvider.getProvider(iProject);
-			if (getProviderId().equals(provider.getID())) {
+			if (provider != null && getProviderId().equals(provider.getID())) {
 				//found a subclipse project in the work space
 				String folderUrlStr = SVNWorkspaceRoot.getSVNFolderFor(iProject).getUrl().toString();
 				mapSvnFolderToProject.put(folderUrlStr, iProject);
