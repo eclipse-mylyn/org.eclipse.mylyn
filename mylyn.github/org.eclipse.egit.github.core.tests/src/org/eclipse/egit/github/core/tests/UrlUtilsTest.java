@@ -1,0 +1,44 @@
+/******************************************************************************
+ *  Copyright (c) 2011 GitHub Inc.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *****************************************************************************/
+package org.eclipse.egit.github.core.tests;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.eclipse.egit.github.core.util.UrlUtils;
+import org.junit.Test;
+
+/**
+ * Unit tests of {@link UrlUtils}
+ */
+public class UrlUtilsTest {
+
+	/**
+	 * Test default constructor through anonymous sub-class
+	 */
+	@Test
+	public void constructor() {
+		assertNotNull(new UrlUtils() {
+		});
+	}
+
+	/**
+	 * Encode url
+	 */
+	@Test
+	public void encode() {
+		assertEquals("url", UrlUtils.encode("url"));
+		String encoded = UrlUtils.encode("http://test.com/with space");
+		assertNotNull(encoded);
+		assertEquals(-1, encoded.indexOf(' '));
+	}
+
+}
