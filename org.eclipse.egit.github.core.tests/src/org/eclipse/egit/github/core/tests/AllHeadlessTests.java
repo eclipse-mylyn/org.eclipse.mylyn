@@ -20,12 +20,15 @@ import org.junit.runners.Suite.SuiteClasses;
  * All headless unit tests of GitHub Java API
  */
 @RunWith(Suite.class)
-@SuiteClasses({ RepositoryTest.class, PullRequestTest.class, CommentTest.class,
-		GistTest.class, GistRevisionTest.class, IssueTest.class,
-		MilestoneTest.class, GitHubClientTest.class, IssueServiceTest.class,
-		LabelServiceTest.class, MilestoneServiceTest.class,
-		GistServiceTest.class, PullRequestServiceTest.class,
-		RequestErrorTest.class })
+@SuiteClasses({ CommentTest.class, DateUtilTests.class,
+		EncodingUtilsTest.class, GistChangeStatusTest.class,
+		GistFileTest.class, GistRevisionTest.class, GistServiceTest.class,
+		GistTest.class, GitHubClientTest.class, IssueServiceTest.class,
+		IssueTest.class, LabelComparatorTest.class, LabelServiceTest.class,
+		LabelTest.class, MilestoneComparatorTest.class,
+		MilestoneServiceTest.class, MilestoneTest.class,
+		PullRequestServiceTest.class, PullRequestTest.class,
+		RepositoryTest.class, RequestErrorTest.class, UrlUtilsTest.class })
 public class AllHeadlessTests {
 
 }
