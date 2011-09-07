@@ -10,17 +10,78 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.Label;
+import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.User;
 import org.junit.Test;
 
 /**
  * Unit tests of {@link Issue}
  */
 public class IssueTest {
+
+	/**
+	 * Test default state of issue
+	 */
+	@Test
+	public void defaultState() {
+		Issue issue = new Issue();
+		assertNull(issue.getAssignee());
+		assertNull(issue.getBody());
+		assertNull(issue.getClosedAt());
+		assertEquals(0, issue.getComments());
+		assertNull(issue.getCreatedAt());
+		assertNull(issue.getHtmlUrl());
+		assertNull(issue.getLabels());
+		assertNull(issue.getMilestone());
+		assertEquals(0, issue.getNumber());
+		assertNull(issue.getPullRequest());
+		assertNull(issue.getState());
+		assertNull(issue.getTitle());
+		assertNull(issue.getUpdatedAt());
+		assertNull(issue.getUrl());
+		assertNull(issue.getUser());
+	}
+
+	/**
+	 * Test updating issue fields
+	 */
+	@Test
+	public void updateFields() {
+		Issue issue = new Issue();
+		User assignee = new User().setLogin("assignee");
+		assertEquals(assignee, issue.setAssignee(assignee).getAssignee());
+		assertEquals("body", issue.setBody("body").getBody());
+		assertEquals(new Date(1000), issue.setClosedAt(new Date(1000))
+				.getClosedAt());
+		assertEquals(5, issue.setComments(5).getComments());
+		assertEquals(new Date(2000), issue.setCreatedAt(new Date(2000))
+				.getCreatedAt());
+		assertEquals("html", issue.setHtmlUrl("html").getHtmlUrl());
+		assertEquals(new ArrayList<Label>(),
+				issue.setLabels(new ArrayList<Label>()).getLabels());
+		Milestone milestone = new Milestone().setNumber(50);
+		assertEquals(milestone, issue.setMilestone(milestone).getMilestone());
+		assertEquals(123, issue.setNumber(123).getNumber());
+		PullRequest pr = new PullRequest().setNumber(500);
+		assertEquals(pr, issue.setPullRequest(pr).getPullRequest());
+		assertEquals("state", issue.setState("state").getState());
+		assertEquals("title", issue.setTitle("title").getTitle());
+		assertEquals(new Date(3000), issue.setUpdatedAt(new Date(3000))
+				.getUpdatedAt());
+		assertEquals("url", issue.setUrl("url").getUrl());
+		User user = new User().setLogin("user");
+		assertEquals(user, issue.setUser(user).getUser());
+	}
 
 	/**
 	 * Test non-mutable created at date
