@@ -15,7 +15,6 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.UIIcons;
 import org.eclipse.egit.ui.UIUtils;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
@@ -219,10 +218,12 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		fetchCommits = createCommandContributionItem(FetchPullRequestHandler.ID);
 		mergePr = createCommandContributionItem(MergePullRequestHandler.ID);
 		rebasePr = createCommandContributionItem(RebasePullRequestHandler.ID);
-		toolBarManager.add(checkoutPr);
+
+		// Disable actions for now
+		// toolBarManager.add(checkoutPr);
 		toolBarManager.add(fetchCommits);
-		toolBarManager.add(mergePr);
-		toolBarManager.add(rebasePr);
+		// toolBarManager.add(mergePr);
+		// toolBarManager.add(rebasePr);
 	}
 
 	@Override
