@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.7.0.I20110907" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.7.0.I20110906" match="compatible"/>
    </requires>
 
    <plugin
