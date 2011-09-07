@@ -36,6 +36,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 
+import com.google.gerrit.common.auth.SignInMode;
+import com.google.gerrit.common.auth.openid.DiscoveryResult;
+import com.google.gerrit.common.auth.openid.DiscoveryResult.Status;
 import com.google.gerrit.common.auth.userpass.LoginResult;
 
 /**
@@ -94,14 +97,16 @@ public class GerritHttpClient {
 	 */
 	public String postJsonRequest(String serviceUri, JsonEntity entity, IProgressMonitor monitor) throws IOException,
 			GerritException {
+		String openIdProvider = getOpenIdProvider();
+
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
 			if (needsAuthentication()) {
 				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-				if (credentials != null) {
-					authenticate(monitor);
+				if (openIdProvider != null || credentials != null) {
+					authenticate(openIdProvider, monitor);
 				}
 			}
 
@@ -114,7 +119,7 @@ public class GerritHttpClient {
 				WebUtil.releaseConnection(method, monitor);
 				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 					// login or re-authenticate due to an expired session
-					authenticate(monitor);
+					authenticate(openIdProvider, monitor);
 				} else {
 //					System.err.println("Method failed: " + method.getStatusLine() + "\n"
 //							+ method.getResponseBodyAsString());
@@ -173,25 +178,40 @@ public class GerritHttpClient {
 		return url;
 	}
 
-	private void authenticate(IProgressMonitor monitor) throws GerritException, IOException {
+	private void authenticate(String openIdProvider, IProgressMonitor monitor) throws GerritException, IOException {
 		while (true) {
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (credentials == null) {
+			if (openIdProvider == null && credentials == null) {
 				throw new GerritLoginException();
 			}
 
 			// try form based authentication first
-			int code = authenticateForm(credentials, monitor);
-			if (code == -1) {
-				continue;
-			} else if (code == HttpStatus.SC_NOT_FOUND) {
-				code = authenticateService(credentials, monitor);
+			int code;
+			if (openIdProvider != null) {
+				code = authenticateOpenIdService(openIdProvider, credentials, monitor);
+				if (code == -1) {
+					continue;
+				}
+			} else {
+				code = HttpStatus.SC_NOT_FOUND;
+			}
+
+			if (code == HttpStatus.SC_NOT_FOUND) {
+				code = authenticateForm(credentials, monitor);
 				if (code == -1) {
 					continue;
 				} else if (code == HttpStatus.SC_NOT_FOUND) {
-					authenticateTestMode(credentials, monitor);
+					code = authenticateUserPassService(credentials, monitor);
+					if (code == -1) {
+						continue;
+					} else if (code == HttpStatus.SC_NOT_FOUND) {
+						if (code == -1) {
+							authenticateTestMode(credentials, monitor);
+						}
+					}
 				}
 			}
+
 			// Location: http://egit.eclipse.org/r/#SignInFailure,SIGN_IN,Session cookie not available
 			validateAuthenticationState(httpClient);
 
@@ -200,7 +220,74 @@ public class GerritHttpClient {
 		}
 	}
 
-	private int authenticateService(AuthenticationCredentials credentials, IProgressMonitor monitor)
+	private String getOpenIdProvider() {
+		if (location instanceof IOpenIdLocation) {
+			return ((IOpenIdLocation) location).getProviderUrl();
+		}
+		return null;
+	}
+
+	private int authenticateOpenIdService(String openIdProvider, AuthenticationCredentials credentials,
+			IProgressMonitor monitor) throws IOException, GerritException {
+		JSonSupport json = new JSonSupport();
+
+		List<Object> args = new ArrayList<Object>(2);
+		args.add(openIdProvider);
+		args.add(SignInMode.SIGN_IN);
+		args.add(Boolean.TRUE);
+		args.add(""); //$NON-NLS-1$
+		final String request = json.createRequest(getId(), null, "discover", args); //$NON-NLS-1$
+		JsonEntity entity = new JsonEntity() {
+			@Override
+			public String getContent() {
+				return request;
+			}
+		};
+
+		String openIdResponse = null;
+		PostMethod method = postJsonRequestInternal("/gerrit/rpc/OpenIdService", entity, monitor); //$NON-NLS-1$
+		try {
+			int code = method.getStatusCode();
+			if (needsReauthentication(code, monitor)) {
+				return -1;
+			}
+
+			if (code == HttpURLConnection.HTTP_OK) {
+				DiscoveryResult result = json.parseResponse(method.getResponseBodyAsString(), DiscoveryResult.class);
+				if (result.status == Status.VALID) {
+					if (location instanceof IOpenIdLocation) {
+						openIdResponse = ((IOpenIdLocation) location).requestAuthentication(result.providerUrl,
+								result.providerArgs);
+					}
+				} else {
+					return -1;
+				}
+			}
+			if (openIdResponse == null) {
+				return code;
+			}
+		} finally {
+			method.releaseConnection();
+		}
+
+		GetMethod validateMethod = new GetMethod(openIdResponse);
+		try {
+			// Execute the method.
+			WebUtil.execute(httpClient, hostConfiguration, validateMethod, monitor);
+		} catch (IOException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		} catch (RuntimeException e) {
+			WebUtil.releaseConnection(method, monitor);
+			throw e;
+		}
+		if (validateMethod.getStatusCode() == HttpURLConnection.HTTP_OK) {
+			return HttpStatus.SC_TEMPORARY_REDIRECT;
+		}
+		return validateMethod.getStatusCode();
+	}
+
+	private int authenticateUserPassService(AuthenticationCredentials credentials, IProgressMonitor monitor)
 			throws IOException, GerritException {
 		JSonSupport json = new JSonSupport();
 
@@ -330,9 +417,7 @@ public class GerritHttpClient {
 		Cookie[] cookies = httpClient.getState().getCookies();
 		for (Cookie cookie : cookies) {
 			if (LOGIN_COOKIE_NAME.equals(cookie.getName())) {
-				synchronized (this) {
-					xsrfCookie = cookie;
-				}
+				setXsrfCookie(cookie);
 				return;
 			}
 		}
@@ -344,8 +429,27 @@ public class GerritHttpClient {
 		throw new GerritLoginException();
 	}
 
+	protected void sessionChanged(Cookie cookie) {
+	}
+
 	public boolean isAnonymous() {
-		return getLocation().getCredentials(AuthenticationType.REPOSITORY) == null;
+		return getLocation().getCredentials(AuthenticationType.REPOSITORY) == null && getOpenIdProvider() == null;
+	}
+
+	public Cookie getXsrfCookie() {
+		return xsrfCookie;
+	}
+
+	public void setXsrfCookie(Cookie xsrfCookie) {
+		Cookie oldCookie;
+		synchronized (this) {
+			oldCookie = this.xsrfCookie;
+			this.xsrfCookie = xsrfCookie;
+		}
+		if (xsrfCookie != null && !xsrfCookie.equals(oldCookie)) {
+			httpClient.getState().addCookie(xsrfCookie);
+		}
+		sessionChanged(xsrfCookie);
 	}
 
 }

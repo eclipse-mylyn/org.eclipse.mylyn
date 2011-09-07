@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.gerrit.core.support;
+package org.eclipse.mylyn.gerrit.tests.support;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tests.util.TestFixture;
@@ -19,11 +19,13 @@ import org.eclipse.mylyn.tests.util.TestFixture;
  */
 public class GerritFixture extends TestFixture {
 
-	public static GerritFixture GERRIT_2_1_5 = new GerritFixture("http://localhost:8080/", "2.1.5", "");
+	public static GerritFixture GERRIT_2_1_5 = new GerritFixture("http://localhost:8080/", "2.1.5", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture GERRIT_EGIT = new GerritFixture("http://egit.eclipse.org/r/", "2.1.5", "");
+	public static GerritFixture GERRIT_EGIT = new GerritFixture("http://egit.eclipse.org/r/", "2.1.5", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture DEFAULT = GERRIT_2_1_5;
+	public static GerritFixture GERRIT_MYLYN = new GerritFixture("http://review.mylyn.org/", "2.2.1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+	public static GerritFixture DEFAULT = GERRIT_MYLYN;
 
 	private static GerritFixture current;
 

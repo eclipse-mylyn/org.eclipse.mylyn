@@ -10,8 +10,10 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -40,7 +42,13 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 
 		GerritCorePlugin.getDefault()
 				.getConnector()
-				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationUiFactory());
+				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationUiFactory() {
+					@Override
+					public AbstractWebLocation createWebLocation(TaskRepository taskRepository) {
+						// ignore
+						return new GerritRepositoryLocationUi(taskRepository);
+					}
+				});
 	}
 
 	@Override

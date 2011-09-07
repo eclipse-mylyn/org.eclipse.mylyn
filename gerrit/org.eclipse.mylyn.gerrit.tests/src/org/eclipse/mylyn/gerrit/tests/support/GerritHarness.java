@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.gerrit.core.support;
+package org.eclipse.mylyn.gerrit.tests.support;
 
 import java.net.Proxy;
 

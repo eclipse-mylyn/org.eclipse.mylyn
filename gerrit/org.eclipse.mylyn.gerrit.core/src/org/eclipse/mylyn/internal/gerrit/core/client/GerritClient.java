@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.swing.text.html.HTML.Tag;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -108,6 +109,9 @@ public class GerritClient {
 		}
 
 		public void onFailure(Throwable exception) {
+			if (isAuthenticationException(exception)) {
+				client.setXsrfCookie(null);
+			}
 			this.exception = exception;
 		}
 
@@ -132,6 +136,14 @@ public class GerritClient {
 		}
 	}
 
+	public boolean isAuthenticationException(Throwable exception) {
+		if (exception instanceof GerritException) {
+			return ((GerritException) exception).getCode() == -32603
+					&& "Invalid xsrfKey in request".equals(((GerritException) exception).getMessage());
+		}
+		return false;
+	}
+
 	// XXX belongs in GerritConnector
 	public static String configToString(GerritConfig config) {
 		try {
@@ -140,6 +152,28 @@ public class GerritClient {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, "Failed to serialize configration",
 					e));
+			return null;
+		}
+	}
+
+	// XXX belongs in GerritConnector
+	public static GerritAuthenticationState authStateFromString(String token) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.getGson().fromJson(token, GerritAuthenticationState.class);
+		} catch (Exception e) {
+			// ignore
+			return null;
+		}
+	}
+
+	// XXX belongs in GerritConnector
+	public static String authStateToString(GerritAuthenticationState authState) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.getGson().toJson(authState);
+		} catch (Exception e) {
+			// ignore
 			return null;
 		}
 	}
@@ -217,11 +251,21 @@ public class GerritClient {
 	private volatile boolean configRefreshed;
 
 	public GerritClient(AbstractWebLocation location) {
-		this(location, null);
+		this(location, null, null);
 	}
 
-	public GerritClient(AbstractWebLocation location, GerritConfig config) {
-		this.client = new GerritHttpClient(location);
+	public GerritClient(AbstractWebLocation location, GerritConfig config, GerritAuthenticationState authState) {
+		this.client = new GerritHttpClient(location) {
+			@Override
+			protected void sessionChanged(Cookie cookie) {
+				GerritAuthenticationState authState = new GerritAuthenticationState();
+				authState.setCookie(cookie);
+				authStateChanged(authState);
+			}
+		};
+		if (authState != null) {
+			client.setXsrfCookie(authState.getCookie());
+		}
 		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
 		this.config = config;
 	}
@@ -692,6 +736,9 @@ public class GerritClient {
 	}
 
 	protected void configurationChanged(GerritConfig config) {
+	}
+
+	protected void authStateChanged(GerritAuthenticationState config) {
 	}
 
 	protected <T> T execute(IProgressMonitor monitor, Operation<T> operation) throws GerritException {

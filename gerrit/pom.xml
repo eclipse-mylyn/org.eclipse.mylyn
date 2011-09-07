@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>org.eclipse.mylyn.gerrit.core</module>
+    <module>org.eclipse.mylyn.gerrit.core.tests</module>
     <module>org.eclipse.mylyn.gerrit.tests</module>
     <module>org.eclipse.mylyn.gerrit.ui</module>
     <module>org.eclipse.mylyn.gerrit.ui.tests</module>

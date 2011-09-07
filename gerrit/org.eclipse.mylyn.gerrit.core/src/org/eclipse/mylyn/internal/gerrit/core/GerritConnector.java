@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
@@ -74,7 +75,13 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	public static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
 
+	public static final String KEY_REPOSITORY_AUTH = CONNECTOR_KIND + ".auth"; //$NON-NLS-1$
+
 	public static final String KEY_REPOSITORY_ACCOUNT_ID = CONNECTOR_KIND + ".accountId"; //$NON-NLS-1$
+
+	public static final String KEY_REPOSITORY_OPEN_ID_ENABLED = CONNECTOR_KIND + ".openId.enabled"; //$NON-NLS-1$
+
+	public static final String KEY_REPOSITORY_OPEN_ID_PROVIDER = CONNECTOR_KIND + ".openId.provider"; //$NON-NLS-1$
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 
@@ -100,7 +107,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	public GerritClient getClient(TaskRepository repository) {
-		return createClient(repository);
+		return createClient(repository, true);
 	}
 
 	@Override
@@ -236,7 +243,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
-			return createClient(repository).getInfo(Policy.backgroundMonitorFor(monitor));
+			return createClient(repository, false).getInfo(Policy.backgroundMonitorFor(monitor));
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {
@@ -244,15 +251,24 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private GerritClient createClient(final TaskRepository repository) {
-		GerritConfig config = GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
-		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config) {
+	private GerritClient createClient(final TaskRepository repository, boolean cachedConfig) {
+		GerritConfig config = (cachedConfig)
+				? GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG))
+				: null;
+		GerritAuthenticationState authState = (cachedConfig)
+				? GerritClient.authStateFromString(repository.getProperty(KEY_REPOSITORY_AUTH))
+				: null;
+		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config, authState) {
 			@Override
 			protected void configurationChanged(GerritConfig config) {
 				repository.setProperty(KEY_REPOSITORY_CONFIG, GerritClient.configToString(config));
 			}
-		};
 
+			@Override
+			protected void authStateChanged(GerritAuthenticationState authState) {
+				repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
+			}
+		};
 	}
 
 	CoreException toCoreException(TaskRepository repository, GerritException e) {
