@@ -19,7 +19,6 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -308,9 +307,7 @@ public class CommitService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMENTS);
 		uri.append('/').append(comment.getId());
-		Map<String, String> params = Collections.singletonMap(
-				"body", comment.getBody()); //$NON-NLS-1$
-		return client.post(uri.toString(), params, CommitComment.class);
+		return client.post(uri.toString(), comment, CommitComment.class);
 	}
 
 	/**
@@ -320,14 +317,9 @@ public class CommitService extends GitHubService {
 	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(IRepositoryIdProvider repository, String commentId)
+	public void deleteComment(IRepositoryIdProvider repository, int commentId)
 			throws IOException {
 		String id = getId(repository);
-		if (commentId == null)
-			throw new IllegalArgumentException("Comment Id cannot be null"); //$NON-NLS-1$
-		if (commentId.length() == 0)
-			throw new IllegalArgumentException("Comment Id cannot be empty"); //$NON-NLS-1$
-
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMENTS);

@@ -28,7 +28,6 @@ import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
 /**
@@ -81,10 +80,12 @@ public class TeamService extends GitHubService {
 	public List<Team> getTeams(String organization) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_TEAMS);
+		uri.append(SEGMENT_TEAMS);
 		PagedRequest<Team> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Team>>() {
@@ -117,12 +118,14 @@ public class TeamService extends GitHubService {
 			List<String> repoNames) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
 		if (team == null)
 			throw new IllegalArgumentException("Team cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
-		uri.append(IGitHubConstants.SEGMENT_TEAMS);
+		uri.append(SEGMENT_TEAMS);
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("name", team.getName()); //$NON-NLS-1$
@@ -189,6 +192,8 @@ public class TeamService extends GitHubService {
 	public boolean isMember(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
 		uri.append('/').append(id);
@@ -207,12 +212,14 @@ public class TeamService extends GitHubService {
 	public void addMember(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_MEMBERS);
 		uri.append('/').append(user);
-		client.put(uri.toString(), null, null);
+		client.put(uri.toString());
 	}
 
 	/**
@@ -225,6 +232,8 @@ public class TeamService extends GitHubService {
 	public void removeMember(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_TEAMS);
 		uri.append('/').append(id);
@@ -283,7 +292,7 @@ public class TeamService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
-		client.put(uri.toString(), null, null);
+		client.put(uri.toString());
 	}
 
 	/**

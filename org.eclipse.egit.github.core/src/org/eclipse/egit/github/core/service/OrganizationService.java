@@ -68,8 +68,7 @@ public class OrganizationService extends GitHubService {
 		if (user == null)
 			request.setUri(SEGMENT_USER + SEGMENT_ORGS);
 		else {
-			StringBuilder uri = new StringBuilder();
-			uri.append(SEGMENT_USERS);
+			StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 			uri.append('/').append(user);
 			uri.append(SEGMENT_ORGS);
 			request.setUri(uri);
@@ -101,6 +100,8 @@ public class OrganizationService extends GitHubService {
 	public List<User> getOrganizations(String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		PagedRequest<User> request = createOrgRequest(user, PAGE_FIRST,
 				PAGE_SIZE);
@@ -117,9 +118,10 @@ public class OrganizationService extends GitHubService {
 	public User getOrganization(String name) throws IOException {
 		if (name == null)
 			throw new IllegalArgumentException("Name cannot be null"); //$NON-NLS-1$
+		if (name.length() == 0)
+			throw new IllegalArgumentException("Name cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder uri = new StringBuilder();
-		uri.append(SEGMENT_ORGS);
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(name);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
@@ -131,7 +133,7 @@ public class OrganizationService extends GitHubService {
 	 * Edit given organization
 	 *
 	 * @param organization
-	 * @return edited user
+	 * @return edited organization
 	 * @throws IOException
 	 */
 	public User editOrganization(User organization) throws IOException {
@@ -141,9 +143,11 @@ public class OrganizationService extends GitHubService {
 		if (name == null)
 			throw new IllegalArgumentException(
 					"Organization login cannot be null"); //$NON-NLS-1$
+		if (name.length() == 0)
+			throw new IllegalArgumentException(
+					"Organization login cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder uri = new StringBuilder();
-		uri.append(SEGMENT_ORGS);
+		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(name);
 		return client.post(uri.toString(), organization, User.class);
 	}
@@ -158,6 +162,8 @@ public class OrganizationService extends GitHubService {
 	public List<User> getMembers(String organization) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -179,6 +185,8 @@ public class OrganizationService extends GitHubService {
 	public List<User> getPublicMembers(String organization) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -202,8 +210,12 @@ public class OrganizationService extends GitHubService {
 			throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -224,8 +236,12 @@ public class OrganizationService extends GitHubService {
 			throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -245,14 +261,18 @@ public class OrganizationService extends GitHubService {
 			throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
 		uri.append(SEGMENT_PUBLIC_MEMBERS);
 		uri.append('/').append(user);
-		client.put(uri.toString(), null, null);
+		client.put(uri.toString());
 	}
 
 	/**
@@ -266,8 +286,12 @@ public class OrganizationService extends GitHubService {
 			throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -287,8 +311,12 @@ public class OrganizationService extends GitHubService {
 			throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
