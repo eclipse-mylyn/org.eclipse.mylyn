@@ -174,4 +174,23 @@ public abstract class GitHubService {
 			throw new IllegalArgumentException("Repository id cannot be empty"); //$NON-NLS-1$
 		return id;
 	}
+
+	/**
+	 * Verify user and repository name
+	 *
+	 * @param user
+	 * @param repository
+	 * @return this service
+	 */
+	protected GitHubService verifyRepository(String user, String repository) {
+		if (user == null)
+			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
+		if (user.length() == 0)
+			throw new IllegalArgumentException("User cannot be empty"); //$NON-NLS-1$
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		if (repository.length() == 0)
+			throw new IllegalArgumentException("Repository cannot be empty"); //$NON-NLS-1$
+		return this;
+	}
 }

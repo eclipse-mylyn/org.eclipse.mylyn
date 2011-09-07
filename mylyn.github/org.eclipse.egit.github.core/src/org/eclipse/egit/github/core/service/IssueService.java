@@ -227,12 +227,11 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue getIssue(String user, String repository, String id)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (id == null)
 			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
+		if (id.length() == 0)
+			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -269,12 +268,11 @@ public class IssueService extends GitHubService {
 	 */
 	public List<Comment> getComments(String user, String repository, String id)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (id == null)
 			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
+		if (id.length() == 0)
+			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -301,10 +299,7 @@ public class IssueService extends GitHubService {
 	protected PagedRequest<Issue> createIssuesRequest(String user,
 			String repository, Map<String, String> filterData, int start,
 			int size) {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -330,6 +325,17 @@ public class IssueService extends GitHubService {
 		PagedRequest<Issue> request = createIssuesRequest(user, repository,
 				filterData, PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 *
+	 * @param user
+	 * @param repository
+	 * @return iterator over issue pages
+	 */
+	public PageIterator<Issue> pageIssues(String user, String repository) {
+		return pageIssues(user, repository, null);
 	}
 
 	/**
@@ -426,10 +432,7 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue createIssue(String user, String repository, Issue issue)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -450,10 +453,7 @@ public class IssueService extends GitHubService {
 	 */
 	public Issue editIssue(String user, String repository, Issue issue)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (issue == null)
 			throw new IllegalArgumentException("Issue cannot be null"); //$NON-NLS-1$
 
@@ -497,12 +497,11 @@ public class IssueService extends GitHubService {
 	 */
 	public Comment createComment(String user, String repository,
 			String issueId, String comment) throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (issueId == null)
 			throw new IllegalArgumentException("Issue id cannot be null"); //$NON-NLS-1$
+		if (issueId.length() == 0)
+			throw new IllegalArgumentException("Issue id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
@@ -539,12 +538,11 @@ public class IssueService extends GitHubService {
 	 */
 	public void deleteComment(String user, String repository, String comment)
 			throws IOException {
-		if (user == null)
-			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
-		if (repository == null)
-			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+		verifyRepository(user, repository);
 		if (comment == null)
 			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
+		if (comment.length() == 0)
+			throw new IllegalArgumentException("Comment cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);

@@ -30,7 +30,7 @@ import org.junit.Test;
 public class GistTest {
 
 	/**
-	 * Test default state of state
+	 * Test default state of gist
 	 */
 	@Test
 	public void defaultState() {
