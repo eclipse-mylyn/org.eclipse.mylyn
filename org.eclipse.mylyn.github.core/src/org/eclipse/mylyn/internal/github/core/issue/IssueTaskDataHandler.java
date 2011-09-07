@@ -341,7 +341,9 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					service.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
 
-				if (collaborator) {
+				boolean reporter = attributeMatchesUser(client,
+						IssueAttribute.REPORTER.getMetadata(), taskData);
+				if (collaborator || reporter) {
 					// Handle state change
 					TaskAttribute operationAttribute = taskData.getRoot()
 							.getAttribute(TaskAttribute.OPERATION);

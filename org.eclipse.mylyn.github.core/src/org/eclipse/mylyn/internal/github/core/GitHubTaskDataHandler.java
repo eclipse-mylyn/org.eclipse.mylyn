@@ -225,6 +225,25 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	/**
+	 * Does the attribute's value in the given task data match the authenticated
+	 * client user?
+	 *
+	 * @param client
+	 * @param metadata
+	 * @param data
+	 * @return true if match, false otherwise
+	 */
+	protected boolean attributeMatchesUser(GitHubClient client,
+			GitHubAttributeMetadata metadata, TaskData data) {
+		if (client == null || metadata == null || data == null)
+			return false;
+		String user = client.getUser();
+		if (user == null || user.length() == 0)
+			return false;
+		return metadata.getValue(data).equals(user);
+	}
+
+	/**
 	 * Is configured client user a collaborator on the given repository?
 	 *
 	 * @param client
