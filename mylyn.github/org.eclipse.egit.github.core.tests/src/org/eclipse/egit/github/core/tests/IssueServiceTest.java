@@ -99,9 +99,11 @@ public class IssueServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void getIssue_OK() throws IOException {
-		issueService.getIssue("test_user", "test_repository", "test_id");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+	public void getIssueOK() throws IOException {
+		issueService.getIssue("tu", "tr", 3);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/tu/tr/issues/3");
+		verify(gitHubClient).get(request);
 	}
 
 	/**
@@ -141,8 +143,10 @@ public class IssueServiceTest {
 	 */
 	@Test
 	public void getCommentsOK() throws IOException {
-		issueService.getComments("test_user", "test_repository", "test_id");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		issueService.getComments("tu", "tr", "4");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/tu/tr/issues/4/comments"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**
@@ -172,8 +176,10 @@ public class IssueServiceTest {
 	 */
 	@Test
 	public void getIssuesOK() throws IOException {
-		issueService.getIssues("test_user", "test_repository", null);
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		issueService.getIssues("tu", "tr", null);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/tu/tr/issues"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**

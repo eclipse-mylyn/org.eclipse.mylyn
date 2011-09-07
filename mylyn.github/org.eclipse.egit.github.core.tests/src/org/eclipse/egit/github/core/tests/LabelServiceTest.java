@@ -91,8 +91,10 @@ public class LabelServiceTest {
 	 */
 	@Test
 	public void getLabelsOK() throws IOException {
-		labelService.getLabels("test_user", "test_repository");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		labelService.getLabels("lu", "lr");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/lu/lr/labels"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**
