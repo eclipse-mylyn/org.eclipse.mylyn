@@ -105,7 +105,9 @@ public class GistServiceTest {
 	@Test
 	public void getGist() throws IOException {
 		gistService.getGist("1");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/gists/1");
+		verify(gitHubClient).get(request);
 	}
 
 	/**
@@ -229,7 +231,9 @@ public class GistServiceTest {
 	@Test
 	public void isStarredGist() throws IOException {
 		gistService.isStarred("1");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/gists/1/star");
+		verify(gitHubClient).get(request);
 	}
 
 	/**
@@ -314,7 +318,9 @@ public class GistServiceTest {
 	@Test
 	public void getGistsOK() throws IOException {
 		gistService.getGists("test_user");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/users/test_user/gists"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**
@@ -427,7 +433,9 @@ public class GistServiceTest {
 	@Test
 	public void getCommentsOK() throws IOException {
 		gistService.getComments("1");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/gists/1/comments"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**

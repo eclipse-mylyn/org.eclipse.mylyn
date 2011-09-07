@@ -86,19 +86,22 @@ public class MilestoneServiceTest {
 	 */
 	@Test
 	public void getMilestonesNullState() throws IOException {
-		milestoneService.getMilestones("test_user", "test_repository", null);
-		verify(gitHubClient).get(any(GitHubRequest.class));
+		milestoneService.getMilestones("mu", "mr", null);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/mu/mr/milestones"));
+		verify(gitHubClient).get(request);
 	}
 
 	/**
-	 * Create milestones with valid parameters
+	 * Get milestones with open state
 	 *
 	 * @throws IOException
 	 */
 	@Test
-	public void getMilestonesOK() throws IOException {
-		milestoneService.getMilestones("test_user", "test_repository",
-				"test_state");
-		verify(gitHubClient).get(any(GitHubRequest.class));
+	public void getMilestonesOpenState() throws IOException {
+		milestoneService.getMilestones("mu", "mr", "open");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/mu/mr/milestones?state=open"));
+		verify(gitHubClient).get(request);
 	}
 }
