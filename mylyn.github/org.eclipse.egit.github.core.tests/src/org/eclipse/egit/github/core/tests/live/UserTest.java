@@ -133,7 +133,7 @@ public class UserTest extends LiveTest {
 		emails = service.getEmails();
 		assertTrue(emails.contains(email1));
 
-		service.deleteEmail(email1);
+		service.removeEmail(email1);
 		emails = service.getEmails();
 		assertFalse(emails.contains(email1));
 	}
@@ -160,7 +160,7 @@ public class UserTest extends LiveTest {
 		assertTrue(emails.contains(email1));
 		assertTrue(emails.contains(email2));
 
-		service.deleteEmail(email1, email2);
+		service.removeEmail(email1, email2);
 		emails = service.getEmails();
 		assertFalse(emails.contains(email1));
 		assertFalse(emails.contains(email2));

@@ -297,7 +297,7 @@ public class WatcherService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_USER);
 		uri.append(SEGMENT_WATCHED);
 		uri.append('/').append(id);
-		client.put(uri.toString(), null, null);
+		client.put(uri.toString());
 	}
 
 	/**

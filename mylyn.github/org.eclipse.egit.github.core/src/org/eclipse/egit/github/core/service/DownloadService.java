@@ -250,8 +250,7 @@ public class DownloadService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_DOWNLOADS);
-		return (DownloadResource) client.post(uri.toString(), download,
-				DownloadResource.class);
+		return client.post(uri.toString(), download, DownloadResource.class);
 	}
 
 	/**

@@ -40,6 +40,7 @@ public class CollaboratorService extends GitHubService {
 
 	/**
 	 * Create collaborator service
+	 *
 	 * @param client
 	 */
 	public CollaboratorService(GitHubClient client) {
@@ -110,7 +111,7 @@ public class CollaboratorService extends GitHubService {
 	 */
 	public void addCollaborator(IRepositoryIdProvider repository, String user)
 			throws IOException {
-		client.put(createUpdateUri(repository, user), null, null);
+		client.put(createUpdateUri(repository, user));
 	}
 
 	/**
