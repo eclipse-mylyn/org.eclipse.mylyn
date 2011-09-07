@@ -105,7 +105,7 @@ public class ReviewSection extends AbstractGerritSection {
 		subSection.setText("Reviewers");
 
 		List<ApprovalType> approvalTypes;
-		if (config != null) {
+		if (config != null && config.getApprovalTypes() != null && config.getApprovalTypes().getApprovalTypes() != null) {
 			approvalTypes = config.getApprovalTypes().getApprovalTypes();
 		} else {
 			approvalTypes = Collections.emptyList();
