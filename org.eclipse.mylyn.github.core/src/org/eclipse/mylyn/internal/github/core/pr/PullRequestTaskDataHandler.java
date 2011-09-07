@@ -186,6 +186,7 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 				.getRepositoryUrl());
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
+			boolean collaborator = isCollaborator(client, repo);
 			PullRequestService prService = new PullRequestService(client);
 			IssueService issueService = new IssueService(client);
 			if (taskData.isNew()) {
@@ -200,25 +201,29 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 					issueService.createComment(repo.getOwner(), repo.getName(),
 							taskId, comment);
 
-				// Handle state change
-				TaskAttribute operationAttribute = taskData.getRoot()
-						.getAttribute(TaskAttribute.OPERATION);
-				if (operationAttribute != null) {
-					PullRequestOperation operation = PullRequestOperation
-							.fromId(operationAttribute.getValue());
-					if (operation != PullRequestOperation.LEAVE)
-						switch (operation) {
-						case REOPEN:
-							pr.setState(IssueService.STATE_OPEN);
-							break;
-						case CLOSE:
-							pr.setState(IssueService.STATE_CLOSED);
-							break;
-						default:
-							break;
-						}
+				boolean reporter = attributeMatchesUser(client,
+						PullRequestAttribute.REPORTER.getMetadata(), taskData);
+				if (collaborator || reporter) {
+					// Handle state change
+					TaskAttribute operationAttribute = taskData.getRoot()
+							.getAttribute(TaskAttribute.OPERATION);
+					if (operationAttribute != null) {
+						PullRequestOperation operation = PullRequestOperation
+								.fromId(operationAttribute.getValue());
+						if (operation != PullRequestOperation.LEAVE)
+							switch (operation) {
+							case REOPEN:
+								pr.setState(IssueService.STATE_OPEN);
+								break;
+							case CLOSE:
+								pr.setState(IssueService.STATE_CLOSED);
+								break;
+							default:
+								break;
+							}
+					}
+					prService.editPullRequest(repo, pr);
 				}
-				prService.editPullRequest(repo, pr);
 			}
 			return new RepositoryResponse(
 					taskData.isNew() ? ResponseKind.TASK_CREATED
