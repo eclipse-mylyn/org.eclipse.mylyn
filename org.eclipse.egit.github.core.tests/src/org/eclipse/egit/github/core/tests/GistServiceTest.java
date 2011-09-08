@@ -268,6 +268,42 @@ public class GistServiceTest {
 	}
 
 	/**
+	 * Edit comment with null comment
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editGistCommentNullComment() throws IOException {
+		gistService.editComment(null);
+	}
+
+	/**
+	 * Edit comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editGistComment() throws IOException {
+		Comment comment = new Comment();
+		comment.setId(48).setBody("new body");
+		gistService.editComment(comment);
+		verify(gitHubClient).post("/gists/comments/48", comment, Comment.class);
+	}
+
+	/**
+	 * Get gist comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getGistComment() throws IOException {
+		gistService.getComment(59);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/gists/comments/59");
+		verify(gitHubClient).get(request);
+	}
+
+	/**
 	 * Delete gist comment
 	 *
 	 * @throws IOException
