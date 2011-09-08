@@ -251,7 +251,7 @@ public class CommitService extends GitHubService {
 	 * @return commit comment
 	 * @throws IOException
 	 */
-	public CommitComment getComment(IRepositoryIdProvider repository, int id)
+	public CommitComment getComment(IRepositoryIdProvider repository, long id)
 			throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
@@ -317,7 +317,7 @@ public class CommitService extends GitHubService {
 	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(IRepositoryIdProvider repository, int commentId)
+	public void deleteComment(IRepositoryIdProvider repository, long commentId)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
