@@ -12,8 +12,8 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -307,5 +307,29 @@ public class PullRequestServiceTest {
 	public void deleteComment() throws IOException {
 		pullRequestService.deleteComment(repo, 589);
 		verify(gitHubClient).delete("/repos/o/n/pulls/comments/589");
+	}
+
+	/**
+	 * Edit comment with null comment
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editCommentNullComment() throws IOException {
+		pullRequestService.editComment(repo, null);
+	}
+
+	/**
+	 * Edit comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editComment() throws IOException {
+		CommitComment comment = new CommitComment();
+		comment.setId(78).setBody("a newer body");
+		pullRequestService.editComment(repo, comment);
+		verify(gitHubClient).post("/repos/o/n/pulls/comments/78", comment,
+				CommitComment.class);
 	}
 }
