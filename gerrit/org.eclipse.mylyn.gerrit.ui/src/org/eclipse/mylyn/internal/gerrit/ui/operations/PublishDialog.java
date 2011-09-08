@@ -124,39 +124,41 @@ public class PublishDialog extends GerritOperationDialog {
 			return;
 		}
 
-		for (ApprovalType approvalType : config.getApprovalTypes().getApprovalTypes()) {
-			Set<ApprovalCategoryValue.Id> allowed = publishDetail.getAllowed(approvalType.getCategory().getId());
-			if (allowed != null && allowed.size() > 0) {
-				Group group = new Group(approvalComposite, SWT.NONE);
-				GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
-				group.setText(approvalType.getCategory().getName());
-				group.setLayout(new RowLayout(SWT.VERTICAL));
+		if (config.getApprovalTypes() != null && publishDetail.getAllowed() != null) {
+			for (ApprovalType approvalType : config.getApprovalTypes().getApprovalTypes()) {
+				Set<ApprovalCategoryValue.Id> allowed = publishDetail.getAllowed(approvalType.getCategory().getId());
+				if (allowed != null && allowed.size() > 0) {
+					Group group = new Group(approvalComposite, SWT.NONE);
+					GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
+					group.setText(approvalType.getCategory().getName());
+					group.setLayout(new RowLayout(SWT.VERTICAL));
 
-				int givenValue = 0;
-				if (publishDetail.getGiven() != null) {
-					PatchSetApproval approval = publishDetail.getGiven().get(approvalType.getCategory().getId());
-					if (approval != null) {
-						givenValue = approval.getValue();
-					}
-				}
-
-				List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
-				Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
-					public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
-						return o2.get() - o1.get();
-					}
-				});
-				for (ApprovalCategoryValue.Id valueId : allowedList) {
-					ApprovalCategoryValue approvalValue = approvalType.getValue(valueId.get());
-
-					Button button = new Button(group, SWT.RADIO);
-					button.setText(approvalValue.format());
-					if (approvalValue.getValue() == givenValue) {
-						button.setSelection(true);
+					int givenValue = 0;
+					if (publishDetail.getGiven() != null) {
+						PatchSetApproval approval = publishDetail.getGiven().get(approvalType.getCategory().getId());
+						if (approval != null) {
+							givenValue = approval.getValue();
+						}
 					}
 
-					button.setData(KEY_ID, valueId);
-					approvalButtons.add(button);
+					List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
+					Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
+						public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
+							return o2.get() - o1.get();
+						}
+					});
+					for (ApprovalCategoryValue.Id valueId : allowedList) {
+						ApprovalCategoryValue approvalValue = approvalType.getValue(valueId.get());
+
+						Button button = new Button(group, SWT.RADIO);
+						button.setText(approvalValue.format());
+						if (approvalValue.getValue() == givenValue) {
+							button.setSelection(true);
+						}
+
+						button.setData(KEY_ID, valueId);
+						approvalButtons.add(button);
+					}
 				}
 			}
 		}
