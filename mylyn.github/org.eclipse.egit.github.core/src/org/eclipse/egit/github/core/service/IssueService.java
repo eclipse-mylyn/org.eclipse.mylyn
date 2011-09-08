@@ -518,6 +518,51 @@ public class IssueService extends GitHubService {
 	}
 
 	/**
+	 * Get issue comment
+	 *
+	 * @param user
+	 * @param repository
+	 * @param commentId
+	 * @return comment
+	 * @throws IOException
+	 */
+	public Comment getComment(String user, String repository, int commentId)
+			throws IOException {
+		verifyRepository(user, repository);
+
+		GitHubRequest request = createRequest();
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
+		uri.append('/').append(commentId);
+		request.setUri(uri);
+		request.setType(Comment.class);
+		return (Comment) client.get(request).getBody();
+	}
+
+	/**
+	 * Edit issue comment
+	 *
+	 * @param user
+	 * @param repository
+	 * @param comment
+	 * @return edited comment
+	 * @throws IOException
+	 */
+	public Comment editComment(String user, String repository, Comment comment)
+			throws IOException {
+		verifyRepository(user, repository);
+		if (comment == null)
+			throw new IllegalArgumentException("Comment cannot be null");
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
+		uri.append('/').append(comment.getId());
+		return client.post(uri.toString(), comment, Comment.class);
+	}
+
+	/**
 	 * Delete the issue comment with the given id
 	 *
 	 * @param user
