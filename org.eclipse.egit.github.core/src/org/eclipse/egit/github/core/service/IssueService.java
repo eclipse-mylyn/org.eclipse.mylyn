@@ -526,7 +526,7 @@ public class IssueService extends GitHubService {
 	 * @return comment
 	 * @throws IOException
 	 */
-	public Comment getComment(String user, String repository, int commentId)
+	public Comment getComment(String user, String repository, long commentId)
 			throws IOException {
 		verifyRepository(user, repository);
 
@@ -570,9 +570,9 @@ public class IssueService extends GitHubService {
 	 * @param comment
 	 * @throws IOException
 	 */
-	public void deleteComment(String user, String repository, int comment)
+	public void deleteComment(String user, String repository, long comment)
 			throws IOException {
-		deleteComment(user, repository, Integer.toString(comment));
+		deleteComment(user, repository, Long.toString(comment));
 	}
 
 	/**

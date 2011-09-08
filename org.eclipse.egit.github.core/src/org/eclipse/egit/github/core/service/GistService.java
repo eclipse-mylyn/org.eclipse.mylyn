@@ -312,7 +312,7 @@ public class GistService extends GitHubService {
 	 * @return comment
 	 * @throws IOException
 	 */
-	public Comment getComment(int commentId) throws IOException {
+	public Comment getComment(long commentId) throws IOException {
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		GitHubRequest request = createRequest();
@@ -343,7 +343,7 @@ public class GistService extends GitHubService {
 	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(int commentId) throws IOException {
+	public void deleteComment(long commentId) throws IOException {
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());

@@ -29,7 +29,7 @@ public class Comment implements Serializable {
 
 	private String body;
 
-	private int id;
+	private long id;
 
 	private String url;
 
@@ -86,7 +86,7 @@ public class Comment implements Serializable {
 	/**
 	 * @return id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -94,7 +94,7 @@ public class Comment implements Serializable {
 	 * @param id
 	 * @return this comment
 	 */
-	public Comment setId(int id) {
+	public Comment setId(long id) {
 		this.id = id;
 		return this;
 	}
