@@ -513,6 +513,28 @@ public class PullRequestService extends GitHubService {
 	}
 
 	/**
+	 * Edit pull request comment
+	 *
+	 * @param repository
+	 * @param comment
+	 * @return edited comment
+	 * @throws IOException
+	 */
+	public CommitComment editComment(IRepositoryIdProvider repository,
+			CommitComment comment) throws IOException {
+		String repoId = getId(repository);
+		if (comment == null)
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_PULLS);
+		uri.append(SEGMENT_COMMENTS);
+		uri.append('/').append(comment.getId());
+		return client.post(uri.toString(), comment, CommitComment.class);
+	}
+
+	/**
 	 * Delete commit comment with given id
 	 *
 	 * @param repository
