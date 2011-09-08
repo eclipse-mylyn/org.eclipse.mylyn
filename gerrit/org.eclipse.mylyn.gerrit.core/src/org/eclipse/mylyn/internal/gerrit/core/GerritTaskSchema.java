@@ -29,7 +29,7 @@ public class GerritTaskSchema extends AbstractTaskSchema {
 
 	private final DefaultTaskSchema parent = DefaultTaskSchema.getInstance();
 
-	public final Field SUMMARY = inheritFrom(parent.SUMMARY).create();
+	public final Field SUMMARY = inheritFrom(parent.SUMMARY).addFlags(Flag.READ_ONLY).create();
 
 	public final Field STATUS = inheritFrom(parent.STATUS).create();
 
