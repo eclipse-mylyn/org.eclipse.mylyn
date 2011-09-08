@@ -628,4 +628,40 @@ public class IssueServiceTest {
 		request.setUri("/repos/user/repo/issues/events/4399");
 		verify(gitHubClient).get(request);
 	}
+
+	/**
+	 * Get issue comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getIssueComment() throws IOException {
+		issueService.getComment("user", "repo", 38);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/issues/comments/38");
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Edit issue comment with null comment
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editIssueCommentNullComment() throws IOException {
+		issueService.editComment("user", "repo", null);
+	}
+
+	/**
+	 * Edit issue comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editIssueComment() throws IOException {
+		Comment comment = new Comment().setId(29).setBody("new body");
+		issueService.editComment("user", "repo", comment);
+		verify(gitHubClient).post("/repos/user/repo/issues/comments/29",
+				comment, Comment.class);
+	}
 }
