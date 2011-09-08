@@ -11,6 +11,8 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -26,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -56,14 +59,14 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 	public GerritCustomQueryPage(TaskRepository repository, String pageName, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.query = query;
-		setDescription("Enter title and type of the query.");
+		setDescription("Enter title and select a query type.");
 	}
 
 	public void createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(2, false);
 		control.setLayout(layout);
 
 		ModifyListener modifyListener = new ModifyListener() {
@@ -75,48 +78,43 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		if (getSearchContainer() == null) {
 			Label titleLabel = new Label(control, SWT.NONE);
-			titleLabel.setText("Query Title:");
+			titleLabel.setText("Title:");
 
 			titleText = new Text(control, SWT.BORDER);
-			GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-			gd2.horizontalSpan = 2;
-			titleText.setLayoutData(gd2);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(modifyListener);
 		}
 
-		Label typeLabel = new Label(control, SWT.NONE);
-		typeLabel.setText("Query type:");
+		Group group = new Group(control, SWT.NONE);
+		group.setText("Query type");
+		group.setLayout(new GridLayout(2, false));
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(group);
 
 		// radio button to select query type
-		myChangesButton = new Button(control, SWT.RADIO);
+		myChangesButton = new Button(group, SWT.RADIO);
 		myChangesButton.setText("My changes");
-		GridData gd2 = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		gd2.horizontalSpan = 2;
-		myChangesButton.setLayoutData(gd2);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(myChangesButton);
 
-		new Label(control, SWT.NONE);
-		watchedChangesButton = new Button(control, SWT.RADIO);
+		watchedChangesButton = new Button(group, SWT.RADIO);
 		watchedChangesButton.setText("My watched changes");
-		watchedChangesButton.setLayoutData(gd2);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(watchedChangesButton);
 
-		new Label(control, SWT.NONE);
-		allOpenChangesButton = new Button(control, SWT.RADIO);
+		allOpenChangesButton = new Button(group, SWT.RADIO);
 		allOpenChangesButton.setText("All open changes");
-		allOpenChangesButton.setLayoutData(gd2);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(allOpenChangesButton);
 
-		new Label(control, SWT.NONE);
-		byProjectButton = new Button(control, SWT.RADIO);
-		byProjectButton.setText("Open changes by project");
+		byProjectButton = new Button(group, SWT.RADIO);
+		byProjectButton.setText("Open changes by project:");
 
-		projectText = new Text(control, SWT.BORDER);
+		projectText = new Text(group, SWT.BORDER);
 		projectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		projectText.addModifyListener(modifyListener);
 
 		new Label(control, SWT.NONE);
-		customQueryButton = new Button(control, SWT.RADIO);
-		customQueryButton.setText("Custom query");
+		customQueryButton = new Button(group, SWT.RADIO);
+		customQueryButton.setText("Custom query:");
 
-		queryText = new Text(control, SWT.BORDER);
+		queryText = new Text(group, SWT.BORDER);
 		queryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		queryText.addModifyListener(modifyListener);
 
@@ -157,6 +155,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		byProjectButton.addSelectionListener(buttonSelectionListener);
 		customQueryButton.addSelectionListener(buttonSelectionListener);
 
+		Dialog.applyDialogFont(control);
 		setControl(control);
 	}
 
