@@ -25,6 +25,7 @@ import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestComposite;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.internal.github.core.pr.PullRequestUtils;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Handler class that fetches changes from a selected pull request
@@ -51,6 +53,26 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 
 	}
 
+	private void showNoRepositoryDialog(PullRequest request) {
+		org.eclipse.egit.github.core.Repository remoteRepo = request.getBase()
+				.getRepo();
+		String id = remoteRepo.getOwner().getLogin() + '/'
+				+ remoteRepo.getName();
+		final String message = MessageFormat.format(
+				Messages.FetchPullRequestHandler_MessageRepositoryNotFound, id);
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+			public void run() {
+				MessageDialog
+						.openInformation(
+								PlatformUI.getWorkbench().getDisplay()
+										.getActiveShell(),
+								Messages.FetchPullRequestHandler_TitleRepositoryNotFound,
+								message);
+			}
+		});
+	}
+
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
 		if (data == null)
@@ -67,8 +89,10 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 						return Status.CANCEL_STATUS;
 					PullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
-					if (repo == null)
+					if (repo == null) {
+						showNoRepositoryDialog(request);
 						return Status.CANCEL_STATUS;
+					}
 					RemoteConfig remote = PullRequestUtils.addRemote(repo,
 							request);
 					new FetchOperationUI(repo, remote, Activator.getDefault()
