@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class IssueTest extends LiveTest {
 
 	/**
 	 * Test fetching an issue
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -53,8 +54,73 @@ public class IssueTest extends LiveTest {
 	}
 
 	/**
+	 * Test issue events
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getIssueEvents() throws IOException {
+		IssueService service = new IssueService(client);
+		PageIterator<IssueEvent> iter = service.pageIssueEvents("schacon",
+				"showoff", 1);
+		assertNotNull(iter);
+		assertTrue(iter.hasNext());
+		for (Collection<IssueEvent> page : iter) {
+			assertNotNull(page);
+			assertFalse(page.isEmpty());
+			for (IssueEvent event : page) {
+				assertNotNull(event);
+				assertTrue(event.getId() > 0);
+				assertNotNull(event.getActor());
+				if (event.getIssue() != null)
+					assertTrue(event.getIssue().getNumber() > 0);
+				assertNotNull(event.getCreatedAt());
+				assertNotNull(event.getEvent());
+				assertNotNull(event.getUrl());
+				IssueEvent fetched = service.getIssueEvent("schacon",
+						"showoff", event.getId());
+				assertNotNull(fetched);
+				assertEquals(event.getId(), fetched.getId());
+				assertNotNull(fetched.getActor());
+				assertEquals(event.getActor().getLogin(), fetched.getActor()
+						.getLogin());
+				if (event.getCommitId() != null)
+					assertEquals(event.getCommitId(), fetched.getCommitId());
+				assertEquals(event.getCreatedAt(), fetched.getCreatedAt());
+				assertEquals(event.getEvent(), fetched.getEvent());
+				assertEquals(event.getUrl(), fetched.getUrl());
+			}
+		}
+	}
+
+	/**
+	 * Get single page of repository issue events
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageAllIssueEvents() throws IOException {
+		IssueService service = new IssueService(client);
+		PageIterator<IssueEvent> iter = service.pageEvents("schacon",
+				"showoff", 10);
+		assertNotNull(iter);
+		assertTrue(iter.hasNext());
+		Collection<IssueEvent> firstPage = iter.next();
+		assertNotNull(firstPage);
+		assertFalse(firstPage.isEmpty());
+		for (IssueEvent event : firstPage) {
+			assertNotNull(event);
+			assertTrue(event.getId() > 0);
+			assertNotNull(event.getActor());
+			assertNotNull(event.getCreatedAt());
+			assertNotNull(event.getEvent());
+			assertNotNull(event.getUrl());
+		}
+	}
+
+	/**
 	 * Test fetching multiple issues
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -70,7 +136,7 @@ public class IssueTest extends LiveTest {
 
 	/**
 	 * Test paging of requests
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -106,7 +172,7 @@ public class IssueTest extends LiveTest {
 
 	/**
 	 * Testing page current user's issues
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

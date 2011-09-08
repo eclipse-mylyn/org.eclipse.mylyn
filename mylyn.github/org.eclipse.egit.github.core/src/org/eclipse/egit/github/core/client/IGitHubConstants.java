@@ -83,6 +83,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_EMAILS = "/emails"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_EVENTS = "/events"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_FILES = "/files"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_FOLLOWERS = "/followers"; //$NON-NLS-1$
