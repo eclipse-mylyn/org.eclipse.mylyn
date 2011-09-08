@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
-import java.util.Map;
-
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 
@@ -39,6 +37,6 @@ public interface IOpenIdLocation {
 	 * @throws OperationCanceledException
 	 *             if the authentication was canceled
 	 */
-	public String requestAuthentication(String requestUrl, Map<String, String> providerArgs);
+	public String requestAuthentication(OpenIdAuthenticationRequest request);
 
 }

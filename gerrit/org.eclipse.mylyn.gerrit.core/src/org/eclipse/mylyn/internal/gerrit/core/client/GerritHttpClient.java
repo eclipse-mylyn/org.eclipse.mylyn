@@ -256,8 +256,11 @@ public class GerritHttpClient {
 				DiscoveryResult result = json.parseResponse(method.getResponseBodyAsString(), DiscoveryResult.class);
 				if (result.status == Status.VALID) {
 					if (location instanceof IOpenIdLocation) {
-						openIdResponse = ((IOpenIdLocation) location).requestAuthentication(result.providerUrl,
-								result.providerArgs);
+						String returnUrl = result.providerArgs.get("openid.return_to"); //$NON-NLS-1$
+						OpenIdAuthenticationRequest authenticationRequest = new OpenIdAuthenticationRequest(
+								result.providerUrl, result.providerArgs, returnUrl);
+						authenticationRequest.setAlternateUrl(location.getUrl());
+						openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest);
 					}
 				} else {
 					return -1;

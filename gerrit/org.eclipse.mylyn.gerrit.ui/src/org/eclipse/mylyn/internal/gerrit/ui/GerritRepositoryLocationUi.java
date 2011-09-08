@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -20,10 +21,12 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.IOpenIdLocation;
+import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationRequest;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.WebBrowserDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryLocationUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.widgets.Display;
@@ -50,7 +53,7 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 	}
 
 	@Override
-	public String requestAuthentication(final String providerUrl, final Map<String, String> providerArgs) {
+	public String requestAuthentication(OpenIdAuthenticationRequest request) {
 		final String repositoryUrl = taskRepository.getUrl();
 
 		int currentVersion = version;
@@ -62,15 +65,14 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 				return null;
 			}
 
-			return showAuthenticationDialog(repositoryUrl, providerUrl, providerArgs);
+			return showAuthenticationDialog(repositoryUrl, request);
 		}
 	}
 
-	private String showAuthenticationDialog(final String repositoryUrl, final String providerUrl,
-			final Map<String, String> providerArgs) {
+	private String showAuthenticationDialog(final String repositoryUrl, final OpenIdAuthenticationRequest request) {
 		final StringBuilder sb = new StringBuilder();
 		try {
-			for (Map.Entry<String, String> entry : providerArgs.entrySet()) {
+			for (Map.Entry<String, String> entry : request.getProviderArgs().entrySet()) {
 				sb.append(URLEncoder.encode(entry.getKey(), "UTF-8")); //$NON-NLS-1$
 				sb.append("="); //$NON-NLS-1$
 				sb.append(URLEncoder.encode(entry.getValue(), "UTF-8")); //$NON-NLS-1$
@@ -88,11 +90,20 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 						"Login to OpenID Provider", MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL },
 						0);
 				dialog.create();
-				dialog.getBrowser().setUrl(providerUrl, sb.toString(), null);
+
+				// TODO e3.6 replace reflection with call to setUrl(...)
+				Method method;
+				try {
+					method = Browser.class.getDeclaredMethod("setUrl", String.class, String.class, String[].class);
+					method.invoke(dialog.getBrowser(), request.getRequestUrl(), sb.toString(), null);
+				} catch (Exception e) {
+					// POST API not available, fall-back to alternate URL
+					dialog.getBrowser().setUrl(request.getAlternateUrl());
+				}
 				dialog.getBrowser().addLocationListener(new LocationAdapter() {
 					@Override
 					public void changing(LocationEvent event) {
-						if (event.location != null && event.location.startsWith(repositoryUrl)) {
+						if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
 							result.set(event.location);
 							event.doit = false;
 							dialog.close();
