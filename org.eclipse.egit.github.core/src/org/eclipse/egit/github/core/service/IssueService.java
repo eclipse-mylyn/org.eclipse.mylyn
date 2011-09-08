@@ -11,6 +11,7 @@
 package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_EVENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ISSUES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
@@ -549,5 +551,138 @@ public class IssueService extends GitHubService {
 		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
 		uri.append('/').append(comment);
 		client.delete(uri.toString());
+	}
+
+	/**
+	 * Page issue events for repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageEvents(String user, String repository)
+			throws IOException {
+		return pageEvents(user, repository, PAGE_SIZE);
+	}
+
+	/**
+	 * Page issue events for repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param size
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageEvents(String user, String repository,
+			int size) throws IOException {
+		return pageEvents(user, repository, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page events for issue in repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param start
+	 * @param size
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageEvents(String user, String repository,
+			int start, int size) throws IOException {
+		verifyRepository(user, repository);
+
+		PagedRequest<IssueEvent> request = createPagedRequest(start, size);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES);
+		uri.append(SEGMENT_EVENTS);
+		request.setUri(uri);
+		request.setType(new TypeToken<List<IssueEvent>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Page events for issue in repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageIssueEvents(String user,
+			String repository, int issueId) throws IOException {
+		return pageIssueEvents(user, repository, issueId, PAGE_SIZE);
+	}
+
+	/**
+	 * Page events for issue in repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @param size
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageIssueEvents(String user,
+			String repository, int issueId, int size) throws IOException {
+		return pageIssueEvents(user, repository, issueId, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page issue events for repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @param start
+	 * @param size
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public PageIterator<IssueEvent> pageIssueEvents(String user,
+			String repository, int issueId, int start, int size)
+			throws IOException {
+		verifyRepository(user, repository);
+
+		PagedRequest<IssueEvent> request = createPagedRequest(start, size);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES);
+		uri.append('/').append(issueId);
+		uri.append(SEGMENT_EVENTS);
+		request.setUri(uri);
+		request.setType(new TypeToken<List<IssueEvent>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Get issue event for repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param eventId
+	 * @return iterator over issue event pages
+	 * @throws IOException
+	 */
+	public IssueEvent getIssueEvent(String user, String repository, long eventId)
+			throws IOException {
+		verifyRepository(user, repository);
+
+		GitHubRequest request = createRequest();
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(user).append('/').append(repository);
+		uri.append(SEGMENT_ISSUES);
+		uri.append(SEGMENT_EVENTS);
+		uri.append('/').append(eventId);
+		request.setUri(uri);
+		request.setType(IssueEvent.class);
+		return (IssueEvent) client.get(request).getBody();
 	}
 }

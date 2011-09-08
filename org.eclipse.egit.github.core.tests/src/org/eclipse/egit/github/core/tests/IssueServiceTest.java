@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -584,5 +585,47 @@ public class IssueServiceTest {
 		List<Issue> issues = issueService.getIssues();
 		assertNotNull(issues);
 		assertTrue(issues.isEmpty());
+	}
+
+	/**
+	 * Page all issue events for repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageEvents() throws IOException {
+		PageIterator<IssueEvent> iter = issueService.pageEvents("user", "repo");
+		assertNotNull(iter);
+		assertTrue(iter.hasNext());
+		assertEquals(Utils.page("/repos/user/repo/issues/events"), iter
+				.getRequest().generateUri());
+	}
+
+	/**
+	 * Page issue events for repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageIssueEvents() throws IOException {
+		PageIterator<IssueEvent> iter = issueService.pageIssueEvents("user",
+				"repo", 16);
+		assertNotNull(iter);
+		assertTrue(iter.hasNext());
+		assertEquals(Utils.page("/repos/user/repo/issues/16/events"), iter
+				.getRequest().generateUri());
+	}
+
+	/**
+	 * Get issue event
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getIssueEvent() throws IOException {
+		issueService.getIssueEvent("user", "repo", 4399);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/issues/events/4399");
+		verify(gitHubClient).get(request);
 	}
 }
