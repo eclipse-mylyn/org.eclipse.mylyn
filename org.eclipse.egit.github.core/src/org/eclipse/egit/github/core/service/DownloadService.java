@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
@@ -174,9 +175,7 @@ public class DownloadService extends GitHubService {
 	 */
 	public List<Download> getDownloads(IRepositoryIdProvider repository)
 			throws IOException {
-		PagedRequest<Download> request = createDownloadsRequest(repository,
-				PAGE_FIRST, PAGE_SIZE);
-		return getAll(request);
+		return getAll(pageDownloads(repository));
 	}
 
 	/**
@@ -244,13 +243,24 @@ public class DownloadService extends GitHubService {
 	public DownloadResource createResource(IRepositoryIdProvider repository,
 			Download download) throws IOException {
 		final String repoId = getId(repository);
-		if (download == null)
-			throw new IllegalArgumentException("Download cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_DOWNLOADS);
 		return client.post(uri.toString(), download, DownloadResource.class);
+	}
+
+	/**
+	 * Create client to use to upload a resource to
+	 *
+	 * @return non-null http client
+	 */
+	protected HttpClient createDownloadClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
+				.getConnectionManager().getSchemeRegistry(), ProxySelector
+				.getDefault()));
+		return client;
 	}
 
 	/**
@@ -267,11 +277,11 @@ public class DownloadService extends GitHubService {
 		if (resource == null)
 			throw new IllegalArgumentException(
 					"Download resource cannot be null"); //$NON-NLS-1$
+		if( content == null)
+			throw new IllegalArgumentException(
+					"Content input stream cannot be null"); //$NON-NLS-N$
 
-		DefaultHttpClient client = new DefaultHttpClient();
-		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
-				.getConnectionManager().getSchemeRegistry(), ProxySelector
-				.getDefault()));
+		HttpClient client = createDownloadClient();
 
 		HttpPost post = new HttpPost(resource.getS3Url());
 		MultipartEntity entity = new MultipartEntity();
