@@ -205,8 +205,9 @@ public class GerritHttpClient {
 					if (code == -1) {
 						continue;
 					} else if (code == HttpStatus.SC_NOT_FOUND) {
+						code = authenticateDevelopmentMode(credentials, monitor);
 						if (code == -1) {
-							authenticateTestMode(credentials, monitor);
+							continue;
 						}
 					}
 				}
@@ -328,10 +329,23 @@ public class GerritHttpClient {
 		}
 	}
 
-	private int authenticateTestMode(AuthenticationCredentials credentials, IProgressMonitor monitor)
+	private int authenticateDevelopmentMode(AuthenticationCredentials credentials, IProgressMonitor monitor)
 			throws IOException, GerritException {
+		// try to detect if user name is user id, email or account id
+		String key;
+		if (credentials.getUserName().contains("@")) { //$NON-NLS-1$
+			key = "preferred_email"; //$NON-NLS-1$
+		} else {
+			try {
+				Long.parseLong(credentials.getUserName());
+				key = "account_id"; //$NON-NLS-1$
+			} catch (NumberFormatException e) {
+				key = "user_name"; //$NON-NLS-1$
+			}
+		}
+
 		String repositoryUrl = getUrl();
-		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?user_name=" //$NON-NLS-1$
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?" + key + "=" //$NON-NLS-1$ //$NON-NLS-2$
 				+ credentials.getUserName()));
 		method.setFollowRedirects(false);
 		try {
@@ -340,7 +354,12 @@ public class GerritHttpClient {
 				return -1;
 			}
 
-			if (code != HttpStatus.SC_NOT_FOUND && code != HttpStatus.SC_MOVED_TEMPORARILY) {
+			if (code == HttpStatus.SC_OK) {
+				// authentication failed
+				return code;
+			}
+			if (code != HttpStatus.SC_NOT_FOUND && code != HttpStatus.SC_MOVED_TEMPORARILY
+					&& code != HttpStatus.SC_MOVED_TEMPORARILY) {
 				throw new GerritHttpException(code);
 			}
 			return code;
