@@ -449,18 +449,18 @@ public class PullRequestService extends GitHubService {
 	 * Get commit comment with given id
 	 *
 	 * @param repository
-	 * @param id
+	 * @param commentId
 	 * @return commit comment
 	 * @throws IOException
 	 */
-	public CommitComment getComment(IRepositoryIdProvider repository, long id)
-			throws IOException {
+	public CommitComment getComment(IRepositoryIdProvider repository,
+			long commentId) throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_PULLS);
 		uri.append(SEGMENT_COMMENTS);
-		uri.append('/').append(id);
+		uri.append('/').append(commentId);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(CommitComment.class);
@@ -538,17 +538,17 @@ public class PullRequestService extends GitHubService {
 	 * Delete commit comment with given id
 	 *
 	 * @param repository
-	 * @param id
+	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(IRepositoryIdProvider repository, long id)
+	public void deleteComment(IRepositoryIdProvider repository, long commentId)
 			throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_PULLS);
 		uri.append(SEGMENT_COMMENTS);
-		uri.append('/').append(id);
+		uri.append('/').append(commentId);
 		client.delete(uri.toString());
 	}
 }
