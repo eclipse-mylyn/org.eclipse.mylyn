@@ -247,17 +247,17 @@ public class CommitService extends GitHubService {
 	 * Get commit comment with given id
 	 *
 	 * @param repository
-	 * @param id
+	 * @param commentId
 	 * @return commit comment
 	 * @throws IOException
 	 */
-	public CommitComment getComment(IRepositoryIdProvider repository, long id)
-			throws IOException {
+	public CommitComment getComment(IRepositoryIdProvider repository,
+			long commentId) throws IOException {
 		String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_COMMENTS);
-		uri.append('/').append(id);
+		uri.append('/').append(commentId);
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(CommitComment.class);

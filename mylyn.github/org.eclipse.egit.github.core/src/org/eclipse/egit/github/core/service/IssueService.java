@@ -567,12 +567,12 @@ public class IssueService extends GitHubService {
 	 *
 	 * @param user
 	 * @param repository
-	 * @param comment
+	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(String user, String repository, long comment)
+	public void deleteComment(String user, String repository, long commentId)
 			throws IOException {
-		deleteComment(user, repository, Long.toString(comment));
+		deleteComment(user, repository, Long.toString(commentId));
 	}
 
 	/**
@@ -580,21 +580,21 @@ public class IssueService extends GitHubService {
 	 *
 	 * @param user
 	 * @param repository
-	 * @param comment
+	 * @param commentId
 	 * @throws IOException
 	 */
-	public void deleteComment(String user, String repository, String comment)
+	public void deleteComment(String user, String repository, String commentId)
 			throws IOException {
 		verifyRepository(user, repository);
-		if (comment == null)
+		if (commentId == null)
 			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
-		if (comment.length() == 0)
+		if (commentId.length() == 0)
 			throw new IllegalArgumentException("Comment cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);
 		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
-		uri.append('/').append(comment);
+		uri.append('/').append(commentId);
 		client.delete(uri.toString());
 	}
 
