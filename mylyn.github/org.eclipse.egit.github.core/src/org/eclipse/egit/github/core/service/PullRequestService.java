@@ -36,7 +36,6 @@ import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -123,19 +122,18 @@ public class PullRequestService extends GitHubService {
 	 * @param size
 	 * @return paged request
 	 */
-	protected PagedRequest<PullRequest> createdPullsRequest(
+	protected PagedRequest<PullRequest> createPullsRequest(
 			IRepositoryIdProvider provider, String state, int start, int size) {
 		final String id = getId(provider);
-		if (state == null)
-			throw new IllegalArgumentException("State cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(IGitHubConstants.SEGMENT_PULLS);
+		uri.append(SEGMENT_PULLS);
 		PagedRequest<PullRequest> request = createPagedRequest();
 		request.setUri(uri);
-		request.setParams(Collections.singletonMap(IssueService.FILTER_STATE,
-				state));
+		if (state != null)
+			request.setParams(Collections.singletonMap(
+					IssueService.FILTER_STATE, state));
 		request.setType(new TypeToken<List<PullRequest>>() {
 		}.getType());
 		return request;
@@ -151,9 +149,7 @@ public class PullRequestService extends GitHubService {
 	 */
 	public List<PullRequest> getPullRequests(IRepositoryIdProvider repository,
 			String state) throws IOException {
-		PagedRequest<PullRequest> request = createdPullsRequest(repository,
-				state, PAGE_FIRST, PAGE_SIZE);
-		return getAll(request);
+		return getAll(pagePullRequests(repository, state));
 	}
 
 	/**
@@ -192,30 +188,32 @@ public class PullRequestService extends GitHubService {
 	 */
 	public PageIterator<PullRequest> pagePullRequests(
 			IRepositoryIdProvider repository, String state, int start, int size) {
-		PagedRequest<PullRequest> request = createdPullsRequest(repository,
+		PagedRequest<PullRequest> request = createPullsRequest(repository,
 				state, start, size);
 		return createPageIterator(request);
 	}
 
 	private Map<String, String> createPrMap(PullRequest request) {
 		Map<String, String> params = new HashMap<String, String>();
-		String title = request.getTitle();
-		if (title != null)
-			params.put(PR_TITLE, title);
-		String body = request.getBody();
-		if (body != null)
-			params.put(PR_BODY, body);
-		PullRequestMarker baseMarker = request.getBase();
-		if (baseMarker != null) {
-			String base = baseMarker.getLabel();
-			if (base != null)
-				params.put(PR_BASE, base);
-		}
-		PullRequestMarker headMarker = request.getHead();
-		if (headMarker != null) {
-			String head = headMarker.getLabel();
-			if (head != null)
-				params.put(PR_HEAD, head);
+		if (request != null) {
+			String title = request.getTitle();
+			if (title != null)
+				params.put(PR_TITLE, title);
+			String body = request.getBody();
+			if (body != null)
+				params.put(PR_BODY, body);
+			PullRequestMarker baseMarker = request.getBase();
+			if (baseMarker != null) {
+				String base = baseMarker.getLabel();
+				if (base != null)
+					params.put(PR_BASE, base);
+			}
+			PullRequestMarker headMarker = request.getHead();
+			if (headMarker != null) {
+				String head = headMarker.getLabel();
+				if (head != null)
+					params.put(PR_HEAD, head);
+			}
 		}
 		return params;
 	}
@@ -245,13 +243,34 @@ public class PullRequestService extends GitHubService {
 	public PullRequest createPullRequest(IRepositoryIdProvider repository,
 			PullRequest request) throws IOException {
 		String id = getId(repository);
-		if (request == null)
-			throw new IllegalArgumentException("Request cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_PULLS);
 		Map<String, String> params = createPrMap(request);
+		return client.post(uri.toString(), params, PullRequest.class);
+	}
+
+	/**
+	 * Create pull request by attaching branch information to an existing issue
+	 *
+	 * @param repository
+	 * @param issueId
+	 * @param head
+	 * @param base
+	 * @return created pull request
+	 * @throws IOException
+	 */
+	public PullRequest createPullRequest(IRepositoryIdProvider repository,
+			int issueId, String head, String base) throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_PULLS);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("issue", issueId); //$NON-NLS-1$
+		params.put("head", head); //$NON-NLS-1$
+		params.put("base", base); //$NON-NLS-1$
 		return client.post(uri.toString(), params, PullRequest.class);
 	}
 
@@ -460,8 +479,6 @@ public class PullRequestService extends GitHubService {
 	public CommitComment createComment(IRepositoryIdProvider repository,
 			int id, CommitComment comment) throws IOException {
 		String repoId = getId(repository);
-		if (comment == null)
-			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
