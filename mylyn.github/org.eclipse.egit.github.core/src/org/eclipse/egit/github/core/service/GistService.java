@@ -306,6 +306,38 @@ public class GistService extends GitHubService {
 	}
 
 	/**
+	 * Get gist comment with id
+	 *
+	 * @param commentId
+	 * @return comment
+	 * @throws IOException
+	 */
+	public Comment getComment(int commentId) throws IOException {
+		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
+		uri.append('/').append(commentId);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		request.setType(Comment.class);
+		return (Comment) client.get(request).getBody();
+	}
+
+	/**
+	 * Edit gist comment
+	 *
+	 * @param comment
+	 * @return edited comment
+	 * @throws IOException
+	 */
+	public Comment editComment(Comment comment) throws IOException {
+		if (comment == null)
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_GISTS + SEGMENT_COMMENTS);
+		uri.append('/').append(comment.getId());
+		return client.post(uri.toString(), comment, Comment.class);
+	}
+
+	/**
 	 * Delete the Gist comment with the given id
 	 *
 	 * @param commentId
