@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -64,7 +65,6 @@ import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
-import com.google.gerrit.common.data.PatchSetPublishDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.common.data.SystemInfoService;
@@ -403,34 +403,50 @@ public class GerritClient {
 			result = execute(monitor, new Operation<PatchSetDetail>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeDetailService().patchSetDetail(id, null, null, this);
+					getChangeDetailService().patchSetDetail2(null, id, null, this);
 				}
 			});
 		} catch (GerritException e) {
-			// fallback for Gerrit < 2.1.7
-			String message = e.getMessage();
-			if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
-				result = execute(monitor, new Operation<PatchSetDetail>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeDetailService().patchSetDetail(id, this);
-					}
-				});
-			} else {
-				throw e;
+			try {
+				// fallback for Gerrit 2.1.7
+				String message = e.getMessage();
+				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+					result = execute(monitor, new Operation<PatchSetDetail>() {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getChangeDetailService().patchSetDetail(null, id, null, this);
+						}
+					});
+				}
+			} catch (GerritException e2) {
+				// fallback for Gerrit < 2.1.7
+				String message = e2.getMessage();
+				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+					result = execute(monitor, new Operation<PatchSetDetail>() {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getChangeDetailService().patchSetDetail(id, this);
+						}
+					});
+				} else {
+					throw e;
+				}
 			}
 		}
 		return result;
 	}
 
-	public PatchSetPublishDetail getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
+	public PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
-		return execute(monitor, new Operation<PatchSetPublishDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeDetailService().patchSetPublishDetail(id, this);
-			}
-		});
+		PatchSetPublishDetailX publishDetail = execute(monitor,
+				new Operation<org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getChangeDetailService().patchSetPublishDetailX(id, this);
+					}
+				});
+		publishDetail.fixFields();
+		return publishDetail;
 	}
 
 	public GerritChange getChange(String reviewId, IProgressMonitor monitor) throws GerritException {
@@ -448,12 +464,12 @@ public class GerritClient {
 		}
 		ChangeDetail changeDetail = getChangeDetail(id, monitor);
 		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
-		Map<PatchSet.Id, PatchSetPublishDetail> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetail>();
+		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetailX>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
 			PatchSetDetail patchSetDetail = getPatchSetDetail(patchSet.getId(), monitor);
 			patchSets.add(patchSetDetail);
 			if (!isAnonymous()) {
-				PatchSetPublishDetail patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);
+				PatchSetPublishDetailX patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);
 				patchSetPublishDetailByPatchSetId.put(patchSet.getId(), patchSetPublishDetail);
 			}
 		}

@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.PublishRequest;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
@@ -59,9 +61,9 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private final int addedDrafts;
 
-	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail patchSet, int addedDrafts) {
+	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, int addedDrafts) {
 		super(parentShell, task);
-		this.publishDetail = patchSet;
+		this.publishDetail = publishDetail;
 		this.addedDrafts = addedDrafts;
 		this.approvalButtons = new ArrayList<Button>();
 		setNeedsConfig(true);
@@ -124,9 +126,9 @@ public class PublishDialog extends GerritOperationDialog {
 			return;
 		}
 
-		if (config.getApprovalTypes() != null && publishDetail.getAllowed() != null) {
+		if (config.getApprovalTypes() != null && config.getApprovalTypes().getApprovalTypes() != null) {
 			for (ApprovalType approvalType : config.getApprovalTypes().getApprovalTypes()) {
-				Set<ApprovalCategoryValue.Id> allowed = publishDetail.getAllowed(approvalType.getCategory().getId());
+				Set<ApprovalCategoryValue.Id> allowed = getAllowed(publishDetail, approvalType);
 				if (allowed != null && allowed.size() > 0) {
 					Group group = new Group(approvalComposite, SWT.NONE);
 					GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
@@ -135,9 +137,21 @@ public class PublishDialog extends GerritOperationDialog {
 
 					int givenValue = 0;
 					if (publishDetail.getGiven() != null) {
+						// Gerrit 2.1
 						PatchSetApproval approval = publishDetail.getGiven().get(approvalType.getCategory().getId());
 						if (approval != null) {
 							givenValue = approval.getValue();
+						}
+					}
+					if (givenValue == 0 && publishDetail instanceof PatchSetPublishDetailX) {
+						// Gerrit 2.2
+						List<PatchSetApproval> given = ((PatchSetPublishDetailX) publishDetail).getGiven2();
+						if (given != null) {
+							for (PatchSetApproval approval : given) {
+								if (approval.getCategoryId().equals(approvalType.getCategory().getId())) {
+									givenValue = approval.getValue();
+								}
+							}
 						}
 					}
 
@@ -164,4 +178,27 @@ public class PublishDialog extends GerritOperationDialog {
 		}
 	}
 
+	private Set<ApprovalCategoryValue.Id> getAllowed(PatchSetPublishDetail publishDetail, ApprovalType approvalType) {
+		if (publishDetail.getAllowed() != null) {
+			// Gerrit 2.1
+			return publishDetail.getAllowed(approvalType.getCategory().getId());
+		} else if (publishDetail instanceof PatchSetPublishDetailX) {
+			// Gerrit 2.2
+			List<PermissionLabel> labels = ((PatchSetPublishDetailX) publishDetail).getLabels();
+			if (labels != null) {
+				Set<ApprovalCategoryValue.Id> result = new HashSet<ApprovalCategoryValue.Id>();
+				for (PermissionLabel label : labels) {
+					if (label.matches(approvalType.getCategory())) {
+						for (ApprovalCategoryValue value : approvalType.getValues()) {
+							if (label.matches(value)) {
+								result.add(value.getId());
+							}
+						}
+					}
+				}
+				return result;
+			}
+		}
+		return null;
+	}
 }

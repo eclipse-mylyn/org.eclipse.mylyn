@@ -14,9 +14,10 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
+
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
-import com.google.gerrit.common.data.PatchSetPublishDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
@@ -28,7 +29,7 @@ public class GerritChange {
 
 	private List<PatchSetDetail> patchSetDetails;
 
-	private Map<PatchSet.Id, PatchSetPublishDetail> publishDetailByPatchSetId;
+	private Map<PatchSet.Id, PatchSetPublishDetailX> publishDetailByPatchSetId;
 
 	public ChangeDetail getChangeDetail() {
 		return changeDetail;
@@ -38,7 +39,7 @@ public class GerritChange {
 		return patchSetDetails;
 	}
 
-	public Map<PatchSet.Id, PatchSetPublishDetail> getPublishDetailByPatchSetId() {
+	public Map<PatchSet.Id, PatchSetPublishDetailX> getPublishDetailByPatchSetId() {
 		return publishDetailByPatchSetId;
 	}
 
@@ -50,7 +51,7 @@ public class GerritChange {
 		this.patchSetDetails = patchSets;
 	}
 
-	void setPatchSetPublishDetailByPatchSetId(Map<PatchSet.Id, PatchSetPublishDetail> patchSetPublishDetailByPatchSetId) {
+	void setPatchSetPublishDetailByPatchSetId(Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId) {
 		this.publishDetailByPatchSetId = patchSetPublishDetailByPatchSetId;
 	}
 

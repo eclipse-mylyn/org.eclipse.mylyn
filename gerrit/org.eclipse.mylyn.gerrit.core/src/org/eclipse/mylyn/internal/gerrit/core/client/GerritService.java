@@ -91,7 +91,11 @@ public class GerritService implements InvocationHandler {
 			String responseMessage = client.postJsonRequest(getServiceUri(), new JsonEntity() {
 				@Override
 				public String getContent() {
-					return json.createRequest(client.getId(), client.getXsrfKey(), method.getName(), parameters);
+					String methodName = method.getName();
+					if (methodName.endsWith("X")) { //$NON-NLS-1$
+						methodName = methodName.substring(0, methodName.length() - 1);
+					}
+					return json.createRequest(client.getId(), client.getXsrfKey(), methodName, parameters);
 				}
 			}, monitor);
 

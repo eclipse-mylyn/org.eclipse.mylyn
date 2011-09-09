@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Sascha Scholz (SAP) - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
@@ -16,9 +17,18 @@ import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+/**
+ * @author Sascha Scholz
+ * @author Steffen Pingel
+ */
 public interface ChangeDetailService extends com.google.gerrit.common.data.ChangeDetailService {
 
 	void patchSetDetail(PatchSet.Id keyA, PatchSet.Id keyB, AccountDiffPreference diffPrefs,
 			AsyncCallback<PatchSetDetail> callback);
+
+	void patchSetDetail2(PatchSet.Id keyA, PatchSet.Id keyB, AccountDiffPreference diffPrefs,
+			AsyncCallback<PatchSetDetail> callback);
+
+	void patchSetPublishDetailX(PatchSet.Id key, AsyncCallback<PatchSetPublishDetailX> callback);
 
 }
