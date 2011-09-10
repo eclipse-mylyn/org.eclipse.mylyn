@@ -106,6 +106,26 @@ public class HtmlParserTest extends TestCase {
 		performTest("<html><body><ul><li>a <code>foo baz</code></li></ul></body></html>", "* a @foo baz@\n\n");
 	}
 
+	public void testNbsp160() throws IOException, SAXException {
+		performTest("<html><body>test&nbsp;two&#160;three</body></html>", "test two three\n\n");
+	}
+
+	public void testLtGt() throws IOException, SAXException {
+		performTest("<html><body>test&lt;two&gt;three</body></html>", "test<two>three\n\n");
+	}
+
+	public void testApos() throws IOException, SAXException {
+		performTest("<html><body>test&apos;two</body></html>", "test'two\n\n");
+	}
+
+	public void testAmp() throws IOException, SAXException {
+		performTest("<html><body>test&amp;two</body></html>", "test&two\n\n");
+	}
+
+	public void testEntityReferences() throws IOException, SAXException {
+		performTest("<html><body>&copy;&reg;&euro;</body></html>", "(c)(r)\u20ac\n\n");
+	}
+
 	private void performTest(String html, String expectedResult) throws IOException, SAXException {
 		TestUtil.println("HTML: " + html);
 

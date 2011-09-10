@@ -472,7 +472,22 @@ public class TextileDocumentBuilder extends DocumentBuilder {
 	public void characters(String text) {
 		assertOpenBlock();
 		try {
-			currentBlock.write(text);
+			text = text.replace("\u00A0", " "); //$NON-NLS-1$//$NON-NLS-2$
+			for (int x = 0; x < text.length(); ++x) {
+				char c = text.charAt(x);
+				switch (c) {
+				case '\u00A0':// &nbsp;
+					currentBlock.write(' ');
+					break;
+				case '\u00A9': // &copy;
+					currentBlock.write("(c)");break; //$NON-NLS-1$
+				case '\u00AE': // &reg;
+					currentBlock.write("(r)");break; //$NON-NLS-1$
+				default:
+					currentBlock.write(c);
+					break;
+				}
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

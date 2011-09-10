@@ -12,10 +12,15 @@
 package org.eclipse.mylyn.wikitext.core.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.mylyn.internal.wikitext.core.util.ConcatenatingReader;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.xml.sax.Attributes;
@@ -158,13 +163,12 @@ public class HtmlParser {
 			void characters(String s) {
 				builder.characters(s);
 			}
+
 		}
 
 		private class BlockElementHandler extends ElementHandler {
 
 			private final BlockType blockType;
-
-			private boolean hasCharacters;
 
 			private BlockElementHandler(BlockType blockType) {
 				this.blockType = blockType;
@@ -179,13 +183,9 @@ public class HtmlParser {
 			}
 
 			public void characters(String s) {
-				hasCharacters = true;
 				builder.characters(s);
 			}
 
-			public boolean hasCharacters() {
-				return hasCharacters;
-			}
 		}
 
 		private class SpanElementHandler extends ElementHandler {
@@ -283,6 +283,7 @@ public class HtmlParser {
 			}
 			return new BlockElementHandler(blockType);
 		}
+
 	}
 
 	/**
@@ -305,6 +306,20 @@ public class HtmlParser {
 		}
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(new DocumentBuilderAdapter(builder));
+
+		Reader reader = input.getCharacterStream();
+		if (reader == null) {
+			final InputStream in = input.getByteStream();
+			if (in == null) {
+				throw new IllegalArgumentException("input must provide a byte stream or a character stream"); //$NON-NLS-1$
+			}
+			reader = new InputStreamReader(in, input.getEncoding() == null ? "utf-8" : input.getEncoding()); //$NON-NLS-1$
+		}
+		reader = new ConcatenatingReader(
+				new StringReader(
+						"<?xml version='1.0'?><!DOCTYPE html [ <!ENTITY nbsp \"&#160;\"> <!ENTITY copy \"&#169;\"> <!ENTITY reg \"&#174;\"> <!ENTITY euro \"&#8364;\"> ]>"), reader); //$NON-NLS-1$
+
+		input = new InputSource(reader);
 		xmlReader.parse(input);
 	}
 
