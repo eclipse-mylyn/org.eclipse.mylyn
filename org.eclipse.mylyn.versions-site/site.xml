@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Copyright (c) 2011 Tasktop Technologies and others.
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
-   
-    Contributors:
-         Tasktop Technologies - initial API and implementation
- -->
-<site pack200="true">
+<site>
    <description>
       Mylyn Versions
    </description>
@@ -24,6 +14,9 @@
    </feature>
    <feature url="features/org.eclipse.mylyn.versions.sdk_0.0.0.jar" id="org.eclipse.mylyn.versions.sdk" version="0.0.0">
       <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.subclipse_0.9.0.201109100025.jar" id="org.eclipse.mylyn.subclipse" version="0.9.0.201109100025">
+      <category name="Integration"/>
    </feature>
    <category-def name="Features" label="Mylyn Versions Features">
       <description>
