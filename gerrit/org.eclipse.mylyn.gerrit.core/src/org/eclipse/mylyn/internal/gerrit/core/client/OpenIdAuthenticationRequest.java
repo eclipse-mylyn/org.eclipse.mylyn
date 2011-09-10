@@ -28,6 +28,10 @@ public class OpenIdAuthenticationRequest {
 
 	private final String returnUrl;
 
+	private String cookie;
+
+	private String cookieUrl;
+
 	public OpenIdAuthenticationRequest(String requestUrl, Map<String, String> providerArgs, String returnUrl) {
 		Assert.isNotNull(requestUrl);
 		Assert.isNotNull(providerArgs);
@@ -58,6 +62,22 @@ public class OpenIdAuthenticationRequest {
 
 	public String getReturnUrl() {
 		return returnUrl;
+	}
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+
+	public void setCookieUrl(String cookieUrl) {
+		this.cookieUrl = cookieUrl;
+	}
+
+	public String getCookie() {
+		return cookie;
+	}
+
+	public String getCookieUrl() {
+		return cookieUrl;
 	}
 
 }

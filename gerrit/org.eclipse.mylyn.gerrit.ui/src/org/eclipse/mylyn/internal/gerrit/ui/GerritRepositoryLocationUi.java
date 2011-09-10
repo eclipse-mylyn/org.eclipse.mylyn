@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.IOpenIdLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationRequest;
+import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationResponse;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.WebBrowserDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryLocationUi;
@@ -53,7 +53,7 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 	}
 
 	@Override
-	public String requestAuthentication(OpenIdAuthenticationRequest request) {
+	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request) {
 		final String repositoryUrl = taskRepository.getUrl();
 
 		int currentVersion = version;
@@ -69,20 +69,23 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 		}
 	}
 
-	private String showAuthenticationDialog(final String repositoryUrl, final OpenIdAuthenticationRequest request) {
+	private OpenIdAuthenticationResponse showAuthenticationDialog(final String repositoryUrl,
+			final OpenIdAuthenticationRequest request) {
 		final StringBuilder sb = new StringBuilder();
 		try {
 			for (Map.Entry<String, String> entry : request.getProviderArgs().entrySet()) {
+				if (sb.length() > 0) {
+					sb.append("&"); //$NON-NLS-1$
+				}
 				sb.append(URLEncoder.encode(entry.getKey(), "UTF-8")); //$NON-NLS-1$
 				sb.append("="); //$NON-NLS-1$
 				sb.append(URLEncoder.encode(entry.getValue(), "UTF-8")); //$NON-NLS-1$
-				sb.append("&"); //$NON-NLS-1$
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 
-		final AtomicReference<String> result = new AtomicReference<String>();
+		final AtomicReference<OpenIdAuthenticationResponse> result = new AtomicReference<OpenIdAuthenticationResponse>();
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -91,25 +94,34 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 						0);
 				dialog.create();
 
-				// TODO e3.6 replace reflection with call to setUrl(...)
-				Method method;
-				try {
-					method = Browser.class.getDeclaredMethod("setUrl", String.class, String.class, String[].class);
-					method.invoke(dialog.getBrowser(), request.getRequestUrl(), sb.toString(), null);
-				} catch (Exception e) {
-					// POST API not available, fall-back to alternate URL
-					dialog.getBrowser().setUrl(request.getAlternateUrl());
-				}
 				dialog.getBrowser().addLocationListener(new LocationAdapter() {
 					@Override
 					public void changing(LocationEvent event) {
 						if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
-							result.set(event.location);
+							result.set(new OpenIdAuthenticationResponse(event.location, null));
+						}
+						// alternatively check cookies since IE does not notify listeners of redirects 
+						String value = Browser.getCookie(request.getCookie(), request.getCookieUrl());
+						if (value != null) {
+							result.set(new OpenIdAuthenticationResponse(event.location, value));
+						}
+						if (result.get() != null) {
 							event.doit = false;
-							dialog.close();
+							// delay execution to avoid IE crash
+							dialog.getBrowser().getDisplay().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									if (dialog.getShell() != null && !dialog.getShell().isDisposed()) {
+										dialog.close();
+									}
+								}
+							});
 						}
 					}
 				});
+
+				// navigate to login page
+				dialog.getBrowser().setUrl(request.getRequestUrl() + "?" + sb.toString());
 				dialog.open();
 			}
 		});

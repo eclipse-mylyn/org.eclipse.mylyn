@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -245,7 +246,7 @@ public class GerritHttpClient {
 			}
 		};
 
-		String openIdResponse = null;
+		OpenIdAuthenticationResponse openIdResponse = null;
 		PostMethod method = postJsonRequestInternal("/gerrit/rpc/OpenIdService", entity, monitor); //$NON-NLS-1$
 		try {
 			int code = method.getStatusCode();
@@ -261,10 +262,12 @@ public class GerritHttpClient {
 						OpenIdAuthenticationRequest authenticationRequest = new OpenIdAuthenticationRequest(
 								result.providerUrl, result.providerArgs, returnUrl);
 						authenticationRequest.setAlternateUrl(location.getUrl());
+						authenticationRequest.setCookie("GerritAccount");
+						authenticationRequest.setCookieUrl(location.getUrl());
 						openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest);
 					}
 				} else {
-					return -1;
+					throw new GerritException("Invalid OpenID provider");
 				}
 			}
 			if (openIdResponse == null) {
@@ -274,21 +277,29 @@ public class GerritHttpClient {
 			method.releaseConnection();
 		}
 
-		GetMethod validateMethod = new GetMethod(openIdResponse);
-		try {
-			// Execute the method.
-			WebUtil.execute(httpClient, hostConfiguration, validateMethod, monitor);
-		} catch (IOException e) {
-			WebUtil.releaseConnection(method, monitor);
-			throw e;
-		} catch (RuntimeException e) {
-			WebUtil.releaseConnection(method, monitor);
-			throw e;
-		}
-		if (validateMethod.getStatusCode() == HttpURLConnection.HTTP_OK) {
+		if (openIdResponse.getCookieValue() != null) {
+			URL url = new URL(location.getUrl());
+			boolean isSecure = "https".equals(url.getProtocol());
+			setXsrfCookie(new Cookie(url.getHost(), "GerritAccount", openIdResponse.getCookieValue(), url.getPath(),
+					null, isSecure));
 			return HttpStatus.SC_TEMPORARY_REDIRECT;
+		} else {
+			GetMethod validateMethod = new GetMethod(openIdResponse.getResponseUrl());
+			try {
+				// Execute the method.
+				WebUtil.execute(httpClient, hostConfiguration, validateMethod, monitor);
+			} catch (IOException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
+			} catch (RuntimeException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
+			}
+			if (validateMethod.getStatusCode() == HttpURLConnection.HTTP_OK) {
+				return HttpStatus.SC_TEMPORARY_REDIRECT;
+			}
+			return validateMethod.getStatusCode();
 		}
-		return validateMethod.getStatusCode();
 	}
 
 	private int authenticateUserPassService(AuthenticationCredentials credentials, IProgressMonitor monitor)

@@ -37,6 +37,6 @@ public interface IOpenIdLocation {
 	 * @throws OperationCanceledException
 	 *             if the authentication was canceled
 	 */
-	public String requestAuthentication(OpenIdAuthenticationRequest request);
+	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request);
 
 }
