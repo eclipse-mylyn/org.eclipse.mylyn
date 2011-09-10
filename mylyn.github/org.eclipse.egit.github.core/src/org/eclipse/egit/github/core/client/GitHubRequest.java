@@ -21,7 +21,11 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 /**
- * GitHub API request class.
+ * GitHub API request class that contains the URI and parameters of the request
+ * as well as the expected {@link Type} of the response.
+ *
+ * The {@link #generateUri()} method should be used to build a full URI that
+ * contains both the base uri and the parameters set.
  */
 public class GitHubRequest {
 

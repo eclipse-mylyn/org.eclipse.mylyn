@@ -60,6 +60,8 @@ public class PagedRequest<V> extends GitHubRequest {
 	}
 
 	/**
+	 * Get initial page size
+	 *
 	 * @return pageSize
 	 */
 	public int getPageSize() {
@@ -81,6 +83,8 @@ public class PagedRequest<V> extends GitHubRequest {
 	}
 
 	/**
+	 * Get initial page number
+	 *
 	 * @return page
 	 */
 	public int getPage() {
