@@ -46,9 +46,9 @@ public class Messages extends NLS {
 	/** */
 	public static String FetchPullRequestHandler_JobName;
 	/** */
-	public static String FetchPullRequestHandler_MessageRepositoryNotFound;
+	public static String PullRequestConnectorUi_MessageRepositoryNotFound;
 	/** */
-	public static String FetchPullRequestHandler_TitleRepositoryNotFound;
+	public static String PullRequestConnectorUi_TitleRepositoryNotFound;
 	/** */
 	public static String MergePullRequestHandler_MergeJob;
 	/** */
