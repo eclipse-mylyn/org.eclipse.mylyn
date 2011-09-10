@@ -58,5 +58,4 @@ public class AuthInterceptor implements HttpRequestInterceptor {
 		authState.setAuthScheme(authScheme);
 		authState.setCredentials(creds);
 	}
-
 }

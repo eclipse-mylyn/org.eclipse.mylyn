@@ -13,7 +13,8 @@ package org.eclipse.egit.github.core.client;
 import org.apache.http.HttpResponse;
 
 /**
- * GitHub API response class.
+ * GitHub API response class that provides the parsed response body as well as
+ * any links to the first, previous, next, and last responses.
  */
 public class GitHubResponse {
 
