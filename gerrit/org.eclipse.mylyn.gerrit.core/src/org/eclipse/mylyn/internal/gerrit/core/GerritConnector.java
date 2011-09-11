@@ -120,14 +120,6 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return "Gerrit Code Review (supports 2.1.5 and later)";
 	}
 
-	/**
-	 * Not supported, yet.
-	 */
-	@Override
-	public String getRepositoryUrlFromTaskUrl(String url) {
-		return null;
-	}
-
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
@@ -140,13 +132,28 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
+	public String getRepositoryUrlFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+
+		int i = url.indexOf(CHANGE_PREFIX);
+		if (i != -1) {
+			return url.substring(0, i);
+		}
+		return null;
+	}
+
+	@Override
 	public String getTaskIdFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+
 		// example: https://review.sonyericsson.net/#change,14175
-		if ((url != null) && (url.length() > 0)) {
-			int index = url.indexOf(CHANGE_PREFIX);
-			if (index > 0) {
-				return url.substring(index + CHANGE_PREFIX.length());
-			}
+		int index = url.indexOf(CHANGE_PREFIX);
+		if (index > 0) {
+			return url.substring(index + CHANGE_PREFIX.length());
 		}
 		return null;
 	}
@@ -162,9 +169,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		// return null;
-		String url = repositoryUrl + CHANGE_PREFIX + taskId;
-		return ((repositoryUrl != null) && (taskId != null)) ? url : null;
+		return repositoryUrl + CHANGE_PREFIX + taskId;
 	}
 
 	@Override
