@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +79,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -155,13 +158,25 @@ public class PatchSetSection extends AbstractGerritSection {
 		super.dispose();
 	}
 
-	public String getTextClientText(final PatchSetDetail patchSetDetail) {
+	public void updateTextClient(Section section, final PatchSetDetail patchSetDetail, boolean cachingInProgress) {
+		String message;
+
+		String time = DateFormat.getDateTimeInstance().format(patchSetDetail.getPatchSet().getCreatedOn());
 		int numComments = getNumComments(patchSetDetail);
 		if (numComments > 0) {
-			return NLS.bind("{0} Comments", numComments);
+			message = NLS.bind("{0}, {1} Comments", time, numComments);
 		} else {
-			return " ";
+			message = NLS.bind("{0}", time);
 		}
+
+		if (cachingInProgress) {
+			message += " [Caching contents...]";
+		}
+
+		final Label textClientLabel = (Label) section.getTextClient();
+		textClientLabel.setText("  " + message);
+		textClientLabel.getParent().layout(true, true);
+		//textClientLabel.setVisible(cachingInProgress || !section.isExpanded());
 	}
 
 	@Override
@@ -247,9 +262,10 @@ public class PatchSetSection extends AbstractGerritSection {
 		final Section subSection = toolkit.createSection(composite, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
 		subSection.setText(NLS.bind("Patch Set {0}", patchSetDetail.getPatchSet().getId().get()));
+		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		String message = getTextClientText(patchSetDetail);
-		addTextClient(toolkit, subSection, message);
+		addTextClient(toolkit, subSection, "", false); //$NON-NLS-1$
+		updateTextClient(subSection, patchSetDetail, false);
 
 		if (subSection.isExpanded()) {
 			createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
@@ -273,10 +289,7 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	private void subSectionExpanded(final PatchSetDetail patchSetDetail, final Section composite, final Viewer viewer) {
-		final Label progressLabel = (Label) composite.getTextClient();
-		final String message = "  Caching contents...";
-		progressLabel.setText(message);
-		progressLabel.setVisible(true);
+		updateTextClient(composite, patchSetDetail, true);
 
 		final GetPatchSetContentJob job = new GetPatchSetContentJob(getTaskEditorPage().getTaskRepository(),
 				patchSetDetail);
@@ -295,8 +308,7 @@ public class PatchSetSection extends AbstractGerritSection {
 								}
 							}
 
-							progressLabel.setText("  " + getTextClientText(patchSetDetail));
-							progressLabel.setVisible(!composite.isExpanded());
+							updateTextClient(composite, patchSetDetail, false);
 							getTaskEditorPage().reflow();
 						}
 					}
@@ -421,11 +433,39 @@ public class PatchSetSection extends AbstractGerritSection {
 	void createSubSectionContents(final ChangeDetail changeDetail, final PatchSetDetail patchSetDetail,
 			PatchSetPublishDetail publishDetail, Section subSection) {
 		Composite composite = toolkit.createComposite(subSection);
-		GridLayoutFactory.fillDefaults().applyTo(composite);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
 		subSection.setClient(composite);
 
+		Label authorLabel = new Label(composite, SWT.NONE);
+		authorLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		authorLabel.setText("Author");
+
+		Text authorText = new Text(composite, SWT.READ_ONLY);
+		authorText.setText(GerritUtil.getUserLabel(patchSetDetail.getInfo().getAuthor()));
+
+		Label committerLabel = new Label(composite, SWT.NONE);
+		committerLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		committerLabel.setText("Committer");
+
+		Text committerText = new Text(composite, SWT.READ_ONLY);
+		committerText.setText(GerritUtil.getUserLabel(patchSetDetail.getInfo().getCommitter()));
+
+		Label commitLabel = new Label(composite, SWT.NONE);
+		commitLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		commitLabel.setText("Commit");
+
+		Text commitText = new Text(composite, SWT.READ_ONLY);
+		commitText.setText(patchSetDetail.getPatchSet().getRevision().get());
+
+		Label refLabel = new Label(composite, SWT.NONE);
+		refLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		refLabel.setText("Ref");
+
+		Text refText = new Text(composite, SWT.READ_ONLY);
+		refText.setText(patchSetDetail.getPatchSet().getRefName());
+
 		final TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
-		GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 			private EContentAdapter modelAdapter;
 
@@ -485,6 +525,7 @@ public class PatchSetSection extends AbstractGerritSection {
 		viewer.setInput(items);
 
 		Composite actionComposite = createActions(changeDetail, patchSetDetail, publishDetail, composite);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 
 		subSectionExpanded(patchSetDetail, subSection, viewer);
 

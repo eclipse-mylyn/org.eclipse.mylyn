@@ -102,6 +102,7 @@ public class ReviewSection extends AbstractGerritSection {
 
 		final Section subSection = toolkit.createSection(parent, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
+		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		subSection.setText("Reviewers");
 
 		List<ApprovalType> approvalTypes;
@@ -142,7 +143,7 @@ public class ReviewSection extends AbstractGerritSection {
 
 				for (ApprovalType approvalType : approvalTypes) {
 					PatchSetApproval approval = approvalDetail.getApprovalMap().get(approvalType.getCategory().getId());
-					if (approval != null) {
+					if (approval != null && approval.getValue() != 0) {
 						label = new Label(composite, SWT.NONE);
 						GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).applyTo(label);
 
@@ -205,6 +206,7 @@ public class ReviewSection extends AbstractGerritSection {
 
 		final Section subSection = toolkit.createSection(parent, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
+		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		subSection.setText("Requirements");
 
 		Composite composite = toolkit.createComposite(subSection);
@@ -243,6 +245,7 @@ public class ReviewSection extends AbstractGerritSection {
 
 		final Section subSection = toolkit.createSection(parent, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
+		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		subSection.setText(title);
 
 		Composite composite = toolkit.createComposite(subSection);

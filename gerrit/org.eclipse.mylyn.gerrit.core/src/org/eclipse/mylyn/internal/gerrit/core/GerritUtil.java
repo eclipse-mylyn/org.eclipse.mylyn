@@ -44,6 +44,7 @@ import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.UserIdentity;
 
 /**
  * @author Steffen Pingel
@@ -165,6 +166,17 @@ public class GerritUtil {
 			return (i > 0) ? email.substring(0, i) : email;
 		}
 		return "<Unknown>";
+	}
+
+	public static String getUserLabel(UserIdentity user) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(user.getName());
+		if (user.getEmail() != null) {
+			sb.append(" <");
+			sb.append(user.getEmail());
+			sb.append(">");
+		}
+		return sb.toString();
 	}
 
 }

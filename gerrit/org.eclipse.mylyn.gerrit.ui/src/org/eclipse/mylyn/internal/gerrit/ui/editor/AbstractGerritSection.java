@@ -38,18 +38,25 @@ import com.google.gerrit.common.data.GerritConfig;
 public abstract class AbstractGerritSection extends AbstractTaskEditorSection {
 
 	public Label addTextClient(final FormToolkit toolkit, final Section section, String text) {
+		return addTextClient(toolkit, section, text, true);
+	}
+
+	public Label addTextClient(final FormToolkit toolkit, final Section section, String text, boolean hideOnExpand) {
 		final Label label = new Label(section, SWT.NONE);
 		label.setText("  " + text); //$NON-NLS-1$
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		label.setVisible(!section.isExpanded());
 
 		section.setTextClient(label);
-		section.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				label.setVisible(!section.isExpanded());
-			}
-		});
+
+		if (hideOnExpand) {
+			label.setVisible(!section.isExpanded());
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent e) {
+					label.setVisible(!section.isExpanded());
+				}
+			});
+		}
 
 		return label;
 	}
