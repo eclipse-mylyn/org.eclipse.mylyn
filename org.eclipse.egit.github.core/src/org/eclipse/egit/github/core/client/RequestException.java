@@ -26,15 +26,15 @@ import org.eclipse.egit.github.core.RequestError;
  */
 public class RequestException extends IOException {
 
-	private static final String FIELD_INVALID_WITH_VALUE = "Invalid value of ''{0}'' for field ''{1}''"; //$NON-NLS-1$
+	private static final String FIELD_INVALID_WITH_VALUE = "Invalid value of ''{0}'' for ''{1}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_INVALID = "Invalid value for field ''{0}''"; //$NON-NLS-1$
+	private static final String FIELD_INVALID = "Invalid value for ''{0}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_MISSING = "Missing required field ''{0}''"; //$NON-NLS-1$
+	private static final String FIELD_MISSING = "Missing required ''{0}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_ERROR = "Error with field ''{0}'' in {1} resource"; //$NON-NLS-1$
+	private static final String FIELD_ERROR = "Error with ''{0}'' field in {1} resource"; //$NON-NLS-1$
 
-	private static final String FIELD_EXISTS = "{0} resource with field ''{1}'' already exists"; //$NON-NLS-1$
+	private static final String FIELD_EXISTS = "{0} resource with ''{1}'' field already exists"; //$NON-NLS-1$
 
 	/**
 	 * serialVersionUID
