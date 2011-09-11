@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
+import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -30,5 +31,7 @@ public interface ChangeDetailService extends com.google.gerrit.common.data.Chang
 			AsyncCallback<PatchSetDetail> callback);
 
 	void patchSetPublishDetailX(PatchSet.Id key, AsyncCallback<PatchSetPublishDetailX> callback);
+
+	void changeDetailX(Change.Id id, AsyncCallback<ChangeDetailX> callback);
 
 }

@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 
-import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
@@ -25,13 +25,13 @@ import com.google.gerrit.reviewdb.PatchSet;
  */
 public class GerritChange {
 
-	private ChangeDetail changeDetail;
+	private ChangeDetailX changeDetail;
 
 	private List<PatchSetDetail> patchSetDetails;
 
 	private Map<PatchSet.Id, PatchSetPublishDetailX> publishDetailByPatchSetId;
 
-	public ChangeDetail getChangeDetail() {
+	public ChangeDetailX getChangeDetail() {
 		return changeDetail;
 	}
 
@@ -43,7 +43,7 @@ public class GerritChange {
 		return publishDetailByPatchSetId;
 	}
 
-	void setChangeDetail(ChangeDetail changeDetail) {
+	void setChangeDetail(ChangeDetailX changeDetail) {
 		this.changeDetail = changeDetail;
 	}
 

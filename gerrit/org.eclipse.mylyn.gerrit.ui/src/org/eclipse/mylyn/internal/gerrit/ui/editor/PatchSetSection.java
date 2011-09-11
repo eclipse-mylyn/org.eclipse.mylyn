@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.egit.GerritProjectToGitRepositoryMapping;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
@@ -181,6 +182,9 @@ public class PatchSetSection extends AbstractGerritSection {
 		boolean canSubmit = false;
 		if (changeDetail.getCurrentActions() != null) {
 			canSubmit = changeDetail.getCurrentActions().contains(ApprovalCategory.SUBMIT);
+		} else if (changeDetail instanceof ChangeDetailX) {
+			// Gerrit 2.2
+			canSubmit = ((ChangeDetailX) changeDetail).canSubmit();
 		}
 
 		if (canPublish) {

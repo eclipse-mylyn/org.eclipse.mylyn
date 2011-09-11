@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
@@ -298,12 +299,12 @@ public class GerritClient {
 	/**
 	 * Returns the details for a specific review.
 	 */
-	public ChangeDetail getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
+	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
 		final Change.Id id = new Change.Id(reviewId);
-		return execute(monitor, new Operation<ChangeDetail>() {
+		return execute(monitor, new Operation<ChangeDetailX>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeDetailService().changeDetail(id, this);
+				getChangeDetailService().changeDetailX(id, this);
 			}
 		});
 	}
@@ -462,7 +463,7 @@ public class GerritClient {
 				throw e;
 			}
 		}
-		ChangeDetail changeDetail = getChangeDetail(id, monitor);
+		ChangeDetailX changeDetail = getChangeDetail(id, monitor);
 		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
 		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetailX>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
