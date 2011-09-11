@@ -54,7 +54,18 @@
 		  <layout>p2</layout>
 		  <url>${mylyn-commons-repository-url}</url>
 		</repository>
+		<repository>
+		  <id>subclipse</id>
+		  <layout>p2</layout>
+		  <url>http://subclipse.tigris.org/update_1.6.x/</url>
+		</repository>
 	  </repositories>
+	  <modules>
+		<module>org.eclipse.mylyn.subclipse-feature</module>
+		<module>org.eclipse.mylyn.subclipse.core</module>
+		<module>org.eclipse.mylyn.subclipse.ui</module>
+		<module>org.eclipse.mylyn.versions-site</module>
+	  </modules>
 	</profile>
   </profiles>
   <modules>
@@ -63,11 +74,7 @@
     <module>org.eclipse.mylyn.git-feature</module>
     <module>org.eclipse.mylyn.git.core</module>
     <module>org.eclipse.mylyn.git.ui</module>
-    <module>org.eclipse.mylyn.subclipse-feature</module>
-    <module>org.eclipse.mylyn.subclipse.core</module>
-    <module>org.eclipse.mylyn.subclipse.ui</module>
     <module>org.eclipse.mylyn.versions-feature</module>
-    <module>org.eclipse.mylyn.versions-site</module>
     <module>org.eclipse.mylyn.versions.core</module>
     <module>org.eclipse.mylyn.versions.sdk-feature</module>
     <module>org.eclipse.mylyn.versions.tests</module>

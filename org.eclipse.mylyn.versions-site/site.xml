@@ -12,11 +12,11 @@
    <feature url="features/org.eclipse.mylyn.git_0.0.0.jar" id="org.eclipse.mylyn.git" version="0.0.0">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.subclipse_0.0.0.jar" id="org.eclipse.mylyn.subclipse" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.versions.sdk_0.0.0.jar" id="org.eclipse.mylyn.versions.sdk" version="0.0.0">
       <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.subclipse_0.9.0.201109100025.jar" id="org.eclipse.mylyn.subclipse" version="0.9.0.201109100025">
-      <category name="Integration"/>
    </feature>
    <category-def name="Features" label="Mylyn Versions Features">
       <description>
