@@ -27,7 +27,7 @@ public class RequestException extends IOException {
 
 	private static final String FIELD_INVALID_WITH_VALUE = "Invalid value of ''{0}'' for field ''{1}''"; //$NON-NLS-1$
 
-	private static final String FIELD_INVALID = "Invalid value for field ''{1}''"; //$NON-NLS-1$
+	private static final String FIELD_INVALID = "Invalid value for field ''{0}''"; //$NON-NLS-1$
 
 	private static final String FIELD_MISSING = "Missing required field ''{0}''"; //$NON-NLS-1$
 
