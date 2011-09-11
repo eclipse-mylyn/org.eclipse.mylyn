@@ -68,6 +68,7 @@ public class GitHubException extends IOException {
 		String value = error.getValue();
 		String field = error.getField();
 		String resource = error.getResource();
+
 		if (FieldError.CODE_INVALID.equals(code))
 			if (value != null)
 				return MessageFormat
@@ -76,12 +77,17 @@ public class GitHubException extends IOException {
 			else
 				return MessageFormat.format(Messages.FieldError_InvalidField,
 						field);
-		else if (FieldError.CODE_MISSING_FIELD.equals(code))
+
+		if (FieldError.CODE_MISSING_FIELD.equals(code))
 			return MessageFormat
 					.format(Messages.FieldError_MissingField, field);
-		else
-			return MessageFormat.format(Messages.FieldError_ResourceError,
-					field, resource);
-	}
 
+		if (FieldError.CODE_ALREADY_EXISTS.equals(code))
+			return MessageFormat.format(
+					Messages.FieldError_AlreadyExists,
+					resource, field);
+
+		return MessageFormat.format(Messages.FieldError_ResourceError, field,
+				resource);
+	}
 }
