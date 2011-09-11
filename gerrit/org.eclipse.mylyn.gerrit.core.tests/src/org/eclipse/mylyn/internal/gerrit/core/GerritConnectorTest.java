@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.junit.Test;
 
 /**
@@ -57,9 +56,6 @@ public class GerritConnectorTest {
 	@Test
 	public void testGetTaskUrl() {
 		GerritConnector connector = new GerritConnector();
-		assertNull(connector.getTaskUrl(null, null));
-		assertNull(connector.getTaskUrl("http://review.source.android.com", null)); //$NON-NLS-1$
-		assertNull(connector.getTaskUrl(null, "13492")); //$NON-NLS-1$
 		assertEquals("http://review.source.android.com/#change,13492", //$NON-NLS-1$
 				connector.getTaskUrl("http://review.source.android.com", "13492")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
