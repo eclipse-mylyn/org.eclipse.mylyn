@@ -45,7 +45,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final Pattern PATTERN_CHANGE_ID = Pattern.compile("(?:\\W||^)(Change-Id: (I[0-9a-f]{40}))"); //$NON-NLS-1$
+	private static final Pattern PATTERN_CHANGE_ID = Pattern.compile("(?:\\W||^)(I[0-9a-f]{8}([0-9a-f]{32})?)"); //$NON-NLS-1$
 
 	@Override
 	public String getConnectorKind() {
@@ -101,7 +101,7 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 			if (links == null) {
 				links = new ArrayList<IHyperlink>();
 			}
-			String key = matcher.group(2);
+			String key = matcher.group(1);
 			if (task == null || !key.startsWith(task.getTaskKey())) {
 				int start = matcher.start(1);
 				Region region = new Region(textOffset + start, matcher.end(1) - start);

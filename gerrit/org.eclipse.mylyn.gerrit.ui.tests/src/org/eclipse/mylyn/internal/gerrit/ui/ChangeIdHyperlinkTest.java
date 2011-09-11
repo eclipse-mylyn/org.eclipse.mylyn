@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     GitHub Inc. - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -26,10 +27,11 @@ import org.junit.Test;
  * {@link GerritConnectorUi#findHyperlinks(org.eclipse.mylyn.tasks.core.TaskRepository, org.eclipse.mylyn.tasks.core.ITask, String, int, int)}
  * 
  * @author Kevin Sawicki
+ * @author Steffen Pingel
  */
 public class ChangeIdHyperlinkTest {
 
-	private TaskRepository repo;
+	private TaskRepository repository;
 
 	private GerritConnectorUi connector;
 
@@ -39,10 +41,15 @@ public class ChangeIdHyperlinkTest {
 		assertTrue(link.getHyperlinkRegion().getLength() > 0);
 	}
 
+	private String getHyperlinkedText(String text, IHyperlink hyperlink) {
+		return text.substring(hyperlink.getHyperlinkRegion().getOffset(), hyperlink.getHyperlinkRegion().getOffset()
+				+ hyperlink.getHyperlinkRegion().getLength());
+	}
+
 	@Before
 	public void setUp() {
 		connector = new GerritConnectorUi();
-		repo = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://localhost"); //$NON-NLS-1$
+		repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://localhost"); //$NON-NLS-1$
 	}
 
 	/**
@@ -50,7 +57,7 @@ public class ChangeIdHyperlinkTest {
 	 */
 	@Test
 	public void emptyText() {
-		IHyperlink[] links = connector.findHyperlinks(repo, null, "", -1, 0); //$NON-NLS-1$
+		IHyperlink[] links = connector.findHyperlinks(repository, null, "", -1, 0); //$NON-NLS-1$
 		assertNull(links);
 	}
 
@@ -58,9 +65,19 @@ public class ChangeIdHyperlinkTest {
 	 * Test with invalid hex segment of change id (ends with 't')
 	 */
 	@Test
-	public void invalidHexPortion() {
+	public void invalidHexPortionInTail() {
 		String changeId = "Change-Id: I9a2336216f0bc1256073bff692c087cfebff8ct"; //$NON-NLS-1$
-		IHyperlink[] links = connector.findHyperlinks(repo, null, changeId, -1, 0);
+		IHyperlink[] links = connector.findHyperlinks(repository, null, changeId, -1, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		checkLink(links[0]);
+		assertEquals("I9a233621", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$
+	}
+
+	@Test
+	public void invalidHexPortionInBeginning() {
+		String changeId = "Change-Id: I9az336216f0bc1256073bff692c087cfebff8ct"; //$NON-NLS-1$
+		IHyperlink[] links = connector.findHyperlinks(repository, null, changeId, -1, 0);
 		assertNull(links);
 	}
 
@@ -70,10 +87,11 @@ public class ChangeIdHyperlinkTest {
 	@Test
 	public void singleHyperlinkNoPadding() {
 		String changeId = "Change-Id: I9a2336216f0bc1256073bff692c087cfbebff8cc"; //$NON-NLS-1$
-		IHyperlink[] links = connector.findHyperlinks(repo, null, changeId, -1, 0);
+		IHyperlink[] links = connector.findHyperlinks(repository, null, changeId, -1, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		checkLink(links[0]);
+		assertEquals("I9a2336216f0bc1256073bff692c087cfbebff8cc", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$
 	}
 
 	/**
@@ -82,11 +100,11 @@ public class ChangeIdHyperlinkTest {
 	@Test
 	public void singleHyperlinkWithPadding() {
 		String changeId = "    Change-Id: I9a2336216f0bc1256073bff692c087cfbebff8cc"; //$NON-NLS-1$
-		IHyperlink[] links = connector.findHyperlinks(repo, null, changeId, -1, 0);
+		IHyperlink[] links = connector.findHyperlinks(repository, null, changeId, -1, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		checkLink(links[0]);
-		assertEquals(4, links[0].getHyperlinkRegion().getOffset());
+		assertEquals(15, links[0].getHyperlinkRegion().getOffset());
 	}
 
 	/**
@@ -96,13 +114,24 @@ public class ChangeIdHyperlinkTest {
 	public void twoHyperlinks() {
 		String change1 = "Change-Id: I9a2336216f0bc1256073bff692c087cfbebff8cc"; //$NON-NLS-1$
 		String change2 = "Change-Id: I9a2336216f0bc1256073bff692c087cfbebff8cf"; //$NON-NLS-1$
-		IHyperlink[] links = connector.findHyperlinks(repo, null, change1 + "\n" + change2, -1, 0); //$NON-NLS-1$
+		IHyperlink[] links = connector.findHyperlinks(repository, null, change1 + "\n" + change2, -1, 0); //$NON-NLS-1$
 		assertNotNull(links);
 		assertEquals(2, links.length);
 		for (IHyperlink link : links) {
 			checkLink(link);
 		}
-		assertEquals(0, links[0].getHyperlinkRegion().getOffset());
-		assertEquals(change1.length() + 1, links[1].getHyperlinkRegion().getOffset());
+		assertEquals(11, links[0].getHyperlinkRegion().getOffset());
+		assertEquals(change1.length() + 12, links[1].getHyperlinkRegion().getOffset());
 	}
+
+	@Test
+	public void shortHyperlink() {
+		String changeId = "  I12345678 Iabc A01234567"; //$NON-NLS-1$
+		IHyperlink[] links = connector.findHyperlinks(repository, null, changeId, -1, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		checkLink(links[0]);
+		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$		
+	}
+
 }
