@@ -38,11 +38,11 @@ import org.junit.runners.Suite.SuiteClasses;
 		PullRequestMarkerTest.class, PullRequestServiceTest.class,
 		PullRequestTest.class, ReferenceTest.class, RepositoryCommitTest.class,
 		RepositoryIdTest.class, RepositoryTest.class, RequestErrorTest.class,
-		SearchRepositoryTest.class, ShaResourceTest.class, TagTest.class,
-		TeamServiceTest.class, TeamTest.class, TreeEntryTest.class,
-		TreeTest.class, TypedResourceTest.class, UrlUtilsTest.class,
-		UserPlanTest.class, UserServiceTest.class, UserTest.class,
-		WatcherServiceTest.class })
+		RequestExceptionTest.class, SearchRepositoryTest.class,
+		ShaResourceTest.class, TagTest.class, TeamServiceTest.class,
+		TeamTest.class, TreeEntryTest.class, TreeTest.class,
+		TypedResourceTest.class, UrlUtilsTest.class, UserPlanTest.class,
+		UserServiceTest.class, UserTest.class, WatcherServiceTest.class })
 public class AllHeadlessTests {
 
 }
