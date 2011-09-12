@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
@@ -34,7 +35,6 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -188,8 +188,8 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
 		if (language != null && language.length() > 0)
-			request.setParams(Collections.singletonMap(
-					IGitHubConstants.PARAM_LANGUAGE, language));
+			request.setParams(Collections
+					.singletonMap(PARAM_LANGUAGE, language));
 
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
