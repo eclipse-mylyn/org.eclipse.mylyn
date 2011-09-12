@@ -214,17 +214,10 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 					if (operationAttribute != null) {
 						PullRequestOperation operation = PullRequestOperation
 								.fromId(operationAttribute.getValue());
-						if (operation != PullRequestOperation.LEAVE)
-							switch (operation) {
-							case REOPEN:
-								pr.setState(IssueService.STATE_OPEN);
-								break;
-							case CLOSE:
-								pr.setState(IssueService.STATE_CLOSED);
-								break;
-							default:
-								break;
-							}
+						if (operation == PullRequestOperation.REOPEN)
+							pr.setState(IssueService.STATE_OPEN);
+						else if (operation == PullRequestOperation.CLOSE)
+							pr.setState(IssueService.STATE_CLOSED);
 					}
 					prService.editPullRequest(repo, pr);
 				}
