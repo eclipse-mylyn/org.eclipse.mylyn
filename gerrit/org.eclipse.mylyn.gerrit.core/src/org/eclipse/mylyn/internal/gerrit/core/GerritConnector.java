@@ -15,6 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.eclipse.core.runtime.CoreException;
@@ -54,8 +56,12 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  */
 public class GerritConnector extends AbstractRepositoryConnector {
 
+	static Logger logger = Logger.getLogger("com.google.gson.ParameterizedTypeHandlerMap"); //$NON-NLS-1$
+
 	static {
 		KeyUtil.setEncoderImpl(new StandardKeyEncoder());
+		// disable logging of Overriding the existing type handler for class java.sql.Timestamp message
+		logger.setLevel(Level.OFF);
 	}
 
 	/**

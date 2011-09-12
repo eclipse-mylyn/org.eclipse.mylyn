@@ -401,6 +401,7 @@ public class GerritClient {
 	public PatchSetDetail getPatchSetDetail(final PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
 		PatchSetDetail result = null;
 		try {
+			// Gerrit 2.2
 			result = execute(monitor, new Operation<PatchSetDetail>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
@@ -409,20 +410,9 @@ public class GerritClient {
 			});
 		} catch (GerritException e) {
 			try {
-				// fallback for Gerrit 2.1.7
-				String message = e.getMessage();
-				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
-					result = execute(monitor, new Operation<PatchSetDetail>() {
-						@Override
-						public void execute(IProgressMonitor monitor) throws GerritException {
-							getChangeDetailService().patchSetDetail(null, id, null, this);
-						}
-					});
-				}
-			} catch (GerritException e2) {
 				// fallback for Gerrit < 2.1.7
-				String message = e2.getMessage();
-				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+				String message = e.getMessage();
+				if (message != null && message.contains("No such service method")) { //$NON-NLS-1$
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
@@ -431,6 +421,19 @@ public class GerritClient {
 					});
 				} else {
 					throw e;
+				}
+			} catch (GerritException e2) {
+				// fallback for Gerrit 2.1.7
+				String message = e2.getMessage();
+				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+					result = execute(monitor, new Operation<PatchSetDetail>() {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getChangeDetailService().patchSetDetail(null, id, null, this);
+						}
+					});
+				} else {
+					throw e2;
 				}
 			}
 		}
@@ -446,7 +449,6 @@ public class GerritClient {
 						getChangeDetailService().patchSetPublishDetailX(id, this);
 					}
 				});
-		publishDetail.fixFields();
 		return publishDetail;
 	}
 

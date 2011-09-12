@@ -17,12 +17,18 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 
+import com.google.gerrit.reviewdb.ApprovalCategory;
+import com.google.gerrit.reviewdb.ApprovalCategory.Id;
 import com.google.gerrit.reviewdb.AuthType;
+import com.google.gerrit.reviewdb.PatchSetApproval;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -32,6 +38,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer;
 import com.google.gwtjsonrpc.server.JsonServlet;
 
@@ -92,12 +99,17 @@ public class JSonSupport {
 	private Gson gson;
 
 	public JSonSupport() {
+		TypeToken<Map<Id, PatchSetApproval>> approvalMapType = new TypeToken<Map<ApprovalCategory.Id, PatchSetApproval>>() {
+		};
 		ExclusionStrategy exclustionStrategy = new ExclusionStrategy() {
 
 			public boolean shouldSkipField(FieldAttributes f) {
 				// commentLinks requires instantiation of com.google.gwtexpui.safehtml.client.RegexFindReplace which is not on classpath
 				if (f.getDeclaredClass() == List.class && f.getName().equals("commentLinks")) { //$NON-NLS-1$
 					return true;
+				}
+				if (f.getDeclaredClass() == Map.class && f.getName().equals("given")) { //$NON-NLS-1$
+					//return true;
 				}
 				return false;
 			}
@@ -144,6 +156,33 @@ public class JSonSupport {
 							}
 						}
 						return null;
+					}
+				})
+				.registerTypeAdapter(approvalMapType.getType(), new JsonDeserializer<Map<Id, PatchSetApproval>>() {
+
+					@Override
+					public Map<Id, PatchSetApproval> deserialize(JsonElement json, Type typeOfT,
+							JsonDeserializationContext context) throws JsonParseException {
+						// Gerrit 2.2: the type of PatchSetPublishDetail.given changed from a map to a list
+						Map<Id, PatchSetApproval> map = new HashMap<ApprovalCategory.Id, PatchSetApproval>();
+						if (json.isJsonArray()) {
+							JsonArray array = json.getAsJsonArray();
+							for (Iterator<JsonElement> it = array.iterator(); it.hasNext();) {
+								JsonElement element = it.next();
+								Id key = context.deserialize(element, Id.class);
+								if (key.get() != null) {
+									// Gerrit < 2.1.x: json is map
+									element = it.next();
+								}
+								PatchSetApproval value = context.deserialize(element, PatchSetApproval.class);
+								if (key.get() == null) {
+									// Gerrit 2.2: json is a list, deduct key from value
+									key = value.getCategoryId();
+								}
+								map.put(key, value);
+							}
+						}
+						return map;
 					}
 				})
 				.setExclusionStrategies(exclustionStrategy)

@@ -143,17 +143,6 @@ public class PublishDialog extends GerritOperationDialog {
 							givenValue = approval.getValue();
 						}
 					}
-					if (givenValue == 0 && publishDetail instanceof PatchSetPublishDetailX) {
-						// Gerrit 2.2
-						List<PatchSetApproval> given = ((PatchSetPublishDetailX) publishDetail).getGiven2();
-						if (given != null) {
-							for (PatchSetApproval approval : given) {
-								if (approval.getCategoryId().equals(approvalType.getCategory().getId())) {
-									givenValue = approval.getValue();
-								}
-							}
-						}
-					}
 
 					List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
 					Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {

@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
 import java.util.List;
 
-import com.google.gerrit.reviewdb.PatchSetApproval;
-
 /**
  * Provides additional fields used by Gerrit 2.2.
  * 
@@ -24,23 +22,10 @@ public class PatchSetPublishDetailX extends com.google.gerrit.common.data.PatchS
 
 	protected boolean canSubmit;
 
-	protected List<PatchSetApproval> given;
-
-	// Gerrit 2.2: mirrors the content of given to avoid a conflict with PatchSetPublishDetail.given
-	protected List<PatchSetApproval> given2;
-
 	protected List<PermissionLabel> labels;
 
 	public boolean canSubmit() {
 		return canSubmit;
-	}
-
-	public List<PatchSetApproval> getGiven2() {
-		return given2;
-	}
-
-	public void fixFields() {
-		this.given2 = this.given;
 	}
 
 	public List<PermissionLabel> getLabels() {
