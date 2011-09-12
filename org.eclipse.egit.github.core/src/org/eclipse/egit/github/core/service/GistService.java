@@ -240,8 +240,7 @@ public class GistService extends GitHubService {
 		if (gist == null)
 			throw new IllegalArgumentException("Gist cannot be null"); //$NON-NLS-1$
 		String id = gist.getId();
-		if (id == null)
-			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+		checkGistId(id);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(id);
@@ -258,8 +257,7 @@ public class GistService extends GitHubService {
 	 */
 	public Comment createComment(String gistId, String comment)
 			throws IOException {
-		if (gistId == null)
-			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+		checkGistId(gistId);
 		if (comment == null)
 			throw new IllegalArgumentException("Gist comment cannot be null"); //$NON-NLS-1$
 
@@ -280,8 +278,7 @@ public class GistService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Comment> getComments(String gistId) throws IOException {
-		if (gistId == null)
-			throw new IllegalArgumentException("Gist id cannot be null"); //$NON-NLS-1$
+		checkGistId(gistId);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_GISTS);
 		uri.append('/').append(gistId);
