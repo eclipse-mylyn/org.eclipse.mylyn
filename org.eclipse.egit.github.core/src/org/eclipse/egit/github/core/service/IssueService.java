@@ -552,7 +552,7 @@ public class IssueService extends GitHubService {
 			throws IOException {
 		verifyRepository(user, repository);
 		if (comment == null)
-			throw new IllegalArgumentException("Comment cannot be null");
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);

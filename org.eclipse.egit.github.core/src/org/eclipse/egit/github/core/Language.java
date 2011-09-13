@@ -16,237 +16,237 @@ package org.eclipse.egit.github.core;
 public enum Language {
 
 	/** ACTIONSCRIPT */
-	ACTIONSCRIPT("ActionScript"),
+	ACTIONSCRIPT("ActionScript"), //$NON-NLS-1$
 	/** ADA */
-	ADA("Ada"),
+	ADA("Ada"), //$NON-NLS-1$
 	/** APPLESCRIPT */
-	APPLESCRIPT("AppleScript"),
+	APPLESCRIPT("AppleScript"), //$NON-NLS-1$
 	/** ARC */
-	ARC("Arc"),
+	ARC("Arc"), //$NON-NLS-1$
 	/** ASP */
-	ASP("ASP"),
+	ASP("ASP"), //$NON-NLS-1$
 	/** ASSEMBLY */
-	ASSEMBLY("Assembly"),
+	ASSEMBLY("Assembly"), //$NON-NLS-1$
 	/** BATCHFILE */
-	BATCHFILE("Batchfile"),
+	BATCHFILE("Batchfile"), //$NON-NLS-1$
 	/** BEFUNGE */
-	BEFUNGE("Befunge"),
+	BEFUNGE("Befunge"), //$NON-NLS-1$
 	/** BLITZMAX */
-	BLITZMAX("BlitzMax"),
+	BLITZMAX("BlitzMax"), //$NON-NLS-1$
 	/** BOO */
-	BOO("Boo"),
+	BOO("Boo"), //$NON-NLS-1$
 	/** BRAINFUCK */
-	BRAINFUCK("Brainfuck"),
+	BRAINFUCK("Brainfuck"), //$NON-NLS-1$
 	/** C */
-	C("C"),
+	C("C"), //$NON-NLS-1$
 	/** CSHARP */
-	CSHARP("C#"),
+	CSHARP("C#"), //$NON-NLS-1$
 	/** CPLUSPLUS */
-	CPLUSPLUS("C++"),
+	CPLUSPLUS("C++"), //$NON-NLS-1$
 	/** C_OBJDUMP */
-	C_OBJDUMP("C-ObjDump"),
+	C_OBJDUMP("C-ObjDump"), //$NON-NLS-1$
 	/** CHUCK */
-	CHUCK("Chuck"),
+	CHUCK("Chuck"), //$NON-NLS-1$
 	/** CLOJURE */
-	CLOJURE("Clojure"),
+	CLOJURE("Clojure"), //$NON-NLS-1$
 	/** COFFEESCRIPT */
-	COFFEESCRIPT("CoffeeScript"),
+	COFFEESCRIPT("CoffeeScript"), //$NON-NLS-1$
 	/** COLDFUSION */
-	COLDFUSION("ColdFusion"),
+	COLDFUSION("ColdFusion"), //$NON-NLS-1$
 	/** COMMON_LISP */
-	COMMON_LISP("Common Lisp"),
+	COMMON_LISP("Common Lisp"), //$NON-NLS-1$
 	/** CPP_OBJDUMP */
-	CPP_OBJDUMP("Cpp-ObjDump"),
+	CPP_OBJDUMP("Cpp-ObjDump"), //$NON-NLS-1$
 	/** CSS */
-	CSS("CSS"),
+	CSS("CSS"), //$NON-NLS-1$
 	/** CUCUMBER */
-	CUCUMBER("Cucumber"),
+	CUCUMBER("Cucumber"), //$NON-NLS-1$
 	/** CYTHON */
-	CYTHON("Cython"),
+	CYTHON("Cython"), //$NON-NLS-1$
 	/** D */
-	D("D"),
+	D("D"), //$NON-NLS-1$
 	/** D_OBJDUMP */
-	D_OBJDUMP("D-ObjDump"),
+	D_OBJDUMP("D-ObjDump"), //$NON-NLS-1$
 	/** DARCS_PATCH */
-	DARCS_PATCH("Darcs Patch"),
+	DARCS_PATCH("Darcs Patch"), //$NON-NLS-1$
 	/** DELPHI */
-	DELPHI("Delphi"),
+	DELPHI("Delphi"), //$NON-NLS-1$
 	/** DIFF */
-	DIFF("Diff"),
+	DIFF("Diff"), //$NON-NLS-1$
 	/** DYLAN */
-	DYLAN("Dylan"),
+	DYLAN("Dylan"), //$NON-NLS-1$
 	/** EIFFEL */
-	EIFFEL("Eiffel"),
+	EIFFEL("Eiffel"), //$NON-NLS-1$
 	/** EMACS_LISP */
-	EMACS_LISP("Emacs Lisp"),
+	EMACS_LISP("Emacs Lisp"), //$NON-NLS-1$
 	/** ERLANG */
-	ERLANG("Erlang"),
+	ERLANG("Erlang"), //$NON-NLS-1$
 	/** FSHARP */
-	FSHARP("F#"),
+	FSHARP("F#"), //$NON-NLS-1$
 	/** FACTOR */
-	FACTOR("Factor"),
+	FACTOR("Factor"), //$NON-NLS-1$
 	/** FANCY */
-	FANCY("Fancy"),
+	FANCY("Fancy"), //$NON-NLS-1$
 	/** FORTRAN */
-	FORTRAN("FORTRAN"),
+	FORTRAN("FORTRAN"), //$NON-NLS-1$
 	/** GAS */
-	GAS("GAS"),
+	GAS("GAS"), //$NON-NLS-1$
 	/** GENSHI */
-	GENSHI("Genshi"),
+	GENSHI("Genshi"), //$NON-NLS-1$
 	/** GENTOO_EBUILD */
-	GENTOO_EBUILD("Gentoo Ebuild"),
+	GENTOO_EBUILD("Gentoo Ebuild"), //$NON-NLS-1$
 	/** GENTOO_ECLASS */
-	GENTOO_ECLASS("Gentoo Eclass"),
+	GENTOO_ECLASS("Gentoo Eclass"), //$NON-NLS-1$
 	/** GO */
-	GO("Go"),
+	GO("Go"), //$NON-NLS-1$
 	/** GROFF */
-	GROFF("Groff"),
+	GROFF("Groff"), //$NON-NLS-1$
 	/** GROOVY */
-	GROOVY("Groovy"),
+	GROOVY("Groovy"), //$NON-NLS-1$
 	/** HAML */
-	HAML("Haml"),
+	HAML("Haml"), //$NON-NLS-1$
 	/** HASKELL */
-	HASKELL("Haskell"),
+	HASKELL("Haskell"), //$NON-NLS-1$
 	/** HAXE */
-	HAXE("HaXe"),
+	HAXE("HaXe"), //$NON-NLS-1$
 	/** HTML */
-	HTML("HTML"),
+	HTML("HTML"), //$NON-NLS-1$
 	/** HTML_DJANGO */
-	HTML_DJANGO("HTML+Django"),
+	HTML_DJANGO("HTML+Django"), //$NON-NLS-1$
 	/** HTML_ERB */
-	HTML_ERB("HTML+ERB"),
+	HTML_ERB("HTML+ERB"), //$NON-NLS-1$
 	/** HTML_PHP */
-	HTML_PHP("HTML+PHP"),
+	HTML_PHP("HTML+PHP"), //$NON-NLS-1$
 	/** INI */
-	INI("INI"),
+	INI("INI"), //$NON-NLS-1$
 	/** IO */
-	IO("Io"),
+	IO("Io"), //$NON-NLS-1$
 	/** IRC_LOG */
-	IRC_LOG("IRC log"),
+	IRC_LOG("IRC log"), //$NON-NLS-1$
 	/** JAVA */
-	JAVA("Java"),
+	JAVA("Java"), //$NON-NLS-1$
 	/** JAVA_SERVER_PAGE */
-	JAVA_SERVER_PAGE("Java Server Pages"),
+	JAVA_SERVER_PAGE("Java Server Pages"), //$NON-NLS-1$
 	/** JAVASCRIPT */
-	JAVASCRIPT("JavaScript"),
+	JAVASCRIPT("JavaScript"), //$NON-NLS-1$
 	/** LILYPOND */
-	LILYPOND("LilyPond"),
+	LILYPOND("LilyPond"), //$NON-NLS-1$
 	/** LITERATE_HASKELL */
-	LITERATE_HASKELL("Literate Haskell"),
+	LITERATE_HASKELL("Literate Haskell"), //$NON-NLS-1$
 	/** LLVM */
-	LLVM("LLVM"),
+	LLVM("LLVM"), //$NON-NLS-1$
 	/** LUA */
-	LUA("Lua"),
+	LUA("Lua"), //$NON-NLS-1$
 	/** MAKEFILE */
-	MAKEFILE("Makefile"),
+	MAKEFILE("Makefile"), //$NON-NLS-1$
 	/** MAKO */
-	MAKO("Mako"),
+	MAKO("Mako"), //$NON-NLS-1$
 	/** MARKDOWN */
-	MARKDOWN("Markdown"),
+	MARKDOWN("Markdown"), //$NON-NLS-1$
 	/** MATLAB */
-	MATLAB("Matlab"),
+	MATLAB("Matlab"), //$NON-NLS-1$
 	/** MAX_MSP */
-	MAX_MSP("Max/MSP"),
+	MAX_MSP("Max/MSP"), //$NON-NLS-1$
 	/** MIRAH */
-	MIRAH("Mirah"),
+	MIRAH("Mirah"), //$NON-NLS-1$
 	/** MOOCODE */
-	MOOCODE("Moocode"),
+	MOOCODE("Moocode"), //$NON-NLS-1$
 	/** MUPAD */
-	MUPAD("mupad"),
+	MUPAD("mupad"), //$NON-NLS-1$
 	/** MYGHTY */
-	MYGHTY("Myghty"),
+	MYGHTY("Myghty"), //$NON-NLS-1$
 	/** NIMROD */
-	NIMROD("Nimrod"),
+	NIMROD("Nimrod"), //$NON-NLS-1$
 	/** NU */
-	NU("Nu"),
+	NU("Nu"), //$NON-NLS-1$
 	/** NUMPY */
-	NUMPY("NumPy"),
+	NUMPY("NumPy"), //$NON-NLS-1$
 	/** OBJDUMP */
-	OBJDUMP("ObjDump"),
+	OBJDUMP("ObjDump"), //$NON-NLS-1$
 	/** OBJECTIVE_C */
-	OBJECTIVE_C("Objective-C"),
+	OBJECTIVE_C("Objective-C"), //$NON-NLS-1$
 	/** OBJECTIVE_J */
-	OBJECTIVE_J("Objective-J"),
+	OBJECTIVE_J("Objective-J"), //$NON-NLS-1$
 	/** OCAML */
-	OCAML("OCaml"),
+	OCAML("OCaml"), //$NON-NLS-1$
 	/** OOC */
-	OOC("ooc"),
+	OOC("ooc"), //$NON-NLS-1$
 	/** OPENCL */
-	OPENCL("OpenCL"),
+	OPENCL("OpenCL"), //$NON-NLS-1$
 	/** PARROT_INTERNAL_REPRESENTATION */
-	PARROT_INTERNAL_REPRESENTATION("Parrot Internal Representation"),
+	PARROT_INTERNAL_REPRESENTATION("Parrot Internal Representation"), //$NON-NLS-1$
 	/** PERL */
-	PERL("Perl"),
+	PERL("Perl"), //$NON-NLS-1$
 	/** PROLOG */
-	PROLOG("Prolog"),
+	PROLOG("Prolog"), //$NON-NLS-1$
 	/** PHP */
-	PHP("PHP"),
+	PHP("PHP"), //$NON-NLS-1$
 	/** PURE_DATA */
-	PURE_DATA("Pure Data"),
+	PURE_DATA("Pure Data"), //$NON-NLS-1$
 	/** PYTHON */
-	PYTHON("Python"),
+	PYTHON("Python"), //$NON-NLS-1$
 	/** R */
-	R("R"),
+	R("R"), //$NON-NLS-1$
 	/** RACKET */
-	RACKET("Racket"),
+	RACKET("Racket"), //$NON-NLS-1$
 	/** RAW_TOKEN_DATA */
-	RAW_TOKEN_DATA("Raw token data"),
+	RAW_TOKEN_DATA("Raw token data"), //$NON-NLS-1$
 	/** REBOL */
-	REBOL("Rebol"),
+	REBOL("Rebol"), //$NON-NLS-1$
 	/** REDCODE */
-	REDCODE("Redcode"),
+	REDCODE("Redcode"), //$NON-NLS-1$
 	/** RESTRUCTUREDTEXT */
-	RESTRUCTUREDTEXT("reStructuredText"),
+	RESTRUCTUREDTEXT("reStructuredText"), //$NON-NLS-1$
 	/** RHTML */
-	RHTML("RHTML"),
+	RHTML("RHTML"), //$NON-NLS-1$
 	/** RUBY */
-	RUBY("Ruby"),
+	RUBY("Ruby"), //$NON-NLS-1$
 	/** SASS */
-	SASS("Sass"),
+	SASS("Sass"), //$NON-NLS-1$
 	/** SCALA */
-	SCALA("Scala"),
+	SCALA("Scala"), //$NON-NLS-1$
 	/** SCHEME */
-	SCHEME("Scheme"),
+	SCHEME("Scheme"), //$NON-NLS-1$
 	/** SELF */
-	SELF("Self"),
+	SELF("Self"), //$NON-NLS-1$
 	/** SHELL */
-	SHELL("Shell"),
+	SHELL("Shell"), //$NON-NLS-1$
 	/** SMALLTALK */
-	SMALLTALK("Smalltalk"),
+	SMALLTALK("Smalltalk"), //$NON-NLS-1$
 	/** SMARTY */
-	SMARTY("Smarty"),
+	SMARTY("Smarty"), //$NON-NLS-1$
 	/** STANDARD_ML */
-	STANDARD_ML("Standard ML"),
+	STANDARD_ML("Standard ML"), //$NON-NLS-1$
 	/** SUPERCOLLIDER */
-	SUPERCOLLIDER("SuperCollider"),
+	SUPERCOLLIDER("SuperCollider"), //$NON-NLS-1$
 	/** TCL */
-	TCL("Tcl"),
+	TCL("Tcl"), //$NON-NLS-1$
 	/** TCSH */
-	TCSH("Tcsh"),
+	TCSH("Tcsh"), //$NON-NLS-1$
 	/** TEX */
-	TEX("TeX"),
+	TEX("TeX"), //$NON-NLS-1$
 	/** TEXT */
-	TEXT("Text"),
+	TEXT("Text"), //$NON-NLS-1$
 	/** TEXTILE */
-	TEXTILE("Textile"),
+	TEXTILE("Textile"), //$NON-NLS-1$
 	/** VALA */
-	VALA("Vala"),
+	VALA("Vala"), //$NON-NLS-1$
 	/** VERILOG */
-	VERILOG("Verilog"),
+	VERILOG("Verilog"), //$NON-NLS-1$
 	/** VHDL */
-	VHDL("VHDL"),
+	VHDL("VHDL"), //$NON-NLS-1$
 	/** VIML */
-	VIML("VimL"),
+	VIML("VimL"), //$NON-NLS-1$
 	/** VISUAL_BASIC */
-	VISUAL_BASIC("Visual Basic"),
+	VISUAL_BASIC("Visual Basic"), //$NON-NLS-1$
 	/** XML */
-	XML("XML"),
+	XML("XML"), //$NON-NLS-1$
 	/** XQUERY */
-	XQUERY("XQuery"),
+	XQUERY("XQuery"), //$NON-NLS-1$
 	/** XS */
-	XS("XS"),
+	XS("XS"), //$NON-NLS-1$
 	/** YAML */
-	YAML("YAML");
+	YAML("YAML"); //$NON-NLS-1$
 
 	private final String value;
 

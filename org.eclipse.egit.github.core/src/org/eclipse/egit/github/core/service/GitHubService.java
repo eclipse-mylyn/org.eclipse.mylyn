@@ -37,7 +37,7 @@ public abstract class GitHubService {
 	protected final GitHubClient client;
 
 	/**
-	 * Create service using default {@link GitHubClient}
+	 * Create service using a default {@link GitHubClient}
 	 */
 	public GitHubService() {
 		this(new GitHubClient());
@@ -47,6 +47,7 @@ public abstract class GitHubService {
 	 * Create service for client
 	 *
 	 * @param client
+	 *            must be non-null
 	 */
 	public GitHubService(GitHubClient client) {
 		if (client == null)
