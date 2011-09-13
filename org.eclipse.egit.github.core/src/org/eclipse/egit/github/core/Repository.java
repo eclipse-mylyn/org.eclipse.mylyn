@@ -66,6 +66,8 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private String masterBranch;
 
+	private String mirrorUrl;
+
 	private String name;
 
 	private String sshUrl;
@@ -393,6 +395,22 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 */
 	public Repository setMasterBranch(String masterBranch) {
 		this.masterBranch = masterBranch;
+		return this;
+	}
+
+	/**
+	 * @return mirrorUrl
+	 */
+	public String getMirrorUrl() {
+		return mirrorUrl;
+	}
+
+	/**
+	 * @param mirrorUrl
+	 * @return this repository
+	 */
+	public Repository setMirrorUrl(String mirrorUrl) {
+		this.mirrorUrl = mirrorUrl;
 		return this;
 	}
 

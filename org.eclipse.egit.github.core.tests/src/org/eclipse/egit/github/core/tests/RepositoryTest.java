@@ -41,6 +41,7 @@ public class RepositoryTest {
 		assertNull(repo.getHtmlUrl());
 		assertNull(repo.getLanguage());
 		assertNull(repo.getMasterBranch());
+		assertNull(repo.getMirrorUrl());
 		assertNull(repo.getName());
 		assertEquals(0, repo.getOpenIssues());
 		assertNull(repo.getOwner());
@@ -95,6 +96,7 @@ public class RepositoryTest {
 		assertTrue(repo.setHasIssues(true).isHasIssues());
 		assertTrue(repo.setHasWiki(true).isHasWiki());
 		assertTrue(repo.setPrivate(true).isPrivate());
+		assertEquals("mirror", repo.setMirrorUrl("mirror").getMirrorUrl());
 	}
 
 	/**
