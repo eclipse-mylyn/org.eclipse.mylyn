@@ -114,7 +114,7 @@ public class RequestException extends IOException {
 	public String formatErrors() {
 		String errorMessage = error.getMessage();
 		if (errorMessage == null)
-			errorMessage = "";
+			errorMessage = ""; //$NON-NLS-1$
 		StringBuilder message = new StringBuilder(errorMessage);
 		if (message.length() > 0)
 			message.append(' ').append('(').append(status).append(')');

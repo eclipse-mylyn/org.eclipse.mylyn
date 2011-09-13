@@ -68,7 +68,8 @@ public class CommitService extends GitHubService {
 	}
 
 	/**
-	 * Get all commits in given repository
+	 * Get all commits in given repository beginning at an optional commit SHA-1
+	 * and affecting an optional path.
 	 *
 	 * @param repository
 	 * @param sha

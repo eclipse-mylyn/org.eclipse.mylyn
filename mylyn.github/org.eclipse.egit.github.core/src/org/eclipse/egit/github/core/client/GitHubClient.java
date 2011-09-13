@@ -83,7 +83,7 @@ public class GitHubClient {
 	public static GitHubClient createClient(String url) {
 		try {
 			String host = new URL(url).getHost();
-			host = SUBDOMAIN_API + "." + host;
+			host = SUBDOMAIN_API + "." + host; //$NON-NLS-1$
 			return new GitHubClient(host);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);

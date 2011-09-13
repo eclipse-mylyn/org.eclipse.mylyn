@@ -489,6 +489,6 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 		final String login = owner.getLogin();
 		if (login == null || login.length() == 0)
 			return null;
-		return login + "/" + name;
+		return login + "/" + name; //$NON-NLS-1$
 	}
 }

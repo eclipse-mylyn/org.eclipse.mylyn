@@ -31,7 +31,7 @@ public class PageLinks {
 
 	private static final String DELIM_LINKS = ","; //$NON-NLS-1$
 
-	private static final String DELIM_LINK_PARAM = ";"; //$NON-NLS-1;$
+	private static final String DELIM_LINK_PARAM = ";"; //$NON-NLS-1$
 
 	private String first;
 	private String last;

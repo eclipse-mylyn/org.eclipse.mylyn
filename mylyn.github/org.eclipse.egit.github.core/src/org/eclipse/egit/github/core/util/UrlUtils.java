@@ -57,7 +57,7 @@ public abstract class UrlUtils {
 	 */
 	public static String createRemoteSshUrl(IRepositoryIdProvider repository,
 			String host) {
-		return "git@" + host + ":" + repository.generateId() + SUFFIX_GIT;
+		return "git@" + host + ":" + repository.generateId() + SUFFIX_GIT; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class UrlUtils {
 	 */
 	public static String createRemoteHttpsUrl(IRepositoryIdProvider repository,
 			String host, String user) {
-		return "https://" + user + "@" + host + "/" + repository.generateId()
+		return "https://" + user + "@" + host + "/" + repository.generateId() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ SUFFIX_GIT;
 	}
 
@@ -106,6 +106,6 @@ public abstract class UrlUtils {
 	 */
 	public static String createRemoteReadOnlyUrl(
 			IRepositoryIdProvider repository, String host) {
-		return "git://" + host + "/" + repository.generateId() + SUFFIX_GIT;
+		return "git://" + host + "/" + repository.generateId() + SUFFIX_GIT; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
