@@ -85,6 +85,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("<body><p>normal <b>bold text</b> normal</p></body>").matcher(html).find());
 	}
 
+	public void testBoldImmediatelyFollowingTag() {
+		String html = parser.parseToHtml("normal<br>'''bold text''' normal");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p>normal<br/><b>bold text</b> normal</p></body>").matcher(html).find());
+	}
+
 	public void testItalic() {
 		String html = parser.parseToHtml("normal ''italic text'' normal");
 		TestUtil.println(html);
