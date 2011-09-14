@@ -46,14 +46,15 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 		if (dlg.open() != Window.OK) {
 			return;
 		}
-
-		for (Object result : dlg.getResult()) {
-			if (result instanceof ITask) {
-				AbstractTask task = (AbstractTask) result;
-				if (dlg.getOpenInBrowser()) {
-					TasksUiUtil.openWithBrowser(task);
-				} else {
-					TasksUiInternal.refreshAndOpenTaskListElement(task);
+		if (dlg.getResult() != null) {
+			for (Object result : dlg.getResult()) {
+				if (result instanceof ITask) {
+					AbstractTask task = (AbstractTask) result;
+					if (dlg.getOpenInBrowser()) {
+						TasksUiUtil.openWithBrowser(task);
+					} else {
+						TasksUiInternal.refreshAndOpenTaskListElement(task);
+					}
 				}
 			}
 		}
