@@ -153,4 +153,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				Messages.AbstractInterestManipulationAction_Not_a_valid_landmark);
 	}
 
+	public ISelection getSelection() {
+		return selection;
+	}
 }
