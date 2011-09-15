@@ -33,7 +33,6 @@ import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
@@ -198,7 +197,7 @@ public class IssueService extends GitHubService {
 			int start, int size) {
 		PagedRequest<Issue> request = createPagedRequest(start, size);
 		request.setParams(filterData);
-		request.setUri(IGitHubConstants.SEGMENT_ISSUES);
+		request.setUri(SEGMENT_ISSUES);
 		request.setType(new TypeToken<List<Issue>>() {
 		}.getType());
 		return createPageIterator(request);
@@ -553,7 +552,7 @@ public class IssueService extends GitHubService {
 			throws IOException {
 		verifyRepository(user, repository);
 		if (comment == null)
-			throw new IllegalArgumentException("Comment cannot be null");
+			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(user).append('/').append(repository);

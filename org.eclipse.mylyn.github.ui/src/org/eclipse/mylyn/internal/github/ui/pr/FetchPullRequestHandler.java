@@ -67,8 +67,10 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 						return Status.CANCEL_STATUS;
 					PullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
-					if (repo == null)
+					if (repo == null) {
+						PullRequestConnectorUi.showNoRepositoryDialog(request);
 						return Status.CANCEL_STATUS;
+					}
 					RemoteConfig remote = PullRequestUtils.addRemote(repo,
 							request);
 					new FetchOperationUI(repo, remote, Activator.getDefault()

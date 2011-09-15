@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 /**
- * Exception class to be thrown when iterating over pages fails
+ * Exception class to be thrown when iterating over pages fails. This exception
+ * wraps an {@link IOException} that is the actual exception that occurred when
+ * the page request was made.
  */
 public class NoSuchPageException extends NoSuchElementException {
 
@@ -30,7 +32,7 @@ public class NoSuchPageException extends NoSuchElementException {
 
 	/**
 	 * Create no such page exception
-	 * 
+	 *
 	 * @param cause
 	 */
 	public NoSuchPageException(IOException cause) {
@@ -46,5 +48,4 @@ public class NoSuchPageException extends NoSuchElementException {
 	public IOException getCause() {
 		return cause;
 	}
-
 }

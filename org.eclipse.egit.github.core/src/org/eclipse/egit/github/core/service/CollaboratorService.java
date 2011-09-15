@@ -90,7 +90,7 @@ public class CollaboratorService extends GitHubService {
 	}
 
 	/**
-	 * Is given user a collaborator on the given repository
+	 * Is given user a collaborator on the given repository?
 	 *
 	 * @param repository
 	 * @param user

@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.UIIcons;
 import org.eclipse.egit.ui.UIUtils;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
@@ -132,10 +133,13 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		commitViewer.addOpenListener(new IOpenListener() {
 
 			public void open(final OpenEvent event) {
-				Repository repo = PullRequestUtils.getRepository(request
-						.getRequest());
-				openCommits(repo,
-						((IStructuredSelection) event.getSelection()).toArray());
+				PullRequest pr = request.getRequest();
+				Repository repo = PullRequestUtils.getRepository(pr);
+				if (repo != null)
+					openCommits(repo, ((IStructuredSelection) event
+							.getSelection()).toArray());
+				else
+					PullRequestConnectorUi.showNoRepositoryDialog(pr);
 			}
 		});
 

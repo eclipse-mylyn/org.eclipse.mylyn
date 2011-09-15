@@ -23,15 +23,13 @@ import org.eclipse.egit.github.core.client.RequestException;
  */
 public class GitHubException extends IOException {
 
-	/**
-	 * 
-	 */
+	/** serialVersionUID */
 	private static final long serialVersionUID = -1456910662911777231L;
 
 	/**
 	 * Wraps the given {@link IOException} with a {@link GitHubException} if it
 	 * is a {@link RequestException} instance.
-	 * 
+	 *
 	 * @param exception
 	 * @return wrapped exception
 	 */
@@ -42,7 +40,7 @@ public class GitHubException extends IOException {
 
 	/**
 	 * Create GitHub exception from {@link RequestException}
-	 * 
+	 *
 	 * @param cause
 	 */
 	public GitHubException(RequestException cause) {
@@ -70,6 +68,7 @@ public class GitHubException extends IOException {
 		String value = error.getValue();
 		String field = error.getField();
 		String resource = error.getResource();
+
 		if (FieldError.CODE_INVALID.equals(code))
 			if (value != null)
 				return MessageFormat
@@ -77,13 +76,18 @@ public class GitHubException extends IOException {
 								value, field);
 			else
 				return MessageFormat.format(Messages.FieldError_InvalidField,
-						field, value);
-		else if (FieldError.CODE_MISSING_FIELD.equals(code))
+						field);
+
+		if (FieldError.CODE_MISSING_FIELD.equals(code))
 			return MessageFormat
 					.format(Messages.FieldError_MissingField, field);
-		else
-			return MessageFormat.format(Messages.FieldError_ResourceError,
-					field, resource);
-	}
 
+		if (FieldError.CODE_ALREADY_EXISTS.equals(code))
+			return MessageFormat.format(
+					Messages.FieldError_AlreadyExists,
+					resource, field);
+
+		return MessageFormat.format(Messages.FieldError_ResourceError, field,
+				resource);
+	}
 }

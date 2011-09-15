@@ -103,13 +103,13 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 	 */
 	public RepositoryId(final String owner, final String name) {
 		if (owner == null)
-			throw new IllegalArgumentException("Owner cannot be null");
+			throw new IllegalArgumentException("Owner cannot be null"); //$NON-NLS-1$
 		if (owner.length() == 0)
-			throw new IllegalArgumentException("Owner cannot be empty");
+			throw new IllegalArgumentException("Owner cannot be empty"); //$NON-NLS-1$
 		if (name == null)
-			throw new IllegalArgumentException("Name cannot be null");
+			throw new IllegalArgumentException("Name cannot be null"); //$NON-NLS-1$
 		if (name.length() == 0)
-			throw new IllegalArgumentException("Name cannot be empty");
+			throw new IllegalArgumentException("Name cannot be empty"); //$NON-NLS-1$
 
 		this.owner = owner;
 		this.name = name;
@@ -130,7 +130,7 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 	}
 
 	public String generateId() {
-		return owner + "/" + name;
+		return owner + "/" + name; //$NON-NLS-1$
 	}
 
 	@Override

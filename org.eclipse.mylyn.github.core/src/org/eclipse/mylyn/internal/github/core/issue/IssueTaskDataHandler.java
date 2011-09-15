@@ -350,17 +350,10 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					if (operationAttribute != null) {
 						IssueOperation operation = IssueOperation
 								.fromId(operationAttribute.getValue());
-						if (operation != IssueOperation.LEAVE)
-							switch (operation) {
-							case REOPEN:
-								issue.setState(IssueService.STATE_OPEN);
-								break;
-							case CLOSE:
-								issue.setState(IssueService.STATE_CLOSED);
-								break;
-							default:
-								break;
-							}
+						if (operation == IssueOperation.REOPEN)
+							issue.setState(IssueService.STATE_OPEN);
+						else if (operation == IssueOperation.CLOSE)
+							issue.setState(IssueService.STATE_CLOSED);
 					}
 					service.editIssue(repo.getOwner(), repo.getName(), issue);
 				}

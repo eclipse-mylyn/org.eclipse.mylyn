@@ -66,6 +66,8 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private String masterBranch;
 
+	private String mirrorUrl;
+
 	private String name;
 
 	private String sshUrl;
@@ -397,6 +399,22 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
+	 * @return mirrorUrl
+	 */
+	public String getMirrorUrl() {
+		return mirrorUrl;
+	}
+
+	/**
+	 * @param mirrorUrl
+	 * @return this repository
+	 */
+	public Repository setMirrorUrl(String mirrorUrl) {
+		this.mirrorUrl = mirrorUrl;
+		return this;
+	}
+
+	/**
 	 * @return name
 	 */
 	public String getName() {
@@ -489,6 +507,6 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 		final String login = owner.getLogin();
 		if (login == null || login.length() == 0)
 			return null;
-		return login + "/" + name;
+		return login + "/" + name; //$NON-NLS-1$
 	}
 }

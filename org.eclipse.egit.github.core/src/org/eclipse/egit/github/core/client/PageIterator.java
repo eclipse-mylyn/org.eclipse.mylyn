@@ -25,9 +25,18 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.eclipse.egit.github.core.IResourceProvider;
 
 /**
- * Iterator for getting paged responses
+ * Iterator for getting paged responses. Each call to {@link #next()} will make
+ * a client request for the next page of resources using the URI returned from
+ * the previous request.
+ *
+ * The {@link #hasNext()} method can be used to determine if the last executed
+ * request contained the location of the next page of results.
+ *
+ * This iterator also provides the next and last page numbers as well as the
+ * next and last URIs.
  *
  * @param <V>
+ *            type of resource being iterated over
  */
 public class PageIterator<V> implements Iterator<Collection<V>>,
 		Iterable<Collection<V>> {

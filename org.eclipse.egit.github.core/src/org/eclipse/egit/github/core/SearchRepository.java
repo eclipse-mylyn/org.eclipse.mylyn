@@ -55,13 +55,13 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	 */
 	public SearchRepository(String owner, String name) {
 		if (owner == null)
-			throw new IllegalArgumentException("Owner cannot be null");
+			throw new IllegalArgumentException("Owner cannot be null"); //$NON-NLS-1$
 		if (owner.length() == 0)
-			throw new IllegalArgumentException("Owner cannot be empty");
+			throw new IllegalArgumentException("Owner cannot be empty"); //$NON-NLS-1$
 		if (name == null)
-			throw new IllegalArgumentException("Name cannot be null");
+			throw new IllegalArgumentException("Name cannot be null"); //$NON-NLS-1$
 		if (name.length() == 0)
-			throw new IllegalArgumentException("Name cannot be empty");
+			throw new IllegalArgumentException("Name cannot be empty"); //$NON-NLS-1$
 
 		this.owner = owner;
 		this.name = name;
@@ -235,6 +235,6 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 		final String name = this.name;
 		if (name == null || name.length() == 0)
 			return null;
-		return owner + "/" + name;
+		return owner + "/" + name; //$NON-NLS-1$
 	}
 }

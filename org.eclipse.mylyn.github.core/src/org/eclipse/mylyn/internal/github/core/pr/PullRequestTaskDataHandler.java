@@ -44,7 +44,7 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create GitHub issue task data handler for connector
-	 * 
+	 *
 	 * @param connector
 	 */
 	public PullRequestTaskDataHandler(PullRequestConnector connector) {
@@ -52,7 +52,7 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create task data for pull request
-	 * 
+	 *
 	 * @param repository
 	 * @param monitor
 	 * @param repo
@@ -108,6 +108,10 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 		if (data.isNew())
 			return;
 
+		// Merged pull requests cannot be reopened
+		if (pr.isMerged())
+			return;
+
 		String state = pr.getState();
 		if (state != null) {
 			addOperation(data, pr, PullRequestOperation.LEAVE, true);
@@ -133,7 +137,7 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Create task data for pull request
-	 * 
+	 *
 	 * @param repository
 	 * @param monitor
 	 * @param repo
@@ -210,17 +214,10 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 					if (operationAttribute != null) {
 						PullRequestOperation operation = PullRequestOperation
 								.fromId(operationAttribute.getValue());
-						if (operation != PullRequestOperation.LEAVE)
-							switch (operation) {
-							case REOPEN:
-								pr.setState(IssueService.STATE_OPEN);
-								break;
-							case CLOSE:
-								pr.setState(IssueService.STATE_CLOSED);
-								break;
-							default:
-								break;
-							}
+						if (operation == PullRequestOperation.REOPEN)
+							pr.setState(IssueService.STATE_OPEN);
+						else if (operation == PullRequestOperation.CLOSE)
+							pr.setState(IssueService.STATE_CLOSED);
 					}
 					prService.editPullRequest(repo, pr);
 				}

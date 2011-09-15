@@ -129,7 +129,7 @@ public class PullRequestService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_PULLS);
-		PagedRequest<PullRequest> request = createPagedRequest();
+		PagedRequest<PullRequest> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		if (state != null)
 			request.setParams(Collections.singletonMap(

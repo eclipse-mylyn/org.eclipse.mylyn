@@ -16,7 +16,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 /**
- * DELETE request that supports an entity
+ * DELETE request that supports an enclosed entity
  */
 public class EntityDeleteMethod extends HttpEntityEnclosingRequestBase {
 
