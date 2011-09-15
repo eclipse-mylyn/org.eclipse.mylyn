@@ -105,11 +105,46 @@ public class RepositoryService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories() throws IOException {
-		PagedRequest<Repository> request = createPagedRequest();
+		return getAll(pageRepositories());
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories() throws IOException {
+		return pageRepositories(PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @param size
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(int size)
+			throws IOException {
+		return pageRepositories(PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(int start, int size)
+			throws IOException {
+		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
-		return getAll(request);
+		return createPageIterator(request);
 	}
 
 	/**
@@ -120,6 +155,45 @@ public class RepositoryService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories(String user) throws IOException {
+		return getAll(pageRepositories(user));
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(String user)
+			throws IOException {
+		return pageRepositories(user, PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
+	 * @param size
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(String user, int size)
+			throws IOException {
+		return pageRepositories(user, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
+	 * @param start
+	 * @param size
+	 * @return iterator over repository page
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(String user, int start,
+			int size) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
 		if (user.length() == 0)
@@ -128,11 +202,11 @@ public class RepositoryService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
 		uri.append(SEGMENT_REPOS);
-		PagedRequest<Repository> request = createPagedRequest();
+		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
-		return getAll(request);
+		return createPageIterator(request);
 	}
 
 	/**
@@ -144,6 +218,41 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<Repository> getOrgRepositories(String organization)
 			throws IOException {
+		return getAll(pageOrgRepositories(organization));
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization) {
+		return pageOrgRepositories(organization, PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @param size
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization,
+			int size) {
+		return pageOrgRepositories(organization, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization,
+			int start, int size) {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
 		if (organization.length() == 0)
@@ -152,15 +261,18 @@ public class RepositoryService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
 		uri.append(SEGMENT_REPOS);
-		PagedRequest<Repository> request = createPagedRequest();
+		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
-		return getAll(request);
+		return createPageIterator(request);
 	}
 
 	/**
-	 * Search repositories
+	 * Search for repositories matching query.
+	 *
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @return list of repositories
@@ -172,7 +284,10 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
-	 * Search for repositories matching language and query
+	 * Search for repositories matching language and query.
+	 *
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @param language
@@ -181,6 +296,11 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<SearchRepository> searchRepositories(final String query,
 			final String language) throws IOException {
+		if (query == null)
+			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
+		if (query.length() == 0)
+			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
+
 		StringBuilder uri = new StringBuilder(SEGMENT_V2_API);
 		uri.append(SEGMENT_REPOS);
 		uri.append(SEGMENT_SEARCH);
@@ -224,6 +344,8 @@ public class RepositoryService extends GitHubService {
 			Repository repository) throws IOException {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
+		if (organization.length() == 0)
+			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 		if (repository == null)
 			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
 
@@ -292,9 +414,7 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<Repository> getForks(IRepositoryIdProvider repository)
 			throws IOException {
-		PagedRequest<Repository> request = createPagedForkRequest(repository,
-				PAGE_FIRST, PAGE_SIZE);
-		return getAll(request);
+		return getAll(pageForks(repository));
 	}
 
 	/**
