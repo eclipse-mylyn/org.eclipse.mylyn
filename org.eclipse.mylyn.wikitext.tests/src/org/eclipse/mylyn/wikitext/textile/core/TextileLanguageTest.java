@@ -530,7 +530,7 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("table.\n|^a|<row with|>four|<>columns|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td style=\"text-align: top;\">a</td><td style=\"text-align: left;\">row with</td><td style=\"text-align: right;\">four</td><td style=\"text-align: center;\">columns</td></tr></table>"));
+		assertTrue(html.contains("<table><tr><td style=\"vertical-align: top;\">a</td><td style=\"text-align: left;\">row with</td><td style=\"text-align: right;\">four</td><td style=\"text-align: center;\">columns</td></tr></table>"));
 	}
 
 	public void testTableCellColspan() throws IOException {

@@ -14,10 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
@@ -108,7 +108,7 @@ public class TableBlock extends Block {
 				} else if (alignment.equals("<")) { //$NON-NLS-1$
 					textAlign = "text-align: left;"; //$NON-NLS-1$
 				} else if (alignment.equals("^")) { //$NON-NLS-1$
-					textAlign = "text-align: top;"; //$NON-NLS-1$
+					textAlign = "vertical-align: top;"; //$NON-NLS-1$
 				}
 			}
 			TableCellAttributes attributes = new TableCellAttributes();
