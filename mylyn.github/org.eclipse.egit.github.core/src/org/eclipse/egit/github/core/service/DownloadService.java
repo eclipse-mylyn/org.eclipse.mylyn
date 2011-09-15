@@ -277,9 +277,9 @@ public class DownloadService extends GitHubService {
 		if (resource == null)
 			throw new IllegalArgumentException(
 					"Download resource cannot be null"); //$NON-NLS-1$
-		if( content == null)
+		if (content == null)
 			throw new IllegalArgumentException(
-					"Content input stream cannot be null"); //$NON-NLS-N$
+					"Content input stream cannot be null"); //$NON-NLS-1$
 
 		HttpClient client = createDownloadClient();
 

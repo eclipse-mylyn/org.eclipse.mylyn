@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.FieldError.CODE_ALREADY_EXISTS;
 import static org.eclipse.egit.github.core.FieldError.CODE_INVALID;
 import static org.eclipse.egit.github.core.FieldError.CODE_MISSING_FIELD;
 
@@ -25,13 +26,15 @@ import org.eclipse.egit.github.core.RequestError;
  */
 public class RequestException extends IOException {
 
-	private static final String FIELD_INVALID_WITH_VALUE = "Invalid value of ''{0}'' for field ''{1}''"; //$NON-NLS-1$
+	private static final String FIELD_INVALID_WITH_VALUE = "Invalid value of ''{0}'' for ''{1}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_INVALID = "Invalid value for field ''{1}''"; //$NON-NLS-1$
+	private static final String FIELD_INVALID = "Invalid value for ''{0}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_MISSING = "Missing required field ''{0}''"; //$NON-NLS-1$
+	private static final String FIELD_MISSING = "Missing required ''{0}'' field"; //$NON-NLS-1$
 
-	private static final String FIELD_ERROR = "Error with field ''{0}'' in {1} resource"; //$NON-NLS-1$
+	private static final String FIELD_ERROR = "Error with ''{0}'' field in {1} resource"; //$NON-NLS-1$
+
+	private static final String FIELD_EXISTS = "{0} resource with ''{1}'' field already exists"; //$NON-NLS-1$
 
 	/**
 	 * serialVersionUID
@@ -85,17 +88,22 @@ public class RequestException extends IOException {
 		String code = error.getCode();
 		String value = error.getValue();
 		String field = error.getField();
+
 		if (CODE_INVALID.equals(code))
 			if (value != null)
 				return MessageFormat.format(FIELD_INVALID_WITH_VALUE, value,
 						field);
 			else
 				return MessageFormat.format(FIELD_INVALID, field);
+
 		if (CODE_MISSING_FIELD.equals(code))
 			return MessageFormat.format(FIELD_MISSING, field);
-		else
-			return MessageFormat
-					.format(FIELD_ERROR, field, error.getResource());
+
+		if (CODE_ALREADY_EXISTS.equals(code))
+			return MessageFormat.format(FIELD_EXISTS, error.getResource(),
+					field);
+
+		return MessageFormat.format(FIELD_ERROR, field, error.getResource());
 	}
 
 	/**
@@ -106,7 +114,7 @@ public class RequestException extends IOException {
 	public String formatErrors() {
 		String errorMessage = error.getMessage();
 		if (errorMessage == null)
-			errorMessage = "";
+			errorMessage = ""; //$NON-NLS-1$
 		StringBuilder message = new StringBuilder(errorMessage);
 		if (message.length() > 0)
 			message.append(' ').append('(').append(status).append(')');

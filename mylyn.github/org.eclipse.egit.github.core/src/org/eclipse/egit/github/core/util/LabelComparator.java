@@ -15,7 +15,6 @@ import java.util.Comparator;
 
 import org.eclipse.egit.github.core.Label;
 
-
 /**
  * Label comparator using case-insensitive name comparisons.
  */
