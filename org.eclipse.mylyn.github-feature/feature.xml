@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.github.feature"
       label="Eclipse EGit Mylyn GitHub Feature"
-      version="1.1.0.qualifier"
+      version="1.1.0.201109151100-r"
       provider-name="Eclipse EGit">
 
    <description url="http://www.eclipse.org/egit">
