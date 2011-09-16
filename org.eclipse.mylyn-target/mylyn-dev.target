@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-dev" sequenceNumber="15">
+<target name="mylyn-dev" sequenceNumber="16">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
@@ -44,11 +44,6 @@
 <repository location="http://download.eclipse.org/eclipse/updates/3.8milestones"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
-<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.6.12"/>
-<repository location="http://subclipse.tigris.org/update_1.6.x"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
@@ -76,6 +71,14 @@
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jgit.source.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates-nightly"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
+<unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
+<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.6.12"/>
+<unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.6.15"/>
+<unit id="org.tmatesoft.svnkit.feature.group" version="1.3.5.7406"/>
+<repository location="http://subclipse.tigris.org/update_1.6.x"/>
 </location>
 </locations>
 </target>
