@@ -13,15 +13,11 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,25 +27,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.commons.core.CoreUtil;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -61,12 +46,10 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlace
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
-import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractRepositoryQueryPage2;
-import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -87,13 +70,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 /**
@@ -426,8 +406,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private static final String STORE_CHARTS_ID = PAGE_NAME + ".CHARTS"; //$NON-NLS-1$
 
-	private RepositoryConfiguration repositoryConfiguration;
-
 	private final FormToolkit toolkit;
 
 	private ExpandableComposite moreOptionsSection;
@@ -516,7 +494,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	@Override
-	public void clearFields() {
+	public void doClearFields() {
 		product.deselectAll();
 		component.deselectAll();
 		version.deselectAll();
@@ -940,8 +918,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 				}
 
 				Map<String, String> validValues = new HashMap<String, String>();
-				for (String string : repositoryConfiguration.getKeywords()) {
-					validValues.put(string, string);
+				if (getRepositoryConfiguration() != null) {
+					for (String string : getRepositoryConfiguration().getKeywords()) {
+						validValues.put(string, string);
+					}
 				}
 				final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
 						WorkbenchUtil.getShell(), keywordsSelectButton, values, validValues, ""); //$NON-NLS-1$
@@ -1174,94 +1154,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		if (visible && summaryPattern != null) {
 			if (firstTime) {
 				firstTime = false;
-				// Set item and text here to prevent page from resizing
+				// restore items from history here to prevent page from resizing
 				for (String searchPattern : getPreviousPatterns(previousSummaryPatterns)) {
 					summaryPattern.add(searchPattern);
 				}
-				// summaryPattern.setItems(getPreviousPatterns(previousSummaryPatterns));
 				for (String comment : getPreviousPatterns(previousCommentPatterns)) {
 					commentPattern.add(comment);
 				}
-				// commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
 				for (String email : getPreviousPatterns(previousEmailPatterns)) {
 					emailPattern.add(email);
 				}
-
 				for (String email : getPreviousPatterns(previousEmailPatterns2)) {
 					emailPattern2.add(email);
 				}
-
-				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 				for (String keyword : getPreviousPatterns(previousKeywords)) {
 					keywords.add(keyword);
 				}
 
-				// TODO: update status, resolution, severity etc if possible...
-				if (getTaskRepository() != null) {
-					BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
-					repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
-					updateAttributesFromConfiguration(null);
-					if (product.getItemCount() == 0) {
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								if (getControl() != null && !getControl().isDisposed()) {
-									updateConfiguration(true);
-									updateAttributesFromConfiguration(null);
-								}
-							}
-
-						});
-					}
-				}
-				if (originalQuery != null) {
-					try {
-						updateDefaults(originalQuery.getUrl());
-						refreshChartControls();
-					} catch (UnsupportedEncodingException e) {
-						// ignore
-					}
-				}
-				if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
-						(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
-						(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
-						(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
-						priority.getSelection().length > 0 || resolution.getSelection().length > 0
-						|| version.getSelection().length > 0 || target.getSelection().length > 0
-						|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-					moreOptionsSection.setExpanded(true);
-					scrolledComposite.reflow(true);
-					refreshChartControls();
-				}
-				if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
-					chartSection.setExpanded(true);
-					scrolledComposite.reflow(true);
-					refreshChartControls();
-				}
-			}
-
-			/*
-			 * hack: we have to select the correct product, then update the
-			 * attributes so the component/version/milestone lists have the
-			 * proper values, then we can restore all the widget selections.
-			 */
-			if (getTaskRepository() != null) {
-				IDialogSettings settings = getDialogSettings();
-				String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
-				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
-						&& product != null) {
-					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-					if (product.getSelection().length > 0) {
-						updateAttributesFromConfiguration(product.getSelection());
-					}
-					restoreWidgetValues();
-				}
-			}
-			setPageComplete(isPageComplete());
-		}
-		if (visible) {
-			if (getWizard() == null && summaryPattern != null) {
-				// TODO: wierd check
-				summaryPattern.setFocus();
 			}
 		}
 		super.setVisible(visible);
@@ -1565,6 +1474,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@SuppressWarnings("unchecked")
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
+		RepositoryConfiguration repositoryConfiguration = getRepositoryConfiguration();
 		if (repositoryConfiguration != null) {
 			String[] saved_product = product.getSelection();
 			String[] saved_component = component.getSelection();
@@ -2078,60 +1988,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	}
 
-	@Override
-	public void saveState() {
-		String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
-		IDialogSettings settings = getDialogSettings();
-		settings.put(STORE_PRODUCT_ID + repoId, product.getSelection());
-		settings.put(STORE_COMPONENT_ID + repoId, component.getSelection());
-		settings.put(STORE_VERSION_ID + repoId, version.getSelection());
-		settings.put(STORE_MSTONE_ID + repoId, target.getSelection());
-		settings.put(STORE_STATUS_ID + repoId, status.getSelection());
-		settings.put(STORE_RESOLUTION_ID + repoId, resolution.getSelection());
-		settings.put(STORE_SEVERITY_ID + repoId, severity.getSelection());
-		settings.put(STORE_PRIORITY_ID + repoId, priority.getSelection());
-		settings.put(STORE_HARDWARE_ID + repoId, hardware.getSelection());
-		settings.put(STORE_OS_ID + repoId, os.getSelection());
-		settings.put(STORE_SUMMARYMATCH_ID + repoId, summaryOperation.getSelectionIndex());
-		settings.put(STORE_COMMENTMATCH_ID + repoId, commentOperation.getSelectionIndex());
-		settings.put(STORE_EMAILMATCH_ID + repoId, emailOperation.getSelectionIndex());
-		for (int i = 0; i < emailButtons.length; i++) {
-			settings.put(STORE_EMAILBUTTON_ID + i + repoId, emailButtons[i].getSelection());
-		}
-		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
-		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());
-		settings.put(STORE_EMAILADDRESS_ID + repoId, emailPattern.getText());
-		settings.put(STORE_EMAIL2ADDRESS_ID + repoId, emailPattern2.getText());
-		settings.put(STORE_EMAIL2MATCH_ID + repoId, emailOperation2.getSelectionIndex());
-		for (int i = 0; i < emailButtons2.length; i++) {
-			settings.put(STORE_EMAIL2BUTTON_ID + i + repoId, emailButtons2[i].getSelection());
-		}
-
-		settings.put(STORE_KEYWORDS_ID + repoId, keywords.getText());
-		settings.put(STORE_KEYWORDSMATCH_ID + repoId, keywordsOperation.getSelectionIndex());
-		settings.put(STORE_WHITEBOARD_ID + repoId, whiteboardPattern.getText());
-		settings.put(STORE_WHITEBOARDMATCH_ID + repoId, whiteboardOperation.getSelectionIndex());
-
-		ObjectOutputStream outputStream = null;
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		try {
-			try {
-				outputStream = new ObjectOutputStream(byteArrayOutputStream);
-				outputStream.writeObject(charts);
-				outputStream.flush();
-				settings.put(STORE_CHARTS_ID + repoId, byteArrayOutputStream.toString());
-			} catch (IOException e) {
-				throw e;
-			} finally {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			}
-		} catch (Exception e) {
-		}
-
-	}
-
 	/* Testing hook to see if any products are present */
 	public int getProductCount() throws Exception {
 		return product.getItemCount();
@@ -2147,98 +2003,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private String[] convertStringListToArray(java.util.List<String> stringList) {
 		return stringList.toArray(new String[stringList.size()]);
-	}
-
-	private void updateConfiguration(final boolean force) {
-		String[] selectedProducts = product.getSelection();
-		if (selectedProducts != null && selectedProducts.length == 0) {
-			selectedProducts = null;
-		}
-		if (getTaskRepository() != null) {
-			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					if (monitor == null) {
-						monitor = new NullProgressMonitor();
-					}
-					try {
-						monitor.beginTask(Messages.BugzillaSearchPage_Updating_search_options_,
-								IProgressMonitor.UNKNOWN);
-						BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
-						repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository(), force,
-								monitor);
-					} catch (final Exception e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						monitor.done();
-					}
-				}
-			};
-
-			try {
-				if (getContainer() != null) {
-					getContainer().run(true, true, updateRunnable);
-				} else if (getSearchContainer() != null) {
-					getSearchContainer().getRunnableContext().run(true, true, updateRunnable);
-				} else {
-					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.busyCursorWhile(updateRunnable);
-				}
-
-			} catch (InvocationTargetException ex) {
-				Shell shell = null;
-				shell = getShell();
-				if (ex.getCause() instanceof CoreException) {
-					CoreException cause = ((CoreException) ex.getCause());
-					if (cause.getStatus() instanceof RepositoryStatus
-							&& ((RepositoryStatus) cause.getStatus()).isHtmlMessage()) {
-						if (shell != null) {
-							shell.setEnabled(false);
-						}
-						// TODO: eliminate use of internal api
-						WebBrowserDialog dialog = new WebBrowserDialog(shell,
-								Messages.BugzillaSearchPage_Error_updating_search_options, null, cause.getStatus()
-										.getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
-								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
-						dialog.setBlockOnOpen(true);
-						dialog.open();
-						if (shell != null) {
-							shell.setEnabled(true);
-						}
-						return;
-					} else {
-						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, cause.getMessage(),
-								cause));
-					}
-				}
-				if (ex.getCause() instanceof OperationCanceledException) {
-					return;
-				}
-
-				// FIXME improve error reporting
-				if (!CoreUtil.TEST_MODE) {
-					MessageDialog.openError(shell, Messages.BugzillaSearchPage_Error_updating_search_options,
-							MessageFormat.format(Messages.BugzillaSearchPage_Error_was_X, ex.getCause().getMessage()));
-				}
-				return;
-
-			} catch (InterruptedException ex) {
-				return;
-			}
-
-			updateAttributesFromConfiguration(selectedProducts);
-		}
-	}
-
-	@Override
-	public Shell getShell() {
-		Shell shell = null;
-		if (getWizard() != null && getWizard().getContainer() != null) {
-			shell = getWizard().getContainer().getShell();
-		}
-		if (shell == null && getControl() != null) {
-			shell = getControl().getShell();
-		}
-		return shell;
 	}
 
 	private void setSelection(List listControl, String[] selection) {
@@ -2350,8 +2114,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 							ChartExpression chartExpression = charts.get(chartNum).getChartExpression(chartRow,
 									chartColumn);
 							chartExpression.setFieldName(comboField.getSelectionIndex());
-							getShell().layout(true);
-							getShell().redraw();
+							comboField.getShell().layout(true);
+							comboField.getShell().redraw();
 						}
 					});
 					comboField.setToolTipText(Messages.BugzillaSearchPage_Tooltip_Custom_fields_at_end);
@@ -2474,24 +2238,18 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	public BugzillaSearchPage(TaskRepository repository) {
-		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, null);
-
-		toolkit = new FormToolkit(Display.getCurrent());
-		setNeedsClearButton(true);
-		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
-		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
-		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
+		this(repository, null);
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
 		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
-		originalQuery = origQuery;
-		setNeedsClearButton(true);
+		this.originalQuery = origQuery;
+
+		setNeedsClear(true);
 		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
 		setMessage(Messages.BugzillaSearchPage_Enter_search_option);
+
 		toolkit = new FormToolkit(Display.getCurrent());
-		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
-		repositoryConfiguration = connector.getRepositoryConfiguration(getTaskRepository().getUrl());
 	}
 
 	@Override
@@ -2506,27 +2264,71 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@Override
 	protected boolean hasRepositoryConfiguration() {
-		return repositoryConfiguration != null;
+		return getRepositoryConfiguration() != null;
+	}
+
+	public RepositoryConfiguration getRepositoryConfiguration() {
+		return ((BugzillaRepositoryConnector) getConnector()).getRepositoryConfiguration(getTaskRepository().getUrl());
 	}
 
 	@Override
 	protected void doRefresh() {
-		// ignore
-
+		String[] selectedProducts = product.getSelection();
+		if (selectedProducts != null && selectedProducts.length == 0) {
+			selectedProducts = null;
+		}
+		updateAttributesFromConfiguration(selectedProducts);
 	}
 
 	@Override
 	protected boolean restoreState(IRepositoryQuery query) {
-		if (originalQuery != null) {
+		if (query != null) {
 			try {
-				updateDefaults(originalQuery.getUrl());
+				updateDefaults(query.getUrl());
 				refreshChartControls();
 			} catch (UnsupportedEncodingException e) {
 				// ignore
 			}
 		}
 
-		return false;
+		if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
+				(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
+				(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
+				(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
+				priority.getSelection().length > 0 || resolution.getSelection().length > 0
+				|| version.getSelection().length > 0 || target.getSelection().length > 0
+				|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
+			moreOptionsSection.setExpanded(true);
+			scrolledComposite.reflow(true);
+			refreshChartControls();
+		}
+
+		if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
+			chartSection.setExpanded(true);
+			scrolledComposite.reflow(true);
+			refreshChartControls();
+		}
+
+		/*
+		 * hack: we have to select the correct product, then update the
+		 * attributes so the component/version/milestone lists have the
+		 * proper values, then we can restore all the widget selections.
+		 */
+//		if (getTaskRepository() != null) {
+//			IDialogSettings settings = getDialogSettings();
+//			String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
+//			if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
+//					&& product != null) {
+//				product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
+//				if (product.getSelection().length > 0) {
+//					updateAttributesFromConfiguration(product.getSelection());
+//				}
+//				restoreWidgetValues();
+//			}
+//		}
+//		setPageComplete(isPageComplete());
+
+		return true;
 	}
 
 	@Override

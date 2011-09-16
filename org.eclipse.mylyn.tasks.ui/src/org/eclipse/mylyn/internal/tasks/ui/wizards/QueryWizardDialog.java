@@ -16,22 +16,22 @@ import java.util.HashMap;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.EnhancedWizardDialog;
-import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractRepositoryQueryPage2;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 public class QueryWizardDialog extends EnhancedWizardDialog {
 
-	private static final String UPDATE_BUTTON_KEY = "update"; //$NON-NLS-1$
+	private static final String REFRESH_BUTTON_KEY = "refresh"; //$NON-NLS-1$
 
 	private static final String CLEAR_BUTTON_KEY = "clear"; //$NON-NLS-1$
 
-	public static final int UPDATE_BUTTON_ID = 2001;
+	public static final int REFRESH_BUTTON_ID = 2001;
 
 	public static final int CLEAR_BUTTON_ID = 2002;
 
-	private Button updateButton;
+	private Button refreshButton;
 
 	private Button clearButton;
 
@@ -49,21 +49,26 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 
 	@Override
 	protected void createExtraButtons(Composite composite) {
-		clearButton = createButton(composite, CLEAR_BUTTON_ID, Messages.QueryWizardDialog_Clear_Fields, false);
-		clearButton.setVisible(false);
-		setButtonLayoutData(clearButton);
-		updateButton = createButton(composite, UPDATE_BUTTON_ID,
-				Messages.QueryWizardDialog_Update_Attributes_from_Repository, false);
-//		updateButton.setImage(TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION_SMALL.createImage());
-		updateButton.setVisible(false);
-		setButtonLayoutData(updateButton);
+		if (abstractRepositoryQueryPage != null) {
+			if (abstractRepositoryQueryPage.needsRefresh()) {
+				refreshButton = createButton(composite, REFRESH_BUTTON_ID,
+						Messages.QueryWizardDialog_Update_Attributes_from_Repository, false);
+				refreshButton.setVisible(false);
+				setButtonLayoutData(refreshButton);
+			}
+			if (abstractRepositoryQueryPage.needsClear()) {
+				clearButton = createButton(composite, CLEAR_BUTTON_ID, Messages.QueryWizardDialog_Clear_Fields, false);
+				clearButton.setVisible(false);
+				setButtonLayoutData(clearButton);
+			}
+		}
 	}
 
 	@Override
 	protected void updateExtraButtons() {
 		if (abstractRepositoryQueryPage != null) {
 			abstractRepositoryQueryPage.setExtraButtonState(clearButton);
-			abstractRepositoryQueryPage.setExtraButtonState(updateButton);
+			abstractRepositoryQueryPage.setExtraButtonState(refreshButton);
 		}
 	}
 
@@ -87,9 +92,9 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 				savedEnabledState.put(CLEAR_BUTTON_KEY, clearButton.getEnabled());
 				clearButton.setEnabled(false);
 			}
-			if (updateButton != null && updateButton.getShell() == getShell()) {
-				savedEnabledState.put(UPDATE_BUTTON_KEY, updateButton.getEnabled());
-				updateButton.setEnabled(false);
+			if (refreshButton != null && refreshButton.getShell() == getShell()) {
+				savedEnabledState.put(REFRESH_BUTTON_KEY, refreshButton.getEnabled());
+				refreshButton.setEnabled(false);
 			}
 		}
 		return savedEnabledState;
@@ -107,9 +112,9 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 			if (clearButton != null && savedValidateEnabledState != null) {
 				clearButton.setEnabled(savedValidateEnabledState);
 			}
-			savedValidateEnabledState = savedEnabledState.get(UPDATE_BUTTON_KEY);
-			if (updateButton != null && savedValidateEnabledState != null) {
-				updateButton.setEnabled(savedValidateEnabledState);
+			savedValidateEnabledState = savedEnabledState.get(REFRESH_BUTTON_KEY);
+			if (refreshButton != null && savedValidateEnabledState != null) {
+				refreshButton.setEnabled(savedValidateEnabledState);
 			}
 		}
 	}

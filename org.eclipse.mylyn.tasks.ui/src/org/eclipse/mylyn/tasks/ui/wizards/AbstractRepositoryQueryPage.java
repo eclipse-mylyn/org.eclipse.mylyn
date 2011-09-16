@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * Extend to provide repository-specific query page to the Workbench search dialog.
+ * <p>
+ * It is recommended that clients extend {@link AbstractRepositoryQueryPage2} instead.
  * 
  * @author Rob Elves
  * @author Steffen Pingel

@@ -144,23 +144,16 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		fParentComposite.setLayoutData(gd);
 
 		createRepositoryGroup(fParentComposite);
-		createSeparator(fParentComposite);
-		this.setControl(fParentComposite);
 
+		setControl(fParentComposite);
 		Dialog.applyDialogFont(fParentComposite);
-	}
-
-	private void createSeparator(Composite parent) {
-		Label separator = new Label(parent, SWT.NONE);
-		separator.setVisible(false);
-		GridData data = new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1);
-		data.heightHint = convertHeightInCharsToPixels(1) / 3;
-		separator.setLayoutData(data);
 	}
 
 	private void createRepositoryGroup(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
 		GridLayout layout = new GridLayout(6, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
 		group.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(gd);
@@ -242,6 +235,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		// Page wrapper
 		final Composite pageWrapper = new Composite(fParentComposite, SWT.NONE);
 		pageWrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		// m4.0 replace with FillLayout
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;

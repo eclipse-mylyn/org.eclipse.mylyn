@@ -19,7 +19,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.QueryWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -35,6 +34,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -44,7 +44,9 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Steffen Pingel
  * @since 3.1
+ * @deprecated use {@link org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2} instead
  */
+@Deprecated
 public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQueryPage {
 
 	private Text titleText;
@@ -57,8 +59,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private boolean needsRepositoryConfiguration = true;
 
-	private boolean needsClearButton = false;
-
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
@@ -67,10 +67,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	public void setNeedsRepositoryConfiguration(boolean needsRepositoryConfiguration) {
 		this.needsRepositoryConfiguration = needsRepositoryConfiguration;
-	}
-
-	public void setNeedsClearButton(boolean needsClearButton) {
-		this.needsClearButton = needsClearButton;
 	}
 
 	public void createControl(Composite parent) {
@@ -89,8 +85,10 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).span(2, 1).applyTo(innerComposite);
 		innerComposite.setLayout(new FillLayout());
 		createPageContent(innerComposite);
-		createButtonGroup(composite);
-		if (!needsRepositoryConfiguration) {
+
+		if (needsRepositoryConfiguration) {
+			createUpdateButton(composite);
+		} else {
 			setDescription(Messages.AbstractRepositoryQueryPage2_Create_a_Query_Page_Description);
 		}
 
@@ -126,49 +124,30 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		});
 	}
 
-	private void createButtonGroup(Composite control) {
+	private Control createUpdateButton(final Composite control) {
 		Composite composite = new Composite(control, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		composite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).span(2, 1).applyTo(composite);
-		createButtons(composite);
-	}
 
-	protected void createButtons(final Composite control) {
-		if (getSearchContainer() == null) {
-			return;
-		}
-		if (needsClearButton) {
-			Button clearButton = new Button(control, SWT.PUSH);
-			clearButton.setText(Messages.AbstractRepositoryQueryPage2_Clear_Fields);
-			clearButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-			clearButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					clearFields();
+		updateButton = new Button(composite, SWT.PUSH);
+		updateButton.setText(Messages.AbstractRepositoryQueryPage2__Refresh_From_Repository);
+		updateButton.setLayoutData(new GridData());
+		updateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (getTaskRepository() != null) {
+					updateAttributesFromRepository(true);
+				} else {
+					MessageDialog.openInformation(
+							Display.getCurrent().getActiveShell(),
+							Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
+							Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 				}
+			}
+		});
 
-			});
-		}
-		if (needsRepositoryConfiguration) {
-			updateButton = new Button(control, SWT.PUSH);
-			updateButton.setText(Messages.AbstractRepositoryQueryPage2__Refresh_From_Repository);
-			updateButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-//			updateButton.setImage(TasksUiImages.REPOSITORY_UPDATE_CONFIGURATION.createImage());
-			updateButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (getTaskRepository() != null) {
-						updateAttributesFromRepository(true);
-					} else {
-						MessageDialog.openInformation(
-								Display.getCurrent().getActiveShell(),
-								Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
-								Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
-					}
-				}
-			});
-		}
+		return composite;
 	}
 
 	@Override
@@ -290,47 +269,4 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		}
 	}
 
-	public void setExtraButtonState(Button button) {
-		Integer obj = (Integer) button.getData();
-		if (obj == QueryWizardDialog.UPDATE_BUTTON_ID) {
-			if (needsRepositoryConfiguration) {
-				if (!button.isVisible()) {
-					button.setVisible(true);
-				}
-				button.setEnabled(true);
-			} else {
-				if (button != null && button.isVisible()) {
-					button.setVisible(false);
-				}
-			}
-		} else if (obj == QueryWizardDialog.CLEAR_BUTTON_ID) {
-			if (!button.isVisible()) {
-				button.setVisible(true);
-			}
-			button.setEnabled(true);
-		}
-
-	}
-
-	public boolean handleExtraButtonPressed(int buttonId) {
-		if (buttonId == QueryWizardDialog.UPDATE_BUTTON_ID) {
-			if (getTaskRepository() != null) {
-				updateAttributesFromRepository(true);
-			} else {
-				MessageDialog.openInformation(
-						Display.getCurrent().getActiveShell(),
-						Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
-						Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
-			}
-			return true;
-		} else if (buttonId == QueryWizardDialog.CLEAR_BUTTON_ID) {
-			clearFields();
-			return true;
-		}
-		return false;
-	}
-
-	public void clearFields() {
-
-	}
 }
