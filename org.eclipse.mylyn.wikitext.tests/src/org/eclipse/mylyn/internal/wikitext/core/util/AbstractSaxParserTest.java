@@ -18,7 +18,7 @@ import java.io.StringWriter;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
@@ -29,11 +29,10 @@ import org.xml.sax.SAXException;
 
 /**
  * @author David Green
- * @see HtmlParser
  */
-public class HtmlParserTest extends TestCase {
+public abstract class AbstractSaxParserTest extends TestCase {
 
-	private HtmlParser parser;
+	private AbstractSaxHtmlParser parser;
 
 	private StringWriter out;
 
@@ -41,18 +40,31 @@ public class HtmlParserTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		parser = new HtmlParser();
+		parser = createParser();
 		out = new StringWriter();
 		builder = new TextileDocumentBuilder(out);
 		super.setUp();
 	}
+
+	protected abstract AbstractSaxHtmlParser createParser();
 
 	public void testBasicHtml() throws IOException, SAXException {
 		performTest("<html><body>test 123</body></html>", "test 123\n\n");
 	}
 
 	public void testBasicHtmlWithPara() throws IOException, SAXException {
-		performTest("<html><body>test 123<p>abc\n\n\ndef</p></body></html>", "test 123\n\nabc   def\n\n");
+		performTest("<html><body>test 123<p>abc\n\n\ndef</p></body></html>", "test 123\n\nabc def\n\n");
+	}
+
+	public void testBasicHtmlWithHeadingPara() throws IOException, SAXException {
+		performTest("<html><body><h1>Heading 1</h1>test 123<p>abc\n\n\ndef</p></body></html>",
+				"h1. Heading 1\n\ntest 123\n\nabc def\n\n");
+	}
+
+	public void testBasicHtmlWithNewlines() throws IOException, SAXException {
+		performTest(
+				"<html><body>\n<h1>First Heading</h1>\n\n<p>some content</p>\n<h1>Second Heading</h1>\n<p>some more content</p></body></html>",
+				"h1. First Heading\n\nsome content\n\nh1. Second Heading\n\nsome more content\n\n");
 	}
 
 	public void testNumericList() throws IOException, SAXException {
@@ -126,7 +138,7 @@ public class HtmlParserTest extends TestCase {
 		performTest("<html><body>&copy;&reg;&euro;</body></html>", "(c)(r)\u20ac\n\n");
 	}
 
-	private void performTest(String html, String expectedResult) throws IOException, SAXException {
+	protected void performTest(String html, String expectedResult) throws IOException, SAXException {
 		TestUtil.println("HTML: " + html);
 
 		parser.parse(sourceForHtml(html), builder);

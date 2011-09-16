@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -478,7 +478,7 @@ public class HtmlTextPresentationParser {
 					// trim left here, since we must properly eliminate whitespace in ordered lists where we've already
 					// prepended a number to the list item text
 					int skip = 0;
-					while (Character.isWhitespace(ch[start + skip]) && skip < length) {
+					while (skip < length && Character.isWhitespace(ch[start + skip])) {
 						++skip;
 					}
 					start += skip;

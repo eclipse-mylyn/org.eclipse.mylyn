@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of
- * {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>bq. </code>. Creates a block type of {@link ParagraphBlock
+ * paragraph}.
  * 
  * @author David Green
  */

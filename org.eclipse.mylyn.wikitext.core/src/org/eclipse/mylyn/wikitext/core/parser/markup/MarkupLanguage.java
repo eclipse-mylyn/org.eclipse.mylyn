@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -686,5 +687,19 @@ public abstract class MarkupLanguage implements Cloneable {
 	 */
 	public void setEnableMacros(boolean enableMacros) {
 		this.enableMacros = enableMacros;
+	}
+
+	/**
+	 * Create a document builder suitable for emitting content in this markup language
+	 * 
+	 * @param out
+	 *            the target to which content is written
+	 * @return a document builder
+	 * @throws UnsupportedOperationException
+	 *             if the markup language has no corresponding document builder
+	 * @since 1.6
+	 */
+	public DocumentBuilder createDocumentBuilder(Writer out) {
+		throw new UnsupportedOperationException();
 	}
 }

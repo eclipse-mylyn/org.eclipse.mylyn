@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.core;
 
+import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -236,5 +237,13 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 			currentState = null;
 			super.processContent(parser, markupContent, asDocument);
 		}
+	}
+
+	/**
+	 * @since 1.6
+	 */
+	@Override
+	public DocumentBuilder createDocumentBuilder(Writer out) {
+		return new TextileDocumentBuilder(out);
 	}
 }

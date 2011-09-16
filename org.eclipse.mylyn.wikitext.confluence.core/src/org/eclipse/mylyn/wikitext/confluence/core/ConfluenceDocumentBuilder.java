@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.textile.core;
+package org.eclipse.mylyn.wikitext.confluence.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -25,15 +25,15 @@ import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 
 /**
- * a document builder that emits Textile markup
+ * a document builder that emits Confluence markup
  * 
  * @see HtmlParser
  * @author David Green
  * @since 1.6
- * @see TextileLanguage
- * @see TextileLanguage#createDocumentBuilder(Writer)
+ * @see ConfluenceLanguage
+ * @see ConfluenceLanguage#createDocumentBuilder(Writer)
  */
-public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
+public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
 
@@ -52,10 +52,6 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		entityToLiteral.put("#36", "$"); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("#37", "%"); //$NON-NLS-1$//$NON-NLS-2$
 	}
-
-	private boolean previousWasExtended;
-
-	private boolean emitAttributes = true;
 
 	private class ContentBlock extends Block {
 
@@ -109,9 +105,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			emitContent(content, extended);
 
 			super.close();
-			if (getBlockType() != null) {
-				previousWasExtended = extended;
-			}
+
 		}
 
 		protected void emitContent(final String content, final boolean extended) throws IOException {
@@ -159,7 +153,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
-	public TextileDocumentBuilder(Writer out) {
+	public ConfluenceDocumentBuilder(Writer out) {
 		super(out);
 	}
 
@@ -171,7 +165,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case NUMERIC_LIST:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case CODE:
-			return new ContentBlock(type, "bc. ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{code}", "{code}\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
@@ -190,17 +184,15 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ContentBlock(type, attributesMarkup.length() > 0 || previousWasExtended
-					? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
-					: attributesMarkup, "\n\n"); //$NON-NLS-1$
+			return new ContentBlock(type, attributesMarkup, "\n\n"); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "{noformat}" + computeAttributes(attributes) + ". ", "{noformat}\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case QUOTE:
 			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
-			return new ContentBlock(type, "|_.", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+			return new ContentBlock(type, "||", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case TABLE_CELL_NORMAL:
 			return new ContentBlock(type, "|", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case TABLE_ROW:
@@ -270,21 +262,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private String computeAttributes(Attributes attributes) {
 		String attributeMarkup = ""; //$NON-NLS-1$
-		if (emitAttributes) {
-			String classId = ""; //$NON-NLS-1$
-			if (attributes.getCssClass() != null) {
-				classId = attributes.getCssClass();
-			}
-			if (attributes.getId() != null) {
-				classId += "#" + attributes.getId(); //$NON-NLS-1$
-			}
-			if (classId.length() > 0) {
-				attributeMarkup += "(" + classId + ")"; //$NON-NLS-1$//$NON-NLS-2$
-			}
-			if (attributes.getCssStyle() != null) {
-				attributeMarkup += "{" + attributes.getCssStyle() + "}"; //$NON-NLS-1$//$NON-NLS-2$
-			}
-		}
+
 		return attributeMarkup;
 	}
 
@@ -398,30 +376,12 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private void writeAttributes(Attributes attributes) {
-		if (!emitAttributes) {
-			return;
-		}
+
 		try {
 			currentBlock.write(computeAttributes(attributes));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
-	 * Defaults to true.
-	 */
-	public boolean isEmitAttributes() {
-		return emitAttributes;
-	}
-
-	/**
-	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
-	 * Defaults to true.
-	 */
-	public void setEmitAttributes(boolean emitAttributes) {
-		this.emitAttributes = emitAttributes;
 	}
 
 }
