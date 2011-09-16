@@ -49,12 +49,9 @@ public class TracClientFactoryTest extends TestCase {
 	}
 
 	public void testCreateClientNull() throws Exception {
-		try {
-			WebLocation location = new WebLocation(fixture.getRepositoryUrl(), "user", "password");
-			TracClientFactory.createClient(location, null);
-			fail("Expected Exception");
-		} catch (Exception e) {
-		}
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), "user", "password");
+		ITracClient client = TracClientFactory.createClient(location, null);
+		assertEquals(Version.XML_RPC, client.getAccessMode());
 	}
 
 	public void testProbeClient() throws Exception {

@@ -16,11 +16,11 @@ import java.net.MalformedURLException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 
 /**
  * @author Steffen Pingel
@@ -34,7 +34,8 @@ public class TracClientFactory {
 			return new TracXmlRpcClient(location, version);
 		}
 
-		throw new RuntimeException("Invalid repository version: " + version); //$NON-NLS-1$
+		// fall-back to XML_RPC in case the repository information is incomplete
+		return new TracXmlRpcClient(location, Version.XML_RPC);
 	}
 
 	/**
