@@ -276,12 +276,20 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_ELEMENT__REFRESH_DATE = 4;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_ELEMENT__ATTRIBUTES = 5;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_ELEMENT_FEATURE_COUNT = 5;
+	public static final int BUILD_ELEMENT_FEATURE_COUNT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -322,6 +330,14 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int ARTIFACT__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ARTIFACT__ATTRIBUTES = BUILD_ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Relative Path</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -378,6 +394,14 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int BUILD__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD__ATTRIBUTES = BUILD_ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -640,6 +664,14 @@ public class BuildPackage extends EPackageImpl {
 	public static final int BUILD_PLAN__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BUILD_PLAN__ATTRIBUTES = BUILD_ELEMENT__ATTRIBUTES;
+
+	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -885,7 +917,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER__ATTRIBUTES = BUILD_ELEMENT_FEATURE_COUNT + 0;
+	public static final int BUILD_SERVER__ATTRIBUTES = BUILD_ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Location</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -893,7 +925,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER__LOCATION = BUILD_ELEMENT_FEATURE_COUNT + 1;
+	public static final int BUILD_SERVER__LOCATION = BUILD_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -901,7 +933,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER__CONNECTOR_KIND = BUILD_ELEMENT_FEATURE_COUNT + 2;
+	public static final int BUILD_SERVER__CONNECTOR_KIND = BUILD_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Repository Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -909,7 +941,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER__REPOSITORY_URL = BUILD_ELEMENT_FEATURE_COUNT + 3;
+	public static final int BUILD_SERVER__REPOSITORY_URL = BUILD_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Server</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -917,7 +949,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BUILD_SERVER_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 4;
+	public static final int BUILD_SERVER_FEATURE_COUNT = BUILD_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Artifacts</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -1101,6 +1133,14 @@ public class BuildPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int USER__REFRESH_DATE = BUILD_ELEMENT__REFRESH_DATE;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER__ATTRIBUTES = BUILD_ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2238,6 +2278,19 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the map '{@link org.eclipse.mylyn.builds.core.IBuildElement#getAttributes
+	 * <em>Attributes</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the map '<em>Attributes</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getAttributes()
+	 * @see #getBuildElement()
+	 * @generated
+	 */
+	public EReference getBuildElement_Attributes() {
+		return (EReference) buildElementEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildModel <em>Model</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2551,19 +2604,6 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the map '{@link org.eclipse.mylyn.builds.core.IBuildServer#getAttributes
-	 * <em>Attributes</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the map '<em>Attributes</em>'.
-	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getAttributes()
-	 * @see #getBuildServer()
-	 * @generated
-	 */
-	public EReference getBuildServer_Attributes() {
-		return (EReference) buildServerEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation
 	 * <em>Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2573,7 +2613,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getBuildServer_Location() {
-		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(1);
+		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2586,7 +2626,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getBuildServer_ConnectorKind() {
-		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(2);
+		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2599,7 +2639,7 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getBuildServer_RepositoryUrl() {
-		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(3);
+		return (EAttribute) buildServerEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3892,6 +3932,7 @@ public class BuildPackage extends EPackageImpl {
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__OPERATIONS);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__ELEMENT_STATUS);
 		createEAttribute(buildElementEClass, BUILD_ELEMENT__REFRESH_DATE);
+		createEReference(buildElementEClass, BUILD_ELEMENT__ATTRIBUTES);
 
 		buildPlanEClass = createEClass(BUILD_PLAN);
 		createEReference(buildPlanEClass, BUILD_PLAN__SERVER);
@@ -3920,7 +3961,6 @@ public class BuildPackage extends EPackageImpl {
 		createEReference(buildModelEClass, BUILD_MODEL__BUILDS);
 
 		buildServerEClass = createEClass(BUILD_SERVER);
-		createEReference(buildServerEClass, BUILD_SERVER__ATTRIBUTES);
 		createEAttribute(buildServerEClass, BUILD_SERVER__LOCATION);
 		createEAttribute(buildServerEClass, BUILD_SERVER__CONNECTOR_KIND);
 		createEAttribute(buildServerEClass, BUILD_SERVER__REPOSITORY_URL);
@@ -4197,6 +4237,11 @@ public class BuildPackage extends EPackageImpl {
 				getBuildElement_RefreshDate(),
 				ecorePackage.getEDate(),
 				"refreshDate", null, 0, 1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getBuildElement_Attributes(),
+				this.getStringToStringMap(),
+				null,
+				"attributes", null, 0, -1, IBuildElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(buildElementEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
@@ -4302,11 +4347,6 @@ public class BuildPackage extends EPackageImpl {
 
 		initEClass(buildServerEClass, IBuildServer.class,
 				"BuildServer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getBuildServer_Attributes(),
-				this.getStringToStringMap(),
-				null,
-				"attributes", null, 0, -1, IBuildServer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getBuildServer_Location(),
 				this.getRepositoryLocation(),
@@ -4634,6 +4674,14 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute BUILD_ELEMENT__REFRESH_DATE = eINSTANCE.getBuildElement_RefreshDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference BUILD_ELEMENT__ATTRIBUTES = eINSTANCE.getBuildElement_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Artifact <em>Artifact</em>}'
@@ -5016,14 +5064,6 @@ public class BuildPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass BUILD_SERVER = eINSTANCE.getBuildServer();
-
-		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EReference BUILD_SERVER__ATTRIBUTES = eINSTANCE.getBuildServer_Attributes();
 
 		/**
 		 * The meta object literal for the '<em><b>Location</b></em>' attribute feature. <!-- begin-user-doc --> <!--

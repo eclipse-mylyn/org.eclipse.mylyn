@@ -1090,6 +1090,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 		getHealthReports().clear();
 		getHealthReports().addAll(EcoreUtil.copyAll(source.getHealthReports()));
+
+		getAttributes().clear();
+		getAttributes().putAll(source.getAttributes());
 	}
 
 	@Override

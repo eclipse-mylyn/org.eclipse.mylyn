@@ -61,6 +61,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementStatus" eType="#//IStatus"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refreshDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//StringToStringMap" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildPlan" eSuperTypes="#//BuildElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="server" lowerBound="1"
@@ -100,8 +102,6 @@
         eType="#//Build" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BuildServer" eSuperTypes="#//BuildElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
-        eType="#//StringToStringMap" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="#//RepositoryLocation"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="connectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

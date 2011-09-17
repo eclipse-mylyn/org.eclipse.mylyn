@@ -20,7 +20,6 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getAttributes <em>Attributes</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector Kind</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
@@ -30,19 +29,6 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * @generated
  */
 public interface IBuildServer extends IBuildElement {
-	/**
-	 * Returns the value of the '<em><b>Attributes</b></em>' map. The key is of type {@link java.lang.String}, and the
-	 * value is of type {@link java.lang.String}, <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Attributes</em>' map.
-	 * @generated
-	 */
-	Map<String, String> getAttributes();
-
 	/**
 	 * Returns the value of the '<em><b>Location</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>

@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.builds.tests.mock;
+package org.eclipse.mylyn.builds.tests.support;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
@@ -22,24 +22,21 @@ import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
  */
 public class MockBuildLoader implements IBuildLoader {
 
+	private final MockBuildModelRealm realm;
+
+	public MockBuildLoader() {
+		this.realm = new MockBuildModelRealm();
+	}
+
 	public BuildServerBehaviour loadBehaviour(BuildServer server) throws CoreException {
-		return null;
+		if (server.getOriginal() != null && server.getOriginal().getBehaviour() != null) {
+			return server.getOriginal().getBehaviour();
+		}
+		return new MockBuildServerBehaviour(server);
 	}
 
 	public IBuildModelRealm getRealm() {
-		return new IBuildModelRealm() {
-			public void syncExec(Runnable runnable) {
-				runnable.run();
-			}
-
-			public void exec(Runnable runnable) {
-				runnable.run();
-			}
-
-			public void asyncExec(Runnable runnable) {
-				runnable.run();
-			}
-		};
+		return realm;
 	}
 
 }

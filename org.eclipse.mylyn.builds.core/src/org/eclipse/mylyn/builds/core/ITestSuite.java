@@ -28,7 +28,7 @@ public interface ITestSuite extends ITestElement {
 	/**
 	 * Returns the value of the '<em><b>Cases</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.builds.core.ITestCase}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>} '. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Cases</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...

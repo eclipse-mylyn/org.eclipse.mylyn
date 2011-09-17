@@ -14,6 +14,7 @@ package org.eclipse.mylyn.builds.core;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 
 /**
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations <em>Operations</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element Status</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate <em>Refresh Date</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IBuildElement#getAttributes <em>Attributes</em>}</li>
  * </ul>
  * </p>
  * 
@@ -143,6 +145,19 @@ public interface IBuildElement {
 	 * @generated
 	 */
 	void setRefreshDate(Date value);
+
+	/**
+	 * Returns the value of the '<em><b>Attributes</b></em>' map. The key is of type {@link java.lang.String}, and the
+	 * value is of type {@link java.lang.String}, <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Attributes</em>' map.
+	 * @generated
+	 */
+	Map<String, String> getAttributes();
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

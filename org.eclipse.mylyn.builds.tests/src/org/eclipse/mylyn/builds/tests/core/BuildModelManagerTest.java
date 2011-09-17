@@ -21,7 +21,7 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.BuildModelManager;
-import org.eclipse.mylyn.builds.tests.mock.MockBuildLoader;
+import org.eclipse.mylyn.builds.tests.support.MockBuildLoader;
 
 /**
  * @author Steffen Pingel

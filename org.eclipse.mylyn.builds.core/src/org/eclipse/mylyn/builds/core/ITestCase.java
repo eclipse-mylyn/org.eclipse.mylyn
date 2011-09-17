@@ -79,7 +79,7 @@ public interface ITestCase extends ITestElement {
 
 	/**
 	 * Returns the value of the '<em><b>Suite</b></em>' container reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.builds.core.ITestSuite#getCases <em>Cases</em>} '. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.builds.core.ITestSuite#getCases <em>Cases</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Suite</em>' container reference isn't clear, there really should be more of a
 	 * description here...

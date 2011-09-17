@@ -14,13 +14,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
@@ -36,6 +43,7 @@ import org.eclipse.mylyn.builds.core.IOperation;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getOperations <em>Operations</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getElementStatus <em>Element Status</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getRefreshDate <em>Refresh Date</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getAttributes <em>Attributes</em>}</li>
  * </ul>
  * </p>
  * 
@@ -130,6 +138,16 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	 * @ordered
 	 */
 	protected Date refreshDate = REFRESH_DATE_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getAttributes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap<String, String> attributes;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -249,9 +267,37 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 					oldRefreshDate, refreshDate));
 	}
 
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Map<String, String> getAttributes() {
+		if (attributes == null) {
+			attributes = new EcoreEMap<String, String>(BuildPackage.Literals.STRING_TO_STRING_MAP,
+					StringToStringMap.class, this, BuildPackage.BUILD_ELEMENT__ATTRIBUTES);
+		}
+		return attributes.map();
+	}
+
 	public abstract String getLabel();
 
 	public abstract IBuildServer getServer();
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).basicRemove(
+					otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -271,6 +317,11 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 			return getElementStatus();
 		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
 			return getRefreshDate();
+		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+			if (coreType)
+				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
+			else
+				return getAttributes();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -300,6 +351,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
 			setRefreshDate((Date) newValue);
 			return;
+		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).set(newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -327,6 +381,9 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
 			setRefreshDate(REFRESH_DATE_EDEFAULT);
 			return;
+		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+			getAttributes().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -351,6 +408,8 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 					: !ELEMENT_STATUS_EDEFAULT.equals(elementStatus);
 		case BuildPackage.BUILD_ELEMENT__REFRESH_DATE:
 			return REFRESH_DATE_EDEFAULT == null ? refreshDate != null : !REFRESH_DATE_EDEFAULT.equals(refreshDate);
+		case BuildPackage.BUILD_ELEMENT__ATTRIBUTES:
+			return attributes != null && !attributes.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

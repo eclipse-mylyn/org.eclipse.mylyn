@@ -42,7 +42,6 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getAttributes <em>Attributes</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getConnectorKind <em>Connector Kind</em>}</li>
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
@@ -52,16 +51,6 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
  * @generated
  */
 public class BuildServer extends BuildElement implements IBuildServer {
-	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getAttributes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EMap<String, String> attributes;
-
 	/**
 	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -136,23 +125,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	protected EClass eStaticClass() {
 		return BuildPackage.Literals.BUILD_SERVER;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Attributes</em>' map isn't clear, there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public Map<String, String> getAttributes() {
-		if (attributes == null) {
-			attributes = new EcoreEMap<String, String>(BuildPackage.Literals.STRING_TO_STRING_MAP,
-					StringToStringMap.class, this, BuildPackage.BUILD_SERVER__ATTRIBUTES);
-		}
-		return attributes.map();
 	}
 
 	/**
@@ -252,28 +224,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			return ((InternalEList<?>) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).basicRemove(
-					otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			if (coreType)
-				return ((EMap.InternalMapView<String, String>) getAttributes()).eMap();
-			else
-				return getAttributes();
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return getLocation();
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
@@ -293,9 +245,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			((EStructuralFeature.Setting) ((EMap.InternalMapView<String, String>) getAttributes()).eMap()).set(newValue);
-			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation((RepositoryLocation) newValue);
 			return;
@@ -317,9 +266,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			getAttributes().clear();
-			return;
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			setLocation(LOCATION_EDEFAULT);
 			return;
@@ -341,8 +287,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case BuildPackage.BUILD_SERVER__ATTRIBUTES:
-			return attributes != null && !attributes.isEmpty();
 		case BuildPackage.BUILD_SERVER__LOCATION:
 			return LOCATION_EDEFAULT == null ? location != null : !LOCATION_EDEFAULT.equals(location);
 		case BuildPackage.BUILD_SERVER__CONNECTOR_KIND:
