@@ -172,7 +172,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	protected String getPrettyName(String address) {
 		String value = proposals.get(address);
 		if (value != null) {
-			return NLS.bind("{0} <{1}>", value, address);
+			return NLS.bind("{0} <{1}>", value, address); //$NON-NLS-1$
 		}
 		return address;
 	}

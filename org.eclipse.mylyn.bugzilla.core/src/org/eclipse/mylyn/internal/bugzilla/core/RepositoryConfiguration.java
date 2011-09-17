@@ -752,7 +752,7 @@ public class RepositoryConfiguration implements Serializable {
 				if (unconfirmedAllowed) {
 					addOperation(bugReport, BugzillaOperation.unconfirmed);
 				}
-				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) {
+				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) { //$NON-NLS-1$
 					addOperation(bugReport, BugzillaOperation.confirmed);
 				}
 				addOperation(bugReport, BugzillaOperation.verify_with_resolution);
@@ -762,7 +762,7 @@ public class RepositoryConfiguration implements Serializable {
 				if (unconfirmedAllowed) {
 					addOperation(bugReport, BugzillaOperation.unconfirmed);
 				}
-				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) {
+				if (everConfirmed != null && "1".equals(everConfirmed.getValue())) { //$NON-NLS-1$
 					addOperation(bugReport, BugzillaOperation.confirmed);
 				}
 				addOperation(bugReport, BugzillaOperation.resolve);
