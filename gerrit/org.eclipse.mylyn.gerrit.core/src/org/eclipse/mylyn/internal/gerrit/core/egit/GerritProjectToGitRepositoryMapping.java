@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Sascha Scholz (SAP) - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.egit;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -22,87 +24,15 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+import com.google.gerrit.common.data.GerritConfig;
+
+/**
+ * @author Sascha Scholz
+ * @author Steffen Pingel
+ */
 public class GerritProjectToGitRepositoryMapping {
-
-	private final String gerritHostName;
-
-	private final String gerritProjectName;
-
-	public GerritProjectToGitRepositoryMapping(String gerritHostName, String gerritProjectName) {
-		this.gerritHostName = gerritHostName;
-		this.gerritProjectName = gerritProjectName;
-	}
-
-	public Repository findRepository() throws IOException {
-		RepositoryUtil repoUtil = getRepositoryUtil();
-		RepositoryCache repoCache = getRepositoryCache();
-		for (String dirs : repoUtil.getConfiguredRepositories()) {
-			Repository repo = repoCache.lookupRepository(new File(dirs));
-			if (isMatchingRepository(repo)) {
-				return repo;
-			}
-		}
-		return null;
-	}
-
-	RepositoryUtil getRepositoryUtil() {
-		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
-		return egit.getRepositoryUtil();
-	}
-
-	RepositoryCache getRepositoryCache() {
-		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
-		return egit.getRepositoryCache();
-	}
-
-	private boolean isMatchingRepository(Repository repo) {
-		List<RemoteConfig> remotes;
-		try {
-			remotes = RemoteConfig.getAllRemoteConfigs(repo.getConfig());
-		} catch (URISyntaxException e) {
-			GerritCorePlugin.logWarning("Invalid URI in remote configuration", e);
-			return false;
-		}
-		for (RemoteConfig remote : remotes) {
-			if (isMatchingRemoteConfig(remote)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isMatchingRemoteConfig(RemoteConfig remoteConfig) {
-		List<URIish> remoteUris = remoteConfig.getURIs();
-		return !remoteUris.isEmpty() && isMatchingUri(remoteUris.get(0));
-	}
-
-	private boolean isMatchingUri(URIish uri) {
-		String host = uri.getHost();
-		return gerritHostName.equalsIgnoreCase(host) && gerritProjectName.equals(calcProjectNameFromUri(uri));
-	}
-
-	static String calcProjectNameFromUri(URIish uri) {
-		String path = uri.getPath();
-		path = cleanTrailingDotGit(path);
-		if (isHttpUri(uri)) {
-			path = cleanGerritHttpPrefix(path);
-		}
-		return cleanLeadingSlash(path);
-	}
-
-	private static String cleanTrailingDotGit(String path) {
-		int dotGitIndex = path.lastIndexOf(".git"); //$NON-NLS-1$
-		if (dotGitIndex >= 0) {
-			return path.substring(0, dotGitIndex);
-		} else {
-			return path;
-		}
-	}
-
-	private static boolean isHttpUri(URIish fetchUri) {
-		return fetchUri.getScheme().toLowerCase().startsWith("http"); //$NON-NLS-1$
-	}
 
 	private static String cleanGerritHttpPrefix(String path) {
 		String httpPathPrefix = "/p/"; //$NON-NLS-1$
@@ -120,6 +50,148 @@ public class GerritProjectToGitRepositoryMapping {
 		} else {
 			return path;
 		}
+	}
+
+	private static String cleanTrailingDotGit(String path) {
+		int dotGitIndex = path.lastIndexOf(".git"); //$NON-NLS-1$
+		if (dotGitIndex >= 0) {
+			return path.substring(0, dotGitIndex);
+		} else {
+			return path;
+		}
+	}
+
+	private static boolean isHttpUri(URIish fetchUri) {
+		return fetchUri.getScheme().toLowerCase().startsWith("http"); //$NON-NLS-1$
+	}
+
+	static String calcProjectNameFromUri(URIish uri) {
+		String path = uri.getPath();
+		path = cleanTrailingDotGit(path);
+		if (isHttpUri(uri)) {
+			path = cleanGerritHttpPrefix(path);
+		}
+		return cleanLeadingSlash(path);
+	}
+
+	private final GerritConfig config;
+
+	private String gerritHost;
+
+	private final String gerritProject;
+
+	private RemoteConfig remote;
+
+	private Repository repository;
+
+	private final TaskRepository taskRepository;
+
+	public GerritProjectToGitRepositoryMapping(TaskRepository taskRepository, GerritConfig config, String gerritProject) {
+		this.config = config;
+		this.taskRepository = taskRepository;
+		this.gerritProject = gerritProject;
+	}
+
+	public Repository find() throws IOException {
+		if (gerritProject == null) {
+			return null;
+		}
+
+		gerritHost = getHostFromUrl(getGitDaemonUrl());
+		if (gerritHost != null) {
+			findMatchingRepository();
+		}
+		if (repository == null) {
+			// fall back to repository url
+			gerritHost = getHostFromUrl(taskRepository.getRepositoryUrl());
+			findMatchingRepository();
+		}
+		return repository;
+	}
+
+	public String getGerritHost() {
+		return gerritHost;
+	}
+
+	public String getGerritProject() {
+		return gerritProject;
+	}
+
+	public RemoteConfig getRemote() {
+		return remote;
+	}
+
+	public Repository getRepository() {
+		return repository;
+	}
+
+	private String getGitDaemonUrl() {
+		if (config != null) {
+			return config.getGitDaemonUrl();
+		} else {
+			return null;
+		}
+	}
+
+	private String getHostFromUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		try {
+			return new URI(url).getHost();
+		} catch (URISyntaxException e) {
+			GerritCorePlugin.logWarning("Error in task repository URL " + url, e); //$NON-NLS-1$
+			return null;
+		}
+	}
+
+	private boolean isMatchingRemoteConfig(RemoteConfig remoteConfig) {
+		List<URIish> remoteUris = remoteConfig.getURIs();
+		return !remoteUris.isEmpty() && isMatchingUri(remoteUris.get(0));
+	}
+
+	private boolean isMatchingUri(URIish uri) {
+		String host = uri.getHost();
+		return gerritHost.equalsIgnoreCase(host) && gerritProject.equals(calcProjectNameFromUri(uri));
+	}
+
+	protected RemoteConfig findMatchingRemote(Repository repo) throws IOException {
+		List<RemoteConfig> remotes;
+		try {
+			remotes = RemoteConfig.getAllRemoteConfigs(repo.getConfig());
+		} catch (URISyntaxException e) {
+			throw new IOException("Invalid URI in remote configuration", e); //$NON-NLS-1$
+		}
+		for (RemoteConfig remote : remotes) {
+			if (isMatchingRemoteConfig(remote)) {
+				return remote;
+			}
+		}
+		return null;
+	}
+
+	protected void findMatchingRepository() throws IOException {
+		RepositoryUtil repoUtil = getRepositoryUtil();
+		RepositoryCache repoCache = getRepositoryCache();
+		for (String dirs : repoUtil.getConfiguredRepositories()) {
+			repository = repoCache.lookupRepository(new File(dirs));
+			remote = findMatchingRemote(repository);
+			if (remote != null) {
+				return;
+			}
+		}
+		repository = null;
+		remote = null;
+	}
+
+	RepositoryCache getRepositoryCache() {
+		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
+		return egit.getRepositoryCache();
+	}
+
+	RepositoryUtil getRepositoryUtil() {
+		org.eclipse.egit.core.Activator egit = org.eclipse.egit.core.Activator.getDefault();
+		return egit.getRepositoryUtil();
 	}
 
 }

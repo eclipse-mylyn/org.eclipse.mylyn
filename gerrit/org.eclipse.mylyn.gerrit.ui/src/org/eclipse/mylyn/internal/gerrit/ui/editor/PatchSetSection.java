@@ -17,21 +17,32 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.egit.core.synchronize.dto.GitSynchronizeData;
+import org.eclipse.egit.ui.Activator;
+import org.eclipse.egit.ui.UIPreferences;
+import org.eclipse.egit.ui.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
+import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
+import org.eclipse.egit.ui.internal.synchronize.GitModelSynchronize;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -44,7 +55,16 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
@@ -73,12 +93,15 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -86,6 +109,9 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.GerritConfig;
@@ -94,12 +120,43 @@ import com.google.gerrit.common.data.PatchSetPublishDetail;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchSet;
-import com.google.gerrit.reviewdb.PatchSet.Id;
 
 /**
  * @author Steffen Pingel
  */
 public class PatchSetSection extends AbstractGerritSection {
+
+	private class CompareAction extends Action {
+
+		private final PatchSet base;
+
+		private final PatchSet target;
+
+		private final ChangeDetail changeDetail;
+
+		public CompareAction(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
+			this.changeDetail = changeDetail;
+			this.base = base;
+			this.target = target;
+		}
+
+		public void fill(Menu menu) {
+			MenuItem item = new MenuItem(menu, SWT.NONE);
+			item.setText(NLS.bind("Compare with Patch Set {0}", base.getPatchSetId()));
+			item.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					run();
+				}
+			});
+		}
+
+		@Override
+		public void run() {
+			doCompareWith(changeDetail, base, target);
+		}
+
+	}
 
 	private class GetPatchSetContentJob extends Job {
 
@@ -130,10 +187,85 @@ public class PatchSetSection extends AbstractGerritSection {
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			} catch (GerritException e) {
-				return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Review retrieval failed", e);
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Review retrieval failed", e),
+						StatusManager.LOG);
 			}
 			return Status.OK_STATUS;
 		}
+	}
+
+	private class ComparePatchSetJob extends Job {
+
+		private final Repository repository;
+
+		private final PatchSet target;
+
+		private final PatchSet base;
+
+		private final RemoteConfig remote;
+
+		public ComparePatchSetJob(Repository repository, RemoteConfig remote, PatchSet base, PatchSet target) {
+			super("Comparing Patch Set");
+			this.repository = repository;
+			this.remote = remote;
+			this.base = base;
+			this.target = target;
+		}
+
+		public void openSynchronization(String baseRef, String targetRef) throws IOException {
+			GitSynchronizeData data = new GitSynchronizeData(repository, baseRef, targetRef, false);
+			GitModelSynchronize.launch(data, data.getProjects().toArray(new IResource[0]));
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			try {
+				SubMonitor subMonitor = SubMonitor.convert(monitor);
+				// fetch target first to retrieve parent commit
+				String targetRef = fetchPatchSet(target, subMonitor).getName();
+				String baseRef;
+				if (base != null) {
+					baseRef = fetchPatchSet(base, subMonitor).getName();
+				} else {
+					baseRef = fetchParent(target, subMonitor);
+				}
+				openSynchronization(baseRef, targetRef);
+			} catch (Exception e) {
+				return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Patch set retrieval failed", e);
+			}
+			return Status.OK_STATUS;
+		}
+
+		private String fetchParent(PatchSet patchSet, IProgressMonitor monitor) throws URISyntaxException,
+				CoreException, IOException {
+			RevCommit targetCommit = getRevCommit(repository, patchSet);
+			RevCommit parentCommit = targetCommit.getParents()[0];
+			return parentCommit.getName();
+		}
+
+		private RevCommit fetchPatchSet(PatchSet patchSet, IProgressMonitor monitor) throws IOException, CoreException,
+				URISyntaxException {
+			RevCommit commit = getRevCommit(repository, patchSet);
+			if (commit != null) {
+				// commit was already fetched
+				return commit;
+			}
+			RefSpec refSpec = new RefSpec(patchSet.getRefName() + ":FETCH_HEAD"); //$NON-NLS-1$
+			return fetchRefSpec(monitor, refSpec);
+		}
+
+		private RevCommit fetchRefSpec(IProgressMonitor monitor, RefSpec refSpec) throws URISyntaxException,
+				CoreException, MissingObjectException, IncorrectObjectTypeException, IOException {
+			List<RefSpec> refSpecs = Collections.singletonList(refSpec);
+			FetchOperationUI op = new FetchOperationUI(repository, remote.getURIs().get(0), refSpecs,
+					Activator.getDefault().getPreferenceStore().getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT), false);
+			op.setCredentialsProvider(new EGitCredentialsProvider());
+			FetchResult result = op.execute(monitor);
+			ObjectId resultRef = result.getAdvertisedRef(refSpec.getSource()).getObjectId();
+			return new RevWalk(repository).parseCommit(resultRef);
+		}
+
 	}
 
 	private Composite composite;
@@ -220,6 +352,40 @@ public class PatchSetSection extends AbstractGerritSection {
 			}
 		});
 
+		final Composite compareComposite = toolkit.createComposite(buttonComposite);
+		GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).applyTo(compareComposite);
+
+		Button compareButton = toolkit.createButton(compareComposite, "Compare With Base", SWT.PUSH);
+		compareButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				doCompareWith(changeDetail, null, patchSetDetail.getPatchSet());
+			}
+		});
+
+		if (changeDetail.getPatchSets().size() > 1) {
+			Button compareWithButton = toolkit.createButton(compareComposite, "", SWT.PUSH);
+			GridDataFactory.fillDefaults().grab(false, true).applyTo(compareWithButton);
+			compareWithButton.setImage(WorkbenchImages.getImage(IWorkbenchGraphicConstants.IMG_LCL_BUTTON_MENU));
+			compareWithButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					showCompareMenu(compareComposite, changeDetail, patchSetDetail);
+				}
+
+				private void showCompareMenu(Composite compareComposite, ChangeDetail changeDetail,
+						PatchSetDetail patchSetDetail) {
+					Menu menu = new Menu(compareComposite);
+					Point p = compareComposite.getLocation();
+					p.y = p.y + compareComposite.getSize().y;
+					p = compareComposite.getParent().toDisplay(p);
+					fillCompareWithMenu(changeDetail, patchSetDetail, menu);
+					menu.setLocation(p);
+					menu.setVisible(true);
+				}
+			});
+		}
+
 		if (canSubmit) {
 			Button submitButton = toolkit.createButton(buttonComposite, "Submit", SWT.PUSH);
 			submitButton.addSelectionListener(new SelectionAdapter() {
@@ -250,6 +416,15 @@ public class PatchSetSection extends AbstractGerritSection {
 			}
 		}
 		return buttonComposite;
+	}
+
+	void fillCompareWithMenu(ChangeDetail changeDetail, PatchSetDetail patchSetDetail, Menu menu) {
+		for (PatchSet patchSet : changeDetail.getPatchSets()) {
+			if (patchSet.getPatchSetId() != patchSetDetail.getPatchSet().getPatchSetId()) {
+				CompareAction action = new CompareAction(changeDetail, patchSet, patchSetDetail.getPatchSet());
+				action.fill(menu);
+			}
+		}
 	}
 
 	private void createSubSection(final ChangeDetail changeDetail, final PatchSetDetail patchSetDetail,
@@ -329,7 +504,7 @@ public class PatchSetSection extends AbstractGerritSection {
 		GerritChange change = GerritUtil.getChange(getTaskData());
 		if (change != null) {
 			for (PatchSetDetail patchSetDetail : change.getPatchSetDetails()) {
-				Id patchSetId = patchSetDetail.getPatchSet().getId();
+				PatchSet.Id patchSetId = patchSetDetail.getPatchSet().getId();
 				PatchSetPublishDetail publishDetail = change.getPublishDetailByPatchSetId().get(patchSetId);
 				createSubSection(change.getChangeDetail(), patchSetDetail, publishDetail, getSection());
 			}
@@ -349,14 +524,20 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {
+		GerritProjectToGitRepositoryMapping mapping = getRepository(changeDetail);
+		if (mapping != null) {
+			String refName = patchSetDetail.getPatchSet().getRefName();
+			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(mapping.getRepository(), refName);
+			WizardDialog wizardDialog = new WizardDialog(getShell(), wizard);
+			wizardDialog.setHelpAvailable(false);
+			wizardDialog.open();
+		}
+	}
+
+	private GerritProjectToGitRepositoryMapping getRepository(ChangeDetail changeDetail) {
 		String gerritProject = getGerritProject(changeDetail);
 		String gerritHost = getHostFromUrl(getGitDaemonUrl());
-		Repository repository = findGitRepository(gerritHost, gerritProject);
-		if (repository == null) {
-			// fall back to repository url
-			gerritHost = getHostFromUrl(getRepositoryUrl());
-			repository = findGitRepository(gerritHost, gerritProject);
-		}
+		GerritProjectToGitRepositoryMapping repository = findGitRepository(changeDetail);
 		if (repository == null) {
 			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
 			String reason = "No remote config found that has fetch URL with host '" + gerritHost
@@ -364,21 +545,39 @@ public class PatchSetSection extends AbstractGerritSection {
 			GerritCorePlugin.logError(message, null);
 			ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
 					GerritCorePlugin.PLUGIN_ID, reason));
-		} else {
-			String refName = patchSetDetail.getPatchSet().getRefName();
-			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(repository, refName);
-			WizardDialog wizardDialog = new WizardDialog(getShell(), wizard);
-			wizardDialog.setHelpAvailable(false);
-			wizardDialog.open();
+		}
+		return repository;
+	}
+
+	protected void doCompareWith(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
+		GerritProjectToGitRepositoryMapping mapping = getRepository(changeDetail);
+		if (mapping != null) {
+			ComparePatchSetJob job = new ComparePatchSetJob(mapping.getRepository(), mapping.getRemote(), base, target);
+			job.schedule();
+
+			TasksUi.getTaskActivityManager().activateTask(getTask());
+//			} catch (IOException e) {
+//				Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+//						"Unexpected error while opening patch set in Synchronize view.", e);
+//				StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
+//			}
 		}
 	}
 
-	protected Repository findGitRepository(String gerritHost, String gerritProject) {
+	private RevCommit getRevCommit(Repository repository, PatchSet target) throws AmbiguousObjectException,
+			IOException, MissingObjectException, IncorrectObjectTypeException {
+		ObjectId ref = repository.resolve(target.getRevision().get());
+		RevWalk walker = new RevWalk(repository);
+		RevCommit targetCommit = walker.parseCommit(ref);
+		return targetCommit;
+	}
+
+	protected GerritProjectToGitRepositoryMapping findGitRepository(ChangeDetail changeDetail) {
 		try {
-			if (gerritHost != null && gerritProject != null) {
-				GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(gerritHost,
-						gerritProject);
-				return mapper.findRepository();
+			GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(
+					getTaskEditorPage().getTaskRepository(), getConfig(), getGerritProject(changeDetail));
+			if (mapper.find() != null) {
+				return mapper;
 			}
 		} catch (IOException e) {
 			GerritCorePlugin.logWarning("Error accessing Git repository", e);
