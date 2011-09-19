@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.egit.core.synchronize.dto.GitSynchronizeData;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
-import org.eclipse.egit.ui.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
 import org.eclipse.egit.ui.internal.synchronize.GitModelSynchronize;
@@ -74,9 +73,10 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
-import org.eclipse.mylyn.internal.gerrit.core.egit.GerritProjectToGitRepositoryMapping;
+import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
@@ -246,13 +246,14 @@ public class PatchSetSection extends AbstractGerritSection {
 
 		private RevCommit fetchPatchSet(PatchSet patchSet, IProgressMonitor monitor) throws IOException, CoreException,
 				URISyntaxException {
-			RevCommit commit = getRevCommit(repository, patchSet);
-			if (commit != null) {
+			try {
 				// commit was already fetched
-				return commit;
+				return getRevCommit(repository, patchSet);
+			} catch (MissingObjectException e) {
+				// need to getch it
+				RefSpec refSpec = new RefSpec(patchSet.getRefName() + ":FETCH_HEAD"); //$NON-NLS-1$
+				return fetchRefSpec(monitor, refSpec);
 			}
-			RefSpec refSpec = new RefSpec(patchSet.getRefName() + ":FETCH_HEAD"); //$NON-NLS-1$
-			return fetchRefSpec(monitor, refSpec);
 		}
 
 		private RevCommit fetchRefSpec(IProgressMonitor monitor, RefSpec refSpec) throws URISyntaxException,
@@ -260,7 +261,7 @@ public class PatchSetSection extends AbstractGerritSection {
 			List<RefSpec> refSpecs = Collections.singletonList(refSpec);
 			FetchOperationUI op = new FetchOperationUI(repository, remote.getURIs().get(0), refSpecs,
 					Activator.getDefault().getPreferenceStore().getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT), false);
-			op.setCredentialsProvider(new EGitCredentialsProvider());
+			EGitUiUtil.setCredentialsProvider(op);
 			FetchResult result = op.execute(monitor);
 			ObjectId resultRef = result.getAdvertisedRef(refSpec.getSource()).getObjectId();
 			return new RevWalk(repository).parseCommit(resultRef);
@@ -524,7 +525,7 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {
-		GerritProjectToGitRepositoryMapping mapping = getRepository(changeDetail);
+		GerritToGitMapping mapping = getRepository(changeDetail);
 		if (mapping != null) {
 			String refName = patchSetDetail.getPatchSet().getRefName();
 			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(mapping.getRepository(), refName);
@@ -534,10 +535,10 @@ public class PatchSetSection extends AbstractGerritSection {
 		}
 	}
 
-	private GerritProjectToGitRepositoryMapping getRepository(ChangeDetail changeDetail) {
+	private GerritToGitMapping getRepository(ChangeDetail changeDetail) {
 		String gerritProject = getGerritProject(changeDetail);
 		String gerritHost = getHostFromUrl(getGitDaemonUrl());
-		GerritProjectToGitRepositoryMapping repository = findGitRepository(changeDetail);
+		GerritToGitMapping repository = findGitRepository(changeDetail);
 		if (repository == null) {
 			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
 			String reason = "No remote config found that has fetch URL with host '" + gerritHost
@@ -550,7 +551,7 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doCompareWith(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
-		GerritProjectToGitRepositoryMapping mapping = getRepository(changeDetail);
+		GerritToGitMapping mapping = getRepository(changeDetail);
 		if (mapping != null) {
 			ComparePatchSetJob job = new ComparePatchSetJob(mapping.getRepository(), mapping.getRemote(), base, target);
 			job.schedule();
@@ -572,10 +573,10 @@ public class PatchSetSection extends AbstractGerritSection {
 		return targetCommit;
 	}
 
-	protected GerritProjectToGitRepositoryMapping findGitRepository(ChangeDetail changeDetail) {
+	protected GerritToGitMapping findGitRepository(ChangeDetail changeDetail) {
 		try {
-			GerritProjectToGitRepositoryMapping mapper = new GerritProjectToGitRepositoryMapping(
-					getTaskEditorPage().getTaskRepository(), getConfig(), getGerritProject(changeDetail));
+			GerritToGitMapping mapper = new GerritToGitMapping(getTaskEditorPage().getTaskRepository(), getConfig(),
+					getGerritProject(changeDetail));
 			if (mapper.find() != null) {
 				return mapper;
 			}

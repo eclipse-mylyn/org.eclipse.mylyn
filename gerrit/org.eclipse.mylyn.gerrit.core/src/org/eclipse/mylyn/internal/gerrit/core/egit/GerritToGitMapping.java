@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.jgit.lib.Repository;
@@ -32,7 +33,7 @@ import com.google.gerrit.common.data.GerritConfig;
  * @author Sascha Scholz
  * @author Steffen Pingel
  */
-public class GerritProjectToGitRepositoryMapping {
+public class GerritToGitMapping {
 
 	private static String cleanGerritHttpPrefix(String path) {
 		String httpPathPrefix = "/p/"; //$NON-NLS-1$
@@ -86,7 +87,7 @@ public class GerritProjectToGitRepositoryMapping {
 
 	private final TaskRepository taskRepository;
 
-	public GerritProjectToGitRepositoryMapping(TaskRepository taskRepository, GerritConfig config, String gerritProject) {
+	public GerritToGitMapping(TaskRepository taskRepository, GerritConfig config, String gerritProject) {
 		this.config = config;
 		this.taskRepository = taskRepository;
 		this.gerritProject = gerritProject;
@@ -104,7 +105,9 @@ public class GerritProjectToGitRepositoryMapping {
 		if (repository == null) {
 			// fall back to repository url
 			gerritHost = getHostFromUrl(taskRepository.getRepositoryUrl());
-			findMatchingRepository();
+			if (gerritHost != null) {
+				findMatchingRepository();
+			}
 		}
 		return repository;
 	}
@@ -155,10 +158,11 @@ public class GerritProjectToGitRepositoryMapping {
 		return gerritHost.equalsIgnoreCase(host) && gerritProject.equals(calcProjectNameFromUri(uri));
 	}
 
-	protected RemoteConfig findMatchingRemote(Repository repo) throws IOException {
+	protected RemoteConfig findMatchingRemote() throws IOException {
+		Assert.isNotNull(repository);
 		List<RemoteConfig> remotes;
 		try {
-			remotes = RemoteConfig.getAllRemoteConfigs(repo.getConfig());
+			remotes = RemoteConfig.getAllRemoteConfigs(repository.getConfig());
 		} catch (URISyntaxException e) {
 			throw new IOException("Invalid URI in remote configuration", e); //$NON-NLS-1$
 		}
@@ -175,7 +179,7 @@ public class GerritProjectToGitRepositoryMapping {
 		RepositoryCache repoCache = getRepositoryCache();
 		for (String dirs : repoUtil.getConfiguredRepositories()) {
 			repository = repoCache.lookupRepository(new File(dirs));
-			remote = findMatchingRemote(repository);
+			remote = findMatchingRemote();
 			if (remote != null) {
 				return;
 			}

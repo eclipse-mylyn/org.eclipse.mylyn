@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Sascha Scholz (SAP) - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.egit;
@@ -32,12 +33,17 @@ import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Test;
+
+import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Sascha Scholz
+ * @author Steffen Pingel
  */
-public class GerritProjectToGitRepositoryMappingTest {
+public class GerritToGitMappingTest {
 
 	private static final String GERRIT_GIT_HOST = "egit.eclipse.org"; //$NON-NLS-1$
 
@@ -45,20 +51,20 @@ public class GerritProjectToGitRepositoryMappingTest {
 
 	@Test
 	public void testFindNoMatchingEmptyList() throws Exception {
-		GerritProjectToGitRepositoryMapping mapping = createTestMapping(createRepositories());
-		assertNull(mapping.findRepository());
+		GerritToGitMapping mapping = createTestMapping(createRepositories());
+		assertNull(mapping.find());
 	}
 
 	@Test
 	public void testFindNoMatching() throws Exception {
-		GerritProjectToGitRepositoryMapping mapping = createTestMapping(createRepositories("project1", "project2")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertNull(mapping.findRepository());
+		GerritToGitMapping mapping = createTestMapping(createRepositories("project1", "project2")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertNull(mapping.find());
 	}
 
 	@Test
 	public void testFindMatching() throws Exception {
-		GerritProjectToGitRepositoryMapping mapping = createTestMapping(createRepositories("project1", GERRIT_PROJECT)); //$NON-NLS-1$ 
-		assertNotNull(mapping.findRepository());
+		GerritToGitMapping mapping = createTestMapping(createRepositories("project1", GERRIT_PROJECT)); //$NON-NLS-1$ 
+		assertNotNull(mapping.find());
 	}
 
 	private Repository[] createRepositories(String... projects) {
@@ -84,7 +90,7 @@ public class GerritProjectToGitRepositoryMappingTest {
 		return repo;
 	}
 
-	private GerritProjectToGitRepositoryMapping createTestMapping(Repository[] repositories) throws Exception {
+	private GerritToGitMapping createTestMapping(Repository[] repositories) throws Exception {
 		List<String> repoDirList = createRepositoryDirList(repositories.length);
 
 		final RepositoryUtil util = mock(RepositoryUtil.class);
@@ -94,7 +100,8 @@ public class GerritProjectToGitRepositoryMappingTest {
 		for (String dir : repoDirList) {
 			when(cache.lookupRepository(new File(dir))).thenReturn(repositories[Integer.parseInt(dir)]);
 		}
-		return new GerritProjectToGitRepositoryMapping(GERRIT_GIT_HOST, GERRIT_PROJECT) {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://" + GERRIT_GIT_HOST); //$NON-NLS-1$
+		return new GerritToGitMapping(repository, new GerritConfig(), GERRIT_PROJECT) {
 
 			@Override
 			RepositoryCache getRepositoryCache() {
@@ -120,73 +127,73 @@ public class GerritProjectToGitRepositoryMappingTest {
 	@Test
 	public void testCalcGit() throws Exception {
 		URIish uri = new URIish("git://egit.eclipse.org/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcGitWithDotGitSuffix() throws Exception {
 		URIish uri = new URIish("git://egit.eclipse.org/jgit.git"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcGitWithGerritHttpPrefix() throws Exception {
 		URIish uri = new URIish("git://egit.eclipse.org/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("p/jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("p/jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcSsh() throws Exception {
 		URIish uri = new URIish("ssh://user@egit.eclipse.org:29418/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttp() throws Exception {
 		URIish uri = new URIish("http://egit.eclipse.org/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttps() throws Exception {
 		URIish uri = new URIish("https://egit.eclipse.org/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttpWithPort() throws Exception {
 		URIish uri = new URIish("http://egit.eclipse.org:8080/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttpWithUser() throws Exception {
 		URIish uri = new URIish("http://user@egit.eclipse.org/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttpWithPrefix() throws Exception {
 		URIish uri = new URIish("http://egit.eclipse.org/r/p/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttpWithSubProject() throws Exception {
 		URIish uri = new URIish("http://egit.eclipse.org/p/jgit/subproj"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit/subproj")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit/subproj")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcHttpWithoutGerritPrefix() throws Exception {
 		URIish uri = new URIish("http://egit.eclipse.org/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testCalcUnknownProtocol() throws Exception {
 		URIish uri = new URIish("xyz://user@egit.eclipse.org:29418/jgit"); //$NON-NLS-1$
-		assertThat(GerritProjectToGitRepositoryMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
+		assertThat(GerritToGitMapping.calcProjectNameFromUri(uri), is("jgit")); //$NON-NLS-1$
 	}
 
 }
