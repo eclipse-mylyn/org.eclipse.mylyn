@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -114,7 +113,6 @@ import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.PatchSetPublishDetail;
 import com.google.gerrit.reviewdb.ApprovalCategory;
@@ -536,18 +534,26 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	private GerritToGitMapping getRepository(ChangeDetail changeDetail) {
-		String gerritProject = getGerritProject(changeDetail);
-		String gerritHost = getHostFromUrl(getGitDaemonUrl());
-		GerritToGitMapping repository = findGitRepository(changeDetail);
-		if (repository == null) {
-			String message = "No Git repository found for fetching Gerrit change " + getTask().getTaskKey();
-			String reason = "No remote config found that has fetch URL with host '" + gerritHost
-					+ "' and path matching '" + gerritProject + "'";
-			GerritCorePlugin.logError(message, null);
-			ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
-					GerritCorePlugin.PLUGIN_ID, reason));
+		GerritToGitMapping mapper = new GerritToGitMapping(getTaskEditorPage().getTaskRepository(), getConfig(),
+				getGerritProject(changeDetail));
+		try {
+			if (mapper.find() != null) {
+				return mapper;
+			}
+		} catch (IOException e) {
+			Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Error accessing Git repository", e);
+			StatusManager.getManager().handle(status, StatusManager.BLOCK | StatusManager.SHOW | StatusManager.LOG);
+			return null;
 		}
-		return repository;
+
+		String message = NLS.bind("No Git repository found for fetching Gerrit change {0}", getTask().getTaskKey());
+		String reason = NLS.bind(
+				"No remote config found that has fetch URL with host ''{0}'' and path matching ''{1}''",
+				mapper.getGerritHost(), mapper.getGerritProject());
+		GerritCorePlugin.logError(message, null);
+		ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
+				GerritUiPlugin.PLUGIN_ID, reason));
+		return null;
 	}
 
 	protected void doCompareWith(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
@@ -555,13 +561,6 @@ public class PatchSetSection extends AbstractGerritSection {
 		if (mapping != null) {
 			ComparePatchSetJob job = new ComparePatchSetJob(mapping.getRepository(), mapping.getRemote(), base, target);
 			job.schedule();
-
-			TasksUi.getTaskActivityManager().activateTask(getTask());
-//			} catch (IOException e) {
-//				Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-//						"Unexpected error while opening patch set in Synchronize view.", e);
-//				StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
-//			}
 		}
 	}
 
@@ -573,46 +572,8 @@ public class PatchSetSection extends AbstractGerritSection {
 		return targetCommit;
 	}
 
-	protected GerritToGitMapping findGitRepository(ChangeDetail changeDetail) {
-		try {
-			GerritToGitMapping mapper = new GerritToGitMapping(getTaskEditorPage().getTaskRepository(), getConfig(),
-					getGerritProject(changeDetail));
-			if (mapper.find() != null) {
-				return mapper;
-			}
-		} catch (IOException e) {
-			GerritCorePlugin.logWarning("Error accessing Git repository", e);
-		}
-		return null;
-	}
-
 	private String getGerritProject(ChangeDetail changeDetail) {
 		return changeDetail.getChange().getProject().get();
-	}
-
-	private String getRepositoryUrl() {
-		return getTaskEditorPage().getTaskRepository().getRepositoryUrl();
-	}
-
-	private String getGitDaemonUrl() {
-		GerritConfig config = getConfig();
-		if (config != null) {
-			return config.getGitDaemonUrl();
-		} else {
-			return null;
-		}
-	}
-
-	private String getHostFromUrl(String url) {
-		if (url == null) {
-			return null;
-		}
-		try {
-			return new URI(url).getHost();
-		} catch (URISyntaxException e) {
-			GerritCorePlugin.logWarning("Error in task repository URL " + url, e);
-			return null;
-		}
 	}
 
 	protected void doRestore(PatchSet patchSet) {
