@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.github.feature"
-      label="Eclipse EGit Mylyn GitHub Feature"
+      label="%featureName"
       version="1.2.0.qualifier"
-      provider-name="Eclipse EGit">
+      provider-name="%providerName"
+      plugin="org.eclipse.egit">
 
    <description url="http://www.eclipse.org/egit">
-      Eclipse Mylyn to GitHub connector.
+      %description
    </description>
 
    <copyright>
-      Copyright (c) 2011 Red Hat and others. All rights reserved.
+      %copyright
    </copyright>
 
    <license url="license.html">
