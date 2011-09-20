@@ -56,6 +56,16 @@ public abstract class AbstractSaxParserTest extends TestCase {
 		performTest("<html><body>test 123<p>abc\n\n\ndef</p></body></html>", "test 123\n\nabc def\n\n");
 	}
 
+	public void testBasicHtmlWithBoldEmphasis() throws IOException, SAXException {
+		performTest("<html><body><p>text <b>bold</b> and <em>emphasis</em></p></body></html>",
+				"text *bold* and _emphasis_\n\n");
+	}
+
+	public void testBasicHtmlWithBoldEmphasis_NoPara() throws IOException, SAXException {
+		performTest("<html><body>text <b>bold</b> and <em>emphasis</em></body></html>",
+				"text *bold* and _emphasis_\n\n");
+	}
+
 	public void testBasicHtmlWithHeadingPara() throws IOException, SAXException {
 		performTest("<html><body><h1>Heading 1</h1>test 123<p>abc\n\n\ndef</p></body></html>",
 				"h1. Heading 1\n\ntest 123\n\nabc def\n\n");

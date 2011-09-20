@@ -118,6 +118,7 @@ public abstract class AbstractSaxHtmlParser {
 	}
 
 	private static final class ElementState {
+		@SuppressWarnings("unused")
 		final String elementName;
 
 		final ElementState parent;
@@ -137,6 +138,9 @@ public abstract class AbstractSaxHtmlParser {
 			collapsesAdjacentWhitespace = whitespaceCollapsingElements.contains(elementName);
 			noWhitespaceTextContainer = "body".equals(elementName); //$NON-NLS-1$
 			preserveWhitespace = (parent != null && parent.preserveWhitespace) || "pre".equals(elementName); //$NON-NLS-1$
+			if (parent != null) {
+				parent.lastChild = this;
+			}
 		}
 
 		int childCount = 0;
@@ -239,7 +243,7 @@ public abstract class AbstractSaxHtmlParser {
 
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (processingContent) {
-				if (elementState.noWhitespaceTextContainer
+				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
 						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {

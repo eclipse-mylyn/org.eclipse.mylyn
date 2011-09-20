@@ -53,6 +53,27 @@ public class TextileDocumentBuilderTest extends TestCase {
 		Assert.assertEquals("text  more text\n\n", markup);
 	}
 
+	public void testParagraphWithBoldEmphasis() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("some ");
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
+		builder.endSpan();
+		builder.characters(" and ");
+		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
+		builder.characters("emphasis");
+		builder.endSpan();
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("some *bold* and _emphasis_\n\n", markup);
+	}
+
 	public void testParagraphWithCssClass() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes(null, "test", null, null));
