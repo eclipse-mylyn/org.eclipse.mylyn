@@ -76,7 +76,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 
 	/**
 	 * Create commit attribute part
-	 * 
+	 *
 	 * @param request
 	 */
 	public CommitAttributePart(PullRequestComposite request) {
@@ -112,7 +112,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 					IFormColors.TITLE));
 			GridDataFactory.swtDefaults().indent(15, 0).applyTo(destLabel);
 			toolkit.createText(refArea, request.getRequest().getBase()
-					.getLabel());
+					.getLabel(), SWT.READ_ONLY);
 		}
 
 		Composite treeArea = toolkit.createComposite(displayArea);
