@@ -34,6 +34,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaSearch;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaSearch.Entry;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -1473,21 +1474,21 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		BugzillaSearch search = new BugzillaSearch(getTaskRepository(), queryUrl);
 
 		// set product first to initialize dependent fields
-		String productValue = search.getParameters().get("product"); //$NON-NLS-1$
-		if (productValue != null) {
+		for (Entry entry : search.getParameters("product")) { //$NON-NLS-1$
+			String value = entry.value;
 			String[] sel = product.getSelection();
 			java.util.List<String> selList = Arrays.asList(sel);
 			selList = new ArrayList<String>(selList);
-			selList.add(productValue);
+			selList.add(value);
 			sel = new String[selList.size()];
 			product.setSelection(selList.toArray(sel));
 			updateAttributesFromConfiguration(selList.toArray(sel));
 		}
 
 		boolean adjustChart = false;
-		for (Map.Entry<String, String> entry : search.getParameters().entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
+		for (Entry entry : search.getParameters()) {
+			String key = entry.key;
+			String value = entry.value;
 
 			if (key.equals("short_desc")) { //$NON-NLS-1$
 				summaryPattern.setText(value);

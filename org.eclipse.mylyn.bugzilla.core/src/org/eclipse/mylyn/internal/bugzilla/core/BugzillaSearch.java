@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -24,10 +24,23 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class BugzillaSearch {
 
-	private final Map<String, String> parameters;
+	public static class Entry {
+
+		public final String key;
+
+		public final String value;
+
+		public Entry(String key, String value) {
+			this.key = key;
+			this.value = value;
+		}
+
+	}
+
+	private final List<Entry> parameters;
 
 	public BugzillaSearch(TaskRepository repository, String queryUrl) throws UnsupportedEncodingException {
-		parameters = new LinkedHashMap<String, String>();
+		parameters = new ArrayList<Entry>();
 
 		queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1); //$NON-NLS-1$
 		String[] options = queryUrl.split("&"); //$NON-NLS-1$
@@ -44,12 +57,22 @@ public class BugzillaSearch {
 			}
 			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
 					repository.getCharacterEncoding());
-			parameters.put(key, value);
+			parameters.add(new Entry(key, value));
 		}
 	}
 
-	public Map<String, String> getParameters() {
-		return Collections.unmodifiableMap(parameters);
+	public List<Entry> getParameters() {
+		return Collections.unmodifiableList(parameters);
+	}
+
+	public List<Entry> getParameters(String key) {
+		List<Entry> result = new ArrayList<Entry>();
+		for (Entry entry : parameters) {
+			if (entry.key.equals(key)) {
+				result.add(entry);
+			}
+		}
+		return Collections.unmodifiableList(result);
 	}
 
 }
