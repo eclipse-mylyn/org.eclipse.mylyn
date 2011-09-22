@@ -168,7 +168,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			applyTo(query);
 
 			IDialogSettings settings = getDialogSettings();
-			settings.put(getSavedStateSettingKey(), query.getRepositoryUrl());
+			settings.put(getSavedStateSettingKey(), query.getUrl());
 		}
 	}
 
