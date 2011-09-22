@@ -17,7 +17,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -36,7 +38,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
@@ -366,7 +367,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 	}
 
 	@Override
-	public void doRefresh() {
+	public void doRefreshControls() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		ITracClient client = connector.getClientManager().getTracClient(getTaskRepository());
@@ -435,30 +436,24 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 		}
 	}
 
-	protected Control createOptionsGroup(Composite control) {
-		Group group = new Group(control, SWT.NONE);
-		// group.setText("Ticket Attributes");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		group.setLayout(layout);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 4;
-		group.setLayoutData(gd);
-
-		createProductAttributes(group);
-		createTicketAttributes(group);
-
-		return group;
-	}
-
 	@Override
-	protected void createPageContent(Composite parent) {
-		Composite control = new Composite(parent, SWT.NONE);
+	protected void createPageContent(@SuppressWarnings("restriction")
+	SectionComposite composite) {
+		@SuppressWarnings("restriction")
+		Composite control = composite.getContent();
+
 		GridLayout layout = new GridLayout(4, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		control.setLayout(layout);
 
+		createDefaultGroup(control);
+		createProductGroup(control);
+		createTicketGroup(control);
+		createUserGroup(control);
+	}
+
+	private void createDefaultGroup(Composite control) {
 		summaryField = new TextSearchField("summary"); //$NON-NLS-1$
 		summaryField.createControls(control, Messages.TracQueryPage_Summary);
 
@@ -467,23 +462,19 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 
 		keywordsField = new TextSearchField("keywords"); //$NON-NLS-1$
 		keywordsField.createControls(control, Messages.TracQueryPage_Keywords);
-
-		createOptionsGroup(control);
-
-		createUserGroup(control);
 	}
 
 	/**
 	 * Creates the area for selection on product attributes component/version/milestone.
 	 */
-	protected Control createProductAttributes(Composite control) {
+	protected Control createProductGroup(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).span(4, 1).applyTo(group);
 		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		layout.numColumns = 3;
 		group.setLayout(layout);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 1;
-		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.LEFT);
 		label.setText(Messages.TracQueryPage_Component);
@@ -509,14 +500,14 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 	/**
 	 * Creates the area for selection of ticket attributes status/resolution/priority.
 	 */
-	protected Control createTicketAttributes(Composite control) {
+	protected Control createTicketGroup(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).span(4, 1).applyTo(group);
 		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		layout.numColumns = 4;
 		group.setLayout(layout);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 1;
-		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.LEFT);
 		label.setText(Messages.TracQueryPage_Status);

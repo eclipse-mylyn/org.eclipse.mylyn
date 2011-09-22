@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.ProgressMonitorPart;
+import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ProgressContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -38,7 +39,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -62,10 +62,17 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private boolean firstTime = true;
 
-	private Composite innerComposite;
+	@SuppressWarnings("restriction")
+	private SectionComposite innerComposite;
 
+	/**
+	 * Determines whether a 'Clear Fields' button is shown on the page.
+	 */
 	private boolean needsClear;
 
+	/**
+	 * Determines whether a 'Refresh' button is shown on the page.
+	 */
 	private boolean needsRefresh = true;
 
 	private ProgressContainer progressContainer;
@@ -73,8 +80,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	private Button refreshButton;
 
 	private Text titleText;
-
-	private Composite buttonComposite;
 
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
@@ -94,20 +99,14 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 		createTitleGroup(composite);
 
-		innerComposite = new Composite(composite, SWT.NONE);
+		innerComposite = new SectionComposite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).span(2, 1).applyTo(innerComposite);
-		innerComposite.setLayout(new FillLayout());
 		createPageContent(innerComposite);
 
 		createButtonGroup(composite);
 
 		if (!needsRefresh) {
 			setDescription(Messages.AbstractRepositoryQueryPage2_Create_a_Query_Page_Description);
-		}
-
-		if (getQuery() != null) {
-			titleText.setText(getQuery().getSummary());
-			restoreState(getQuery());
 		}
 
 		Dialog.applyDialogFont(composite);
@@ -122,7 +121,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	public boolean handleExtraButtonPressed(int buttonId) {
 		if (buttonId == QueryWizardDialog.REFRESH_BUTTON_ID) {
 			if (getTaskRepository() != null) {
-				updateAttributesFromRepository(true);
+				refreshConfiguration(true);
 			} else {
 				MessageDialog.openInformation(
 						Display.getCurrent().getActiveShell(),
@@ -131,7 +130,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			}
 			return true;
 		} else if (buttonId == QueryWizardDialog.CLEAR_BUTTON_ID) {
-			doClearFields();
+			doClearControls();
 			return true;
 		}
 		return false;
@@ -199,8 +198,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		this.needsClear = needsClearButton;
 	}
 
-	public void setNeedsRefresh(boolean needsRepositoryConfiguration) {
-		this.needsRefresh = needsRepositoryConfiguration;
+	public void setNeedsRefresh(boolean needsRefresh) {
+		this.needsRefresh = needsRefresh;
 	}
 
 	public void setQueryTitle(String text) {
@@ -228,7 +227,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 							initializePage();
 						}
 					}
-
 				});
 			} else {
 				// no remote connection is needed to get attributes therefore do
@@ -239,14 +237,19 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	private void createButtonGroup(Composite parent) {
-		buttonComposite = new Composite(parent, SWT.NONE);
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		buttonComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).span(2, 1).applyTo(buttonComposite);
 		createButtons(buttonComposite);
-		layout.numColumns = buttonComposite.getChildren().length;
+		if (buttonComposite.getChildren().length > 0) {
+			layout.numColumns = buttonComposite.getChildren().length;
+		} else {
+			// remove composite to avoid spacing
+			buttonComposite.dispose();
+		}
 	}
 
 	private void createTitleGroup(Composite control) {
@@ -268,61 +271,72 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private void initializePage() {
 		if (needsRefresh) {
-			updateAttributesFromRepository(false);
+			boolean refreshed = refreshConfiguration(false);
+			if (!refreshed) {
+				// always do a refresh when page is initially shown
+				doRefreshControls();
+			}
 		}
-		boolean restored = (getQuery() != null);
-		if (inSearchContainer()) {
+		boolean restored = false;
+		if (getQuery() != null) {
+			titleText.setText(getQuery().getSummary());
+			restored |= restoreState(getQuery());
+		} else if (inSearchContainer()) {
 			restored |= restoreSavedState();
 		}
 		if (!restored) {
 			// initialize with default values
+			doClearControls();
 		}
 	}
 
-	private void updateAttributesFromRepository(final boolean force) {
+	protected boolean refreshConfiguration(final boolean force) {
 		if (!hasRepositoryConfiguration() || force) {
 			setErrorMessage(null);
 			try {
-				IRunnableWithProgress runnable = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						monitor = SubMonitor.convert(monitor);
-						monitor.beginTask(Messages.AbstractRepositoryQueryPage2_Refresh_Configuration_Button_Label,
-								IProgressMonitor.UNKNOWN);
-						try {
-							connector.updateRepositoryConfiguration(getTaskRepository(), monitor);
-						} catch (CoreException e) {
-							throw new InvocationTargetException(e);
-						} catch (OperationCanceledException e) {
-							throw new InterruptedException();
-						} finally {
-							monitor.done();
-						}
-					}
-				};
-
-				if (getContainer() != null) {
-					getContainer().run(true, true, runnable);
-				} else if (progressContainer != null) {
-					progressContainer.run(true, true, runnable);
-				} else if (getSearchContainer() != null) {
-					getSearchContainer().getRunnableContext().run(true, true, runnable);
-				} else {
-					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.busyCursorWhile(runnable);
-				}
+				doRefreshConfiguration();
+				doRefreshControls();
+				return true;
 			} catch (InvocationTargetException e) {
 				if (e.getCause() instanceof CoreException) {
 					setErrorMessage(((CoreException) e.getCause()).getStatus().getMessage());
 				} else {
 					setErrorMessage(e.getCause().getMessage());
 				}
-				return;
 			} catch (InterruptedException e) {
-				return;
+				// canceled
 			}
 		}
+		return false;
+	}
 
-		doRefresh();
+	private void doRefreshConfiguration() throws InvocationTargetException, InterruptedException {
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				monitor = SubMonitor.convert(monitor);
+				monitor.beginTask(Messages.AbstractRepositoryQueryPage2_Refresh_Configuration_Button_Label,
+						IProgressMonitor.UNKNOWN);
+				try {
+					connector.updateRepositoryConfiguration(getTaskRepository(), monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} finally {
+					monitor.done();
+				}
+			}
+		};
+		if (getContainer() != null) {
+			getContainer().run(true, true, runnable);
+		} else if (progressContainer != null) {
+			progressContainer.run(true, true, runnable);
+		} else if (getSearchContainer() != null) {
+			getSearchContainer().getRunnableContext().run(true, true, runnable);
+		} else {
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			service.busyCursorWhile(runnable);
+		}
 	}
 
 	protected void createButtons(final Composite composite) {
@@ -337,7 +351,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (getTaskRepository() != null) {
-						updateAttributesFromRepository(true);
+						refreshConfiguration(true);
 					} else {
 						MessageDialog.openInformation(
 								Display.getCurrent().getActiveShell(),
@@ -353,7 +367,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			clearButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					doClearFields();
+					doClearControls();
 				}
 			});
 		}
@@ -365,7 +379,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			protected void restoreUiState(java.util.Map<Object, Object> state) {
 				cancelButton.setVisible(false);
 				CommonUiUtil.setEnabled(innerComposite, true);
-				for (Control control : buttonComposite.getChildren()) {
+				for (Control control : composite.getChildren()) {
 					if (control instanceof ProgressMonitorPart) {
 						break;
 					}
@@ -376,7 +390,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			@Override
 			protected void saveUiState(java.util.Map<Object, Object> savedState) {
 				CommonUiUtil.setEnabled(innerComposite, false);
-				for (Control control : buttonComposite.getChildren()) {
+				for (Control control : composite.getChildren()) {
 					if (control instanceof ProgressMonitorPart) {
 						break;
 					}
@@ -393,12 +407,13 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		progressContainer.setCancelButton(cancelButton);
 	}
 
-	protected abstract void createPageContent(Composite parent);
+	@SuppressWarnings("restriction")
+	protected abstract void createPageContent(SectionComposite parent);
 
-	protected void doClearFields() {
+	protected void doClearControls() {
 	}
 
-	protected abstract void doRefresh();
+	protected abstract void doRefreshControls();
 
 	protected AbstractRepositoryConnector getConnector() {
 		return connector;

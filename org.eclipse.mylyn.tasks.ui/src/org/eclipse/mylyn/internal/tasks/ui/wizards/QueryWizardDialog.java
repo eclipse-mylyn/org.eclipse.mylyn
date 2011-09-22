@@ -67,8 +67,12 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 	@Override
 	protected void updateExtraButtons() {
 		if (abstractRepositoryQueryPage != null) {
-			abstractRepositoryQueryPage.setExtraButtonState(clearButton);
-			abstractRepositoryQueryPage.setExtraButtonState(refreshButton);
+			if (refreshButton != null) {
+				abstractRepositoryQueryPage.setExtraButtonState(refreshButton);
+			}
+			if (clearButton != null) {
+				abstractRepositoryQueryPage.setExtraButtonState(clearButton);
+			}
 		}
 	}
 
@@ -88,13 +92,13 @@ public class QueryWizardDialog extends EnhancedWizardDialog {
 		HashMap<String, Boolean> savedEnabledState = null;
 		if (getShell() != null) {
 			savedEnabledState = new HashMap<String, Boolean>();
-			if (clearButton != null && clearButton.getShell() == getShell()) {
-				savedEnabledState.put(CLEAR_BUTTON_KEY, clearButton.getEnabled());
-				clearButton.setEnabled(false);
-			}
 			if (refreshButton != null && refreshButton.getShell() == getShell()) {
 				savedEnabledState.put(REFRESH_BUTTON_KEY, refreshButton.getEnabled());
 				refreshButton.setEnabled(false);
+			}
+			if (clearButton != null && clearButton.getShell() == getShell()) {
+				savedEnabledState.put(CLEAR_BUTTON_KEY, clearButton.getEnabled());
+				clearButton.setEnabled(false);
 			}
 		}
 		return savedEnabledState;

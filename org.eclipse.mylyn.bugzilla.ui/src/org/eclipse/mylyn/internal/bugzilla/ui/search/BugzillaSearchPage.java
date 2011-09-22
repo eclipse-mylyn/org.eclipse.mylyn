@@ -12,11 +12,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +33,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaSearch;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -336,75 +333,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	protected String[] chartFieldValues;
 
-	// /** File containing saved queries */
-	// protected static SavedQueryFile input;
-
-	// /** "Remember query" button */
-	// protected Button saveButton;
-
-	// /** "Saved queries..." button */
-	// protected Button loadButton;
-
-	// /** Run a remembered query */
-	// protected boolean rememberedQuery = false;
-
 	/** Index of the saved query to run */
 	protected int selIndex;
 
-	// --------------- Configuration handling --------------
-
 	// Dialog store taskId constants
 	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
-
-	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT"; //$NON-NLS-1$
-
-	private static final String STORE_COMPONENT_ID = PAGE_NAME + ".COMPONENT"; //$NON-NLS-1$
-
-	private static final String STORE_VERSION_ID = PAGE_NAME + ".VERSION"; //$NON-NLS-1$
-
-	private static final String STORE_MSTONE_ID = PAGE_NAME + ".MILESTONE"; //$NON-NLS-1$
-
-	private static final String STORE_STATUS_ID = PAGE_NAME + ".STATUS"; //$NON-NLS-1$
-
-	private static final String STORE_RESOLUTION_ID = PAGE_NAME + ".RESOLUTION"; //$NON-NLS-1$
-
-	private static final String STORE_SEVERITY_ID = PAGE_NAME + ".SEVERITY"; //$NON-NLS-1$
-
-	private static final String STORE_PRIORITY_ID = PAGE_NAME + ".PRIORITY"; //$NON-NLS-1$
-
-	private static final String STORE_HARDWARE_ID = PAGE_NAME + ".HARDWARE"; //$NON-NLS-1$
-
-	private static final String STORE_OS_ID = PAGE_NAME + ".OS"; //$NON-NLS-1$
-
-	private static final String STORE_SUMMARYMATCH_ID = PAGE_NAME + ".SUMMARYMATCH"; //$NON-NLS-1$
-
-	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH"; //$NON-NLS-1$
-
-	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH"; //$NON-NLS-1$
-
-	private static final String STORE_EMAIL2MATCH_ID = PAGE_NAME + ".EMAIL2MATCH"; //$NON-NLS-1$
-
-	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR"; //$NON-NLS-1$
-
-	private static final String STORE_EMAIL2BUTTON_ID = PAGE_NAME + ".EMAIL2ATTR"; //$NON-NLS-1$
-
-	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT"; //$NON-NLS-1$
-
-	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT"; //$NON-NLS-1$
-
-	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS"; //$NON-NLS-1$
-
-	private static final String STORE_EMAIL2ADDRESS_ID = PAGE_NAME + ".EMAIL2ADDRESS"; //$NON-NLS-1$
-
-	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS"; //$NON-NLS-1$
-
-	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH"; //$NON-NLS-1$
-
-	private static final String STORE_WHITEBOARD_ID = PAGE_NAME + ".WHITEBOARD"; //$NON-NLS-1$
-
-	private static final String STORE_WHITEBOARDMATCH_ID = PAGE_NAME + ".WHITEBOARDMATCH"; //$NON-NLS-1$
-
-	private static final String STORE_CHARTS_ID = PAGE_NAME + ".CHARTS"; //$NON-NLS-1$
 
 	private final FormToolkit toolkit;
 
@@ -414,7 +347,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	private SectionComposite scrolledComposite;
 
-	private ArrayList<Chart> charts = new ArrayList<Chart>(1);
+	private final ArrayList<Chart> charts = new ArrayList<Chart>(1);
 
 	private class ChartControls {
 		private final Combo field;
@@ -494,7 +427,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	@Override
-	public void doClearFields() {
+	public void doClearControls() {
 		product.deselectAll();
 		component.deselectAll();
 		version.deselectAll();
@@ -531,17 +464,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		recreateChartControls();
 	}
 
-	private void createOptionsGroup(Composite control) {
-		scrolledComposite = new SectionComposite(control, SWT.NONE);
-		GridData g = new GridData(GridData.FILL, GridData.FILL, true, true);
-		scrolledComposite.setLayoutData(g);
+	@Override
+	protected void createPageContent(SectionComposite parent) {
+		this.scrolledComposite = parent;
+
 		Composite scrolledBodyComposite = scrolledComposite.getContent();
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
-
 		scrolledBodyComposite.setLayout(layout);
 
 		basicCompositeCreate(scrolledBodyComposite);
@@ -686,10 +618,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					updateAttributesFromConfiguration(selectedProducts);
 				} else {
 					updateAttributesFromConfiguration(null);
-				}
-				if (restoring) {
-					restoring = false;
-					restoreWidgetValues();
 				}
 				setPageComplete(isPageComplete());
 			}
@@ -1465,13 +1393,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		return fDialogSettings;
 	}
 
-	/**
-	 * Initializes itself from the stored page settings.
-	 */
-	private void readConfiguration() {
-		getDialogSettings();
-	}
-
 	@SuppressWarnings("unchecked")
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
 		RepositoryConfiguration repositoryConfiguration = getRepositoryConfiguration();
@@ -1548,26 +1469,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	}
 
-	/**
-	 * TODO: get rid of this?
-	 */
-	public void updateDefaults(String startingUrl) throws UnsupportedEncodingException {
+	public void updateDefaults(String queryUrl) throws UnsupportedEncodingException {
+		BugzillaSearch search = new BugzillaSearch(getTaskRepository(), queryUrl);
+
+		// set product first to initialize dependent fields
+		String productValue = search.getParameters().get("product"); //$NON-NLS-1$
+		if (productValue != null) {
+			String[] sel = product.getSelection();
+			java.util.List<String> selList = Arrays.asList(sel);
+			selList = new ArrayList<String>(selList);
+			selList.add(productValue);
+			sel = new String[selList.size()];
+			product.setSelection(selList.toArray(sel));
+			updateAttributesFromConfiguration(selList.toArray(sel));
+		}
+
 		boolean adjustChart = false;
-		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1); //$NON-NLS-1$
-		String[] options = startingUrl.split("&"); //$NON-NLS-1$
-		for (String option : options) {
-			String key;
-			int endindex = option.indexOf("="); //$NON-NLS-1$
-			if (endindex == -1) {
-				key = null;
-			} else {
-				key = option.substring(0, option.indexOf("=")); //$NON-NLS-1$
-			}
-			if (key == null) {
-				continue;
-			}
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
-					getTaskRepository().getCharacterEncoding());
+		for (Map.Entry<String, String> entry : search.getParameters().entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
 
 			if (key.equals("short_desc")) { //$NON-NLS-1$
 				summaryPattern.setText(value);
@@ -1583,13 +1503,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					summaryOperation.select(index);
 				}
 			} else if (key.equals("product")) { //$NON-NLS-1$
-				String[] sel = product.getSelection();
-				java.util.List<String> selList = Arrays.asList(sel);
-				selList = new ArrayList<String>(selList);
-				selList.add(value);
-				sel = new String[selList.size()];
-				product.setSelection(selList.toArray(sel));
-				updateAttributesFromConfiguration(selList.toArray(sel));
+				// ignore, see above
 			} else if (key.equals("component")) { //$NON-NLS-1$
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
@@ -1892,102 +1806,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	}
 
-	private String[] nonNullArray(IDialogSettings settings, String id) {
-		String[] value = settings.getArray(id);
-		if (value == null) {
-			return new String[] {};
-		}
-		return value;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void restoreWidgetValues() {
-		try {
-			IDialogSettings settings = getDialogSettings();
-			String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
-			if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
-				return;
-			}
-
-			// set widgets to stored values
-			product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-			component.setSelection(nonNullArray(settings, STORE_COMPONENT_ID + repoId));
-			version.setSelection(nonNullArray(settings, STORE_VERSION_ID + repoId));
-			target.setSelection(nonNullArray(settings, STORE_MSTONE_ID + repoId));
-			status.setSelection(nonNullArray(settings, STORE_STATUS_ID + repoId));
-			resolution.setSelection(nonNullArray(settings, STORE_RESOLUTION_ID + repoId));
-			severity.setSelection(nonNullArray(settings, STORE_SEVERITY_ID + repoId));
-			priority.setSelection(nonNullArray(settings, STORE_PRIORITY_ID + repoId));
-			hardware.setSelection(nonNullArray(settings, STORE_HARDWARE_ID + repoId));
-			os.setSelection(nonNullArray(settings, STORE_OS_ID + repoId));
-			summaryOperation.select(settings.getInt(STORE_SUMMARYMATCH_ID + repoId));
-			commentOperation.select(settings.getInt(STORE_COMMENTMATCH_ID + repoId));
-			emailOperation.select(settings.getInt(STORE_EMAILMATCH_ID + repoId));
-			for (int i = 0; i < emailButtons.length; i++) {
-				emailButtons[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
-			}
-			summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
-			commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
-			emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
-			try {
-				emailOperation2.select(settings.getInt(STORE_EMAIL2MATCH_ID + repoId));
-			} catch (Exception e) {
-				//ignore
-			}
-			for (int i = 0; i < emailButtons2.length; i++) {
-				emailButtons2[i].setSelection(settings.getBoolean(STORE_EMAIL2BUTTON_ID + i + repoId));
-			}
-			emailPattern2.setText(settings.get(STORE_EMAIL2ADDRESS_ID + repoId));
-			if (settings.get(STORE_KEYWORDS_ID + repoId) != null) {
-				keywords.setText(settings.get(STORE_KEYWORDS_ID + repoId));
-				keywordsOperation.select(settings.getInt(STORE_KEYWORDSMATCH_ID + repoId));
-			}
-			if (settings.get(STORE_WHITEBOARD_ID + repoId) != null) {
-				whiteboardPattern.setText(settings.get(STORE_WHITEBOARD_ID + repoId));
-				whiteboardOperation.select(settings.getInt(STORE_WHITEBOARDMATCH_ID + repoId));
-			}
-
-			if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
-					(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
-					(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
-					(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
-					priority.getSelection().length > 0 || resolution.getSelection().length > 0
-					|| version.getSelection().length > 0 || target.getSelection().length > 0
-					|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
-				moreOptionsSection.setExpanded(true);
-				scrolledComposite.reflow(true);
-				refreshChartControls();
-			}
-
-			String chartString = settings.get(STORE_CHARTS_ID + repoId);
-			if (chartString != null) {
-				ObjectInputStream inputStream = null;
-				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chartString.getBytes());
-				try {
-					try {
-						inputStream = new ObjectInputStream(byteArrayInputStream);
-						charts = (ArrayList<Chart>) inputStream.readObject();
-					} catch (IOException e) {
-						throw e;
-					} finally {
-						if (inputStream != null) {
-							inputStream.close();
-						}
-					}
-				} catch (Exception e) {
-				}
-			}
-			if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
-				chartSection.setExpanded(true);
-				scrolledComposite.reflow(true);
-				refreshChartControls();
-			}
-
-		} catch (IllegalArgumentException e) {
-			//ignore
-		}
-	}
-
 	/* Testing hook to see if any products are present */
 	public int getProductCount() throws Exception {
 		return product.getItemCount();
@@ -2253,16 +2071,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	@Override
-	protected void createPageContent(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		composite.setLayout(layout);
-		createOptionsGroup(composite);
-	}
-
-	@Override
 	protected boolean hasRepositoryConfiguration() {
 		return getRepositoryConfiguration() != null;
 	}
@@ -2272,7 +2080,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	@Override
-	protected void doRefresh() {
+	protected void doRefreshControls() {
 		String[] selectedProducts = product.getSelection();
 		if (selectedProducts != null && selectedProducts.length == 0) {
 			selectedProducts = null;
@@ -2285,48 +2093,32 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		if (query != null) {
 			try {
 				updateDefaults(query.getUrl());
-				refreshChartControls();
 			} catch (UnsupportedEncodingException e) {
 				// ignore
 			}
 		}
 
-		if ((commentPattern.getText() != null && !commentPattern.getText().equals("")) || // //$NON-NLS-1$
-				(emailPattern2.getText() != null && !emailPattern2.getText().equals("")) || // //$NON-NLS-1$
-				(keywords.getText() != null && !keywords.getText().equals("")) || // //$NON-NLS-1$
-				(whiteboardPattern.getText() != null && !whiteboardPattern.getText().equals("")) || // //$NON-NLS-1$
-				priority.getSelection().length > 0 || resolution.getSelection().length > 0
+		boolean reflow = false;
+		if (commentPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
+				|| keywords.getText().length() > 0 || whiteboardPattern.getText().length() > 0
+				|| priority.getSelection().length > 0 || resolution.getSelection().length > 0
 				|| version.getSelection().length > 0 || target.getSelection().length > 0
 				|| hardware.getSelection().length > 0 || os.getSelection().length > 0) {
 			moreOptionsSection.setExpanded(true);
-			scrolledComposite.reflow(true);
-			refreshChartControls();
+			reflow = true;
 		}
 
 		if (charts.size() > 0 && charts.get(0).getChartExpression(0, 0).getFieldName() > 0) {
 			chartSection.setExpanded(true);
-			scrolledComposite.reflow(true);
-			refreshChartControls();
+			reflow = true;
 		}
 
-		/*
-		 * hack: we have to select the correct product, then update the
-		 * attributes so the component/version/milestone lists have the
-		 * proper values, then we can restore all the widget selections.
-		 */
-//		if (getTaskRepository() != null) {
-//			IDialogSettings settings = getDialogSettings();
-//			String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
-//			if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
-//					&& product != null) {
-//				product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-//				if (product.getSelection().length > 0) {
-//					updateAttributesFromConfiguration(product.getSelection());
-//				}
-//				restoreWidgetValues();
-//			}
-//		}
-//		setPageComplete(isPageComplete());
+		if (reflow) {
+			scrolledComposite.reflow(true);
+		}
+		refreshChartControls();
+
+		setPageComplete(isPageComplete());
 
 		return true;
 	}
@@ -2335,7 +2127,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	public void applyTo(IRepositoryQuery query) {
 		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 		query.setSummary(getQueryTitle());
-		saveState();
 	}
 
 }

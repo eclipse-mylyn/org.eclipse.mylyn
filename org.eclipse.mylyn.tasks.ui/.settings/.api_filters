@@ -24,4 +24,13 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/mylyn/tasks/ui/wizards/AbstractRepositoryQueryPage2.java" type="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2">
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="SectionComposite"/>
+                <message_argument value="AbstractRepositoryQueryPage2"/>
+                <message_argument value="createPageContent(SectionComposite)"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>
