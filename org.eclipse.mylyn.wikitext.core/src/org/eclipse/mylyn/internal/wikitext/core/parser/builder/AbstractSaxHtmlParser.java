@@ -384,7 +384,7 @@ public abstract class AbstractSaxHtmlParser {
 			@Override
 			public void end() {
 				if (!noop) {
-					builder.endBlock();
+					builder.endSpan();
 				}
 			}
 

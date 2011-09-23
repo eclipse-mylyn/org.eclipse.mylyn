@@ -159,6 +159,20 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
+	private class TableCellBlock extends ContentBlock {
+		public TableCellBlock(BlockType blockType) {
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|_.", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+
+		@Override
+		protected void emitContent(String content, boolean extended) throws IOException {
+			if (content.length() == 0) {
+				content = " "; //$NON-NLS-1$
+			}
+			super.emitContent(content, extended);
+		}
+	}
+
 	public TextileDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -178,7 +192,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
-			return new ContentBlock(type, "", ""); //$NON-NLS-1$//$NON-NLS-2$
+			if (currentBlock == null) {
+				return new ContentBlock(type, "", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				return new ContentBlock(type, "", ""); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		case FOOTNOTE:
 			return new ContentBlock(type, "fn1. ", "\n\n"); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
@@ -200,9 +218,8 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
-			return new ContentBlock(type, "|_.", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case TABLE_CELL_NORMAL:
-			return new ContentBlock(type, "|", ""); //$NON-NLS-1$ //$NON-NLS-2$ 
+			return new TableCellBlock(type);
 		case TABLE_ROW:
 			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
 		default:
