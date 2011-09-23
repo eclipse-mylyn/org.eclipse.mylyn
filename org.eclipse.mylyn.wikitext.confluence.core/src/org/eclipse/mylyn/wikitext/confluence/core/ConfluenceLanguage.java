@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TableOfContentsBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.TextBoxBlock;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.ColorPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.ConfluenceWrappedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.EmphasisPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.HyperlinkPhraseModifier;
@@ -125,6 +126,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false)); //$NON-NLS-1$ //$NON-NLS-2$
 		phraseModifierSyntax.add(new ConfluenceWrappedPhraseModifier("{quote}", SpanType.QUOTE, true)); //$NON-NLS-1$ 
+		phraseModifierSyntax.add(new ColorPhraseModifier());
 		phraseModifierSyntax.add(new ImagePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 	}

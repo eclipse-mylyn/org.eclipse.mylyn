@@ -37,7 +37,7 @@ public class ColorBlock extends ParameterizedBlock {
 
 	public ColorBlock() {
 		this.blockType = BlockType.DIV;
-		startPattern = Pattern.compile("\\{color(?::([^\\}]*))?\\}(.*)"); //$NON-NLS-1$
+		startPattern = Pattern.compile("^\\{color(?::([^\\}]*))?\\}(.*)"); //$NON-NLS-1$
 		endPattern = Pattern.compile("(\\{color\\})(.*)"); //$NON-NLS-1$
 	}
 
@@ -102,6 +102,9 @@ public class ColorBlock extends ParameterizedBlock {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
+		if (lineOffset > 0) {
+			return false;
+		}
 		blockLineCount = 0;
 		color = null;
 		nesting = false;

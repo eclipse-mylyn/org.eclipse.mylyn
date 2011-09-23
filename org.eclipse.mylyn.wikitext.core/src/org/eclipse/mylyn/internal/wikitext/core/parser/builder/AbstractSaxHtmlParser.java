@@ -93,6 +93,7 @@ public abstract class AbstractSaxHtmlParser {
 		elementNameToSpanType.put("sup", SpanType.SUPERSCRIPT); //$NON-NLS-1$
 		elementNameToSpanType.put("sub", SpanType.SUBSCRIPT); //$NON-NLS-1$
 		elementNameToSpanType.put("span", SpanType.SPAN); //$NON-NLS-1$
+		elementNameToSpanType.put("font", SpanType.SPAN); //$NON-NLS-1$
 		elementNameToSpanType.put("code", SpanType.CODE); //$NON-NLS-1$
 		elementNameToSpanType.put("tt", SpanType.MONOSPACE); //$NON-NLS-1$
 	}
@@ -554,6 +555,8 @@ public abstract class AbstractSaxHtmlParser {
 				attributes.setCssClass(atts.getValue(x));
 			} else if (localName.equals("title")) { //$NON-NLS-1$
 				attributes.setTitle(atts.getValue(x));
+			} else if (localName.equals("color")) { //$NON-NLS-1$
+				attributes.appendCssStyle("color: " + atts.getValue(x) + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

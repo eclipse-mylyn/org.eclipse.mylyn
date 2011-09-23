@@ -825,7 +825,13 @@ public class ConfluenceLanguageTest extends TestCase {
 	public void testColor3() {
 		String html = parser.parseToHtml("text {color:red}more text{color} text");
 		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>text </p><div style=\"color: red;\"><p>more text</p></div><p> text</p></body>"));
+		assertTrue(html.contains("<body><p>text <span style=\"color: red;\">more text</span> text</p></body>"));
+	}
+
+	public void testColor4() {
+		String html = parser.parseToHtml("text\n{color:red}more text{color}\ntext");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>text</p><div style=\"color: red;\"><p>more text</p></div><p>text</p></body>"));
 	}
 
 	public void testColorLexicalOffsets() {

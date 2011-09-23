@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -253,9 +254,6 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			break;
 		case MONOSPACE:
 			block = new ContentBlock("{{", "}}"); //$NON-NLS-1$//$NON-NLS-2$
-		case SPAN:
-			block = new ContentBlock("", ""); //$NON-NLS-1$//$NON-NLS-2$
-			break;
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
@@ -268,10 +266,26 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case UNDERLINED:
 			block = new ContentBlock("+", "+"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
+//			case QUOTE: not supported		
 
-//			case QUOTE: not supported by Textile		
+		case SPAN:
 		default:
-			block = new ContentBlock("", ""); //$NON-NLS-1$//$NON-NLS-2$
+			block = null;
+			if (attributes.getCssStyle() != null) {
+				Matcher colorMatcher = Pattern.compile("color:\\s*([^; \t]+)").matcher(attributes.getCssStyle()); //$NON-NLS-1$
+				if (colorMatcher.find()) {
+					String color = colorMatcher.group(1);
+					if (color.equalsIgnoreCase("black") || color.equals("#010101")) { //$NON-NLS-1$ //$NON-NLS-2$
+						color = null;
+					}
+					if (color != null) {
+						block = new ContentBlock("{color:" + color + "}", "{color}"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}
+				}
+			}
+			if (block == null) {
+				block = new ContentBlock("", ""); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		}
 		return block;
 	}
