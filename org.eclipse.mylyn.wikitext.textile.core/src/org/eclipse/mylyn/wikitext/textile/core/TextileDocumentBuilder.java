@@ -214,48 +214,53 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		Block block;
+		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
 		case BOLD:
-			block = new ContentBlock("*" + computeAttributes(attributes), "*"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CITATION:
-			block = new ContentBlock("??" + computeAttributes(attributes), "??"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("??" + spanAttributes, "??"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case DELETED:
-			block = new ContentBlock("-" + computeAttributes(attributes), "-"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("-" + spanAttributes, "-"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case EMPHASIS:
-			block = new ContentBlock("_" + computeAttributes(attributes), "_"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("_" + spanAttributes, "_"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case INSERTED:
-			block = new ContentBlock("+" + computeAttributes(attributes), "+"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("+" + spanAttributes, "+"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CODE:
-			block = new ContentBlock("@" + computeAttributes(attributes), "@"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("@" + spanAttributes, "@"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case ITALIC:
-			block = new ContentBlock("__" + computeAttributes(attributes), "__"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("__" + spanAttributes, "__"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case LINK:
 			if (attributes instanceof LinkAttributes) {
 				block = new LinkBlock((LinkAttributes) attributes);
 			} else {
-				block = new ContentBlock("%" + computeAttributes(attributes), "%"); //$NON-NLS-1$//$NON-NLS-2$
+				block = new ContentBlock("%" + spanAttributes, "%"); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			break;
 		case MONOSPACE:
 			block = new ContentBlock("%{font-family:monospace;}", "%"); //$NON-NLS-1$//$NON-NLS-2$
 		case SPAN:
-			block = new ContentBlock("%" + computeAttributes(attributes), "%"); //$NON-NLS-1$//$NON-NLS-2$
+			if (spanAttributes.length() == 0) {
+				block = new ContentBlock("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				block = new ContentBlock("%" + spanAttributes, "%"); //$NON-NLS-1$//$NON-NLS-2$
+			}
 			break;
 		case STRONG:
-			block = new ContentBlock("*" + computeAttributes(attributes), "*"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUBSCRIPT:
-			block = new ContentBlock("^" + computeAttributes(attributes), "^"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("^" + spanAttributes, "^"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUPERSCRIPT:
-			block = new ContentBlock("~" + computeAttributes(attributes), "~"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("~" + spanAttributes, "~"); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case UNDERLINED:
 			block = new ContentBlock("%{text-decoration:underline;}", "%"); //$NON-NLS-1$//$NON-NLS-2$
@@ -263,7 +268,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 //			case QUOTE: not supported by Textile		
 		default:
-			block = new ContentBlock("%" + computeAttributes(attributes), "%"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("%" + spanAttributes, "%"); //$NON-NLS-1$//$NON-NLS-2$
 		}
 		return block;
 	}

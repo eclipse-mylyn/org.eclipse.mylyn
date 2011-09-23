@@ -364,18 +364,28 @@ public abstract class AbstractSaxHtmlParser {
 
 			private final SpanType spanType;
 
+			private boolean noop;
+
 			private SpanElementHandler(SpanType spanType) {
 				this.spanType = spanType;
 			}
 
 			@Override
 			public void start(Attributes atts) {
-				builder.beginSpan(spanType, computeAttributes(spanType, atts));
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeAttributes(spanType, atts);
+				if (spanType == SpanType.SPAN && attributes.getCssClass() == null && attributes.getCssStyle() == null
+						&& attributes.getId() == null) {
+					noop = true;
+				} else {
+					builder.beginSpan(spanType, attributes);
+				}
 			}
 
 			@Override
 			public void end() {
-				builder.endBlock();
+				if (!noop) {
+					builder.endBlock();
+				}
 			}
 
 		}
