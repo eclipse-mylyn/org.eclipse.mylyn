@@ -49,6 +49,14 @@ public class TracTestCleanupUtil extends TestCase {
 		deleteOldTickets();
 	}
 
+	public void testCleanup010FormAuth() throws Exception {
+		TracFixture fixture = TracFixture.TRAC_0_10_XML_RPC_FORM_AUTH.activate();
+		System.err.println("Connected to " + fixture.getRepositoryUrl());
+		client = fixture.connect(PrivilegeLevel.ADMIN);
+		deleteOldAttachments();
+		deleteOldTickets();
+	}
+
 	public void testCleanup011() throws Exception {
 		TracFixture fixture = TracFixture.TRAC_0_11_XML_RPC.activate();
 		System.err.println("Connected to " + fixture.getRepositoryUrl());
