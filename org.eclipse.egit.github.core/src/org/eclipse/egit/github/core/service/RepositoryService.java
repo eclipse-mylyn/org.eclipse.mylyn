@@ -455,6 +455,23 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Edit given repository
+	 *
+	 * @param repository
+	 * @return edited repository
+	 * @throws IOException
+	 */
+	public Repository editRepository(Repository repository) throws IOException {
+		if (repository == null)
+			throw new IllegalArgumentException("Repository cannot be null"); //$NON-NLS-1$
+
+		final String repoId = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		return client.post(uri.toString(), repository, Repository.class);
+	}
+
+	/**
 	 * Fork given repository into new repository under the currently
 	 * authenticated user.
 	 *
