@@ -34,6 +34,7 @@ public class DownloadTest {
 		assertNull(dl.getName());
 		assertEquals(0, dl.getSize());
 		assertNull(dl.getUrl());
+		assertNull(dl.getContentType());
 	}
 
 	/**
@@ -51,6 +52,7 @@ public class DownloadTest {
 		assertEquals("download.jar", dl.setName("download.jar").getName());
 		assertEquals(12345, dl.setSize(12345).getSize());
 		assertEquals("/path/dl", dl.setUrl("/path/dl").getUrl());
+		assertEquals("text/plain", dl.setContentType("text/plain").getContentType());
 	}
 
 }

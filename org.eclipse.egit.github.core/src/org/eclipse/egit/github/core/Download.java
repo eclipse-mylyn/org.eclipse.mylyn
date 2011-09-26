@@ -28,6 +28,8 @@ public class Download implements Serializable {
 
 	private String description;
 
+	private String contentType;
+
 	private String htmlUrl;
 
 	private String name;
@@ -95,6 +97,22 @@ public class Download implements Serializable {
 	 */
 	public Download setDescription(String description) {
 		this.description = description;
+		return this;
+	}
+
+	/**
+	 * @return contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @param contentType
+	 * @return this download
+	 */
+	public Download setContentType(String contentType) {
+		this.contentType = contentType;
 		return this;
 	}
 
