@@ -43,21 +43,21 @@
 <repository location="http://download.eclipse.org/eclipse/updates/4.1"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201106081058"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="3.5.1.v20110531-2218"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.0.0.201109151620"/>
+<unit id="org.eclipse.ecf.core.feature.group" version="3.5.2.v20110829-0349"/>
 <unit id="org.eclipse.equinox.concurrent" version="1.0.200.v20110502"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.0.v20110605-0747"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.7.0.v20110605-0747"/>
-<unit id="org.eclipse.emf.common.ui.feature.group" version="2.7.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.7.0.v20110606-0949"/>
-<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.7.0.v20110606-0949"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.7.1.v20110912-0920"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.7.0.v20110912-0920"/>
+<unit id="org.eclipse.emf.common.ui.feature.group" version="2.7.0.v20110913-1156"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20110913-1156"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="2.7.1.v20110913-1526"/>
+<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.7.0.v20110913-1156"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="1.0.0.201106090707-r"/>
-<repository location="http://download.eclipse.org/egit/updates-1.0"/>
+<unit id="org.eclipse.egit.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="1.1.0.201109151100-r"/>
+<repository location="http://download.eclipse.org/egit/updates-1.1"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
