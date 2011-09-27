@@ -29,6 +29,7 @@ public class FieldErrorTest {
 		FieldError error = new FieldError();
 		assertNull(error.getCode());
 		assertNull(error.getField());
+		assertNull(error.getMessage());
 		assertNull(error.getResource());
 		assertNull(error.getValue());
 	}
@@ -42,6 +43,7 @@ public class FieldErrorTest {
 		assertEquals("invalid", error.setCode("invalid").getCode());
 		assertEquals("name", error.setField("name").getField());
 		assertEquals("commit", error.setResource("commit").getResource());
+		assertEquals("message", error.setMessage("message").getMessage());
 		assertEquals("-1", error.setValue("-1").getValue());
 	}
 }
