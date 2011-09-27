@@ -44,6 +44,8 @@ public class FieldError implements Serializable {
 
 	private String field;
 
+	private String message;
+
 	private String resource;
 
 	private String value;
@@ -77,6 +79,21 @@ public class FieldError implements Serializable {
 	 */
 	public FieldError setField(String field) {
 		this.field = field;
+		return this;
+	}
+
+	/**
+	 * @return message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	/**
+	 * @param message
+	 * @return this field error
+	 */
+	public FieldError setMessage(String message) {
+		this.message = message;
 		return this;
 	}
 
