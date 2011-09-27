@@ -46,6 +46,11 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 public class IssueService extends GitHubService {
 
 	/**
+	 * Filter field key
+	 */
+	public static final String FIELD_FILTER = "filter"; //$NON-NLS-1$
+
+	/**
 	 * Filter by issue assignee
 	 */
 	public static final String FILTER_ASSIGNEE = "assignee"; //$NON-NLS-1$
@@ -64,6 +69,16 @@ public class IssueService extends GitHubService {
 	 * Filter by subscribed issues for user
 	 */
 	public static final String FILTER_SUBSCRIBED = "subscribed"; //$NON-NLS-1$
+
+	/**
+	 * Filter by created issues by user
+	 */
+	public static final String FILTER_CREATED = "created"; //$NON-NLS-1$
+
+	/**
+	 * Filter by assigned issues for user
+	 */
+	public static final String FILTER_ASSIGNED = "assigned"; //$NON-NLS-1$
 
 	/**
 	 * Filter by issue's labels
@@ -114,6 +129,26 @@ public class IssueService extends GitHubService {
 	 * Descending direction sort order
 	 */
 	public static final String DIRECTION_DESCENDING = "desc"; //$NON-NLS-1$
+
+	/**
+	 * Sort field key
+	 */
+	public static final String FIELD_SORT = "sort"; //$NON-NLS-1$
+
+	/**
+	 * Sort by created at
+	 */
+	public static final String SORT_CREATED = "created"; //$NON-NLS-1$
+
+	/**
+	 * Sort by updated at
+	 */
+	public static final String SORT_UPDATED = "updated"; //$NON-NLS-1$
+
+	/**
+	 * Sort by commented on at
+	 */
+	public static final String SORT_COMMENTS = "comments"; //$NON-NLS-1$
 
 	/**
 	 * Create issue service
