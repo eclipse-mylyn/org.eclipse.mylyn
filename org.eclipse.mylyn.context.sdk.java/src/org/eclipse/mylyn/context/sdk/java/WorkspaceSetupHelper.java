@@ -75,8 +75,7 @@ public class WorkspaceSetupHelper {
 		return javaProject;
 	}
 
-	private static IJavaProject createPluginProject(IProject project) throws CoreException, JavaModelException {
-
+	public static IJavaProject createPluginProject(IProject project) throws CoreException, JavaModelException {
 		if (project == null) {
 			return null;
 		}
@@ -105,8 +104,7 @@ public class WorkspaceSetupHelper {
 		return javaProject;
 	}
 
-	private static IProject createProject(String projectName) throws CoreException {
-
+	public static IProject createProject(String projectName) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(projectName);
 		if (!project.exists()) {
