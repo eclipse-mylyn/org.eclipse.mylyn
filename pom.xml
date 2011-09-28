@@ -76,6 +76,9 @@
     <module>org.eclipse.mylyn.wikitext.confluence.core</module>
     <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
     <module>org.eclipse.mylyn.wikitext.core</module>
+    <module>org.eclipse.mylyn.wikitext.creole.core</module>
+    <module>org.eclipse.mylyn.wikitext.creole.ui</module>
+    <module>org.eclipse.mylyn.wikitext.extras-feature</module>
     <module>org.eclipse.mylyn.wikitext.help.sdk</module>
     <module>org.eclipse.mylyn.wikitext.help.ui</module>
     <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
@@ -89,9 +92,6 @@
     <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.twiki.core</module>
     <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
-    <module>org.eclipse.mylyn.wikitext.creole.core</module>
-    <module>org.eclipse.mylyn.wikitext.creole.ui</module>
-    <module>org.eclipse.mylyn.wikitext.extras</module>
     <module>org.eclipse.mylyn.wikitext.ui</module>
 	<!-- needs to be last -->
     <module>org.eclipse.mylyn.wikitext-standalone</module>
