@@ -25,6 +25,7 @@ import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;

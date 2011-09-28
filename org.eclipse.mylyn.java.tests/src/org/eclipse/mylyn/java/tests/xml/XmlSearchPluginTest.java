@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
 import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
@@ -32,7 +33,6 @@ import org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
-import org.eclipse.mylyn.java.tests.search.WorkspaceSetupHelper;
 
 /**
  * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2.

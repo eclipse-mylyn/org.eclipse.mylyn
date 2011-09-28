@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
 import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;

@@ -112,7 +112,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		} while (wasInterrupted);
 	}
 
-	class TestProgressMonitor implements IProgressMonitor {
+	public class TestProgressMonitor implements IProgressMonitor {
 
 		boolean done = false;
 

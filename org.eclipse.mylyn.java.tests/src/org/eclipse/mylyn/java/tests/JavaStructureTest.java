@@ -22,6 +22,8 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
+import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;

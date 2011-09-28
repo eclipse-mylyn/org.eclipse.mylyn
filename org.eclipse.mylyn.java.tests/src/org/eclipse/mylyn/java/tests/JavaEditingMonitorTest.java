@@ -22,6 +22,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
+import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
+import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;

@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.ide.ui.MarkerViewerInterestSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;

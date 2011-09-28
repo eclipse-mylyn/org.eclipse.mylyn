@@ -55,4 +55,5 @@ public class AllJavaTests {
 		suite.addTestSuite(JavaStackTraceContextComputationStrategyTest.class);
 		return suite;
 	}
+
 }
