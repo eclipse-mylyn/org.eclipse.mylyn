@@ -80,8 +80,12 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.mylyn.commons.team.category"
+            name="Team">
+      </category>
       <command
-            categoryId="org.eclipse.team.ui.category.team"
+            categoryId="org.eclipse.mylyn.commons.team.category"
             defaultHandler="org.eclipse.mylyn.internal.commons.ui.team.NewRepositoryHandler"
             id="org.eclipse.mylyn.commons.ui.command.AddRepository"
             name="Add Repository">
