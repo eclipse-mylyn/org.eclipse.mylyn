@@ -36,11 +36,11 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.Messages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
@@ -110,7 +110,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 		private final String LABEL = getEmptyViewMessage();
 
-		private final Image IMAGE = CommonImages.getImage(TasksUiImages.CONTEXT_FOCUS);
+		private final Image IMAGE = CommonImages.getImage(ContextUiImages.CONTEXT_FOCUS);
 
 		private final Tree tree;
 
@@ -214,7 +214,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		this.manageLinking = manageLinking;
 		setText(Messages.AbstractFocusViewAction_Apply_Mylyn);
 		setToolTipText(Messages.AbstractFocusViewAction_Apply_Mylyn);
-		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
+		setImageDescriptor(ContextUiImages.CONTEXT_FOCUS);
 		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}

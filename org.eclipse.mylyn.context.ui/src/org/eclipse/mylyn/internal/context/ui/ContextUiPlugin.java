@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,8 +35,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -45,14 +46,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.context.ui.wizards.RetrieveLatestContextDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -62,6 +56,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.navigator.INavigatorContentExtension;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -83,7 +79,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			switch (event.getEventKind()) {
 			case PRE_ACTIVATED:
 				initLazyStart();
-				contextPopulationStrategy.activated(event);
 				break;
 			}
 		}
@@ -110,8 +105,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private final Map<String, Set<String>> preservedFilterClasses = new HashMap<String, Set<String>>();
 
 	private final Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
-
-	private final ContextPopulationStrategy contextPopulationStrategy = new ContextPopulationStrategy();
 
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
@@ -185,25 +178,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
-
-		@SuppressWarnings("restriction")
-		@Override
-		public void taskActivated(ITask task) {
-			if (CoreUtil.TEST_MODE) {
-				// avoid blocking the test suite
-				return;
-			}
-
-			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
-			if (!hasLocalContext) {
-				if (org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil.hasContextAttachment(task)) {
-					RetrieveLatestContextDialog.openQuestion(WorkbenchUtil.getShell(), task);
-				}
-			}
-		}
-	};
-
 	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
 	private ContextEditorManager editorManager;
@@ -245,11 +219,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		try {
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUi.addWindowPartListener(contentOutlineManager);
-			perspectiveManager.addManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
-			TasksUi.getTaskActivityManager().addActivationListener(perspectiveManager);
-			MonitorUi.addWindowPerspectiveListener(perspectiveManager);
-			TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
-
+			MonitorUi.addWindowPerspectiveListener(perspectiveManager.getPerspectiveListener());
+			ContextCore.getContextManager().addListener(perspectiveManager.getContextListener());
 			ContextCore.getContextManager().addListener(editorManager);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", //$NON-NLS-1$
@@ -290,9 +261,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUi.removeWindowPartListener(contentOutlineManager);
 
-		TasksUi.getTaskActivityManager().removeActivationListener(perspectiveManager);
-		MonitorUi.removeWindowPerspectiveListener(perspectiveManager);
-		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
+		MonitorUi.removeWindowPerspectiveListener(perspectiveManager.getPerspectiveListener());
+		ContextCore.getContextManager().removeListener(perspectiveManager.getContextListener());
 	}
 
 	/**
@@ -303,12 +273,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		if (lazyStarted.get()) {
 			lazyStop();
 		}
-		if (TasksUi.getTaskActivityManager() != null) {
-			ContextCore.getContextManager().removeListener(contextActivationListener);
-		}
+		ContextCore.getContextManager().removeListener(contextActivationListener);
 
 		super.stop(context);
-		perspectiveManager.removeManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 		viewerManager.dispose();
 	}
 
@@ -639,4 +606,27 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public static ContextPerspectiveManager getPerspectiveManager() {
 		return INSTANCE.perspectiveManager;
 	}
+
+	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
+		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
+				"org.eclipse.jdt.java.ui.javaContent"); //$NON-NLS-1$
+		if (javaContent != null) {
+			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
+			// TODO: find a sane way of doing this, perhaps via AbstractContextUiBridge, should be:
+			// if (javaContent.getContentProvider() != null) {
+			// JavaNavigatorContentProvider java =
+			// (JavaNavigatorContentProvider)javaContent.getContentProvider();
+			// java.setIsFlatLayout(true);
+			// }
+			try {
+				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
+				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class }); //$NON-NLS-1$
+				method.invoke(treeContentProvider, new Object[] { true });
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$
+			}
+		}
+	}
+
 }

@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.context.ui.preferences;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -98,10 +96,6 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				manageExpansionButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE,
 				mapCloseToRemoveButton.getSelection());
-
-		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, manageExpansionButton.getSelection());
 
 		return true;
 	}

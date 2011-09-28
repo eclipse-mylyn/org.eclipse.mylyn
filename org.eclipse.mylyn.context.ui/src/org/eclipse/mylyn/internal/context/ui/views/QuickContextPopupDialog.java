@@ -25,7 +25,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.editors.ContextEditorFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -112,7 +111,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		try {
 			commonViewer.getControl().setRedraw(false);
 
-			ContextEditorFormPage.forceFlatLayoutOfJavaContent(commonViewer);
+			ContextUiPlugin.forceFlatLayoutOfJavaContent(commonViewer);
 
 			commonViewer.setInput(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getInput());
 			commonViewer.expandAll();

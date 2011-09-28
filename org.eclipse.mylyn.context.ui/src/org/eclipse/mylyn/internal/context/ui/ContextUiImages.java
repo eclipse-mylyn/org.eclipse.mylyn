@@ -29,6 +29,8 @@ public class ContextUiImages {
 
 	private static final String T_TOOL = "etool16"; //$NON-NLS-1$
 
+	private static final String T_VIEW = "eview16"; //$NON-NLS-1$
+
 	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
 	// TODO 3.5 move images below to sandbox
@@ -59,6 +61,8 @@ public class ContextUiImages {
 	public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor CONTEXT_FOCUS = create(T_VIEW, "focus.gif"); //$NON-NLS-1$
 
 	public static ImageDescriptor create(String prefix, String name) {
 		return create(prefix, name, baseURL);

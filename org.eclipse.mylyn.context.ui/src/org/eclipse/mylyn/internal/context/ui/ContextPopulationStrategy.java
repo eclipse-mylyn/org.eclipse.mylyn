@@ -12,24 +12,18 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextComputationStrategy;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.internal.context.core.StrategiesExtensionPointReader;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -51,31 +45,11 @@ public class ContextPopulationStrategy {
 
 	private boolean disabled;
 
-	public void activated(ContextChangeEvent event) {
-		if (disabled) {
-			return;
-		}
-
-		// detect empty context
-		if (event.getContext().getAllElements().isEmpty()) {
-			// get corresponding task
-			ITask task = TasksUi.getRepositoryModel().getTask(event.getContextHandle());
-			if (task != null) {
-				try {
-					TaskData taskData = null;
-					if (TasksUiPlugin.getTaskDataManager().hasTaskData(task)) {
-						taskData = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task, false).getLocalData();
-					}
-					IInteractionContext context = event.getContext();
-					populateContext(context, task, taskData);
-				} catch (CoreException e) {
-					ContextUiPlugin.getDefault().getLog().log(e.getStatus());
-				}
-			}
-		}
+	public boolean isDisabled() {
+		return disabled;
 	}
 
-	public void populateContext(final IInteractionContext context, final ITask task, final TaskData taskData) {
+	public void populateContext(final IInteractionContext context, final IAdaptable input) {
 		Job job = new Job(Messages.ContextPopulationStrategy_Populate_Context_Job_Label) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -84,17 +58,7 @@ public class ContextPopulationStrategy {
 				if (strategy == null) {
 					return Status.CANCEL_STATUS;
 				}
-				final List<Object> contextItems = strategy.computeContext(context, new IAdaptable() {
-					public Object getAdapter(@SuppressWarnings("rawtypes")
-					Class adapter) {
-						if (adapter == ITask.class) {
-							return task;
-						} else if (adapter == TaskData.class) {
-							return taskData;
-						}
-						return null;
-					}
-				}, monitor);
+				final List<Object> contextItems = strategy.computeContext(context, input, monitor);
 
 				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;

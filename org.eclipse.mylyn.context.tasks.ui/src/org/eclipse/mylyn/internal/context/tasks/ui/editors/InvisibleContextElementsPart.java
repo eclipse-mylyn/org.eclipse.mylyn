@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.editors;
+package org.eclipse.mylyn.internal.context.tasks.ui.editors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

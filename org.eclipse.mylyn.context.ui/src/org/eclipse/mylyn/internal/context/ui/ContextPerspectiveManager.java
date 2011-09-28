@@ -15,24 +15,50 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener4;
+import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextPerspectiveManager implements ITaskActivationListener, IPerspectiveListener4 {
+public class ContextPerspectiveManager {
+
+	private final Set<String> actionSetsToSuppress;
+
+	private final AbstractContextListener contextListener = new AbstractContextListener() {
+		@Override
+		public void contextChanged(org.eclipse.mylyn.context.core.ContextChangeEvent event) {
+			switch (event.getEventKind()) {
+			case ACTIVATED:
+				ContextPerspectiveManager.this.contextActivated(event.getContext());
+			case DEACTIVATED:
+				ContextPerspectiveManager.this.contextDeactivated(event.getContext());
+			}
+		};
+	};
 
 	private final Set<String> managedPerspectiveIds;
 
-	private final Set<String> actionSetsToSuppress;
+	private final IPerspectiveListener perspectiveListener = new PerspectiveAdapter() {
+
+		@Override
+		public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			cleanActionSets(page, perspective);
+		}
+
+		@Override
+		public void perspectiveOpened(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			cleanActionSets(page, perspective);
+		}
+
+	};
 
 	private final IPreferenceStore preferenceStore;
 
@@ -49,18 +75,14 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 		managedPerspectiveIds.add(id);
 	}
 
-	public void removeManagedPerspective(String id) {
-		managedPerspectiveIds.remove(id);
-	}
-
-	public void taskActivated(ITask task) {
+	public void contextActivated(IInteractionContext context) {
 		try {
 			IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 			if (launchingWindow != null) {
 				IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
 				setPerspectiveIdFor(null, descriptor.getId());
 
-				String perspectiveId = getPerspectiveIdFor(task);
+				String perspectiveId = getPerspectiveIdFor(context);
 				showPerspective(perspectiveId);
 			}
 		} catch (Exception e) {
@@ -68,7 +90,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 		}
 	}
 
-	public void taskDeactivated(ITask task) {
+	public void contextDeactivated(IInteractionContext context) {
 		try {
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault()
@@ -77,7 +99,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 				IWorkbenchWindow launchingWindow = getWorkbenchWindow();
 				if (launchingWindow != null) {
 					IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
-					setPerspectiveIdFor(task, descriptor.getId());
+					setPerspectiveIdFor(context, descriptor.getId());
 
 					String previousPerspectiveId = getPerspectiveIdFor(null);
 					showPerspective(previousPerspectiveId);
@@ -85,6 +107,64 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 			}
 		} catch (Exception e) {
 			// ignore, perspective may not have been saved, e.g. due to crash
+		}
+	}
+
+	public AbstractContextListener getContextListener() {
+		return contextListener;
+	}
+
+	public IPerspectiveListener getPerspectiveListener() {
+		return perspectiveListener;
+	}
+
+	public IWorkbenchWindow getWorkbenchWindow() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			if (windows.length > 0) {
+				window = windows[0];
+			}
+		}
+		return window;
+	}
+
+	public void removeManagedPerspective(String id) {
+		managedPerspectiveIds.remove(id);
+	}
+
+	private void cleanActionSets(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
+		if (managedPerspectiveIds.contains(perspectiveDescriptor.getId())) {
+			for (String actionSetId : actionSetsToSuppress) {
+				page.hideActionSet(actionSetId);
+			}
+		}
+	}
+
+	/**
+	 * @param context
+	 *            can be null to indicate no task
+	 */
+	private String getPerspectiveIdFor(IInteractionContext context) {
+		if (context != null) {
+			return preferenceStore.getString(IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE
+					+ context.getHandleIdentifier());
+		} else {
+			return preferenceStore.getString(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK);
+		}
+	}
+
+	/**
+	 * @param context
+	 *            can be null to indicate no task
+	 */
+	private void setPerspectiveIdFor(IInteractionContext context, String perspectiveId) {
+		if (context != null) {
+			preferenceStore.setValue(
+					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + context.getHandleIdentifier(),
+					perspectiveId);
+		} else {
+			preferenceStore.setValue(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
 		}
 	}
 
@@ -107,94 +187,6 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 					launchingWindow.getShell().setRedraw(true);
 				}
 			}
-		}
-	}
-
-	public IWorkbenchWindow getWorkbenchWindow() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows.length > 0) {
-				window = windows[0];
-			}
-		}
-		return window;
-	}
-
-	public void perspectivePreDeactivate(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		// ignore
-	}
-
-	public void perspectiveClosed(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		// ignore
-	}
-
-	public void perspectiveDeactivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		// ignore
-	}
-
-	public void perspectiveOpened(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-		cleanActionSets(page, perspective);
-	}
-
-	public void perspectiveSavedAs(IWorkbenchPage page, IPerspectiveDescriptor oldPerspective,
-			IPerspectiveDescriptor newPerspective) {
-		// ignore
-	}
-
-	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective,
-			IWorkbenchPartReference partRef, String changeId) {
-		// ignore
-	}
-
-	public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
-		cleanActionSets(page, perspectiveDescriptor);
-	}
-
-	private void cleanActionSets(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
-		if (managedPerspectiveIds.contains(perspectiveDescriptor.getId())) {
-			for (String actionSetId : actionSetsToSuppress) {
-				page.hideActionSet(actionSetId);
-			}
-		}
-	}
-
-	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
-		// ignore
-	}
-
-	public void preTaskActivated(ITask task) {
-		// ignore	
-	}
-
-	public void preTaskDeactivated(ITask task) {
-		// ignore		
-	}
-
-	/**
-	 * @param task
-	 *            can be null to indicate no task
-	 */
-	private String getPerspectiveIdFor(ITask task) {
-		if (task != null) {
-			return preferenceStore.getString(IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE
-					+ task.getHandleIdentifier());
-		} else {
-			return preferenceStore.getString(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK);
-		}
-	}
-
-	/**
-	 * @param task
-	 *            can be null to indicate no task
-	 */
-	private void setPerspectiveIdFor(ITask task, String perspectiveId) {
-		if (task != null) {
-			preferenceStore.setValue(
-					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
-					perspectiveId);
-		} else {
-			preferenceStore.setValue(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
 		}
 	}
 

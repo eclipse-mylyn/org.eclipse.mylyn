@@ -38,10 +38,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -86,8 +83,11 @@ public class ContextEditorManager extends AbstractContextListener {
 
 	private final IPreferenceStore preferenceStore;
 
+	private boolean enabled;
+
 	public ContextEditorManager() {
 		preferenceStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.mylyn.resources.ui"); //$NON-NLS-1$
+		setEnabled(true);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault()
 						.getPreferenceStore()
-						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
+						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && isEnabled()) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
@@ -236,7 +236,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault()
 						.getPreferenceStore()
-						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && !TaskMigrator.isActive()) {
+						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && isEnabled()) {
 			closeAllButActiveTaskEditor(context.getHandleIdentifier());
 
 			XMLMemento rootMemento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
@@ -362,13 +362,11 @@ public class ContextEditorManager extends AbstractContextListener {
 						if (canClose(reference)) {
 							try {
 								IEditorInput input = reference.getEditorInput();
-								if (input instanceof TaskEditorInput) {
-									ITask task = ((TaskEditorInput) input).getTask();
-									if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
-										// do not close
-									} else {
-										toClose.add(reference);
-									}
+								IInteractionContext inputContext = (IInteractionContext) input.getAdapter(IInteractionContext.class);
+								if (inputContext != null && inputContext.getHandleIdentifier().equals(taskHandle)) {
+									// do not close
+								} else {
+									toClose.add(reference);
 								}
 							} catch (PartInitException e) {
 								// ignore
@@ -459,6 +457,14 @@ public class ContextEditorManager extends AbstractContextListener {
 	public boolean hasEditorMemento(String sourceHandle) {
 		Assert.isNotNull(sourceHandle);
 		return readEditorMemento(sourceHandle) != null;
+	}
+
+	private boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean active) {
+		this.enabled = active;
 	}
 
 }

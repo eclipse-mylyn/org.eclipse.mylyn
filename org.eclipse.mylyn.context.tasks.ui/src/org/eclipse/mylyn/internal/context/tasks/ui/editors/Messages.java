@@ -9,12 +9,12 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.editors;
+package org.eclipse.mylyn.internal.context.tasks.ui.editors;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.context.ui.editors.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.context.tasks.ui.editors.messages"; //$NON-NLS-1$
 
 	static {
 		// load message values from bundle file

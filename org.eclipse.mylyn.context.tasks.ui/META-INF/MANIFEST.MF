@@ -6,8 +6,12 @@ Bundle-Version: 3.7.0.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
+ org.eclipse.jface.text,
  org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.navigator,
  org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.context.core;bundle-version="3.7.0",
  org.eclipse.mylyn.context.ui;bundle-version="3.7.0",
  org.eclipse.mylyn.monitor.core;bundle-version="3.7.0",
@@ -15,6 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)"
 Bundle-Vendor: %Bundle-Vendor
-Export-Package: org.eclipse.mylyn.internal.context.tasks.ui;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.context.tasks.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.context.tasks.ui.bridge;x-internal:=true,
+ org.eclipse.mylyn.internal.context.tasks.ui.editors;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .

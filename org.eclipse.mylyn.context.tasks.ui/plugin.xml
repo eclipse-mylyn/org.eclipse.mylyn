@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.mylyn.context.ui.startup">
       <startup
-            class="org.eclipse.mylyn.internal.context.tasks.ui.ContextUiStartupHandler">
+            class="org.eclipse.mylyn.internal.context.tasks.ui.ContextTasksStartupHandler">
       </startup>
    </extension>
    <extension
@@ -31,4 +31,34 @@
             id="org.eclipse.mylyn.context.tasks.ui.activityMonitor">
       </activityMonitor>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
+            class="org.eclipse.mylyn.internal.context.tasks.ui.ContextTasksAdapterFactory">
+         <adapter
+               type="org.eclipse.mylyn.context.core.IInteractionContext">
+         </adapter>
+      </factory>
+   </extension>
+
+    <extension 
+         point="org.eclipse.mylyn.context.core.bridges">
+      <structureBridge 
+      		class="org.eclipse.mylyn.internal.context.tasks.ui.bridge.TaskStructureBridge"/> 
+   </extension>
+   <extension 
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <uiBridge
+            class="org.eclipse.mylyn.internal.context.tasks.ui.bridge.TaskUiBridge"
+            contentType="meta/task"/>
+   </extension>   
+ 
+ 	<extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      	<pageFactory
+             id="org.eclipse.mylyn.context.ui.pageFactory.Context"
+			 class="org.eclipse.mylyn.internal.context.tasks.ui.editors.ContextPageFactory"/>
+   	</extension>
+    
 </plugin>

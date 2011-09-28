@@ -9,9 +9,8 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.editors;
+package org.eclipse.mylyn.internal.context.tasks.ui.editors;
 
-import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
@@ -26,6 +25,8 @@ import org.eclipse.ui.forms.editor.IFormPage;
  */
 public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
+	public static String ID_CONTEXT_PAGE_FACTORY = "org.eclipse.mylyn.context.ui.editor.context"; //$NON-NLS-1$
+
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		return true;
@@ -33,8 +34,7 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		return new ContextEditorFormPage(parentEditor, ContextUi.ID_CONTEXT_PAGE_FACTORY,
-				Messages.ContextPageFactory_Context);
+		return new ContextEditorFormPage(parentEditor, ID_CONTEXT_PAGE_FACTORY, Messages.ContextPageFactory_Context);
 	}
 
 	@Override

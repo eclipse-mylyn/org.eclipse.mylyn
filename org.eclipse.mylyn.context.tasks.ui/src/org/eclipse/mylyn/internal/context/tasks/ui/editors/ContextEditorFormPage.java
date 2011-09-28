@@ -9,13 +9,10 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.editors;
+package org.eclipse.mylyn.internal.context.tasks.ui.editors;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,10 +22,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -36,13 +31,13 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler;
-import org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler;
-import org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler;
-import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
+import org.eclipse.mylyn.internal.tasks.ui.context.AttachContextHandler;
+import org.eclipse.mylyn.internal.tasks.ui.context.ClearContextHandler;
+import org.eclipse.mylyn.internal.tasks.ui.context.CopyContextHandler;
+import org.eclipse.mylyn.internal.tasks.ui.context.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -75,7 +70,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.navigator.INavigatorContentExtension;
 
 /**
  * @author Mik Kersten
@@ -481,35 +475,13 @@ public class ContextEditorFormPage extends FormPage {
 		try {
 			commonViewer.getControl().setRedraw(false);
 
-			forceFlatLayoutOfJavaContent(commonViewer);
+			ContextUiPlugin.forceFlatLayoutOfJavaContent(commonViewer);
 
 			commonViewer.setInput(getSite().getPage().getInput());
 			hookContextMenu();
 			commonViewer.expandAll();
 		} finally {
 			commonViewer.getControl().setRedraw(true);
-		}
-	}
-
-	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
-		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
-				"org.eclipse.jdt.java.ui.javaContent"); //$NON-NLS-1$
-		if (javaContent != null) {
-			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
-			// TODO: find a sane way of doing this, perhaps via AbstractContextUiBridge, should be:
-			// if (javaContent.getContentProvider() != null) {
-			// JavaNavigatorContentProvider java =
-			// (JavaNavigatorContentProvider)javaContent.getContentProvider();
-			// java.setIsFlatLayout(true);
-			// }
-			try {
-				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
-				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class }); //$NON-NLS-1$
-				method.invoke(treeContentProvider, new Object[] { true });
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$
-			}
 		}
 	}
 

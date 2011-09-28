@@ -15,7 +15,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ColorMap;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 
@@ -71,7 +70,9 @@ public final class ContextUi {
 	 * 
 	 * @since 3.1
 	 * @see AbstractTaskEditorPageFactory
+	 * @deprecated
 	 */
+	@Deprecated
 	public static String ID_CONTEXT_PAGE_FACTORY = "org.eclipse.mylyn.context.ui.editor.context"; //$NON-NLS-1$
 
 }

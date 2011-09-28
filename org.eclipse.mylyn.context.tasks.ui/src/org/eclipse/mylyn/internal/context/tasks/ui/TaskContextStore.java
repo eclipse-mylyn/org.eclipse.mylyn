@@ -15,14 +15,17 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -36,13 +39,18 @@ import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 public class TaskContextStore extends AbstractTaskContextStore {
 
 	@Override
-	public void cloneContext(ITask oldTask, ITask newTask) {
+	public IAdaptable cloneContext(ITask sourceTask, ITask targetTask) {
 		ContextCorePlugin.getContextStore().saveActiveContext();
-		ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(), newTask.getHandleIdentifier());
+		final IInteractionContext result = ContextCore.getContextStore().cloneContext(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
+
+		// migrate editor memento
+		ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
 
 		// migrate task activity
-		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(oldTask.getHandleIdentifier(),
-				newTask.getHandleIdentifier());
+		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
 		try {
 			operation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException e) {
@@ -51,11 +59,19 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		} catch (InterruptedException e) {
 			// ignore
 		}
+		return new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (adapter == IInteractionContext.class) {
+					return result;
+				}
+				return null;
+			}
+		};
 	}
 
 	@Override
-	public void deleteContext(ITask oldTask) {
-		ContextCorePlugin.getContextManager().deleteContext(oldTask.getHandleIdentifier());
+	public void deleteContext(ITask task) {
+		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
 	}
 
 	@Override
@@ -138,6 +154,18 @@ public class TaskContextStore extends AbstractTaskContextStore {
 				}
 			}
 			newMetaContext.parseEvent(event);
+		}
+	}
+
+	@Override
+	public void mergeContext(ITask sourceTask, ITask targetTask) {
+		ContextCorePlugin.getContextStore().merge(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
+		boolean shouldCopyEditorMemento = !ContextUiPlugin.getEditorManager().hasEditorMemento(
+				targetTask.getHandleIdentifier());
+		if (shouldCopyEditorMemento) {
+			// copy editor memento
+			ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
+					targetTask.getHandleIdentifier());
 		}
 	}
 
