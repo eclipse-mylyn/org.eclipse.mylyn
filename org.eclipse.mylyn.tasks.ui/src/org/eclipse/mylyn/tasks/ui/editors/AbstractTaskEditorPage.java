@@ -36,6 +36,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -63,6 +64,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -1031,6 +1033,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 							getEditor().openWithBrowserAction.setMenuCreator(new MenuCreator() {
 								@Override
 								protected void initialize(MenuManager menuManager) {
+									OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
+									openWithBrowserAction.selectionChanged(new StructuredSelection(task));
+									menuManager.add(openWithBrowserAction);
+									menuManager.add(new Separator());
 									menuManager.add(historyAction);
 								};
 							});
