@@ -59,14 +59,5 @@
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 </location>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
-<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.6.12"/>
-<repository location="http://subclipse.tigris.org/update_1.6.x"/>
-</location>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
-</location>
 </locations>
 </target>
