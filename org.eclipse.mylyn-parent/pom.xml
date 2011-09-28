@@ -15,7 +15,7 @@
 
   <properties>
     <mylyn-version>3.7.0-SNAPSHOT</mylyn-version>
-    <tycho-version>0.13.0-SNAPSHOT</tycho-version>
+    <tycho-version>0.13.0</tycho-version>
 
     <mylyn-credentials>${user.home}/.mylyn/credentials.properties</mylyn-credentials>
 	<mylyn-test-append></mylyn-test-append>
