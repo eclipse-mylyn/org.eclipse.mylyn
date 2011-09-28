@@ -78,6 +78,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String AUTO_EXPAND_TASK_LIST = "org.eclipse.mylyn.tasks.ui.auto.expand"; //$NON-NLS-1$
 
+	public static final String TASK_LIST_FOCUSED = "org.eclipse.mylyn.tasks.ui.task.list.focused"; //$NON-NLS-1$
+
 	/**
 	 * Local subtasks are now enabled by default.
 	 * 

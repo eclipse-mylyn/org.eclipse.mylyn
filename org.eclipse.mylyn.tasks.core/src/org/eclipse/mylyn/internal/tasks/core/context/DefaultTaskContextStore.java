@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -34,8 +35,8 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	private File contextDirectory;
 
 	@Override
-	public void cloneContext(ITask sourceTask, ITask destinationTask) {
-		// ignore
+	public IAdaptable cloneContext(ITask sourceTask, ITask destinationTask) {
+		return null;
 	}
 
 	@Override
@@ -88,6 +89,11 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	@Override
 	public synchronized void setContextDirectory(File directory) {
 		this.contextDirectory = directory;
+	}
+
+	@Override
+	public void mergeContext(ITask sourceTask, ITask targetTask) {
+		// ignore		
 	}
 
 }
