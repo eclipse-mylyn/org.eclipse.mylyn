@@ -19,6 +19,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -37,9 +38,9 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected Image getImageForObject(Object object) {
 		if (object instanceof IFile) {
-			return ContextUiImages.getImage(ContextUiImages.FILE_GENERIC);
+			return CommonImages.getImage(ContextUiImages.FILE_GENERIC);
 		} else if (object instanceof IContainer) {
-			return ContextUiImages.getImage(ContextUiImages.FOLDER_GENERIC);
+			return CommonImages.getImage(ContextUiImages.FOLDER_GENERIC);
 		}
 		return null;
 	}

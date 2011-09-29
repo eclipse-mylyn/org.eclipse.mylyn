@@ -25,8 +25,6 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 
 	private static IdeUiBridgePlugin INSTANCE;
 
-	// FIXME 3.5 remove unused field
-	@Deprecated
 	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif"); //$NON-NLS-1$
 
 	public static class IdeUiBridgeStartup implements IContextUiStartup {
