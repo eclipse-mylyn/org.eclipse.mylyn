@@ -99,4 +99,19 @@ public class RequestExceptionTest {
 		assertEquals("400: Error with 'priority' field in Gist resource",
 				formatted);
 	}
+
+	/**
+	 * Formatted error message for custom error code that contains message
+	 */
+	@Test
+	public void customCode() {
+		RequestError error = GsonUtils
+				.fromJson(
+						"{\"errors\":[{\"code\":\"custom\", \"message\":\"Integer instead of String\"}]}",
+						RequestError.class);
+		RequestException e = new RequestException(error, 400);
+		String formatted = e.formatErrors();
+		assertNotNull(formatted);
+		assertEquals("400: Integer instead of String", formatted);
+	}
 }

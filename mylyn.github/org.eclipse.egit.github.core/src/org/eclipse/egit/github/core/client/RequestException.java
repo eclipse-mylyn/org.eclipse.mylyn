@@ -103,6 +103,13 @@ public class RequestException extends IOException {
 			return MessageFormat.format(FIELD_EXISTS, error.getResource(),
 					field);
 
+		// Use field error message as is if custom code
+		if (FieldError.CODE_CUSTOM.equals(code)) {
+			String message = error.getMessage();
+			if (message != null && message.length() > 0)
+				return message;
+		}
+
 		return MessageFormat.format(FIELD_ERROR, field, error.getResource());
 	}
 
