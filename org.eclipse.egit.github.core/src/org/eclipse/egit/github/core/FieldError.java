@@ -40,6 +40,11 @@ public class FieldError implements Serializable {
 	 */
 	public static final String CODE_ALREADY_EXISTS = "already_exists"; //$NON-NLS-1$
 
+	/**
+	 * CODE_CUSTOM
+	 */
+	public static final String CODE_CUSTOM = "custom"; //$NON-NLS-1$
+
 	private String code;
 
 	private String field;
@@ -88,6 +93,7 @@ public class FieldError implements Serializable {
 	public String getMessage() {
 		return message;
 	}
+
 	/**
 	 * @param message
 	 * @return this field error
