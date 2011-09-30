@@ -32,6 +32,8 @@ import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -46,6 +48,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -105,6 +108,32 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	}
 
+	private class AttachmentTableFilter extends ViewerFilter {
+
+		private boolean filterDeprecatedEnabled;
+
+		public boolean isFilterDeprecatedEnabled() {
+			return filterDeprecatedEnabled;
+		}
+
+		public void setFilterDeprecatedEnabled(boolean filterDeprecatedEnabled) {
+			this.filterDeprecatedEnabled = filterDeprecatedEnabled;
+		}
+
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (filterDeprecatedEnabled) {
+				if (element instanceof ITaskAttachment) {
+					return !((ITaskAttachment) element).isDeprecated();
+				}
+			}
+			return true;
+		}
+
+	}
+
+	private static final String PREF_FILTER_DEPRECATED = "org.eclipse.mylyn.tasks.ui.editor.attachments.filter.deprecated"; //$NON-NLS-1$
+
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
 
 	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name,
@@ -114,7 +143,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100, 0 };
 
-	private List<TaskAttribute> attachments;
+	private List<TaskAttribute> attachmentAttributes;
 
 	private boolean hasIncoming;
 
@@ -123,6 +152,16 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private Composite attachmentsComposite;
 
 	private Table attachmentsTable;
+
+	private AttachmentTableFilter tableFilter;
+
+	private TableViewer attachmentsViewer;
+
+	private List<ITaskAttachment> attachmentList;
+
+	private Section section;
+
+	private int nonDeprecatedCount;
 
 	public TaskEditorAttachmentPart() {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
@@ -153,20 +192,13 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		// size column
 		attachmentsTable.getColumn(2).setAlignment(SWT.RIGHT);
 
-		TableViewer attachmentsViewer = new TableViewer(attachmentsTable);
+		attachmentsViewer = new TableViewer(attachmentsTable);
 		attachmentsViewer.setUseHashlookup(true);
 		attachmentsViewer.setColumnProperties(attachmentsColumns);
 		ColumnViewerToolTipSupport.enableFor(attachmentsViewer, ToolTip.NO_RECREATE);
 
 		attachmentsViewer.setSorter(new AttachmentTableSorter());
 
-		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.size());
-		for (TaskAttribute attribute : attachments) {
-			TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
-					attribute);
-			getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
-			attachmentList.add(taskAttachment);
-		}
 		attachmentsViewer.setContentProvider(new ArrayContentProvider());
 		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider(getModel(),
 				getTaskEditorPage().getAttributeEditorToolkit()));
@@ -188,6 +220,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, true);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
+
+		attachmentsViewer.addFilter(tableFilter);
 
 		new TableViewerSupport(attachmentsViewer, getStateFile());
 	}
@@ -229,8 +263,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, final FormToolkit toolkit) {
 		initialize();
 
-		final Section section = createSection(parent, toolkit, hasIncoming);
-		section.setText(getPartName() + " (" + attachments.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		section = createSection(parent, toolkit, hasIncoming);
+		section.setText(getPartName() + " (" + attachmentAttributes.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (hasIncoming) {
 			expandSection(toolkit, section);
 		} else {
@@ -254,7 +288,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		getTaskEditorPage().registerDefaultDropListener(section);
 
-		if (attachments.size() > 0) {
+		if (attachmentAttributes.size() > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
 		} else {
 			Label label = toolkit.createLabel(attachmentsComposite, Messages.TaskEditorAttachmentPart_No_attachments);
@@ -276,18 +310,47 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		attachments = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
+		attachmentAttributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
 				TaskAttribute.TYPE_ATTACHMENT);
-		for (TaskAttribute attachmentAttribute : attachments) {
-			if (getModel().hasIncomingChanges(attachmentAttribute)) {
+		attachmentList = new ArrayList<ITaskAttachment>(attachmentAttributes.size());
+		for (TaskAttribute attribute : attachmentAttributes) {
+			if (getModel().hasIncomingChanges(attribute)) {
 				hasIncoming = true;
-				break;
+			}
+			TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
+					attribute);
+			getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
+			attachmentList.add(taskAttachment);
+			if (!taskAttachment.isDeprecated()) {
+				nonDeprecatedCount++;
 			}
 		}
+
+		tableFilter = new AttachmentTableFilter();
 	}
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
+		Action filterDeprecatedAttachmentsAction = new Action() {
+			@Override
+			public void run() {
+				TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_FILTER_DEPRECATED, isChecked());
+				filterDeprecated(isChecked());
+			}
+		};
+		filterDeprecatedAttachmentsAction.setImageDescriptor(CommonImages.FILTER_COMPLETE);
+		filterDeprecatedAttachmentsAction.setToolTipText("Hide Deprecated Attachments");
+		if (nonDeprecatedCount > 0 && nonDeprecatedCount < attachmentAttributes.size()) {
+			filterDeprecatedAttachmentsAction.setChecked(TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(PREF_FILTER_DEPRECATED));
+			filterDeprecated(filterDeprecatedAttachmentsAction.isChecked());
+		} else {
+			// do not allow filtering if it would cause the table to be empty or no change
+			filterDeprecatedAttachmentsAction.setEnabled(false);
+		}
+		toolBarManager.add(filterDeprecatedAttachmentsAction);
+
 		Action attachFileAction = new Action() {
 			@Override
 			public void run() {
@@ -297,6 +360,15 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachFileAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach_);
 		attachFileAction.setImageDescriptor(CommonImages.FILE_PLAIN_SMALL);
 		toolBarManager.add(attachFileAction);
+	}
+
+	private void updateSectionTitle() {
+		if (tableFilter.isFilterDeprecatedEnabled()) {
+			section.setText(NLS.bind("{0} ({1} of {2})", new Object[] { getPartName(), nonDeprecatedCount,
+					attachmentAttributes.size() }));
+		} else {
+			section.setText(NLS.bind("{0} ({1})", getPartName(), attachmentAttributes.size()));
+		}
 	}
 
 	protected void openAttachments(OpenEvent event) {
@@ -327,8 +399,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	public boolean setFormInput(Object input) {
 		if (input instanceof String) {
 			String text = (String) input;
-			if (attachments != null) {
-				for (TaskAttribute attachmentAttribute : attachments) {
+			if (attachmentAttributes != null) {
+				for (TaskAttribute attachmentAttribute : attachmentAttributes) {
 					if (text.equals(attachmentAttribute.getId())) {
 						CommonFormUtil.setExpanded((ExpandableComposite) getControl(), true);
 						return selectReveal(attachmentAttribute);
@@ -361,6 +433,15 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			index++;
 		}
 		return false;
+	}
+
+	void filterDeprecated(boolean filter) {
+		tableFilter.setFilterDeprecatedEnabled(filter);
+		if (attachmentsViewer != null) {
+			attachmentsViewer.refresh();
+			getTaskEditorPage().reflow();
+		}
+		updateSectionTitle();
 	}
 
 }
