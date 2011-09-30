@@ -104,6 +104,14 @@ public class AdaptiveRefreshPolicy {
 	}
 
 	/**
+	 * the filter has changed in some way (not the text)
+	 */
+	public void filterChanged() {
+		refreshJob.cancel();
+		refreshJob.schedule(refreshDelay / 2);
+	}
+
+	/**
 	 * for testing purposes only
 	 */
 	public void internalForceRefresh() {
