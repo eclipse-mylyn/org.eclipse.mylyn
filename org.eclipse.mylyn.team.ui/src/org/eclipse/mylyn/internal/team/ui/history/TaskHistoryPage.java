@@ -177,32 +177,32 @@ public class TaskHistoryPage extends HistoryPage {
 		TreeViewerColumn authorViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		authorViewerColumn.setLabelProvider(new AuthorLabelProvider());
 		TreeColumn authorColumn = authorViewerColumn.getColumn();
-		authorColumn.setText("Author");
+		authorColumn.setText(Messages.TaskHistoryPage_Author_Column_Label);
 		authorColumn.setWidth(120);
 		authorColumn.setData(AbstractColumnViewerSupport.KEY_COLUMN_CAN_HIDE, false);
 
 		TreeViewerColumn timeViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		timeViewerColumn.setLabelProvider(new TimeLabelProvider());
 		TreeColumn timeColumn = timeViewerColumn.getColumn();
-		timeColumn.setText("Time");
+		timeColumn.setText(Messages.TaskHistoryPage_Time_Column_Label);
 		timeColumn.setWidth(140);
 
 		TreeViewerColumn fieldViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		fieldViewerColumn.setLabelProvider(new FieldLabelProvider());
 		TreeColumn fieldColumn = fieldViewerColumn.getColumn();
-		fieldColumn.setText("Field");
+		fieldColumn.setText(Messages.TaskHistoryPage_Field_Column_Label);
 		fieldColumn.setWidth(120);
 
 		TreeViewerColumn removedViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		removedViewerColumn.setLabelProvider(new RemovedLabelProvider());
 		TreeColumn remmovedColumn = removedViewerColumn.getColumn();
-		remmovedColumn.setText("Removed");
+		remmovedColumn.setText(Messages.TaskHistoryPage_Removed_Column_Label);
 		remmovedColumn.setWidth(120);
 
 		TreeViewerColumn addedViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		addedViewerColumn.setLabelProvider(new AddedLabelProvider());
 		TreeColumn addedColumn = addedViewerColumn.getColumn();
-		addedColumn.setText("Added");
+		addedColumn.setText(Messages.TaskHistoryPage_Added_Column_Label);
 		addedColumn.setWidth(120);
 
 		contentProvider = new TaskHistoryContentProvider();
@@ -218,9 +218,9 @@ public class TaskHistoryPage extends HistoryPage {
 					CompareConfiguration configuration = new CompareConfiguration();
 					configuration.setProperty(CompareConfiguration.IGNORE_WHITESPACE, Boolean.valueOf(true));
 					configuration.setLeftEditable(false);
-					configuration.setLeftLabel("Old Value");
+					configuration.setLeftLabel(Messages.TaskHistoryPage_Old_Value_Label);
 					configuration.setRightEditable(false);
-					configuration.setRightLabel("New Value");
+					configuration.setRightLabel(Messages.TaskHistoryPage_New_Value_Label);
 					CompareEditorInput editorInput = new CompareEditorInput(configuration) {
 						@Override
 						protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
@@ -261,7 +261,7 @@ public class TaskHistoryPage extends HistoryPage {
 	}
 
 	public String getDescription() {
-		return NLS.bind("Task history for {0}", getName());
+		return NLS.bind(Messages.TaskHistoryPage_Task_history_for_X_Desscription_Label, getName());
 	}
 
 	public String getName() {

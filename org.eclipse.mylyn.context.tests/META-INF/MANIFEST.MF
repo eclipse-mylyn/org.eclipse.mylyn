@@ -13,6 +13,7 @@ Require-Bundle: org.junit,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.context.sdk.util,
  org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.monitor.ui

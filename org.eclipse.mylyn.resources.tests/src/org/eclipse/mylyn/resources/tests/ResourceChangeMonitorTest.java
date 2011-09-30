@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
@@ -257,7 +258,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isPredicted());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testDerrivedFileChanged() throws CoreException {
+		// TODO e3.6 replace with setDerived(true, null)
 		fileInFolder.setDerived(true);
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
@@ -270,7 +273,9 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testDerrivedFolderChanged() throws CoreException {
+		// TODO e3.6 replace with setDerived(true, null)
 		folder.setDerived(true);
 		fileInFolder.setDerived(false);
 

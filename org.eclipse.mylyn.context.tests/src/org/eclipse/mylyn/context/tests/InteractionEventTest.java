@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

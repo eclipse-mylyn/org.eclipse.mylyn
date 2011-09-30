@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**

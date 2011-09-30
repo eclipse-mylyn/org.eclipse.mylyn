@@ -35,6 +35,10 @@ import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
+/**
+ * @deprecated user {@link org.eclipse.mylyn.context.sdk.util.ContextTestUtil} instead
+ */
+@Deprecated
 public class ContextTestUtil {
 
 	private static boolean contextUiLazyStarted;

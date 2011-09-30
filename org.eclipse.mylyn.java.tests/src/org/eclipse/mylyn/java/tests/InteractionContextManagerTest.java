@@ -341,6 +341,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		project.build();
 		IJavaElement parent = m1.getParent();
+		@SuppressWarnings("unused")
 		int level = 1;
 		do {
 			level++;
@@ -366,6 +367,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		// make all the parents interest propated to have negative interest
 		IJavaElement parent = m1.getParent();
+		@SuppressWarnings("unused")
 		int level = 1;
 		do {
 			level++;

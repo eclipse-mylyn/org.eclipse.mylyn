@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;

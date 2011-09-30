@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -305,9 +304,10 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	/**
 	 * Ignores decay.
 	 */
-	private boolean shouldRemove(IInteractionElement element) {
-		// TODO: generalize this logic?
-		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < ContextCore.getCommonContextScaling()
-				.getInteresting();
-	}
+//	private boolean shouldRemove(IInteractionElement element) {
+//		// TODO: generalize this logic?
+//		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < ContextCore.getCommonContextScaling()
+//				.getInteresting();
+//	}
+
 }

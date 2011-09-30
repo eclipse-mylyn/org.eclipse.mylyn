@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.internal.resources.ui.ResourceModifiedDateExclusionStrategy;
 
 /**

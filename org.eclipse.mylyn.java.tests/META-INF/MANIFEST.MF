@@ -31,7 +31,6 @@ Require-Bundle: org.junit,
  org.eclipse.mylyn.monitor.ui,
  org.eclipse.mylyn.pde.ui,
  org.eclipse.mylyn.resources.ui,
- org.eclipse.mylyn.resources.tests,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.ui
 Export-Package: org.eclipse.mylyn.java.tests;x-internal:=true,

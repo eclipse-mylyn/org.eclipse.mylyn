@@ -29,8 +29,6 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest} instead
  */
 @Deprecated
-// TODO e3.5
-@SuppressWarnings("deprecation")
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
