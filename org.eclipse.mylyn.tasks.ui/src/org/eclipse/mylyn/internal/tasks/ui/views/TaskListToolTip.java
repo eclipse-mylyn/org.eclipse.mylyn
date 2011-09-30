@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Kevin Barnes, IBM Corporation - fix for bug 277974
+ *     Robert Munteanu - fix for bug 350771
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -300,7 +301,7 @@ public class TaskListToolTip extends GradientToolTip {
 						TasksUiPlugin.getTaskDataManager(), TasksUiPlugin.getDefault().getSynchronizationManger());
 				TaskDataDiff diff = notifier.getDiff(task);
 				if (diff != null && diff.hasChanged()) {
-					text = TaskDiffUtil.toString(diff, MAX_TEXT_WIDTH, false);
+					text = TaskDiffUtil.toString(diff, MAX_TEXT_WIDTH, true);
 				}
 				if (text != null && text.length() > 0) {
 					return text;
