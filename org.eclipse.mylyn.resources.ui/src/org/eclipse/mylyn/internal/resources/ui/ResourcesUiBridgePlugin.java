@@ -71,6 +71,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	};
 
+	private boolean started;
+
 	public ResourcesUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -102,6 +104,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 				IResourceChangeEvent.POST_CHANGE);
 
 		interestEditorTracker.install(PlatformUI.getWorkbench());
+
+		started = true;
 	}
 
 	protected void lazyStop() {
@@ -116,6 +120,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		if (interestEditorTracker != null) {
 			interestEditorTracker.dispose(PlatformUI.getWorkbench());
 		}
+
+		started = false;
 	}
 
 	/**
@@ -187,6 +193,10 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	private void updateResourceMonitorEnablement() {
 		resourceChangeMonitor.setEnabled(getPreferenceStore().getBoolean(
 				ResourcesUiPreferenceInitializer.PREF_RESOURCE_MONITOR_ENABLED));
+	}
+
+	public boolean isStarted() {
+		return started;
 	}
 
 }

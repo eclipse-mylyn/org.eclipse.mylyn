@@ -66,6 +66,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		String bridges = ContextCorePlugin.getDefault().getStructureBridges().toString();
 		assertTrue("Expected JavaStructureBridge not available: " + bridges,
 				bridges.indexOf(JavaStructureBridge.class.getCanonicalName()) != -1);
+		assertTrue("Expected initialized ResourcesUiBridge", ResourcesUiBridgePlugin.getDefault().isStarted());
 
 		project = new TestJavaProject(this.getClass().getSimpleName());
 		nonJavaProject = new TestProject(this.getClass().getSimpleName() + "nonJava");

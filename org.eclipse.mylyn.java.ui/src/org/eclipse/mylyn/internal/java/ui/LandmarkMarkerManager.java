@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -47,7 +47,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; //$NON-NLS-1$
 
-	private final Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
+	private final Map<IInteractionElement, Long> markerMap = new ConcurrentHashMap<IInteractionElement, Long>();
 
 	private final LandmarkUpdateJob updateJob = new LandmarkUpdateJob(
 			Messages.LandmarkMarkerManager_Updating_Landmark_Markers);
@@ -93,6 +93,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private void modelUpdated() {
 		try {
+			// remove all known landmark markers
 			LinkedHashSet<LandmarkUpdateOperation> runnables = new LinkedHashSet<LandmarkUpdateOperation>();
 			for (IInteractionElement node : markerMap.keySet()) {
 				LandmarkUpdateOperation runnable = createRemoveLandmarkMarkerOperation(node);
@@ -101,6 +102,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 				}
 			}
 			markerMap.clear();
+			// add any nodes that are landmarks
 			for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
 				LandmarkUpdateOperation runnable = createAddLandmarkMarkerOperation(node);
 				if (runnable != null) {
@@ -134,7 +136,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark"); //$NON-NLS-1$
+									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark");
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									markerMap.put(node, marker.getId());
 								}

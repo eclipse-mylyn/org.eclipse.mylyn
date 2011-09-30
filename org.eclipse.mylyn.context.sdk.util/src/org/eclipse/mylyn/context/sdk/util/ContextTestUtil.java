@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.context.sdk.util;
 
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 
 /**
@@ -33,6 +34,9 @@ public class ContextTestUtil {
 
 		// make sure monitor UI is started and logs the start interaction event 
 		MonitorUiPlugin.getDefault();
+
+		// ensure activation of context UI
+		ContextUiPlugin.getDefault();
 
 		ContextCore.getContextManager().activateContext("startup");
 		ContextCore.getContextManager().deactivateContext("startup");
