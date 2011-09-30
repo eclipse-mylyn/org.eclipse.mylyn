@@ -23,8 +23,6 @@ public class ContextUiImages {
 
 	private static final String T_ELCL = "elcl16"; //$NON-NLS-1$
 
-	private static final String T_VIEW = "eview16"; //$NON-NLS-1$
-
 	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif"); //$NON-NLS-1$
@@ -33,7 +31,7 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_FOCUS = create(T_VIEW, "focus.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor CONTEXT_FOCUS = create(T_ELCL, "focus.gif"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		return create(prefix, name, baseURL);
