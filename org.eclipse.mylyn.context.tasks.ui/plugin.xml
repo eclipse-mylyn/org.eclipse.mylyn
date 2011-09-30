@@ -42,18 +42,6 @@
       </factory>
    </extension>
 
-    <extension 
-         point="org.eclipse.mylyn.context.core.bridges">
-      <structureBridge 
-      		class="org.eclipse.mylyn.internal.context.tasks.ui.bridge.TaskStructureBridge"/> 
-   </extension>
-   <extension 
-         point="org.eclipse.mylyn.context.ui.bridges">
-      <uiBridge
-            class="org.eclipse.mylyn.internal.context.tasks.ui.bridge.TaskUiBridge"
-            contentType="meta/task"/>
-   </extension>   
- 
  	<extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       	<pageFactory

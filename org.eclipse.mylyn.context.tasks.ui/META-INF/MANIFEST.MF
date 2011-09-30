@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)"
 Bundle-Vendor: %Bundle-Vendor
 Export-Package: org.eclipse.mylyn.internal.context.tasks.ui;x-internal:=true,
- org.eclipse.mylyn.internal.context.tasks.ui.bridge;x-internal:=true,
  org.eclipse.mylyn.internal.context.tasks.ui.editors;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
