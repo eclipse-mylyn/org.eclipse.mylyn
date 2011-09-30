@@ -58,21 +58,23 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+
 		ContextTestUtil.triggerContextUiLazyStart();
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
+		assertNotNull(ResourcesUiBridgePlugin.getDefault());
+		String bridges = ContextCorePlugin.getDefault().getStructureBridges().toString();
+		assertTrue("Expected JavaStructureBridge not available: " + bridges,
+				bridges.indexOf(JavaStructureBridge.class.getCanonicalName()) != -1);
+
 		project = new TestJavaProject(this.getClass().getSimpleName());
 		nonJavaProject = new TestProject(this.getClass().getSimpleName() + "nonJava");
 		p1 = project.createPackage("p1");
 		type1 = project.createType(p1, "Type1.java", "public class Type1 { }");
+
 		context = new InteractionContext(contextId, scaling);
 		context.reset();
 		manager.internalActivateContext(context);
-		assertNotNull(JavaUiBridgePlugin.getDefault());
-		assertTrue(ContextCorePlugin.getDefault()
-				.getStructureBridges()
-				.toString()
-				.indexOf(JavaStructureBridge.class.getCanonicalName()) != -1);
 
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);

@@ -30,7 +30,7 @@ public class AllJavaTests {
 	public static Test suite() {
 		ContextTestUtil.triggerContextUiLazyStart();
 
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
+		TestSuite suite = new TestSuite(AllJavaTests.class.getName());
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
