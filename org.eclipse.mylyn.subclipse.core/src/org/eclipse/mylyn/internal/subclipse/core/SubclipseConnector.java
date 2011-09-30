@@ -82,6 +82,10 @@ public class SubclipseConnector extends ScmConnector {
 		SubclipseRepository repo = null;
 		try {
 			svnResource = SVNWorkspaceRoot.getBaseResourceFor(resource);
+			if (svnResource == null) {
+				//not in version control
+				return null;
+			}
 			repo = (SubclipseRepository) getRepository(resource, null);
 		} catch (SVNException e) {
 			// TODO: implement a plug-in logger besides the one in the work space
