@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Maarten Meijer - improvements
+ *     Robert Munteanu - fix for bug 359539
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -91,7 +92,7 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		}
 		if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
-			if (files.length > 0) {
+			if (files != null && files.length > 0) {
 				File file = new File(files[0]);
 				NewAttachmentWizardDialog dialog = EditorUtil.openNewAttachmentWizard(page, null,
 						new FileTaskAttachmentSource(file));
