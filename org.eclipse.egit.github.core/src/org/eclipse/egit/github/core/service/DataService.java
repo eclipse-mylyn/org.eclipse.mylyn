@@ -278,8 +278,8 @@ public class DataService extends GitHubService {
 		uri.append(SEGMENT_GIT);
 		uri.append(SEGMENT_REFS);
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("ref", object.getSha()); //$NON-NLS-1$
-		params.put("sha", reference.getRef()); //$NON-NLS-1$
+		params.put("sha", object.getSha()); //$NON-NLS-1$
+		params.put("ref", reference.getRef()); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Reference.class);
 	}
 
