@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -1061,6 +1062,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			// Until we found the reason we disable this test for the 4.1 bugzilla on mylyn.eclipse.org
 			return;
 		}
+		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		List<String> priorities = repositoryConfiguration.getPriorities();
+		String priority1 = priorities.get(0);
+		String priority2 = priorities.get(1);
+
 		assertNotNull(data);
 		ITask task4 = generateLocalTaskAndDownload(data.getTaskId());
 		assertNotNull(task4);
@@ -1108,20 +1114,20 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(event.getStaleTasks().contains(task5));
 
 		String priority4 = null;
-		if (task4.getPriority().equals("P1")) {
-			priority4 = "P2";
+		if (task4.getPriority().equals(priority1)) {
+			priority4 = priority2;
 			taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority4);
 		} else {
-			priority4 = "P1";
+			priority4 = priority1;
 			taskData4.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority4);
 		}
 
 		String priority5 = null;
-		if (task5.getPriority().equals("P1")) {
-			priority5 = "P2";
+		if (task5.getPriority().equals(priority1)) {
+			priority5 = priority2;
 			taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority5);
 		} else {
-			priority5 = "P1";
+			priority5 = priority1;
 			taskData5.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority5);
 		}
 		Set<TaskAttribute> changed4 = new HashSet<TaskAttribute>();

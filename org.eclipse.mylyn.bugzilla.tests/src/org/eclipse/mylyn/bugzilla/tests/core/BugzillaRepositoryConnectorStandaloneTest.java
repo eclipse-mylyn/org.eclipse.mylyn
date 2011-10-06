@@ -15,6 +15,7 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -215,7 +217,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 
 		// queries for bugs assigned to tests@mylyn.eclipse.org, updated in the last hour, trivial with P1
-		String priority = "P1";
+		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		List<String> priorities = repositoryConfiguration.getPriorities();
+		String priority = priorities.get(0);
 		String severity = "trivial";
 		String email = "tests%40mylyn.eclipse.org";
 		String bug_status = BugzillaFixture.current()

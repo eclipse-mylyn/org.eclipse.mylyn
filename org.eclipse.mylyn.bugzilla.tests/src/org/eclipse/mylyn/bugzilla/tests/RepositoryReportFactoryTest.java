@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +23,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -74,10 +77,13 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testPostingAndReadingAttributes() throws Exception {
+		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		List<String> priorities = repositoryConfiguration.getPriorities();
+		String priority = priorities.get(priorities.size() > 0 ? priorities.size() - 1 : 0);
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "testPostingAndReading() summary",
 				"testPostingAndReading() description");
 		data.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("ManualC2");
-		data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
+		data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue(priority);
 		data.getRoot().getMappedAttribute(TaskAttribute.SEVERITY).setValue("enhancement");
 		data.getRoot().getMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).setValue("PC");
 		data.getRoot().getMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("Linux");
@@ -89,7 +95,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		data = BugzillaFixture.current().getTask(data.getTaskId(), client);
 		assertNotNull(data);
 		assertEquals("ManualC2", data.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).getValue());
-		assertEquals("P5", data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).getValue());
+		assertEquals(priority, data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).getValue());
 		assertEquals("enhancement", data.getRoot().getMappedAttribute(TaskAttribute.SEVERITY).getValue());
 		assertEquals("PC", data.getRoot().getMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
 		assertEquals("Linux", data.getRoot().getMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());

@@ -70,10 +70,17 @@ public class BugzillaClientTest extends TestCase {
 		} else {
 			assertEquals(5, config.getStatusValues().size());
 		}
-		assertEquals(8, config.getResolutions().size());
-		assertEquals(8, config.getPlatforms().size());
-		assertEquals(36, config.getOSs().size());
-		assertEquals(5, config.getPriorities().size());
+		if (config.getResolutions().contains("LATER")) {
+			assertEquals(8, config.getResolutions().size());
+			assertEquals(8, config.getPlatforms().size());
+			assertEquals(36, config.getOSs().size());
+			assertEquals(5, config.getPriorities().size());
+		} else {
+			assertEquals(6, config.getResolutions().size());
+			assertEquals(4, config.getPlatforms().size());
+			assertEquals(5, config.getOSs().size());
+			assertEquals(6, config.getPriorities().size());
+		}
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(3, config.getProducts().size());
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
