@@ -32,10 +32,11 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 public class AllBugzillaHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(false);
+		String[] empty = { "" };
+		return suite(false, empty);
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(boolean defaultOnly, String[] excludeFixtureArray) {
 		TestSuite suite = new TestSuite(AllBugzillaHeadlessStandaloneTests.class.getName());
 		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
@@ -46,6 +47,17 @@ public class AllBugzillaHeadlessStandaloneTests {
 			addTests(suite, BugzillaFixture.DEFAULT);
 		} else {
 			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+				String fixtureURL = fixture.getRepositoryUrl();
+				boolean excludeFound = false;
+				for (String excludeFixtureURL : excludeFixtureArray) {
+					if (excludeFixtureURL.equals(fixtureURL)) {
+						excludeFound = true;
+						break;
+					}
+				}
+				if (excludeFound) {
+					continue;
+				}
 				addTests(suite, fixture);
 			}
 		}

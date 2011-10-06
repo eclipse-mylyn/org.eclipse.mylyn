@@ -342,7 +342,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //
 	public void testStdWorkflow() throws Exception {
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF) {
+			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF
+					&& BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
 				doStdWorkflow32("3");
 			}
 		} else {

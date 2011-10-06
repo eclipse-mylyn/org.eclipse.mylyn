@@ -56,9 +56,11 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 			Object[] xx0 = bugzillaClient.getUserInfoFromIDs(monitor, new Integer[] { 1, 2 });
 			Object[] xx1 = bugzillaClient.getUserInfoFromNames(monitor, new String[] { "tests@mylyn.eclipse.org" });
 			Object[] xx2 = bugzillaClient.getUserInfoWithMatch(monitor, new String[] { "est" });
-			Object[] xx3 = bugzillaClient.getAllFields(monitor);
-			Object[] xx4 = bugzillaClient.getFieldsWithNames(monitor, new String[] { "qa_contact" });
-			Object[] xx5 = bugzillaClient.getFieldsWithIDs(monitor, new Integer[] { 12, 18 });
+			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_4) {
+				Object[] xx3 = bugzillaClient.getAllFields(monitor);
+				Object[] xx4 = bugzillaClient.getFieldsWithNames(monitor, new String[] { "qa_contact" });
+				Object[] xx5 = bugzillaClient.getFieldsWithIDs(monitor, new Integer[] { 12, 18 });
+			}
 			Object[] xx6 = bugzillaClient.getSelectableProducts(monitor);
 			Object[] xx7 = bugzillaClient.getEnterableProducts(monitor);
 			Object[] xx8 = bugzillaClient.getAccessibleProducts(monitor);

@@ -65,7 +65,9 @@ public class BugzillaClientTest extends TestCase {
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(BugzillaFixture.current().getVersion(), config.getInstallVersion().toString());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
+			assertEquals(10, config.getStatusValues().size());
+		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(7, config.getStatusValues().size());
 		} else {
 			assertEquals(5, config.getStatusValues().size());
@@ -83,7 +85,10 @@ public class BugzillaClientTest extends TestCase {
 		}
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(3, config.getProducts().size());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
+			assertEquals(6, config.getOpenStatusValues().size());
+			assertEquals(1, config.getClosedStatusValues().size());
+		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(4, config.getOpenStatusValues().size());
 			assertEquals(3, config.getClosedStatusValues().size());
 		} else {

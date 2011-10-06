@@ -22,7 +22,6 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
@@ -43,8 +42,11 @@ public class AllBugzillaTests {
 	}
 
 	private static void addTests(boolean defaultOnly, TestSuite suite) {
+		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
+		String[] excludeFixtureArray = excludeFixture.split(",");
+
 		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly, excludeFixtureArray));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		suite.addTestSuite(TaskEditorTest.class);
@@ -58,24 +60,22 @@ public class AllBugzillaTests {
 		// unless otherwise excluded
 		if (defaultOnly) {
 			addTests(suite, BugzillaFixture.DEFAULT);
-			addTests_3_6(suite, BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS);
 		} else {
 			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+				String fixtureURL = fixture.getRepositoryUrl();
+				boolean excludeFound = false;
+				for (String excludeFixtureURL : excludeFixtureArray) {
+					if (excludeFixtureURL.equals(fixtureURL)) {
+						excludeFound = true;
+						break;
+					}
+				}
+				if (excludeFound) {
+					continue;
+				}
 				addTests(suite, fixture);
 			}
-			for (BugzillaFixture fixture : BugzillaFixture.ONLY_3_6_SPECIFIC) {
-				addTests_3_6(suite, fixture);
-			}
 		}
-	}
-
-	protected static void addTests_3_6(TestSuite suite, BugzillaFixture fixture) {
-		fixture.createSuite(suite);
-		fixture.add(BugzillaXmlRpcClientTest.class);
-		if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
-			fixture.add(BugzillaCustomRepositoryTest.class);
-		}
-		fixture.done();
 	}
 
 	private static void addTests(TestSuite suite, BugzillaFixture fixture) {
@@ -84,18 +84,18 @@ public class AllBugzillaTests {
 		fixture.add(BugzillaTaskDataHandlerTest.class);
 		fixture.add(BugzillaSearchTest.class);
 		fixture.add(EncodingTest.class);
+		fixture.add(BugzillaXmlRpcClientTest.class);
+		fixture.add(BugzillaRepositoryConnectorTest.class);
+		fixture.add(BugzillaAttachmentHandlerTest.class);
 
 		// Move any tests here that are resulting in spurious failures
 		// due to recent changes in Bugzilla Server head.
 		if (fixture != BugzillaFixture.BUGS_HEAD) {
 		}
 
-		// Only run these tests on > 3.2 repositories
-		if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
-			if (fixture != BugzillaFixture.BUGS_HEAD) {
-			}
-			fixture.add(BugzillaRepositoryConnectorTest.class);
-			fixture.add(BugzillaAttachmentHandlerTest.class);
+		// Only run this if we have custom status and Workflow
+		if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
+			fixture.add(BugzillaCustomRepositoryTest.class);
 		}
 
 		fixture.done();
