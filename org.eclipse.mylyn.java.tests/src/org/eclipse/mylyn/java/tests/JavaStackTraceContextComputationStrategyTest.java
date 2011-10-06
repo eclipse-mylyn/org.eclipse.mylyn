@@ -53,4 +53,37 @@ public class JavaStackTraceContextComputationStrategyTest extends TestCase {
 				"org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable", "run")));
 	}
 
+	/**
+	 * bug 354184
+	 */
+	public void testStackTracePopulatedWithoutEclipseErrorHeaderElements() throws IOException {
+		File file = CommonTestUtil.getFile(this, "testdata/taskDescription2.txt");
+		List<Element> contextObjects = stackTraceDetector.computeElements(CommonTestUtil.read(file));
+		assertFalse(contextObjects.isEmpty());
+
+		//                don't want
+		//                                Element [fqn=Date, methodName=null]
+		//                                Element [fqn=Message, methodName=null]
+		//                                Element [fqn=Severity, methodName=null]
+		//                                Element [fqn=Product, methodName=null]
+		//                                Element [fqn=Plugin, methodName=null]
+		//      do want
+		//                                Element [fqn=org.eclipse.swt.SWTException, methodName=null]
+		//                                Element [fqn=org.eclipse.swt.SWT, methodName=error]
+		//                                Element [fqn=org.eclipse.swt.SWT, methodName=error]
+		//                                Element [fqn=org.eclipse.swt.SWT, methodName=error]
+		//                                Element [fqn=org.eclipse.swt.graphics.Image, methodName=getBounds]
+
+		//
+
+		assertFalse(contextObjects.contains(new Element("Date", null)));
+		assertFalse(contextObjects.contains(new Element("Message", null)));
+		assertFalse(contextObjects.contains(new Element("Severity", null)));
+		assertFalse(contextObjects.contains(new Element("Product", null)));
+		assertFalse(contextObjects.contains(new Element("Plugin", null)));
+
+		assertTrue(contextObjects.contains(new Element("org.eclipse.swt.SWTException", null)));
+		assertTrue(contextObjects.contains(new Element("org.eclipse.swt.SWT", "error")));
+		assertTrue(contextObjects.contains(new Element("org.eclipse.swt.graphics.Image", "getBounds")));
+	}
 }

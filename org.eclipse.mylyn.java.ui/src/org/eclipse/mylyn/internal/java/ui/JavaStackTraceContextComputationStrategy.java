@@ -46,7 +46,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 
 	private static final String CLASS_PART = "[A-Za-z][a-zA-Z0-9_$]*"; //$NON-NLS-1$
 
-	private static final String FQN_PART = "((" + PACKAGE_PART + "\\.)*" + CLASS_PART + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String FQN_PART = "((" + PACKAGE_PART + "\\.)+" + CLASS_PART + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*((" + "((Caused by:\\s+)|(at\\s+))?" //$NON-NLS-1$//$NON-NLS-2$
 			+ FQN_PART + "((:\\s+\\w.*)|(\\.((\\<(?:cl)?init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))?" //$NON-NLS-1$
