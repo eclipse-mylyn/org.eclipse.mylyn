@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Mylyn Reviews Target" sequenceNumber="76">
+<target name="Mylyn Reviews Target" sequenceNumber="85">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.egit.source.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.egit.mylyn.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.source.feature.group" version="1.0.0.201106090707-r"/>
+<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.egit.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.egit.mylyn.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jgit.source.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.ide.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit3.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.forms.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
-<unit id="org.eclipse.swtbot.feature.group" version="2.0.4.20110304_0338-e5aff47-dev-e36"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.ide.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit3.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -52,8 +52,8 @@
 <repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.wb.swt.feature.feature.group" version="1.0.0.r37x201106081643"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.0.v20110606-0949"/>
+<unit id="org.eclipse.wb.swt.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/indigo/"/>
 </location>
 </locations>
