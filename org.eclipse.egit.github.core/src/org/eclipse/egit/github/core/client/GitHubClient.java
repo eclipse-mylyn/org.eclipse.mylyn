@@ -289,7 +289,8 @@ public class GitHubClient {
 	 */
 	protected <V> V parseJson(HttpResponse response, Type type)
 			throws IOException {
-		InputStreamReader reader = new InputStreamReader(getStream(response));
+		InputStreamReader reader = new InputStreamReader(getStream(response),
+				CHARSET_UTF8);
 		try {
 			return gson.fromJson(reader, type);
 		} catch (JsonParseException jpe) {
