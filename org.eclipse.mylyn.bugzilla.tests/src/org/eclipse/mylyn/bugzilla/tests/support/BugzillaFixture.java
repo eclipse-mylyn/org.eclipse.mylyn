@@ -58,8 +58,6 @@ public class BugzillaFixture extends TestFixture {
 
 	public static final String TEST_BUGZILLA_HEAD_URL = getServerUrl("bugshead");
 
-	public static final String TEST_BUGZILLA_LATEST_URL = TEST_BUGZILLA_36_URL;
-
 	private static final String getServerUrl(String version) {
 		return TestConfiguration.getRepositoryUrl(version);
 	}

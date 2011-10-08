@@ -1091,27 +1091,27 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return history;
 	}
 
-	public static PriorityLevel getTaskPriority(String tracPriority) {
-		if (tracPriority != null) {
-			BugzillaPriorityLevel priority = BugzillaPriorityLevel.fromPriority(tracPriority);
+	public static PriorityLevel getTaskPriority(String bugzillaPriority) {
+		if (bugzillaPriority != null) {
+			BugzillaPriorityLevel priority = BugzillaPriorityLevel.fromPriority(bugzillaPriority);
 			if (priority != null) {
 				return priority.toPriorityLevel();
 			}
 		}
-		return PriorityLevel.getDefault();
+		return PriorityLevel.fromString(bugzillaPriority);
 	}
 
 	public static PriorityLevel getTaskPriority(String priority, List<String> priorities) {
 		if (priority != null && priorities != null && priorities.size() > 0) {
-			int size = priorities.size();
+			int size = priorities.size() - 1;
 			int index = 0;
 			for (String priority2test : priorities) {
-				index++;
 				if (priority.equals(priority2test)) {
 					float relativeValue = (float) index / size;
 					int value = (int) (relativeValue * 5) + 1;
 					return PriorityLevel.fromLevel(value);
 				}
+				index++;
 			}
 		}
 		return getTaskPriority(priority);
