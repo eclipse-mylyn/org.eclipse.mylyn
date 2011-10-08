@@ -43,6 +43,8 @@
   <modules>
     <module>org.eclipse.mylyn.commons-feature</module>
     <module>org.eclipse.mylyn.commons-site</module>
+    <module>org.eclipse.mylyn.commons.activity.tests</module>
+    <module>org.eclipse.mylyn.commons.activity.ui</module>
     <module>org.eclipse.mylyn.commons.core</module>
     <module>org.eclipse.mylyn.commons.http</module>
     <module>org.eclipse.mylyn.commons.identity</module>

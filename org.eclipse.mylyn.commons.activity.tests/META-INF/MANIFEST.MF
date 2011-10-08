@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Commons Activity Monitor Tests
+Bundle-SymbolicName: org.eclipse.mylyn.commons.activity.tests;singleton:=true
+Bundle-Version: 3.7.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.mylyn.commons.activity.ui
+Export-Package: org.eclipse.mylyn.commons.activity.tests;x-internal:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
