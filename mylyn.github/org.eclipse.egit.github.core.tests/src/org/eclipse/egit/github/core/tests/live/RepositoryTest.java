@@ -4,7 +4,7 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryId;
@@ -33,7 +35,7 @@ public class RepositoryTest extends LiveTest {
 
 	/**
 	 * Test fetching a repository
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -57,7 +59,7 @@ public class RepositoryTest extends LiveTest {
 
 	/**
 	 * Test creating a repository
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -79,7 +81,7 @@ public class RepositoryTest extends LiveTest {
 
 	/**
 	 * Test forking a repository
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -92,7 +94,7 @@ public class RepositoryTest extends LiveTest {
 
 	/**
 	 * Test fetching forks of a repository
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -108,4 +110,22 @@ public class RepositoryTest extends LiveTest {
 		}
 	}
 
+	/**
+	 * Get languages used in a repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getLanguages() throws IOException {
+		RepositoryService service = new RepositoryService(client);
+		Map<String, Long> languages = service.getLanguages(new RepositoryId(
+				"defunkt", "resque"));
+		assertNotNull(languages);
+		assertFalse(languages.isEmpty());
+		for (Entry<String, Long> language : languages.entrySet()) {
+			assertNotNull(language.getKey());
+			assertFalse(language.getKey().length() == 0);
+			assertTrue(language.getValue() > 0);
+		}
+	}
 }
