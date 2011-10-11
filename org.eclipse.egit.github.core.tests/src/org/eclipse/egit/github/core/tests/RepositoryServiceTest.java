@@ -241,7 +241,7 @@ public class RepositoryServiceTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getRepositoriesNullUser() throws IOException {
-		service.getRepositories(null);
+		service.getRepositories((String) null);
 	}
 
 	/**
@@ -383,6 +383,34 @@ public class RepositoryServiceTest {
 		service.getTags(repo);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/o/n/tags"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get public repositories for current user
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getPublicRepositories() throws IOException {
+		service.getRepositories(Collections.singletonMap(
+				RepositoryService.FILTER_TYPE, RepositoryService.TYPE_PUBLIC));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/user/repos?type=public"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get public repositories for current user
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getPrivateOrgRepositories() throws IOException {
+		service.getOrgRepositories("org1", Collections.singletonMap(
+				RepositoryService.FILTER_TYPE, RepositoryService.TYPE_PRIVATE));
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/orgs/org1/repos?type=private"));
 		verify(client).get(request);
 	}
 }
