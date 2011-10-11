@@ -359,4 +359,30 @@ public class RepositoryServiceTest {
 		request.setUri("/repos/o/n/languages");
 		verify(client).get(request);
 	}
+
+	/**
+	 * Get branches in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getBranches() throws IOException {
+		service.getBranches(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/branches"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get tags in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getTags() throws IOException {
+		service.getTags(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/tags"));
+		verify(client).get(request);
+	}
 }

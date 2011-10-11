@@ -11,11 +11,13 @@
 package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
@@ -32,7 +34,9 @@ import java.util.Map;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.RepositoryTag;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -527,5 +531,45 @@ public class RepositoryService extends GitHubService {
 		request.setType(new TypeToken<Map<String, Long>>() {
 		}.getType());
 		return (Map<String, Long>) client.get(request).getBody();
+	}
+
+	/**
+	 * Get branches in given repository
+	 *
+	 * @param repository
+	 * @return list of branches
+	 * @throws IOException
+	 */
+	public List<RepositoryBranch> getBranches(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_BRANCHES);
+		PagedRequest<RepositoryBranch> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<RepositoryBranch>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get tags in given repository
+	 *
+	 * @param repository
+	 * @return list of tags
+	 * @throws IOException
+	 */
+	public List<RepositoryTag> getTags(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_TAGS);
+		PagedRequest<RepositoryTag> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<RepositoryTag>>() {
+		}.getType());
+		return getAll(request);
 	}
 }
