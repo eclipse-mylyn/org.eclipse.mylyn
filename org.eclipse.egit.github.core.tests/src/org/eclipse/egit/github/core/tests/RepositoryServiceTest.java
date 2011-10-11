@@ -346,4 +346,17 @@ public class RepositoryServiceTest {
 				.page("/api/v2/json/repos/search/buffers?language=c"));
 		verify(client).get(request);
 	}
+
+	/**
+	 * Get languages in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getLanguages() throws IOException {
+		service.getLanguages(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/o/n/languages");
+		verify(client).get(request);
+	}
 }

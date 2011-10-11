@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
@@ -505,5 +506,26 @@ public class RepositoryService extends GitHubService {
 		if (organization != null)
 			params = Collections.singletonMap("org", organization); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Repository.class);
+	}
+
+	/**
+	 * Get languages used in given repository
+	 *
+	 * @param repository
+	 * @return map of language names mapped to line counts
+	 * @throws IOException
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public Map<String, Long> getLanguages(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_LANGUAGES);
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<Map<String, Long>>() {
+		}.getType());
+		return (Map<String, Long>) client.get(request).getBody();
 	}
 }
