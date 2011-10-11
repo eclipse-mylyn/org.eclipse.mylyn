@@ -87,7 +87,7 @@ public class TeamServiceTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getTeamsNullName() throws IOException {
-		service.getTeams(null);
+		service.getTeams((String) null);
 	}
 
 	/**
@@ -353,5 +353,18 @@ public class TeamServiceTest {
 	public void removeRepository() throws IOException {
 		service.removeRepository(8, repo);
 		verify(client).delete("/teams/8/repos/o/n");
+	}
+
+	/**
+	 * Get teams for repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getRepositoryTeams() throws IOException {
+		service.getTeams(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/teams"));
+		verify(client).get(request);
 	}
 }

@@ -311,4 +311,24 @@ public class TeamService extends GitHubService {
 		uri.append('/').append(repoId);
 		client.delete(uri.toString());
 	}
+
+	/**
+	 * Get teams associated with given repository
+	 *
+	 * @param repository
+	 * @return list of teams
+	 * @throws IOException
+	 */
+	public List<Team> getTeams(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_TEAMS);
+		PagedRequest<Team> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Team>>() {
+		}.getType());
+		return getAll(request);
+	}
 }
