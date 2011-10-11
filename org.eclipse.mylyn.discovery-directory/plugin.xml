@@ -140,7 +140,7 @@
          <overview
                screenshot="images/foglyn-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.foglyn"
-               url="http://www.foglyn.com/?connectordiscovery">
+               url="http://www.foglyn.com/">
          </overview>
       </connectorDescriptor>
 	</extension>
