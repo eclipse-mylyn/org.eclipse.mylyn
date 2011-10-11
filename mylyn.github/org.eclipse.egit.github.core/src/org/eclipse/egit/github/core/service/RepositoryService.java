@@ -73,6 +73,31 @@ public class RepositoryService extends GitHubService {
 	 */
 	public static final String FIELD_PUBLIC = "public"; //$NON-NLS-1$
 
+	/**
+	 * Type filter key
+	 */
+	public static final String FILTER_TYPE = "type"; //$NON-NLS-1$
+
+	/**
+	 * Public repository filter type
+	 */
+	public static final String TYPE_PUBLIC = "public"; //$NON-NLS-1$
+
+	/**
+	 * Private repository filter type
+	 */
+	public static final String TYPE_PRIVATE = "private"; //$NON-NLS-1$
+
+	/**
+	 * Member repository filter type
+	 */
+	public static final String TYPE_MEMBER = "member"; //$NON-NLS-1$
+
+	/**
+	 * All repositories filter type
+	 */
+	public static final String TYPE_ALL = "all"; //$NON-NLS-1$
+
 	private static class RepositoryContainer implements
 			IResourceProvider<SearchRepository> {
 
@@ -110,7 +135,19 @@ public class RepositoryService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Repository> getRepositories() throws IOException {
-		return getAll(pageRepositories());
+		return getRepositories((Map<String, String>) null);
+	}
+
+	/**
+	 * Get repositories for the currently authenticated user
+	 *
+	 * @param filterData
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getRepositories(Map<String, String> filterData)
+			throws IOException {
+		return getAll(pageRepositories(filterData));
 	}
 
 	/**
@@ -145,8 +182,49 @@ public class RepositoryService extends GitHubService {
 	 */
 	public PageIterator<Repository> pageRepositories(int start, int size)
 			throws IOException {
+		return pageRepositories((Map<String, String>) null, start, size);
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @param filterData
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(
+			Map<String, String> filterData) throws IOException {
+		return pageRepositories(filterData, PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @param filterData
+	 * @param size
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(
+			Map<String, String> filterData, int size) throws IOException {
+		return pageRepositories(filterData, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for currently authenticated user
+	 *
+	 * @param filterData
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of repositories
+	 * @throws IOException
+	 */
+	public PageIterator<Repository> pageRepositories(
+			Map<String, String> filterData, int start, int size)
+			throws IOException {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
+		request.setParams(filterData);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return createPageIterator(request);
@@ -223,7 +301,7 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<Repository> getOrgRepositories(String organization)
 			throws IOException {
-		return getAll(pageOrgRepositories(organization));
+		return getOrgRepositories(organization, null);
 	}
 
 	/**
@@ -258,6 +336,58 @@ public class RepositoryService extends GitHubService {
 	 */
 	public PageIterator<Repository> pageOrgRepositories(String organization,
 			int start, int size) {
+		return pageOrgRepositories(organization, null, start, size);
+	}
+
+	/**
+	 * Get organization repositories for the given organization
+	 *
+	 * @param organization
+	 * @param filterData
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getOrgRepositories(String organization,
+			Map<String, String> filterData) throws IOException {
+		return getAll(pageOrgRepositories(organization, filterData));
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @param filterData
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization,
+			Map<String, String> filterData) {
+		return pageOrgRepositories(organization, filterData, PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @param filterData
+	 * @param size
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization,
+			Map<String, String> filterData, int size) {
+		return pageOrgRepositories(organization, filterData, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for the given organization
+	 *
+	 * @param organization
+	 * @param filterData
+	 * @param start
+	 * @param size
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageOrgRepositories(String organization,
+			Map<String, String> filterData, int start, int size) {
 		if (organization == null)
 			throw new IllegalArgumentException("Organization cannot be null"); //$NON-NLS-1$
 		if (organization.length() == 0)
@@ -267,6 +397,7 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(organization);
 		uri.append(SEGMENT_REPOS);
 		PagedRequest<Repository> request = createPagedRequest(start, size);
+		request.setParams(filterData);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
