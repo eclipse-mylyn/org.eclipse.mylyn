@@ -20,17 +20,18 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.OrganizationService;
+import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.TeamService;
 import org.junit.Test;
 
 /**
- * 
+ *
  */
 public class TeamTest extends LiveTest {
 
 	/**
 	 * Test fetching teams in an org
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -61,7 +62,7 @@ public class TeamTest extends LiveTest {
 
 	/**
 	 * Test checking membership in org
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -93,7 +94,7 @@ public class TeamTest extends LiveTest {
 
 	/**
 	 * Test getting team repositories
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -118,5 +119,37 @@ public class TeamTest extends LiveTest {
 			for (Repository repo : repos)
 				assertTrue(teamService.isTeamRepository(team.getId(), repo));
 		}
+	}
+
+	/**
+	 * Get teams for a repository
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void getRepositoryTeams() throws Exception {
+		checkUser();
+
+		OrganizationService orgService = new OrganizationService(client);
+		List<User> orgs = orgService.getOrganizations();
+		assertNotNull(orgs);
+		assertFalse(orgs.isEmpty());
+		User org = orgs.get(0);
+		assertNotNull(org);
+		assertNotNull(org.getLogin());
+		TeamService teamService = new TeamService(client);
+		boolean hasTeams = false;
+		for (Repository repo : new RepositoryService(client)
+				.getOrgRepositories(org.getLogin())) {
+			List<Team> teams = teamService.getTeams(repo);
+			assertNotNull(teams);
+			for (Team team : teams) {
+				hasTeams = true;
+				assertNotNull(team);
+				assertNotNull(team.getName());
+				assertNotNull(team.getUrl());
+			}
+		}
+		assertTrue(hasTeams);
 	}
 }
