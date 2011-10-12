@@ -67,9 +67,9 @@ public class ReviewCompareAnnotationModel {
 
 	private MergeSourceViewer fLeftSourceViewer;
 
-	public ReviewCompareAnnotationModel(IFileItem crucibleFile, ITopic commentToFocus) {
-		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getBase());
-		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, crucibleFile, crucibleFile.getTarget());
+	public ReviewCompareAnnotationModel(IFileItem reviewItem, ITopic commentToFocus) {
+		this.leftAnnotationModel = new ReviewAnnotationModel(null, null, null, reviewItem.getTarget());
+		this.rightAnnotationModel = new ReviewAnnotationModel(null, null, null, reviewItem.getBase());
 		this.commentToFocus = commentToFocus;
 	}
 
@@ -83,7 +83,7 @@ public class ReviewCompareAnnotationModel {
 		 * only create listeners if they are not already existing
 		 */
 		if (!isListenerFor(leftViewerListener, fLeft, leftAnnotationModel)) {
-			leftViewerListener = addTextInputListener(fLeft, leftAnnotationModel, false);
+			leftViewerListener = addTextInputListener(fLeft, leftAnnotationModel);
 		} else {
 			/*
 			 * Using asyncExec here because if the underlying slaveDocument (part of the file that gets displayed when clicking
@@ -105,7 +105,7 @@ public class ReviewCompareAnnotationModel {
 			});
 		}
 		if (!isListenerFor(rightViewerListener, fRight, rightAnnotationModel)) {
-			rightViewerListener = addTextInputListener(fRight, rightAnnotationModel, true);
+			rightViewerListener = addTextInputListener(fRight, rightAnnotationModel);
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
@@ -130,9 +130,8 @@ public class ReviewCompareAnnotationModel {
 	}
 
 	private ReviewCompareInputListener addTextInputListener(final MergeSourceViewer sourceViewer,
-			final ReviewAnnotationModel crucibleAnnotationModel, boolean oldFile) {
-		ReviewCompareInputListener listener = new ReviewCompareInputListener(sourceViewer, crucibleAnnotationModel,
-				oldFile);
+			final ReviewAnnotationModel annotationModel) {
+		ReviewCompareInputListener listener = new ReviewCompareInputListener(sourceViewer, annotationModel);
 		SourceViewer viewer = getSourceViewer(sourceViewer);
 		if (viewer != null) {
 			viewer.addTextInputListener(listener);

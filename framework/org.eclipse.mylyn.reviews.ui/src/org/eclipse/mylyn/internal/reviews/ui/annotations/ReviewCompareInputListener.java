@@ -192,7 +192,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 	private final SourceViewer sourceViewer;
 
-	ReviewCompareInputListener(MergeSourceViewer sourceViewer, ReviewAnnotationModel annotationModel, boolean oldFile) {
+	ReviewCompareInputListener(MergeSourceViewer sourceViewer, ReviewAnnotationModel annotationModel) {
 		this.sourceViewer = ReviewCompareAnnotationModel.getSourceViewer(sourceViewer);
 		this.mergeSourceViewer = sourceViewer;
 		this.annotationModel = annotationModel;

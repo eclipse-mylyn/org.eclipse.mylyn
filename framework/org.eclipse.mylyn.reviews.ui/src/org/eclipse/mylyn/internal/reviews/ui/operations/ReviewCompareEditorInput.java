@@ -74,10 +74,6 @@ public class ReviewCompareEditorInput extends CompareEditorInput {
 
 	}
 
-	private final byte[] content1;
-
-	private final byte[] content2;
-
 	private final ReviewCompareAnnotationModel annotationModel;
 
 	private final IFileItem file;
@@ -85,8 +81,6 @@ public class ReviewCompareEditorInput extends CompareEditorInput {
 	public ReviewCompareEditorInput(IFileItem file, ReviewCompareAnnotationModel annotationModel,
 			CompareConfiguration compareConfiguration) {
 		super(compareConfiguration);
-		this.content1 = getContent(file.getBase());
-		this.content2 = getContent(file.getTarget());
 		this.annotationModel = annotationModel;
 		this.file = file;
 
@@ -101,9 +95,19 @@ public class ReviewCompareEditorInput extends CompareEditorInput {
 
 	@Override
 	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		Differencer d = new Differencer();
-		Object diff = d.findDifferences(false, monitor, null, null, new ByteArrayInput(content1, file.getBase()
-				.getPath()), new ByteArrayInput(content2, file.getTarget().getPath()));
+		byte[] targetContent = getContent(file.getTarget());
+		byte[] baseContent = getContent(file.getBase());
+		String targetPath = file.getTarget().getPath();
+		if (targetPath == null) {
+			targetPath = file.getBase().getPath();
+		}
+		String basePath = file.getBase().getPath();
+		if (basePath == null) {
+			basePath = targetPath;
+		}
+		Differencer differencer = new Differencer();
+		Object diff = differencer.findDifferences(false, monitor, null, null, new ByteArrayInput(targetContent,
+				targetPath), new ByteArrayInput(baseContent, basePath));
 		return diff;
 	}
 

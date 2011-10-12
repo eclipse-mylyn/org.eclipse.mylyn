@@ -35,11 +35,9 @@ import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
-import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
-import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -62,7 +60,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 
 	private IDocument editorDocument;
 
-	private IFileItem reviewItem;
+	private IReviewItem reviewItem;
 
 	private boolean annotated = false;
 
@@ -75,17 +73,14 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		}
 	};
 
-	private final IFileRevision revision;
-
 	private EContentAdapter modelAdapter;
 
 	public ReviewAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
-			IFileItem crucibleFile, IFileRevision revision) {
+			IReviewItem reviewItem) {
 		this.textEditor = editor;
 		this.editorInput = editorInput;
 		this.editorDocument = document;
-		this.reviewItem = crucibleFile;
-		this.revision = revision;
+		this.reviewItem = reviewItem;
 		updateAnnotations(true);
 	}
 
@@ -137,14 +132,8 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		AnnotationModelEvent event = new AnnotationModelEvent(this);
 		clear(event);
 
-		if (revision != null) {
-			for (ITopic comment : revision.getTopics()) {
-				createCommentAnnotation(event, comment);
-			}
-		} else if (reviewItem != null) {
-			for (ITopic comment : reviewItem.getTopics()) {
-				createCommentAnnotation(event, comment);
-			}
+		for (ITopic comment : reviewItem.getTopics()) {
+			createCommentAnnotation(event, comment);
 		}
 
 		fireModelChanged(event);
@@ -260,13 +249,12 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		}
 	}
 
-	public void updateCrucibleFile(IFileItem reviewItem, IReview newReview) {
-		// TODO we could just update the annotations appropriately instead of remove and re-add
+	public void update(IReviewItem reviewItem) {
 		this.reviewItem = reviewItem;
 		updateAnnotations(true);
 	}
 
-	public IFileItem getItem() {
+	public IReviewItem getItem() {
 		return reviewItem;
 	}
 

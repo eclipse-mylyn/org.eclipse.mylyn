@@ -23,10 +23,10 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewUiUtil;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.IReviewCompareSourceViewer;
 import org.eclipse.mylyn.internal.reviews.ui.dialogs.AddCommentDialog;
-import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.ui.IEditorInput;
@@ -39,20 +39,16 @@ import org.eclipse.ui.IEditorPart;
  */
 public class AddLineCommentToFileAction extends AbstractReviewAction {
 
-	private IReviewCompareSourceViewer compareSourceViewer;
+	private final IReviewCompareSourceViewer compareSourceViewer;
 
 	private IEditorInput editorInput;
 
 	private LineRange selectedRange;
 
-	private IFileItem item;
+	private final IReviewItem item;
 
-	public AddLineCommentToFileAction() {
+	public AddLineCommentToFileAction(IReviewCompareSourceViewer compareSourceViewer, IReviewItem item) {
 		super("Add Comment...");
-	}
-
-	public AddLineCommentToFileAction(IReviewCompareSourceViewer compareSourceViewer, IFileItem item) {
-		this();
 		this.compareSourceViewer = compareSourceViewer;
 		this.item = item;
 	}
