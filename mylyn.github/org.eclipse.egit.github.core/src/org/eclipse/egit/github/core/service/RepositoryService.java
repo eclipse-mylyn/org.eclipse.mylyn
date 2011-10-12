@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTRIBUTORS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.egit.github.core.Contributor;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
@@ -700,6 +702,29 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryTag> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryTag>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get contributors to repository
+	 *
+	 * @param repository
+	 * @param includeAnonymous
+	 * @return list of contributors
+	 * @throws IOException
+	 */
+	public List<Contributor> getContributors(IRepositoryIdProvider repository,
+			boolean includeAnonymous) throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_CONTRIBUTORS);
+		PagedRequest<Contributor> request = createPagedRequest();
+		request.setUri(uri);
+		if (includeAnonymous)
+			request.setParams(Collections.singletonMap("anon", "1")); //$NON-NLS-1$ //$NON-NLS-2$
+		request.setType(new TypeToken<List<Contributor>>() {
 		}.getType());
 		return getAll(request);
 	}
