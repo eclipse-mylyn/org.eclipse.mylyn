@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Atlassian - initial API and implementation
+ *     Robert Munteanu - fix for bug 360549
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -26,7 +28,10 @@ import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
+import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.mylyn.reviews.ui.SizeCachingComposite;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
@@ -181,11 +186,14 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 	private Control createReadOnlyText(FormToolkit toolkit, Composite composite, String value) {
 
 		int style = SWT.FLAT | SWT.READ_ONLY | SWT.MULTI | SWT.WRAP;
-		// FIXME
-		TaskRepository repository = TasksUi.getRepositoryManager()
-				.getRepositories("org.eclipse.mylyn.gerrit")
-				.iterator()
-				.next();
+
+		ReviewBehavior activeReview = ReviewUi.getActiveReview();
+		Assert.isNotNull(activeReview, "No active review.");
+
+		ITask task = activeReview.getTask();
+
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
 
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository);
 
