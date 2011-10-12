@@ -45,6 +45,14 @@ public class Messages extends NLS {
 
 	public static String DateUtil_weeks;
 
+	public static String XMLMemento_parserConfigError;
+
+	public static String XMLMemento_ioError;
+
+	public static String XMLMemento_formatError;
+
+	public static String XMLMemento_noElement;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
