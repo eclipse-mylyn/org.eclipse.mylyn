@@ -77,6 +77,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_COMMENTS = "/comments"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_CONTRIBUTORS = "/contributors"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_COMMITS = "/commits"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_CREATE = "/create"; //$NON-NLS-1$

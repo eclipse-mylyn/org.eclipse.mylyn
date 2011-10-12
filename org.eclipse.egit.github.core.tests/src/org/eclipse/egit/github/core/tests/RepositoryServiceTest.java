@@ -413,4 +413,30 @@ public class RepositoryServiceTest {
 		request.setUri(Utils.page("/orgs/org1/repos?type=private"));
 		verify(client).get(request);
 	}
+
+	/**
+	 * Get contributors to repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getContributors() throws IOException {
+		service.getContributors(repo, false);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/contributors"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get contributors including anonymous ones to repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getContributorsWithAnonymous() throws IOException {
+		service.getContributors(repo, true);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/contributors?anon=1"));
+		verify(client).get(request);
+	}
 }
