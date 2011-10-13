@@ -1202,6 +1202,8 @@ public class RepositoryConfiguration implements Serializable {
 	public String getStartStatus() {
 		if (validTransitions == null) {
 			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
+					|| !(getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) || getStatusValues().contains(
+							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
 					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
 					: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
