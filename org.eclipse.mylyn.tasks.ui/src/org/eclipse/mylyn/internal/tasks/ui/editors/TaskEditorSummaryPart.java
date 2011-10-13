@@ -126,10 +126,10 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	private void addSummaryText(Composite composite, final FormToolkit toolkit) {
 		TaskAttribute summaryAttrib = getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		summaryEditor = createAttributeEditor(summaryAttrib);
-		if (summaryAttrib.getMetaData().isReadOnly()) {
-			summaryEditor.setReadOnly(true);
-		}
 		if (summaryEditor != null) {
+			if (summaryAttrib.getMetaData().isReadOnly()) {
+				summaryEditor.setReadOnly(true);
+			}
 			if (summaryEditor instanceof RichTextAttributeEditor) {
 				// create composite to hold rounded border
 				Composite roundedBorder = EditorUtil.createBorder(composite, toolkit, !summaryEditor.isReadOnly());
