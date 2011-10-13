@@ -13,7 +13,7 @@
 
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>mylyn-integration-build</artifactId>
-  <version>3.6.2-SNAPSHOT</version>
+  <version>3.6.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
