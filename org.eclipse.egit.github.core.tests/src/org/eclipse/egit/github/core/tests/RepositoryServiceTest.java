@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -438,5 +439,88 @@ public class RepositoryServiceTest {
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/o/n/contributors?anon=1"));
 		verify(client).get(request);
+	}
+
+	/**
+	 * Get hooks in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getHooks() throws IOException {
+		service.getHooks(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/hooks"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get hook in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getHook() throws IOException {
+		service.getHook(repo, 43);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/o/n/hooks/43");
+		verify(client).get(request);
+	}
+
+	/**
+	 * Create hook in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createHook() throws IOException {
+		RepositoryHook hook = new RepositoryHook();
+		service.createHook(repo, hook);
+		verify(client).post("/repos/o/n/hooks", hook, RepositoryHook.class);
+	}
+
+	/**
+	 * Edit hook in repository with null hook;
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editHookNullHook() throws IOException {
+		service.editHook(repo, null);
+	}
+
+	/**
+	 * Edit hook in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editHook() throws IOException {
+		RepositoryHook hook = new RepositoryHook();
+		hook.setId(5006);
+		service.editHook(repo, hook);
+		verify(client).put("/repos/o/n/hooks/5006", hook, RepositoryHook.class);
+	}
+
+	/**
+	 * Delete hook in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteHook() throws IOException {
+		service.deleteHook(repo, 4949);
+		verify(client).delete("/repos/o/n/hooks/4949");
+	}
+
+	/**
+	 * Run hook in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void runHook() throws IOException {
+		service.testHook(repo, 5609);
+		verify(client).post("/repos/o/n/hooks/5609/test");
 	}
 }

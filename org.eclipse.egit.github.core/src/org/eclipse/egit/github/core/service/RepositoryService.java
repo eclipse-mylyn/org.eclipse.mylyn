@@ -14,11 +14,13 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAG
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTRIBUTORS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HOOKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEST;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
@@ -37,6 +39,7 @@ import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
+import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.RepositoryTag;
 import org.eclipse.egit.github.core.SearchRepository;
@@ -727,5 +730,120 @@ public class RepositoryService extends GitHubService {
 		request.setType(new TypeToken<List<Contributor>>() {
 		}.getType());
 		return getAll(request);
+	}
+
+	/**
+	 * Get hooks for given repository
+	 *
+	 * @param repository
+	 * @return list of hooks
+	 * @throws IOException
+	 */
+	public List<RepositoryHook> getHooks(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		PagedRequest<RepositoryHook> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<RepositoryHook>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get hook from repository with given id
+	 *
+	 * @param repository
+	 * @param hookId
+	 * @return repository hook
+	 * @throws IOException
+	 */
+	public RepositoryHook getHook(IRepositoryIdProvider repository, int hookId)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		uri.append('/').append(hookId);
+		GitHubRequest request = createRequest();
+		request.setType(RepositoryHook.class);
+		request.setUri(uri);
+		return (RepositoryHook) client.get(request).getBody();
+	}
+
+	/**
+	 * Create hook in repository
+	 *
+	 * @param repository
+	 * @param hook
+	 * @return created repository hook
+	 * @throws IOException
+	 */
+	public RepositoryHook createHook(IRepositoryIdProvider repository,
+			RepositoryHook hook) throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		return client.post(uri.toString(), hook, RepositoryHook.class);
+	}
+
+	/**
+	 * Edit hook in repository
+	 *
+	 * @param repository
+	 * @param hook
+	 * @return edited hook
+	 * @throws IOException
+	 */
+	public RepositoryHook editHook(IRepositoryIdProvider repository,
+			RepositoryHook hook) throws IOException {
+		String id = getId(repository);
+		if (hook == null)
+			throw new IllegalArgumentException("Hook cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		uri.append('/').append(hook.getId());
+		return client.put(uri.toString(), hook, RepositoryHook.class);
+	}
+
+	/**
+	 * Delete hook from repository
+	 *
+	 * @param repository
+	 * @param hookId
+	 * @throws IOException
+	 */
+	public void deleteHook(IRepositoryIdProvider repository, int hookId)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		uri.append('/').append(hookId);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Test hook in repository. This will trigger the hook to run for the latest
+	 * push to the repository.
+	 *
+	 * @param repository
+	 * @param hookId
+	 * @throws IOException
+	 */
+	public void testHook(IRepositoryIdProvider repository, int hookId)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_HOOKS);
+		uri.append('/').append(hookId);
+		uri.append(SEGMENT_TEST);
+		client.post(uri.toString());
 	}
 }
