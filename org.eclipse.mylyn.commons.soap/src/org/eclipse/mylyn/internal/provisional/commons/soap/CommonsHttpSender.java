@@ -30,6 +30,8 @@
  *   - added AxisHttpFault to provide additional details in case of http error
  * Pawel Niewiadomski 
  *   - fixed user agent handling (bug 288441)
+ * Robert Munteanu
+ *    - allow subclasses to override creation of HttpMethod instances (bug 360780) 
  */
 package org.eclipse.mylyn.internal.provisional.commons.soap;
 
@@ -152,7 +154,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 			if (posting) {
 				Message reqMessage = msgContext.getRequestMessage();
-				method = new PostMethod(targetURL.toString());
+				method = createPostMethod(targetURL);
 
 				// set false as default, addContetInfo can overwrite
 				method.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
@@ -167,7 +169,7 @@ public class CommonsHttpSender extends BasicHandler {
 				}
 				((PostMethod) method).setRequestEntity(requestEntity);
 			} else {
-				method = new GetMethod(targetURL.toString());
+				method = createGetMethod(targetURL);
 				addContextInfo(method, httpClient, msgContext, targetURL);
 			}
 
@@ -287,6 +289,14 @@ public class CommonsHttpSender extends BasicHandler {
 //		if (log.isDebugEnabled()) {
 //			log.debug(Messages.getMessage("exit00", "CommonsHTTPSender::invoke"));
 //		}
+	}
+
+	protected GetMethod createGetMethod(URL targetURL) {
+		return new GetMethod(targetURL.toString());
+	}
+
+	protected PostMethod createPostMethod(URL targetURL) {
+		return new PostMethod(targetURL.toString());
 	}
 
 	/**
