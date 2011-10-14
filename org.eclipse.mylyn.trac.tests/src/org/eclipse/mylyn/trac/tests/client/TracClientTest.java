@@ -168,10 +168,6 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchMilestoneAmpersand() throws Exception {
-		// XXX re-enable for XML-RPC when bug 162094 is resolved
-		if (client.getAccessMode() == Version.XML_RPC) {
-			return;
-		}
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "mile&stone");
 		search.setOrderBy("id");

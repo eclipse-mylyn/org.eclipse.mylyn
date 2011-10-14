@@ -122,13 +122,19 @@ public class TracSearch {
 			sb.append("="); //$NON-NLS-1$
 			List<String> values = filter.getValues();
 			for (Iterator<String> it = values.iterator(); it.hasNext();) {
-				sb.append(it.next());
+				sb.append(escapeValue(it.next()));
 				if (it.hasNext()) {
 					sb.append("|"); //$NON-NLS-1$
 				}
 			}
 		}
 		return sb.toString();
+	}
+
+	private String escapeValue(String text) {
+		text = text.replaceAll("&", "\\\\&"); //$NON-NLS-1$ //$NON-NLS-2$
+		text = text.replaceAll("\\|", "\\\\|"); //$NON-NLS-1$ //$NON-NLS-2$
+		return text;
 	}
 
 	/**

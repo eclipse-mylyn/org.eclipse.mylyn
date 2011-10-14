@@ -133,4 +133,24 @@ public class TracSearchTest extends TestCase {
 		assertEquals("&order=summary" + QUERY1, search1.toQuery());
 	}
 
+	public void testToQueryAmpersand() {
+		TracSearch search = new TracSearch();
+		search.addFilter("milestone", "mile&stone&");
+		assertEquals("&milestone=mile\\&stone\\&", search.toQuery());
+	}
+
+	public void testToQueryPipe() {
+		TracSearch search = new TracSearch();
+		search.addFilter("field", "|pipes||");
+		assertEquals("&field=\\|pipes\\|\\|", search.toQuery());
+	}
+
+	public void testToQueryPipeAmpersand() {
+		TracSearch search = new TracSearch();
+		search.addFilter("pipe", "|");
+		search.addFilter("amp", "&");
+		search.addFilter("amppipe", "|&");
+		assertEquals("&pipe=\\|&amp=\\&&amppipe=\\|\\&", search.toQuery());
+	}
+
 }
