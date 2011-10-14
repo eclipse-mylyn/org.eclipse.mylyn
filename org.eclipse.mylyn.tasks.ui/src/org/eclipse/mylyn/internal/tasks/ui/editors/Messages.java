@@ -105,6 +105,10 @@ public class Messages extends NLS {
 
 	public static String TaskEditorAttachmentPart_Attach__Screenshot;
 
+	public static String TaskEditorAttachmentPart_Attachment_Section_Title_X;
+
+	public static String TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y;
+
 	public static String TaskEditorAttachmentPart_Attachments;
 
 	public static String TaskEditorAttachmentPart_Created;
@@ -112,6 +116,8 @@ public class Messages extends NLS {
 	public static String TaskEditorAttachmentPart_Creator;
 
 	public static String TaskEditorAttachmentPart_Description;
+
+	public static String TaskEditorAttachmentPart_Hide_Obsolete_Tooltip;
 
 	public static String TaskEditorAttachmentPart_ID;
 

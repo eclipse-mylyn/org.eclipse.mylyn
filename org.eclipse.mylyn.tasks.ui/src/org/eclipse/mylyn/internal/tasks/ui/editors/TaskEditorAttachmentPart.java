@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -333,7 +334,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
-		filterDeprecatedAttachmentsAction = new Action() {
+		filterDeprecatedAttachmentsAction = new Action("", IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_FILTER_DEPRECATED, isChecked());
@@ -341,7 +342,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		};
 		filterDeprecatedAttachmentsAction.setImageDescriptor(TasksUiImages.FILTER_OBSOLETE);
-		filterDeprecatedAttachmentsAction.setToolTipText("Hide Obsolete Attachments");
+		filterDeprecatedAttachmentsAction.setToolTipText(Messages.TaskEditorAttachmentPart_Hide_Obsolete_Tooltip);
 		if (nonDeprecatedCount > 0 && nonDeprecatedCount < attachmentAttributes.size()) {
 			filterDeprecated(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_FILTER_DEPRECATED));
 		} else {
@@ -363,10 +364,11 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private void updateSectionTitle() {
 		if (tableFilter.isFilterDeprecatedEnabled()) {
-			section.setText(NLS.bind("{0} ({1} of {2})", new Object[] { getPartName(), nonDeprecatedCount,
-					attachmentAttributes.size() }));
+			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y, new Object[] {
+					getPartName(), nonDeprecatedCount, attachmentAttributes.size() }));
 		} else {
-			section.setText(NLS.bind("{0} ({1})", getPartName(), attachmentAttributes.size()));
+			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X, getPartName(),
+					attachmentAttributes.size()));
 		}
 	}
 
