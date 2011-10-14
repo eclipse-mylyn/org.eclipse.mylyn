@@ -785,6 +785,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 		result = (Object[]) call(monitor, "ticket.getTicketFields"); //$NON-NLS-1$
 		data.ticketFields = new ArrayList<TracTicketField>(result.length);
+		data.ticketFieldByName = null;
 		for (Object item : result) {
 			data.ticketFields.add(parseTicketField((Map<?, ?>) item));
 		}
