@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tests.util;
 
 import java.net.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -235,6 +237,12 @@ public abstract class TestFixture {
 		} catch (NoClassDefFoundError e) {
 			// ignore, running in headless standalone environment
 		}
+	}
+
+	public boolean isExcluded() {
+		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
+		String[] excludeFixtureArray = excludeFixture.split(",");
+		return new HashSet<String>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
 	}
 
 }

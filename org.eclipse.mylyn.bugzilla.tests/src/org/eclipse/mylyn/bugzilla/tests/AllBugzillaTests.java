@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -26,6 +27,8 @@ import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
+ * @author Frank Becker
  */
 public class AllBugzillaTests {
 
@@ -42,11 +45,8 @@ public class AllBugzillaTests {
 	}
 
 	private static void addTests(boolean defaultOnly, TestSuite suite) {
-		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
-		String[] excludeFixtureArray = excludeFixture.split(",");
-
 		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly, excludeFixtureArray));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		suite.addTestSuite(TaskEditorTest.class);
@@ -62,23 +62,16 @@ public class AllBugzillaTests {
 			addTests(suite, BugzillaFixture.DEFAULT);
 		} else {
 			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-				String fixtureURL = fixture.getRepositoryUrl();
-				boolean excludeFound = false;
-				for (String excludeFixtureURL : excludeFixtureArray) {
-					if (excludeFixtureURL.equals(fixtureURL)) {
-						excludeFound = true;
-						break;
-					}
-				}
-				if (excludeFound) {
-					continue;
-				}
 				addTests(suite, fixture);
 			}
 		}
 	}
 
 	private static void addTests(TestSuite suite, BugzillaFixture fixture) {
+		if (fixture.isExcluded()) {
+			return;
+		}
+
 		fixture.createSuite(suite);
 		fixture.add(RepositoryReportFactoryTest.class);
 		fixture.add(BugzillaTaskDataHandlerTest.class);

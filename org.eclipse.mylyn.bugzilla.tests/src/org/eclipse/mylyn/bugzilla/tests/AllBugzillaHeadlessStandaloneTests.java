@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -28,15 +29,15 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 /**
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
+ * @author Frank Becker
  */
 public class AllBugzillaHeadlessStandaloneTests {
 
 	public static Test suite() {
-		String[] empty = { "" };
-		return suite(false, empty);
+		return suite(false);
 	}
 
-	public static Test suite(boolean defaultOnly, String[] excludeFixtureArray) {
+	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllBugzillaHeadlessStandaloneTests.class.getName());
 		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
@@ -47,17 +48,6 @@ public class AllBugzillaHeadlessStandaloneTests {
 			addTests(suite, BugzillaFixture.DEFAULT);
 		} else {
 			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-				String fixtureURL = fixture.getRepositoryUrl();
-				boolean excludeFound = false;
-				for (String excludeFixtureURL : excludeFixtureArray) {
-					if (excludeFixtureURL.equals(fixtureURL)) {
-						excludeFound = true;
-						break;
-					}
-				}
-				if (excludeFound) {
-					continue;
-				}
 				addTests(suite, fixture);
 			}
 		}
@@ -65,6 +55,10 @@ public class AllBugzillaHeadlessStandaloneTests {
 	}
 
 	protected static void addTests(TestSuite suite, BugzillaFixture fixture) {
+		if (fixture.isExcluded()) {
+			return;
+		}
+
 		fixture.createSuite(suite);
 		// XXX: re-enable when webservice is used for retrieval of history
 		// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
