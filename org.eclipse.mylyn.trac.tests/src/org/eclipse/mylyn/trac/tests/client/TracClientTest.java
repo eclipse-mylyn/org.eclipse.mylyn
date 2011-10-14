@@ -179,7 +179,7 @@ public class TracClientTest extends TestCase {
 			TracTestUtil.assertTicketEquals(tickets.get(7), result.get(0));
 		} catch (TracRemoteException e) {
 			if ("'Query filter requires field and constraints separated by a \"=\"' while executing 'ticket.query()'".equals(e.getMessage())
-					&& fixture.getVersion().equals("0.10")) {
+					&& (fixture.getVersion().equals("0.10") || fixture.getVersion().equals("0.11"))) {
 				// ignore upstream problem, see bug 162094
 			} else {
 				throw e;
