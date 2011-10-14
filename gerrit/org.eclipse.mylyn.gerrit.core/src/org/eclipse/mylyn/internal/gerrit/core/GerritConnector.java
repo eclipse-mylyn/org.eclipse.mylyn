@@ -123,7 +123,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return "Gerrit Code Review (supports 2.1.5 and later)";
+		return "Gerrit Code Review (supports 2.2.1 and later)";
 	}
 
 	@Override
