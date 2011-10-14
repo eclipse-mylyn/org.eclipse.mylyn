@@ -48,11 +48,14 @@
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="7.0.2.201102110609"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.3.1.v20100913-1814"/>
-<unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="1.0.0.v20100913-1814"/>
 <!--
+<unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="1.0.0.v20100913-1814"/>
 <unit id="org.eclipse.ecf.discovery.feature.feature.group" version="1.0.0.v20100913-1814"/>
-<unit id="org.eclipse.equinox.concurrent" version="1.0.100.v20100503"/>
 -->
+<unit id="org.eclipse.ecf.discovery" version="3.0.0.v20100913-1814"/>
+<unit id="org.eclipse.ecf.provider.discovery" version="2.1.100.v20100913-1814"/>
+<unit id="org.eclipse.ecf.provider.jmdns" version="4.0.0.v20100913-1814"/>
+<unit id="org.eclipse.equinox.concurrent" version="1.0.100.v20100503"/>
 <unit id="org.eclipse.emf.common.feature.group" version="2.6.0.v20100914-1218"/>
 <unit id="org.eclipse.emf.common.ui.feature.group" version="2.6.0.v20100914-1218"/>
 <unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20100914-1218"/>
