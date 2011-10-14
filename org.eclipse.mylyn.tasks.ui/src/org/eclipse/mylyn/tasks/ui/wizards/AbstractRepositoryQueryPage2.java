@@ -291,7 +291,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	protected boolean refreshConfiguration(final boolean force) {
-		if (!hasRepositoryConfiguration() || force) {
+		if (force || !hasRepositoryConfiguration()) {
 			setErrorMessage(null);
 			try {
 				doRefreshConfiguration();

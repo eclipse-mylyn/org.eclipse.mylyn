@@ -614,12 +614,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		product.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (product.getSelectionIndex() != -1) {
-					String[] selectedProducts = product.getSelection();
-					updateAttributesFromConfiguration(selectedProducts);
-				} else {
-					updateAttributesFromConfiguration(null);
-				}
+				updateAttributesBasedOnProductSelection(product.getSelection(), getRepositoryConfiguration());
 				setPageComplete(isPageComplete());
 			}
 		});
@@ -1398,10 +1393,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
 		RepositoryConfiguration repositoryConfiguration = getRepositoryConfiguration();
 		if (repositoryConfiguration != null) {
-			String[] saved_product = product.getSelection();
-			String[] saved_component = component.getSelection();
-			String[] saved_version = version.getSelection();
-			String[] saved_target = target.getSelection();
 			String[] saved_status = status.getSelection();
 			String[] saved_resolution = resolution.getSelection();
 			String[] saved_severity = severity.getSelection();
@@ -1409,22 +1400,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			String[] saved_hardware = hardware.getSelection();
 			String[] saved_os = os.getSelection();
 
-			if (selectedProducts == null) {
-				java.util.List<String> products = repositoryConfiguration.getProducts();
-				String[] productsList = products.toArray(new String[products.size()]);
-				Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
-				product.setItems(productsList);
-			}
+			java.util.List<String> products = repositoryConfiguration.getProducts();
+			String[] productsList = products.toArray(new String[products.size()]);
+			Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
+			product.setItems(productsList);
 
-			String[] componentsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
-					selectedProducts, repositoryConfiguration);
-			Arrays.sort(componentsList, String.CASE_INSENSITIVE_ORDER);
-			component.setItems(componentsList);
+			updateAttributesBasedOnProductSelection(selectedProducts, repositoryConfiguration);
 
-			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
-					repositoryConfiguration));
-			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
-					repositoryConfiguration));
 			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
 			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
 			severity.setItems(convertStringListToArray(repositoryConfiguration.getSeverities()));
@@ -1432,10 +1414,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			hardware.setItems(convertStringListToArray(repositoryConfiguration.getPlatforms()));
 			os.setItems(convertStringListToArray(repositoryConfiguration.getOSs()));
 
-			setSelection(product, saved_product);
-			setSelection(component, saved_component);
-			setSelection(version, saved_version);
-			setSelection(target, saved_target);
+			setSelection(product, selectedProducts);
 			setSelection(status, saved_status);
 			setSelection(resolution, saved_resolution);
 			setSelection(severity, saved_severity);
@@ -1443,20 +1422,41 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			setSelection(hardware, saved_hardware);
 			setSelection(os, saved_os);
 
-			if (repositoryConfiguration != null) {
-				ArrayList<String> fieldText = (ArrayList<String>) chartFieldTextDefault.clone();
-				ArrayList<String> fieldValue = (ArrayList<String>) chartFieldValuesDefault.clone();
+			ArrayList<String> fieldText = (ArrayList<String>) chartFieldTextDefault.clone();
+			ArrayList<String> fieldValue = (ArrayList<String>) chartFieldValuesDefault.clone();
 
-				for (BugzillaCustomField bugzillaCustomField : repositoryConfiguration.getCustomFields()) {
-					fieldValue.add(bugzillaCustomField.getName());
-					fieldText.add(bugzillaCustomField.getDescription());
-				}
-				chartFieldText = fieldText.toArray(new String[fieldText.size()]);
-				chartFieldValues = fieldValue.toArray(new String[fieldValue.size()]);
-				recreateChartControls();
+			for (BugzillaCustomField bugzillaCustomField : repositoryConfiguration.getCustomFields()) {
+				fieldValue.add(bugzillaCustomField.getName());
+				fieldText.add(bugzillaCustomField.getDescription());
 			}
-
+			chartFieldText = fieldText.toArray(new String[fieldText.size()]);
+			chartFieldValues = fieldValue.toArray(new String[fieldValue.size()]);
+			recreateChartControls();
 		}
+	}
+
+	private void updateAttributesBasedOnProductSelection(String[] selectedProducts,
+			RepositoryConfiguration repositoryConfiguration) {
+		if (repositoryConfiguration == null) {
+			return;
+		}
+
+		String[] saved_component = component.getSelection();
+		String[] saved_version = version.getSelection();
+		String[] saved_target = target.getSelection();
+
+		String[] componentsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
+				selectedProducts, repositoryConfiguration);
+		Arrays.sort(componentsList, String.CASE_INSENSITIVE_ORDER);
+		component.setItems(componentsList);
+		version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
+				repositoryConfiguration));
+		target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
+				repositoryConfiguration));
+
+		setSelection(component, saved_component);
+		setSelection(version, saved_version);
+		setSelection(target, saved_target);
 	}
 
 	@Override
@@ -1470,7 +1470,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		}
 	}
 
-	public void updateDefaults(String queryUrl) throws UnsupportedEncodingException {
+	public void restoreStateFromUrl(String queryUrl) throws UnsupportedEncodingException {
 		BugzillaSearch search = new BugzillaSearch(getTaskRepository(), queryUrl);
 
 		// set product first to initialize dependent fields
@@ -1482,8 +1482,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			selList.add(value);
 			sel = new String[selList.size()];
 			product.setSelection(selList.toArray(sel));
-			updateAttributesFromConfiguration(selList.toArray(sel));
 		}
+
+		updateAttributesBasedOnProductSelection(product.getSelection(), getRepositoryConfiguration());
 
 		boolean adjustChart = false;
 		for (Entry entry : search.getParameters()) {
@@ -1825,20 +1826,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	}
 
 	private void setSelection(List listControl, String[] selection) {
-		for (String item : selection) {
-			int index = listControl.indexOf(item);
-			if (index > -1) {
-				listControl.select(index);
-			}
-		}
-		if (listControl.getSelectionCount() > 0) {
-			listControl.showSelection();
-		} else {
-			listControl.select(0);
-			listControl.showSelection();
-			listControl.deselectAll();
-		}
-
+		listControl.setSelection(selection);
 	}
 
 	@Override
@@ -2082,18 +2070,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@Override
 	protected void doRefreshControls() {
-		String[] selectedProducts = product.getSelection();
-		if (selectedProducts != null && selectedProducts.length == 0) {
-			selectedProducts = null;
-		}
-		updateAttributesFromConfiguration(selectedProducts);
+		updateAttributesFromConfiguration(product.getSelection());
 	}
 
 	@Override
 	protected boolean restoreState(IRepositoryQuery query) {
 		if (query != null) {
 			try {
-				updateDefaults(query.getUrl());
+				restoreStateFromUrl(query.getUrl());
 			} catch (UnsupportedEncodingException e) {
 				// ignore
 			}
