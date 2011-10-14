@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Pull request merge status model class.
  */
-public class MergeStatus {
+public class MergeStatus implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 2003332803236436488L;
 
 	private boolean merged;
 

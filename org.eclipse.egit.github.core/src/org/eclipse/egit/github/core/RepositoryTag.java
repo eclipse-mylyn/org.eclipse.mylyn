@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Repository tag model class
  */
-public class RepositoryTag {
+public class RepositoryTag implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 1070566274663989459L;
 
 	private String name;
 

@@ -10,6 +10,7 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -18,7 +19,10 @@ import org.eclipse.egit.github.core.util.DateUtils;
 /**
  * Repository hook model class
  */
-public class RepositoryHook {
+public class RepositoryHook implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -9023469643749604324L;
 
 	private boolean active;
 

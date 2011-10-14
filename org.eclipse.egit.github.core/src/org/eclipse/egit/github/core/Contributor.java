@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Repository contributor model class
  */
-public class Contributor {
+public class Contributor implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -8434028880839230626L;
 
 	/**
 	 * Anonymous contributor type value

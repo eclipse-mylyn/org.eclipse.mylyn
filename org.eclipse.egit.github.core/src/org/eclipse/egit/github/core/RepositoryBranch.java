@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Repository branch model class
  */
-public class RepositoryBranch {
+public class RepositoryBranch implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = 4927461901146433920L;
 
 	private String name;
 
