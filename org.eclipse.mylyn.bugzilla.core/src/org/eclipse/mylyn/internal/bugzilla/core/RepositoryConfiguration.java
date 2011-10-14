@@ -768,7 +768,9 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.resolve);
 				break;
 			}
-			addOperation(bugReport, BugzillaOperation.duplicate);
+			if (status != BUGZILLA_REPORT_STATUS_4_0.START) {
+				addOperation(bugReport, BugzillaOperation.duplicate);
+			}
 		}
 		BugzillaAttribute key = BugzillaAttribute.SET_DEFAULT_ASSIGNEE;
 		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(key.getKey());
