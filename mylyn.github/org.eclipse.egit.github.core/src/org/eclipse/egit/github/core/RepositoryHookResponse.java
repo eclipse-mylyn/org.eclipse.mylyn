@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Repository hook response model class
  */
-public class RepositoryHookResponse {
+public class RepositoryHookResponse implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -1168379336046512838L;
 
 	private int code;
 
