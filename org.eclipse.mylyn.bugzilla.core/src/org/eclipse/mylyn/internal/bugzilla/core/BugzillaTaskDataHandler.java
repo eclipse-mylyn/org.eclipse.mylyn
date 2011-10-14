@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField.FieldType;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -550,8 +551,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 		} else {
-			attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
-			repositoryConfiguration.addValidOperations(taskData);
+			if (repositoryConfiguration.getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| repositoryConfiguration.getStatusValues().contains(
+							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+
+				attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
+				repositoryConfiguration.addValidOperations(taskData);
+			} else {
+				attributeStatus.setValue(repositoryConfiguration.getStartStatus());
+			}
 		}
 
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);

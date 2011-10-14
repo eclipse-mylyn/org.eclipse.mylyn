@@ -666,19 +666,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			@Override
 			public PriorityLevel getPriorityLevel() {
 				RepositoryConfiguration repositoryConfiguration = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
-				BugzillaVersion bugzillaVersion;
-				if (repositoryConfiguration != null) {
-					bugzillaVersion = repositoryConfiguration.getInstallVersion();
-				} else {
-					bugzillaVersion = BugzillaVersion.MIN_VERSION;
-				}
-				if (bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_3_6) >= 0) {
-					BugzillaPriorityLevel bugzillaPriorityLevel = BugzillaPriorityLevel.fromPriority(getPriority());
-					if (bugzillaPriorityLevel != null) {
-						return bugzillaPriorityLevel.toPriorityLevel();
-					}
-				}
-				return super.getPriorityLevel();
+				List<String> priorities = repositoryConfiguration.getPriorities();
+				String priority = getPriority();
+				return BugzillaRepositoryConnector.getTaskPriority(priority, priorities);
 			}
 		};
 	}
@@ -1099,5 +1089,31 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 		return history;
+	}
+
+	public static PriorityLevel getTaskPriority(String bugzillaPriority) {
+		if (bugzillaPriority != null) {
+			BugzillaPriorityLevel priority = BugzillaPriorityLevel.fromPriority(bugzillaPriority);
+			if (priority != null) {
+				return priority.toPriorityLevel();
+			}
+		}
+		return PriorityLevel.fromString(bugzillaPriority);
+	}
+
+	public static PriorityLevel getTaskPriority(String priority, List<String> priorities) {
+		if (priority != null && priorities != null && priorities.size() > 0) {
+			int size = priorities.size() - 1;
+			int index = 0;
+			for (String priority2test : priorities) {
+				if (priority.equals(priority2test)) {
+					float relativeValue = (float) index / size;
+					int value = (int) (relativeValue * 5) + 1;
+					return PriorityLevel.fromLevel(value);
+				}
+				index++;
+			}
+		}
+		return getTaskPriority(priority);
 	}
 }

@@ -79,6 +79,7 @@ import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -1287,12 +1288,18 @@ public class BugzillaClient {
 				String id = a.getId();
 				if (id.equals(BugzillaAttribute.BUG_STATUS.getKey())
 						&& bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) >= 0) {
-					TaskAttribute attributeOperation = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-					value = attributeOperation.getValue().toUpperCase();
-					if (!BugzillaOperation.new_default.toString().toUpperCase().equals(value)) {
-						fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
-					} else {
-						continue;
+					if (repositoryConfiguration.getStatusValues().contains(
+							BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+							|| repositoryConfiguration.getStatusValues().contains(
+									BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+						TaskAttribute attributeOperation = taskData.getRoot().getMappedAttribute(
+								TaskAttribute.OPERATION);
+						value = attributeOperation.getValue().toUpperCase();
+						if (!BugzillaOperation.new_default.toString().toUpperCase().equals(value)) {
+							fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
+						} else {
+							continue;
+						}
 					}
 				}
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {

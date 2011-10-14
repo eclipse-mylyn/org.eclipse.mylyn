@@ -308,6 +308,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		if (!version.isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
 			// fresh bugzilla 3.6 databases have a new schema for priorities
+			// the value "---" maybe present (as default) so we get P5 or P3 (if not present) as the level
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Highest");
 			assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("High");
@@ -319,7 +320,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lowest");
 			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
-			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			PriorityLevel pl = mapping.getPriorityLevel();
+			assertTrue("P3 or P5 expected! but got " + pl.toString(), pl == PriorityLevel.P3 || pl == PriorityLevel.P5);
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
 			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		}

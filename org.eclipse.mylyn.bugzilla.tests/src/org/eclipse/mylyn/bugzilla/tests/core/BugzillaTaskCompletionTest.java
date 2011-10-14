@@ -54,10 +54,11 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	}
 
 	public void testCompletionDate() throws Exception {
-		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
+		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current().getRepositoryUrl(),
+				"1");
 		TaskAttributeMapper mapper = connector.getTaskDataHandler().getAttributeMapper(repository);
-		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
+		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current()
+				.getRepositoryUrl(), "1");
 		taskData.getRoot()
 				.createAttribute(BugzillaAttribute.BUG_STATUS.getKey())
 				.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
@@ -75,10 +76,11 @@ public class BugzillaTaskCompletionTest extends TestCase {
 	}
 
 	public void testCompletionDateForStates() throws Exception {
-		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
+		TaskTask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current().getRepositoryUrl(),
+				"1");
 		TaskAttributeMapper mapper = connector.getTaskDataHandler().getAttributeMapper(repository);
-		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.TEST_BUGZILLA_LATEST_URL, "1");
+		TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current()
+				.getRepositoryUrl(), "1");
 		TaskAttribute status = taskData.getRoot().createAttribute(BugzillaAttribute.BUG_STATUS.getKey());
 		status.setValue("REOPENED");
 		TaskAttribute attrComment = taskData.getRoot().createAttribute(BugzillaAttribute.COMMENTID.getKey());
