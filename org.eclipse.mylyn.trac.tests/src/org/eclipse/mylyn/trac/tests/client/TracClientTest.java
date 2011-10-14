@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
+import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
@@ -172,9 +173,18 @@ public class TracClientTest extends TestCase {
 		search.addFilter("milestone", "mile&stone");
 		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		client.search(search, result, null);
-		assertEquals(1, result.size());
-		TracTestUtil.assertTicketEquals(tickets.get(7), result.get(0));
+		try {
+			client.search(search, result, null);
+			assertEquals(1, result.size());
+			TracTestUtil.assertTicketEquals(tickets.get(7), result.get(0));
+		} catch (TracRemoteException e) {
+			if ("'Query filter requires field and constraints separated by a \"=\"' while executing 'ticket.query()'".equals(e.getMessage())
+					&& fixture.getVersion().equals("0.10")) {
+				// ignore upstream problem, see bug 162094
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	public void testStatusClosed() throws Exception {
