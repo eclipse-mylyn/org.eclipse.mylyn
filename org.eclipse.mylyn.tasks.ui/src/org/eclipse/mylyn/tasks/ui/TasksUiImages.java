@@ -67,6 +67,11 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor TASK_ATTACHMENT_PATCH = create(OBJ, "attachment-patch.gif"); //$NON-NLS-1$
 
+	/**
+	 * @since 3.7
+	 */
+	public static final ImageDescriptor FILTER_OBSOLETE = create(TOOL_SMALL, "filter-obsolete.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor TASK_RETRIEVE = create(TOOL, "task-retrieve.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor TASK_REPOSITORY = create(TOOL, "task-repository.gif"); //$NON-NLS-1$

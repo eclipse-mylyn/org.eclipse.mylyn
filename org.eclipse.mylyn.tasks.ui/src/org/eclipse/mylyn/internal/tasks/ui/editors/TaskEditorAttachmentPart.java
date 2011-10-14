@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -60,7 +61,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -162,6 +162,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private Section section;
 
 	private int nonDeprecatedCount;
+
+	private Action filterDeprecatedAttachmentsAction;
 
 	public TaskEditorAttachmentPart() {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
@@ -331,20 +333,17 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
-		Action filterDeprecatedAttachmentsAction = new Action() {
+		filterDeprecatedAttachmentsAction = new Action() {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_FILTER_DEPRECATED, isChecked());
 				filterDeprecated(isChecked());
 			}
 		};
-		filterDeprecatedAttachmentsAction.setImageDescriptor(CommonImages.FILTER_COMPLETE);
-		filterDeprecatedAttachmentsAction.setToolTipText("Hide Deprecated Attachments");
+		filterDeprecatedAttachmentsAction.setImageDescriptor(TasksUiImages.FILTER_OBSOLETE);
+		filterDeprecatedAttachmentsAction.setToolTipText("Hide Obsolete Attachments");
 		if (nonDeprecatedCount > 0 && nonDeprecatedCount < attachmentAttributes.size()) {
-			filterDeprecatedAttachmentsAction.setChecked(TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(PREF_FILTER_DEPRECATED));
-			filterDeprecated(filterDeprecatedAttachmentsAction.isChecked());
+			filterDeprecated(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_FILTER_DEPRECATED));
 		} else {
 			// do not allow filtering if it would cause the table to be empty or no change
 			filterDeprecatedAttachmentsAction.setEnabled(false);
@@ -400,10 +399,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		if (input instanceof String) {
 			String text = (String) input;
 			if (attachmentAttributes != null) {
-				for (TaskAttribute attachmentAttribute : attachmentAttributes) {
-					if (text.equals(attachmentAttribute.getId())) {
+				for (ITaskAttachment attachment : attachmentList) {
+					if (text.equals(attachment.getTaskAttribute().getId())) {
 						CommonFormUtil.setExpanded((ExpandableComposite) getControl(), true);
-						return selectReveal(attachmentAttribute);
+						return selectReveal(attachment);
 					}
 				}
 			}
@@ -411,31 +410,28 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		return super.setFormInput(input);
 	}
 
-	public boolean selectReveal(TaskAttribute attachmentAttribute) {
-		if (attachmentAttribute == null || attachmentsTable == null) {
+	private boolean selectReveal(ITaskAttachment attachment) {
+		if (attachment == null || attachmentsTable == null) {
 			return false;
 		}
-		TableItem[] attachments = attachmentsTable.getItems();
-		int index = 0;
-		for (TableItem attachment : attachments) {
-			Object data = attachment.getData();
-			if (data instanceof ITaskAttachment) {
-				ITaskAttachment attachmentData = ((ITaskAttachment) data);
-				if (attachmentData.getTaskAttribute().getValue().equals(attachmentAttribute.getValue())) {
-					attachmentsTable.deselectAll();
-					attachmentsTable.select(index);
-					IManagedForm mform = getManagedForm();
-					ScrolledForm form = mform.getForm();
-					EditorUtil.focusOn(form, attachmentsTable);
-					return true;
-				}
-			}
-			index++;
+
+		if (tableFilter.isFilterDeprecatedEnabled() && attachment.isDeprecated()) {
+			filterDeprecated(false);
 		}
-		return false;
+
+		attachmentsViewer.setSelection(new StructuredSelection(attachment));
+
+		IManagedForm mform = getManagedForm();
+		ScrolledForm form = mform.getForm();
+		EditorUtil.focusOn(form, attachmentsTable);
+
+		return true;
 	}
 
 	void filterDeprecated(boolean filter) {
+		if (filterDeprecatedAttachmentsAction.isChecked() != filter) {
+			filterDeprecatedAttachmentsAction.setChecked(filter);
+		}
 		tableFilter.setFilterDeprecatedEnabled(filter);
 		if (attachmentsViewer != null) {
 			attachmentsViewer.refresh();
