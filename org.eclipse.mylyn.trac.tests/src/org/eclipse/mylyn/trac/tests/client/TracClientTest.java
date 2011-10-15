@@ -221,6 +221,11 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testUpdateAttributesChangedTicketFields() throws Exception {
+		if (fixture.getAccessMode() == Version.TRAC_0_9) {
+			// field information is not available in web mode
+			return;
+		}
+
 		client = fixture.connect(fixture.getRepositoryUrl());
 		client.updateAttributes(new NullProgressMonitor(), true);
 		// modify field to bogus value
