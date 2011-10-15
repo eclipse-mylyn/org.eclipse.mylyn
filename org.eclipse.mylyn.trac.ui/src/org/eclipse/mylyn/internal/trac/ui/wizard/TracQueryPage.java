@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -114,6 +116,11 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 			}
 		}
 
+		@Override
+		public void clear() {
+			list.deselectAll();
+		}
+
 //		public void selectItems(String[] items) {
 //			list.deselectAll();
 //			for (String item : items) {
@@ -146,6 +153,8 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 		public abstract TracSearchFilter getFilter();
 
 		public abstract void setFilter(TracSearchFilter filter);
+
+		public abstract void clear();
 
 	}
 
@@ -232,6 +241,12 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 			searchText.setText(text);
 		}
 
+		@Override
+		public void clear() {
+			searchText.setText(""); //$NON-NLS-1$
+			conditionCombo.select(0);
+		}
+
 	}
 
 	private class UserSearchField extends SearchField {
@@ -260,6 +275,11 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 				textField.setFieldName(fieldName);
 				textField.setFilter(filter);
 				setSelection(index);
+			}
+
+			@Override
+			public void clear() {
+				textField.clear();
 			}
 
 		}
@@ -305,6 +325,11 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 
 		private void setSelection(int index) {
 			userCombo.select(index);
+		}
+
+		@Override
+		public void clear() {
+			textField.clear();
 		}
 
 	}
@@ -353,6 +378,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 		super(PAGE_NAME, repository, query);
 		setTitle(Messages.TracQueryPage_Enter_query_parameters);
 		setDescription(Messages.TracQueryPage_If_attributes_are_blank_or_stale_press_the_Update_button);
+		setNeedsClear(true);
 	}
 
 	@Override
@@ -380,6 +406,11 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 		componentField.setValues(client.getComponents());
 		versionField.setValues(client.getVersions());
 		milestoneField.setValues(client.getMilestones());
+	}
+
+	@Override
+	protected void doClearControls() {
+		restoreWidgetValues(new TracSearch());
 	}
 
 	@Override
@@ -424,15 +455,22 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 	}
 
 	private void restoreWidgetValues(TracSearch search) {
+		Set<SearchField> allFields = new HashSet<SearchField>(searchFieldByName.values());
+
 		java.util.List<TracSearchFilter> filters = search.getFilters();
 		for (TracSearchFilter filter : filters) {
 			SearchField field = searchFieldByName.get(filter.getFieldName());
 			if (field != null) {
 				field.setFilter(filter);
+				allFields.remove(field);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN,
 						"Ignoring invalid search filter: " + filter)); //$NON-NLS-1$
 			}
+		}
+
+		for (SearchField field : allFields) {
+			field.clear();
 		}
 	}
 
