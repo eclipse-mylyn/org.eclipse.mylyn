@@ -1441,6 +1441,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			return;
 		}
 
+		// show everything if no product is selected
+		if (selectedProducts != null && selectedProducts.length == 0) {
+			selectedProducts = null;
+		}
+
 		String[] saved_component = component.getSelection();
 		String[] saved_version = version.getSelection();
 		String[] saved_target = target.getSelection();
