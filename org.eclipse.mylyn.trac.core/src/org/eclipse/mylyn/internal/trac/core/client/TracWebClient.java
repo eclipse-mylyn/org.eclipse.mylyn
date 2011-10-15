@@ -70,12 +70,148 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.
  * 
  * @author Steffen Pingel
  */
 public class TracWebClient extends AbstractTracClient {
+
+	private interface AttributeFactory {
+
+		void initialize();
+
+		void addAttribute(String value);
+
+	}
+
+	private static class TracConfiguration {
+
+		private final Map<String, AttributeFactory> factoryByField = new HashMap<String, AttributeFactory>();
+
+		public TracConfiguration(final TracClientData data) {
+			AttributeFactory attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.components.add(new TracComponent(value));
+				}
+
+				public void initialize() {
+					data.components = new ArrayList<TracComponent>();
+				}
+			};
+			factoryByField.put("component", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.milestones.add(new TracMilestone(value));
+				}
+
+				public void initialize() {
+					data.milestones = new ArrayList<TracMilestone>();
+				}
+			};
+			factoryByField.put("milestone", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.priorities.add(new TracPriority(value, data.priorities.size() + 1));
+				}
+
+				public void initialize() {
+					data.priorities = new ArrayList<TracPriority>();
+				}
+			};
+			factoryByField.put("priority", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.ticketResolutions.add(new TracTicketResolution(value, data.ticketResolutions.size() + 1));
+				}
+
+				public void initialize() {
+					data.ticketResolutions = new ArrayList<TracTicketResolution>();
+				}
+			};
+			factoryByField.put("resolution", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.severities.add(new TracSeverity(value, data.severities.size() + 1));
+				}
+
+				public void initialize() {
+					data.severities = new ArrayList<TracSeverity>();
+				}
+			};
+			factoryByField.put("severity", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.ticketStatus.add(new TracTicketStatus(value, data.ticketStatus.size() + 1));
+				}
+
+				public void initialize() {
+					data.ticketStatus = new ArrayList<TracTicketStatus>();
+				}
+			};
+			factoryByField.put("status", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.ticketTypes.add(new TracTicketType(value, data.ticketTypes.size() + 1));
+				}
+
+				public void initialize() {
+					data.ticketTypes = new ArrayList<TracTicketType>();
+				}
+			};
+			factoryByField.put("type", attributeFactory); //$NON-NLS-1$
+
+			attributeFactory = new AttributeFactory() {
+				public void addAttribute(String value) {
+					data.versions.add(new TracVersion(value));
+				}
+
+				public void initialize() {
+					data.versions = new ArrayList<TracVersion>();
+				}
+			};
+			factoryByField.put("version", attributeFactory); //$NON-NLS-1$
+		}
+
+		public AttributeFactory getFactoryByField(String field) {
+			return factoryByField.get(field);
+		}
+
+	}
+
+	private static class TracConfigurationField {
+
+		@SuppressWarnings("unused")
+		String label;
+
+		@SuppressWarnings("unused")
+		String type;
+
+		List<String> options;
+
+		List<TracConfigurationOptGroup> optgroups;
+
+	}
+
+	private static class TracConfigurationOptGroup {
+
+		@SuppressWarnings("unused")
+		String label;
+
+		List<String> options;
+
+	}
 
 	private class Request {
 
@@ -448,7 +584,10 @@ public class TracWebClient extends AbstractTracClient {
 						if (tag.getTagType() == Tag.SCRIPT) {
 							String text = getText(tokenizer).trim();
 							if (text.startsWith("var properties=")) { //$NON-NLS-1$
-								parseAttributes(text);
+								if (!parseAttributesJSon(text)) {
+									// fall back
+									parseAttributesTokenizer(text);
+								}
 							}
 						}
 					}
@@ -471,13 +610,66 @@ public class TracWebClient extends AbstractTracClient {
 		INIT, IN_LIST, IN_ATTRIBUTE_KEY, IN_ATTRIBUTE_VALUE, IN_ATTRIBUTE_VALUE_LIST
 	};
 
+	private boolean parseAttributesJSon(String text) {
+		// remove surrounding JavaScript
+		if (text.startsWith("var properties=")) { //$NON-NLS-1$
+			text = text.substring("var properties=".length()); //$NON-NLS-1$
+		}
+		int i = text.indexOf("};"); //$NON-NLS-1$
+		if (i != -1) {
+			text = text.substring(0, i + 1);
+		}
+
+		// parse JSon stream
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		TypeToken<Map<String, TracConfigurationField>> type = new TypeToken<Map<String, TracConfigurationField>>() {
+		};
+		Map<String, TracConfigurationField> fieldByName;
+		try {
+			fieldByName = gson.fromJson(text, type.getType());
+			if (fieldByName == null) {
+				return false;
+			}
+		} catch (JsonSyntaxException e) {
+			return false;
+		}
+
+		// copy parsed JSon objects in to client data 
+		TracConfiguration configuration = new TracConfiguration(data);
+		for (Map.Entry<String, TracConfigurationField> entry : fieldByName.entrySet()) {
+			AttributeFactory factory = configuration.getFactoryByField(entry.getKey());
+			if (factory != null) {
+				factory.initialize();
+
+				TracConfigurationField field = entry.getValue();
+				if (field.options != null && field.options.size() > 0) {
+					for (String option : field.options) {
+						factory.addAttribute(option);
+					}
+				} else if (field.optgroups != null && field.optgroups.size() > 0) {
+					// milestones in Trac 0.13 support groups for labeling related options: ignore groups but extract options  
+					for (TracConfigurationOptGroup group : field.optgroups) {
+						if (group.options != null) {
+							for (String option : group.options) {
+								factory.addAttribute(option);
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Parses the JavaScript code from the query page to extract repository configuration.
 	 */
-	private void parseAttributes(String text) throws IOException {
+	private void parseAttributesTokenizer(String text) throws IOException {
 		StreamTokenizer t = new StreamTokenizer(new StringReader(text));
 		t.quoteChar('"');
 
+		TracConfiguration configuration = new TracConfiguration(data);
 		AttributeFactory attributeFactory = null;
 		String attributeType = null;
 
@@ -487,65 +679,9 @@ public class TracWebClient extends AbstractTracClient {
 			switch (tokenType) {
 			case StreamTokenizer.TT_WORD:
 				if (state == AttributeState.IN_LIST) {
-					if ("component".equals(t.sval)) { //$NON-NLS-1$
-						data.components = new ArrayList<TracComponent>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.components.add(new TracComponent(value));
-							}
-						};
-					} else if ("milestone".equals(t.sval)) { //$NON-NLS-1$
-						data.milestones = new ArrayList<TracMilestone>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.milestones.add(new TracMilestone(value));
-							}
-						};
-					} else if ("priority".equals(t.sval)) { //$NON-NLS-1$
-						data.priorities = new ArrayList<TracPriority>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.priorities.add(new TracPriority(value, data.priorities.size() + 1));
-							}
-						};
-					} else if ("resolution".equals(t.sval)) { //$NON-NLS-1$
-						data.ticketResolutions = new ArrayList<TracTicketResolution>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.ticketResolutions.add(new TracTicketResolution(value,
-										data.ticketResolutions.size() + 1));
-							}
-						};
-					} else if ("severity".equals(t.sval)) { //$NON-NLS-1$
-						data.severities = new ArrayList<TracSeverity>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.severities.add(new TracSeverity(value, data.severities.size() + 1));
-							}
-						};
-					} else if ("status".equals(t.sval)) { //$NON-NLS-1$
-						data.ticketStatus = new ArrayList<TracTicketStatus>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.ticketStatus.add(new TracTicketStatus(value, data.ticketStatus.size() + 1));
-							}
-						};
-					} else if ("type".equals(t.sval)) { //$NON-NLS-1$
-						data.ticketTypes = new ArrayList<TracTicketType>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.ticketTypes.add(new TracTicketType(value, data.ticketTypes.size() + 1));
-							}
-						};
-					} else if ("version".equals(t.sval)) { //$NON-NLS-1$
-						data.versions = new ArrayList<TracVersion>();
-						attributeFactory = new AttributeFactory() {
-							public void addAttribute(String value) {
-								data.versions.add(new TracVersion(value));
-							}
-						};
-					} else {
-						attributeFactory = null;
+					attributeFactory = configuration.getFactoryByField(t.sval);
+					if (attributeFactory != null) {
+						attributeFactory.initialize();
 					}
 				} else if (state == AttributeState.IN_ATTRIBUTE_KEY) {
 					attributeType = t.sval;
@@ -776,12 +912,6 @@ public class TracWebClient extends AbstractTracClient {
 
 	public Set<Integer> getChangedTickets(Date since, IProgressMonitor monitor) throws TracException {
 		return null;
-	}
-
-	private interface AttributeFactory {
-
-		void addAttribute(String value);
-
 	}
 
 	public Date getTicketLastChanged(Integer id, IProgressMonitor monitor) {
