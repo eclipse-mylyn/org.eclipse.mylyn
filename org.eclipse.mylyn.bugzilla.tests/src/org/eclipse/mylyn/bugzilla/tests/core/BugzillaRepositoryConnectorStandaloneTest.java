@@ -326,4 +326,175 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		}
 	}
+
+	public void testGetTaskMappingPriorityNoConfiguration() throws Exception {
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		ITaskMapping mapping = connector.getTaskMapping(taskData);
+		taskDataHandler.initializeTaskData(repository, taskData, null, null);
+
+		connector.removeConfiguration(connector.getRepositoryConfiguration(repository.getRepositoryUrl()));
+
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P1");
+		assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P2");
+		assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P3");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P4");
+		assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P5");
+		assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		if (!version.isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
+			// fresh bugzilla 3.6 databases have a new schema for priorities
+			// the value "---" maybe present (as default) so we get P5 or P3 (if not present) as the level
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Highest");
+			assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("High");
+			assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Normal");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Low");
+			assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lowest");
+			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
+			PriorityLevel pl = mapping.getPriorityLevel();
+			assertTrue("P3 or P5 expected! but got " + pl.toString(), pl == PriorityLevel.P3 || pl == PriorityLevel.P5);
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		}
+	}
+
+	public void testGetTaskMappingPriorityCustom() throws Exception {
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		ITaskMapping mapping = connector.getTaskMapping(taskData);
+		taskDataHandler.initializeTaskData(repository, taskData, null, null);
+
+		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		connector.removeConfiguration(config);
+		config = new RepositoryConfiguration();
+		config.setRepositoryUrl(repository.getRepositoryUrl());
+		config.addPriority("MostHighest");
+		config.addPriority("Highest");
+		config.addPriority("Higher");
+		config.addPriority("High");
+		config.addPriority("Normal");
+		config.addPriority("Low");
+		config.addPriority("Lower");
+		config.addPriority("Lowest");
+		config.addPriority("MostLowest");
+		connector.addRepositoryConfiguration(config);
+
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P1");
+		assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P2");
+		assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P3");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P4");
+		assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P5");
+		assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		if (!version.isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
+			// fresh bugzilla 3.6 databases have a new schema for priorities
+			// the value "---" maybe present (as default) so we get P5 or P3 (if not present) as the level
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("MostHighest");
+			assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Highest");
+			assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Higher");
+			assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("High");
+			assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Normal");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Low");
+			assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lower");
+			assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lowest");
+			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("MostLowest");
+			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		}
+	}
+
+	public void testGetTaskMappingPriorityCustomWithNoConfig() throws Exception {
+		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		ITaskMapping mapping = connector.getTaskMapping(taskData);
+		taskDataHandler.initializeTaskData(repository, taskData, null, null);
+
+		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		connector.removeConfiguration(config);
+		config = new RepositoryConfiguration();
+		config.setRepositoryUrl(repository.getRepositoryUrl());
+		config.addPriority("MostHighest");
+		config.addPriority("Highest");
+		config.addPriority("Higher");
+		config.addPriority("High");
+		config.addPriority("Normal");
+		config.addPriority("Low");
+		config.addPriority("Lower");
+		config.addPriority("Lowest");
+		config.addPriority("MostLowest");
+
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P1");
+		assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P2");
+		assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P3");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P4");
+		assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("P5");
+		assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+		taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+		assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		if (!version.isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
+			// fresh bugzilla 3.6 databases have a new schema for priorities
+			// the value "---" maybe present (as default) so we get P5 or P3 (if not present) as the level
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("MostHighest");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Highest");
+			assertEquals(PriorityLevel.P1, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Higher");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("High");
+			assertEquals(PriorityLevel.P2, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Normal");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Low");
+			assertEquals(PriorityLevel.P4, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lower");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("Lowest");
+			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("MostLowest");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
+			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
+		}
+	}
 }

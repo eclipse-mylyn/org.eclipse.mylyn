@@ -666,8 +666,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			@Override
 			public PriorityLevel getPriorityLevel() {
 				RepositoryConfiguration repositoryConfiguration = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
-				List<String> priorities = repositoryConfiguration.getPriorities();
 				String priority = getPriority();
+				if (repositoryConfiguration == null) {
+					// When we did not have the configuration we only can use the standard Priorities
+					// Did not know how the configuration can be null here
+					return getTaskPriority(priority);
+				}
+				List<String> priorities = repositoryConfiguration.getPriorities();
 				return BugzillaRepositoryConnector.getTaskPriority(priority, priorities);
 			}
 		};
