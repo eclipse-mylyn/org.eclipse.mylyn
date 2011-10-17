@@ -91,7 +91,7 @@ public class GitHubClient {
 	}
 
 	private static final Header USER_AGENT = new BasicHeader(HTTP.USER_AGENT,
-			"GitHubJava/1.1.0"); //$NON-NLS-1$
+			"GitHubJava/1.2.0"); //$NON-NLS-1$
 
 	private final HttpHost httpHost;
 
