@@ -83,7 +83,7 @@ public class UserService extends GitHubService {
 	}
 
 	/**
-	 * Get currently authenticate user
+	 * Get currently authenticated user
 	 *
 	 * @return user
 	 * @throws IOException
