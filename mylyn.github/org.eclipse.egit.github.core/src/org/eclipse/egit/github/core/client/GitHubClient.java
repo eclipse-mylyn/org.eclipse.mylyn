@@ -101,7 +101,7 @@ public class GitHubClient {
 
 	private Header userAgent = USER_AGENT;
 
-	private final Gson gson = GsonUtils.getGson();
+	private Gson gson = GsonUtils.getGson();
 
 	/**
 	 * Create default client
@@ -151,6 +151,17 @@ public class GitHubClient {
 		AuthCache authCache = new BasicAuthCache();
 		httpContext.setAttribute(AUTH_CACHE, authCache);
 		client.addRequestInterceptor(new AuthInterceptor(), 0);
+	}
+
+	/**
+	 * Set whether or not serialized data should include fields that are null.
+	 *
+	 * @param serializeNulls
+	 * @return this client
+	 */
+	public GitHubClient setSerializeNulls(boolean serializeNulls) {
+		gson = GsonUtils.getGson(serializeNulls);
+		return this;
 	}
 
 	/**
