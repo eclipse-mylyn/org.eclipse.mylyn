@@ -49,7 +49,7 @@ public class GitHub {
 			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)"); //$NON-NLS-1$
 
 	/** USER_AGENT */
-	public static final String USER_AGENT = "GitHubEclipse/1.1.0"; //$NON-NLS-1$
+	public static final String USER_AGENT = "GitHubEclipse/1.2.0"; //$NON-NLS-1$
 
 	/** REPOSITORY_SEGMENTS */
 	public static final String REPOSITORY_SEGMENTS = "/user/repository"; //$NON-NLS-1$
