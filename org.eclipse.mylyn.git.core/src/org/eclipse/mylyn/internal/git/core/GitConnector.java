@@ -115,6 +115,8 @@ public class GitConnector extends ScmConnector {
 				walk.parseHeaders(p);
 				walk.parseBody(p);
 				treeWalk.addTree(p.getTree());
+				//we can compare with one parent only
+				break;
 			}
 			treeWalk.addTree(commit.getTree());
 			treeWalk.setRecursive(true);
