@@ -1593,7 +1593,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				manager.prependToGroup(ID_SEPARATOR_CONTEXT, filterCompleteTask);
 			}
 			updateFilterEnablement();
-			manager.update(false);
+			getViewSite().getActionBars().updateActionBars();
 		} finally {
 			if (toolBarManager != null) {
 				toolBarManager.getControl().setRedraw(true);
