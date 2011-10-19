@@ -13,30 +13,19 @@
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.egit.core.synchronize.dto.GitSynchronizeData;
-import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
+import org.eclipse.egit.ui.internal.commit.CommitEditor;
 import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
-import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
-import org.eclipse.egit.ui.internal.synchronize.GitModelSynchronize;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
@@ -53,29 +42,15 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
-import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
@@ -85,8 +60,6 @@ import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -105,8 +78,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -152,117 +128,6 @@ public class PatchSetSection extends AbstractGerritSection {
 		@Override
 		public void run() {
 			doCompareWith(changeDetail, base, target);
-		}
-
-	}
-
-	private class GetPatchSetContentJob extends Job {
-
-		private GerritPatchSetContent patchSetContent;
-
-		private final PatchSetDetail patchSetDetail;
-
-		private final TaskRepository repository;
-
-		public GetPatchSetContentJob(TaskRepository repository, PatchSetDetail patchSetDetail) {
-			super("Caching Patch Set Content");
-			this.repository = repository;
-			this.patchSetDetail = patchSetDetail;
-		}
-
-		public GerritPatchSetContent getPatchSetContent() {
-			return patchSetContent;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
-			GerritClient client = connector.getClient(repository);
-			try {
-				int reviewId = patchSetDetail.getInfo().getKey().getParentKey().get();
-				patchSetContent = client.getPatchSetContent(
-						reviewId + "", patchSetDetail.getPatchSet().getId().get(), monitor); //$NON-NLS-1$
-			} catch (OperationCanceledException e) {
-				return Status.CANCEL_STATUS;
-			} catch (GerritException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Review retrieval failed", e),
-						StatusManager.LOG);
-			}
-			return Status.OK_STATUS;
-		}
-	}
-
-	private class ComparePatchSetJob extends Job {
-
-		private final Repository repository;
-
-		private final PatchSet target;
-
-		private final PatchSet base;
-
-		private final RemoteConfig remote;
-
-		public ComparePatchSetJob(Repository repository, RemoteConfig remote, PatchSet base, PatchSet target) {
-			super("Comparing Patch Set");
-			this.repository = repository;
-			this.remote = remote;
-			this.base = base;
-			this.target = target;
-		}
-
-		public void openSynchronization(String baseRef, String targetRef) throws IOException {
-			GitSynchronizeData data = new GitSynchronizeData(repository, baseRef, targetRef, false);
-			GitModelSynchronize.launch(data, data.getProjects().toArray(new IResource[0]));
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				SubMonitor subMonitor = SubMonitor.convert(monitor);
-				// fetch target first to retrieve parent commit
-				String targetRef = fetchPatchSet(target, subMonitor).getName();
-				String baseRef;
-				if (base != null) {
-					baseRef = fetchPatchSet(base, subMonitor).getName();
-				} else {
-					baseRef = fetchParent(target, subMonitor);
-				}
-				openSynchronization(baseRef, targetRef);
-			} catch (Exception e) {
-				return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Patch set retrieval failed", e);
-			}
-			return Status.OK_STATUS;
-		}
-
-		private String fetchParent(PatchSet patchSet, IProgressMonitor monitor) throws URISyntaxException,
-				CoreException, IOException {
-			RevCommit targetCommit = getRevCommit(repository, patchSet);
-			RevCommit parentCommit = targetCommit.getParents()[0];
-			return parentCommit.getName();
-		}
-
-		private RevCommit fetchPatchSet(PatchSet patchSet, IProgressMonitor monitor) throws IOException, CoreException,
-				URISyntaxException {
-			try {
-				// commit was already fetched
-				return getRevCommit(repository, patchSet);
-			} catch (MissingObjectException e) {
-				// need to getch it
-				RefSpec refSpec = new RefSpec(patchSet.getRefName() + ":FETCH_HEAD"); //$NON-NLS-1$
-				return fetchRefSpec(monitor, refSpec);
-			}
-		}
-
-		private RevCommit fetchRefSpec(IProgressMonitor monitor, RefSpec refSpec) throws URISyntaxException,
-				CoreException, MissingObjectException, IncorrectObjectTypeException, IOException {
-			List<RefSpec> refSpecs = Collections.singletonList(refSpec);
-			FetchOperationUI op = new FetchOperationUI(repository, remote.getURIs().get(0), refSpecs,
-					Activator.getDefault().getPreferenceStore().getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT), false);
-			EGitUiUtil.setCredentialsProvider(op);
-			FetchResult result = op.execute(monitor);
-			ObjectId resultRef = result.getAdvertisedRef(refSpec.getSource()).getObjectId();
-			return new RevWalk(repository).parseCommit(resultRef);
 		}
 
 	}
@@ -564,14 +429,6 @@ public class PatchSetSection extends AbstractGerritSection {
 		}
 	}
 
-	private RevCommit getRevCommit(Repository repository, PatchSet target) throws AmbiguousObjectException,
-			IOException, MissingObjectException, IncorrectObjectTypeException {
-		ObjectId ref = repository.resolve(target.getRevision().get());
-		RevWalk walker = new RevWalk(repository);
-		RevCommit targetCommit = walker.parseCommit(ref);
-		return targetCommit;
-	}
-
 	private String getGerritProject(ChangeDetail changeDetail) {
 		return changeDetail.getChange().getProject().get();
 	}
@@ -615,8 +472,30 @@ public class PatchSetSection extends AbstractGerritSection {
 		commitLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		commitLabel.setText("Commit");
 
-		Text commitText = new Text(composite, SWT.READ_ONLY);
-		commitText.setText(patchSetDetail.getPatchSet().getRevision().get());
+		Hyperlink commitLink = new Hyperlink(composite, SWT.READ_ONLY);
+		commitLink.setText(patchSetDetail.getPatchSet().getRevision().get());
+		commitLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent event) {
+				GerritToGitMapping mapping = getRepository(changeDetail);
+				if (mapping != null) {
+					final FetchPatchSetJob job = new FetchPatchSetJob("Opening Commit Viewer", mapping.getRepository(),
+							mapping.getRemote(), patchSetDetail.getPatchSet());
+					job.schedule();
+					job.addJobChangeListener(new JobChangeAdapter() {
+						@Override
+						public void done(IJobChangeEvent event) {
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									CommitEditor.openQuiet(job.getCommit());
+								}
+							});
+						}
+					});
+				}
+			}
+		});
 
 		Label refLabel = new Label(composite, SWT.NONE);
 		refLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
