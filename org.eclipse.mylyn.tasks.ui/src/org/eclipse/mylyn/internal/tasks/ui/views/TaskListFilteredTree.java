@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RepositoryElementActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
+import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler.IFilterChangeListener;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
@@ -62,7 +64,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -70,6 +71,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 /**
  * @author Mik Kersten
  * @author Leo Dos Santos - Task Working Set UI
+ * @author David Green
  */
 public class TaskListFilteredTree extends AbstractFilteredTree {
 
@@ -113,12 +115,19 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private StructuredSelection activeSelection;
 
+	private final AbstractSearchHandler searchHandler;
+
+	private Composite searchComposite;
+
 	/**
 	 * @param window
 	 *            can be null. Needed for the working sets to be displayed properly
 	 */
-	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter, IWorkbenchWindow window) {
-		super(parent, treeStyle, filter);
+	public TaskListFilteredTree(Composite parent, int treeStyle, AbstractSearchHandler searchHandler,
+			IWorkbenchWindow window) {
+		super(parent, treeStyle, searchHandler.createFilter());
+		this.searchHandler = searchHandler;
+		initSearchComposite();
 		hookContextMenu();
 		this.window = window;
 		indicateActiveTaskWorkingSet();
@@ -226,16 +235,30 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createSearchComposite(Composite container) {
+		searchComposite = new Composite(container, SWT.NONE);
+		GridLayout searchLayout = new GridLayout(2, false);
+		searchLayout.marginWidth = 8;
+		searchLayout.marginHeight = 0;
+		searchLayout.marginBottom = 0;
+		searchLayout.horizontalSpacing = 0;
+		searchLayout.verticalSpacing = 0;
+		searchComposite.setLayout(searchLayout);
+		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+
+		return searchComposite;
+	}
+
+	private void initSearchComposite() {
+
+		searchHandler.createSearchComposite(searchComposite);
+		searchHandler.adaptTextSearchControl(getTextSearchControl().getTextControl());
+		searchHandler.addFilterChangeListener(new IFilterChangeListener() {
+			public void filterChanged() {
+				getRefreshPolicy().filterChanged();
+			}
+		});
+
 		if (SearchUtil.supportsTaskSearch()) {
-			Composite searchComposite = new Composite(container, SWT.NONE);
-			GridLayout searchLayout = new GridLayout(1, false);
-			searchLayout.marginWidth = 8;
-			searchLayout.marginHeight = 0;
-			searchLayout.marginBottom = 0;
-			searchLayout.horizontalSpacing = 0;
-			searchLayout.verticalSpacing = 0;
-			searchComposite.setLayout(searchLayout);
-			searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
 			final TaskScalingHyperlink searchLink = new TaskScalingHyperlink(searchComposite, SWT.LEFT);
 			searchLink.setText(LABEL_SEARCH);
@@ -254,10 +277,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 					searchLink.setUnderlined(false);
 				}
 			});
-
-			return searchComposite;
-		} else {
-			return super.createSearchComposite(container);
 		}
 	}
 

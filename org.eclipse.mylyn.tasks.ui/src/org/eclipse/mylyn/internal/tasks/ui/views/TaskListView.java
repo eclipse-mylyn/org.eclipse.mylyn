@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -100,6 +99,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
+import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
@@ -189,6 +190,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Mik Kersten
  * @author Ken Sueda
  * @author Eugene Kuleshov
+ * @author David Green
  */
 public class TaskListView extends ViewPart implements IPropertyChangeListener, IShowInTarget {
 
@@ -620,6 +622,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		if (editorListener != null) {
 			getSite().getPage().removePartListener(editorListener);
 		}
+		if (searchHandler != null) {
+			searchHandler.dispose();
+		}
 	}
 
 	private void updateDescription() {
@@ -798,8 +803,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
+		searchHandler = SearchUtil.createSearchHandler();
+
 		filteredTree = new TaskListFilteredTree(body, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT.NO_SCROLL | SWT.FULL_SELECTION, new SubstringPatternFilter(), getViewSite().getWorkbenchWindow());
+				| SWT.NO_SCROLL | SWT.FULL_SELECTION, searchHandler, getViewSite().getWorkbenchWindow());
 
 		// need to do initialize tooltip early for native tooltip disablement to take effect
 		taskListToolTip = new TaskListToolTip(getViewer().getControl());
@@ -1384,6 +1391,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private DelayedRefreshJob refreshJob;
 
 	private boolean itemNotFoundExceptionLogged;
+
+	private AbstractSearchHandler searchHandler;
 
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;

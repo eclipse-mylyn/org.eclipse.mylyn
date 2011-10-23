@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchWindow;
  * point.
  * 
  * @author Flavio Donze
+ * @author David Green
  */
 public class SearchUtil {
 
@@ -46,6 +47,8 @@ public class SearchUtil {
 
 	/** searchProvider extension point id */
 	private static final String EXTENSION_SEARCH_PROVIDER = "org.eclipse.mylyn.tasks.ui.searchProvider"; //$NON-NLS-1$
+
+	private static final String EXTENSION_SEARCH_HANDLER = "org.eclipse.mylyn.tasks.ui.searchHandler"; //$NON-NLS-1$
 
 	/** searchProvider attribute 'class' */
 	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
@@ -84,7 +87,7 @@ public class SearchUtil {
 				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 						"No search provider was registed. Tasks search is not available.")); //$NON-NLS-1$
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Loading of searchProvider extension failed.", e)); //$NON-NLS-1$
 		}
@@ -92,6 +95,31 @@ public class SearchUtil {
 			provider = new NullSearchProvider();
 		}
 		return provider;
+	}
+
+	public static AbstractSearchHandler createSearchHandler() {
+		AbstractSearchHandler searchHandler = null;
+		try {
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+			IConfigurationElement[] configurationElements = registry.getConfigurationElementsFor(EXTENSION_SEARCH_HANDLER);
+			if (configurationElements.length > 0) {
+				if (configurationElements.length > 1) {
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+							"More than one task list search handler was registered.")); //$NON-NLS-1$
+				}
+
+				IConfigurationElement providerConfiguration = configurationElements[0];
+				searchHandler = (AbstractSearchHandler) providerConfiguration.createExecutableExtension(ATTR_CLASS);
+			}
+		} catch (Throwable e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Loading of searchHandler extension failed.", e)); //$NON-NLS-1$
+		}
+		if (searchHandler == null) {
+			searchHandler = new DefaultSearchHandler();
+		}
+		return searchHandler;
 	}
 
 	public static boolean supportsTaskSearch() {
