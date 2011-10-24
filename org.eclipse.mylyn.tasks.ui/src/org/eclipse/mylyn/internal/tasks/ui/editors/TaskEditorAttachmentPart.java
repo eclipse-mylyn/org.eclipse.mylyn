@@ -341,7 +341,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				filterDeprecated(isChecked());
 			}
 		};
-		filterDeprecatedAttachmentsAction.setImageDescriptor(TasksUiImages.FILTER_OBSOLETE);
+		filterDeprecatedAttachmentsAction.setImageDescriptor(TasksUiImages.FILTER_OBSOLETE_SMALL);
 		filterDeprecatedAttachmentsAction.setToolTipText(Messages.TaskEditorAttachmentPart_Hide_Obsolete_Tooltip);
 		if (nonDeprecatedCount > 0 && nonDeprecatedCount < attachmentAttributes.size()) {
 			filterDeprecated(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_FILTER_DEPRECATED));
@@ -358,7 +358,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		};
 		attachFileAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach_);
-		attachFileAction.setImageDescriptor(CommonImages.FILE_PLAIN_SMALL);
+		attachFileAction.setImageDescriptor(TasksUiImages.FILE_NEW_SMALL);
 		toolBarManager.add(attachFileAction);
 	}
 

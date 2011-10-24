@@ -70,7 +70,12 @@ public class TasksUiImages {
 	/**
 	 * @since 3.7
 	 */
-	public static final ImageDescriptor FILTER_OBSOLETE = create(TOOL_SMALL, "filter-obsolete.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FILTER_OBSOLETE_SMALL = create(TOOL_SMALL, "file-delete-line-12x12.png"); //$NON-NLS-1$
+
+	/**
+	 * @since 3.7
+	 */
+	public static final ImageDescriptor FILE_NEW_SMALL = create(TOOL_SMALL, "file-new-12x12.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(TOOL, "task-retrieve.gif"); //$NON-NLS-1$
 
