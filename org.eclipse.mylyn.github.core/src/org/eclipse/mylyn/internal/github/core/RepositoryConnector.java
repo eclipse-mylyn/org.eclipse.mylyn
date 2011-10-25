@@ -45,7 +45,9 @@ public abstract class RepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getTaskIdFromTaskUrl(String taskFullUrl) {
+	public String getTaskIdFromTaskUrl(final String taskFullUrl) {
+		if (taskFullUrl == null || taskFullUrl.length() == 0)
+			return null;
 		int lastSlash = taskFullUrl.lastIndexOf('/');
 		if (lastSlash != -1 && lastSlash + 1 < taskFullUrl.length())
 			return taskFullUrl.substring(lastSlash + 1);
