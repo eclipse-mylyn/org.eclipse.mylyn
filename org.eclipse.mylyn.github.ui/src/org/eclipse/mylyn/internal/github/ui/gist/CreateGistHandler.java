@@ -28,7 +28,8 @@ import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
@@ -64,9 +65,9 @@ public class CreateGistHandler extends AbstractHandler {
 	 * TODO replace this with HandlerUtil.getActiveEditorInput(ExecutionEvent)
 	 * as soon as we don't support Eclipse 3.6 anymore copied from HandlerUtil
 	 * in 3.7 to be able to run this on 3.6
-	 * 
+	 *
 	 * Return the input of the active editor.
-	 * 
+	 *
 	 * @param event
 	 *            The execution event that contains the application context
 	 * @return the input of the active editor, or <code>null</code>.
@@ -116,7 +117,7 @@ public class CreateGistHandler extends AbstractHandler {
 			}
 			if (name == null)
 				name = DEFAULT_FILENAME;
-			createGistJob(name, text.getText(), isPublic);
+			createGistJob(event, name, text.getText(), isPublic);
 		} else if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			Object obj = structuredSelection.getFirstElement();
@@ -126,19 +127,30 @@ public class CreateGistHandler extends AbstractHandler {
 			else if (obj instanceof IAdaptable)
 				file = (IFile) ((IAdaptable) obj).getAdapter(IFile.class);
 			if (file != null)
-				createGistJob(file, isPublic);
+				createGistJob(event, file, isPublic);
 		}
 		return null;
 	}
 
-	private void createGistJob(String name, String contents, boolean isPublic) {
+	private void createGistJob(ExecutionEvent event, String name,
+			String contents, boolean isPublic) {
 		Set<TaskRepository> repositories = GistConnectorUi.getRepositories();
+		if (repositories.isEmpty())
+			return;
 
-		// only use the first repository, in the future provide a
-		// selection if multiple exist
-		TaskRepository repository = repositories.iterator().next();
-		GitHubClient client = GitHub.configureClient(new GitHubClient());
-		GitHub.addCredentials(client, repository);
+		TaskRepository repository = null;
+		// Prompt for repository selection if more than one
+		if (repositories.size() > 1) {
+			GistConnectorSelectionDialog dialog = new GistConnectorSelectionDialog(
+					HandlerUtil.getActiveShell(event), repositories);
+			if (Window.OK == dialog.open())
+				repository = (TaskRepository) dialog.getResult()[0];
+		} else
+			repository = repositories.iterator().next();
+		if (repository == null)
+			return;
+
+		GitHubClient client = GistConnector.createClient(repository);
 		GistService service = new GistService(client);
 		CreateGistJob job = new CreateGistJob(
 				Messages.CreateGistHandler_CreateGistJobName, name, contents,
@@ -146,7 +158,8 @@ public class CreateGistHandler extends AbstractHandler {
 		job.schedule();
 	}
 
-	private void createGistJob(IFile file, boolean isPublic) {
+	private void createGistJob(ExecutionEvent event, IFile file,
+			boolean isPublic) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(file.getContents()));
@@ -156,7 +169,7 @@ public class CreateGistHandler extends AbstractHandler {
 				result.append(line).append('\n');
 
 			String contents = result.toString();
-			createGistJob(file.getName(), contents, isPublic);
+			createGistJob(event, file.getName(), contents, isPublic);
 		} catch (CoreException e) {
 			GitHubUi.logError(e);
 		} catch (IOException e) {

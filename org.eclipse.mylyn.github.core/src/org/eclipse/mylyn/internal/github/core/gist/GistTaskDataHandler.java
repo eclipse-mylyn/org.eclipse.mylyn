@@ -51,7 +51,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Fill task data with comments
-	 * 
+	 *
 	 * @param repository
 	 * @param data
 	 * @param comments
@@ -65,7 +65,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Get gist url
-	 * 
+	 *
 	 * @param repositoryUrl
 	 * @param gist
 	 * @return url
@@ -76,7 +76,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 
 	/**
 	 * Fill task data with data from gist
-	 * 
+	 *
 	 * @param repository
 	 * @param data
 	 * @param gist
@@ -226,7 +226,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		RepositoryResponse response = null;
 
 		Gist gist = new Gist();
-		GitHubClient client = new GitHubClient();
+		GitHubClient client = GistConnector.createClient(repository);
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null) {
@@ -291,7 +291,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	/**
 	 * Is the given Gist author the same user as configured via the task
 	 * repository's credentials?
-	 * 
+	 *
 	 * @param repository
 	 * @param author
 	 * @return true if owner, false otherwise
@@ -305,7 +305,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	/**
 	 * Is the given Gist author the same user as configured via the task
 	 * repository's credentials?
-	 * 
+	 *
 	 * @param repository
 	 * @param author
 	 * @return true if owner, false otherwise

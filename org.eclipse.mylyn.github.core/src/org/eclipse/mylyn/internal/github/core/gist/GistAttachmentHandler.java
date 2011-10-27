@@ -94,7 +94,7 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 		file.setFilename(mapper.getFileName());
 		gist.setFiles(Collections.singletonMap(file.getFilename(), file));
 
-		GitHubClient client = new GitHubClient();
+		GitHubClient client = GistConnector.createClient(repository);
 		AuthenticationCredentials credentials = repository
 				.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null)

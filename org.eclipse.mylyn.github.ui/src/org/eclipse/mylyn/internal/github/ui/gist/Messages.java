@@ -59,6 +59,12 @@ public class Messages extends NLS {
 	public static String GistAttachmentPart_PartName;
 
 	/** */
+	public static String GistConnectorSelectionDialog_Message;
+
+	/** */
+	public static String GistConnectorSelectionDialog_Title;
+
+	/** */
 	public static String GistConnectorUi_LabelTaskKind;
 
 	/** */

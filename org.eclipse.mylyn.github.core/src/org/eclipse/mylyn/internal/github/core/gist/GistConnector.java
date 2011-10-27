@@ -42,12 +42,13 @@ public class GistConnector extends RepositoryConnector {
 
 	/**
 	 * Create client for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return client
 	 */
 	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = new GitHubClient();
+		GitHubClient client = GitHubClient.createClient(repository
+				.getRepositoryUrl());
 		GitHub.addCredentials(client, repository);
 		return GitHub.configureClient(client);
 	}

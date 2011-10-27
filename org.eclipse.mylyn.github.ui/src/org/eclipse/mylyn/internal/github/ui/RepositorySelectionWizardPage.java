@@ -370,7 +370,8 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
-					GitHubClient client = new GitHubClient();
+					GitHubClient client = GitHub
+							.configureClient(new GitHubClient());
 					client.setCredentials(user, password);
 					RepositoryService service = new RepositoryService(client);
 					OrganizationService orgs = new OrganizationService(client);
