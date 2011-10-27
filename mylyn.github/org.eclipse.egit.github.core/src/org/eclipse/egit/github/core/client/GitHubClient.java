@@ -230,7 +230,7 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Create standard post method
+	 * Create standard put method
 	 *
 	 * @param uri
 	 * @return post
