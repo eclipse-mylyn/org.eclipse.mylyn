@@ -101,6 +101,8 @@ public class GitHubClient {
 
 	private Header userAgent = USER_AGENT;
 
+	private final Header accept = new BasicHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	private Gson gson = GsonUtils.getGson();
 
 	/**
@@ -188,6 +190,7 @@ public class GitHubClient {
 	 */
 	protected <V extends HttpMessage> V configureRequest(V request) {
 		request.addHeader(userAgent);
+		request.addHeader(accept);
 		return request;
 	}
 
