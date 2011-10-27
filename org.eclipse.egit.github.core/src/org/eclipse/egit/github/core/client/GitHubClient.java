@@ -25,8 +25,11 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CONTENT_TYPE_JSON;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_DEFAULT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_GISTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PROTOCOL_HTTPS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SUBDOMAIN_API;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V3_API;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -73,9 +76,10 @@ public class GitHubClient {
 
 	/**
 	 * Create API client from URL.
-	 *
+	 * <p>
 	 * This creates an HTTPS-based client with a host that contains the host
-	 * value of the given URL prefixed with 'api'.
+	 * value of the given URL prefixed with 'api' if the given URL is github.com
+	 * or gist.github.com
 	 *
 	 * @param url
 	 * @return client
@@ -83,7 +87,8 @@ public class GitHubClient {
 	public static GitHubClient createClient(String url) {
 		try {
 			String host = new URL(url).getHost();
-			host = SUBDOMAIN_API + "." + host; //$NON-NLS-1$
+			if (HOST_DEFAULT.equals(host) || HOST_GISTS.equals(host))
+				host = HOST_API;
 			return new GitHubClient(host);
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
@@ -102,6 +107,8 @@ public class GitHubClient {
 	private Header userAgent = USER_AGENT;
 
 	private final Header accept = new BasicHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	private final String prefix;
 
 	private Gson gson = GsonUtils.getGson();
 
@@ -142,6 +149,12 @@ public class GitHubClient {
 			throw new IllegalArgumentException("Http host cannot be null"); //$NON-NLS-1$
 
 		this.httpHost = httpHost;
+
+		// Use URI prefix on non-standard host names
+		if (!HOST_API.equals(httpHost.getHostName()))
+			prefix = SEGMENT_V3_API;
+		else
+			prefix = null;
 
 		// Support JVM configured proxy servers
 		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
@@ -195,13 +208,15 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Create standard post method
+	 * Configure request URI
 	 *
 	 * @param uri
-	 * @return post
+	 * @return configured URI
 	 */
-	protected HttpPost createPost(String uri) {
-		return configureRequest(new HttpPost(uri));
+	protected String configureUri(final String uri) {
+		if (prefix == null || uri.startsWith(SEGMENT_V2_API))
+			return uri;
+		return prefix + uri;
 	}
 
 	/**
@@ -210,8 +225,18 @@ public class GitHubClient {
 	 * @param uri
 	 * @return post
 	 */
-	protected HttpPut createPut(String uri) {
-		return configureRequest(new HttpPut(uri));
+	protected HttpPost createPost(final String uri) {
+		return configureRequest(new HttpPost(configureUri(uri)));
+	}
+
+	/**
+	 * Create standard post method
+	 *
+	 * @param uri
+	 * @return post
+	 */
+	protected HttpPut createPut(final String uri) {
+		return configureRequest(new HttpPut(configureUri(uri)));
 	}
 
 	/**
@@ -220,8 +245,8 @@ public class GitHubClient {
 	 * @param uri
 	 * @return get method
 	 */
-	protected HttpGet createGet(String uri) {
-		return configureRequest(new HttpGet(uri));
+	protected HttpGet createGet(final String uri) {
+		return configureRequest(new HttpGet(configureUri(uri)));
 	}
 
 	/**
@@ -231,7 +256,7 @@ public class GitHubClient {
 	 * @return get method
 	 */
 	protected HttpDelete createDelete(String uri) {
-		return configureRequest(new HttpDelete(uri));
+		return configureRequest(new HttpDelete(configureUri(uri)));
 	}
 
 	/**

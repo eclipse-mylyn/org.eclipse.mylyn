@@ -43,6 +43,8 @@ public interface IGitHubConstants {
 	String HOST_API_V2 = "github.com"; //$NON-NLS-1$
 	/** */
 	String HOST_DEFAULT = "github.com"; //$NON-NLS-1$
+	/** */
+	String HOST_GISTS = "gist.github.com"; //$NON-NLS-1$
 
 	/** */
 	String META_REL = "rel"; //$NON-NLS-1$
@@ -160,6 +162,8 @@ public interface IGitHubConstants {
 	String SEGMENT_WATCHERS = "/watchers"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
+	/** */
+	String SEGMENT_V3_API = "/api/v3"; //$NON-NLS-1$
 
 	/** */
 	String SUBDOMAIN_API = "api"; //$NON-NLS-1$
