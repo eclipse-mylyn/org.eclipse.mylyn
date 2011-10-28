@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -33,10 +34,13 @@ import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPart2;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -78,11 +82,24 @@ public class CreateGistHandler extends AbstractHandler {
 		return var instanceof IEditorInput ? (IEditorInput) var : null;
 	}
 
+	/**
+	 * Get active part
+	 *
+	 * @param event
+	 * @return part
+	 */
+	private IWorkbenchPart getActivePart(ExecutionEvent event) {
+		Object var = HandlerUtil.getVariable(event, ISources.ACTIVE_PART_NAME);
+		return var instanceof IWorkbenchPart ? (IWorkbenchPart) var : null;
+
+	}
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO replace this with
 		// HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon
 		// as we don't support Eclipse 3.6 anymore
 		IEditorInput input = getActiveEditorInput(event);
+		IWorkbenchPart part = getActivePart(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection == null || selection.isEmpty())
 			selection = HandlerUtil.getActiveMenuSelection(event);
@@ -94,27 +111,32 @@ public class CreateGistHandler extends AbstractHandler {
 		if (selection instanceof ITextSelection) {
 			ITextSelection text = (ITextSelection) selection;
 			String name = null;
-			if (input instanceof IFileEditorInput) {
-				IFile file = ((IFileEditorInput) input).getFile();
-				if (file != null)
-					name = file.getName();
-			}
-			if (name == null && input instanceof IPathEditorInput) {
-				IPath path = ((IPathEditorInput) input).getPath();
-				if (path != null)
-					name = path.lastSegment();
-			}
-			if (name == null && input instanceof IURIEditorInput) {
-				URI uri = ((IURIEditorInput) input).getURI();
-				if (uri != null) {
-					String rawPath = uri.getRawPath();
-					if (rawPath != null) {
-						int lastSlash = rawPath.lastIndexOf('/') + 1;
-						if (lastSlash > 0 && lastSlash < rawPath.length())
-							name = rawPath.substring(lastSlash);
+			if (part == null || part instanceof IEditorPart) {
+				if (input instanceof IFileEditorInput) {
+					IFile file = ((IFileEditorInput) input).getFile();
+					if (file != null)
+						name = file.getName();
+				}
+				if (name == null && input instanceof IPathEditorInput) {
+					IPath path = ((IPathEditorInput) input).getPath();
+					if (path != null)
+						name = path.lastSegment();
+				}
+				if (name == null && input instanceof IURIEditorInput) {
+					URI uri = ((IURIEditorInput) input).getURI();
+					if (uri != null) {
+						String rawPath = uri.getRawPath();
+						if (rawPath != null) {
+							int lastSlash = rawPath.lastIndexOf('/') + 1;
+							if (lastSlash > 0 && lastSlash < rawPath.length())
+								name = rawPath.substring(lastSlash);
+						}
 					}
 				}
-			}
+			} else if (part instanceof IWorkbenchPart2)
+				name = ((IWorkbenchPart2) part).getPartName().replace(" ", "")
+						.toLowerCase(Locale.US)
+						+ ".txt";
 			if (name == null)
 				name = DEFAULT_FILENAME;
 			createGistJob(event, name, text.getText(), isPublic);

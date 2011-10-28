@@ -166,6 +166,34 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.debug.ui.ProcessConsoleType.#ContextMenu?after=additions">
+         <menu
+               icon="icons/obj16/github.png"
+               label="%githubMenuLabel">
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_private.png"
+                  label="%createPrivateGistLabel"
+                  style="push">
+               <parameter
+                     name="publicGist"
+                     value="false">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.github.ui.command.createGist"
+                  icon="icons/obj16/gist_public.png"
+                  label="%createPublicGistLabel"
+                  style="push">
+               <parameter
+                     name="publicGist"
+                     value="true">
+               </parameter>
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
