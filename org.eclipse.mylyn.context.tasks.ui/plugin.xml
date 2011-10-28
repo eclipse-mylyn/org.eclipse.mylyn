@@ -39,6 +39,9 @@
          <adapter
                type="org.eclipse.mylyn.context.core.IInteractionContext">
          </adapter>
+         <adapter
+               type="org.eclipse.mylyn.context.ui.ContextAwareEditorInput">
+         </adapter>
       </factory>
    </extension>
 

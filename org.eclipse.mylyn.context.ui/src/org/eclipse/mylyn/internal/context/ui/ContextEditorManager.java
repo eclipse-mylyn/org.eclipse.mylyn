@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.context.ui.ContextAwareEditorInput;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -237,7 +239,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				&& ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS) && isEnabled()) {
-			closeAllButActiveTaskEditor(context.getHandleIdentifier());
+			closeContextAwareEditors(context.getHandleIdentifier());
 
 			XMLMemento rootMemento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
@@ -282,7 +284,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	public void clearEditorMemento(String contextHandle, boolean closeEditors) {
 
 		if (closeEditors) {
-			closeAllButActiveTaskEditor(contextHandle);
+			closeContextAwareEditors(contextHandle);
 		}
 
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
@@ -348,7 +350,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		}
 	}
 
-	public void closeAllButActiveTaskEditor(String taskHandle) {
+	public void closeContextAwareEditors(String contextHandle) {
 		try {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
@@ -362,10 +364,7 @@ public class ContextEditorManager extends AbstractContextListener {
 						if (canClose(reference)) {
 							try {
 								IEditorInput input = reference.getEditorInput();
-								IInteractionContext inputContext = (IInteractionContext) input.getAdapter(IInteractionContext.class);
-								if (inputContext != null && inputContext.getHandleIdentifier().equals(taskHandle)) {
-									// do not close
-								} else {
+								if (shouldForceClose(input, contextHandle)) {
 									toClose.add(reference);
 								}
 							} catch (PartInitException e) {
@@ -402,6 +401,22 @@ public class ContextEditorManager extends AbstractContextListener {
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
+	}
+
+	private boolean shouldForceClose(final IEditorInput input, final String contextHandle) {
+		final AtomicBoolean result = new AtomicBoolean();
+		SafeRunnable.run(new ISafeRunnable() {
+			public void run() throws Exception {
+				ContextAwareEditorInput inputContext = (ContextAwareEditorInput) input.getAdapter(ContextAwareEditorInput.class);
+				result.set(inputContext != null && inputContext.forceClose(contextHandle));
+			}
+
+			public void handleException(Throwable e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Failed to verify editor status", e)); //$NON-NLS-1$
+			}
+		});
+		return result.get();
 	}
 
 	private boolean canClose(final IEditorReference editorReference) {
