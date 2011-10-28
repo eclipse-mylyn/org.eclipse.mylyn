@@ -36,7 +36,7 @@ h3. Markup Source Tab
 
 'Source' is the default editor pane.  This is the area for editing markup such as Textile.   The source pane provides syntax highlighting that should make it easier to see what the markup means.
 
-Standard text editor actions are available here, such as copy/paste and find/replace.  Explore the context menu and 'Edit' menu to see what actions are available.
+Standard text editor actions are available here, such as copy/paste and find/replace.  A "Preview at _[heading]_" context menu is provided to open the preview tab at a specific section of the document.  Explore the context menu and 'Edit' menu to see what actions are available.
 
 h3. Preview Tab
 
