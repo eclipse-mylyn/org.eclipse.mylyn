@@ -1699,8 +1699,13 @@ public class BugzillaClient {
 				inStream = getResponseStream(getMethod, monitor);
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(
 						inStream, getCharacterEncoding())), null);
+				String formName = null;
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
+					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.FORM
+							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						formName = tag.getAttribute("id"); //$NON-NLS-1$
+					} else if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
 							&& !((HtmlTag) (token.getValue())).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						//	String name = tag.getAttribute("name");
@@ -1712,7 +1717,8 @@ public class BugzillaClient {
 						if (type != null && type.equalsIgnoreCase("checkbox") && id != null && id.startsWith("bit-")) { //$NON-NLS-1$ //$NON-NLS-2$
 							htmlInfo.getGroups().put(id, checkedValue);
 						} else if (name != null && name.equalsIgnoreCase(BugzillaAttribute.TOKEN.getKey())
-								&& value != null && value.length() > 0) {
+								&& value != null && value.length() > 0 && formName != null
+								&& formName.equals("changeform")) { //$NON-NLS-1$
 							htmlInfo.setToken(value);
 						}
 					}
