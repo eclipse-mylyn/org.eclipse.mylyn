@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Tomasz Zarna <tzarna@gmail.com> - bug 361536
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -20,12 +21,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlag;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlagMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,7 +59,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 
 	private Composite flagScrollComposite;
 
-	private ScrolledComposite scrolledComposite;
+	private SectionComposite scrolledComposite;
 
 	private Composite scrolledBodyComposite;
 
@@ -81,15 +82,13 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 	}
 
 	private void createScrolledComposite(Composite parent) {
-		scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL /*| SWT.BORDER*/) {
+		scrolledComposite = new SectionComposite(parent, SWT.NONE) {
 			@Override
 			public Point computeSize(int hint, int hint2, boolean changed) {
 				return new Point(64, 64);
 			}
 		};
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledBodyComposite = new Composite(scrolledComposite, SWT.NONE);
+		scrolledBodyComposite = scrolledComposite.getContent();
 		scrolledBodyComposite.setLayout(new GridLayout());
 		scrolledComposite.setContent(scrolledBodyComposite);
 		setControl(scrolledComposite);
