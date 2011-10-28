@@ -349,6 +349,20 @@ public class RepositoryServiceTest {
 	}
 
 	/**
+	 * Search repositories starting at page
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void searchRepositoriesStartingAtPage() throws IOException {
+		service.searchRepositories("buffers", 50);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils
+				.page("/api/v2/json/repos/search/buffers?start_page=50"));
+		verify(client).get(request);
+	}
+
+	/**
 	 * Get languages in repository
 	 *
 	 * @throws IOException

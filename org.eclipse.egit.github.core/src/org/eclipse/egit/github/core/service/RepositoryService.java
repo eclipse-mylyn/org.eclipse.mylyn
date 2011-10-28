@@ -11,6 +11,7 @@
 package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_START_PAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTRIBUTORS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
@@ -31,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -419,9 +421,25 @@ public class RepositoryService extends GitHubService {
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<SearchRepository> searchRepositories(String query)
+	public List<SearchRepository> searchRepositories(final String query)
 			throws IOException {
-		return searchRepositories(query, null);
+		return searchRepositories(query, -1);
+	}
+
+	/**
+	 * Search for repositories matching query.
+	 *
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
+	 *
+	 * @param query
+	 * @param startPage
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<SearchRepository> searchRepositories(final String query,
+			final int startPage) throws IOException {
+		return searchRepositories(query, null, startPage);
 	}
 
 	/**
@@ -437,6 +455,23 @@ public class RepositoryService extends GitHubService {
 	 */
 	public List<SearchRepository> searchRepositories(final String query,
 			final String language) throws IOException {
+		return searchRepositories(query, language, -1);
+	}
+
+	/**
+	 * Search for repositories matching language and query.
+	 *
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
+	 *
+	 * @param query
+	 * @param language
+	 * @param startPage
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<SearchRepository> searchRepositories(final String query,
+			final String language, final int startPage) throws IOException {
 		if (query == null)
 			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
 		if (query.length() == 0)
@@ -448,9 +483,13 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(query);
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
+		Map<String, String> params = new HashMap<String, String>();
 		if (language != null && language.length() > 0)
-			request.setParams(Collections
-					.singletonMap(PARAM_LANGUAGE, language));
+			params.put(PARAM_LANGUAGE, language);
+		if (startPage > 0)
+			params.put(PARAM_START_PAGE, Integer.toString(startPage));
+		if (!params.isEmpty())
+			request.setParams(params);
 
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);

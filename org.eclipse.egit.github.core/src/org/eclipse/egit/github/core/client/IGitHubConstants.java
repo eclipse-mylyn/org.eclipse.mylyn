@@ -63,6 +63,8 @@ public interface IGitHubConstants {
 	String PARAM_PAGE = "page"; //$NON-NLS-1$
 	/** */
 	String PARAM_PER_PAGE = "per_page"; //$NON-NLS-1$
+	/** */
+	String PARAM_START_PAGE = "start_page"; //$NON-NLS-1$
 
 	/** */
 	String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
