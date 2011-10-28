@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,6 +129,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * content assist, validation, and cheat-sheet help content.
  * 
  * @author David Green
+ * @author Nicolas Bros
  */
 public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSource, CommandManager {
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
@@ -289,7 +290,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 			public void widgetSelected(SelectionEvent selectionevent) {
 				if (isShowingPreview()) {
-					updatePreview(getNearestMatchingOutlineItem());
+					updatePreview();
 				}
 			}
 		});
@@ -506,7 +507,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 							}
 							scheduleOutlineUpdate();
 							if (isShowingPreview()) {
-								updatePreview(null);
+								updatePreview();
 							}
 						}
 
@@ -530,9 +531,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 	}
 
-	private void updatePreview(final OutlineItem item) {
-		boolean revealItem = item != null;
+	private static final String JAVASCRIPT_GETSCROLLTOP = "function getScrollTop() { " //$NON-NLS-1$
+			+ "  if(typeof pageYOffset!='undefined') return pageYOffset;" //$NON-NLS-1$
+			+ "  else{var B=document.body;var D=document.documentElement;D=(D.clientHeight)?D:B;return D.scrollTop;}" //$NON-NLS-1$
+			+ "}; return getScrollTop();"; //$NON-NLS-1$
+
+	private void updatePreview() {
 		if (previewDirty && browser != null) {
+			Object result = browser.evaluate(JAVASCRIPT_GETSCROLLTOP);
+			final int verticalScrollbarPos = result != null ? ((Double) result).intValue() : 0;
 			String xhtml = null;
 			if (document == null) {
 				xhtml = "<?xml version=\"1.0\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><body></body></html>"; //$NON-NLS-1$
@@ -606,21 +613,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					xhtml = documentWriter.toString();
 				}
 			}
-			if (revealItem) {
-				revealItem = false;
-				browser.addProgressListener(new ProgressAdapter() {
-					@Override
-					public void completed(ProgressEvent event) {
-						browser.removeProgressListener(this);
-						revealInBrowser(item);
-					}
-				});
-			}
+			browser.addProgressListener(new ProgressAdapter() {
+				@Override
+				public void completed(ProgressEvent event) {
+					browser.removeProgressListener(this);
+					browser.execute(String.format("window.scrollTo(0,%d);", verticalScrollbarPos)); //$NON-NLS-1$
+				}
+			});
 			browser.setText(xhtml);
 			previewDirty = false;
-		}
-		if (revealItem) {
-			revealInBrowser(item);
 		}
 	}
 
