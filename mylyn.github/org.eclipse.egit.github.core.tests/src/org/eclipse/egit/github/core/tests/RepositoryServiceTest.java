@@ -308,7 +308,7 @@ public class RepositoryServiceTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void searchRepositoriesNullQuery() throws IOException {
-		service.searchRepositories(null);
+		service.searchRepositories((String) null);
 	}
 
 	/**
