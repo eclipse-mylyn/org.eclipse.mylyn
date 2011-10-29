@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_START_PAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
@@ -31,10 +32,12 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.egit.github.core.Contributor;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
@@ -413,7 +416,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching query.
-	 *
+	 * <p>
 	 * This method requires an API v2 configured {@link GitHubClient} as it is
 	 * not yet supported in API v3 clients.
 	 *
@@ -428,7 +431,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching query.
-	 *
+	 * <p>
 	 * This method requires an API v2 configured {@link GitHubClient} as it is
 	 * not yet supported in API v3 clients.
 	 *
@@ -444,7 +447,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching language and query.
-	 *
+	 * <p>
 	 * This method requires an API v2 configured {@link GitHubClient} as it is
 	 * not yet supported in API v3 clients.
 	 *
@@ -460,7 +463,7 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching language and query.
-	 *
+	 * <p>
 	 * This method requires an API v2 configured {@link GitHubClient} as it is
 	 * not yet supported in API v3 clients.
 	 *
@@ -480,10 +483,13 @@ public class RepositoryService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_V2_API);
 		uri.append(SEGMENT_REPOS);
 		uri.append(SEGMENT_SEARCH);
-		uri.append('/').append(query);
+		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
+				.replace("+", "%20");
+		uri.append('/').append(encodedQuery);
+
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<String, String>(2, 1);
 		if (language != null && language.length() > 0)
 			params.put(PARAM_LANGUAGE, language);
 		if (startPage > 0)
@@ -494,6 +500,47 @@ public class RepositoryService extends GitHubService {
 		request.setUri(uri);
 		request.setType(RepositoryContainer.class);
 		return getAll(request);
+	}
+
+	/**
+	 * Search for repositories matching search parameters.
+	 * <p>
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
+	 *
+	 * @param params
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<SearchRepository> searchRepositories(
+			final Map<String, String> params) throws IOException {
+		return searchRepositories(params, -1);
+	}
+
+	/**
+	 * Search for repositories matching search parameters.
+	 * <p>
+	 * This method requires an API v2 configured {@link GitHubClient} as it is
+	 * not yet supported in API v3 clients.
+	 *
+	 * @param queryParams
+	 * @param startPage
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<SearchRepository> searchRepositories(
+			final Map<String, String> queryParams, final int startPage)
+			throws IOException {
+		if (queryParams == null)
+			throw new IllegalArgumentException("Params cannot be null"); //$NON-NLS-1$
+		if (queryParams.isEmpty())
+			throw new IllegalArgumentException("Params cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder query = new StringBuilder();
+		for (Entry<String, String> param : queryParams.entrySet())
+			query.append(param.getKey()).append(':').append(param.getValue())
+					.append(' ');
+		return searchRepositories(query.toString(), startPage);
 	}
 
 	/**
