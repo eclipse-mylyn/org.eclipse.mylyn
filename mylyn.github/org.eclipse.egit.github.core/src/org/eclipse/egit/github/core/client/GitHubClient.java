@@ -25,6 +25,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CONTENT_TYPE_JSON;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API_V2;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_DEFAULT;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_GISTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PROTOCOL_HTTPS;
@@ -75,7 +76,7 @@ import org.eclipse.egit.github.core.RequestError;
 public class GitHubClient {
 
 	/**
-	 * Create API client from URL.
+	 * Create API v3 client from URL.
 	 * <p>
 	 * This creates an HTTPS-based client with a host that contains the host
 	 * value of the given URL prefixed with 'api' if the given URL is github.com
@@ -151,10 +152,11 @@ public class GitHubClient {
 		this.httpHost = httpHost;
 
 		// Use URI prefix on non-standard host names
-		if (!HOST_API.equals(httpHost.getHostName()))
-			prefix = SEGMENT_V3_API;
-		else
+		String host = httpHost.getHostName();
+		if (HOST_API.equals(host) || HOST_API_V2.equals(host))
 			prefix = null;
+		else
+			prefix = SEGMENT_V3_API;
 
 		// Support JVM configured proxy servers
 		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
