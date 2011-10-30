@@ -484,7 +484,8 @@ public class RepositoryService extends GitHubService {
 		uri.append(SEGMENT_REPOS);
 		uri.append(SEGMENT_SEARCH);
 		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
-				.replace("+", "%20");
+				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
 		uri.append('/').append(encodedQuery);
 
 		PagedRequest<SearchRepository> request = createPagedRequest();

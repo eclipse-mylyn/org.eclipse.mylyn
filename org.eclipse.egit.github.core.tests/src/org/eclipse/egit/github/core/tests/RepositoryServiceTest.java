@@ -363,6 +363,19 @@ public class RepositoryServiceTest {
 	}
 
 	/**
+	 * Search repositories with query that needs escaping
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void searchEscaped() throws IOException {
+		service.searchRepositories("a and a.");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/api/v2/json/repos/search/a%20and%20a%2E"));
+		verify(client).get(request);
+	}
+
+	/**
 	 * Get languages in repository
 	 *
 	 * @throws IOException
