@@ -9,11 +9,12 @@
  *     Igor Malinin - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.creole.core;
+package org.eclipse.mylyn.internal.wikitext.creole.tests;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**

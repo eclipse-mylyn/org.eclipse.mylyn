@@ -25,5 +25,5 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.mylyn.wikitext.creole.core;bundle-version="1.6.0",
  org.eclipse.mylyn.wikitext.tests;bundle-version="1.6.0"
 Export-Package: 
- org.eclipse.mylyn.wikitext.creole.core
+ org.eclipse.mylyn.internal.wikitext.creole.tests;x-internal:=true
 Bundle-Localization: plugin
