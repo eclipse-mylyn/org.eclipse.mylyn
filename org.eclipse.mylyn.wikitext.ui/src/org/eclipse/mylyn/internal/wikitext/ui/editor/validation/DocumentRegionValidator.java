@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.validation;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -73,9 +74,23 @@ public abstract class DocumentRegionValidator {
 		final int totalWork = Integer.MAX_VALUE / 2;
 		monitor.beginTask(Messages.DocumentRegionValidator_validating, totalWork);
 		try {
-			List<ValidationProblem> problems = delegate.validate(new SubProgressMonitor(monitor, totalWork / 2),
-					document.get(), region.getOffset(), region.getLength());
+			String markup = document.get();
+			int offset = region.getOffset();
+			int length = region.getLength();
 
+			// guard against invalid length see bug 361636
+			if (offset + length > markup.length()) {
+				length = markup.length() - offset;
+			}
+
+			List<ValidationProblem> problems;
+			if (length <= 0) {
+				problems = Collections.emptyList();
+			} else {
+				problems = delegate.validate(new SubProgressMonitor(monitor, totalWork / 2), markup, offset, length);
+			}
+
+			// always createProblems even if there are no problems
 			createProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region, problems);
 
 		} finally {
