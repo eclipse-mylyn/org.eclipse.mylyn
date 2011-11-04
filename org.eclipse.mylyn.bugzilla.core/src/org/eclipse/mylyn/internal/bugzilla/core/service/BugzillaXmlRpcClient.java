@@ -397,7 +397,14 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 						continue;
 					}
 					if (values instanceof HashMap<?, ?>) {
-						defaultMilestone = (String) ((HashMap<?, ?>) values).get("defaultmilestone"); //$NON-NLS-1$
+						Object defaultMilestoneObj = ((HashMap<?, ?>) values).get("defaultmilestone"); //$NON-NLS-1$
+						if (defaultMilestoneObj instanceof String) {
+							defaultMilestone = (String) defaultMilestoneObj;
+						} else if (defaultMilestoneObj instanceof Double) {
+							defaultMilestone = ((Double) defaultMilestoneObj).toString();
+						} else if (defaultMilestoneObj instanceof Integer) {
+							defaultMilestone = ((Integer) defaultMilestoneObj).toString();
+						}
 					}
 					if (product != null && !product.equals("") //$NON-NLS-1$
 							&& defaultMilestone != null && !defaultMilestone.equals("")) { //$NON-NLS-1$
