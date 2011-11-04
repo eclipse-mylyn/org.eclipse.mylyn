@@ -39,6 +39,7 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
@@ -84,8 +85,10 @@ public class ReviewCompareEditorInput extends CompareEditorInput {
 		this.annotationModel = annotationModel;
 		this.file = file;
 
-		setTitle("Compare " + file.getName() + " " + file.getBase().getRevision() + " and "
-				+ file.getTarget().getRevision());
+		compareConfiguration.setLeftLabel(NLS.bind("{0}: {1}", file.getTarget().getRevision(), file.getName()));
+		compareConfiguration.setRightLabel(NLS.bind("{0}: {1}", file.getBase().getRevision(), file.getName()));
+		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getTarget().getRevision(),
+				file.getBase().getRevision() }));
 	}
 
 	private byte[] getContent(IFileRevision revision) {
