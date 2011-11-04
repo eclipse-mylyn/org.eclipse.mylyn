@@ -59,6 +59,7 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotation
 import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.osgi.util.NLS;
@@ -519,17 +520,20 @@ public class PatchSetSection extends AbstractGerritSection {
 
 			public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 				if (oldInput instanceof List<?> && modelAdapter != null) {
-					for (Object item : (List) oldInput) {
+					for (IReviewItem item : (List<IReviewItem>) oldInput) {
 						((EObject) item).eAdapters().remove(modelAdapter);
 					}
 					addedDrafts = 0;
 				}
 
 				if (newInput instanceof List<?>) {
+					// monitors any new topics that are added
 					modelAdapter = new EContentAdapter() {
 						@Override
 						public void notifyChanged(Notification notification) {
-							if (notification.getEventType() == Notification.ADD) {
+							super.notifyChanged(notification);
+							if (notification.getFeatureID(IReviewItem.class) == ReviewsPackage.REVIEW_ITEM__TOPICS
+									&& notification.getEventType() == Notification.ADD) {
 								viewer.refresh();
 								addedDrafts++;
 							}

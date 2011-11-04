@@ -12,6 +12,7 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.EObject;
@@ -37,7 +38,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
  */
 public class FileItem extends ReviewItem implements IFileItem {
 	/**
-	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference.
+	 * The cached value of the '{@link #getBase() <em>Base</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getBase()
@@ -47,7 +48,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	protected IFileRevision base;
 
 	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
+	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getTarget()
@@ -81,15 +82,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IFileRevision getBase() {
-		if (base != null && ((EObject) base).eIsProxy()) {
-			InternalEObject oldBase = (InternalEObject) base;
-			base = (IFileRevision) eResolveProxy(oldBase);
-			if (base != oldBase) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__BASE, oldBase,
-							base));
-			}
-		}
 		return base;
 	}
 
@@ -98,8 +90,18 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IFileRevision basicGetBase() {
-		return base;
+	public NotificationChain basicSetBase(IFileRevision newBase, NotificationChain msgs) {
+		IFileRevision oldBase = base;
+		base = newBase;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.FILE_ITEM__BASE, oldBase, newBase);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -108,10 +110,19 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public void setBase(IFileRevision newBase) {
-		IFileRevision oldBase = base;
-		base = newBase;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__BASE, oldBase, base));
+		if (newBase != base) {
+			NotificationChain msgs = null;
+			if (base != null)
+				msgs = ((InternalEObject) base).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+			if (newBase != null)
+				msgs = ((InternalEObject) newBase).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+			msgs = basicSetBase(newBase, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__BASE, newBase, newBase));
 	}
 
 	/**
@@ -120,15 +131,6 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IFileRevision getTarget() {
-		if (target != null && ((EObject) target).eIsProxy()) {
-			InternalEObject oldTarget = (InternalEObject) target;
-			target = (IFileRevision) eResolveProxy(oldTarget);
-			if (target != oldTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__TARGET,
-							oldTarget, target));
-			}
-		}
 		return target;
 	}
 
@@ -137,8 +139,18 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IFileRevision basicGetTarget() {
-		return target;
+	public NotificationChain basicSetTarget(IFileRevision newTarget, NotificationChain msgs) {
+		IFileRevision oldTarget = target;
+		target = newTarget;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.FILE_ITEM__TARGET, oldTarget, newTarget);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -147,10 +159,36 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public void setTarget(IFileRevision newTarget) {
-		IFileRevision oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__TARGET, oldTarget, target));
+		if (newTarget != target) {
+			NotificationChain msgs = null;
+			if (target != null)
+				msgs = ((InternalEObject) target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+			if (newTarget != null)
+				msgs = ((InternalEObject) newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+			msgs = basicSetTarget(newTarget, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__TARGET, newTarget,
+					newTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.FILE_ITEM__BASE:
+			return basicSetBase(null, msgs);
+		case ReviewsPackage.FILE_ITEM__TARGET:
+			return basicSetTarget(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -162,13 +200,9 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.FILE_ITEM__BASE:
-			if (resolve)
-				return getBase();
-			return basicGetBase();
+			return getBase();
 		case ReviewsPackage.FILE_ITEM__TARGET:
-			if (resolve)
-				return getTarget();
-			return basicGetTarget();
+			return getTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

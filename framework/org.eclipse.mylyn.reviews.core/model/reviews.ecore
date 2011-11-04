@@ -78,8 +78,10 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FileItem" eSuperTypes="#//ReviewItem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="#//FileRevision"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FileRevision"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="#//FileRevision"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FileRevision"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReviewItemSet" eSuperTypes="#//ReviewItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"

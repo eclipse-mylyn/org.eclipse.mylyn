@@ -199,7 +199,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 		case ReviewsPackage.TASK_REFERENCE__TASK_ID:
 			return TASK_ID_EDEFAULT == null ? taskId != null : !TASK_ID_EDEFAULT.equals(taskId);
 		case ReviewsPackage.TASK_REFERENCE__REPOSITORY_URL:
-			return REPOSITORY_URL_EDEFAULT == null ? repositoryURL != null
+			return REPOSITORY_URL_EDEFAULT == null
+					? repositoryURL != null
 					: !REPOSITORY_URL_EDEFAULT.equals(repositoryURL);
 		}
 		return super.eIsSet(featureID);

@@ -763,7 +763,7 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__ID = REVIEW_ITEM__ID;
 
 	/**
-	 * The feature id for the '<em><b>Base</b></em>' reference.
+	 * The feature id for the '<em><b>Base</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -772,7 +772,7 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__BASE = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * The feature id for the '<em><b>Target</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1200,7 +1200,8 @@ public class ReviewsPackage extends EPackageImpl {
 			return (ReviewsPackage) EPackage.Registry.INSTANCE.getEPackage(ReviewsPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage ? EPackage.Registry.INSTANCE.get(eNS_URI)
+		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
+				? EPackage.Registry.INSTANCE.get(eNS_URI)
 				: new ReviewsPackage());
 
 		isInited = true;
@@ -1767,10 +1768,10 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Base</em>'.
+	 * @return the meta object for the containment reference '<em>Base</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getBase()
 	 * @see #getFileItem()
 	 * @generated
@@ -1780,10 +1781,10 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @return the meta object for the containment reference '<em>Target</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget()
 	 * @see #getFileItem()
 	 * @generated
@@ -2266,12 +2267,12 @@ public class ReviewsPackage extends EPackageImpl {
 				getFileItem_Base(),
 				this.getFileRevision(),
 				null,
-				"base", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"base", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getFileItem_Target(),
 				this.getFileRevision(),
 				null,
-				"target", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"target", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(reviewItemSetEClass, IReviewItemSet.class,
 				"ReviewItemSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2723,7 +2724,7 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EClass FILE_ITEM = eINSTANCE.getFileItem();
 
 		/**
-		 * The meta object literal for the '<em><b>Base</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Base</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2731,7 +2732,7 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference FILE_ITEM__BASE = eINSTANCE.getFileItem_Base();
 
 		/**
-		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Target</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

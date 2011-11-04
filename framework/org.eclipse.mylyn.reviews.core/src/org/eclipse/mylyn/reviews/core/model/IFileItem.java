@@ -27,48 +27,48 @@ package org.eclipse.mylyn.reviews.core.model;
  */
 public interface IFileItem extends IReviewItem {
 	/**
-	 * Returns the value of the '<em><b>Base</b></em>' reference.
+	 * Returns the value of the '<em><b>Base</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Base</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Base</em>' reference.
+	 * @return the value of the '<em>Base</em>' containment reference.
 	 * @see #setBase(IFileRevision)
 	 * @generated
 	 */
 	IFileRevision getBase();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Base</em>' reference.
+	 * @param value the new value of the '<em>Base</em>' containment reference.
 	 * @see #getBase()
 	 * @generated
 	 */
 	void setBase(IFileRevision value);
 
 	/**
-	 * Returns the value of the '<em><b>Target</b></em>' reference.
+	 * Returns the value of the '<em><b>Target</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Target</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target</em>' reference.
+	 * @return the value of the '<em>Target</em>' containment reference.
 	 * @see #setTarget(IFileRevision)
 	 * @generated
 	 */
 	IFileRevision getTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target</em>' reference.
+	 * @param value the new value of the '<em>Target</em>' containment reference.
 	 * @see #getTarget()
 	 * @generated
 	 */
