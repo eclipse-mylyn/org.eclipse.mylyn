@@ -414,7 +414,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			}
 		} catch (XmlRpcException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Can not get the Default Milestons using XMLRPC")); //$NON-NLS-1$
+					"Can not get the Default Milestones using XMLRPC")); //$NON-NLS-1$
 		}
 
 	}
