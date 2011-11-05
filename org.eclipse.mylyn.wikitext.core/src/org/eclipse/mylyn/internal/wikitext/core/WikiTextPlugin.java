@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -98,9 +99,11 @@ public class WikiTextPlugin extends Plugin {
 		Class<? extends MarkupLanguage> languageClass = languageByName.get(name);
 		if (languageClass == null) {
 			// if not found by name, attempt to lookup by class name. 
-			for (Class<? extends MarkupLanguage> clazz : languageByName.values()) {
+			for (Entry<String, Class<? extends MarkupLanguage>> entry : languageByName.entrySet()) {
+				Class<? extends MarkupLanguage> clazz = entry.getValue();
 				if (clazz.getName().equals(name)) {
 					languageClass = clazz;
+					name = entry.getKey();
 					break;
 				}
 			}
