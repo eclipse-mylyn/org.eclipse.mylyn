@@ -59,12 +59,17 @@
 <repository location="http://download.eclipse.org/releases/galileo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.source.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.egit.source.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.egit.mylyn.feature.group" version="1.0.0.201106090707-r"/>
-<repository location="http://download.eclipse.org/egit/updates-1.0"/>
+<unit id="org.eclipse.mylyn_feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.team_feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/releases/latest"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.egit.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.jgit.source.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.egit.source.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.egit.mylyn.feature.group" version="1.1.0.201109151100-r"/>
+<repository location="http://download.eclipse.org/egit/updates-1.1"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>

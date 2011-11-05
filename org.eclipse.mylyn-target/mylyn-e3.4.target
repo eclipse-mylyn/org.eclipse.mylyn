@@ -61,9 +61,9 @@
 <repository location="http://download.eclipse.org/eclipse/updates/3.4"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="1.0.0.201106090707-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="1.0.0.201106090707-r"/>
-<repository location="http://download.eclipse.org/egit/updates-1.0"/>
+<unit id="org.eclipse.egit.feature.group" version="1.1.0.201109151100-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="1.1.0.201109151100-r"/>
+<repository location="http://download.eclipse.org/egit/updates-1.1"/>
 </location>
 </locations>
 </target>
