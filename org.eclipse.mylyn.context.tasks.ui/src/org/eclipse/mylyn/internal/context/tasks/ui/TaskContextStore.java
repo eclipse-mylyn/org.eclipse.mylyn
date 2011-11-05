@@ -39,34 +39,9 @@ import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 public class TaskContextStore extends AbstractTaskContextStore {
 
 	@Override
-	public IAdaptable cloneContext(ITask sourceTask, ITask targetTask) {
-		ContextCorePlugin.getContextStore().saveActiveContext();
-		final IInteractionContext result = ContextCore.getContextStore().cloneContext(sourceTask.getHandleIdentifier(),
-				targetTask.getHandleIdentifier());
-
-		// migrate editor memento
-		ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
-				targetTask.getHandleIdentifier());
-
-		// migrate task activity
-		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(sourceTask.getHandleIdentifier(),
-				targetTask.getHandleIdentifier());
-		try {
-			operation.run(new NullProgressMonitor());
-		} catch (InvocationTargetException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
-		} catch (InterruptedException e) {
-			// ignore
-		}
-		return new IAdaptable() {
-			public Object getAdapter(Class adapter) {
-				if (adapter == IInteractionContext.class) {
-					return result;
-				}
-				return null;
-			}
-		};
+	public IAdaptable copyContext(ITask sourceTask, ITask targetTask) {
+		IInteractionContext result = copyContextInternal(sourceTask, targetTask);
+		return asAdaptable(result);
 	}
 
 	@Override
@@ -85,6 +60,37 @@ public class TaskContextStore extends AbstractTaskContextStore {
 	}
 
 	@Override
+	public void mergeContext(ITask sourceTask, ITask targetTask) {
+		ContextCorePlugin.getContextStore().merge(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
+		boolean shouldCopyEditorMemento = !ContextUiPlugin.getEditorManager().hasEditorMemento(
+				targetTask.getHandleIdentifier());
+		if (shouldCopyEditorMemento) {
+			// copy editor memento
+			ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
+					targetTask.getHandleIdentifier());
+		}
+	}
+
+	@Override
+	public IAdaptable moveContext(ITask sourceTask, ITask targetTask) {
+		final IInteractionContext result = copyContextInternal(sourceTask, targetTask);
+
+		// move task activity
+		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
+		try {
+			operation.run(new NullProgressMonitor());
+		} catch (InvocationTargetException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
+		} catch (InterruptedException e) {
+			// ignore
+		}
+
+		return asAdaptable(result);
+	}
+
+	@Override
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		refactorMetaContextHandles(oldRepositoryUrl, newRepositoryUrl);
 		refactorContextFileNames(oldRepositoryUrl, newRepositoryUrl);
@@ -98,6 +104,28 @@ public class TaskContextStore extends AbstractTaskContextStore {
 	@Override
 	public void setContextDirectory(File contextStoreDir) {
 		ContextCorePlugin.getContextStore().setContextDirectory(contextStoreDir);
+	}
+
+	private IAdaptable asAdaptable(final IInteractionContext result) {
+		return new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if (adapter == IInteractionContext.class) {
+					return result;
+				}
+				return null;
+			}
+		};
+	}
+
+	private IInteractionContext copyContextInternal(ITask sourceTask, ITask targetTask) {
+		ContextCorePlugin.getContextStore().saveActiveContext();
+		final IInteractionContext result = ContextCore.getContextStore().cloneContext(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
+
+		// migrate editor memento
+		ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
+				targetTask.getHandleIdentifier());
+		return result;
 	}
 
 	@SuppressWarnings("restriction")
@@ -154,18 +182,6 @@ public class TaskContextStore extends AbstractTaskContextStore {
 				}
 			}
 			newMetaContext.parseEvent(event);
-		}
-	}
-
-	@Override
-	public void mergeContext(ITask sourceTask, ITask targetTask) {
-		ContextCorePlugin.getContextStore().merge(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
-		boolean shouldCopyEditorMemento = !ContextUiPlugin.getEditorManager().hasEditorMemento(
-				targetTask.getHandleIdentifier());
-		if (shouldCopyEditorMemento) {
-			// copy editor memento
-			ContextUiPlugin.getEditorManager().copyEditorMemento(sourceTask.getHandleIdentifier(),
-					targetTask.getHandleIdentifier());
 		}
 	}
 
