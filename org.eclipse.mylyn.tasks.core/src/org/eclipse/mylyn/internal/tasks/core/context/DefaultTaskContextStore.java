@@ -35,7 +35,7 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	private File contextDirectory;
 
 	@Override
-	public IAdaptable cloneContext(ITask sourceTask, ITask destinationTask) {
+	public IAdaptable copyContext(ITask sourceTask, ITask destinationTask) {
 		return null;
 	}
 
@@ -73,6 +73,17 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 		return file.exists();
 	}
 
+	@Override
+	public void mergeContext(ITask sourceTask, ITask targetTask) {
+		// ignore		
+	}
+
+	@Override
+	public IAdaptable moveContext(ITask sourceTask, ITask destinationTask) {
+		// ignore
+		return null;
+	}
+
 	/**
 	 * @since 3.7
 	 */
@@ -89,11 +100,6 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	@Override
 	public synchronized void setContextDirectory(File directory) {
 		this.contextDirectory = directory;
-	}
-
-	@Override
-	public void mergeContext(ITask sourceTask, ITask targetTask) {
-		// ignore		
 	}
 
 }

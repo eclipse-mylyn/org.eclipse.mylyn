@@ -188,7 +188,7 @@ public class TaskMigrator {
 		}
 
 		// migrate context
-		TasksUiPlugin.getContextStore().cloneContext(oldTask, newTask);
+		TasksUiPlugin.getContextStore().copyContext(oldTask, newTask);
 	}
 
 	public static boolean isActive() {

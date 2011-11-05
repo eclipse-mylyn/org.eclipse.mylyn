@@ -79,7 +79,7 @@ public class CopyContextHandler extends AbstractTaskHandler {
 
 				switch (action) {
 				case REPLACE:
-					IAdaptable context = TasksUiPlugin.getContextStore().cloneContext(sourceTask, targetTask);
+					IAdaptable context = TasksUiPlugin.getContextStore().copyContext(sourceTask, targetTask);
 					if (context == null) {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 								TITLE_DIALOG, Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);

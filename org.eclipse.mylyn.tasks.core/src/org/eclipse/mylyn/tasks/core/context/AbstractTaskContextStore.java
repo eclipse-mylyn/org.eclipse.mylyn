@@ -28,10 +28,19 @@ public abstract class AbstractTaskContextStore {
 	 * Copies the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
 	 * <code>sourceTask</code> does not have a context.
 	 * 
-	 * @return result of the clone operation
+	 * @return result of the copy operation
 	 * @since 3.7
 	 */
-	public abstract IAdaptable cloneContext(ITask sourceTask, ITask destinationTask);
+	public abstract IAdaptable copyContext(ITask sourceTask, ITask destinationTask);
+
+	/**
+	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
+	 * <code>sourceTask</code> does not have a context.
+	 * 
+	 * @return result of the move operation
+	 * @since 3.7
+	 */
+	public abstract IAdaptable moveContext(ITask sourceTask, ITask destinationTask);
 
 	/**
 	 * @since 3.7
