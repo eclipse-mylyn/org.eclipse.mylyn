@@ -89,8 +89,20 @@ public class CoreUtil {
 	 */
 	// TODO e3.5 remove this method and replace with bundle.getVersion()
 	public static Version getVersion(Bundle bundle) {
-		String header = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+		String header = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		return (header != null) ? Version.parseVersion(header) : null;
+	}
+
+	/**
+	 * @since 3.7
+	 */
+	public static <T> int compare(Comparable<T> key1, T key2) {
+		if (key1 == null) {
+			return (key2 != null) ? 1 : 0;
+		} else if (key2 == null) {
+			return -1;
+		}
+		return key1.compareTo(key2);
 	}
 
 }
