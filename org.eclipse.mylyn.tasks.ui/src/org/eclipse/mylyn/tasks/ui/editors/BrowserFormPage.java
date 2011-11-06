@@ -87,6 +87,9 @@ public class BrowserFormPage extends TaskFormPage {
 	 * Returns a reference to the browser control.
 	 */
 	public Browser getBrowser() {
+		if (browserViewer == null) {
+			return null;
+		}
 		return browserViewer.getBrowser();
 	}
 
