@@ -32,10 +32,10 @@ sed -i -e "s/<mylyn-version>$OLD-SNAPSHOT<\/mylyn-version>/<mylyn-version>$NEW-S
 
 }
 
-update_features 0.8.2 0.8.3
-update_features 1.5.2 1.5.3
-update_features 3.6.2 3.6.3
-update_features 5.2.302 5.2.303
+update_features 0.8.3 0.8.4
+update_features 1.5.3 1.5.4
+update_features 3.6.3 3.6.4
+update_features 5.2.303 5.2.304
 
 #update_qualifier 0.8.0 v20110608-1400
 #update_qualifier 1.5.0 v20110608-1400

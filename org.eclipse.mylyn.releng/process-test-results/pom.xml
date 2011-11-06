@@ -5,11 +5,11 @@
   <parent>
     <artifactId>mylyn-parent</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
-    <version>3.6.3-SNAPSHOT</version>
+    <version>3.6.4-SNAPSHOT</version>
   </parent>
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>process-test-results</artifactId>
-  <version>3.6.3-SNAPSHOT</version>
+  <version>3.6.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <build>
     <plugins>
