@@ -86,6 +86,8 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 
 	private final ContextPopulationStrategy contextPopulationStrategy = new ContextPopulationStrategy();
 
+	private final ContextActivationListener contextActivationListener = new ContextActivationListener();
+
 	public ContextTasksStartupHandler() {
 		// ignore
 	}
@@ -108,9 +110,13 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 			}
 		});
 		updateAutoManageExpansionPreference();
+
+		ContextCore.getContextManager().addListener(contextActivationListener);
 	}
 
 	private void lazyStop() {
+		ContextCore.getContextManager().removeListener(contextActivationListener);
+
 		ContextUiPlugin.getPerspectiveManager().removeManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 	}
