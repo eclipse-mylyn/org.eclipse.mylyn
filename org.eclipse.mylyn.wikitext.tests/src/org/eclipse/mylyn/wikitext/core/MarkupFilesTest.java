@@ -25,6 +25,7 @@ import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -35,7 +36,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.tests.NoDiscovery;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
-import org.junit.Assert;
 import org.osgi.framework.Bundle;
 
 /**
