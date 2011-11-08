@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
@@ -26,6 +27,7 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.FindAndReplaceTarget;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
@@ -66,6 +68,8 @@ public class HtmlViewer extends SourceViewer {
 	private Stylesheet stylesheet;
 
 	private Font defaultMonospaceFont;
+
+	private IFindReplaceTarget findReplaceTarget;
 
 	public HtmlViewer(Composite parent, IVerticalRuler ruler, int styles) {
 		super(parent, ruler, styles);
@@ -180,11 +184,22 @@ public class HtmlViewer extends SourceViewer {
 	}
 
 	@Override
+	public IFindReplaceTarget getFindReplaceTarget() {
+		if (findReplaceTarget != null) {
+			return findReplaceTarget;
+		}
+		return super.getFindReplaceTarget();
+	}
+
+	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 		if (configuration instanceof HtmlViewerConfiguration) {
 			this.configuration = (HtmlViewerConfiguration) configuration;
 			if (textPresentation != null) {
 				this.configuration.setTextPresentation(textPresentation);
+			}
+			if (((HtmlViewerConfiguration) configuration).isEnableSelfContainedIncrementalFind()) {
+				findReplaceTarget = new FindAndReplaceTarget(this);
 			}
 		}
 		super.configure(configuration);
@@ -281,4 +296,5 @@ public class HtmlViewer extends SourceViewer {
 	public void setDefaultMonospaceFont(Font defaultMonospaceFont) {
 		this.defaultMonospaceFont = defaultMonospaceFont;
 	}
+
 }

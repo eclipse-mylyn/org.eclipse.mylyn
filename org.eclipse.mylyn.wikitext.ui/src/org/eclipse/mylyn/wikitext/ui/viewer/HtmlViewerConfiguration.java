@@ -39,6 +39,7 @@ import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.editors.text.TextEditor;
 
 /**
  * A configuration for use with a {@link HtmlViewer}.
@@ -53,6 +54,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	private TextPresentation textPresentation;
 
 	private boolean disableHyperlinkModifiers = true;
+
+	private boolean enableSelfContainedIncrementalFind = false;
 
 	public HtmlViewerConfiguration(HtmlViewer viewer) {
 		super(getDefaultPreferenceStore());
@@ -238,5 +241,25 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	 */
 	public void setDisableHyperlinkModifiers(boolean disableHyperlinkModifiers) {
 		this.disableHyperlinkModifiers = disableHyperlinkModifiers;
+	}
+
+	/**
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
+	 * used in a {@link TextEditor}. Defaults to false.
+	 * 
+	 * @since 1.6
+	 */
+	public boolean isEnableSelfContainedIncrementalFind() {
+		return enableSelfContainedIncrementalFind;
+	}
+
+	/**
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
+	 * used in a {@link TextEditor}.
+	 * 
+	 * @since 1.6
+	 */
+	public void setEnableSelfContainedIncrementalFind(boolean enableSelfContainedIncrementalFind) {
+		this.enableSelfContainedIncrementalFind = enableSelfContainedIncrementalFind;
 	}
 }

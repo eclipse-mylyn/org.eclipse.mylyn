@@ -63,6 +63,7 @@ import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguratio
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
 import org.eclipse.ui.themes.IThemeManager;
@@ -106,6 +107,8 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	private MarkupHyperlinkDetector markupHyperlinkDetector;
 
 	private boolean enableHippieContentAssist = true;
+
+	private boolean enableSelfContainedIncrementalFind = false;
 
 	/**
 	 * @since 1.3
@@ -558,6 +561,26 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 */
 	public void setEnableHippieContentAssist(boolean enableHippieContentAssist) {
 		this.enableHippieContentAssist = enableHippieContentAssist;
+	}
+
+	/**
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
+	 * used in a {@link TextEditor}. Defaults to false.
+	 * 
+	 * @since 1.6
+	 */
+	public boolean isEnableSelfContainedIncrementalFind() {
+		return enableSelfContainedIncrementalFind;
+	}
+
+	/**
+	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
+	 * used in a {@link TextEditor}.
+	 * 
+	 * @since 1.6
+	 */
+	public void setEnableSelfContainedIncrementalFind(boolean enableSelfContainedIncrementalFind) {
+		this.enableSelfContainedIncrementalFind = enableSelfContainedIncrementalFind;
 	}
 
 }

@@ -306,5 +306,25 @@
 		</activeWhen>
     </handler>
     
+    
+    <handler
+          class="org.eclipse.mylyn.internal.wikitext.tasks.ui.commands.IncrementalFindHandler"
+          commandId="org.eclipse.ui.edit.findIncremental">
+         <activeWhen>
+         	<or>
+	         	<with variable="activeContexts">
+		            <iterate operator="or" ifEmpty="false">
+		               <equals
+		                     value="org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"/>
+		            </iterate>
+	         	</with>
+	         	<with variable="activeFocusControlId">
+       	 			<equals value="org.eclipse.mylyn.wikitext.tasks.ui.markupViewer"/>
+         		</with>
+         	</or>
+		</activeWhen>
+    </handler>
+    
+    
  </extension>
 </plugin>

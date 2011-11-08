@@ -12,11 +12,13 @@
 package org.eclipse.mylyn.wikitext.ui.editor;
 
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.FindAndReplaceTarget;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowQuickOutlineCommand;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -50,6 +52,8 @@ public class MarkupSourceViewer extends SourceViewer {
 	public static final int QUICK_OUTLINE = ShowQuickOutlineCommand.QUICK_OUTLINE;
 
 	private IInformationPresenter outlinePresenter;
+
+	private IFindReplaceTarget findReplaceTarget;
 
 	public MarkupSourceViewer(Composite parent, IVerticalRuler ruler, int styles, MarkupLanguage markupLanguage) {
 		super(parent, ruler, styles);
@@ -90,11 +94,24 @@ public class MarkupSourceViewer extends SourceViewer {
 	}
 
 	@Override
+	public IFindReplaceTarget getFindReplaceTarget() {
+		if (findReplaceTarget != null) {
+			return findReplaceTarget;
+		}
+		return super.getFindReplaceTarget();
+	}
+
+	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 		super.configure(configuration);
 		if (configuration instanceof MarkupSourceViewerConfiguration) {
-			outlinePresenter = ((MarkupSourceViewerConfiguration) configuration).getOutlineInformationPresenter(this);
+			MarkupSourceViewerConfiguration markupConfiguration = (MarkupSourceViewerConfiguration) configuration;
+			outlinePresenter = markupConfiguration.getOutlineInformationPresenter(this);
 			outlinePresenter.install(this);
+
+			if (markupConfiguration.isEnableSelfContainedIncrementalFind()) {
+				findReplaceTarget = new FindAndReplaceTarget(this);
+			}
 		}
 	}
 }
