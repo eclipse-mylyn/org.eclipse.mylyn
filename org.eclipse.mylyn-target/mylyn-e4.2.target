@@ -66,5 +66,9 @@
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates"/>
 </location>
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.core.runtime.compatibility.auth" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/snapshots/compatibility"/>
+</location>
 </locations>
 </target>
