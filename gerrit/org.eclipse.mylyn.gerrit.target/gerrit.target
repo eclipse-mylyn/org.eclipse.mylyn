@@ -44,6 +44,7 @@
 <unit id="org.mockito" version="0.0.0"/>
 <unit id="org.mockito.source" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
+<unit id="org.apache.commons.logging" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">

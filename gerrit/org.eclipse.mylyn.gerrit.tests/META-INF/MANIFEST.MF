@@ -10,7 +10,10 @@ Require-Bundle: org.eclipse.mylyn.tests.util;bundle-version="3.5.0",
  org.junit;bundle-version="4.5.0",
  org.eclipse.mylyn.commons.net,
  org.eclipse.mylyn.gerrit.core,
- javax.servlet;bundle-version="2.5.0"
+ javax.servlet;bundle-version="2.5.0",
+ org.eclipse.mylyn.commons.sdk.util,
+ org.apache.commons.logging,
+ org.eclipse.core.net
 Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.prettify.common;version="2.1.5",
