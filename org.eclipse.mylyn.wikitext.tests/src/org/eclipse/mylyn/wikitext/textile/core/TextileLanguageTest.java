@@ -234,6 +234,30 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("A&amp;BC"));
 	}
 
+	public void testHtmlEntityEncoding2() {
+		String html = parser.parseToHtml("Some A&BC Thing; two");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Some A&amp;BC Thing; two</p>"));
+	}
+
+	public void testHtmlEntityEncoding3() {
+		String html = parser.parseToHtml("Some A&BCThing; two");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Some A&BCThing; two</p>"));
+	}
+
+	public void testHtmlEntityEncoding4() {
+		String html = parser.parseToHtml("Some A&#60; two");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Some A&#60; two</p>"));
+	}
+
+	public void testHtmlEntityEncoding5() {
+		String html = parser.parseToHtml("Some A&#x27; two");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Some A&#x27; two</p>"));
+	}
+
 	public void testParagraphs() throws IOException {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		TestUtil.println(html);
@@ -1452,13 +1476,37 @@ public class TextileLanguageTest extends TestCase {
 	}
 
 	public void testEntityReferences() {
-		String[] entities = new String[] { "copy", "amp", "foobar" };
+		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
 		for (String entity : entities) {
 			String markup = "text &" + entity + ";";
 			String html = parser.parseToHtml(markup);
 			TestUtil.println(html);
 			assertTrue(html.contains("&" + entity + ";"));
 
+			markup = "&" + entity + ";";
+			html = parser.parseToHtml(markup);
+			TestUtil.println(html);
+			assertTrue(html.contains("&" + entity + ";"));
+
+			markup = "&" + entity + "; text";
+			html = parser.parseToHtml(markup);
+			TestUtil.println(html);
+			assertTrue(html.contains("&" + entity + ";"));
+		}
+	}
+
+	public void testEntityReferences_NegativeMatch() {
+		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
+		for (String entity : entities) {
+			String markup = "text &" + entity + " ;";
+			String html = parser.parseToHtml(markup);
+			TestUtil.println(html);
+			assertTrue(html.contains("&amp;" + entity + " ;"));
+
+			markup = "text & " + entity + ";";
+			html = parser.parseToHtml(markup);
+			TestUtil.println(html);
+			assertTrue(html.contains("&amp; " + entity + ";"));
 		}
 	}
 }
