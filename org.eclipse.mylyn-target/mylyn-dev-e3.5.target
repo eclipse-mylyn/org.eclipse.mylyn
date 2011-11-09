@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-dev-base" sequenceNumber="7">
+<target name="mylyn-dev-e3.5 (base)" sequenceNumber="7">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
@@ -40,6 +40,7 @@
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
 <unit id="com.thoughtworks.qdox" version="1.6.3.v20081201-1400"/>
 <unit id="org.jdom" version="1.1.1.v201101151400"/>
+<unit id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="org.apache.httpcomponents.httpclient" version="4.1.0.v201103311320"/>
@@ -60,9 +61,14 @@
 <repository location="http://download.eclipse.org/releases/galileo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn_feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.team_feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/releases/latest"/>
+<unit id="org.eclipse.mylyn.builds.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.docs.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.versions.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.versions.sdk.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/snapshots/nightly"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="1.1.0.201109151100-r"/>

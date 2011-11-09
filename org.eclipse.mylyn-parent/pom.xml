@@ -141,6 +141,7 @@
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -156,6 +157,7 @@
         <target-version>3.4</target-version>
         <target-platform>mylyn-e3.4</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/ganymede/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/ganymede/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -171,6 +173,7 @@
         <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/galileo/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -186,6 +189,7 @@
         <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/helios/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -201,6 +205,7 @@
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -216,6 +221,7 @@
         <target-version>3.8</target-version>
         <target-platform>mylyn-e3.8</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -231,6 +237,7 @@
         <target-version>4.1</target-version>
         <target-platform>mylyn-e4.1</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -246,6 +253,7 @@
         <target-version>4.2</target-version>
         <target-platform>mylyn-e4.2</target-platform>
 		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
 		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
@@ -383,6 +391,11 @@
 		  <id>eclipse-platform</id>
 		  <layout>p2</layout>
 		  <url>${platform-repository-url}</url>
+		</repository>
+		<repository>
+		  <id>eclipse-egit</id>
+		  <layout>p2</layout>
+		  <url>${egit-repository-url}</url>
 		</repository>
 		<repository>
 		  <id>eclipse-orbit</id>

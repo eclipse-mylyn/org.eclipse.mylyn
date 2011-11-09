@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="mylyn-dev-latest" sequenceNumber="16">
+<target name="mylyn-dev-e3.8 (latest)" sequenceNumber="16">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
