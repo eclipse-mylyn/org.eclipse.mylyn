@@ -10,6 +10,7 @@
  *      Tasktop Technologies - improvements
  *      Sascha Scholz (SAP) - improvements
  *      GitHub, Inc. - fixes for bug 354753
+ *      Christian Trutz - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -88,6 +89,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
+ * @author Christian Trutz
  */
 public class GerritClient {
 
@@ -768,6 +770,8 @@ public class GerritClient {
 				throw (GerritException) operation.getException();
 			} else if (operation.getException() instanceof OperationCanceledException) {
 				throw (OperationCanceledException) operation.getException();
+			} else if (operation.getException() instanceof RuntimeException) {
+				throw (RuntimeException) operation.getException();
 			} else if (operation.getException() != null) {
 				GerritException e = new GerritException();
 				e.initCause(operation.getException());

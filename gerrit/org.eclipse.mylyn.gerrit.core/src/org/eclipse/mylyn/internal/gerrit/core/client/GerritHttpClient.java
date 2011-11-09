@@ -8,6 +8,7 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
+ *      Christian Trutz - improvements
  *********************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
@@ -29,6 +30,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -48,6 +50,7 @@ import com.google.gerrit.common.auth.userpass.LoginResult;
  * @author Daniel Olsson, ST Ericsson
  * @author Thomas Westling
  * @author Steffen Pingel
+ * @author Christian Trutz
  */
 public class GerritHttpClient {
 
@@ -74,6 +77,7 @@ public class GerritHttpClient {
 	private volatile Cookie xsrfCookie;
 
 	public GerritHttpClient(AbstractWebLocation location) {
+		Assert.isNotNull(location, "Location must be not null."); //$NON-NLS-1$
 		this.location = location;
 		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
 	}
@@ -98,6 +102,9 @@ public class GerritHttpClient {
 	 */
 	public String postJsonRequest(String serviceUri, JsonEntity entity, IProgressMonitor monitor) throws IOException,
 			GerritException {
+		Assert.isNotNull(serviceUri, "Service URI must be not null."); //$NON-NLS-1$
+		Assert.isNotNull(entity, "JSON entity must be not null."); //$NON-NLS-1$
+
 		String openIdProvider = getOpenIdProvider();
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
