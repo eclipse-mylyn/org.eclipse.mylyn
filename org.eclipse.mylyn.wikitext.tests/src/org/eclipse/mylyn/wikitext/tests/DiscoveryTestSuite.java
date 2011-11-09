@@ -11,9 +11,10 @@
 
 package org.eclipse.mylyn.wikitext.tests;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import junit.framework.TestCase;
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
@@ -36,7 +37,29 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 		new ClassTraversal().visitClasses(new Visitor() {
 			public void visit(Class<?> clazz) {
 				if (!filter(clazz) && !filter.filter(clazz)) {
-					addTest(new TestSuite(clazz));
+					if (TestSuite.class.isAssignableFrom(clazz)) {
+						try {
+							Method suiteMethod = clazz.getMethod("suite");
+							if (Modifier.isStatic(suiteMethod.getModifiers())
+									&& Modifier.isPublic(suiteMethod.getModifiers())) {
+								addTest((Test) suiteMethod.invoke(null));
+							} else {
+								throw new IllegalStateException(clazz.getName() + "#" + suiteMethod.getName());
+							}
+						} catch (NoSuchMethodException e) {
+							try {
+								addTest((Test) clazz.newInstance());
+							} catch (InstantiationException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							} catch (IllegalAccessException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							}
+						} catch (Throwable e) {
+							throw new IllegalStateException(clazz.getName(), e);
+						}
+					} else {
+						addTest(new TestSuite(clazz));
+					}
 				}
 			}
 		});
@@ -50,7 +73,7 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 	}
 
 	public boolean filter(Class<?> clazz) {
-		if (!TestCase.class.isAssignableFrom(clazz)) {
+		if (!Test.class.isAssignableFrom(clazz)) {
 			return true;
 		}
 		if (DiscoveryTestSuite.class.isAssignableFrom(clazz)) {

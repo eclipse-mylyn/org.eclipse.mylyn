@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import junit.framework.Test;
@@ -237,6 +238,9 @@ public class MarkupFilesTest extends TestSuite {
 
 	private void discoverTests() {
 		Logger log = Logger.getLogger(MarkupFilesTest.class.getName());
+		log.setLevel(Level.FINEST);
+
+		System.out.println("******************* Discovering tests....");
 
 		if (Platform.isRunning()) {
 			Bundle bundle = Platform.getBundle("org.eclipse.mylyn.wikitext.tests");
@@ -299,5 +303,8 @@ public class MarkupFilesTest extends TestSuite {
 				addTest(new MarkupLanguageTestSuite(languageDir.getName(), languageDir));
 			}
 		}
+
+		log.info(String.format("Found %s tests", countTestCases()));
+
 	}
 }
