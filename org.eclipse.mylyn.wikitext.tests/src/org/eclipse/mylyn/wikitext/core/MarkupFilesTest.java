@@ -25,7 +25,6 @@ import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -131,7 +130,7 @@ public class MarkupFilesTest extends TestSuite {
 			TestUtil.println("Generated:\n" + html);
 			TestUtil.println("Expecting:\n" + expectedContent);
 
-			Assert.assertTrue(html.contains(expectedContent));
+			assertTrue(html.contains(expectedContent));
 		}
 
 		protected abstract String readExpectedContent() throws IOException;
