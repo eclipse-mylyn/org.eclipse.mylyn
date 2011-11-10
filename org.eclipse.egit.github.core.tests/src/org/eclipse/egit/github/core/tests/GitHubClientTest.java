@@ -47,6 +47,7 @@ public class GitHubClientTest {
 	@Test
 	public void prefixHostApiV2() {
 		PrefixClient client = new PrefixClient(IGitHubConstants.HOST_API_V2);
+		assertEquals("/api/v3/repos/o/n", client.uri("/api/v3/repos/o/n"));
 		assertEquals("/repos/o/n", client.uri("/repos/o/n"));
 		assertEquals("/api/v2/json/repos/search/test",
 				client.uri("/api/v2/json/repos/search/test"));
@@ -58,6 +59,7 @@ public class GitHubClientTest {
 	@Test
 	public void prefixHostApiV3() {
 		PrefixClient client = new PrefixClient(IGitHubConstants.HOST_API);
+		assertEquals("/api/v3/repos/o/n", client.uri("/api/v3/repos/o/n"));
 		assertEquals("/repos/o/n", client.uri("/repos/o/n"));
 		assertEquals("/api/v2/json/repos/search/test",
 				client.uri("/api/v2/json/repos/search/test"));
@@ -70,6 +72,7 @@ public class GitHubClientTest {
 	public void prefixLocalhost() {
 		PrefixClient client = new PrefixClient("localhost");
 		assertEquals("/api/v3/repos/o/n", client.uri("/repos/o/n"));
+		assertEquals("/api/v3/repos/o/n", client.uri("/api/v3/repos/o/n"));
 		assertEquals("/api/v2/json/repos/search/test",
 				client.uri("/api/v2/json/repos/search/test"));
 	}

@@ -216,7 +216,8 @@ public class GitHubClient {
 	 * @return configured URI
 	 */
 	protected String configureUri(final String uri) {
-		if (prefix == null || uri.startsWith(SEGMENT_V2_API))
+		if (prefix == null || uri.startsWith(SEGMENT_V2_API)
+				|| uri.startsWith(prefix))
 			return uri;
 		return prefix + uri;
 	}
