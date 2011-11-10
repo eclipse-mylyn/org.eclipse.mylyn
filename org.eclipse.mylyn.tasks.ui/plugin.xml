@@ -862,8 +862,16 @@
             categoryId="org.eclipse.mylyn.tasks.ui.commands"/>   
    </extension>
    <extension point="org.eclipse.ui.handlers">
-		<handler commandId="org.eclipse.mylyn.task.ui.editor.QuickOutline"
-			class="org.eclipse.mylyn.internal.tasks.ui.editors.outline.ShowQuickOutlineHandler"/>
+		<handler
+        class="org.eclipse.mylyn.internal.tasks.ui.editors.outline.ShowQuickOutlineHandler"
+        commandId="org.eclipse.mylyn.task.ui.editor.QuickOutline">
+     <activeWhen>
+          	<with variable="activePartId">
+	               <equals
+	                     value="org.eclipse.mylyn.tasks.ui.editors.task"/>
+         	</with>
+     </activeWhen>
+  </handler>
 	</extension>
  <extension
        point="org.eclipse.ui.menus">
