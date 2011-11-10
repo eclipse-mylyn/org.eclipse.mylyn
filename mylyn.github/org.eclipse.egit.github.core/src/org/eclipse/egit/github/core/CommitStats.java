@@ -10,10 +10,15 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import java.io.Serializable;
+
 /**
  * Model class containing line differences introduced by a commit
  */
-public class CommitStats {
+public class CommitStats implements Serializable {
+
+	/** serialVersionUID */
+	private static final long serialVersionUID = -4398346227258322028L;
 
 	private int additions;
 
