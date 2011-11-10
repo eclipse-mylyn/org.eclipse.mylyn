@@ -20,7 +20,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * All headless unit tests of GitHub Java API
  */
 @RunWith(Suite.class)
-@SuiteClasses({ BlobTest.class, //
+@SuiteClasses({ ApplicationTest.class, //
+		AuthorizationTest.class, //
+		BlobTest.class, //
 		CollaboratorServiceTest.class, //
 		CommentTest.class, //
 		CommitCommentTest.class, //
@@ -59,6 +61,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		MilestoneComparatorTest.class, //
 		MilestoneServiceTest.class, //
 		MilestoneTest.class, //
+		OAuthServiceTest.class, //
 		OrganizationServiceTest.class, //
 		PagedRequestTest.class, //
 		PullRequestMarkerTest.class, //

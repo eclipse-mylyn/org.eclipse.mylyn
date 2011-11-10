@@ -73,6 +73,8 @@ public interface IGitHubConstants {
 	String SCHEME_OAUTH2 = "oauth2"; //$NON-NLS-1$
 
 	/** */
+	String SEGMENT_AUTHORIZATIONS = "/authorizations"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_BLOBS = "/blobs"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_BRANCHES = "/branches"; //$NON-NLS-1$
