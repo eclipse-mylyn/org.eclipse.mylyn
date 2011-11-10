@@ -20,33 +20,75 @@ import org.junit.runners.Suite.SuiteClasses;
  * All headless unit tests of GitHub Java API
  */
 @RunWith(Suite.class)
-@SuiteClasses({ BlobTest.class, CollaboratorServiceTest.class,
-		CommentTest.class, CommitCommentTest.class, CommitFileTest.class,
-		CommitServiceTest.class, CommitTest.class, CommitUserTest.class,
-		ContributorTest.class, DataServiceTest.class, DateFormatterTest.class,
-		DateUtilTests.class, DeployKeyServiceTest.class,
-		DownloadServiceTest.class, DownloadTest.class,
-		DownloadResourceTest.class, EncodingUtilsTest.class,
-		FieldErrorTest.class, GistChangeStatusTest.class, GistFileTest.class,
-		GistRevisionTest.class, GistServiceTest.class, GistTest.class,
-		GitHubClientTest.class, GsonUtilsTest.class, IdTest.class,
-		IssueEventTest.class, IssueServiceTest.class, IssueTest.class,
-		KeyTest.class, LabelComparatorTest.class, LabelServiceTest.class,
-		LabelTest.class, LanguageTest.class, MergeStatusTest.class,
-		MilestoneComparatorTest.class, MilestoneServiceTest.class,
-		MilestoneTest.class, OrganizationServiceTest.class,
-		PagedRequestTest.class, PullRequestMarkerTest.class,
-		PullRequestServiceTest.class, PullRequestTest.class,
-		ReferenceTest.class, RepositoryBranchTest.class,
-		RepositoryCommitTest.class, RepositoryHookResponseTest.class,
-		RepositoryHookTest.class, RepositoryIdTest.class,
-		RepositoryServiceTest.class, RepositoryTagTest.class,
-		RepositoryTest.class, RequestErrorTest.class,
-		RequestExceptionTest.class, SearchRepositoryTest.class,
-		ShaResourceTest.class, TagTest.class, TeamServiceTest.class,
-		TeamTest.class, TreeEntryTest.class, TreeTest.class,
-		TypedResourceTest.class, UrlUtilsTest.class, UserPlanTest.class,
-		UserServiceTest.class, UserTest.class, WatcherServiceTest.class })
+@SuiteClasses({ BlobTest.class, //
+		CollaboratorServiceTest.class, //
+		CommentTest.class, //
+		CommitCommentTest.class, //
+		CommitFileTest.class, //
+		CommitServiceTest.class, //
+		CommitStatsTest.class, //
+		CommitTest.class, //
+		CommitUserTest.class, //
+		ContributorTest.class, //
+		DataServiceTest.class, //
+		DateFormatterTest.class, //
+		DateUtilTests.class, //
+		DeployKeyServiceTest.class, //
+		DownloadServiceTest.class, //
+		DownloadTest.class, //
+		DownloadResourceTest.class, //
+		EncodingUtilsTest.class, //
+		FieldErrorTest.class, //
+		GistChangeStatusTest.class, //
+		GistFileTest.class, //
+		GistRevisionTest.class, //
+		GistServiceTest.class, //
+		GistTest.class, //
+		GitHubClientTest.class, //
+		GsonUtilsTest.class, //
+		IdTest.class, //
+		IssueEventTest.class, //
+		IssueServiceTest.class, //
+		IssueTest.class, //
+		KeyTest.class, //
+		LabelComparatorTest.class, //
+		LabelServiceTest.class, //
+		LabelTest.class, //
+		LanguageTest.class, //
+		MergeStatusTest.class, //
+		MilestoneComparatorTest.class, //
+		MilestoneServiceTest.class, //
+		MilestoneTest.class, //
+		OrganizationServiceTest.class, //
+		PagedRequestTest.class, //
+		PullRequestMarkerTest.class, //
+		PullRequestServiceTest.class, //
+		PullRequestTest.class, //
+		ReferenceTest.class, //
+		RepositoryBranchTest.class, //
+		RepositoryCommitTest.class, //
+		RepositoryHookResponseTest.class, //
+		RepositoryHookTest.class, //
+		RepositoryIdTest.class, //
+		RepositoryServiceTest.class, //
+		RepositoryTagTest.class, //
+		RepositoryTest.class, //
+		RequestErrorTest.class, //
+		RequestExceptionTest.class, //
+		SearchRepositoryTest.class, //
+		ShaResourceTest.class, //
+		TagTest.class, //
+		TeamServiceTest.class, //
+		TeamTest.class, //
+		TreeEntryTest.class, //
+		TreeTest.class, //
+		TypedResourceTest.class, //
+		UrlUtilsTest.class, //
+		UserPlanTest.class, //
+		UserServiceTest.class, //
+		UserTest.class, //
+		WatcherServiceTest.class //
+})
 public class AllHeadlessTests {
 
 }

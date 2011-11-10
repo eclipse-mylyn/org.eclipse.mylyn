@@ -25,7 +25,11 @@ public class RepositoryCommit implements Serializable {
 
 	private Commit commit;
 
+	private CommitStats stats;
+
 	private List<Commit> parents;
+
+	private List<CommitFile> files;
 
 	private String sha;
 
@@ -52,6 +56,22 @@ public class RepositoryCommit implements Serializable {
 	}
 
 	/**
+	 * @return stats
+	 */
+	public CommitStats getStats() {
+		return stats;
+	}
+
+	/**
+	 * @param stats
+	 * @return this commit
+	 */
+	public RepositoryCommit setStats(CommitStats stats) {
+		this.stats = stats;
+		return this;
+	}
+
+	/**
 	 * @return parents
 	 */
 	public List<Commit> getParents() {
@@ -64,6 +84,22 @@ public class RepositoryCommit implements Serializable {
 	 */
 	public RepositoryCommit setParents(List<Commit> parents) {
 		this.parents = parents;
+		return this;
+	}
+
+	/**
+	 * @return files
+	 */
+	public List<CommitFile> getFiles() {
+		return files;
+	}
+
+	/**
+	 * @param files
+	 * @return this commit
+	 */
+	public RepositoryCommit setFiles(List<CommitFile> files) {
+		this.files = files;
 		return this;
 	}
 
