@@ -13,8 +13,10 @@ package org.eclipse.egit.github.core.client;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PAGE;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -154,7 +156,15 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 		if (!hasNext())
 			throw new NoSuchElementException();
 		if (next != null)
-			request.setUri(next);
+			if (nextPage < 1)
+				request.setUri(next);
+			else
+				try {
+					request.setUri(new URL(next).getFile());
+				} catch (MalformedURLException e) {
+					request.setUri(next);
+				}
+
 		GitHubResponse response;
 		try {
 			response = client.get(request);
