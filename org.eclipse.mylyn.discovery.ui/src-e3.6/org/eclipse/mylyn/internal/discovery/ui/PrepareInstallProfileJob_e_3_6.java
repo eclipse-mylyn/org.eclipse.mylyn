@@ -39,6 +39,7 @@ import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.operations.InstallOperation;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.RepositoryTracker;
+import org.eclipse.equinox.p2.operations.UninstallOperation;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
@@ -90,7 +91,7 @@ class PrepareInstallProfileJob_e_3_6 extends AbstractInstallJob {
 
 				checkCancelled(monitor);
 
-				final InstallOperation installOperation = resolve(monitor.newChild(50), ius,
+				final InstallOperation installOperation = resolveInstall(monitor.newChild(50), ius,
 						repositoryLocations.toArray(new URI[0]));
 
 				checkCancelled(monitor);
@@ -110,13 +111,80 @@ class PrepareInstallProfileJob_e_3_6 extends AbstractInstallJob {
 		}
 	}
 
+	@Override
+	public IStatus uninstall(UninstallRequest request, IProgressMonitor progressMonitor)
+			throws InvocationTargetException, InterruptedException {
+		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession()).getProfile(
+				ProvisioningUI.getDefaultUI().getProfileId());
+		if (profile == null) {
+			throw new IllegalStateException("No valid profile defined");
+		}
+
+		try {
+			SubMonitor monitor = SubMonitor.convert(progressMonitor, Messages.InstallConnectorsJob_task_configuring,
+					100);
+			try {
+				repositoryLocations = new HashSet<URI>(Arrays.asList(provisioningUI.getRepositoryTracker()
+						.getKnownRepositories(provisioningUI.getSession())));
+
+				final List<IInstallableUnit> ius = new ArrayList<IInstallableUnit>();
+				IQueryResult<IInstallableUnit> result = profile.available(QueryUtil.createIUGroupQuery(), monitor);
+				for (Iterator<IInstallableUnit> it = result.iterator(); it.hasNext();) {
+					IInstallableUnit iu = it.next();
+					try {
+						org.osgi.framework.Version version = new org.osgi.framework.Version(iu.getVersion()
+								.getOriginal());
+						InstalledItem<IInstallableUnit> item = new InstalledItem<IInstallableUnit>(iu, iu.getId(),
+								version);
+						if (request.select(item)) {
+							ius.add(iu);
+						}
+					} catch (IllegalArgumentException e) {
+						// ignore
+					}
+				}
+
+				checkCancelled(monitor);
+
+				if (ius.size() == 0) {
+					return Status.CANCEL_STATUS;
+				}
+
+				final UninstallOperation uninstallOperation = resolveUninstall(monitor.newChild(50),
+						ius.toArray(new IInstallableUnit[0]), repositoryLocations.toArray(new URI[0]));
+
+				checkCancelled(monitor);
+
+				return uninstallOperation.getProvisioningJob(null).runModal(monitor);
+			} finally {
+				monitor.done();
+			}
+		} catch (OperationCanceledException e) {
+			throw new InterruptedException();
+		} catch (Exception e) {
+			throw new InvocationTargetException(e);
+		}
+	}
+
 	private void checkCancelled(IProgressMonitor monitor) {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
 	}
 
-	private InstallOperation resolve(IProgressMonitor monitor, final IInstallableUnit[] ius, URI[] repositories)
+	private UninstallOperation resolveUninstall(IProgressMonitor monitor, final IInstallableUnit[] ius,
+			URI[] repositories) throws CoreException {
+		final UninstallOperation uninstallOperation = provisioningUI.getUninstallOperation(Arrays.asList(ius),
+				repositories);
+		IStatus operationStatus = uninstallOperation.resolveModal(new SubProgressMonitor(monitor,
+				installableConnectors.size()));
+		if (operationStatus.getSeverity() > IStatus.WARNING) {
+			throw new CoreException(operationStatus);
+		}
+		return uninstallOperation;
+	}
+
+	private InstallOperation resolveInstall(IProgressMonitor monitor, final IInstallableUnit[] ius, URI[] repositories)
 			throws CoreException {
 		final InstallOperation installOperation = provisioningUI.getInstallOperation(Arrays.asList(ius), repositories);
 		IStatus operationStatus = installOperation.resolveModal(new SubProgressMonitor(monitor,

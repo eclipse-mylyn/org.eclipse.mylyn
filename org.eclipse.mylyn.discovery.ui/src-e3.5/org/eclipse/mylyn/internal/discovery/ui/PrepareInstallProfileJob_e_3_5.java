@@ -114,8 +114,9 @@ class PrepareInstallProfileJob_e_3_5 extends AbstractInstallJob {
 							new QueryableMetadataRepositoryManager(Policy.getDefault().getQueryContext(), false));
 					WizardDialog dialog = new ProvisioningWizardDialog(DiscoveryUiUtil.getShell(), wizard);
 					dialog.create();
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
-							IProvHelpContextIds.INSTALL_WIZARD);
+					PlatformUI.getWorkbench()
+							.getHelpSystem()
+							.setHelp(dialog.getShell(), IProvHelpContextIds.INSTALL_WIZARD);
 
 					dialog.open();
 				}
@@ -332,8 +333,8 @@ class PrepareInstallProfileJob_e_3_5 extends AbstractInstallJob {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					okayToProceed[0] = MessageDialog.openQuestion(DiscoveryUiUtil.getShell(),
-							Messages.InstallConnectorsJob_questionProceed, NLS.bind(
-									Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
+							Messages.InstallConnectorsJob_questionProceed,
+							NLS.bind(Messages.InstallConnectorsJob_questionProceed_long, new Object[] { finalMessage }));
 				}
 			});
 			if (!okayToProceed[0]) {
@@ -428,6 +429,12 @@ class PrepareInstallProfileJob_e_3_5 extends AbstractInstallJob {
 			}
 		}
 		return installedFeatures;
+	}
+
+	@Override
+	public IStatus uninstall(UninstallRequest request, IProgressMonitor progressMonitor)
+			throws InvocationTargetException, InterruptedException {
+		throw new UnsupportedOperationException();
 	}
 
 }
