@@ -364,4 +364,32 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 		assertTrue(html.contains("<link type=\"text/css\" rel=\"stylesheet\" href=\"a/test.css\"/>"));
 	}
+
+	public void testFilterEntityReferences_FiltersKnown() {
+		builder.setFilterEntityReferences(true);
+
+		doEntityReferenceTest("yen", "&#165;");
+	}
+
+	public void testFilterEntityReferences_DisabledFilter() {
+		doEntityReferenceTest("yen", "&yen;");
+	}
+
+	public void testFilterEntityReferences_FiltersUnknown() {
+		builder.setFilterEntityReferences(true);
+
+		doEntityReferenceTest("unlikely", "&amp;unlikely;");
+	}
+
+	private void doEntityReferenceTest(String entityReference, String expected) {
+		builder.beginDocument();
+		builder.entityReference(entityReference);
+		builder.endDocument();
+
+		String html = out.toString();
+
+		TestUtil.println(html);
+
+		assertTrue(html.contains(expected));
+	}
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.viewer;
 
+import java.io.StringWriter;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -19,6 +21,7 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Composite;
 
@@ -47,7 +50,14 @@ public class MarkupViewer extends HtmlViewer {
 
 	public void setMarkup(String source) {
 		try {
-			String htmlText = parser.parseToHtml(source);
+			StringWriter out = new StringWriter();
+			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+			builder.setFilterEntityReferences(true);
+
+			parser.parse(source);
+			parser.setBuilder(null);
+
+			String htmlText = out.toString();
 			setHtml(htmlText);
 		} catch (Throwable t) {
 			if (getTextPresentation() != null) {
