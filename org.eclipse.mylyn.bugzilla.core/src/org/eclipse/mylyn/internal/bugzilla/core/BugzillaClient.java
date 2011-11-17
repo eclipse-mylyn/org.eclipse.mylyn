@@ -1704,7 +1704,7 @@ public class BugzillaClient {
 					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.FORM
 							&& !((HtmlTag) (token.getValue())).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
-						formName = tag.getAttribute("id"); //$NON-NLS-1$
+						formName = tag.getAttribute("name"); //$NON-NLS-1$
 					} else if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
 							&& !((HtmlTag) (token.getValue())).isEndTag()) {
 						HtmlTag tag = (HtmlTag) token.getValue();
