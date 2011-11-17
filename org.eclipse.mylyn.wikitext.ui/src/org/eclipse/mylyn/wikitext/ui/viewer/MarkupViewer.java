@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,14 +50,7 @@ public class MarkupViewer extends HtmlViewer {
 
 	public void setMarkup(String source) {
 		try {
-			StringWriter out = new StringWriter();
-			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
-			builder.setFilterEntityReferences(true);
-
-			parser.parse(source);
-			parser.setBuilder(null);
-
-			String htmlText = out.toString();
+			String htmlText = computeHtml(source);
 			setHtml(htmlText);
 		} catch (Throwable t) {
 			if (getTextPresentation() != null) {
@@ -95,7 +88,7 @@ public class MarkupViewer extends HtmlViewer {
 		if (document != null) {
 			markupContent = document.get();
 			if (markupContent.length() > 0) {
-				String htmlText = parser.parseToHtml(markupContent);
+				String htmlText = computeHtml(markupContent);
 				document.set(htmlText);
 			}
 		}
@@ -107,5 +100,18 @@ public class MarkupViewer extends HtmlViewer {
 				setDocumentNoMarkup(document, annotationModel);
 			}
 		}
+	}
+
+	private String computeHtml(String markupContent) {
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+		builder.setFilterEntityReferences(true);
+
+		parser.setBuilder(builder);
+		parser.parse(markupContent);
+		parser.setBuilder(null);
+
+		String htmlText = out.toString();
+		return htmlText;
 	}
 }
