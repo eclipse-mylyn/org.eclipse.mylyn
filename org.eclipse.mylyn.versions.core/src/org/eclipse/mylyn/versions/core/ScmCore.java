@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.versions.core.ScmInternal;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.team.core.RepositoryProvider;
@@ -40,8 +41,6 @@ import org.eclipse.team.core.RepositoryProvider;
 public class ScmCore {
 
 	private static HashMap<String, ScmConnector> connectorById = new HashMap<String, ScmConnector>();
-
-	private static final String ID_PLUGIN = "org.eclipse.mylyn.versions.core"; //$NON-NLS-1$
 
 	public static IResource findResource(String file) {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -89,10 +88,10 @@ public class ScmCore {
 
 	private static ScmConnector loadConnector(String id) {
 		Assert.isNotNull(id);
-		MultiStatus result = new MultiStatus(ScmCore.ID_PLUGIN, 0, "Scm connectors failed to load.", null); //$NON-NLS-1$
+		MultiStatus result = new MultiStatus(ScmInternal.ID_PLUGIN, 0, "Scm connectors failed to load.", null); //$NON-NLS-1$
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ScmCore.ID_PLUGIN + ".connectors"); //$NON-NLS-1$
+		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ScmInternal.ID_PLUGIN + ".connectors"); //$NON-NLS-1$
 		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -105,7 +104,7 @@ public class ScmCore {
 						} else {
 							result.add(new Status(
 									IStatus.ERROR,
-									ScmCore.ID_PLUGIN,
+									ScmInternal.ID_PLUGIN,
 									NLS.bind(
 											"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
 											object.getClass().getCanonicalName(), element.getContributor().getName())));
@@ -113,7 +112,7 @@ public class ScmCore {
 					} catch (Throwable e) {
 						result.add(new Status(
 								IStatus.ERROR,
-								ScmCore.ID_PLUGIN,
+								ScmInternal.ID_PLUGIN,
 								NLS.bind(
 										"Connector core failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
 					}

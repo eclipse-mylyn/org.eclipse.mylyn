@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.core,
  org.eclipse.mylyn.commons.core;bundle-version="3.0"
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.versions.core;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.versions.core;x-internal:=true,
+ org.eclipse.mylyn.versions.core;x-internal:=true,
  org.eclipse.mylyn.versions.core.spi;x-internal:=true
