@@ -66,6 +66,10 @@ public class MarkupFilesTest extends TestSuite {
 		private void discoverLanguageTests(MarkupLanguage markupLanguage, Bundle bundle, String bundlePath) {
 			final String markupFileExtension = '.' + markupLanguage.getName().toLowerCase();
 
+			Logger.getLogger(MarkupFilesTest.class.getName()).info(
+					String.format("Looking for %s tests in bundle %s using path %s", markupLanguage.getName(),
+							bundle.getSymbolicName(), bundlePath));
+
 			Enumeration<URL> entries = bundle.findEntries(bundlePath, null, false);
 			while (entries.hasMoreElements()) {
 				URL testElement = entries.nextElement();
@@ -80,13 +84,22 @@ public class MarkupFilesTest extends TestSuite {
 					name = name.substring(name.lastIndexOf('/') + 1, name.length());
 					name = name.substring(0, name.lastIndexOf('.'));
 
-					URL expectedOutcome = bundle.getEntry(bundlePath + "/" + name + ".txt");
+					String expectedOutcomePath = bundlePath + "/" + name + ".txt";
 
-					addTest(new PlatformMarkupFileCase(markupLanguage, name, testElement, expectedOutcome));
+					URL expectedOutcome = bundle.getEntry(expectedOutcomePath);
+					if (expectedOutcome == null) {
+						Logger.getLogger(MarkupFilesTest.class.getName()).severe(
+								"Cannot find file: " + name + " for test input: " + testElement);
+					} else {
+						addTest(new PlatformMarkupFileCase(markupLanguage, name, testElement, expectedOutcome));
+					}
 				} else if (!name.endsWith(".txt")) {
 					Logger.getLogger(MarkupFilesTest.class.getName()).severe("Unexpected file: " + name);
 				}
 			}
+
+			Logger.getLogger(MarkupFilesTest.class.getName()).info(
+					String.format("Found %s %s tests", countTestCases(), markupLanguage.getName()));
 		}
 
 		private void discoverLanguageTests(MarkupLanguage markupLanguage, File languageDir) {
