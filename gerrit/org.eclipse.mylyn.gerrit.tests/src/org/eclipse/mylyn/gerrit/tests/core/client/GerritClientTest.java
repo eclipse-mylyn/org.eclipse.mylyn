@@ -18,12 +18,12 @@ import static org.junit.Assert.fail;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.reviewdb.Account;
 
 /**
@@ -48,8 +48,9 @@ public class GerritClientTest {
 
 	@Test
 	public void testRefreshConfig() throws Exception {
-		GerritConfig config = client.refreshConfig(null);
+		GerritConfiguration config = client.refreshConfig(null);
 		assertNotNull(config);
+		assertNotNull(config.getGerritConfig());
 	}
 
 	@Test

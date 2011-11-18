@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
@@ -23,6 +24,7 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
@@ -51,6 +53,7 @@ import com.google.gerrit.common.data.GerritConfig;
 /**
  * @author Steffen Pingel
  * @author Benjamin Muskalla
+ * @author Sascha Scholz
  */
 public abstract class GerritOperationDialog extends ProgressDialog {
 
@@ -132,14 +135,14 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 		Control control = super.createDialogArea(parent);
 		if (needsConfig()) {
-			GerritConfig config = getOperationFactory().getClient(getTask()).getConfig();
+			GerritConfig config = getOperationFactory().getClient(getTask()).getGerritConfig();
 			if (config != null) {
 				doRefresh(config);
 			} else {
-				GerritOperation<GerritConfig> operation = getOperationFactory().createRefreshConfigOperation(getTask(),
-						new RefreshConfigRequest());
+				GerritOperation<GerritConfiguration> operation = getOperationFactory().createRefreshConfigOperation(
+						getTask(), new RefreshConfigRequest());
 				performOperation(operation);
-				config = operation.getOperationResult();
+				config = operation.getOperationResult().getGerritConfig();
 				doRefresh(config);
 			}
 		}

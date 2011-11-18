@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AbandonRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AddReviewersRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
@@ -25,12 +27,12 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class GerritOperationFactory {
 
@@ -56,8 +58,8 @@ public class GerritOperationFactory {
 		return new GerritOperation<Object>("Publishing Change", getClient(review), request);
 	}
 
-	public GerritOperation<GerritConfig> createRefreshConfigOperation(ITask review, RefreshConfigRequest request) {
-		return new GerritOperation<GerritConfig>("Refreshing Configuration", getClient(review), request);
+	public GerritOperation<GerritConfiguration> createRefreshConfigOperation(ITask review, RefreshConfigRequest request) {
+		return new GerritOperation<GerritConfiguration>("Refreshing Configuration", getClient(review), request);
 	}
 
 	public GerritOperation<ChangeDetail> createRestoreOperation(ITask review, RestoreRequest request) {

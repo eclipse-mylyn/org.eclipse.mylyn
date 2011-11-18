@@ -23,13 +23,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -44,7 +47,6 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.ChangeInfo;
-import com.google.gerrit.common.data.GerritConfig;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -53,6 +55,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  * 
  * @author Mikael Kober
  * @author Thomas Westling
+ * @author Sascha Scholz
  */
 public class GerritConnector extends AbstractRepositoryConnector {
 
@@ -263,16 +266,16 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	private GerritClient createClient(final TaskRepository repository, boolean cachedConfig) {
-		GerritConfig config = (cachedConfig)
-				? GerritClient.configFromString(repository.getProperty(KEY_REPOSITORY_CONFIG))
+		GerritConfiguration config = (cachedConfig)
+				? configurationFromString(repository.getProperty(KEY_REPOSITORY_CONFIG))
 				: null;
 		GerritAuthenticationState authState = (cachedConfig)
 				? GerritClient.authStateFromString(repository.getProperty(KEY_REPOSITORY_AUTH))
 				: null;
 		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config, authState) {
 			@Override
-			protected void configurationChanged(GerritConfig config) {
-				repository.setProperty(KEY_REPOSITORY_CONFIG, GerritClient.configToString(config));
+			protected void configurationChanged(GerritConfiguration config) {
+				repository.setProperty(KEY_REPOSITORY_CONFIG, configurationToString(config));
 			}
 
 			@Override
@@ -280,6 +283,28 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
 			}
 		};
+	}
+
+	private static GerritConfiguration configurationFromString(String token) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.getGson().fromJson(token, GerritConfiguration.class);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					"Failed to deserialize configuration: '" + token + "'", e));
+			return null;
+		}
+	}
+
+	private static String configurationToString(GerritConfiguration config) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.getGson().toJson(config);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					"Failed to serialize configuration", e));
+			return null;
+		}
 	}
 
 	CoreException toCoreException(TaskRepository repository, GerritException e) {

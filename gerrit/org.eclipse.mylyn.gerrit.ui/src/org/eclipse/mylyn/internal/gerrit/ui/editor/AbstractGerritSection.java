@@ -34,6 +34,7 @@ import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public abstract class AbstractGerritSection extends AbstractTaskEditorSection {
 
@@ -80,7 +81,7 @@ public abstract class AbstractGerritSection extends AbstractTaskEditorSection {
 	protected GerritConfig getConfig() {
 		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getTaskData().getConnectorKind());
 		GerritClient client = connector.getClient(getTaskEditorPage().getTaskRepository());
-		return client.getConfig();
+		return client.getGerritConfig();
 	}
 
 }

@@ -90,6 +90,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Thomas Westling
  * @author Steffen Pingel
  * @author Christian Trutz
+ * @author Sascha Scholz
  */
 public class GerritClient {
 
@@ -127,36 +128,12 @@ public class GerritClient {
 		}
 	}
 
-	// XXX belongs in GerritConnector
-	public static GerritConfig configFromString(String token) {
-		try {
-			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritConfig.class);
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to deserialize configration: '" + token + "'", e));
-			return null;
-		}
-	}
-
 	public boolean isAuthenticationException(Throwable exception) {
 		if (exception instanceof GerritException) {
 			return ((GerritException) exception).getCode() == -32603
 					&& "Invalid xsrfKey in request".equals(((GerritException) exception).getMessage());
 		}
 		return false;
-	}
-
-	// XXX belongs in GerritConnector
-	public static String configToString(GerritConfig config) {
-		try {
-			JSonSupport support = new JSonSupport();
-			return support.getGson().toJson(config);
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, "Failed to serialize configration",
-					e));
-			return null;
-		}
 	}
 
 	// XXX belongs in GerritConnector
@@ -197,7 +174,7 @@ public class GerritClient {
 
 	private final GerritHttpClient client;
 
-	private volatile GerritConfig config;
+	private volatile GerritConfiguration config;
 
 	private Account myAcount;
 
@@ -257,7 +234,7 @@ public class GerritClient {
 		this(location, null, null);
 	}
 
-	public GerritClient(AbstractWebLocation location, GerritConfig config, GerritAuthenticationState authState) {
+	public GerritClient(AbstractWebLocation location, GerritConfiguration config, GerritAuthenticationState authState) {
 		this.client = new GerritHttpClient(location) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
@@ -329,7 +306,11 @@ public class GerritClient {
 		return result;
 	}
 
-	public GerritConfig getConfig() {
+	public GerritConfig getGerritConfig() {
+		return config == null ? null : config.getGerritConfig();
+	}
+
+	public GerritConfiguration getConfiguration() {
 		return config;
 	}
 
@@ -561,9 +542,8 @@ public class GerritClient {
 	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
 	 * portion of the page.
 	 */
-	public GerritConfig refreshConfig(IProgressMonitor monitor) throws GerritException {
-		configRefreshed = true;
-		GerritConfig config = null;
+	private GerritConfig refreshGerritConfig(IProgressMonitor monitor) throws GerritException {
+		GerritConfig gerritConfig = null;
 		try {
 			GetMethod method = client.getRequest("/", monitor); //$NON-NLS-1$
 			try {
@@ -581,7 +561,7 @@ public class GerritClient {
 										String text = getText(tokenizer);
 										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-										config = parseConfig(text);
+										gerritConfig = parseConfig(text);
 										break;
 									}
 								}
@@ -594,13 +574,10 @@ public class GerritClient {
 					}
 				}
 
-				if (config == null) {
+				if (gerritConfig == null) {
 					throw new GerritException("Failed to obtain Gerrit configuration");
 				}
-
-				this.config = config;
-				configurationChanged(config);
-				return config;
+				return gerritConfig;
 			} finally {
 				method.releaseConnection();
 			}
@@ -611,7 +588,15 @@ public class GerritClient {
 		}
 	}
 
-	public GerritConfig refreshConfigOnce(IProgressMonitor monitor) throws GerritException {
+	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {
+		configRefreshed = true;
+		GerritConfig gerritConfig = refreshGerritConfig(monitor);
+		config = new GerritConfiguration(gerritConfig);
+		configurationChanged(config);
+		return config;
+	}
+
+	public GerritConfiguration refreshConfigOnce(IProgressMonitor monitor) throws GerritException {
 		if (!configRefreshed && config == null) {
 			try {
 				refreshConfig(monitor);
@@ -619,7 +604,7 @@ public class GerritClient {
 				// don't fail validation in case config parsing fails
 			}
 		}
-		return getConfig();
+		return getConfiguration();
 	}
 
 	public ChangeDetail restore(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
@@ -750,13 +735,24 @@ public class GerritClient {
 		for (String token : tokens) {
 			if (token.startsWith(prefix)) {
 				token = token.substring(prefix.length());
-				return configFromString(token);
+				return gerritConfigFromString(token);
 			}
 		}
 		return null;
 	}
 
-	protected void configurationChanged(GerritConfig config) {
+	private static GerritConfig gerritConfigFromString(String token) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.getGson().fromJson(token, GerritConfig.class);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					"Failed to deserialize Gerrit configuration: '" + token + "'", e));
+			return null;
+		}
+	}
+
+	protected void configurationChanged(GerritConfiguration config) {
 	}
 
 	protected void authStateChanged(GerritAuthenticationState config) {

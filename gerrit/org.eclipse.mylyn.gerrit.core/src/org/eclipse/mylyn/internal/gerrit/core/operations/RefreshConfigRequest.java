@@ -7,26 +7,27 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.operations;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
-
-import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
-public class RefreshConfigRequest extends AbstractRequest<GerritConfig> {
+public class RefreshConfigRequest extends AbstractRequest<GerritConfiguration> {
 
 	public RefreshConfigRequest() {
 	}
 
 	@Override
-	protected GerritConfig execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
+	protected GerritConfiguration execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
 		return client.refreshConfig(monitor);
 	}
 
