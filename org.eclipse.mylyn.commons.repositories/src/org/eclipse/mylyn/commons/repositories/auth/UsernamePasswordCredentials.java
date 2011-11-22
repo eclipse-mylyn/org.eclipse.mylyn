@@ -17,7 +17,6 @@ import org.eclipse.equinox.security.storage.StorageException;
  * Provides a user name and password.
  * 
  * @author Steffen Pingel
- * @since 2.2
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class UsernamePasswordCredentials extends AuthenticationCredentials {

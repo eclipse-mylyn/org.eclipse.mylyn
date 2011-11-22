@@ -170,9 +170,6 @@ public class RepositoryLocation extends PlatformObject {
 		}
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public boolean getSavePassword(AuthenticationType authType) {
 		return getBooleanPropery(getKeyPrefix(authType) + SAVE_PASSWORD);
 	}
@@ -186,9 +183,6 @@ public class RepositoryLocation extends PlatformObject {
 		return service;
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public IStatus getStatus() {
 		return errorStatus;
 	}
@@ -236,9 +230,6 @@ public class RepositoryLocation extends PlatformObject {
 		return workingCopy;
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public void removeChangeListener(PropertyChangeListener listener) {
 		propertyChangeListeners.remove(listener);
 	}
