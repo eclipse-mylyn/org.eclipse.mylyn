@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
 import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
 import org.eclipse.emf.common.notify.Notification;
@@ -41,6 +42,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
@@ -55,6 +57,7 @@ import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
 import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
@@ -405,20 +408,28 @@ public class PatchSetSection extends AbstractGerritSection {
 		try {
 			if (mapper.find() != null) {
 				return mapper;
+			} else if (mapper.getGerritProject() != null) {
+				String uri = NLS.bind("{0}/p/{1}", getTaskEditorPage().getTaskRepository(), mapper.getGerritProject());
+				WizardDialog dlg = new WizardDialog(WorkbenchUtil.getShell(), new GitCloneWizard(uri));
+				dlg.setHelpAvailable(false);
+				int response = dlg.open();
+				if (response == Window.OK && mapper.find() != null) {
+					return mapper;
+				}
+			} else {
+				String message = NLS.bind("No Git repository found for fetching Gerrit change {0}",
+						getTask().getTaskKey());
+				String reason = NLS.bind(
+						"No remote config found that has fetch URL with host ''{0}'' and path matching ''{1}''",
+						mapper.getGerritHost(), mapper.getGerritProject());
+				GerritCorePlugin.logError(message, null);
+				ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
+						GerritUiPlugin.PLUGIN_ID, reason));
 			}
 		} catch (IOException e) {
 			Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Error accessing Git repository", e);
 			StatusManager.getManager().handle(status, StatusManager.BLOCK | StatusManager.SHOW | StatusManager.LOG);
-			return null;
 		}
-
-		String message = NLS.bind("No Git repository found for fetching Gerrit change {0}", getTask().getTaskKey());
-		String reason = NLS.bind(
-				"No remote config found that has fetch URL with host ''{0}'' and path matching ''{1}''",
-				mapper.getGerritHost(), mapper.getGerritProject());
-		GerritCorePlugin.logError(message, null);
-		ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
-				GerritUiPlugin.PLUGIN_ID, reason));
 		return null;
 	}
 
