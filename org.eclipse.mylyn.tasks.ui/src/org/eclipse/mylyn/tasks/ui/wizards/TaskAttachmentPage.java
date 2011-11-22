@@ -8,6 +8,7 @@
  * Contributors:
  *     Jeff Pound - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Tomasz Zarna (IBM) - fixes for bug 364240
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -339,10 +340,12 @@ public class TaskAttachmentPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
-			fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
-			if (fileNameText.getText().length() == 0) {
-				setFilePath(getModel().getSource().getName());
-				setContentType(getModel().getSource().getContentType());
+			if (!fileNameText.getText().equals(taskAttachment.getFileName())) {
+				fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
+				if (fileNameText.getText().length() == 0) {
+					setFilePath(getModel().getSource().getName());
+					setContentType(getModel().getSource().getContentType());
+				}
 			}
 		}
 		super.setVisible(visible);
