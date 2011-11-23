@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,8 @@ public class TextileToDocbookTest extends TestCase {
 		String linkend = matcher.group(1);
 		assertNotNull(linkend);
 
-		assertTrue(Pattern.compile("<para\\s*id=\"" + Pattern.quote(linkend) + "\">", Pattern.MULTILINE)
+		assertTrue(Pattern.compile("<para\\s*id=\"" + Pattern.quote(linkend) + "\"\\s+role=\"footnote\">",
+				Pattern.MULTILINE)
 				.matcher(book)
 				.find());
 	}

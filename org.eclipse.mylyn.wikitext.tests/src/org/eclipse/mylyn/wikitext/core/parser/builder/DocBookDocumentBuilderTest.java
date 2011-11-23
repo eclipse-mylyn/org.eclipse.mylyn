@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
@@ -48,7 +49,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		parser.parse("some text !(inline)images/foo.png! some text");
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
-		assertTrue(docbook.contains("<inlinemediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
+		assertTrue(docbook.contains("<inlinemediaobject role=\"inline\"><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
 	}
 
 	public void testInlineQuote() {
@@ -206,5 +207,29 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		TestUtil.println("DocBook: \n" + docbook);
 
 		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para></chapter></book>"));
+	}
+
+	public void testTableClass() {
+		builder.beginDocument();
+		TableAttributes tableAttributes = new TableAttributes();
+		tableAttributes.appendCssClass("foo");
+		builder.beginBlock(BlockType.TABLE, tableAttributes);
+
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("text");
+		builder.endBlock(); // cell
+
+		builder.endBlock(); // row
+
+		builder.endBlock(); // table
+		builder.endDocument();
+
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+
+		assertTrue(docbook.contains("<informaltable role=\"foo\"><tr><td>text</td></tr></informaltable>"));
+
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -414,6 +414,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyAttributes(Attributes attributes) {
 		if (attributes.getId() != null) {
 			writer.writeAttribute("id", attributes.getId()); //$NON-NLS-1$
+		}
+		if (attributes.getCssClass() != null) {
+			writer.writeAttribute("role", attributes.getCssClass()); //$NON-NLS-1$
 		}
 	}
 
