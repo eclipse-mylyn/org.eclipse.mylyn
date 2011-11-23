@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,15 +19,16 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * List block, matches blocks that start with <code>*</code>, <code>#</code> or <code>-</code>
+ * List block, matches blocks that start with <code>*</code>, <code>#</code> or <code>;:</code>
  * 
  * @author David Green
+ * @see <a href="http://www.mediawiki.org/wiki/Help:Formatting">Help:Formatting</a>
  */
 public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 2;
 
-	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-)|(?:\\;)|(?:\\:))+)\\s?(.+)"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:\\;)|(?:\\:))+)\\s?(.+)"); //$NON-NLS-1$
 
 	static final Pattern definitionPattern = Pattern.compile("(\\s+\\:\\s+)(.*)"); //$NON-NLS-1$
 

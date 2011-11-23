@@ -154,6 +154,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("hr <hr/> foo"));
 	}
 
+	public void testHorizontalRule2() {
+		String html = parser.parseToHtml("Mediawiki should render:\n----\nAs a \"horizontal rule\".");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("render\\:\\s*<hr/>\\s*As a").matcher(html).find());
+	}
+
 	public void testListUnordered() throws IOException {
 		String html = parser.parseToHtml("* a list\n* with two lines");
 
