@@ -11,7 +11,12 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
+
 import com.google.gerrit.common.data.GerritConfig;
+import com.google.gerrit.reviewdb.Project;
 
 /**
  * @author Sascha Scholz
@@ -20,12 +25,17 @@ public final class GerritConfiguration {
 
 	private GerritConfig gerritConfig;
 
+	private List<Project> projects;
+
 	GerritConfiguration() {
 		// no-args constructor needed by gson	
 	}
 
-	public GerritConfiguration(GerritConfig gerritConfig) {
+	public GerritConfiguration(GerritConfig gerritConfig, List<Project> projects) {
+		Assert.isNotNull(gerritConfig, "gerritConfig must not be null");
+		Assert.isNotNull(projects, "projects must not be null");
 		this.gerritConfig = gerritConfig;
+		this.projects = projects;
 	}
 
 	/**
@@ -33,6 +43,13 @@ public final class GerritConfiguration {
 	 */
 	public GerritConfig getGerritConfig() {
 		return gerritConfig;
+	}
+
+	/**
+	 * @return the list of visible Gerrit projects, never null
+	 */
+	public List<Project> getProjects() {
+		return projects;
 	}
 
 }

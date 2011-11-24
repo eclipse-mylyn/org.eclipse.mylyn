@@ -25,7 +25,7 @@ public class GerritFixture extends TestFixture {
 
 	public static GerritFixture GERRIT_MYLYN = new GerritFixture("http://review.mylyn.org/", "2.2.1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture DEFAULT = GERRIT_MYLYN;
+	public static GerritFixture DEFAULT = GERRIT_EGIT;
 
 	private static GerritFixture current;
 

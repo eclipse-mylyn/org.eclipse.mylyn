@@ -12,9 +12,15 @@
 package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -31,10 +37,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 
 /**
  * @author Mikael Kober
  * @author Thomas Westling
+ * @author Sascha Scholz
  */
 public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
@@ -109,6 +117,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		projectText = new Text(group, SWT.BORDER);
 		projectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		projectText.addModifyListener(modifyListener);
+		addProjectNameContentProposal(projectText);
 
 		new Label(control, SWT.NONE);
 		customQueryButton = new Button(group, SWT.RADIO);
@@ -157,6 +166,18 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		Dialog.applyDialogFont(control);
 		setControl(control);
+	}
+
+	private void addProjectNameContentProposal(Text text) {
+		IContentProposalProvider proposalProvider = new ProjectNameContentProposalProvider(getGerritClient());
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, new TextContentAdapter(),
+				proposalProvider, null, new char[0], true);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+	}
+
+	private GerritClient getGerritClient() {
+		GerritConnector connector = GerritCorePlugin.getDefault().getConnector();
+		return connector.getClient(getTaskRepository());
 	}
 
 	protected void updateButtons() {

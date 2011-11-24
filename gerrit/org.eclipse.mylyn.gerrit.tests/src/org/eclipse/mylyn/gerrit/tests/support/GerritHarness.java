@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.support;
@@ -23,17 +24,20 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class GerritHarness {
 
 	private final GerritFixture fixture;
+
+	private Credentials credentials;
 
 	public GerritHarness(GerritFixture fixture) {
 		this.fixture = fixture;
 	}
 
 	public GerritClient client() {
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		readCredentials();
 		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), credentials.username, credentials.password,
 				new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {
@@ -44,7 +48,13 @@ public class GerritHarness {
 	}
 
 	public void dispose() {
+	}
 
+	public Credentials readCredentials() {
+		if (credentials == null) {
+			credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		}
+		return credentials;
 	}
 
 }

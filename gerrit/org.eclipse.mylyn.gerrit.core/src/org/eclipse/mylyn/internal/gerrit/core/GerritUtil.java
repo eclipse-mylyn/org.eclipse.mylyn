@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -37,6 +39,7 @@ import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.CommentDetail;
+import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.prettify.common.SparseFileContent;
@@ -48,6 +51,7 @@ import com.google.gerrit.reviewdb.UserIdentity;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class GerritUtil {
 
@@ -177,6 +181,17 @@ public class GerritUtil {
 			sb.append(">");
 		}
 		return sb.toString();
+	}
+
+	public static boolean isPermissionOnlyProject(GerritClient client, String projectName) {
+		// TODO this filters only the global permission-only project, but it's possible to create additional permission-only projects on Gerrit
+		GerritConfig config = client.getGerritConfig();
+		if (config != null) {
+			String wildProjectName = config.getWildProject().get();
+			return projectName.equals(wildProjectName);
+		} else {
+			return false;
+		}
 	}
 
 }

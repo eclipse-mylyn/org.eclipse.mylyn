@@ -12,23 +12,25 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gerrit.reviewdb.Account;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
+@Ignore("Credentials are required, but not configured on Hudson")
 public class GerritClientTest {
 
 	private GerritHarness harness;
@@ -51,15 +53,12 @@ public class GerritClientTest {
 		GerritConfiguration config = client.refreshConfig(null);
 		assertNotNull(config);
 		assertNotNull(config.getGerritConfig());
+		assertNotNull(config.getProjects());
 	}
 
 	@Test
 	public void testGetAccount() throws Exception {
-		try {
-			Account account = client.getAccount(null);
-			fail("Expected GerritLoginException, got: " + account.getUserName()); //$NON-NLS-1$
-		} catch (GerritLoginException expected) {
-		}
+		Account account = client.getAccount(null);
+		assertEquals(harness.readCredentials().username, account.getUserName());
 	}
-
 }

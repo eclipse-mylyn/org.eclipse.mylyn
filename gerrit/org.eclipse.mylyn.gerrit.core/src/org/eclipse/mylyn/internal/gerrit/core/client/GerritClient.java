@@ -67,6 +67,7 @@ import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
+import com.google.gerrit.common.data.ProjectAdminService;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.common.data.SystemInfoService;
@@ -79,6 +80,7 @@ import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 import com.google.gwtjsonrpc.client.VoidResult;
@@ -591,7 +593,8 @@ public class GerritClient {
 	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {
 		configRefreshed = true;
 		GerritConfig gerritConfig = refreshGerritConfig(monitor);
-		config = new GerritConfiguration(gerritConfig);
+		List<Project> projects = getVisibleProjects(monitor);
+		config = new GerritConfiguration(gerritConfig, projects);
 		configurationChanged(config);
 		return config;
 	}
@@ -720,6 +723,20 @@ public class GerritClient {
 
 	private SystemInfoService getSystemInfoService() {
 		return getService(SystemInfoService.class);
+	}
+
+	private List<Project> getVisibleProjects(IProgressMonitor monitor) throws GerritException {
+		List<Project> projects = execute(monitor, new Operation<List<Project>>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getProjectAdminService().visibleProjects(this);
+			}
+		});
+		return projects;
+	}
+
+	private ProjectAdminService getProjectAdminService() {
+		return getService(ProjectAdminService.class);
 	}
 
 	public boolean isAnonymous() {
