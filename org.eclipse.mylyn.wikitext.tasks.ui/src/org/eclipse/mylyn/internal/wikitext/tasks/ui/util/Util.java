@@ -11,11 +11,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.util;
 
-import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaGeneratedCommentBlock;
-import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla.BugzillaQuoteBlock;
+import org.eclipse.mylyn.wikitext.core.parser.markup.ConfigurationBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.EclipseErrorDetailsBlock;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
+import org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaGeneratedCommentBlock;
+import org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaQuoteBlock;
 
 /**
  * @author David Green
@@ -28,18 +27,12 @@ public class Util {
 	private static final String BUGZILLA = "bugzilla"; //$NON-NLS-1$
 
 	public static MarkupLanguageConfiguration create(String repositoryKind) {
-		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
-		configuration.setEnableUnwrappedParagraphs(false);
-		configuration.setEscapingHtmlAndXml(true);
-		configuration.setNewlinesMustCauseLineBreak(true);
-		configuration.setOptimizeForRepositoryUsage(true);
+		ConfigurationBuilder builder = ConfigurationBuilder.create().repositorySettings();
+
 		if (isBugzillaOrDerivative(repositoryKind)) {
-			configuration.getBlocks().add(new BugzillaQuoteBlock());
-			configuration.getBlocks().add(new BugzillaGeneratedCommentBlock());
+			builder.block(new BugzillaQuoteBlock()).block(new BugzillaGeneratedCommentBlock());
 		}
-		configuration.getBlocks().add(new EclipseErrorDetailsBlock());
-		configuration.getBlocks().add(new JavaStackTraceBlock());
-		return configuration;
+		return builder.configuration();
 	}
 
 	private static boolean isBugzillaOrDerivative(String repositoryKind) {
