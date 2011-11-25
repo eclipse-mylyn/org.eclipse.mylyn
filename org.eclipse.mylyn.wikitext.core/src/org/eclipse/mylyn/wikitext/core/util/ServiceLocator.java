@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -39,6 +40,8 @@ public class ServiceLocator {
 	protected final ClassLoader classLoader;
 
 	private static Class<? extends ServiceLocator> implementationClass;
+
+	private static Pattern CLASS_NAME_PATTERN = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 
 	protected ServiceLocator(ClassLoader classLoader) {
 		this.classLoader = classLoader;
@@ -85,59 +88,31 @@ public class ServiceLocator {
 	 * @throws IllegalArgumentException
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
-	public MarkupLanguage getMarkupLanguage(String languageName) throws IllegalArgumentException {
+	public MarkupLanguage getMarkupLanguage(final String languageName) throws IllegalArgumentException {
 		if (languageName == null) {
 			throw new IllegalArgumentException();
 		}
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
-		Set<String> names = new TreeSet<String>();
-		try {
-			// note that we can't use the standard Java services API to load services here since the service may be declared on 
-			// a specific class loader (not the system class loader).
-			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
-			Enumeration<URL> resources = classLoader.getResources(servicesFilename);
-			while (resources.hasMoreElements()) {
-				URL url = resources.nextElement();
-				try {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8));
-					try {
-						String line;
-						while ((line = reader.readLine()) != null) {
-							Matcher matcher = classNamePattern.matcher(line);
-							if (matcher.matches()) {
-								String className = matcher.group(1);
-								if (className != null) {
-									try {
-										Class<?> clazz = Class.forName(className, true, classLoader);
-										if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-											MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
-											if (languageName.equals(instance.getName())) {
-												return instance;
-											}
-											names.add(instance.getName());
-										}
-									} catch (Exception e) {
-										// very unusual, but inform the user in a stand-alone way
-										Logger.getLogger(ServiceLocator.class.getName())
-												.log(Level.WARNING,
-														MessageFormat.format(
-																Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
-									}
-								}
-							}
-						}
-					} finally {
-						reader.close();
-					}
-				} catch (IOException e) {
+		final Set<String> names = new TreeSet<String>();
+
+		final MarkupLanguage[] result = new MarkupLanguage[1];
+
+		loadMarkupLanguages(new MarkupLanguageVisitor() {
+
+			public boolean accept(MarkupLanguage language) {
+				if (languageName.equals(language.getName())) {
+					result[0] = language;
+					return false;
 				}
+				names.add(language.getName());
+				return true;
 			}
-		} catch (IOException e) {
-			// very unusual, but inform the user in a stand-alone way
-			Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE,
-					Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
+		});
+		if (result[0] != null) {
+			return result[0];
 		}
+
 		// next attempt to load the markup language as if the language name is a fully qualified name
 		Matcher matcher = classNamePattern.matcher(languageName);
 		if (matcher.matches()) {
@@ -171,7 +146,76 @@ public class ServiceLocator {
 						: Messages.getString("ServiceLocator.6") + buf)); //$NON-NLS-1$
 	}
 
+	/**
+	 * Get all known markup languages
+	 * 
+	 * @since 1.6
+	 */
+	public Set<MarkupLanguage> getAllMarkupLanguages() {
+		final Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
+		loadMarkupLanguages(new MarkupLanguageVisitor() {
+
+			public boolean accept(MarkupLanguage language) {
+				markupLanguages.add(language);
+				return true;
+			}
+		});
+		return markupLanguages;
+	}
+
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {
 		ServiceLocator.implementationClass = implementationClass;
+	}
+
+	private interface MarkupLanguageVisitor {
+		public boolean accept(MarkupLanguage language);
+	}
+
+	private void loadMarkupLanguages(MarkupLanguageVisitor visitor) {
+		try {
+			// note that we can't use the standard Java services API to load services here since the service may be declared on 
+			// a specific class loader (not the system class loader).
+			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
+			Enumeration<URL> resources = classLoader.getResources(servicesFilename);
+			while (resources.hasMoreElements()) {
+				URL url = resources.nextElement();
+				try {
+					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8));
+					try {
+						String line;
+						while ((line = reader.readLine()) != null) {
+							Matcher matcher = CLASS_NAME_PATTERN.matcher(line);
+							if (matcher.matches()) {
+								String className = matcher.group(1);
+								if (className != null) {
+									try {
+										Class<?> clazz = Class.forName(className, true, classLoader);
+										if (MarkupLanguage.class.isAssignableFrom(clazz)) {
+											MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
+											if (!visitor.accept(instance)) {
+												return;
+											}
+										}
+									} catch (Exception e) {
+										// very unusual, but inform the user in a stand-alone way
+										Logger.getLogger(ServiceLocator.class.getName())
+												.log(Level.WARNING,
+														MessageFormat.format(
+																Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
+									}
+								}
+							}
+						}
+					} finally {
+						reader.close();
+					}
+				} catch (IOException e) {
+				}
+			}
+		} catch (IOException e) {
+			// very unusual, but inform the user in a stand-alone way
+			Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE,
+					Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
+		}
 	}
 }

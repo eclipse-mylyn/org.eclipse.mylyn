@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.internal.wikitext.core.util;
 
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
@@ -58,4 +60,17 @@ public class EclipseServiceLocator extends ServiceLocator {
 		return markupLanguage;
 	}
 
+	@Override
+	public Set<MarkupLanguage> getAllMarkupLanguages() {
+		Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
+
+		for (String languageName : WikiTextPlugin.getDefault().getMarkupLanguageNames()) {
+			MarkupLanguage markupLanguage = getMarkupLanguage(languageName);
+			if (markupLanguage != null) {
+				markupLanguages.add(markupLanguage);
+			}
+		}
+
+		return markupLanguages;
+	}
 }
