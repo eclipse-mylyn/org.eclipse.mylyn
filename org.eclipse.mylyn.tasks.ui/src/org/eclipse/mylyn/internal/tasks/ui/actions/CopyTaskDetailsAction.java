@@ -18,11 +18,13 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Thomas Ehrnhoefer
  */
 public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
@@ -89,9 +91,9 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			break;
 		case URL:
 			if (object instanceof IRepositoryElement) {
-				IRepositoryElement element = (IRepositoryElement) object;
-				if (element.getUrl() != null) {
-					sb.append(element.getUrl());
+				String taskUrl = getUrl((IRepositoryElement) object);
+				if (TasksUiInternal.isValidUrl(taskUrl)) {
+					sb.append(taskUrl);
 				}
 			}
 			break;
@@ -119,9 +121,10 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				}
 
 				sb.append(task.getSummary());
-				if (TasksUiInternal.isValidUrl(task.getUrl())) {
+				String taskUrl = getUrl((IRepositoryElement) object);
+				if (TasksUiInternal.isValidUrl(taskUrl)) {
 					sb.append(ClipboardCopier.LINE_SEPARATOR);
-					sb.append(task.getUrl());
+					sb.append(taskUrl);
 				}
 			} else if (object instanceof IRepositoryQuery) {
 				RepositoryQuery query = (RepositoryQuery) object;
@@ -137,6 +140,17 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			break;
 		}
 		return sb.toString();
+	}
+
+	private static String getUrl(IRepositoryElement element) {
+		if (element.getUrl() != null) {
+			return element.getUrl();
+		} else if (element instanceof ITask) {
+			ITask task = (ITask) element;
+			return TasksUi.getRepositoryConnector(task.getConnectorKind()).getTaskUrl(task.getRepositoryUrl(),
+					task.getTaskId());
+		}
+		return null;
 	}
 
 }

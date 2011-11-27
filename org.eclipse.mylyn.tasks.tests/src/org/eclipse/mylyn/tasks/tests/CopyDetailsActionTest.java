@@ -13,11 +13,17 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.provisional.commons.ui.ClipboardCopier;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
+ * @author Thomas Ehrnhoefer
  */
 public class CopyDetailsActionTest extends TestCase {
 
@@ -57,6 +63,21 @@ public class CopyDetailsActionTest extends TestCase {
 
 		task.setTaskKey(null);
 		assertEquals("abc", CopyTaskDetailsAction.getTextForTask(task));
+	}
+
+	public void testGetSummaryAndUrl() {
+		MockTask task = new MockTask("321");
+		task.setSummary("s321");
+		task.setTaskKey("321");
+		MockRepositoryConnector connector = new MockRepositoryConnector() {
+			@Override
+			public String getTaskUrl(String repositoryUrl, String taskId) {
+				return "http://321.com";
+			}
+		};
+		((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
+		assertEquals("321: s321" + ClipboardCopier.LINE_SEPARATOR + "http://321.com",
+				CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
 	}
 
 }
