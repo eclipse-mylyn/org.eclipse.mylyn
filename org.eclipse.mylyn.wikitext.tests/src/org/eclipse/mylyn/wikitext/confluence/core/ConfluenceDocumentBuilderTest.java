@@ -359,4 +359,33 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		Assert.assertEquals("|content| |\n\n", markup);
 	}
+
+	public void testDivAfterImplicitParagraph() {
+		builder.beginDocument();
+
+		builder.characters("test");
+
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("more ");
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text");
+		builder.endSpan();
+		builder.endBlock();
+
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+
+		builder.endBlock();
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
+	}
 }
