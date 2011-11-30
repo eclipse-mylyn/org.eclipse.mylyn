@@ -216,4 +216,147 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		Assert.assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
 	}
 
+	public void testBoldSpanNoWhitespace_spanAtLineStart() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+		builder.characters("text3");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("*text2* text3\n\n", markup);
+	}
+
+	public void testBoldSpanNoWhitespace_spanAtLineEnd() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.characters("text3");
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("text3 *text2*\n\n", markup);
+	}
+
+	public void testBoldSpanNoWhitespace_spanMidLine() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.characters("text3");
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+		builder.characters("text4");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("text3 *text2* text4\n\n", markup);
+	}
+
+	public void testBoldSpanNoWhitespace_adjacentSpans() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+		builder.beginSpan(SpanType.ITALIC, new Attributes());
+		builder.characters("text3");
+		builder.endSpan();
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("*text2* _text3_\n\n", markup);
+	}
+
+	public void testSpanWithAdjacentWhitespace() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bolded");
+		builder.endBlock();
+
+		builder.characters(" suffix");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("prefix *bolded* suffix\n\n", markup);
+	}
+
+	public void testEmptySpan() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.endBlock();
+
+		builder.characters(" suffix");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("prefix ** suffix\n\n", markup);
+	}
+
+	public void testTableWithEmptyCells() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("content");
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.endBlock();
+
+		builder.endBlock();
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("|content| |\n\n", markup);
+	}
 }
