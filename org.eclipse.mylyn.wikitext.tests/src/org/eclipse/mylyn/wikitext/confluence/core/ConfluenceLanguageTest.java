@@ -732,6 +732,12 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<em>italics</em>"));
 	}
 
+	public void testDoubleUnderscore() {
+		String html = parser.parseToHtml("__italics__");
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>__italics__</p>"));
+	}
+
 	public void testItalicsNegativeMatchTrailingWhitespace() {
 		String html = parser.parseToHtml("_italics _");
 		TestUtil.println(html);

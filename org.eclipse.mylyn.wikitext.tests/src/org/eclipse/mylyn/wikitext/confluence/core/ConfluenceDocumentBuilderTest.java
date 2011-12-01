@@ -388,4 +388,57 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		Assert.assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
 	}
+
+	public void testDivWithinTableCell() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("first");
+		builder.endBlock();
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("content");
+		builder.endBlock(); // div
+
+		builder.endBlock(); // cell
+
+		builder.endBlock(); // row
+
+		builder.endBlock(); // table
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("|first|content|\n\n", markup);
+	}
+
+	public void testItalics() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.ITALIC, new Attributes());
+		builder.characters("italic phrase");
+		builder.endBlock();
+
+		builder.characters(" suffix");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("prefix _italic phrase_ suffix\n\n", markup);
+	}
 }

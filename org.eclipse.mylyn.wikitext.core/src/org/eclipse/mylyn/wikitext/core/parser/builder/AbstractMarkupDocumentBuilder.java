@@ -60,6 +60,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		public BlockType getBlockType() {
 			return blockType;
 		}
+
 	}
 
 	/**
@@ -137,7 +138,9 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 				return;
 			}
 			delegate.write(cbuf, off, len);
-			lastChar = cbuf[off + len - 1];
+			int lastCharIndex = off + len - 1;
+			lastChar = cbuf[lastCharIndex];
+
 		}
 
 		/**
@@ -265,12 +268,12 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
-		Block block = computeBlock(type, attributes);
 		try {
 			if (currentBlock instanceof ImplicitParagraphBlock) {
 				currentBlock.close();
 				currentBlock = null;
 			}
+			Block block = computeBlock(type, attributes);
 			block.open();
 		} catch (IOException e) {
 			throw new RuntimeException(e);

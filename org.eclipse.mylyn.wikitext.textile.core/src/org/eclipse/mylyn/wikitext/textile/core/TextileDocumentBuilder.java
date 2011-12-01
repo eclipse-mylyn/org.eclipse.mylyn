@@ -203,7 +203,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
-			return new ContentBlock(type, "", "\n", false); //$NON-NLS-1$ //$NON-NLS-2$
+			if (currentBlock == null) {
+				return new ContentBlock(type, "", "\n", false); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				return new ContentBlock(type, "", "", false); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		case FOOTNOTE:
 			return new ContentBlock(type, "fn1. ", "\n\n", false); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
