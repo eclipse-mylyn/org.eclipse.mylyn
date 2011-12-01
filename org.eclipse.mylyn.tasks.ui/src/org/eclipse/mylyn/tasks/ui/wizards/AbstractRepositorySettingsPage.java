@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -37,6 +38,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IValidatable;
 import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
@@ -85,7 +87,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Helen Bershadskaya
  * @since 2.0
  */
-public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage {
+public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage,
+		IAdaptable {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
@@ -1983,6 +1986,32 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			this.status = status;
 		}
 
+	}
+
+	/**
+	 * Provides an adapter for the {@link IValidatable} interface.
+	 * 
+	 * @since 3.7
+	 * @see IAdaptable#getAdapter(Class)
+	 */
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
+		if (adapter == IValidatable.class) {
+			return new IValidatable() {
+				public void validate() {
+					AbstractRepositorySettingsPage.this.validateSettings();
+				}
+
+				public boolean needsValidation() {
+					return AbstractRepositorySettingsPage.this.needsValidation();
+				}
+
+				public boolean canValidate() {
+					return AbstractRepositorySettingsPage.this.canValidate();
+				}
+			};
+		}
+		return null;
 	}
 
 }
