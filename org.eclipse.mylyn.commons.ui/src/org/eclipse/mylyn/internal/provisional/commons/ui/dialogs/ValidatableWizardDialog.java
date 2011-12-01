@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.widgets.Button;
@@ -52,11 +54,12 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 
 	@Override
 	public void updateExtraButtons() {
-		if (getCurrentPage() instanceof IValidatable && ((IValidatable) getCurrentPage()).needsValidation()) {
+		IValidatable validatable = getValidatablePage();
+		if (validatable != null && validatable.needsValidation()) {
 			if (!validateServerButton.isVisible()) {
 				validateServerButton.setVisible(true);
 			}
-			validateServerButton.setEnabled(((IValidatable) getCurrentPage()).canValidate());
+			validateServerButton.setEnabled(validatable.canValidate());
 		} else {
 			if (validateServerButton != null && validateServerButton.isVisible()) {
 				validateServerButton.setVisible(false);
@@ -64,11 +67,23 @@ public class ValidatableWizardDialog extends EnhancedWizardDialog {
 		}
 	}
 
+	private IValidatable getValidatablePage() {
+		IValidatable validatable = null;
+		IWizardPage currentPage = getCurrentPage();
+		if (currentPage instanceof IValidatable) {
+			validatable = (IValidatable) currentPage;
+		} else if (currentPage instanceof IAdaptable) {
+			validatable = (IValidatable) ((IAdaptable) currentPage).getAdapter(IValidatable.class);
+		}
+		return validatable;
+	}
+
 	@Override
 	protected boolean handleExtraButtonPressed(int buttonId) {
 		if (buttonId == VALIDATE_BUTTON_ID) {
-			if (getCurrentPage() instanceof IValidatable) {
-				((IValidatable) getCurrentPage()).validate();
+			IValidatable validatable = getValidatablePage();
+			if (validatable != null) {
+				validatable.validate();
 				return true;
 			}
 		}
