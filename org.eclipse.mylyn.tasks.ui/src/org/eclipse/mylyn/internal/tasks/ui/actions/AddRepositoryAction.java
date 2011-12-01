@@ -13,26 +13,24 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Mik Kersten
@@ -41,6 +39,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  */
 public class AddRepositoryAction extends Action {
 
+	@Deprecated
 	private static final String PREF_ADD_QUERY = "org.eclipse.mylyn.internal.tasks.add.query"; //$NON-NLS-1$
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.add"; //$NON-NLS-1$
@@ -76,25 +75,25 @@ public class AddRepositoryAction extends Action {
 	}
 
 	public TaskRepository showWizard() {
-		IHandlerService handlerSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-		try {
-			Object result = handlerSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
-			if (result instanceof TaskRepository) {
-				if (getPromptToAddQuery()) {
-					TaskRepository repository = (TaskRepository) result;
-					AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
-					if (connector != null && connector.canQuery(repository)) {
-						promptToAddQuery(repository);
-					}
-				}
-				return (TaskRepository) result;
-			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
+		return showWizard(WorkbenchUtil.getShell(), null);
+	}
+
+	public TaskRepository showWizard(Shell shell, String connectorKind) {
+		NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(connectorKind);
+		repositoryWizard.setShowNewQueryPromptOnFinish(getPromptToAddQuery());
+
+		WizardDialog dialog = new TaskRepositoryWizardDialog(shell, repositoryWizard);
+		dialog.create();
+		dialog.setBlockOnOpen(true);
+		dialog.open();
+
+		if (dialog.getReturnCode() == Window.OK) {
+			return repositoryWizard.getTaskRepository();
 		}
 		return null;
 	}
 
+	@Deprecated
 	public void promptToAddQuery(TaskRepository taskRepository) {
 		IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
 		if (!preferenceStore.getBoolean(PREF_ADD_QUERY)) {

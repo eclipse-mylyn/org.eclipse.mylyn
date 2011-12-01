@@ -12,11 +12,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -34,6 +41,8 @@ import org.eclipse.ui.IWorkbench;
  */
 public class NewRepositoryWizard extends Wizard implements INewWizard {
 
+	private static final String PREF_ADD_QUERY = "org.eclipse.mylyn.internal.tasks.add.query"; //$NON-NLS-1$
+
 	private AbstractRepositoryConnector connector;
 
 	/**
@@ -49,6 +58,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	private String lastConnectorKind;
 
+	private boolean showNewQueryPromptOnFinish;
+
 	public NewRepositoryWizard() {
 		this(null);
 	}
@@ -59,6 +70,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		setForcePreviousAndNextButtons(connectorKind == null);
 		setNeedsProgressMonitor(true);
 		setWindowTitle(AddRepositoryAction.TITLE);
+		setShowNewQueryPromptOnFinish(true);
 	}
 
 	@Override
@@ -102,6 +114,13 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			taskRepository = new TaskRepository(connector.getConnectorKind(), settingsPage.getRepositoryUrl());
 			settingsPage.performFinish(taskRepository);
 			TasksUi.getRepositoryManager().addRepository(taskRepository);
+
+			if (showNewQueryPromptOnFinish()) {
+				if (connector.canQuery(taskRepository)) {
+					promptToAddQuery(taskRepository);
+				}
+			}
+
 			return true;
 		}
 		return false;
@@ -123,6 +142,40 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			settingsPage.setWizard(this);
 			lastConnectorKind = connector.getConnectorKind();
 		}
+	}
+
+	public void promptToAddQuery(TaskRepository taskRepository) {
+		IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+		if (!preferenceStore.getBoolean(PREF_ADD_QUERY)) {
+			MessageDialogWithToggle messageDialog = MessageDialogWithToggle.openYesNoQuestion(getShell(),
+					Messages.AddRepositoryAction_Add_new_query,
+					Messages.AddRepositoryAction_Add_a_query_to_the_Task_List,
+					Messages.AddRepositoryAction_Do_not_show_again, false, preferenceStore, PREF_ADD_QUERY);
+			preferenceStore.setValue(PREF_ADD_QUERY, messageDialog.getToggleState());
+			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				final IWizard queryWizard = connectorUi.getQueryWizard(taskRepository, null);
+				((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
+
+				// execute delayed to avoid stacking dialogs
+				getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						WizardDialog queryDialog = new WizardDialog(WorkbenchUtil.getShell(), queryWizard);
+						queryDialog.create();
+						queryDialog.setBlockOnOpen(true);
+						queryDialog.open();
+					}
+				});
+			}
+		}
+	}
+
+	public boolean showNewQueryPromptOnFinish() {
+		return showNewQueryPromptOnFinish;
+	}
+
+	public void setShowNewQueryPromptOnFinish(boolean showNewQueryPromptOnFinish) {
+		this.showNewQueryPromptOnFinish = showNewQueryPromptOnFinish;
 	}
 
 }
