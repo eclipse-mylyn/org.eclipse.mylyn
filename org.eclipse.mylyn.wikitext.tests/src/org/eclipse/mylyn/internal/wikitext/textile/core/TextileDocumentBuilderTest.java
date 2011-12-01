@@ -16,7 +16,6 @@ import java.io.StringWriter;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -450,7 +449,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix ** suffix\n\n", markup);
+		Assert.assertEquals("prefix  suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {
@@ -536,6 +535,25 @@ public class TextileDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		Assert.assertEquals("|first|content|\n\n", markup);
+	}
+
+	public void testEmptyBoldSpan() {
+		builder.beginDocument();
+
+		builder.characters("first ");
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.endSpan();
+
+		builder.characters("second");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("first second\n\n", markup);
 	}
 
 }

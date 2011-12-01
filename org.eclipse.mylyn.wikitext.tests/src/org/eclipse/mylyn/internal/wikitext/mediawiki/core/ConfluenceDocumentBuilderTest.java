@@ -353,7 +353,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix ** suffix\n\n", markup);
+		Assert.assertEquals("prefix  suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {
@@ -460,5 +460,24 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		Assert.assertEquals("prefix _italic phrase_ suffix\n\n", markup);
+	}
+
+	public void testEmptyBoldSpan() {
+		builder.beginDocument();
+
+		builder.characters("first ");
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.endSpan();
+
+		builder.characters("second");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("first second\n\n", markup);
 	}
 }
