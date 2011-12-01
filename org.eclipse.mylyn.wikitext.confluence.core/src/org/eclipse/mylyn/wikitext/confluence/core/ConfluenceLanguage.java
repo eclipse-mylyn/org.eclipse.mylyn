@@ -14,6 +14,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.confluence.core.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.ColorBlock;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.block.ExtendedPreformattedBlock;

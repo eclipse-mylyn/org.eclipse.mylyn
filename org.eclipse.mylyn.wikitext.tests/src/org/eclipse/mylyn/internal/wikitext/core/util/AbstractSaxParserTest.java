@@ -19,10 +19,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
-import org.eclipse.mylyn.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
+import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.HeadingBlock;

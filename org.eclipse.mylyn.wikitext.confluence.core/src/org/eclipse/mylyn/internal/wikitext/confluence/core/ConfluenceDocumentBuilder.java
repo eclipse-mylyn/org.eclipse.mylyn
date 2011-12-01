@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.confluence.core;
+package org.eclipse.mylyn.internal.wikitext.confluence.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
@@ -60,13 +61,13 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private final String suffix;
 
-		private final boolean requireAdjacentWhitespace;
+		private final boolean requireAdjacentSeparator;
 
-		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentWhitespace) {
+		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator) {
 			super(blockType);
 			this.prefix = prefix;
 			this.suffix = suffix;
-			this.requireAdjacentWhitespace = requireAdjacentWhitespace;
+			this.requireAdjacentSeparator = requireAdjacentSeparator;
 		}
 
 		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace) {
@@ -93,8 +94,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		public void open() throws IOException {
 			super.open();
 			pushWriter(new StringWriter());
-			if (requireAdjacentWhitespace) {
-				clearRequireAdjacentWhitespace();
+			if (requireAdjacentSeparator) {
+				clearRequireAdjacentSeparator();
 			}
 		}
 
@@ -106,14 +107,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 			boolean extendedBlock = isExtended(content);
 
-			if (requireAdjacentWhitespace) {
-				requireAdjacentWhitespace();
+			if (requireAdjacentSeparator) {
+				requireAdjacentSeparator();
 			}
 
 			emitContent(content, extendedBlock);
 
-			if (requireAdjacentWhitespace) {
-				requireAdjacentWhitespace();
+			if (requireAdjacentSeparator) {
+				requireAdjacentSeparator();
 			}
 
 			super.close();

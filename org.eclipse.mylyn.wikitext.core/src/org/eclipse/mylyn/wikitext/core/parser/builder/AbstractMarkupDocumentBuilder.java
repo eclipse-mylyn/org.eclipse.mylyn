@@ -120,7 +120,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	private MarkupWriter writer;
 
-	private boolean adjacentWhitespaceRequired = false;
+	private boolean adjacentSeparatorRequired = false;
 
 	private static class MarkupWriter extends Writer {
 
@@ -176,14 +176,14 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	private void maybeInsertAdjacentWhitespace(int c) throws IOException {
-		if (adjacentWhitespaceRequired) {
-			if (!Character.isWhitespace(c)) {
+		if (adjacentSeparatorRequired) {
+			if (!isSeparator(c)) {
 				char lastChar = getLastChar();
-				if (lastChar != 0 && !Character.isWhitespace(lastChar)) {
+				if (lastChar != 0 && !isSeparator(lastChar)) {
 					writer.write(' ');
 				}
 			}
-			adjacentWhitespaceRequired = false;
+			adjacentSeparatorRequired = false;
 		}
 	}
 
@@ -196,23 +196,48 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
-	 * Indicate that the next content to be emitted requires adjacent whitespace. When invoked, the next call to
-	 * {@link #emitContent(int)} or {@link #emitContent(String)} will test to see if the {@link #getLastChar() last
-	 * character} is whitespace, or if the content to be emitted starts with whitespace. If neither are true, then a
-	 * single space character is inserted into the content stream. Subsequent calls to <code>emitContent</code> are not
-	 * affected.
+	 * Indicate that the next content to be emitted requires adjacent {@link #isSeparator(char) separator}. When
+	 * invoked, the next call to {@link #emitContent(int)} or {@link #emitContent(String)} will test to see if the
+	 * {@link #getLastChar() last character} is a separator character, or if the content to be emitted starts with a
+	 * separator. If neither are true, then a single space character is inserted into the content stream. Subsequent
+	 * calls to <code>emitContent</code> are not affected.
 	 * 
-	 * @see #clearRequireAdjacentWhitespace()
+	 * @see #clearRequireAdjacentSeparator()
 	 */
-	protected void requireAdjacentWhitespace() {
-		adjacentWhitespaceRequired = true;
+	protected void requireAdjacentSeparator() {
+		adjacentSeparatorRequired = true;
 	}
 
 	/**
-	 * @see #requireAdjacentWhitespace()
+	 * @see #requireAdjacentSeparator()
 	 */
-	protected void clearRequireAdjacentWhitespace() {
-		adjacentWhitespaceRequired = false;
+	protected void clearRequireAdjacentSeparator() {
+		adjacentSeparatorRequired = false;
+	}
+
+	protected boolean isSeparator(int i) {
+		char c = (char) i;
+		boolean separator = Character.isWhitespace(c);
+		if (!separator) {
+			switch (c) {
+			case ',':
+			case '.':
+			case '!':
+			case '?':
+			case ':':
+			case ';':
+			case ')':
+			case '(':
+			case '}':
+			case '{':
+			case '[':
+			case ']':
+			case '|':
+			case '"':
+				separator = true;
+			}
+		}
+		return separator;
 	}
 
 	@Override

@@ -9,13 +9,14 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.textile.core;
+package org.eclipse.mylyn.internal.wikitext.textile.core;
 
 import java.io.StringWriter;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -333,6 +334,25 @@ public class TextileDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		Assert.assertEquals("*text2* __text3__\n\n", markup);
+	}
+
+	public void testBoldSpanWithAdjacentPunctuation() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text2");
+		builder.endSpan();
+		builder.characters("!");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("*text2*!\n\n", markup);
 	}
 
 	public void testBulletedList() {
