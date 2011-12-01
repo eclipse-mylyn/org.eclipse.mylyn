@@ -115,7 +115,6 @@
          </menu>
       </menuContribution>
       <menuContribution
-            allPopups="false"
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
                icon="icons/obj16/github.png"
@@ -127,15 +126,23 @@
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-                     <iterate
-                           ifEmpty="false">
-                        <adapt
-                              type="org.eclipse.core.resources.IFile">
-                        </adapt>
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <and>
+                           <adapt
+                                 type="org.eclipse.core.resources.IResource">
+                           </adapt>
+                           <not>
+                              <adapt
+                                 type="org.eclipse.core.resources.IContainer">
+                              </adapt>
+                           </not>
+                        </and>
                      </iterate>
-                  </with>
+                  </and>
                </visibleWhen>
                <parameter
                      name="publicGist"
@@ -149,15 +156,23 @@
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-                     <iterate
-                           ifEmpty="false">
-                        <adapt
-                              type="org.eclipse.core.resources.IFile">
-                        </adapt>
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <and>
+                           <adapt
+                                 type="org.eclipse.core.resources.IResource">
+                           </adapt>
+                           <not>
+                              <adapt
+                                 type="org.eclipse.core.resources.IContainer">
+                              </adapt>
+                           </not>
+                        </and>
                      </iterate>
-                  </with>
+                  </and>
                </visibleWhen>
                <parameter
                      name="publicGist"

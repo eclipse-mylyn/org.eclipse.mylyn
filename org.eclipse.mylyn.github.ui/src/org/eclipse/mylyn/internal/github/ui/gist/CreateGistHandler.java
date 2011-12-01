@@ -21,6 +21,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -143,13 +144,17 @@ public class CreateGistHandler extends AbstractHandler {
 		} else if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			Object obj = structuredSelection.getFirstElement();
-			IFile file = null;
-			if (obj instanceof IFile)
-				file = (IFile) obj;
-			else if (obj instanceof IAdaptable)
-				file = (IFile) ((IAdaptable) obj).getAdapter(IFile.class);
-			if (file != null)
-				createGistJob(event, file, isPublic);
+			IResource file = null;
+			if (obj instanceof IResource)
+				file = (IResource) obj;
+			else if (obj instanceof IAdaptable) {
+				file = (IResource) ((IAdaptable) obj)
+						.getAdapter(IResource.class);
+				if (file == null)
+					file = (IFile) ((IAdaptable) obj).getAdapter(IFile.class);
+			}
+			if (file instanceof IFile)
+				createGistJob(event, (IFile) file, isPublic);
 		}
 		return null;
 	}
