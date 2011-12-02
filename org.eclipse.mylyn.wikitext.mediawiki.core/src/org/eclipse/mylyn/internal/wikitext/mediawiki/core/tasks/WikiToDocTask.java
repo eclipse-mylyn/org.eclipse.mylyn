@@ -341,7 +341,6 @@ public class WikiToDocTask extends MarkupTask {
 		return computeTocRelativeFile(item, path);
 	}
 
-	@SuppressWarnings("restriction")
 	private String computeTocRelativeFile(OutlineItem item, Path path) {
 		String name = ((SplitOutlineItem) item).getSplitTarget();
 		File pathDestDir = computeDestDir(path);
