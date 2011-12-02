@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
@@ -29,7 +30,7 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
  */
 public class ConfluenceDocumentBuilderTest extends TestCase {
 
-	private ConfluenceDocumentBuilder builder;
+	private DocumentBuilder builder;
 
 	private StringWriter out;
 

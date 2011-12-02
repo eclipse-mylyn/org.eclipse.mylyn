@@ -17,6 +17,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
@@ -28,7 +29,7 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
  */
 public class TextileDocumentBuilderTest extends TestCase {
 
-	private TextileDocumentBuilder builder;
+	private DocumentBuilder builder;
 
 	private StringWriter out;
 

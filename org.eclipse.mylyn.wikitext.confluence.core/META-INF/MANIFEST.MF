@@ -7,7 +7,8 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="1.5.0",
  org.eclipse.team.core;resolution:=optional
-Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core.block;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.confluence.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.token;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.util;x-internal:=true,
