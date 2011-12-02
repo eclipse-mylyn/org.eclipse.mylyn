@@ -21,8 +21,8 @@ import java.io.Reader;
 import java.text.ParseException;
 
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.net.HtmlTag;
 
 /**
  * This is in place to escape & characters within the resource and rdf:about attributes. Currently the values are not

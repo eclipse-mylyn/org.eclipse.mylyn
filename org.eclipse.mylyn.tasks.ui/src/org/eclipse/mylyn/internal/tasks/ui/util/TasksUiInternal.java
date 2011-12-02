@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -1071,7 +1072,7 @@ public class TasksUiInternal {
 	 */
 	@Deprecated
 	public static String escapeLabelText(String text) {
-		return CommonUiUtil.toLabel(text);
+		return LegacyActionTools.escapeMnemonics(text);
 	}
 
 	public static void preservingSelection(final TreeViewer viewer, Runnable runnable) {

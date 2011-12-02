@@ -17,10 +17,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -262,7 +262,7 @@ public class BugzillaFlagPart extends AbstractTaskEditorPart {
 			return;
 		}
 
-		final Label label = toolkit.createLabel(composite, CommonUiUtil.toLabel(text));
+		final Label label = toolkit.createLabel(composite, LegacyActionTools.escapeMnemonics(text));
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setBackground(null);
 		label.setVisible(!section.isExpanded());

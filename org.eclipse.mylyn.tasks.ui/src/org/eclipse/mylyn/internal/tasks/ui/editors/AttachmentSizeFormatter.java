@@ -12,9 +12,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.Locale;
+
 import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.NumberFormat;
-import java.util.Locale;
 
 /**
  * Format attachment size values originally in bytes to nice messages.
