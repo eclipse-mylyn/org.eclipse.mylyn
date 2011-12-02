@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -227,7 +228,10 @@ public class CommonUiUtil {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
+	 * 
+	 * @deprecated use {@link LegacyActionTools#extractMnemonic(String)} instead
 	 */
+	@Deprecated
 	public static String toLabel(String text) {
 		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -244,7 +248,7 @@ public class CommonUiUtil {
 		if (label.contains("@")) { //$NON-NLS-1$
 			label += "\t"; //$NON-NLS-1$
 		}
-		return CommonUiUtil.toLabel(label);
+		return LegacyActionTools.escapeMnemonics(label);
 	}
 
 	public static String getProductName() {

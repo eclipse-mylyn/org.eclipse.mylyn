@@ -14,12 +14,12 @@ package org.eclipse.mylyn.internal.commons.ui.notifications.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -88,7 +88,7 @@ public class NotificationPopup extends AbstractNotificationPopup {
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
 				itemLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				itemLink.registerMouseTrackListener();
-				itemLink.setText(CommonUiUtil.toLabel(notification.getLabel()));
+				itemLink.setText(LegacyActionTools.escapeMnemonics(notification.getLabel()));
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());
 				itemLink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -116,7 +116,7 @@ public class NotificationPopup extends AbstractNotificationPopup {
 				}
 				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
-					descriptionLabel.setText(CommonUiUtil.toLabel(descriptionText));
+					descriptionLabel.setText(LegacyActionTools.escapeMnemonics(descriptionText));
 					descriptionLabel.setBackground(parent.getBackground());
 					GridDataFactory.fillDefaults()
 							.span(2, SWT.DEFAULT)

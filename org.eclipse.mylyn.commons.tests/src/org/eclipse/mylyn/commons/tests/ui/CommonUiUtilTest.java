@@ -12,7 +12,7 @@ package org.eclipse.mylyn.commons.tests.ui;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.jface.action.LegacyActionTools;
 
 /**
  * @author Steffen Pingel
@@ -20,14 +20,14 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
 public class CommonUiUtilTest extends TestCase {
 
 	public void testToLabel() {
-		assertNull(CommonUiUtil.toLabel(null));
-		assertEquals("", CommonUiUtil.toLabel(""));
-		assertEquals(" ", CommonUiUtil.toLabel(" "));
-		assertEquals("abc def", CommonUiUtil.toLabel("abc def"));
-		assertEquals("a&&b", CommonUiUtil.toLabel("a&b"));
-		assertEquals("a&&b&&c", CommonUiUtil.toLabel("a&b&c"));
-		assertEquals("&&", CommonUiUtil.toLabel("&"));
-		assertEquals("&&&&", CommonUiUtil.toLabel("&&"));
+		assertNull(LegacyActionTools.escapeMnemonics(null));
+		assertEquals("", LegacyActionTools.escapeMnemonics(""));
+		assertEquals(" ", LegacyActionTools.escapeMnemonics(" "));
+		assertEquals("abc def", LegacyActionTools.escapeMnemonics("abc def"));
+		assertEquals("a&&b", LegacyActionTools.escapeMnemonics("a&b"));
+		assertEquals("a&&b&&c", LegacyActionTools.escapeMnemonics("a&b&c"));
+		assertEquals("&&", LegacyActionTools.escapeMnemonics("&"));
+		assertEquals("&&&&", LegacyActionTools.escapeMnemonics("&&"));
 	}
 
 }
