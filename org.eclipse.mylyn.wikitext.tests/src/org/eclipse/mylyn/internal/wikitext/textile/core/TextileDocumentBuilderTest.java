@@ -557,4 +557,25 @@ public class TextileDocumentBuilderTest extends TestCase {
 		Assert.assertEquals("first second\n\n", markup);
 	}
 
+	public void testProtectionAgainstNestedSpans() {
+		builder.beginDocument();
+
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color:blue;", null));
+
+		builder.characters("first");
+
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "text-decoration:underline;", null));
+		builder.characters(" second");
+		builder.endSpan();
+		builder.endSpan();
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("%{color:blue;}first second%", markup);
+	}
+
 }

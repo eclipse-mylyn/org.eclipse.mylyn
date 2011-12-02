@@ -60,13 +60,13 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class ContentBlock extends Block {
 
-		private final String prefix;
+		protected final String prefix;
 
-		private final String suffix;
+		protected final String suffix;
 
-		private final boolean requireAdjacentSeparator;
+		protected final boolean requireAdjacentSeparator;
 
-		private final boolean emitWhenEmpty;
+		protected final boolean emitWhenEmpty;
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty) {
@@ -151,6 +151,41 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return false;
 		}
 
+	}
+
+	private class SpanBlock extends ContentBlock {
+
+		public SpanBlock(String spanAttributes, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
+			super(null, "%" + spanAttributes, "%", requireAdjacentWhitespace, emitWhenEmpty); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		@Override
+		protected void emitContent(final String content, final boolean extended) throws IOException {
+			boolean nestedSpan = computeNestedSpan();
+
+			if (!nestedSpan) {
+				final String prefix = extended ? this.prefix.replace(".", "..") : this.prefix; //$NON-NLS-1$//$NON-NLS-2$
+				TextileDocumentBuilder.this.emitContent(prefix);
+			}
+			TextileDocumentBuilder.this.emitContent(content);
+			if (!nestedSpan) {
+				final String suffix = extended ? this.suffix + "\n" : this.suffix; //$NON-NLS-1$
+				TextileDocumentBuilder.this.emitContent(suffix);
+			}
+		}
+
+		private boolean computeNestedSpan() {
+			Block block = getPreviousBlock();
+			while (block != null) {
+
+				if (block instanceof SpanBlock) {
+					return true;
+				}
+
+				block = block.getPreviousBlock();
+			}
+			return false;
+		}
 	}
 
 	private class LinkBlock extends ContentBlock {
@@ -247,6 +282,20 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
+		String appendStyle = null;
+		switch (type) {
+		case UNDERLINED:
+			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+			break;
+		case MONOSPACE:
+			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+			break;
+		}
+		if (appendStyle != null) {
+			attributes = new Attributes(attributes.getId(), attributes.getCssClass(), attributes.getCssStyle(),
+					attributes.getLanguage());
+			attributes.appendCssStyle(appendStyle);
+		}
 		Block block;
 		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
@@ -275,18 +324,12 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (attributes instanceof LinkAttributes) {
 				block = new LinkBlock((LinkAttributes) attributes);
 			} else {
-				block = new ContentBlock("%" + spanAttributes, "%", true, false); //$NON-NLS-1$//$NON-NLS-2$
+				block = new SpanBlock(spanAttributes, true, false);
 			}
 			break;
 		case MONOSPACE:
-			block = new ContentBlock("%{font-family:monospace;}", "%", true, false); //$NON-NLS-1$//$NON-NLS-2$
-		case SPAN:
-			if (spanAttributes.length() == 0) {
-				block = new ContentBlock("", "", true, false); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				block = new ContentBlock("%" + spanAttributes, "%", true, false); //$NON-NLS-1$//$NON-NLS-2$
-			}
-			break;
+			block = new SpanBlock(spanAttributes, true, false);
+
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
@@ -296,13 +339,17 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case SUPERSCRIPT:
 			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case UNDERLINED:
-			block = new ContentBlock("%{text-decoration:underline;}", "%", true, false); //$NON-NLS-1$//$NON-NLS-2$
-			break;
 
 //			case QUOTE: not supported by Textile		
+		case UNDERLINED:
+		case SPAN:
 		default:
-			block = new ContentBlock("%" + spanAttributes, "%", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			if (spanAttributes.length() == 0) {
+				block = new SpanBlock("", false, false); //$NON-NLS-1$ 
+			} else {
+				block = new SpanBlock(spanAttributes, true, false);
+			}
+			break;
 		}
 		return block;
 	}
