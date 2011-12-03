@@ -26,7 +26,9 @@ import org.eclipse.swt.widgets.Shell;
  * Wizard dialog for displaying repository settings page. Necessary so we can add a validate button in the button bar.
  * 
  * @author Helen Bershadskaya
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog} instead
  */
+@Deprecated
 public class ValidatableWizardDialog extends EnhancedWizardDialog {
 
 	private static final String VALIDATE_BUTTON_KEY = "validate"; //$NON-NLS-1$

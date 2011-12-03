@@ -22,8 +22,9 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
- * @since 3.0
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.compatibility.CommonFonts} instead
  */
+@Deprecated
 public class CommonFonts {
 
 	public static Font BOLD;

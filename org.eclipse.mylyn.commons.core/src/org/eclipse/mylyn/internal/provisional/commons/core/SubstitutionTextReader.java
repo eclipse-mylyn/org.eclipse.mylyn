@@ -22,7 +22,10 @@ import java.io.Reader;
  * <p>
  * Based on {@link org.eclipse.jface.internal.text.html.SubstitutionTextReader}.
  * </p>
+ * 
+ * @deprecated use {@link org.eclipse.mylyn.internal.commons.core.SubstitutionTextReader} instead
  */
+@Deprecated
 public abstract class SubstitutionTextReader extends SingleCharReader {
 
 	protected static final String LINE_DELIM = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$

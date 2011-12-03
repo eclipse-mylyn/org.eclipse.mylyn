@@ -32,8 +32,9 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Helen Bershadskaya
  * @author Frank Becker
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.EnhancedWizardDialog} instead
  */
-
+@Deprecated
 public abstract class EnhancedWizardDialog extends WizardDialog {
 
 	public EnhancedWizardDialog(Shell parentShell, IWizard newWizard) {

@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
+import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
@@ -26,11 +26,12 @@ import org.eclipse.swt.widgets.Event;
  * A Custom JFace ToolTip that applies a gradient to the contents
  * 
  * @author Shawn Minto
- * @since 3.2
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.GradientToolTip} instead
  */
+@Deprecated
 public abstract class GradientToolTip extends ToolTip {
 
-	private NotificationPopupColors colors;
+	private GradientColors colors;
 
 	private LocalResourceManager resourceManager;
 
@@ -46,7 +47,7 @@ public abstract class GradientToolTip extends ToolTip {
 
 	private void initResources(Control control) {
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		colors = new NotificationPopupColors(control.getDisplay(), resourceManager);
+		colors = new GradientColors(control.getDisplay(), resourceManager);
 	}
 
 	@Override

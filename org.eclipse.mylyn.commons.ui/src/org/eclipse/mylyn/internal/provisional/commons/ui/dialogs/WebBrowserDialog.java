@@ -46,7 +46,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * 
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.WebBrowserDialog} instead
  */
+@Deprecated
 public class WebBrowserDialog extends MessageDialog {
 
 	private String text;

@@ -23,7 +23,9 @@ import org.eclipse.swt.widgets.TreeColumn;
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.TreeViewerSupport} instead
  */
+@Deprecated
 public class TreeViewerSupport extends AbstractColumnViewerSupport<TreeColumn> {
 
 	private final Tree tree;

@@ -41,7 +41,7 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
 import org.eclipse.mylyn.commons.repositories.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
-import org.eclipse.mylyn.internal.commons.ui.SectionComposite;
+import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.commons.ui.team.RepositoryLocationValueProperty;
 import org.eclipse.mylyn.internal.commons.ui.team.TeamUiPlugin;
 import org.eclipse.swt.SWT;

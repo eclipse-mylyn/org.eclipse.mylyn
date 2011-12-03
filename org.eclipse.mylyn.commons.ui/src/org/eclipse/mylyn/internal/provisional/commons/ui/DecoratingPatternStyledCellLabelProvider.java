@@ -42,7 +42,9 @@ import org.eclipse.ui.internal.misc.StringMatcher.Position;
  * 
  * @author Kevin Sawicki
  * @see DecoratingFileSearchLabelProvider
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.DecoratingPatternStyledCellLabelProvider} instead
  */
+@Deprecated
 public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCellLabelProvider implements
 		IPropertyChangeListener, ILabelProvider {
 

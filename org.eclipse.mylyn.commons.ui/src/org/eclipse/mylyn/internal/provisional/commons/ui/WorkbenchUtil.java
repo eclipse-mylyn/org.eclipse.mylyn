@@ -50,7 +50,9 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.WorkbenchUtil} instead
  */
+@Deprecated
 public class WorkbenchUtil {
 
 	public static final String GROUP_EDIT = "group.edit"; //$NON-NLS-1$

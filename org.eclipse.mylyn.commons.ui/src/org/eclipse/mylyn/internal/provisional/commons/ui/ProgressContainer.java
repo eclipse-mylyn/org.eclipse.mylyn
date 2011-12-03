@@ -38,7 +38,9 @@ import org.eclipse.swt.widgets.Shell;
  * A helper class for running operations in dialogs. Based on {@link WizardDialog}.
  * 
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.ProgressContainer} instead
  */
+@Deprecated
 public class ProgressContainer implements IRunnableContext {
 
 	private static final String FOCUS_CONTROL = "focusControl"; //$NON-NLS-1$

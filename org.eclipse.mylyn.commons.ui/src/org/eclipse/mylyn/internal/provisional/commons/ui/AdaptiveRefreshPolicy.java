@@ -26,7 +26,9 @@ import org.eclipse.ui.progress.WorkbenchJob;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.AdaptiveRefreshPolicy} instead
  */
+@Deprecated
 public class AdaptiveRefreshPolicy {
 
 	private int refreshDelay = 1500;

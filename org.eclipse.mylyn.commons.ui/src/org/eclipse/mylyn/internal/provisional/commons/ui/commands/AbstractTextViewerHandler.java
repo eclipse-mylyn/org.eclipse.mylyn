@@ -23,7 +23,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * Abstract command handler that can get the current text viewer.
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.AbstractTextViewerHandler} instead
  */
+@Deprecated
 public abstract class AbstractTextViewerHandler extends AbstractHandler {
 
 	/**

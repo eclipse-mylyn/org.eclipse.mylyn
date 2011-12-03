@@ -20,7 +20,10 @@ import java.io.Reader;
  * <p>
  * Based on {@link org.eclipse.jface.internal.text.html.SingleCharReader}.
  * </p>
+ * 
+ * @deprecated use {@link org.eclipse.mylyn.internal.commons.core.SingleCharReader} instead
  */
+@Deprecated
 public abstract class SingleCharReader extends Reader {
 
 	/**

@@ -17,9 +17,13 @@ import org.eclipse.ui.texteditor.DeleteLineAction;
  * Command handler for delete line command (whole)
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.DeleteLineHandler} instead
  */
+@Deprecated
 public class DeleteLineHandler extends AbstractDeleteLineHandler {
+
 	public DeleteLineHandler() {
 		super(DeleteLineAction.WHOLE, false);
 	}
+
 }

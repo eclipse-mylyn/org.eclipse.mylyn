@@ -24,6 +24,7 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -32,8 +33,8 @@ import org.eclipse.swt.widgets.Shell;
  * Popup window for color selection
  * 
  * @author Willian Mitsuda
+ * @deprecated use {@link ColorDialog} instead
  */
-// FIXME 3.5 remove this class
 @Deprecated
 public class ColorSelectionWindow extends Window {
 

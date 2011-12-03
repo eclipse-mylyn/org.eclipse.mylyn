@@ -23,7 +23,9 @@ import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.CommonFormUtil} instead
  */
+@Deprecated
 public class CommonFormUtil {
 
 	public static void disableScrollingOnFocus(ScrolledForm form) {

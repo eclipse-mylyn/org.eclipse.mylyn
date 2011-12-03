@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.TableColumn;
  * @author Frank Becker
  * @author Steffen Pingel
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.TableViewerSupport} instead
  */
+@Deprecated
 public class TableViewerSupport extends AbstractColumnViewerSupport<TableColumn> {
 
 	private final Table table;

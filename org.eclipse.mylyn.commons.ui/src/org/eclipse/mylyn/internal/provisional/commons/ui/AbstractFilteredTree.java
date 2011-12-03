@@ -32,7 +32,9 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.AbstractFilteredTree} instead
  */
+@Deprecated
 public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private static final int FILTER_WIDTH_MIN = 60;

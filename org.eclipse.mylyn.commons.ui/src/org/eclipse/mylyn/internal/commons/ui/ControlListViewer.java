@@ -41,7 +41,9 @@ import org.eclipse.swt.widgets.Widget;
  * Based on {@link org.eclipse.ui.internal.progress.DetailedProgressViewer}.
  * 
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.ControlListViewer} instead
  */
+@Deprecated
 @SuppressWarnings("restriction")
 public abstract class ControlListViewer extends StructuredViewer {
 

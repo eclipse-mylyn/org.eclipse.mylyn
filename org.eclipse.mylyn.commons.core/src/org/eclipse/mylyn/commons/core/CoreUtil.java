@@ -89,7 +89,7 @@ public class CoreUtil {
 	 */
 	// TODO e3.5 remove this method and replace with bundle.getVersion()
 	public static Version getVersion(Bundle bundle) {
-		String header = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+		String header = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		return (header != null) ? Version.parseVersion(header) : null;
 	}
 
@@ -103,6 +103,15 @@ public class CoreUtil {
 			return -1;
 		}
 		return key1.compareTo(key2);
+	}
+
+	/**
+	 * Compares a boolean value.
+	 * 
+	 * @since 3.7
+	 */
+	public static boolean propertyEquals(boolean value, Object expectedValue) {
+		return (expectedValue == null) ? value == true : new Boolean(value).equals(expectedValue);
 	}
 
 }

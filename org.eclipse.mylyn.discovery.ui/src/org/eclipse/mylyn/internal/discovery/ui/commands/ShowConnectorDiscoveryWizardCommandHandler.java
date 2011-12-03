@@ -15,9 +15,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.ConnectorDiscoveryWizard;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 
 /**
  * A command that causes the {@link ConnectorDiscoveryWizard} to appear in a dialog.

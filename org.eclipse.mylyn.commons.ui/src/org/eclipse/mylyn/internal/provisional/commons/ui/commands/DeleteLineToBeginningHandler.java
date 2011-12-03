@@ -17,9 +17,13 @@ import org.eclipse.ui.texteditor.DeleteLineAction;
  * Command handler for delete line command (to beginning)
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.DeleteLineToBeginningHandler} instead
  */
+@Deprecated
 public class DeleteLineToBeginningHandler extends AbstractDeleteLineHandler {
+
 	public DeleteLineToBeginningHandler() {
 		super(DeleteLineAction.TO_BEGINNING, false);
 	}
+
 }

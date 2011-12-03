@@ -14,7 +14,7 @@ package org.eclipse.mylyn.commons.core;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.eclipse.mylyn.internal.provisional.commons.core.Html2TextReader;
+import org.eclipse.mylyn.internal.commons.core.Html2TextReader;
 
 /**
  * @author Steffen Pingel

@@ -38,8 +38,9 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Shawn Minto
- * @since 3.3
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.InPlaceCheckBoxTreeDialog} instead
  */
+@Deprecated
 public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 	private final Map<String, String> validValues;

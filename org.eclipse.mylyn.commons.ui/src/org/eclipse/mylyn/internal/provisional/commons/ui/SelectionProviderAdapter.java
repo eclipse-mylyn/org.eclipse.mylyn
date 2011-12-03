@@ -24,7 +24,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * listeners.
  * 
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.SelectionProviderAdapter} instead
  */
+@Deprecated
 public class SelectionProviderAdapter extends EventManager implements ISelectionProvider, ISelectionChangedListener {
 
 	private ISelection selection;
@@ -61,8 +63,8 @@ public class SelectionProviderAdapter extends EventManager implements ISelection
 	public void selectionChanged(final SelectionChangedEvent event) {
 		this.selection = event.getSelection();
 		Object[] listeners = getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			final ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
+		for (Object listener2 : listeners) {
+			final ISelectionChangedListener listener = (ISelectionChangedListener) listener2;
 			SafeRunner.run(new SafeRunnable() {
 				public void run() {
 					listener.selectionChanged(event);

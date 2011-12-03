@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.commons.ui.team;
 
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
+import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;

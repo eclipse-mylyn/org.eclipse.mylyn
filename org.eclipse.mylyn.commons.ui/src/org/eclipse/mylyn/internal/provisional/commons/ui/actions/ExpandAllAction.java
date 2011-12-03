@@ -19,7 +19,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.actions.ExpandAllAction} instead
  */
+@Deprecated
 public class ExpandAllAction extends Action {
 
 	private final AbstractTreeViewer viewer;

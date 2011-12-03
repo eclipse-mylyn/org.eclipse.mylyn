@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Frank Becker and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Frank Becker - initial API and implementation
+ *     IBM Corporation - initial API and implementation
+ *     Frank Becker - fixes for Mylyn
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui;
@@ -19,12 +20,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 
 /**
- * This class copies the code from org.eclipse.jface.window because we can not access the protected method
- * getConstrainedShellBounds. getConstrainedShellBounds has now the window as the first parameter.
+ * Based on {@link org.eclipse.jface.window.Window#getConstrainedShellBounds(Rectangle)}.
  * 
  * @author Frank Becker
  */
 public class WindowUtil {
+
 	/**
 	 * Returns the monitor whose client area contains the given point. If no monitor contains the point, returns the
 	 * monitor that is closest to the point. If this is ever made public, it should be moved into a separate utility

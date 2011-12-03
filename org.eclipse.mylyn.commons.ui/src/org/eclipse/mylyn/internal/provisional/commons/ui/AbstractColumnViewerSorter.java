@@ -24,9 +24,15 @@ import org.eclipse.swt.widgets.Item;
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.AbstractColumnViewerSorter} instead
  */
+@Deprecated
 public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I extends Item> extends ViewerSorter {
 
+	/**
+	 * @deprecated use {@link org.eclipse.mylyn.commons.core.CoreUtil.compare()} instead
+	 */
+	@Deprecated
 	protected <T> int compare(Comparable<T> key1, T key2) {
 		if (key1 == null) {
 			return (key2 != null) ? 1 : 0;

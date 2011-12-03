@@ -25,7 +25,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.commons.workbench.TaskBarManager} instead
  */
+@Deprecated
 public class TaskBarManager {
 
 	private static final String TASK_BAR_MENU_MANAGER_KEY = "org.eclipse.mylyn.commons.TaskBarMenuManager.instance"; //$NON-NLS-1$

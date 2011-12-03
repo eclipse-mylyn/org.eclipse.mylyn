@@ -13,9 +13,6 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 
 import org.eclipse.osgi.util.NLS;
 
-/**
- * @since 3.3
- */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.messages"; //$NON-NLS-1$
 

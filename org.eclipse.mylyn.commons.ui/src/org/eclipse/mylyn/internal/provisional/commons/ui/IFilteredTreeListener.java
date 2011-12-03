@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 /**
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.IFilteredTreeListener} instead
  */
+@Deprecated
 public interface IFilteredTreeListener {
 
 	public void filterTextChanged(String text);

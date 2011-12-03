@@ -27,7 +27,9 @@ import org.eclipse.ui.progress.WorkbenchJob;
  * 
  * @author Steffen Pingel
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.DelayedRefreshJob} instead
  */
+@Deprecated
 public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	static final long REFRESH_DELAY_DEFAULT = 200;

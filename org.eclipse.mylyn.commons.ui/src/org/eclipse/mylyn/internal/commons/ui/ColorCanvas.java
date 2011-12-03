@@ -19,13 +19,16 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * A tiny control just for color display
  * 
  * @author Willian Mitsuda
+ * @deprecated use {@link ColorDialog} instead
  */
+@Deprecated
 public class ColorCanvas extends Canvas {
 
 	private final Color color;

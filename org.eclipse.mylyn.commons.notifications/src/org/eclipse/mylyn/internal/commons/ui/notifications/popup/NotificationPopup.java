@@ -16,11 +16,11 @@ import java.util.List;
 
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
+import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
+import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
+import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -39,7 +39,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class NotificationPopup extends AbstractNotificationPopup {
+public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
@@ -165,7 +165,7 @@ public class NotificationPopup extends AbstractNotificationPopup {
 
 	@Override
 	protected Color getTitleForeground() {
-		return CommonsUiPlugin.getDefault().getFormColors(Display.getDefault()).getColor(IFormColors.TITLE);
+		return CommonsWorkbenchPlugin.getDefault().getFormColors(Display.getDefault()).getColor(IFormColors.TITLE);
 
 	}
 

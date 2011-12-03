@@ -35,7 +35,9 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.WorkbenchActionSupport} instead
  */
+@Deprecated
 @SuppressWarnings("restriction")
 public class WorkbenchActionSupport implements ISelectionChangedListener {
 

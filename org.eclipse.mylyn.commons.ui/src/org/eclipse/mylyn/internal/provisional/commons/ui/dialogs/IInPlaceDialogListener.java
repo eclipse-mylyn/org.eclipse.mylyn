@@ -15,8 +15,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
  * Listener interface for close events from an {@link AbstractInPlaceDialog}
  * 
  * @author Shawn Minto
- * @since 3.3
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.IInPlaceDialogListener} instead
  */
+@Deprecated
 public interface IInPlaceDialogListener {
 
 	public void buttonPressed(InPlaceDialogEvent event);

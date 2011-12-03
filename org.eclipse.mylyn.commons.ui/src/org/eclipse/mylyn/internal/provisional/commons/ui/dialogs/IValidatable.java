@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.IValidatable} instead
  */
+@Deprecated
 public interface IValidatable {
 
 	public boolean canValidate();

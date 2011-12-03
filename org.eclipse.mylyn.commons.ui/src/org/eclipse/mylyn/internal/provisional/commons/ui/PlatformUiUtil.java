@@ -24,7 +24,9 @@ import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.PlatformUiUtil} instead
  */
+@Deprecated
 public class PlatformUiUtil {
 
 	private static Boolean internalBrowserAvailable;

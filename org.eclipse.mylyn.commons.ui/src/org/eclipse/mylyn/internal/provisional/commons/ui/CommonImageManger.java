@@ -25,7 +25,9 @@ import org.eclipse.ui.internal.WorkbenchImages;
 /**
  * @author Steffen Pingel
  * @author Kevin Sawicki
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.CommonImageManger} instead
  */
+@Deprecated
 public class CommonImageManger {
 
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$

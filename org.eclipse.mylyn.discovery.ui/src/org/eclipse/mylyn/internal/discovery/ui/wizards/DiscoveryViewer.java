@@ -47,6 +47,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.GradientCanvas;
+import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.discovery.core.model.AbstractDiscoverySource;
 import org.eclipse.mylyn.internal.discovery.core.model.BundleDiscoveryStrategy;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
@@ -61,11 +66,6 @@ import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryCategoryComparato
 import org.eclipse.mylyn.internal.discovery.core.util.DiscoveryConnectorComparator;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryImages;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
@@ -238,7 +238,7 @@ public class DiscoveryViewer {
 					providerLabel.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							WorkbenchUtil.openUrl(connector.getCertification().getUrl(),
+							BrowserUtil.openUrl(connector.getCertification().getUrl(),
 									IWorkbenchBrowserSupport.AS_EXTERNAL);
 						}
 					});

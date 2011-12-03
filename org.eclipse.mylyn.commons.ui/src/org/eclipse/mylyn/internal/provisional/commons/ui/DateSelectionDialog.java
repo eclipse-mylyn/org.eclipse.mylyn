@@ -30,7 +30,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Ken Sueda
  * @author Mik Kersten
  * @author Rob Elves
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.DateSelectionDialog} instead
  */
+@Deprecated
 public class DateSelectionDialog extends Dialog {
 
 	private Date selectedDate = null;

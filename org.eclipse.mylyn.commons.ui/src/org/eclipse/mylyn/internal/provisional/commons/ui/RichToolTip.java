@@ -35,7 +35,9 @@ import org.eclipse.ui.forms.IFormColors;
  * @author Eric Booth
  * @author Leo Dos Santos
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.RichToolTip} instead
  */
+@Deprecated
 public abstract class RichToolTip extends GradientToolTip {
 
 	private final static int X_SHIFT = PlatformUiUtil.getToolTipXShift();

@@ -17,7 +17,9 @@ import org.eclipse.swt.widgets.TreeColumn;
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.TreeSorter} instead
  */
+@Deprecated
 public abstract class TreeSorter extends AbstractColumnViewerSorter<TreeViewer, TreeColumn> {
 
 	@Override

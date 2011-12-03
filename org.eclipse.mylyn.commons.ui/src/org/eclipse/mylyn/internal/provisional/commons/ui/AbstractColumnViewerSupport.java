@@ -45,7 +45,9 @@ import org.eclipse.ui.XMLMemento;
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.AbstractColumnViewerSupport} instead
  */
+@Deprecated
 public abstract class AbstractColumnViewerSupport<T extends Item> {
 
 	private static class ColumnState {

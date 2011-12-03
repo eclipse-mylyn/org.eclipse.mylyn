@@ -5,16 +5,26 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.ui;singleton:=true
 Bundle-Version: 3.7.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
+ org.eclipse.swt,
+ org.eclipse.jface,
  org.eclipse.jface.text,
  org.eclipse.ui,
+ org.eclipse.ui.browser,
  org.eclipse.ui.editors,
  org.eclipse.ui.forms,
- org.eclipse.ui.browser,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.mylyn.commons.core;bundle-version="3.7.0",
  org.eclipse.mylyn.commons.screenshots;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin
-Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true,
+Export-Package: org.eclipse.mylyn.commons.ui,
+ org.eclipse.mylyn.commons.ui.actions,
+ org.eclipse.mylyn.commons.ui.compatibility,
+ org.eclipse.mylyn.commons.ui.dialogs,
+ org.eclipse.mylyn.commons.ui.wizard,
+ org.eclipse.mylyn.internal.commons.ui;x-internal:=true,
  org.eclipse.mylyn.internal.provisional.commons.ui;x-internal:=true,
  org.eclipse.mylyn.internal.provisional.commons.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.provisional.commons.ui.commands;x-internal:=true,
@@ -22,3 +32,4 @@ Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true,
  org.eclipse.mylyn.internal.provisional.commons.ui.editor;x-internal:=true
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
+

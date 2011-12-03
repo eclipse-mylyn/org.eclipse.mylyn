@@ -25,8 +25,9 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
- * @since 3.0
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.CommonImages} instead
  */
+@Deprecated
 public class CommonImages {
 
 	private static final URL baseURL = CommonsUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$

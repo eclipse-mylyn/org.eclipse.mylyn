@@ -14,7 +14,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 /**
  * @author Mik Kersten
  * @since 3.0
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.compatibility.CommonThemes} instead
  */
+@Deprecated
 public class CommonThemes {
 
 	public static final String COLOR_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background"; //$NON-NLS-1$

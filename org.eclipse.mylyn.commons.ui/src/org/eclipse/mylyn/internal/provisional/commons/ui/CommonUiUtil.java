@@ -34,7 +34,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.CommonUiUtil} instead
  */
+@Deprecated
 public class CommonUiUtil {
 
 	private static final String KEY_ENABLED = "org.eclipse.mylyn.commons.ui.enabled"; //$NON-NLS-1$

@@ -26,8 +26,9 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  * 
  * @author Leo Dos Santos
  * @author Mik Kersten
- * @since 3.0
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.ScalingHyperlink} instead
  */
+@Deprecated
 public class ScalingHyperlink extends ImageHyperlink {
 
 	private boolean strikeThrough;

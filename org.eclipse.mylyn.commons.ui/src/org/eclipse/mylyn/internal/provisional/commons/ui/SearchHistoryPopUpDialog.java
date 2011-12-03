@@ -52,7 +52,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.search.SearchHistoryPopupDialog} instead
  */
+@Deprecated
 public class SearchHistoryPopUpDialog extends PopupDialog {
 
 	private static final int MAX_HISTORY_NO_FILTER = 3;

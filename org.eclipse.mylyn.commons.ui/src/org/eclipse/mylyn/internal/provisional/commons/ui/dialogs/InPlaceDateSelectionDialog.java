@@ -30,8 +30,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Shawn Minto
- * @since 3.3
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.InPlaceDateSelectionDialog} instead
  */
+@Deprecated
 public class InPlaceDateSelectionDialog extends AbstractInPlaceDialog {
 
 	private Date selectedDate = null;

@@ -43,6 +43,7 @@
   <modules>
     <module>org.eclipse.mylyn.commons-feature</module>
     <module>org.eclipse.mylyn.commons-site</module>
+    <module>org.eclipse.mylyn.commons.activity-feature</module>
     <module>org.eclipse.mylyn.commons.activity.tests</module>
     <module>org.eclipse.mylyn.commons.activity.ui</module>
     <module>org.eclipse.mylyn.commons.core</module>
@@ -58,6 +59,8 @@
     <module>org.eclipse.mylyn.commons.team</module>
     <module>org.eclipse.mylyn.commons.tests</module>
     <module>org.eclipse.mylyn.commons.ui</module>
+    <module>org.eclipse.mylyn.commons.ui.tests</module>
+    <module>org.eclipse.mylyn.commons.workbench</module>
     <module>org.eclipse.mylyn.commons.xmlrpc</module>
     <module>org.eclipse.mylyn.discovery-feature</module>
     <module>org.eclipse.mylyn.discovery.core</module>

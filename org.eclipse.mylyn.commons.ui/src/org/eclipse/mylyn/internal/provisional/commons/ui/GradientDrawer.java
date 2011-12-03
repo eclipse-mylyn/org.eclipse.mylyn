@@ -33,7 +33,9 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Mik Kersten
  * @author Frank Becker
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.GradientDrawer} instead
  */
+@Deprecated
 public abstract class GradientDrawer {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {

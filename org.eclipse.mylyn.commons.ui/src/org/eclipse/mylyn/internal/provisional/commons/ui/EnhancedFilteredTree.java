@@ -31,8 +31,10 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * A {@link FilteredTree} that uses the new look on Eclipse 3.5 and later.
  * 
  * @author Hiroyuki Inaba
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.EnhancedFilteredTree} instead
  */
 // TODO e3.5 remove this class and replace with FilteredTree
+@Deprecated
 public class EnhancedFilteredTree extends FilteredTree {
 
 	protected boolean useNewLook;

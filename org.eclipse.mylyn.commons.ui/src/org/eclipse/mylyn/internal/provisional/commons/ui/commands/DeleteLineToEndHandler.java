@@ -17,9 +17,13 @@ import org.eclipse.ui.texteditor.DeleteLineAction;
  * Command handler for delete line command (to end)
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.DeleteLineToEndHandler} instead
  */
+@Deprecated
 public class DeleteLineToEndHandler extends AbstractDeleteLineHandler {
+
 	public DeleteLineToEndHandler() {
 		super(DeleteLineAction.TO_END, false);
 	}
+
 }

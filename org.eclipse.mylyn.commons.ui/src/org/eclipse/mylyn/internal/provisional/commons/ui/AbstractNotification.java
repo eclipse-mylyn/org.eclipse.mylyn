@@ -19,7 +19,9 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.internal.tasks.ui.notifications.notifications.AbstractNotification} instead
  */
+@Deprecated
 public abstract class AbstractNotification implements Comparable<AbstractNotification>, IAdaptable {
 
 	public abstract void open();

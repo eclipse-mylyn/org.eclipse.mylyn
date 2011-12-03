@@ -31,12 +31,14 @@ import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.SectionComposite} instead
  */
+@Deprecated
 public class SectionComposite extends SharedScrolledComposite {
 
-	FormToolkit toolkit;
+	private FormToolkit toolkit;
 
-	public Composite content;
+	private final Composite content;
 
 	public SectionComposite(Composite parent, int style) {
 		super(parent, style | SWT.V_SCROLL);

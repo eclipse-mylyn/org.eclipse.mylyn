@@ -15,8 +15,9 @@ package org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;
  * Event sent with an {@link IInPlaceDialogListener} that contains information about the close event that occurred
  * 
  * @author Shawn Minto
- * @since 3.3
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent} instead
  */
+@Deprecated
 public class InPlaceDialogEvent {
 
 	private final int returnCode;

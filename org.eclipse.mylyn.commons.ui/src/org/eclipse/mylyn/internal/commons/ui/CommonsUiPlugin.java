@@ -19,7 +19,9 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link CommonsUiConstants} instead
  */
+@Deprecated
 public class CommonsUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui"; //$NON-NLS-1$

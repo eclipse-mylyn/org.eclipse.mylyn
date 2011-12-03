@@ -43,11 +43,12 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * GUI control designed to display build service messages. These messages may contain links that can be clicked by the
  * user.
  * 
- * @since 3.5
  * @author Robert Elves
  * @author Steffen Pingel
  * @author Torkild Ulvøy Resheim
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.ServiceMessageControl} instead
  */
+@Deprecated
 public abstract class ServiceMessageControl {
 
 	private static final String NOTIFICATIONS_PREF_PAGE = "org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"; //$NON-NLS-1$

@@ -27,7 +27,10 @@ import java.util.Set;
  * <p>
  * Based on {@link org.eclipse.jface.internal.text.html.HTML2TextReader}.
  * </p>
+ * 
+ * @deprecated use {@link org.eclipse.mylyn.internal.commons.core.Html2TextReader} instead
  */
+@Deprecated
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class Html2TextReader extends SubstitutionTextReader {
 

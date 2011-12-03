@@ -16,7 +16,9 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.TableSorter} instead
  */
+@Deprecated
 public abstract class TableSorter extends AbstractColumnViewerSorter<TableViewer, TableColumn> {
 
 	@Override

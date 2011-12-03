@@ -15,7 +15,9 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.SubstringPatternFilter} instead
  */
+@Deprecated
 public class SubstringPatternFilter extends PatternFilter {
 
 	@Override

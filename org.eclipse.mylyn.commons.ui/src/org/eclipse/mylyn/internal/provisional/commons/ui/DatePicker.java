@@ -48,8 +48,9 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  * 
  * @author Bahadir Yagan
  * @author Mik Kersten
- * @since 1.0
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.DatePicker} instead
  */
+@Deprecated
 public class DatePicker extends Composite {
 
 	public final static String TITLE_DIALOG = Messages.DatePicker_Choose_Date;

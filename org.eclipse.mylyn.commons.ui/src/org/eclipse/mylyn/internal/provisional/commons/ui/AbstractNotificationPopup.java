@@ -19,11 +19,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.mylyn.internal.commons.ui.Messages;
-import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
-import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
-import org.eclipse.mylyn.internal.commons.ui.SwtUtil.FadeJob;
-import org.eclipse.mylyn.internal.commons.ui.SwtUtil.IFadeListener;
+import org.eclipse.mylyn.internal.commons.ui.AnimationUtil;
+import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.FadeJob;
+import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.IFadeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -51,7 +51,9 @@ import org.eclipse.ui.PlatformUI;
  * @author Benjamin Pasero
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.AbstractNotificationPopup} instead
  */
+@Deprecated
 public abstract class AbstractNotificationPopup extends Window {
 
 	private static final int TITLE_HEIGHT = 24;
@@ -72,7 +74,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	protected LocalResourceManager resources;
 
-	private NotificationPopupColors color;
+	private GradientColors color;
 
 	private final Display display;
 
@@ -246,7 +248,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	private void initResources() {
-		color = new NotificationPopupColors(display, resources);
+		color = new GradientColors(display, resources);
 	}
 
 	@Override
@@ -331,7 +333,7 @@ public abstract class AbstractNotificationPopup extends Window {
 			shell.setAlpha(0);
 		}
 		shell.setVisible(true);
-		fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
+		fadeJob = AnimationUtil.fadeIn(shell, new IFadeListener() {
 			public void faded(Shell shell, int alpha) {
 				if (shell.isDisposed()) {
 					return;
@@ -526,7 +528,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		if (fadeJob != null) {
 			fadeJob.cancelAndWait(false);
 		}
-		fadeJob = SwtUtil.fadeOut(getShell(), new IFadeListener() {
+		fadeJob = AnimationUtil.fadeOut(getShell(), new IFadeListener() {
 			public void faded(Shell shell, int alpha) {
 				if (!shell.isDisposed()) {
 					if (alpha == 0) {
@@ -535,7 +537,7 @@ public abstract class AbstractNotificationPopup extends Window {
 						if (fadeJob != null) {
 							fadeJob.cancelAndWait(false);
 						}
-						fadeJob = SwtUtil.fastFadeIn(shell, new IFadeListener() {
+						fadeJob = AnimationUtil.fastFadeIn(shell, new IFadeListener() {
 							public void faded(Shell shell, int alpha) {
 								if (shell.isDisposed()) {
 									return;

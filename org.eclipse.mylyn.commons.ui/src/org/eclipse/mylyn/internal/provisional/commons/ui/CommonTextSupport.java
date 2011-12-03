@@ -55,7 +55,9 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * {@link SourceViewer} controls.
  * 
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.editors.CommonTextSupport} instead
  */
+@Deprecated
 public class CommonTextSupport {
 
 	private class UndoRedoListener implements IOperationHistoryListener {

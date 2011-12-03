@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.core.ICoreRunnable} instead
  */
+@Deprecated
 public interface ICoreRunnable {
 
 	public void run(IProgressMonitor monitor) throws CoreException;

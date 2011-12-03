@@ -43,7 +43,9 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Bahadir Yagan
  * @author Mik Kersten
  * @author Rob Elves
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.forms.DatePickerPanel} instead
  */
+@Deprecated
 public class DatePickerPanel extends Composite implements KeyListener, ISelectionProvider {
 
 	private org.eclipse.swt.widgets.List timeList = null;

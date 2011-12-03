@@ -13,6 +13,10 @@ package org.eclipse.mylyn.internal.provisional.commons.core;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @deprecated use {@link org.eclipse.mylyn.commons.core.CommonMessages} instead
+ */
+@Deprecated
 public class CommonMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.core.messages"; //$NON-NLS-1$

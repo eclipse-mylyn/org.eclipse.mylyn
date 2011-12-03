@@ -26,7 +26,10 @@ import org.eclipse.swt.widgets.Listener;
 
 /**
  * Based on {@link org.eclipse.ui.internal.forms.widgets.FormHeading}.
+ * 
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.GradientCanvas} instead
  */
+@Deprecated
 @SuppressWarnings("restriction")
 public class GradientCanvas extends Canvas {
 

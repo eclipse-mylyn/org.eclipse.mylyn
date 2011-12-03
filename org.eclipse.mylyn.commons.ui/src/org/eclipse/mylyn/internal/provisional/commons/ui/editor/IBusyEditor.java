@@ -20,7 +20,9 @@ import org.eclipse.ui.part.WorkbenchPart;
  * 
  * @author Shawn Minto
  * @see EditorBusyIndicator
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.IBusyEditor} instead
  */
+@Deprecated
 public interface IBusyEditor {
 
 	/**

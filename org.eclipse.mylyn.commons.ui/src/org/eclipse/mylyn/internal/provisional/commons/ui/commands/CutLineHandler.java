@@ -17,9 +17,13 @@ import org.eclipse.ui.texteditor.DeleteLineAction;
  * Command handler for cut line command (whole)
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.CutLineHandler} instead
  */
+@Deprecated
 public class CutLineHandler extends AbstractDeleteLineHandler {
+
 	public CutLineHandler() {
 		super(DeleteLineAction.WHOLE, true);
 	}
+
 }

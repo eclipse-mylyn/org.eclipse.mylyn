@@ -17,9 +17,13 @@ import org.eclipse.ui.texteditor.DeleteLineAction;
  * Command handler for cut line command (to beginning)
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.CutLineToBeginningHandler} instead
  */
+@Deprecated
 public class CutLineToBeginningHandler extends AbstractDeleteLineHandler {
+
 	public CutLineToBeginningHandler() {
 		super(DeleteLineAction.TO_BEGINNING, true);
 	}
+
 }

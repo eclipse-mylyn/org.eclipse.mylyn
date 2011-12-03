@@ -15,9 +15,15 @@ import org.eclipse.core.expressions.PropertyTester;
 
 /**
  * @author Steffen Pingel
+ * @deprecated
  */
+@Deprecated
 public abstract class CommonPropertyTester extends PropertyTester {
 
+	/**
+	 * @deprecated use {@link org.eclipse.mylyn.commons.core.CoreUtil#equals()} instead
+	 */
+	@Deprecated
 	protected boolean equals(boolean value, Object expectedValue) {
 		return (expectedValue == null) ? value == true : new Boolean(value).equals(expectedValue);
 	}

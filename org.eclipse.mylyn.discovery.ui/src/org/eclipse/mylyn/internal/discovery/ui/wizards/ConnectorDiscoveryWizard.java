@@ -18,10 +18,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 

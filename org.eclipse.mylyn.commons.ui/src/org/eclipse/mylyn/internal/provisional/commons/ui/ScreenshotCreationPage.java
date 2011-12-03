@@ -33,7 +33,9 @@ import org.eclipse.swt.widgets.Composite;
  * @author Mik Kersten
  * @author Hiroyuki Inaba
  * @author Benjamin Muskalla
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.wizard.ScreenshotCreationPage} instead
  */
+@Deprecated
 public class ScreenshotCreationPage extends WizardPage {
 
 	private static final String DIALOG_SETTINGS = ScreenshotCreationPage.class.getCanonicalName();

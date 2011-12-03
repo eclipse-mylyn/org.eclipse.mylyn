@@ -17,7 +17,9 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.PropertiesAction} instead
  */
+@Deprecated
 public class PropertiesAction extends BaseSelectionListenerAction {
 
 	public PropertiesAction() {

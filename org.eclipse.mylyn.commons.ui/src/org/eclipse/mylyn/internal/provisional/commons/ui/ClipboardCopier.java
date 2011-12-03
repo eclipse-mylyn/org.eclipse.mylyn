@@ -23,7 +23,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.ClipboardCopier} instead
  */
+@Deprecated
 public class ClipboardCopier {
 
 	public interface TextProvider {

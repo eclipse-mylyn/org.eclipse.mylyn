@@ -14,6 +14,11 @@ import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.dialogs.PatternFilter;
 
+/**
+ * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.workbench.TableTreePatternFilter} instead
+ */
+@Deprecated
 public class TableTreePatternFilter extends PatternFilter {
 
 	@Override

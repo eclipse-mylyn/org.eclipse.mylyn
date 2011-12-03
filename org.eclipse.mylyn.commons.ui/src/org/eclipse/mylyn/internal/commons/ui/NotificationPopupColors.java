@@ -14,21 +14,20 @@ package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
+import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * Helper Class to create the colors for the {@link AbstractNotificationPopup}.
- * <p>
- * Note: Copied from FormColors of UI Forms.
- * </p>
+ * Based on FormColors of UI Forms.
  * 
  * @author Benjamin Pasero (initial contribution from RSSOwl, see bug 177974)
  * @author Mik Kersten
+ * @deprecated use {@link GradientColors} instead
  */
+@Deprecated
 public class NotificationPopupColors {
 
 	private final Display display;
@@ -186,4 +185,5 @@ public class NotificationPopupColors {
 			return manager.getDevice().getSystemColor(SWT.COLOR_BLACK);
 		}
 	}
+
 }

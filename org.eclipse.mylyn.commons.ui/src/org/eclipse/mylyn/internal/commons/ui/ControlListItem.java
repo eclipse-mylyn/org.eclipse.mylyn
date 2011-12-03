@@ -21,13 +21,15 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Display;
 
 /**
- * Based on {@link org.eclipse.ui.internal.progress.ProgressInfoItem}.
+ * Based on <code>org.eclipse.ui.internal.progress.ProgressInfoItem</code>.
  * 
  * @author Steffen Pingel
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.ControlListItem} instead
  */
+@Deprecated
 public abstract class ControlListItem extends Composite {
 
 	static String DARK_COLOR_KEY = "org.eclipse.mylyn.commons.ui.ControlListItem.DARK_COLOR"; //$NON-NLS-1$
@@ -71,7 +73,7 @@ public abstract class ControlListItem extends Composite {
 		// Mac has different Gamma value
 		int shift = "carbon".equals(SWT.getPlatform()) ? -25 : -10;//$NON-NLS-1$ 
 
-		Color lightColor = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		Color lightColor = Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 
 		// Determine a dark color by shifting the list color
 		RGB darkRGB = new RGB(Math.max(0, lightColor.getRed() + shift), Math.max(0, lightColor.getGreen() + shift),

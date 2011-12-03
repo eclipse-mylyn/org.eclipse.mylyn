@@ -44,8 +44,9 @@ import org.eclipse.ui.PlatformUI;
  * Abstract class for an in-place popup dialog that has a cancel button and sends and ok event when the dialog is closed
  * 
  * @author Shawn Minto
- * @since 3.3
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.dialogs.AbstractInPlaceDialog} instead
  */
+@Deprecated
 public abstract class AbstractInPlaceDialog extends PopupDialog {
 
 	public static final int ID_CLEAR = IDialogConstants.CLIENT_ID + 1;

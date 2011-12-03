@@ -59,7 +59,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Shawn Minto
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.search.TextSearchControl} instead
  */
+@Deprecated
 public class TextSearchControl extends Composite {
 
 	private static final String FIND_TEXT_MEMENTO_ELEMENT = "text"; //$NON-NLS-1$

@@ -24,7 +24,9 @@ import org.eclipse.ui.texteditor.TextViewerDeleteLineTarget;
  * and copyToClipboard.
  * 
  * @author David Green
+ * @deprecated use {@link org.eclipse.mylyn.commons.ui.texteditor.AbstractDeleteLineHandler} instead
  */
+@Deprecated
 public class AbstractDeleteLineHandler extends AbstractTextViewerHandler implements IHandler {
 	protected final int type;
 

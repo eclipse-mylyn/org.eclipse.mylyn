@@ -24,7 +24,9 @@ import org.eclipse.swt.widgets.TreeItem;
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @deprecated use {@link AnimationUtil} instead
  */
+@Deprecated
 public class SwtUtil {
 
 	public static final long FADE_RESCHEDULE_DELAY = 80;
