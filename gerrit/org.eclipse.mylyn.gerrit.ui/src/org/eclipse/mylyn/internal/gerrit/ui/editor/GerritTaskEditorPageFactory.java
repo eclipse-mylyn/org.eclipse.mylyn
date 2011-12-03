@@ -10,8 +10,8 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;

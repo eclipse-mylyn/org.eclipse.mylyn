@@ -18,7 +18,7 @@ import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewUiUtil;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.IReviewCompareSourceViewer;

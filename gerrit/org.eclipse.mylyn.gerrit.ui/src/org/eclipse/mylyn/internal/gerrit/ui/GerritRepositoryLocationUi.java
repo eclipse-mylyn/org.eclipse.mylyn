@@ -18,12 +18,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.IOpenIdLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationResponse;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.WebBrowserDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryLocationUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.browser.Browser;

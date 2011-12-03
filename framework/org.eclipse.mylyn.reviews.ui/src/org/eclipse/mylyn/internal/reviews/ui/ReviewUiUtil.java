@@ -15,7 +15,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
