@@ -20,11 +20,11 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.AbstractInPlaceDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IInPlaceDialogListener;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceCheckBoxTreeDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.InPlaceDialogEvent;
+import org.eclipse.mylyn.commons.ui.dialogs.AbstractInPlaceDialog;
+import org.eclipse.mylyn.commons.ui.dialogs.IInPlaceDialogListener;
+import org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent;
+import org.eclipse.mylyn.commons.workbench.InPlaceCheckBoxTreeDialog;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;

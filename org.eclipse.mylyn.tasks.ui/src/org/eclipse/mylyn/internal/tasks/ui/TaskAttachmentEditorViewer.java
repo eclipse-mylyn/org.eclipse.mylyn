@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.ui.IEditorDescriptor;
@@ -43,7 +43,7 @@ public class TaskAttachmentEditorViewer implements ITaskAttachmentViewer {
 		DownloadAndOpenTaskAttachmentJob job = new DownloadAndOpenTaskAttachmentJob(
 				MessageFormat.format(Messages.TaskAttachmentEditorViewer_openingAttachment,
 						AttachmentUtil.getAttachmentFilename(attachment)), attachment, page, descriptor.getId());
-		CommonUiUtil.busyCursorWhile(job);
+		WorkbenchUtil.busyCursorWhile(job);
 	}
 
 }

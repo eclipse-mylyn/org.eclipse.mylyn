@@ -23,7 +23,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -308,7 +308,7 @@ public class TasksUiUtil {
 				}
 			}
 			if (!opened) {
-				WorkbenchUtil.openUrl(url, 0);
+				BrowserUtil.openUrl(url, 0);
 			}
 		}
 	}
@@ -373,7 +373,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openUrl(String location) {
-		WorkbenchUtil.openUrl(location, FLAG_NO_RICH_EDITOR);
+		BrowserUtil.openUrl(location, FLAG_NO_RICH_EDITOR);
 	}
 
 	/**

@@ -30,12 +30,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.wizard.ScreenshotCreationPage;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
@@ -287,7 +288,19 @@ public class TaskAttachmentWizard extends Wizard {
 	public void addPages() {
 		if (model.getSource() == null) {
 			if (mode == Mode.SCREENSHOT) {
-				ScreenshotCreationPage page = new ScreenshotCreationPage();
+				ScreenshotCreationPage page = new ScreenshotCreationPage() {
+					@Override
+					protected IDialogSettings getDialogSettings() {
+						TasksUiPlugin plugin = TasksUiPlugin.getDefault();
+						IDialogSettings settings = plugin.getDialogSettings();
+						String DIALOG_SETTINGS = ScreenshotCreationPage.class.getCanonicalName();
+						IDialogSettings section = settings.getSection(DIALOG_SETTINGS);
+						if (section == null) {
+							section = settings.addNewSection(DIALOG_SETTINGS);
+						}
+						return section;
+					}
+				};
 				ImageSource source = new ImageSource(page);
 				model.setSource(source);
 				model.setContentType(source.getContentType());

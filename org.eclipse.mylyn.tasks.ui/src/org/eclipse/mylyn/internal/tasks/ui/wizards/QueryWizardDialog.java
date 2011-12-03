@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.EnhancedWizardDialog;
+import org.eclipse.mylyn.commons.ui.dialogs.EnhancedWizardDialog;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;

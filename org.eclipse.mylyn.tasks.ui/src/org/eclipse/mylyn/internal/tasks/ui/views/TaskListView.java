@@ -59,11 +59,11 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
+import org.eclipse.mylyn.commons.workbench.DelayedRefreshJob;
+import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -354,7 +354,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	private TaskListFilteredTree filteredTree;
 
-	private org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter selectionProvider;
+	private org.eclipse.mylyn.commons.ui.SelectionProviderAdapter selectionProvider;
 
 	private DrillDownAdapter drillDownAdapter;
 
@@ -797,7 +797,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			progress.showBusyForFamily(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 		}
 
-		this.selectionProvider = new org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter();
+		this.selectionProvider = new org.eclipse.mylyn.commons.ui.SelectionProviderAdapter();
 		getSite().setSelectionProvider(selectionProvider);
 
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();

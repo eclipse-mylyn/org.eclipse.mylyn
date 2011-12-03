@@ -22,7 +22,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -39,7 +39,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * Dialog to show the contents of an html page to the user
  * 
  * @author Shawn Minto
- * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.WebBrowserDialog} instead
+ * @deprecated use {@link org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog} instead
  */
 @Deprecated
 public class WebBrowserDialog extends MessageDialog {
@@ -81,7 +81,7 @@ public class WebBrowserDialog extends MessageDialog {
 						"Unexpected error while displaying error", e)); //$NON-NLS-1$
 				return Window.CANCEL;
 			}
-			WorkbenchUtil.openUrl(file.toURI().toString(), IWorkbenchBrowserSupport.AS_EXTERNAL);
+			BrowserUtil.openUrl(file.toURI().toString(), IWorkbenchBrowserSupport.AS_EXTERNAL);
 			return Window.OK;
 		}
 	}

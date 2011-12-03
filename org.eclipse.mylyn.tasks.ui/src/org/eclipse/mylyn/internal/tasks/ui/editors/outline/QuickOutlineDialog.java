@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DecoratingPatternStyledCellLabelProvider;
+import org.eclipse.mylyn.commons.workbench.DecoratingPatternStyledCellLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineModel;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;

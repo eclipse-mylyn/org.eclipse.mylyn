@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;

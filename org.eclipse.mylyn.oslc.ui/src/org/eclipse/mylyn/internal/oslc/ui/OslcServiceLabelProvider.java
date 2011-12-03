@@ -12,12 +12,12 @@
 package org.eclipse.mylyn.internal.oslc.ui;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.oslc.core.OslcCreationDialogDescriptor;
 import org.eclipse.mylyn.internal.oslc.core.OslcServiceDescriptor;
 import org.eclipse.mylyn.internal.oslc.core.OslcServiceProvider;
 import org.eclipse.mylyn.internal.oslc.core.OslcServiceProviderCatalog;
 import org.eclipse.mylyn.internal.oslc.ui.OslcServiceDiscoveryProvider.ServiceProviderCatalogWrapper;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 

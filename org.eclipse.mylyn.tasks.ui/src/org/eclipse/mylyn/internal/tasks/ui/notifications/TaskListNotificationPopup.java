@@ -16,8 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
+import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -41,7 +40,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class TaskListNotificationPopup extends AbstractNotificationPopup {
+public class TaskListNotificationPopup extends AbstractWorkbenchNotificationPopup {
 
 	private static final String NOTIFICATIONS_HIDDEN = Messages.TaskListNotificationPopup_more;
 

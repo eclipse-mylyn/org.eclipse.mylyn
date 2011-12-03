@@ -36,10 +36,10 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IValidatable;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.dialogs.IValidatable;
+import org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -564,7 +564,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
-						WorkbenchUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
+						BrowserUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				}
 			}
@@ -584,7 +584,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
-						WorkbenchUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
+						BrowserUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				}
 			}

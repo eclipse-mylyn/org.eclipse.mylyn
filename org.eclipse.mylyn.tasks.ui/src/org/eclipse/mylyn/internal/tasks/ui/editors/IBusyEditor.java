@@ -15,7 +15,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Shawn Minto
- * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.editor.IBusyEditor} instead
+ * @deprecated use {@link org.eclipse.mylyn.commons.workbench.IBusyEditor} instead
  */
 @Deprecated
 public interface IBusyEditor {

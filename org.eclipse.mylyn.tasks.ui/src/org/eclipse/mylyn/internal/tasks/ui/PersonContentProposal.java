@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**

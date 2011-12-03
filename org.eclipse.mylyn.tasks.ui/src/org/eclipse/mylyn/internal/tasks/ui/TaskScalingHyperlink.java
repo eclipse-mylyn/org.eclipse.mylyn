@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
+import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

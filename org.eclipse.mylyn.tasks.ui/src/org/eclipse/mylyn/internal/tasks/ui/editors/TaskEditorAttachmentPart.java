@@ -36,10 +36,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFormUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.TableSorter;
-import org.eclipse.mylyn.internal.provisional.commons.ui.TableViewerSupport;
+import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.TableSorter;
+import org.eclipse.mylyn.commons.ui.TableViewerSupport;
+import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
@@ -88,17 +89,17 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			ITaskAttachment attachment2 = (ITaskAttachment) e2;
 			switch (columnIndex) {
 			case 0:
-				return compare(attachment1.getFileName(), attachment2.getFileName());
+				return CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
 			case 1:
 				String description1 = attachment1.getDescription();
 				String description2 = attachment2.getDescription();
-				return compare(description1, description2);
+				return CoreUtil.compare(description1, description2);
 			case 2:
-				return compare(attachment1.getLength(), attachment2.getLength());
+				return CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
 			case 3:
-				return compare(attachment1.getAuthor().toString(), attachment2.getAuthor().toString());
+				return CoreUtil.compare(attachment1.getAuthor().toString(), attachment2.getAuthor().toString());
 			case 4:
-				return compare(attachment1.getCreationDate(), attachment2.getCreationDate());
+				return CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
 			case 5:
 				String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
 				String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);

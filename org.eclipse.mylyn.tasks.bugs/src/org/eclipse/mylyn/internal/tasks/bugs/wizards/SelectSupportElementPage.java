@@ -29,12 +29,12 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.commons.ui.ControlListItem;
-import org.eclipse.mylyn.internal.commons.ui.ControlListViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.ControlListItem;
+import org.eclipse.mylyn.commons.ui.ControlListViewer;
+import org.eclipse.mylyn.commons.ui.GradientCanvas;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.bugs.AbstractSupportElement;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportCategory;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportProduct;
@@ -206,7 +206,7 @@ public class SelectSupportElementPage extends WizardPage {
 				Action action = new Action() {
 					@Override
 					public void run() {
-						WorkbenchUtil.openUrl(url, IWorkbenchBrowserSupport.AS_EXTERNAL);
+						BrowserUtil.openUrl(url, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
 				};
 				action.setImageDescriptor(CommonImages.INFORMATION);

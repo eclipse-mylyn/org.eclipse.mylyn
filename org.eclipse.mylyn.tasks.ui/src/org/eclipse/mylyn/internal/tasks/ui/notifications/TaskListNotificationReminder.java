@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.swt.graphics.Image;
 

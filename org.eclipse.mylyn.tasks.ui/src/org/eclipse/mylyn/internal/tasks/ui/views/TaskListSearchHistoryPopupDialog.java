@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SearchHistoryPopUpDialog;
+import org.eclipse.mylyn.commons.ui.GradientCanvas;
+import org.eclipse.mylyn.commons.ui.GradientColors;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
+import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -30,9 +30,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
-public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopUpDialog {
+public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopupDialog {
 
-	private static NotificationPopupColors colors;
+	private static GradientColors colors;
 
 	private LocalResourceManager resourceManager;
 
@@ -47,7 +47,7 @@ public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopUpDialog {
 		}
 
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		colors = new NotificationPopupColors(composite.getDisplay(), resourceManager);
+		colors = new GradientColors(composite.getDisplay(), resourceManager);
 
 		GradientCanvas gradient = new GradientCanvas(composite, SWT.NONE);
 

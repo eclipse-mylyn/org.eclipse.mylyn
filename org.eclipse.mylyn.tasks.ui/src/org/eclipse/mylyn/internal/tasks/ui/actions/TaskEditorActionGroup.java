@@ -15,8 +15,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchActionSupport;
+import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.workbench.WorkbenchActionSupport;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -22,7 +22,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
  * 
  * @author Shawn Minto
  * @author Steffen Pingel
- * @deprecated use {@link org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator} instead
+ * @deprecated use {@link org.eclipse.mylyn.commons.workbench.BusyAnimator} instead
  */
 @Deprecated
 public class EditorBusyIndicator {

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.commons.identity.Account;
 import org.eclipse.mylyn.commons.identity.IIdentity;
 import org.eclipse.mylyn.commons.identity.IProfileImage;
 import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;

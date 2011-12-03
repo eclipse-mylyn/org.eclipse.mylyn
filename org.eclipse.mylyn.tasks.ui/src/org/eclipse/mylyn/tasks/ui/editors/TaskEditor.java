@@ -45,14 +45,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.editor.EditorBusyIndicator;
-import org.eclipse.mylyn.internal.provisional.commons.ui.editor.IBusyEditor;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.workbench.BusyAnimator;
+import org.eclipse.mylyn.commons.workbench.BusyAnimator.IBusyClient;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -145,7 +145,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Deprecated
 	private final IEditorPart contentOutlineProvider = null;
 
-	private EditorBusyIndicator editorBusyIndicator;
+	private BusyAnimator editorBusyIndicator;
 
 	private MenuManager menuManager;
 
@@ -424,12 +424,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	private void initialize() {
-		editorBusyIndicator = new EditorBusyIndicator(new IBusyEditor() {
-			public Image getTitleImage() {
+		editorBusyIndicator = new BusyAnimator(new IBusyClient() {
+			public Image getImage() {
 				return TaskEditor.this.getTitleImage();
 			}
 
-			public void setTitleImage(Image image) {
+			public void setImage(Image image) {
 				TaskEditor.this.setTitleImage(image);
 			}
 		});

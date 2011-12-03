@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;

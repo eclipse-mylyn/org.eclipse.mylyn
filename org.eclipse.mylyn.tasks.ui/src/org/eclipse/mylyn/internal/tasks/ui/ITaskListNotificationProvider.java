@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 
 /**
  * @author Rob Elves

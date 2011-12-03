@@ -25,10 +25,10 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SearchHistoryPopUpDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.workbench.AbstractFilteredTree;
+import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
@@ -601,7 +601,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	@Override
-	protected SearchHistoryPopUpDialog getHistoryPopupDialog() {
+	protected SearchHistoryPopupDialog getHistoryPopupDialog() {
 		return null;
 //		return new TaskListSearchHistoryPopupDialog(getShell(), SWT.TOP);
 	}

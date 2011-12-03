@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tasks.tests.ui.editor;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
 
-import org.eclipse.mylyn.internal.provisional.commons.core.CommonMessages;
+import org.eclipse.mylyn.commons.core.CommonMessages;
 
 /**
  * @author Rob Elves

@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**

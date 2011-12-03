@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ServiceMessageControl;
+import org.eclipse.mylyn.commons.workbench.forms.NotificationControl;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.notifications.IServiceMessageListener;
 import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
@@ -49,7 +49,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Steffen Pingel
  * @author Torkild U. Resheim
  */
-public class TaskListServiceMessageControl extends ServiceMessageControl implements IServiceMessageListener {
+public class TaskListServiceMessageControl extends NotificationControl implements IServiceMessageListener {
 
 	private ServiceMessage currentMessage;
 

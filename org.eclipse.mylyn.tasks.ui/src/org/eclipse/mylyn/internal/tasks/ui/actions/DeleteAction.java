@@ -27,10 +27,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
@@ -166,7 +165,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 			}
 		};
 		try {
-			CommonUiUtil.runInUi(op, null);
+			WorkbenchUtil.runInUi(op, null);
 		} catch (CoreException e) {
 			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Problems encountered deleting task list elements: {0}", e.getMessage()), e); //$NON-NLS-1$

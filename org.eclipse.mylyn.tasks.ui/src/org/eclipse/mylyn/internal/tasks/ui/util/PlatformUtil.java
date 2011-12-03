@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 

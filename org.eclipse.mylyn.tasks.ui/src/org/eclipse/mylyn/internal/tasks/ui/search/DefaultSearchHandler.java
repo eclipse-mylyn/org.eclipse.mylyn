@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
+import org.eclipse.mylyn.commons.workbench.SubstringPatternFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PatternFilter;
 
