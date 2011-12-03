@@ -37,16 +37,15 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -60,6 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -70,6 +70,13 @@ import org.eclipse.ui.navigator.CommonViewer;
  * @author Shawn Minto
  */
 public class InvisibleContextElementsPart {
+
+	private static void collectItemData(TreeItem[] items, Set<Object> allVisible) {
+		for (TreeItem item : items) {
+			allVisible.add(item.getData());
+			collectItemData(item.getItems(), allVisible);
+		}
+	}
 
 	private final class InteractionElementTableSorter extends ViewerSorter {
 
@@ -448,7 +455,7 @@ public class InvisibleContextElementsPart {
 			return null;
 		}
 		Set<Object> allVisible = new HashSet<Object>();
-		SwtUtil.collectItemData(commonViewer.getTree().getItems(), allVisible);
+		collectItemData(commonViewer.getTree().getItems(), allVisible);
 		return allVisible;
 	}
 
@@ -460,4 +467,5 @@ public class InvisibleContextElementsPart {
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
+
 }

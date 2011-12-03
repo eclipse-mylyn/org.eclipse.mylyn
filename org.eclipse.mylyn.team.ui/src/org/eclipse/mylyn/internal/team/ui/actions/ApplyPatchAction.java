@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
+import org.eclipse.mylyn.commons.core.ICoreRunnable;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
@@ -81,7 +81,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 						attachment, vp);
 
 				try {
-					CommonUiUtil.busyCursorWhile(job);
+					WorkbenchUtil.busyCursorWhile(job);
 				} catch (CoreException e) {
 					StatusManager.getManager().handle(e.getStatus());
 				}

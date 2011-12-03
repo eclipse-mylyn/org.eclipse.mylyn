@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.team.ui;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
 
 /**

@@ -17,7 +17,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.Messages;

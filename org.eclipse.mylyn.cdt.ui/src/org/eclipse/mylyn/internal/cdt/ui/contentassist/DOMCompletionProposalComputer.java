@@ -83,8 +83,8 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**

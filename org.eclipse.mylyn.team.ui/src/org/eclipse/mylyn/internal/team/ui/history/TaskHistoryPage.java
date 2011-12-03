@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
+import org.eclipse.mylyn.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.tasks.core.sync.GetTaskHistoryJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.compare.TaskDataDiffNode;

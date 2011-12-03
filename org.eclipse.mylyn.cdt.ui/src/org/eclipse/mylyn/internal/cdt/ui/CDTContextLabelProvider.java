@@ -16,10 +16,10 @@ import org.eclipse.cdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.cdt.internal.ui.viewsupport.CElementImageProvider;
 import org.eclipse.cdt.internal.ui.viewsupport.ProblemsLabelDecorator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**

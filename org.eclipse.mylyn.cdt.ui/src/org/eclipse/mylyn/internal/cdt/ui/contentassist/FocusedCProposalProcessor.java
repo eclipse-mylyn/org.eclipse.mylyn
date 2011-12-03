@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 
 /**
  * @author Shawn Minto

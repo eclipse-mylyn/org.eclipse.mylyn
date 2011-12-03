@@ -2,9 +2,9 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;

@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.commons.workbench;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
