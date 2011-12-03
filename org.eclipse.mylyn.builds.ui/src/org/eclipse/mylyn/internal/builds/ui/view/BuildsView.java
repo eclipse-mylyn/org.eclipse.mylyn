@@ -48,6 +48,13 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
+import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.ui.AbstractColumnViewerSupport;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.TreeSorter;
+import org.eclipse.mylyn.commons.ui.TreeViewerSupport;
+import org.eclipse.mylyn.commons.ui.actions.CollapseAllAction;
+import org.eclipse.mylyn.commons.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
@@ -58,12 +65,6 @@ import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
 import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
 import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceMessageControl;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider.Presentation;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSupport;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.TreeSorter;
-import org.eclipse.mylyn.internal.provisional.commons.ui.TreeViewerSupport;
-import org.eclipse.mylyn.internal.provisional.commons.ui.actions.CollapseAllAction;
-import org.eclipse.mylyn.internal.provisional.commons.ui.actions.ExpandAllAction;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -119,15 +120,15 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				IBuildPlan p2 = (IBuildPlan) e2;
 				switch (columnIndex) {
 				case -1: // default
-					return compare(p1.getLabel(), p2.getLabel());
+					return CoreUtil.compare(p1.getLabel(), p2.getLabel());
 				case 0: // build
-					return compare(p1.getStatus(), p2.getStatus());
+					return CoreUtil.compare(p1.getStatus(), p2.getStatus());
 				case 1: // summary
 					return p1.getHealth() - p2.getHealth();
 				case 2: // last build
 					Long t1 = (p1.getLastBuild() != null) ? p1.getLastBuild().getTimestamp() : null;
 					Long t2 = (p2.getLastBuild() != null) ? p2.getLastBuild().getTimestamp() : null;
-					return compare(t1, t2);
+					return CoreUtil.compare(t1, t2);
 				}
 			}
 			return super.compare(viewer, e1, e2, columnIndex);

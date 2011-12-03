@@ -14,8 +14,8 @@ package org.eclipse.mylyn.builds.ui;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.ValidatableWizardDialog;
+import org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 
 /**
  * @author Steffen Pingel

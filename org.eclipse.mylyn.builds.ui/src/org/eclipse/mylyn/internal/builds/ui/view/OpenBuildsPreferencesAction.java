@@ -12,8 +12,8 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**

@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.builds.core.ITestCase;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.commons.core.DateUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 

@@ -18,9 +18,9 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IUser;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.workbench.CommonImageManger;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImageManger;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 

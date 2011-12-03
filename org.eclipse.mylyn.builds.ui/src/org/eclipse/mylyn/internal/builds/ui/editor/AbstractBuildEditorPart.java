@@ -26,7 +26,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.internal.provisional.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;

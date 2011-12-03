@@ -16,9 +16,9 @@ import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 

@@ -17,8 +17,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 
 /**
  * @author Steffen Pingel
@@ -31,7 +31,7 @@ public class OpenWithBrowserHandler extends AbstractHandler {
 			Object item = elements.get(0);
 			if (item instanceof IBuildElement) {
 				IBuildElement element = (IBuildElement) item;
-				WorkbenchUtil.openUrl(element.getUrl());
+				BrowserUtil.openUrl(element.getUrl());
 			}
 		}
 		return null;

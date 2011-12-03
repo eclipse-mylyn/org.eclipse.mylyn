@@ -11,13 +11,14 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
+import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonPropertyTester;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildElementPropertyTester extends CommonPropertyTester {
+public class BuildElementPropertyTester extends PropertyTester {
 
 	public BuildElementPropertyTester() {
 		// ignore
@@ -31,9 +32,9 @@ public class BuildElementPropertyTester extends CommonPropertyTester {
 			if (args.length > 0) {
 				String kind = (String) args[0];
 				if ("console".equals(kind)) {
-					return equals(Platform.getBundle("org.eclipse.ui.console") != null, expectedValue);
+					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.ui.console") != null, expectedValue);
 				} else if ("junit".equals(kind)) {
-					return equals(Platform.getBundle("org.eclipse.jdt.junit") != null, expectedValue);
+					return CoreUtil.propertyEquals(Platform.getBundle("org.eclipse.jdt.junit") != null, expectedValue);
 				}
 			}
 		}

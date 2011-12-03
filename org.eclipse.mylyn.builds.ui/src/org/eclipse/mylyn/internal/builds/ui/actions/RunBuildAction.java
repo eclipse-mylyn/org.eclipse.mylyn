@@ -23,10 +23,10 @@ import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.internal.core.operations.RunBuildOperation;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.view.ParametersDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 

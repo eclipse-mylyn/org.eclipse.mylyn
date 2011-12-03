@@ -35,8 +35,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -184,7 +184,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 				if (item instanceof IArtifact) {
 					IArtifact artifact = (IArtifact) item;
 					if (artifact.getUrl() != null) {
-						WorkbenchUtil.openUrl(artifact.getUrl());
+						BrowserUtil.openUrl(artifact.getUrl());
 					}
 				}
 			}

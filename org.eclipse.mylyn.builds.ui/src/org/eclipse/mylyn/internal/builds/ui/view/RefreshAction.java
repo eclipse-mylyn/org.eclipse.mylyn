@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 
 /**
  * @author Steffen Pingel

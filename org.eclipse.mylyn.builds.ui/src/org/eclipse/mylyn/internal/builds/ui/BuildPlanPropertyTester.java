@@ -11,13 +11,14 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
+import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonPropertyTester;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 
 /**
  * @author Steffen Pingel
  */
-public class BuildPlanPropertyTester extends CommonPropertyTester {
+public class BuildPlanPropertyTester extends PropertyTester {
 
 	public BuildPlanPropertyTester() {
 		// ignore
@@ -27,7 +28,7 @@ public class BuildPlanPropertyTester extends CommonPropertyTester {
 		if (receiver instanceof IBuildPlan) {
 			IBuildPlan plan = (IBuildPlan) receiver;
 			if ("hasBuild".equals(property)) {
-				return equals(plan.getLastBuild() != null, expectedValue);
+				return CoreUtil.propertyEquals(plan.getLastBuild() != null, expectedValue);
 			}
 		}
 		return false;

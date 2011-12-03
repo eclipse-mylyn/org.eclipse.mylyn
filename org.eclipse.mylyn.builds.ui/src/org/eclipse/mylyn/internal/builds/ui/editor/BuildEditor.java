@@ -26,13 +26,13 @@ import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.actions.NewTaskFromBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowHistoryAction;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.osgi.util.NLS;
@@ -149,7 +149,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		Action openWithBrowserAction = new Action() {
 			@Override
 			public void run() {
-				WorkbenchUtil.openUrl(plan.getUrl());
+				BrowserUtil.openUrl(plan.getUrl());
 			}
 		};
 		openWithBrowserAction.setImageDescriptor(CommonImages.WEB);

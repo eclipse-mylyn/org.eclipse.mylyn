@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.builds.ui.console;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.ui.console.IHyperlink;
 
 /**
@@ -34,7 +34,7 @@ public class UrlHyperLink implements IHyperlink {
 	}
 
 	public void linkActivated() {
-		WorkbenchUtil.openUrl(url);
+		BrowserUtil.openUrl(url);
 	}
 
 }

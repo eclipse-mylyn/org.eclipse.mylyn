@@ -43,11 +43,10 @@ import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.internal.core.util.JUnitResultGenerator;
+import org.eclipse.mylyn.commons.core.ICoreRunnable;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.xml.sax.SAXException;
 
@@ -112,7 +111,7 @@ public class TestResultManager {
 		public static void openInEditor(final String className, final String testName) {
 			final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
 			try {
-				CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+				WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
 					public void run(IProgressMonitor monitor) throws CoreException {
 						IType type = findType(className, monitor);
 						if (type == null) {
@@ -147,7 +146,7 @@ public class TestResultManager {
 		static void showInJUnitViewInternal(final IBuild build) {
 			final TestRunSession testRunSession = new TestResultSession(build);
 			try {
-				CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+				WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
 					public void run(IProgressMonitor monitor) throws CoreException {
 						JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
 						generator.setIncludeIgnored(jUnitSupportIgnoredTests());

@@ -26,10 +26,10 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.commons.ui.notifications.NotificationSinkEvent;
+import org.eclipse.mylyn.commons.workbench.forms.NotificationControl;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.NewBuildServerAction;
 import org.eclipse.mylyn.internal.commons.ui.team.wizards.NewRepositoryWizardRegistry;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ServiceMessageControl;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -59,7 +59,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * 
  * @author Torkild U. Resheim
  */
-public class BuildsServiceMessageControl extends ServiceMessageControl {
+public class BuildsServiceMessageControl extends NotificationControl {
 
 	private final CopyOnWriteArrayList<AbstractNotification> messages;
 

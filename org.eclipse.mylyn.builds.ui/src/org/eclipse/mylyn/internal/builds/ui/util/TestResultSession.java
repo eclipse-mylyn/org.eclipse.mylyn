@@ -24,9 +24,9 @@ import org.eclipse.jdt.internal.junit.model.TestRunSession;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.commons.core.ICoreRunnable;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.ICoreRunnable;
 import org.eclipse.osgi.util.NLS;
 
 class TestResultSession extends TestRunSession {
@@ -44,7 +44,7 @@ class TestResultSession extends TestRunSession {
 	public boolean rerunTest(String testId, final String className, final String testName, String launchMode,
 			boolean buildBeforeLaunch) throws CoreException {
 		final AtomicReference<IJavaElement> result = new AtomicReference<IJavaElement>();
-		CommonUiUtil.busyCursorWhile(new ICoreRunnable() {
+		WorkbenchUtil.busyCursorWhile(new ICoreRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IType type = TestResultManager.Runner.findType(className, monitor);
 				if (type == null) {

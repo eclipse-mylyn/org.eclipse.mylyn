@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.builds.ui.navigator;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.actions.PropertiesAction;
+import org.eclipse.mylyn.commons.workbench.PropertiesAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
