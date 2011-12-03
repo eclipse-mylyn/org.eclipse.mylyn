@@ -71,6 +71,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.mylyn.commons.workbench"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.mylyn.commons.xmlrpc"
          download-size="0"
          install-size="0"
