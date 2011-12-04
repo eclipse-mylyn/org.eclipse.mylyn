@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Benjamin Pasero (initial contribution from RSSOwl, see bug 177974)
  * @author Mik Kersten
+ * @since 3.7
  */
 public class GradientColors {
 

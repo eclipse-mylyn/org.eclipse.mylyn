@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
  * Based on <code>org.eclipse.ui.internal.progress.ProgressInfoItem</code>.
  * 
  * @author Steffen Pingel
+ * @since 3.7
  */
 public abstract class ControlListItem extends Composite {
 
