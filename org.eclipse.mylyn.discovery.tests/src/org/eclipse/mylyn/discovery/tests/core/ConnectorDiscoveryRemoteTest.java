@@ -57,7 +57,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 		// XXX e3.5 skip test in Tycho build
 		Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
 		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(CoreUtil.getVersion(bundle))) { //$NON-NLS-1$
-			System.err.println("Skipping test on Eclipse 3.5 due to lack of proxy support");
+			System.err.println("Skipping testVerifyAbility() on Eclipse 3.5 due to lack of proxy support");
 			return;
 		}
 
@@ -71,8 +71,11 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 
 		int unavailableCount = 0;
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-			assertNotNull("Failed to verify availability for " + connector.getId(), connector.getAvailable());
-			if (!connector.getAvailable()) {
+			if (connector.getAvailable() == null) {
+				// connectors that can't be verified need to have a valid install message set
+				assertNotNull("Failed to verify availability for " + connector.getId(),
+						connector.getAttributes().get(DiscoveryConnector.ATTRIBUTE_INSTALL_MESSAGE));
+			} else if (!connector.getAvailable()) {
 				++unavailableCount;
 			}
 		}
