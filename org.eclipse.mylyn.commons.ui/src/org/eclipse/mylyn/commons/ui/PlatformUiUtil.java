@@ -19,6 +19,7 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -184,9 +185,15 @@ public class PlatformUiUtil {
 	public static boolean hasInternalBrowser() {
 		if (internalBrowserAvailable == null) {
 			try {
-				Browser browser = new Browser(Display.getCurrent().getActiveShell(), SWT.NONE);
-				browser.dispose();
-				internalBrowserAvailable = Boolean.TRUE;
+				Shell[] shells = Display.getDefault().getShells();
+				if (shells.length > 0) {
+					Browser browser = new Browser(shells[0], SWT.NONE);
+					browser.dispose();
+					internalBrowserAvailable = Boolean.TRUE;
+				} else {
+					// can't determine status
+					return false;
+				}
 			} catch (SWTError er) {
 				internalBrowserAvailable = Boolean.FALSE;
 			}
