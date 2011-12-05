@@ -165,9 +165,9 @@ public class CommonUiUtil {
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
 	 * 
-	 * @deprecated use {@link LegacyActionTools#extractMnemonic(String)} instead
+	 * @see LegacyActionTools#extractMnemonic(String)
 	 */
-	@Deprecated
+	// TODO e3.6 deprecate and replace with LegacyActionTools#extractMnemonic(String)
 	public static String toLabel(String text) {
 		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -184,7 +184,7 @@ public class CommonUiUtil {
 		if (label.contains("@")) { //$NON-NLS-1$
 			label += "\t"; //$NON-NLS-1$
 		}
-		return LegacyActionTools.escapeMnemonics(label);
+		return CommonUiUtil.toLabel(label);
 	}
 
 	public static String getProductName() {

@@ -250,7 +250,7 @@ public class CommonUiUtil {
 		if (label.contains("@")) { //$NON-NLS-1$
 			label += "\t"; //$NON-NLS-1$
 		}
-		return LegacyActionTools.escapeMnemonics(label);
+		return CommonUiUtil.toLabel(label);
 	}
 
 	public static String getProductName() {

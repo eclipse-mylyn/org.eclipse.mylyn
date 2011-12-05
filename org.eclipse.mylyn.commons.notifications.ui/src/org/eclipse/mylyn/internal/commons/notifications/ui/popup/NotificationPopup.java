@@ -123,7 +123,7 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 				}
 				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
-					descriptionLabel.setText(LegacyActionTools.escapeMnemonics(descriptionText));
+					descriptionLabel.setText(CommonUiUtil.toLabel(descriptionText));
 					descriptionLabel.setBackground(parent.getBackground());
 					GridDataFactory.fillDefaults()
 							.span(2, SWT.DEFAULT)
