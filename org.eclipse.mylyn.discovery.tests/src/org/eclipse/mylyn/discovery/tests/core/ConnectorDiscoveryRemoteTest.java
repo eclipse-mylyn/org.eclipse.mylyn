@@ -87,7 +87,7 @@ public class ConnectorDiscoveryRemoteTest extends TestCase {
 	private String computeUnavailableConnetorDescriptorNames() {
 		String message = "";
 		for (DiscoveryConnector connector : connectorDiscovery.getConnectors()) {
-			if (!connector.getAvailable()) {
+			if (connector.getAvailable() != null && !connector.getAvailable()) {
 				if (message.length() > 0) {
 					message += ", ";
 				}

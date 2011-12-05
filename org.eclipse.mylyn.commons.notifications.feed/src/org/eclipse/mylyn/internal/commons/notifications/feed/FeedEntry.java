@@ -38,6 +38,7 @@ public class FeedEntry extends ServiceMessage {
 		}
 		setUrl(source.getLink());
 		setImage("dialog_messasge_info_image"); //$NON-NLS-1$
+		setDate(source.getPublishedDate());
 	}
 
 	public FeedEntry(String eventId) {

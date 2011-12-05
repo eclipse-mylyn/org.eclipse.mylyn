@@ -6,6 +6,7 @@ Bundle-Version: 3.7.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
+ org.eclipse.mylyn,
  org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.commons.notifications.core,
  org.eclipse.mylyn.commons.notifications.feed

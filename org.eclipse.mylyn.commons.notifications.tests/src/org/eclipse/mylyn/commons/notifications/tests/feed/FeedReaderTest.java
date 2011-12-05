@@ -51,7 +51,7 @@ public class FeedReaderTest extends TestCase {
 
 		FeedEntry entry = reader.getEntries().get(0);
 		assertEquals("New Connectors", entry.getTitle());
-		assertEquals("[0.0.0,3.7.0)", entry.getFilter("frameworkVersion"));
+		assertEquals("[0.0.0,4.0.0)", entry.getFilter("frameworkVersion"));
 		assertEquals("New connectors are now available. <a href=\"#discovery\">Show connectors</a>.",
 				entry.getDescription());
 
