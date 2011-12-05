@@ -50,7 +50,11 @@
     <module>org.eclipse.mylyn.commons.http</module>
     <module>org.eclipse.mylyn.commons.identity</module>
     <module>org.eclipse.mylyn.commons.net</module>
-    <module>org.eclipse.mylyn.commons.notifications</module>
+    <module>org.eclipse.mylyn.commons.notifications-feature</module>
+    <module>org.eclipse.mylyn.commons.notifications.core</module>
+    <module>org.eclipse.mylyn.commons.notifications.feed</module>
+    <module>org.eclipse.mylyn.commons.notifications.tests</module>
+    <module>org.eclipse.mylyn.commons.notifications.ui</module>
     <module>org.eclipse.mylyn.commons.repositories</module>
     <module>org.eclipse.mylyn.commons.screenshots</module>
     <module>org.eclipse.mylyn.commons.sdk-feature</module>

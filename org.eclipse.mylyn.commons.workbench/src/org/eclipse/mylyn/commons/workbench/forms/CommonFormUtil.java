@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.forms.widgets.FormUtil;
  */
 public class CommonFormUtil {
 
-	public FormColors getSharedColors() {
+	public static FormColors getSharedColors() {
 		return CommonsWorkbenchPlugin.getDefault().getFormColors(Display.getDefault());
 	}
 

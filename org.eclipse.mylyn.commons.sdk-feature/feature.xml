@@ -32,6 +32,10 @@
          id="org.eclipse.mylyn.commons"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.mylyn.commons.notifications"
+         version="0.0.0"/>
+
    <!-- bug 278474 -->   
    <plugin
          id="org.eclipse.core.runtime.compatibility.auth"
@@ -120,7 +124,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.notifications.source"
+         id="org.eclipse.mylyn.commons.notifications.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.notifications.feed.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.notifications.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
