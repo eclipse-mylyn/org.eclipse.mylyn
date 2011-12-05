@@ -89,7 +89,7 @@ public class CoreUtil {
 	 */
 	// TODO e3.5 remove this method and replace with bundle.getVersion()
 	public static Version getVersion(Bundle bundle) {
-		String header = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+		String header = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		return (header != null) ? Version.parseVersion(header) : null;
 	}
 
