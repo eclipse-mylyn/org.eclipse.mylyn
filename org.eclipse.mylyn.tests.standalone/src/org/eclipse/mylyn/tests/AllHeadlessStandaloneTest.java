@@ -15,6 +15,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
+import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmentTest;
+import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
@@ -22,8 +24,6 @@ import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.DefaultTaskSchemaTest;
-import org.eclipse.mylyn.tasks.tests.core.EnvironmentTest;
-import org.eclipse.mylyn.tasks.tests.core.FeedReaderTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
@@ -51,7 +51,7 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(FeedReaderTest.class);
-		suite.addTestSuite(EnvironmentTest.class);
+		suite.addTestSuite(NotificationEnvironmentTest.class);
 
 		// context
 		// disabled due to failure: bug 257972

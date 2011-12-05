@@ -20,6 +20,7 @@ Require-Bundle: org.junit4,
  org.eclipse.mylyn.trac.tests,
  org.eclipse.mylyn.team.tests,
  org.eclipse.mylyn.commons.tests,
+ org.eclipse.mylyn.commons.notifications.tests,
  org.eclipse.mylyn.wikitext.tests,
  org.eclipse.mylyn.hudson.tests,
  org.eclipse.mylyn.builds.tests
