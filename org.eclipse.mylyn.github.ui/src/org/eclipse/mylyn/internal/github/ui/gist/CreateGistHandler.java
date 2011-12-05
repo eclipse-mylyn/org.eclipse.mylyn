@@ -176,7 +176,7 @@ public class CreateGistHandler extends AbstractHandler {
 		GistService service = new GistService(client);
 		CreateGistJob job = new CreateGistJob(
 				Messages.CreateGistHandler_CreateGistJobName, name, contents,
-				service, isPublic);
+				service, isPublic, repository);
 		job.schedule();
 	}
 

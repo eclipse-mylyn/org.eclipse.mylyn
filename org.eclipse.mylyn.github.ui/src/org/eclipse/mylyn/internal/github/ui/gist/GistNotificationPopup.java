@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.text.MessageFormat;
-import java.util.Set;
 
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.mylyn.internal.github.ui.GitHubImages;
@@ -40,17 +39,22 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 
 	private String title;
 
+	private TaskRepository repository;
+
 	/**
 	 * Create Gist notification popup
-	 * 
+	 *
 	 * @param display
 	 * @param gist
 	 * @param title
+	 * @param repository
 	 */
-	public GistNotificationPopup(Display display, Gist gist, String title) {
+	public GistNotificationPopup(Display display, Gist gist, String title,
+			TaskRepository repository) {
 		super(display);
 		this.gist = gist;
 		this.title = title;
+		this.repository = repository;
 	}
 
 	@Override
@@ -68,18 +72,13 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Set<TaskRepository> repositories = GistConnectorUi
-						.getRepositories();
-				if (!repositories.isEmpty()) {
-					TaskRepository repository = repositories.iterator().next();
-					AbstractTask task = TasksUiInternal.getTask(
-							repository.getRepositoryUrl(), gist.getId(),
-							gist.getHtmlUrl());
-					if (task != null)
-						TasksUiInternal.refreshAndOpenTaskListElement(task);
-					else
-						TasksUiInternal.openTask(repository, gist.getId(), null);
-				}
+				AbstractTask task = TasksUiInternal.getTask(
+						repository.getRepositoryUrl(), gist.getId(),
+						gist.getHtmlUrl());
+				if (task != null)
+					TasksUiInternal.refreshAndOpenTaskListElement(task);
+				else
+					TasksUiInternal.openTask(repository, gist.getId(), null);
 			}
 		});
 	}
