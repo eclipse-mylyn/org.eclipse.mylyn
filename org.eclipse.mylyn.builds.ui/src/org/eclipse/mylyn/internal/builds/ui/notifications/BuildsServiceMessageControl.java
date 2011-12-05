@@ -23,10 +23,11 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildServerWizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
+import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
+import org.eclipse.mylyn.commons.notifications.ui.NotificationControl;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
-import org.eclipse.mylyn.commons.ui.notifications.NotificationSinkEvent;
-import org.eclipse.mylyn.commons.workbench.forms.NotificationControl;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.NewBuildServerAction;
 import org.eclipse.mylyn.internal.commons.ui.team.wizards.NewRepositoryWizardRegistry;
@@ -86,7 +87,9 @@ public class BuildsServiceMessageControl extends NotificationControl {
 			if (ensureControl()) {
 				setTitle(message.getLabel());
 				setDescription(message.getDescription());
-				setTitleImage(message.getNotificationKindImage());
+				if (message instanceof AbstractUiNotification) {
+					setTitleImage(((AbstractUiNotification) message).getNotificationKindImage());
+				}
 				setEventId(message.getEventId());
 			}
 		}

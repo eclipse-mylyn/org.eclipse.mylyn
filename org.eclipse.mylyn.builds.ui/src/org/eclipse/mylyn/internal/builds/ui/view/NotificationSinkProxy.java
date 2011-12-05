@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.view;
 
-import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
-import org.eclipse.mylyn.commons.ui.notifications.NotificationSinkEvent;
+import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
+import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
 import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceMessageControl;
 
 /**

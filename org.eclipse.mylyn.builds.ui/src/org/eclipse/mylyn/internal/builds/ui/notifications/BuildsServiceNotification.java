@@ -11,8 +11,12 @@
 
 package org.eclipse.mylyn.internal.builds.ui.notifications;
 
+import java.util.Date;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -20,7 +24,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Torkild U. Resheim
  */
-public class BuildsServiceNotification extends AbstractNotification {
+public class BuildsServiceNotification extends AbstractUiNotification {
 
 	public static final String EVENT_ID = "org.eclipse.mylyn.builds.ui.events.BuildServiceChanged"; //$NON-NLS-1$
 
@@ -72,8 +76,15 @@ public class BuildsServiceNotification extends AbstractNotification {
 		return Dialog.getImage(notificationKindImage);
 	}
 
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
+	@Override
+	public Date getDate() {
 		// ignore
 		return null;
 	}
+
 }

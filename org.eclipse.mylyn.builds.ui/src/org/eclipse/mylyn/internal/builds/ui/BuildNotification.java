@@ -11,13 +11,16 @@
 
 package org.eclipse.mylyn.internal.builds.ui;
 
+import java.util.Date;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildPackage;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +28,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Steffen Pingel
  */
-public class BuildNotification extends AbstractNotification {
+public class BuildNotification extends AbstractUiNotification {
 
 	private static final String ID_EVENT_PLAN_STATUS_CHANGED = "org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"; //$NON-NLS-1$
 
@@ -44,13 +47,9 @@ public class BuildNotification extends AbstractNotification {
 		this.element = element;
 	}
 
-	public int compareTo(AbstractNotification o) {
-		return -1;
-	}
-
 	public Object getAdapter(@SuppressWarnings("rawtypes")
 	Class adapter) {
-		return null;
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	@Override
@@ -120,6 +119,11 @@ public class BuildNotification extends AbstractNotification {
 			}
 		}
 		return notification;
+	}
+
+	@Override
+	public Date getDate() {
+		return null;
 	}
 
 }

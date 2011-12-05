@@ -16,7 +16,7 @@ import java.util.Collections;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
-import org.eclipse.mylyn.commons.ui.notifications.Notifications;
+import org.eclipse.mylyn.commons.notifications.ui.NotificationsUi;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildModelContentAdapter;
 
 /**
@@ -38,7 +38,7 @@ public class BuildNotifier {
 	protected void handle(Notification msg) {
 		BuildNotification notification = BuildNotification.createNotification(msg);
 		if (notification != null) {
-			Notifications.getService().notify(Collections.singletonList(notification));
+			NotificationsUi.getService().notify(Collections.singletonList(notification));
 		}
 	}
 

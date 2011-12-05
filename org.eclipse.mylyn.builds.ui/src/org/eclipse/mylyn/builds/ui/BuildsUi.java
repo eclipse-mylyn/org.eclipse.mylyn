@@ -32,8 +32,8 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
+import org.eclipse.mylyn.commons.notifications.ui.NotificationsUi;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.ui.notifications.Notifications;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
@@ -114,7 +114,7 @@ public class BuildsUi {
 
 	public static void serverDiscovered(String title, String description) {
 		BuildsServiceNotification notification = new BuildsServiceNotification(title, description);
-		Notifications.getService().notify(Collections.singletonList(notification));
+		NotificationsUi.getService().notify(Collections.singletonList(notification));
 	}
 
 	public static void open(IBuildElement element) {

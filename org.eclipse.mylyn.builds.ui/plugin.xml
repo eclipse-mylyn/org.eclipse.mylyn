@@ -698,7 +698,7 @@
     </consolePageParticipant>
  </extension>
  <extension
-       point="org.eclipse.mylyn.commons.notifications.notifications">
+       point="org.eclipse.mylyn.commons.notifications.ui.notifications">
     <event
           categoryId="org.eclipse.mylyn.builds.ui.category.Builds"
           id="org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"
