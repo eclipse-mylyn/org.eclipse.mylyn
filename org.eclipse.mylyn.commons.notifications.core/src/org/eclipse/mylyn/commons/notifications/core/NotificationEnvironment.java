@@ -54,7 +54,7 @@ public class NotificationEnvironment {
 			bundle = Platform.getBundle(Platform.PI_RUNTIME);
 		}
 		if (bundle != null) {
-			String versionString = bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+			String versionString = (String) bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
 			try {
 				return new Version(versionString);
 			} catch (IllegalArgumentException e) {
