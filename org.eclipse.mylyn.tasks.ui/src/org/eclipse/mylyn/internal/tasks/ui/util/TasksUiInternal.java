@@ -1072,7 +1072,7 @@ public class TasksUiInternal {
 	 */
 	@Deprecated
 	public static String escapeLabelText(String text) {
-		return LegacyActionTools.escapeMnemonics(text);
+		return CommonUiUtil.toLabel(text);
 	}
 
 	public static void preservingSelection(final TreeViewer viewer, Runnable runnable) {
