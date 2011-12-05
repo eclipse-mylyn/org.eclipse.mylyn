@@ -21,9 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.service.GistService;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -67,7 +66,16 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 		try {
 			if (urlAttribute == null)
 				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
-			return new URL(urlAttribute.getValue()).openStream();
+			URL url = new URL(urlAttribute.getValue());
+			GitHubClient client = new GitHubClient(url.getHost()) {
+
+				protected String configureUri(String uri) {
+					// No prefix needed since URI is not an actual API URI
+					return uri;
+				}
+			};
+			GistConnector.configureClient(client, repository);
+			return client.getStream(new GitHubRequest().setUri(url.getFile()));
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
@@ -95,12 +103,6 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 		gist.setFiles(Collections.singletonMap(file.getFilename(), file));
 
 		GitHubClient client = GistConnector.createClient(repository);
-		AuthenticationCredentials credentials = repository
-				.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null)
-			client.setCredentials(credentials.getUserName(),
-					credentials.getPassword());
-
 		GistService service = new GistService(client);
 		InputStream input = source.createInputStream(monitor);
 		try {
