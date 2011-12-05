@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.builds.ui;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
@@ -32,6 +31,7 @@ import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.workbench.forms.RichToolTip;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildSummaryLabelProvider;
@@ -248,7 +248,7 @@ public class BuildToolTip extends RichToolTip {
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 
-		textLabel.setText(LegacyActionTools.escapeMnemonics(text));
+		textLabel.setText(CommonUiUtil.toLabel(text));
 		int width = Math.min(textLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
 	}

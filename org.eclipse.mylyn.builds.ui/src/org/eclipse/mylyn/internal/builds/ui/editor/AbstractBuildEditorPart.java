@@ -19,13 +19,13 @@ import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
 import org.eclipse.emf.databinding.FeaturePath;
 import org.eclipse.emf.databinding.IEMFValueProperty;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.databinding.swt.IWidgetValueProperty;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.swt.SWT;
@@ -132,7 +132,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 			return;
 		}
 
-		final Label label = toolkit.createLabel(composite, LegacyActionTools.escapeMnemonics(text));
+		final Label label = toolkit.createLabel(composite, CommonUiUtil.toLabel(text));
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setBackground(null);
 		label.setVisible(!section.isExpanded());
