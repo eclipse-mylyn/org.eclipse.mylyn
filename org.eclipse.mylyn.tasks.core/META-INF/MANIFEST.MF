@@ -17,16 +17,10 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.core;x-internal:=tr
  org.eclipse.mylyn.internal.tasks.core.context;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.data;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.externalization;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
- org.eclipse.mylyn.internal.tasks.core.notifications;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.internal.tasks.core.sync;x-friends:="org.eclipse.mylyn.tasks.ui,org.eclipse.mylyn.tasks.bugs",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.core.activity,
  org.eclipse.mylyn.tasks.core.context,
  org.eclipse.mylyn.tasks.core.data,
  org.eclipse.mylyn.tasks.core.sync
-Import-Package: com.sun.syndication.feed;version="0.9.0",
- com.sun.syndication.feed.module;version="0.9.0",
- com.sun.syndication.feed.synd;version="0.9.0",
- com.sun.syndication.io;version="0.9.0",
- org.jdom;version="1.0.0"
 Bundle-Localization: plugin

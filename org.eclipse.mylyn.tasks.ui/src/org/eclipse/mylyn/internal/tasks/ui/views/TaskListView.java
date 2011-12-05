@@ -64,6 +64,7 @@ import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.commons.workbench.DelayedRefreshJob;
 import org.eclipse.mylyn.commons.workbench.GradientDrawer;
+import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -72,7 +73,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -1015,7 +1015,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
 
 		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
-			ServiceMessage message = new ServiceMessage();
+			ServiceMessage message = new ServiceMessage("welcome");
 			message.setDescription(Messages.TaskListView_Welcome_Message);
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);

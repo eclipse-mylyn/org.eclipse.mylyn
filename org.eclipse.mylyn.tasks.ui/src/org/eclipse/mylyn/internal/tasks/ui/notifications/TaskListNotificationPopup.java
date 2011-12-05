@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
@@ -46,18 +47,18 @@ public class TaskListNotificationPopup extends AbstractWorkbenchNotificationPopu
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
-	private List<AbstractNotification> notifications;
+	private List<AbstractUiNotification> notifications;
 
 	public TaskListNotificationPopup(Shell parent) {
 		super(parent.getDisplay());
 	}
 
-	public void setContents(List<AbstractNotification> notifications) {
+	public void setContents(List<AbstractUiNotification> notifications) {
 		this.notifications = notifications;
 	}
 
-	public List<AbstractNotification> getNotifications() {
-		return new ArrayList<AbstractNotification>(notifications);
+	public List<AbstractUiNotification> getNotifications() {
+		return new ArrayList<AbstractUiNotification>(notifications);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class TaskListNotificationPopup extends AbstractWorkbenchNotificationPopu
 	@Override
 	protected void createContentArea(Composite parent) {
 		int count = 0;
-		for (final AbstractNotification notification : notifications) {
+		for (final AbstractUiNotification notification : notifications) {
 			Composite notificationComposite = new Composite(parent, SWT.NO_FOCUS);
 			GridLayout gridLayout = new GridLayout(2, false);
 			GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(notificationComposite);

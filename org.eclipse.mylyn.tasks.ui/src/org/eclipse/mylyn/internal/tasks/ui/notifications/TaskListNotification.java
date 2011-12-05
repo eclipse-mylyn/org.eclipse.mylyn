@@ -16,6 +16,8 @@ import java.util.Date;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -29,7 +31,9 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class TaskListNotification extends AbstractNotification {
+public class TaskListNotification extends AbstractUiNotification {
+
+	private final static String ID_EVENT_TASK_CHANGED = "org.eclipse.mylyn.tasks.ui.events.TaskChanged";
 
 	private static DecoratingLabelProvider labelProvider;
 
@@ -42,10 +46,19 @@ public class TaskListNotification extends AbstractNotification {
 	private final Object token;
 
 	public TaskListNotification(ITask task) {
-		this(task, null);
+		this(ID_EVENT_TASK_CHANGED, task, null);
+	}
+
+	public TaskListNotification(String eventId, ITask task) {
+		this(eventId, task, null);
 	}
 
 	public TaskListNotification(ITask task, Object token) {
+		this(ID_EVENT_TASK_CHANGED, task, token);
+	}
+
+	public TaskListNotification(String eventId, ITask task, Object token) {
+		super(eventId);
 		Assert.isNotNull(task);
 		this.task = task;
 		this.token = token;
@@ -109,11 +122,11 @@ public class TaskListNotification extends AbstractNotification {
 		return date;
 	}
 
-	@Override
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	@Override
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
 		Date anotherDate = anotherNotification.getDate();
 		if (date != null && anotherDate != null) {

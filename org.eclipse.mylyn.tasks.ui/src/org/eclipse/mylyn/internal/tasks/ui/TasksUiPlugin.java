@@ -52,6 +52,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
+import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.workbench.TaskBarManager;
@@ -80,11 +83,8 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
-import org.eclipse.mylyn.internal.tasks.core.notifications.Environment;
-import org.eclipse.mylyn.internal.tasks.core.notifications.ServiceMessageManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -256,9 +256,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
-		public Set<AbstractNotification> getNotifications() {
+		public Set<AbstractUiNotification> getNotifications() {
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
-			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
+			Set<AbstractUiNotification> reminders = new HashSet<AbstractUiNotification>();
 			for (AbstractTask task : allTasks) {
 				if (TasksUiPlugin.getTaskActivityManager().isPastReminder(task) && !task.isReminded()) {
 					reminders.add(new TaskListNotificationReminder(task));
@@ -640,7 +640,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			Long checktime = getPreferenceStore().getLong(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME);
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
-					new Environment() {
+					new NotificationEnvironment() {
 						private Set<String> installedFeatures;
 
 						@Override

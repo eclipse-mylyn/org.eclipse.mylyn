@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -45,9 +45,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private TaskListNotificationPopup popup;
 
-	private final Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
+	private final Set<AbstractUiNotification> notifications = new HashSet<AbstractUiNotification>();
 
-	private final Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
+	private final Set<AbstractUiNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
 	private final List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
@@ -67,16 +67,16 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 							collectNotifications();
 
 							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-								List<AbstractNotification> notifications = popup.getNotifications();
-								for (AbstractNotification notification : notifications) {
+								List<AbstractUiNotification> notifications = popup.getNotifications();
+								for (AbstractUiNotification notification : notifications) {
 									if (notification.getToken() != null) {
 										cancelledTokens.put(notification.getToken(), null);
 									}
 								}
 							}
 
-							for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-								AbstractNotification notification = it.next();
+							for (Iterator<AbstractUiNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+								AbstractUiNotification notification = it.next();
 								if (notification.getToken() != null
 										&& cancelledTokens.containsKey(notification.getToken())) {
 									it.remove();
@@ -120,7 +120,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
 		popup.setFadingEnabled(TasksUiInternal.isAnimationsEnabled());
-		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
+		List<AbstractUiNotification> toDisplay = new ArrayList<AbstractUiNotification>(currentlyNotifying);
 		Collections.sort(toDisplay);
 		popup.setContents(toDisplay);
 		cleanNotified();
@@ -186,7 +186,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	/**
 	 * public for testing purposes
 	 */
-	public Set<AbstractNotification> getNotifications() {
+	public Set<AbstractUiNotification> getNotifications() {
 		synchronized (TaskListNotificationManager.class) {
 			return currentlyNotifying;
 		}
