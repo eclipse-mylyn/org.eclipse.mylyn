@@ -93,8 +93,8 @@ public class NotificationEnvironmentTest extends TestCase {
 	public void testGetPlatformVersion() {
 		Version platformVersion = environment.getPlatformVersion();
 		if (Platform.isRunning()) {
-			assertTrue("Expected value between 3.4-5.0, got " + platformVersion,
-					new VersionRange("[3.4.0,5.0.0)").isIncluded(platformVersion));
+			assertTrue("Expected value between 3.3-5.0, got " + platformVersion,
+					new VersionRange("[3.3.0,5.0.0)").isIncluded(platformVersion));
 		} else {
 			assertEquals(Version.emptyVersion, platformVersion);
 		}
