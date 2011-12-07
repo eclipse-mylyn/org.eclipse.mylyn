@@ -8,7 +8,7 @@
  * Contributors:
  *     Andreas Hoehmann - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.ide.tests;
+package org.eclipse.mylyn.java.tests.tasks;
 
 import java.util.Iterator;
 
@@ -38,7 +38,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Andreas Hoehmann
  */
-public class TaskTemplateResolverTest extends TestCase {
+public class JavaTaskTemplateVariableResolverTest extends TestCase {
 
 	/**
 	 * Test with no active task. The resolver should not be able to resolve the mylyn template-variable.

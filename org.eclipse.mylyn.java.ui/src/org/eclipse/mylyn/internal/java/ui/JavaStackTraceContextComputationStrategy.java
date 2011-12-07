@@ -30,10 +30,6 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * A strategy that computes Java items based on a Java stack trace in the task description.
@@ -139,34 +135,6 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 		if (text != null) {
 			return text;
 		}
-
-		TaskData taskData = (TaskData) input.getAdapter(TaskData.class);
-		if (taskData != null) {
-			TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
-			if (attribute != null) {
-				String description = attribute.getValue();
-				if (description != null && description.length() > 0) {
-					return description;
-				}
-			}
-
-			attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
-			if (attribute != null) {
-				String description = attribute.getValue();
-				if (description != null && description.length() > 0) {
-					return description;
-				}
-			}
-		}
-
-		ITask task = (ITask) input.getAdapter(ITask.class);
-		if (task instanceof AbstractTask) {
-			String description = ((AbstractTask) task).getNotes();
-			if (description != null && description.length() > 0) {
-				return description;
-			}
-		}
-
 		return null;
 	}
 
@@ -225,6 +193,7 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 	public List<Element> computeElements(String description) throws IOException {
 		List<Element> elements = new ArrayList<Element>();
 
+		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new StringReader(description));
 		for (String line = reader.readLine(); line != null && elements.size() < maxElements; line = reader.readLine()) {
 			Matcher matcher = STACK_TRACE_PATTERN.matcher(line);

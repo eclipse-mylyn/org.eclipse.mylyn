@@ -25,6 +25,7 @@ import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.ContextPopulationStrategy;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -41,6 +43,55 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Steffen Pingel
  */
 public class ContextTasksStartupHandler implements IContextUiStartup {
+
+	/**
+	 * Adapts a {@link TaskData} or {@link ITask} to a String based on their content.
+	 */
+	final class TaskContentAdapter implements IAdaptable {
+
+		private final TaskData taskData;
+
+		private final ITask task;
+
+		TaskContentAdapter(TaskData taskData, ITask task) {
+			this.taskData = taskData;
+			this.task = task;
+		}
+
+		public Object getAdapter(@SuppressWarnings("rawtypes")
+		Class adapter) {
+			if (adapter == ITask.class) {
+				return task;
+			} else if (adapter == TaskData.class) {
+				return taskData;
+			} else if (adapter == String.class) {
+				if (taskData != null) {
+					TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+					if (attribute != null) {
+						String description = attribute.getValue();
+						if (description != null && description.length() > 0) {
+							return description;
+						}
+					}
+
+					attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+					if (attribute != null) {
+						String description = attribute.getValue();
+						if (description != null && description.length() > 0) {
+							return description;
+						}
+					}
+				}
+				if (task instanceof AbstractTask) {
+					String description = ((AbstractTask) task).getNotes();
+					if (description != null && description.length() > 0) {
+						return description;
+					}
+				}
+			}
+			return null;
+		}
+	}
 
 	private class ContextActivationListener extends AbstractContextListener {
 
@@ -148,17 +199,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 						taskData = null;
 					}
 					IInteractionContext context = event.getContext();
-					IAdaptable input = new IAdaptable() {
-						public Object getAdapter(@SuppressWarnings("rawtypes")
-						Class adapter) {
-							if (adapter == ITask.class) {
-								return task;
-							} else if (adapter == TaskData.class) {
-								return taskData;
-							}
-							return null;
-						}
-					};
+					IAdaptable input = new TaskContentAdapter(taskData, task);
 					contextPopulationStrategy.populateContext(context, input);
 				} catch (CoreException e) {
 					ContextUiPlugin.getDefault().getLog().log(e.getStatus());
@@ -166,5 +207,4 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 			}
 		}
 	}
-
 }

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
+import org.eclipse.mylyn.java.tests.tasks.JavaTaskTemplateVariableResolverTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
 
 /**
@@ -53,6 +54,7 @@ public class AllJavaTests {
 		suite.addTestSuite(XmlSearchPluginTest.class);
 		suite.addTestSuite(JavaEditingMonitorTest.class);
 		suite.addTestSuite(JavaStackTraceContextComputationStrategyTest.class);
+		suite.addTestSuite(JavaTaskTemplateVariableResolverTest.class);
 		return suite;
 	}
 
