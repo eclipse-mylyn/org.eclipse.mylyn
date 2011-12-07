@@ -14,7 +14,8 @@ package org.eclipse.mylyn.internal.commons.notifications.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.ui.notifications.messages"; //$NON-NLS-1$
+
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.notifications.ui.messages"; //$NON-NLS-1$
 
 	public static String NotificationsPreferencesPage_Descriptions_Label;
 
@@ -23,6 +24,7 @@ public class Messages extends NLS {
 	public static String NotificationsPreferencesPage_Events_Label;
 
 	public static String NotificationsPreferencesPage_Notifiers_Label;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -30,4 +32,5 @@ public class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }

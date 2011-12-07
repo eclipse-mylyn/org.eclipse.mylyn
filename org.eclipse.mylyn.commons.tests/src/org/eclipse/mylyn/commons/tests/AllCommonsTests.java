@@ -24,7 +24,7 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 public class AllCommonsTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.commons.tests");
+		TestSuite suite = new TestSuite(AllCommonsTests.class.getName());
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(TimeoutInputStreamTest.class);

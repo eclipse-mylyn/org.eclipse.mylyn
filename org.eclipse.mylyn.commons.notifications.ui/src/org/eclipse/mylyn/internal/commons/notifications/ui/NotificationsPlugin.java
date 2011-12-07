@@ -31,7 +31,9 @@ import org.osgi.framework.BundleContext;
  */
 public class NotificationsPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.notifications"; //$NON-NLS-1$
+	private static final String FILE_NOTIFICATION_STATE = "notifications.xml"; //$NON-NLS-1$
+
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.notifications.ui"; //$NON-NLS-1$
 
 	public static final String PREF_NOTICATIONS_ENABLED = "notifications.enabled"; //$NON-NLS-1$
 
@@ -46,6 +48,8 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 	private NotificationService service;
 
 	public NotificationModel createModelWorkingCopy() {
+		migrateFile_0_8();
+
 		IMemento memento = null;
 		File file = getModelFile().toFile();
 		if (file.exists()) {
@@ -63,6 +67,13 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 			}
 		}
 		return new NotificationModel(memento);
+	}
+
+	private void migrateFile_0_8() {
+		IPath file_0_8 = getModelFile_0_8();
+		if (file_0_8.toFile().exists() && !getModelFile().toFile().exists()) {
+			file_0_8.toFile().renameTo(getModelFile().toFile());
+		}
 	}
 
 	public NotificationModel getModel() {
@@ -122,10 +133,24 @@ public class NotificationsPlugin extends AbstractUIPlugin {
 		return memento;
 	}
 
+	/**
+	 * Returns the location of file that stores the notification state.
+	 */
 	protected IPath getModelFile() {
 		IPath stateLocation = Platform.getStateLocation(getBundle());
-		IPath cacheFile = stateLocation.append("notifications.xml"); //$NON-NLS-1$
+		IPath cacheFile = stateLocation.append(FILE_NOTIFICATION_STATE);
 		return cacheFile;
+	}
+
+	/**
+	 * Returns the location of the state file that was in use in version 0.8.
+	 * 
+	 * @see #getModelFile()
+	 */
+	protected IPath getModelFile_0_8() {
+		IPath stateLocation = Platform.getStateLocation(getBundle());
+		stateLocation = stateLocation.removeLastSegments(1).append("org.eclipse.mylyn.commons.notifications"); //$NON-NLS-1$
+		return stateLocation.append(FILE_NOTIFICATION_STATE);
 	}
 
 }
