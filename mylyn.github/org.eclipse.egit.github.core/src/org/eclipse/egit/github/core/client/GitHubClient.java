@@ -107,7 +107,8 @@ public class GitHubClient {
 
 	private Header userAgent = USER_AGENT;
 
-	private final Header accept = new BasicHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+	private final Header accept = new BasicHeader(
+			"Accept", "application/vnd.github.beta+json"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private final String prefix;
 
