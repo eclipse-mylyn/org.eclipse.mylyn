@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andreas Hoehmann - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 package org.eclipse.mylyn.java.tests.tasks;
 
@@ -37,8 +38,14 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Andreas Hoehmann
+ * @author Steffen Pingel
  */
 public class JavaTaskTemplateVariableResolverTest extends TestCase {
+
+	@Override
+	protected void tearDown() throws Exception {
+		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
+	}
 
 	/**
 	 * Test with no active task. The resolver should not be able to resolve the mylyn template-variable.
