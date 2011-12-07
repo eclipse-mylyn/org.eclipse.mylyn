@@ -16,6 +16,8 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.builds.tests.AllBuildsTests;
 import org.eclipse.mylyn.cdt.tests.AllCdtTests;
+import org.eclipse.mylyn.commons.activity.tests.AllActivityTests;
+import org.eclipse.mylyn.commons.notifications.tests.AllNotificationsTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
@@ -43,6 +45,8 @@ public class AllNonConnectorTests {
 
 	static void addTests(TestSuite suite) {
 		suite.addTest(AllCommonsTests.suite());
+		suite.addTest(AllNotificationsTests.suite());
+		suite.addTest(AllActivityTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllDiscoveryTests.suite());
 		suite.addTest(AllJavaTests.suite());
