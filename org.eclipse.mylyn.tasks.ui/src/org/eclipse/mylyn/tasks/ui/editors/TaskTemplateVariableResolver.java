@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andreas Hoehmann - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
