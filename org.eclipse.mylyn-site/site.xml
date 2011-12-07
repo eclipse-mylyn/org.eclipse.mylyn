@@ -67,6 +67,9 @@
    <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.commons.notifications_0.0.0.jar" id="org.eclipse.mylyn.commons.notifications" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.commons.sdk_0.0.0.jar" id="org.eclipse.mylyn.commons.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
@@ -86,6 +89,9 @@
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.sdk_feature_0.0.0.jar" id="org.eclipse.mylyn.sdk_feature" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.tasks.ide_0.0.0.jar" id="org.eclipse.mylyn.tasks.ide" version="0.0.0">
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.test_feature_0.0.0.jar" id="org.eclipse.mylyn.test_feature" version="0.0.0">
