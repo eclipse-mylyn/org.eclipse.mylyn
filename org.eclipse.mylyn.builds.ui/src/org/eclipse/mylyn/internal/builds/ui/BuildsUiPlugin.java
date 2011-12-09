@@ -61,7 +61,6 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		if (refresher != null) {
-			getPreferenceStore().removePropertyChangeListener(refresher);
 			refresher.stop();
 			refresher = null;
 		}
@@ -88,8 +87,7 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 		}
 
 		if (refresher == null) {
-			refresher = new BuildRefresher();
-			getPreferenceStore().addPropertyChangeListener(refresher);
+			refresher = new BuildRefresher(getPreferenceStore(), BuildsUiInternal.getModel().getScheduler());
 			refresher.start();
 		}
 

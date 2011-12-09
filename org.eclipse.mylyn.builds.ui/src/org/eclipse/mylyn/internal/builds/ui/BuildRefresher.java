@@ -15,10 +15,12 @@ package org.eclipse.mylyn.internal.builds.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
+import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 
@@ -45,17 +47,25 @@ public class BuildRefresher implements IPropertyChangeListener {
 		}
 	};
 
-	public BuildRefresher() {
+	private boolean running;
+
+	private final IPreferenceStore preferenceStore;
+
+	private final BuildScheduler scheduler;
+
+	public BuildRefresher(IPreferenceStore preferenceStore, BuildScheduler scheduler) {
+		this.preferenceStore = preferenceStore;
+		this.scheduler = scheduler;
 	}
 
 	private RefreshJob refreshJob;
 
 	private long getInterval() {
-		return BuildsUiPlugin.getDefault().getPreferenceStore().getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL);
+		return preferenceStore.getLong(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL);
 	}
 
 	public boolean isEnabled() {
-		return BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED);
+		return running && preferenceStore.getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
@@ -66,6 +76,11 @@ public class BuildRefresher implements IPropertyChangeListener {
 	}
 
 	public void start() {
+		if (running) {
+			throw new IllegalStateException();
+		}
+		preferenceStore.addPropertyChangeListener(this);
+		running = true;
 		reschedule(STARTUP_DELAY);
 	}
 
@@ -78,7 +93,7 @@ public class BuildRefresher implements IPropertyChangeListener {
 			refreshJob = new RefreshJob();
 			refreshJob.setSystem(true);
 		}
-		BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, 0);
+		scheduler.schedule(refreshJob, 0);
 	}
 
 	private synchronized void reschedule(long delay) {
@@ -89,11 +104,13 @@ public class BuildRefresher implements IPropertyChangeListener {
 				refreshJob.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
-						reschedule(getInterval());
+						if (running) {
+							reschedule(getInterval());
+						}
 					}
 				});
 			}
-			BuildsUiInternal.getModel().getScheduler().schedule(refreshJob, delay);
+			scheduler.schedule(refreshJob, delay);
 		} else {
 			if (refreshJob != null) {
 				refreshJob.cancel();
@@ -102,6 +119,11 @@ public class BuildRefresher implements IPropertyChangeListener {
 	}
 
 	public synchronized void stop() {
+		if (!running) {
+			return;
+		}
+		running = false;
+		preferenceStore.removePropertyChangeListener(this);
 		if (refreshJob != null) {
 			refreshJob.cancel();
 		}
