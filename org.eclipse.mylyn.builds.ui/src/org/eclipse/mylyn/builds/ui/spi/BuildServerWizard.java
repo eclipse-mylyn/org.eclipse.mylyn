@@ -115,6 +115,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		}
 		updateSubscription(BuildsUiInternal.getModel());
 		BuildsView.openInActivePerspective();
+
 		BuildsUiPlugin.getDefault().refreshBuilds();
 
 		return true;

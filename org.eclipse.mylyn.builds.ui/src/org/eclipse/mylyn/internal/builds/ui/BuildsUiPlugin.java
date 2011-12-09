@@ -106,6 +106,20 @@ public class BuildsUiPlugin extends AbstractUIPlugin {
 	public void refreshBuilds() {
 		initializeRefresh();
 		refresher.refresh();
+
+		// delay the save until other async tasks complete to ensure that the model is updated before it's persisted 
+		BuildsUiInternal.getModel().getLoader().getRealm().asyncExec(new Runnable() {
+			public void run() {
+				// trigger a save in case Eclipse crashes and stop() is not executed
+				try {
+					BuildsUiInternal.save();
+				} catch (IOException e) {
+					StatusManager.getManager().handle(
+							new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds",
+									e));
+				}
+			}
+		});
 	}
 
 	static class UiStartupExtensionPointReader {
