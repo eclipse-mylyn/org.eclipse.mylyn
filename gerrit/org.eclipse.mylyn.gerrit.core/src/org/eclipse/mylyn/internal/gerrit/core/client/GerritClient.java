@@ -564,7 +564,9 @@ public class GerritClient {
 										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 										gerritConfig = parseConfig(text);
-										break;
+										if (gerritConfig != null) {
+											break;
+										}
 									}
 								}
 							}
