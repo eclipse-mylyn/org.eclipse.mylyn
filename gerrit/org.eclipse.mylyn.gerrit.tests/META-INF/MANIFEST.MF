@@ -5,15 +5,17 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.mylyn.tests.util;bundle-version="3.5.0",
- org.eclipse.core.runtime,
- org.junit;bundle-version="4.5.0",
- org.eclipse.mylyn.commons.net,
- org.eclipse.mylyn.gerrit.core,
+Require-Bundle: org.junit;bundle-version="4.5.0",
  javax.servlet;bundle-version="2.5.0",
- org.eclipse.mylyn.commons.sdk.util,
  org.apache.commons.logging,
- org.eclipse.core.net
+ org.eclipse.core.runtime,
+ org.eclipse.core.net,
+ org.eclipse.mylyn.commons.net,
+ org.eclipse.mylyn.commons.sdk.util,
+ org.eclipse.mylyn.gerrit.core,
+ org.eclipse.mylyn.tests.util,
+ org.eclipse.mylyn.tasks.core;bundle-version="3.7.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.7.0"
 Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.prettify.common;version="2.1.5",
