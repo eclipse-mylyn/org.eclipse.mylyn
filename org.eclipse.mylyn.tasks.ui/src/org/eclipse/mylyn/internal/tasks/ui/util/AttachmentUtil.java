@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
@@ -136,8 +137,6 @@ public class AttachmentUtil {
 		try {
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-							task.getRepositoryUrl());
 					File targetFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 					try {
 						boolean exceptionThrown = true;
@@ -167,8 +166,9 @@ public class AttachmentUtil {
 				TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information,
 						((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unexpected error while retrieving context", e)); //$NON-NLS-1$
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Unexpected error while retrieving context", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -207,8 +207,9 @@ public class AttachmentUtil {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Unexpected error while attaching context", e)); //$NON-NLS-1$
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Unexpected error while attaching context", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException ignored) {
 			// canceled

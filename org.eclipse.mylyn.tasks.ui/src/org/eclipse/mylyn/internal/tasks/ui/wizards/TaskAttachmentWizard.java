@@ -34,7 +34,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.wizard.ScreenshotCreationPage;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
@@ -63,6 +62,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * A wizard to add a new attachment to a task report.
@@ -415,7 +415,8 @@ public class TaskAttachmentWizard extends Wizard {
 			handleDone(job);
 			return job.getStatus() == null;
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException e) {
 			// canceled

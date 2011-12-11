@@ -74,11 +74,9 @@ public class BrowserFormPage extends TaskFormPage {
 				browserViewer.setURL(url);
 			}
 		} catch (SWTError e) {
-			// TODO review error handling
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page: " //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page: " //$NON-NLS-1$
 					+ e.getMessage(), e));
 		} catch (RuntimeException e) {
-			// TODO review error handling
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page", e)); //$NON-NLS-1$
 		}
 	}

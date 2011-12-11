@@ -217,7 +217,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 					hndSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 					repositoriesViewer.setInput(getTaskRepositories());
 				} catch (CommandException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 				}
 			}
 		});

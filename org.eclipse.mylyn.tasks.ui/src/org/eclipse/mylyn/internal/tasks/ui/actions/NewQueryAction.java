@@ -15,15 +15,13 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
@@ -31,10 +29,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -90,17 +86,10 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 			wizard = new NewQueryWizard();
 		}
 
-		try {
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
-				dialog.create();
-				dialog.setBlockOnOpen(true);
-				dialog.open();
-			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
-		}
+		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+		dialog.create();
+		dialog.setBlockOnOpen(true);
+		dialog.open();
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)

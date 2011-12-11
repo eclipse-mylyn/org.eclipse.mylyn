@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.action.ChangeAttachmentJob;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -26,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Frank Becker
@@ -119,7 +119,8 @@ public class BugzillaAttachmentWizard extends Wizard {
 			});
 			return true;
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, "Unexpected error", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException e) {
 			// canceled

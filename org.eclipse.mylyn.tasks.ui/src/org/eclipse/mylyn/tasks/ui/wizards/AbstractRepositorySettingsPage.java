@@ -74,6 +74,7 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
@@ -1909,8 +1910,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e.getCause()));
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
+					StatusManager.SHOW | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled

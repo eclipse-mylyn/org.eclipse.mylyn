@@ -47,6 +47,7 @@ public class RepositoryStatus extends Status {
 
 	public final static int REPOSITORY_LOGGED_OUT = 10;
 
+	@Deprecated
 	public final static int ERROR_INTERNAL = 7;
 
 	/**

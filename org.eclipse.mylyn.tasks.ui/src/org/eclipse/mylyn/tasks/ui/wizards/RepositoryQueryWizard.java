@@ -12,11 +12,8 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -26,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Extend to provide a custom edit query dialog, typically invoked by the user requesting properties on a query node in
@@ -63,9 +61,8 @@ public class RepositoryQueryWizard extends Wizard {
 	public boolean performFinish() {
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (!(currentPage instanceof AbstractRepositoryQueryPage)) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Current wizard page does not extends AbstractRepositoryQueryPage")); //$NON-NLS-1$
-			return false;
+			throw new AssertionError(NLS.bind(
+					"Current wizard page ''{0}'' does not extends AbstractRepositoryQueryPage", currentPage.getClass())); //$NON-NLS-1$
 		}
 
 		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) currentPage;

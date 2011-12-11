@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
@@ -31,6 +30,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -63,8 +63,10 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 				try {
 					getContainer().run(true, false, operation);
 				} catch (InvocationTargetException e) {
-					StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-							Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls));
+					StatusManager.getManager().handle(
+							new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+									Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls),
+							StatusManager.SHOW | StatusManager.LOG);
 					return false;
 				} catch (InterruptedException e) {
 					// should not get here

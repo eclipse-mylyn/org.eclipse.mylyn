@@ -20,9 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -45,38 +43,34 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 
 	@Override
 	public void run() {
-		try {
-			IStructuredSelection selection = getStructuredSelection();
-			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-				final TaskRepository repository = getTaskRepository(iter.next());
-				if (repository != null) {
-					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-							.getRepositoryConnector(repository.getConnectorKind());
-					if (connector != null) {
-						final String jobName = MessageFormat.format(
-								Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X,
-								repository.getRepositoryUrl());
-						Job updateJob = new Job(jobName) {
-							@Override
-							protected IStatus run(IProgressMonitor monitor) {
-								monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
-								try {
-									performUpdate(repository, connector, monitor);
-								} finally {
-									monitor.done();
-								}
-								return Status.OK_STATUS;
+		IStructuredSelection selection = getStructuredSelection();
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+			final TaskRepository repository = getTaskRepository(iter.next());
+			if (repository != null) {
+				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+						repository.getConnectorKind());
+				if (connector != null) {
+					final String jobName = MessageFormat.format(
+							Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X,
+							repository.getRepositoryUrl());
+					Job updateJob = new Job(jobName) {
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
+							try {
+								performUpdate(repository, connector, monitor);
+							} finally {
+								monitor.done();
 							}
-						};
-						// show the progress in the system task bar if this is a user job (i.e. forced)
-						updateJob.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
-						updateJob.setUser(true);
-						updateJob.schedule();
-					}
+							return Status.OK_STATUS;
+						}
+					};
+					// show the progress in the system task bar if this is a user job (i.e. forced)
+					updateJob.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+					updateJob.setUser(true);
+					updateJob.schedule();
 				}
 			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 	}
 

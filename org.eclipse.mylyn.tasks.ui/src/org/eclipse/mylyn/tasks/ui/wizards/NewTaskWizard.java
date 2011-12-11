@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Extend for customizing how new tasks editors are created.
@@ -118,8 +119,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 				TasksUiInternal.displayStatus(Messages.NewTaskWizard_Error_creating_new_task,
 						((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						Messages.NewTaskWizard_Error_creating_new_task, e.getCause()));
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								Messages.NewTaskWizard_Error_creating_new_task, e),
+						StatusManager.SHOW | StatusManager.LOG);
 			}
 			return false;
 		} catch (InterruptedException e) {

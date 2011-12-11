@@ -72,41 +72,37 @@ class TaskListCellModifier implements ICellModifier {
 	}
 
 	public void modify(Object element, String property, Object value) {
-		int columnIndex = -1;
-		try {
-			if (element instanceof TreeItem && ((TreeItem) element).isDisposed()) {
-				return;
-			}
-			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			Object data = ((TreeItem) element).getData();
-			if (data instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) data;
-				switch (columnIndex) {
-				case 0:
-					if (task != null) {
-						task.setSummary(((String) value).trim());
-						TasksUiPlugin.getTaskList().notifyElementChanged(task);
-					}
-					break;
-				case 1:
-					break;
-				case 2:
-					toggleTaskActivation((TreeItem) element, null);
-					break;
+		if (element instanceof TreeItem && ((TreeItem) element).isDisposed()) {
+			return;
+		}
+
+		int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
+		Object data = ((TreeItem) element).getData();
+		if (data instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) data;
+			switch (columnIndex) {
+			case 0:
+				if (task != null) {
+					task.setSummary(((String) value).trim());
+					TasksUiPlugin.getTaskList().notifyElementChanged(task);
 				}
-			} else if (data instanceof AbstractTaskCategory || data instanceof IRepositoryQuery) {
-				AbstractTaskContainer container = (AbstractTaskContainer) data;
-				switch (columnIndex) {
-				case 0:
-					TasksUiPlugin.getTaskList().renameContainer(container, ((String) value).trim());
-				case 1:
-					break;
-				case 2:
-					break;
-				}
+				break;
+			case 1:
+				break;
+			case 2:
+				toggleTaskActivation((TreeItem) element, null);
+				break;
 			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
+		} else if (data instanceof AbstractTaskCategory || data instanceof IRepositoryQuery) {
+			AbstractTaskContainer container = (AbstractTaskContainer) data;
+			switch (columnIndex) {
+			case 0:
+				TasksUiPlugin.getTaskList().renameContainer(container, ((String) value).trim());
+			case 1:
+				break;
+			case 2:
+				break;
+			}
 		}
 
 		// XXX trigger a full refresh to ensure correct sorting

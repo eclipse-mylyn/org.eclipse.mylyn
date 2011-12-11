@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @noextend This class is not intended to be subclassed by clients.
@@ -175,8 +176,9 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input //$NON-NLS-1$
-					+ ", taskId: " + editorId, e)); //$NON-NLS-1$
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input //$NON-NLS-1$
+							+ ", taskId: " + editorId, e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -190,24 +192,21 @@ public class TasksUiUtil {
 			return Window.CANCEL;
 		}
 
-		try {
-			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new TaskRepositoryWizardDialog(shell, wizard);
-				dialog.create();
-				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Window.CANCEL) {
-					return Window.CANCEL;
-				}
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (shell != null && !shell.isDisposed()) {
+			WizardDialog dialog = new TaskRepositoryWizardDialog(shell, wizard);
+			dialog.create();
+			dialog.setBlockOnOpen(true);
+			if (dialog.open() == Window.CANCEL) {
+				return Window.CANCEL;
 			}
-
-			if (TaskRepositoriesView.getFromActivePerspective() != null) {
-				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
-			}
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
+
+		if (TaskRepositoriesView.getFromActivePerspective() != null) {
+			TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
+		}
+
 		return Window.OK;
 	}
 
