@@ -61,7 +61,9 @@ public class StatusHandler {
 	 * 
 	 * @see #log(IStatus)
 	 * @since 3.0
+	 * @deprecated
 	 */
+	@Deprecated
 	public static void fail(IStatus status) {
 		log(status);
 		getErrorReporterManager().fail(status);
