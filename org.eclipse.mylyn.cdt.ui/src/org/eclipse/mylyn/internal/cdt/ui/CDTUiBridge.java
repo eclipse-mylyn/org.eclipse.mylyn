@@ -53,8 +53,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 			cOutlineField = AbstractCModelOutlinePage.class.getDeclaredField("fTreeViewer"); //$NON-NLS-1$
 			cOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-					"could not get install Mylyn on Outline viewer", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"Unexpected error while focusing outline viewer", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -67,11 +67,11 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 			}
 			EditorUtility.openInEditor(cElement);
 		} catch (CModelException t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
-					"could not open editor for: {0}", new String[] { node.getHandleIdentifier() }), t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
 		} catch (PartInitException t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
-					"could not open editor for: {0}", new String[] { node.getHandleIdentifier() }), t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), t)); //$NON-NLS-1$
 		}
 	}
 

@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -278,10 +277,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 			} else {
 				return null;
 			}
-		} catch (CModelException ex) {
-			if (ex.doesNotExist()) {
-				StatusHandler.fail(ex.getStatus());
-			}
+		} catch (CModelException e) {
 			return null;
 		}
 	}

@@ -11,11 +11,7 @@
 
 package org.eclipse.mylyn.internal.java.ui.editor;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,48 +34,42 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 	}
 
 	public Control createControl(Composite parent) {
-		try {
-			Composite inner = new Composite(parent, SWT.NONE);
-			GridLayout layout = new GridLayout(1, true);
-			layout.verticalSpacing = 3;
-			layout.marginWidth = 0;
-			inner.setLayout(layout);
+		Composite inner = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		layout.verticalSpacing = 3;
+		layout.marginWidth = 0;
+		inner.setLayout(layout);
 
-			Label label = new Label(inner, SWT.LEFT);
-			label.setText(Messages.AutoFoldPreferenceBlock_Elements_of_low_interest_will_be_automatically_folded);
+		Label label = new Label(inner, SWT.LEFT);
+		label.setText(Messages.AutoFoldPreferenceBlock_Elements_of_low_interest_will_be_automatically_folded);
 
-			// Label label= new Label(inner, SWT.LEFT);
-			// label.setText( "collapse.title"); //$NON-NLS-1$
+		// Label label= new Label(inner, SWT.LEFT);
+		// label.setText( "collapse.title"); //$NON-NLS-1$
 
-			// addCheckBox(inner, "collapse.header", "collapse.header", 0);
-			// //$NON-NLS-1$
-			// addCheckBox(inner, "collapse.imports",
-			// FoldingKeys.COLLAPSE_IMPORTS, 0); //$NON-NLS-1$
-			// addCheckBox(inner, "collapse.inner_type",
-			// FoldingKeys.COLLAPSE_INNER_TYPES, 0); //$NON-NLS-1$
-			// addCheckBox(inner, "collapse.static_initializers",
-			// FoldingKeys.COLLAPSE_STATICS, 0); //$NON-NLS-1$
-			//				
-			// addCheckBox(inner, "collapse.comment_blocks",
-			// FoldingKeys.COLLAPSE_COMMENT_BLOCKS, 0); //$NON-NLS-1$
-			// addCheckBox(inner, "collapse.javadocs",
-			// FoldingKeys.COLLAPSE_JAVADOCS, 0); //$NON-NLS-1$
+		// addCheckBox(inner, "collapse.header", "collapse.header", 0);
+		// //$NON-NLS-1$
+		// addCheckBox(inner, "collapse.imports",
+		// FoldingKeys.COLLAPSE_IMPORTS, 0); //$NON-NLS-1$
+		// addCheckBox(inner, "collapse.inner_type",
+		// FoldingKeys.COLLAPSE_INNER_TYPES, 0); //$NON-NLS-1$
+		// addCheckBox(inner, "collapse.static_initializers",
+		// FoldingKeys.COLLAPSE_STATICS, 0); //$NON-NLS-1$
+		//				
+		// addCheckBox(inner, "collapse.comment_blocks",
+		// FoldingKeys.COLLAPSE_COMMENT_BLOCKS, 0); //$NON-NLS-1$
+		// addCheckBox(inner, "collapse.javadocs",
+		// FoldingKeys.COLLAPSE_JAVADOCS, 0); //$NON-NLS-1$
 
-			// Label label2 = new Label(inner, SWT.LEFT);
-			// label2.setText( "minSize.title");
-			//		
-			// minimumLines = new Text(inner, SWT.BORDER | SWT.SINGLE);
-			// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			// gd.horizontalSpan= 1;
-			// gd.grabExcessVerticalSpace= false;
-			// minimumLines.setLayoutData(gd);
+		// Label label2 = new Label(inner, SWT.LEFT);
+		// label2.setText( "minSize.title");
+		//		
+		// minimumLines = new Text(inner, SWT.BORDER | SWT.SINGLE);
+		// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// gd.horizontalSpan= 1;
+		// gd.grabExcessVerticalSpace= false;
+		// minimumLines.setLayoutData(gd);
 
-			return inner;
-		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not create folding preferences page", t)); //$NON-NLS-1$
-		}
-		return null;
+		return inner;
 	}
 
 	/*

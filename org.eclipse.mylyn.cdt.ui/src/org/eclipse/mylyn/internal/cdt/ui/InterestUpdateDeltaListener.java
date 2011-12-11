@@ -77,7 +77,8 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, "delta update failed", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+					"Unexpected error while updating interest", t)); //$NON-NLS-1$
 		}
 	}
 

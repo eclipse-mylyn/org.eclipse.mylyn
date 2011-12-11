@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -51,12 +52,16 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		if (javaElement == null || !javaElement.exists()) {
 			return;
 		}
+
 		try {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
-		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not open editor for: " //$NON-NLS-1$
-					+ node, t));
+		} catch (PartInitException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
+		} catch (JavaModelException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
+					"Failed to open editor for: {0}", node.getHandleIdentifier()), e)); //$NON-NLS-1$
 		}
 	}
 

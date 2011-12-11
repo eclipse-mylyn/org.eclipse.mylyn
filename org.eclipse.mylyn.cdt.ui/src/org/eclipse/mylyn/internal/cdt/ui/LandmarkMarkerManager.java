@@ -79,17 +79,12 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 	}
 
 	private void modelUpdated() {
-		try {
-			for (IInteractionElement node : markerMap.keySet()) {
-				removedLandmark(node);
-			}
-			markerMap.clear();
-			for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
-				addedLandmark(node);
-			}
-		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-					"could not update landmark markers", t)); //$NON-NLS-1$
+		for (IInteractionElement node : markerMap.keySet()) {
+			removedLandmark(node);
+		}
+		markerMap.clear();
+		for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
+			addedLandmark(node);
 		}
 	}
 
@@ -122,11 +117,11 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (CModelException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-							"could not update markers", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"Unexpected error while updating landmark markers", e)); //$NON-NLS-1$
 				} catch (CoreException e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
-							"could not update markers", e)); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN,
+							"Unexpected error while updating landmark markers", e)); //$NON-NLS-1$
 				}
 			}
 		}
