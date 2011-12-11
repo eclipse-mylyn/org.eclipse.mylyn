@@ -69,6 +69,11 @@
 		  <layout>p2</layout>
 		  <url>${mylyn-context-repository-url}</url>
 		</repository>
+		<repository>
+		  <id>eclipse-mylyn-reviews</id>
+		  <layout>p2</layout>
+		  <url>${mylyn-reviews-repository-url}</url>
+		</repository>
 	  </repositories>
 	  <modules>
 		<module>r4e</module>
