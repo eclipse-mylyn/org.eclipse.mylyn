@@ -175,7 +175,7 @@ perl -pi~ -e '
 		s{<(version)>[^<\$]*</\1>}{<${1}>'"$POM_V"'</${1}>};
 	}
 	s{<(jgit-version)>[^<]*</\1>}{<${1}>'"$J"'</${1}>};
-	' $(git ls-files | grep pom.xml)
+	' $(git ls-files | grep pom.*.xml)
 
 find . -name '*~' | xargs rm -f
 git diff
