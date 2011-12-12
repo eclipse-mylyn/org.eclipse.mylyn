@@ -43,7 +43,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -547,30 +546,26 @@ public class TasksUiInternal {
 			return;
 		}
 
-		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
-			StatusHandler.fail(status);
+		if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
+			WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
+					((RepositoryStatus) status).getHtmlMessage());
 		} else {
-			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
-				WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
-						((RepositoryStatus) status).getHtmlMessage());
-			} else {
-				String message = status.getMessage();
-				if (showLinkToErrorLog) {
-					message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
-				}
-				switch (status.getSeverity()) {
-				case IStatus.CANCEL:
-				case IStatus.INFO:
-					createDialog(shell, title, message, MessageDialog.INFORMATION).open();
-					break;
-				case IStatus.WARNING:
-					createDialog(shell, title, message, MessageDialog.WARNING).open();
-					break;
-				case IStatus.ERROR:
-				default:
-					createDialog(shell, title, message, MessageDialog.ERROR).open();
-					break;
-				}
+			String message = status.getMessage();
+			if (showLinkToErrorLog) {
+				message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
+			}
+			switch (status.getSeverity()) {
+			case IStatus.CANCEL:
+			case IStatus.INFO:
+				createDialog(shell, title, message, MessageDialog.INFORMATION).open();
+				break;
+			case IStatus.WARNING:
+				createDialog(shell, title, message, MessageDialog.WARNING).open();
+				break;
+			case IStatus.ERROR:
+			default:
+				createDialog(shell, title, message, MessageDialog.ERROR).open();
+				break;
 			}
 		}
 	}

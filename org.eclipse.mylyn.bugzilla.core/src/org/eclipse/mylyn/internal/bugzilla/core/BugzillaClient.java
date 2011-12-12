@@ -355,7 +355,7 @@ public class BugzillaClient {
 		}
 
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
+				RepositoryStatus.ERROR_REPOSITORY_LOGIN, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
 						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 
@@ -2176,7 +2176,7 @@ public class BugzillaClient {
 		}
 
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
+				RepositoryStatus.ERROR_REPOSITORY_LOGIN, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
 						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 

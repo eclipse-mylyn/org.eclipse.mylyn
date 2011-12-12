@@ -47,7 +47,6 @@ public class RepositoryStatus extends Status {
 
 	public final static int REPOSITORY_LOGGED_OUT = 10;
 
-	@Deprecated
 	public final static int ERROR_INTERNAL = 7;
 
 	/**
@@ -138,6 +137,10 @@ public class RepositoryStatus extends Status {
 		return repositoryUrl;
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public static RepositoryStatus createInternalError(String pluginId, String message, Throwable t) {
 		return new RepositoryStatus(IStatus.ERROR, pluginId, RepositoryStatus.ERROR_INTERNAL, message, t);
 	}
