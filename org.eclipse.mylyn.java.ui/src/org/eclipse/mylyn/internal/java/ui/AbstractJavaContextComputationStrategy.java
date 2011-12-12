@@ -58,8 +58,6 @@ public abstract class AbstractJavaContextComputationStrategy extends ContextComp
 					requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 		} catch (ResultException e) {
 			return e.fType;
-		} catch (Throwable t) {
-			// ignore
 		}
 		return null;
 	}

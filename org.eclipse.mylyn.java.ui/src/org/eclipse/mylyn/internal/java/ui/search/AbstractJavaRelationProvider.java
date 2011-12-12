@@ -19,7 +19,9 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -43,7 +45,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
@@ -51,6 +52,7 @@ import org.eclipse.mylyn.internal.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
 
@@ -335,31 +337,21 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			try {
-				IStatus runStatus = super.run(monitor);
-				ISearchResult result = getSearchResult();
-				if (result instanceof JavaSearchResult) {
-					// TODO make better
-					Object[] objs = ((JavaSearchResult) result).getElements();
-					if (objs == null) {
-						notifySearchCompleted(null);
-					} else {
-						List<Object> l = new ArrayList<Object>();
-						for (Object obj : objs) {
-							l.add(obj);
-						}
-						notifySearchCompleted(l);
+			IStatus runStatus = super.run(monitor);
+			ISearchResult result = getSearchResult();
+			if (result instanceof JavaSearchResult) {
+				Object[] objs = ((JavaSearchResult) result).getElements();
+				if (objs == null) {
+					notifySearchCompleted(null);
+				} else {
+					List<Object> l = new ArrayList<Object>();
+					for (Object obj : objs) {
+						l.add(obj);
 					}
+					notifySearchCompleted(l);
 				}
-				return runStatus;
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Java search failed", t)); //$NON-NLS-1$
 			}
-
-			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, IStatus.OK,
-					Messages.AbstractJavaRelationProvider_could_not_run_Java_search, null);
-			notifySearchCompleted(null);
-			return status;
+			return runStatus;
 		}
 
 		/**
@@ -398,19 +390,25 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		}
 
 		/**
-		 * Notify all of the listeners that the bugzilla search is completed
+		 * Notifies all of the listeners that the bugzilla search is completed
 		 * 
 		 * @param doiList
 		 *            A list of BugzillaSearchHitDoiInfo
 		 * @param member
 		 *            The IMember that the search was performed on
 		 */
-		public void notifySearchCompleted(List<Object> l) {
-			// go through all of the listeners and call
-			// searchCompleted(colelctor,
-			// member)
-			for (IActiveSearchListener listener : listeners) {
-				listener.searchCompleted(l);
+		public void notifySearchCompleted(final List<Object> l) {
+			for (final IActiveSearchListener listener : listeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void run() throws Exception {
+						listener.searchCompleted(l);
+					}
+
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, NLS.bind(
+								"Unexpected error during listener invocation: {0}", listener.getClass()), e)); //$NON-NLS-1$
+					}
+				});
 			}
 		}
 
