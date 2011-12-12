@@ -4,7 +4,7 @@
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
@@ -15,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.http.HttpHost;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.junit.Before;
 
@@ -36,7 +35,7 @@ public abstract class LiveTest {
 
 	/**
 	 * Configure client
-	 * 
+	 *
 	 * @param client
 	 * @return specified client
 	 */
@@ -50,7 +49,7 @@ public abstract class LiveTest {
 
 	/**
 	 * Create client for url
-	 * 
+	 *
 	 * @param url
 	 * @return client
 	 * @throws IOException
@@ -59,9 +58,8 @@ public abstract class LiveTest {
 		GitHubClient client = null;
 		if (url != null) {
 			URL parsed = new URL(url);
-			HttpHost httpHost = new HttpHost(parsed.getHost(),
-					parsed.getPort(), parsed.getProtocol());
-			client = new GitHubClient(httpHost);
+			client = new GitHubClient(parsed.getHost(), parsed.getPort(),
+					parsed.getProtocol());
 		} else
 			client = new GitHubClient();
 		return configure(client);
@@ -69,7 +67,7 @@ public abstract class LiveTest {
 
 	/**
 	 * Set up live unit test
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Before

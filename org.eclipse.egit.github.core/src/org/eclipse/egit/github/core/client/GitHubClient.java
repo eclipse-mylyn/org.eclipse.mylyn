@@ -11,16 +11,14 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_CREATED;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CONTENT_TYPE_JSON;
@@ -35,40 +33,17 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V3_AP
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.ProxySelector;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpMessage;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.eclipse.egit.github.core.RequestError;
+import org.eclipse.egit.github.core.util.EncodingUtils;
 
 /**
  * Client class for interacting with GitHub HTTP/JSON API.
@@ -96,23 +71,76 @@ public class GitHubClient {
 		}
 	}
 
-	private static final Header USER_AGENT = new BasicHeader(HTTP.USER_AGENT,
-			"GitHubJava/1.2.0"); //$NON-NLS-1$
+	/**
+	 * Content-Type header
+	 */
+	protected static final String HEADER_CONTENT_TYPE = "Content-Type"; //$NON-NLS-1$
 
-	private final HttpHost httpHost;
+	/**
+	 * Accept header
+	 */
+	protected static final String HEADER_ACCEPT = "Accept"; //$NON-NLS-1$
 
-	private final HttpContext httpContext;
+	/**
+	 * Authorization header
+	 */
+	protected static final String HEADER_AUTHORIZATION = "Authorization"; //$NON-NLS-1$
 
-	private final DefaultHttpClient client = new DefaultHttpClient();
+	/**
+	 * User-Agent header
+	 */
+	protected static final String HEADER_USER_AGENT = "User-Agent"; //$NON-NLS-1$
 
-	private Header userAgent = USER_AGENT;
+	/**
+	 * METHOD_GET
+	 */
+	protected static final String METHOD_GET = "GET"; //$NON-NLS-1$
 
-	private final Header accept = new BasicHeader(
-			"Accept", "application/vnd.github.beta+json"); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * METHOD_PUT
+	 */
+	protected static final String METHOD_PUT = "PUT"; //$NON-NLS-1$
 
-	private final String prefix;
+	/**
+	 * METHOD_POST
+	 */
+	protected static final String METHOD_POST = "POST"; //$NON-NLS-1$
 
-	private Gson gson = GsonUtils.getGson();
+	/**
+	 * METHOD_DELETE
+	 */
+	protected static final String METHOD_DELETE = "DELETE"; //$NON-NLS-1$
+
+	/**
+	 * Default user agent request header value
+	 */
+	protected static final String USER_AGENT = "GitHubJava/1.2.0"; //$NON-NLS-1$
+
+	/**
+	 * 422 status code for unprocessable entity
+	 */
+	protected static final int HTTP_UNPROCESSABLE_ENTITY = 422;
+
+	/**
+	 * Base URI
+	 */
+	protected final String baseUri;
+
+	/**
+	 * Prefix to apply to base URI
+	 */
+	protected final String prefix;
+
+	/**
+	 * {@link Gson} instance
+	 */
+	protected Gson gson = GsonUtils.getGson();
+
+	private String user;
+
+	private String credentials;
+
+	private String userAgent;
 
 	/**
 	 * Create default client
@@ -137,38 +165,20 @@ public class GitHubClient {
 	 * @param port
 	 * @param scheme
 	 */
-	public GitHubClient(String hostname, int port, String scheme) {
-		this(new HttpHost(hostname, port, scheme));
-	}
-
-	/**
-	 * Create client for host configuration
-	 *
-	 * @param httpHost
-	 */
-	public GitHubClient(HttpHost httpHost) {
-		if (httpHost == null)
-			throw new IllegalArgumentException("Http host cannot be null"); //$NON-NLS-1$
-
-		this.httpHost = httpHost;
+	public GitHubClient(final String hostname, final int port,
+			final String scheme) {
+		final StringBuilder uri = new StringBuilder(scheme);
+		uri.append("://"); //$NON-NLS-1$
+		uri.append(hostname);
+		if (port > 0)
+			uri.append(port);
+		baseUri = uri.toString();
 
 		// Use URI prefix on non-standard host names
-		String host = httpHost.getHostName();
-		if (HOST_API.equals(host) || HOST_API_V2.equals(host))
+		if (HOST_API.equals(hostname) || HOST_API_V2.equals(hostname))
 			prefix = null;
 		else
 			prefix = SEGMENT_V3_API;
-
-		// Support JVM configured proxy servers
-		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
-				.getConnectionManager().getSchemeRegistry(), ProxySelector
-				.getDefault()));
-
-		// Preemptive authentication
-		httpContext = new BasicHttpContext();
-		AuthCache authCache = new BasicAuthCache();
-		httpContext.setAttribute(AUTH_CACHE, authCache);
-		client.addRequestInterceptor(new AuthInterceptor(), 0);
 	}
 
 	/**
@@ -190,9 +200,9 @@ public class GitHubClient {
 	 * @param agent
 	 * @return this client
 	 */
-	public GitHubClient setUserAgent(String agent) {
+	public GitHubClient setUserAgent(final String agent) {
 		if (agent != null && agent.length() > 0)
-			userAgent = new BasicHeader(HTTP.USER_AGENT, agent);
+			userAgent = agent;
 		else
 			userAgent = USER_AGENT;
 		return this;
@@ -204,9 +214,12 @@ public class GitHubClient {
 	 * @param request
 	 * @return configured request
 	 */
-	protected <V extends HttpMessage> V configureRequest(V request) {
-		request.addHeader(userAgent);
-		request.addHeader(accept);
+	protected HttpURLConnection configureRequest(final HttpURLConnection request) {
+		if (credentials != null)
+			request.setRequestProperty(HEADER_AUTHORIZATION, credentials);
+		request.setRequestProperty(HEADER_USER_AGENT, userAgent);
+		request.setRequestProperty(HEADER_ACCEPT,
+				"application/vnd.github.beta+json"); //$NON-NLS-1$
 		return request;
 	}
 
@@ -224,60 +237,74 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Create standard post method
+	 * Create connection to URI
 	 *
 	 * @param uri
-	 * @return post
+	 * @return connection
+	 * @throws IOException
 	 */
-	protected HttpPost createPost(final String uri) {
-		return configureRequest(new HttpPost(configureUri(uri)));
+	protected HttpURLConnection createConnection(String uri) throws IOException {
+		URL url = new URL(createUri(uri));
+		return (HttpURLConnection) url.openConnection();
 	}
 
 	/**
-	 * Create standard put method
+	 * Create connection to URI
 	 *
 	 * @param uri
-	 * @return post
+	 * @param method
+	 * @return connection
+	 * @throws IOException
 	 */
-	protected HttpPut createPut(final String uri) {
-		return configureRequest(new HttpPut(configureUri(uri)));
+	protected HttpURLConnection createConnection(String uri, String method)
+			throws IOException {
+		HttpURLConnection connection = createConnection(uri);
+		connection.setRequestMethod(method);
+		return configureRequest(connection);
 	}
 
 	/**
-	 * Create get method
+	 * Create a GET request connection to the URI
 	 *
 	 * @param uri
-	 * @return get method
+	 * @return connection
+	 * @throws IOException
 	 */
-	protected HttpGet createGet(final String uri) {
-		return configureRequest(new HttpGet(configureUri(uri)));
+	protected HttpURLConnection createGet(String uri) throws IOException {
+		return createConnection(uri, METHOD_GET);
 	}
 
 	/**
-	 * Create delete method
+	 * Create a POST request connection to the URI
 	 *
 	 * @param uri
-	 * @return get method
+	 * @return connection
+	 * @throws IOException
 	 */
-	protected HttpDelete createDelete(String uri) {
-		return configureRequest(new HttpDelete(configureUri(uri)));
+	protected HttpURLConnection createPost(String uri) throws IOException {
+		return createConnection(uri, METHOD_POST);
 	}
 
 	/**
-	 * Update credential on HTTP client credentials provider
+	 * Create a PUT request connection to the URI
 	 *
-	 * @param user
-	 * @param password
-	 * @return this client
+	 * @param uri
+	 * @return connection
+	 * @throws IOException
 	 */
-	protected GitHubClient updateCredentials(String user, String password) {
-		if (user != null && password != null)
-			client.getCredentialsProvider().setCredentials(
-					new AuthScope(httpHost.getHostName(), httpHost.getPort()),
-					new UsernamePasswordCredentials(user, password));
-		else
-			client.getCredentialsProvider().clear();
-		return this;
+	protected HttpURLConnection createPut(String uri) throws IOException {
+		return createConnection(uri, METHOD_PUT);
+	}
+
+	/**
+	 * Create a DELETE request connection to the URI
+	 *
+	 * @param uri
+	 * @return connection
+	 * @throws IOException
+	 */
+	protected HttpURLConnection createDelete(String uri) throws IOException {
+		return createConnection(uri, METHOD_DELETE);
 	}
 
 	/**
@@ -287,10 +314,14 @@ public class GitHubClient {
 	 * @param password
 	 * @return this client
 	 */
-	public GitHubClient setCredentials(String user, String password) {
-		updateCredentials(user, password);
-		AuthCache authCache = (AuthCache) httpContext.getAttribute(AUTH_CACHE);
-		authCache.put(httpHost, new BasicScheme());
+	public GitHubClient setCredentials(final String user, final String password) {
+		this.user = user;
+		if (user != null && user.length() > 0 && password != null
+				&& password.length() > 0)
+			credentials = "Basic " //$NON-NLS-1$
+					+ EncodingUtils.toBase64(user + ':' + password);
+		else
+			credentials = null;
 		return this;
 	}
 
@@ -301,9 +332,10 @@ public class GitHubClient {
 	 * @return this client
 	 */
 	public GitHubClient setOAuth2Token(String token) {
-		updateCredentials(AUTH_TOKEN, token);
-		AuthCache authCache = (AuthCache) httpContext.getAttribute(AUTH_CACHE);
-		authCache.put(httpHost, new OAuth2Scheme());
+		if (token != null && token.length() > 0)
+			credentials = AUTH_TOKEN + ' ' + token;
+		else
+			credentials = null;
 		return this;
 	}
 
@@ -313,27 +345,36 @@ public class GitHubClient {
 	 * @return user or null if not authentication
 	 */
 	public String getUser() {
-		Credentials credentials = client.getCredentialsProvider()
-				.getCredentials(
-						new AuthScope(httpHost.getHostName(), httpHost
-								.getPort()));
-		return credentials != null ? credentials.getUserPrincipal().getName()
-				: null;
+		return user;
+	}
+
+	/**
+	 * Convert object to a JSON string
+	 *
+	 * @param object
+	 * @return JSON string
+	 * @throws IOException
+	 */
+	protected String toJson(Object object) throws IOException {
+		try {
+			return gson.toJson(object);
+		} catch (JsonParseException jpe) {
+			throw new IOException(jpe.getMessage());
+		}
 	}
 
 	/**
 	 * Parse JSON to specified type
 	 *
 	 * @param <V>
-	 * @param response
+	 * @param stream
 	 * @param type
-	 * @return type
+	 * @return parsed type
 	 * @throws IOException
 	 */
-	protected <V> V parseJson(HttpResponse response, Type type)
-			throws IOException {
-		InputStreamReader reader = new InputStreamReader(getStream(response),
-				CHARSET_UTF8);
+	protected <V> V parseJson(InputStream stream, Type type) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				stream, CHARSET_UTF8));
 		try {
 			return gson.fromJson(reader, type);
 		} catch (JsonParseException jpe) {
@@ -348,99 +389,35 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Convert object to a JSON string
+	 * Does status code denote an error
 	 *
-	 * @param object
-	 * @return JSON string
-	 * @throws IOException
+	 * @param code
+	 * @return true if error, false otherwise
 	 */
-	private String toJson(Object object) throws IOException {
-		try {
-			return gson.toJson(object);
-		} catch (JsonParseException jpe) {
-			throw new IOException(jpe.getMessage());
-		}
-	}
-
-	/**
-	 * Get {@link HttpEntity} from response
-	 *
-	 * @param response
-	 * @return non-null entity
-	 * @throws IOException
-	 */
-	protected HttpEntity getEntity(HttpResponse response) throws IOException {
-		HttpEntity entity = response.getEntity();
-		if (entity == null)
-			throw new IOException("Response has no entity"); //$NON-NLS-1$
-		return entity;
-	}
-
-	/**
-	 * Get {@link InputStream} from response
-	 *
-	 * @param response
-	 * @return non-null input stream
-	 * @throws IOException
-	 */
-	protected InputStream getStream(HttpResponse response) throws IOException {
-		InputStream stream = getEntity(response).getContent();
-		if (stream == null)
-			throw new IOException("Empty body"); //$NON-NLS-1$
-		return stream;
-	}
-
-	/**
-	 * Parse error from response
-	 *
-	 * @param response
-	 * @return request error
-	 * @throws IOException
-	 */
-	protected RequestError parseError(HttpResponse response) throws IOException {
-		return parseJson(response, RequestError.class);
-	}
-
-	/**
-	 * Create error exception from response and throw it
-	 *
-	 * @param response
-	 * @param status
-	 * @return non-null newly created {@link IOException}
-	 */
-	protected IOException createException(HttpResponse response,
-			StatusLine status) {
-		final int code = status.getStatusCode();
+	protected boolean isError(final int code) {
 		switch (code) {
-		case SC_BAD_REQUEST:
-		case SC_UNAUTHORIZED:
-		case SC_FORBIDDEN:
-		case SC_NOT_FOUND:
-		case SC_UNPROCESSABLE_ENTITY:
-		case SC_INTERNAL_SERVER_ERROR:
-			RequestError error;
-			try {
-				error = parseError(response);
-			} catch (IOException e) {
-				return e;
-			}
-			return new RequestException(error, code);
+		case HTTP_BAD_REQUEST:
+		case HTTP_UNAUTHORIZED:
+		case HTTP_FORBIDDEN:
+		case HTTP_NOT_FOUND:
+		case HTTP_UNPROCESSABLE_ENTITY:
+		case HTTP_INTERNAL_ERROR:
+			return true;
 		default:
-			return new IOException(status.getReasonPhrase());
+			return false;
 		}
 	}
 
 	/**
-	 * Is the response successful?
+	 * Does status code denote a non-error response?
 	 *
-	 * @param response
-	 * @param status
+	 * @param code
 	 * @return true if okay, false otherwise
 	 */
-	protected boolean isOk(HttpResponse response, StatusLine status) {
-		switch (status.getStatusCode()) {
-		case SC_OK:
-		case SC_CREATED:
+	protected boolean isOk(final int code) {
+		switch (code) {
+		case HTTP_OK:
+		case HTTP_CREATED:
 			return true;
 		default:
 			return false;
@@ -450,110 +427,61 @@ public class GitHubClient {
 	/**
 	 * Is the response empty?
 	 *
-	 * @param response
-	 * @param status
+	 * @param code
 	 * @return true if empty, false otherwise
 	 */
-	protected boolean isEmpty(HttpResponse response, StatusLine status) {
-		return SC_NO_CONTENT == status.getStatusCode();
+	protected boolean isEmpty(final int code) {
+		return HTTP_NO_CONTENT == code;
 	}
 
 	/**
-	 * Get status line from response
+	 * Parse error from response
 	 *
 	 * @param response
-	 * @return Non-null status line
+	 * @return request error
 	 * @throws IOException
 	 */
-	protected StatusLine getStatus(HttpResponse response) throws IOException {
-		StatusLine statusLine = response.getStatusLine();
-		if (statusLine == null)
-			throw new IOException("Empty HTTP response status line"); //$NON-NLS-1$
-		return statusLine;
+	protected RequestError parseError(InputStream response) throws IOException {
+		return parseJson(response, RequestError.class);
 	}
 
 	/**
-	 * Get response stream from URI. It is the responsibility of the calling
-	 * method to close the returned stream.
+	 * Get body from response inputs stream
 	 *
 	 * @param request
-	 * @return stream
+	 * @param stream
+	 * @return parsed body
 	 * @throws IOException
 	 */
-	public InputStream getStream(GitHubRequest request) throws IOException {
-		HttpGet method = createGet(request.generateUri());
-		HttpResponse response = client.execute(httpHost, method, httpContext);
-		StatusLine status = getStatus(response);
-		if (isOk(response, status))
-			return getStream(response);
-		throw createException(response, status);
-	}
-
-	/**
-	 * Get response from URI and bind to specified type
-	 *
-	 * @param request
-	 * @return response
-	 * @throws IOException
-	 */
-	public GitHubResponse get(GitHubRequest request) throws IOException {
-		HttpGet method = createGet(request.generateUri());
-		HttpResponse response = client.execute(httpHost, method, httpContext);
-		StatusLine status = getStatus(response);
-		if (isOk(response, status)) {
-			Object body = null;
-			Type type = request.getType();
-			if (type != null)
-				body = parseJson(response, type);
-			else
-				EntityUtils.consume(response.getEntity());
-			return new GitHubResponse(response, body);
-		}
-		if (isEmpty(response, status))
-			return new GitHubResponse(response, null);
-		throw createException(response, status);
-	}
-
-	/**
-	 * Send JSON using specified method
-	 *
-	 * @param <V>
-	 * @param method
-	 * @param params
-	 * @param type
-	 * @return resource
-	 * @throws IOException
-	 */
-	protected <V> V sendJson(HttpEntityEnclosingRequestBase method,
-			Object params, Type type) throws IOException {
-		if (params != null)
-			method.setEntity(new StringEntity(toJson(params),
-					CONTENT_TYPE_JSON, CHARSET_UTF8));
-		HttpResponse response = client.execute(httpHost, method, httpContext);
-		StatusLine status = getStatus(response);
-		if (isOk(response, status)) {
-			if (type != null)
-				return parseJson(response, type);
-			EntityUtils.consume(response.getEntity());
+	protected Object getBody(GitHubRequest request, InputStream stream)
+			throws IOException {
+		Type type = request.getType();
+		if (type != null)
+			return parseJson(stream, type);
+		else
 			return null;
-		}
-		if (isEmpty(response, status))
-			return null;
-		throw createException(response, status);
 	}
 
 	/**
-	 * Post data to URI
+	 * Create error exception from response and throw it
 	 *
-	 * @param <V>
-	 * @param uri
-	 * @param params
-	 * @param type
-	 * @return response
-	 * @throws IOException
+	 * @param response
+	 * @param code
+	 * @param status
+	 * @return non-null newly created {@link IOException}
 	 */
-	public <V> V post(String uri, Object params, Type type) throws IOException {
-		return sendJson(createPost(uri), params, type);
+	protected IOException createException(InputStream response, int code,
+			String status) {
+		if (isError(code)) {
+			final RequestError error;
+			try {
+				error = parseError(response);
+			} catch (IOException e) {
+				return e;
+			}
+			return new RequestException(error, code);
+		} else
+			return new IOException(status);
 	}
 
 	/**
@@ -564,20 +492,6 @@ public class GitHubClient {
 	 */
 	public void post(String uri) throws IOException {
 		post(uri, null, null);
-	}
-
-	/**
-	 * Put data to URI
-	 *
-	 * @param <V>
-	 * @param uri
-	 * @param params
-	 * @param type
-	 * @return response
-	 * @throws IOException
-	 */
-	public <V> V put(String uri, Object params, Type type) throws IOException {
-		return sendJson(createPut(uri), params, type);
 	}
 
 	/**
@@ -595,26 +509,139 @@ public class GitHubClient {
 	 * when the response status is not a 204 (No Content).
 	 *
 	 * @param uri
+	 * @throws IOException
+	 */
+	public void delete(String uri) throws IOException {
+		delete(uri, null);
+	}
+
+	/**
+	 * Send parameters to output stream of request
+	 *
+	 * @param request
 	 * @param params
 	 * @throws IOException
 	 */
-	public void delete(String uri, Object params) throws IOException {
-		HttpRequest method;
-		if (params == null)
-			method = createDelete(uri);
-		else {
-			EntityDeleteMethod delete = configureRequest(new EntityDeleteMethod(
-					uri));
-			delete.setEntity(new StringEntity(toJson(params),
-					CONTENT_TYPE_JSON, CHARSET_UTF8));
-			method = delete;
+	protected void sendParams(HttpURLConnection request, Object params)
+			throws IOException {
+		request.setDoOutput(true);
+		request.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON
+				+ "; charset=" + CHARSET_UTF8); //$NON-NLS-1$
+		byte[] data = toJson(params).getBytes(CHARSET_UTF8);
+		request.setFixedLengthStreamingMode(data.length);
+		BufferedOutputStream output = new BufferedOutputStream(
+				request.getOutputStream());
+		try {
+			output.write(data);
+		} finally {
+			output.close();
 		}
+	}
 
-		HttpResponse response = client.execute(httpHost, method, httpContext);
-		StatusLine status = getStatus(response);
-		if (!isEmpty(response, status))
-			throw new RequestException(parseError(response),
-					status.getStatusCode());
+	private <V> V sendJson(final HttpURLConnection request,
+			final Object params, final Type type) throws IOException {
+		if (params != null)
+			sendParams(request, params);
+		final int code = request.getResponseCode();
+		if (isOk(code))
+			if (type != null)
+				return parseJson(getStream(request), type);
+			else
+				return null;
+		if (isEmpty(code))
+			return null;
+		throw createException(getStream(request), code,
+				request.getResponseMessage());
+	}
+
+	/**
+	 * Create full URI from path
+	 *
+	 * @param path
+	 * @return uri
+	 */
+	protected String createUri(final String path) {
+		return baseUri + configureUri(path);
+	}
+
+	/**
+	 * Get response stream from URI. It is the responsibility of the calling
+	 * method to close the returned stream.
+	 *
+	 * @param request
+	 * @return stream
+	 * @throws IOException
+	 */
+	public InputStream getStream(GitHubRequest request) throws IOException {
+		return getStream(createGet(request.generateUri()));
+	}
+
+	/**
+	 * Get stream from request
+	 *
+	 * @param request
+	 * @return stream
+	 * @throws IOException
+	 */
+	protected InputStream getStream(HttpURLConnection request)
+			throws IOException {
+		if (request.getResponseCode() < HTTP_BAD_REQUEST)
+			return request.getInputStream();
+		else {
+			InputStream stream = request.getErrorStream();
+			return stream != null ? stream : request.getInputStream();
+		}
+	}
+
+	/**
+	 * Get response from URI and bind to specified type
+	 *
+	 * @param request
+	 * @return response
+	 * @throws IOException
+	 */
+	public GitHubResponse get(GitHubRequest request) throws IOException {
+		HttpURLConnection httpRequest = createGet(request.generateUri());
+		final int code = httpRequest.getResponseCode();
+		if (isOk(code))
+			return new GitHubResponse(httpRequest, getBody(request,
+					getStream(httpRequest)));
+		if (isEmpty(code))
+			return new GitHubResponse(httpRequest, null);
+		throw createException(getStream(httpRequest), code,
+				httpRequest.getResponseMessage());
+	}
+
+	/**
+	 * Post data to URI
+	 *
+	 * @param <V>
+	 * @param uri
+	 * @param params
+	 * @param type
+	 * @return response
+	 * @throws IOException
+	 */
+	public <V> V post(final String uri, final Object params, final Type type)
+			throws IOException {
+		HttpURLConnection request = createPost(uri);
+		return sendJson(request, params, type);
+	}
+
+	/**
+	 * Put data to URI
+	 *
+	 * @param <V>
+	 * @param uri
+	 * @param params
+	 * @param type
+	 * @return response
+	 * @throws IOException
+	 */
+	public <V> V put(final String uri, final Object params, final Type type)
+			throws IOException {
+		HttpURLConnection request = createPut(uri);
+		return sendJson(request, params, type);
 	}
 
 	/**
@@ -622,9 +649,16 @@ public class GitHubClient {
 	 * when the response status is not a 204 (No Content).
 	 *
 	 * @param uri
+	 * @param params
 	 * @throws IOException
 	 */
-	public void delete(String uri) throws IOException {
-		delete(uri, null);
+	public void delete(final String uri, final Object params)
+			throws IOException {
+		HttpURLConnection request = createDelete(uri);
+		if (params != null)
+			sendParams(request, params);
+		final int code = request.getResponseCode();
+		if (!isEmpty(code))
+			throw new RequestException(parseError(getStream(request)), code);
 	}
 }

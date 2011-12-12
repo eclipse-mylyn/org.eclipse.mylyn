@@ -37,10 +37,10 @@ public class EncodingUtilsTest {
 	@Test
 	public void encodeDecode() {
 		String test = "content";
-		byte[] encoded = EncodingUtils.toBase64(test.getBytes());
+		String encoded = EncodingUtils.toBase64(test.getBytes());
 		assertNotNull(encoded);
-		assertFalse(encoded.length == 0);
-		assertFalse(test.equals(new String(encoded)));
+		assertFalse(encoded.length() == 0);
+		assertFalse(test.equals(encoded));
 		byte[] decoded = EncodingUtils.fromBase64(new String(encoded));
 		assertNotNull(decoded);
 		assertFalse(decoded.length == 0);

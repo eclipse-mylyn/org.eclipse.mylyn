@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
-import org.apache.http.HttpResponse;
+import java.net.HttpURLConnection;
 
 /**
  * GitHub API response class that provides the parsed response body as well as
@@ -18,9 +18,20 @@ import org.apache.http.HttpResponse;
  */
 public class GitHubResponse {
 
-	private PageLinks links;
+	/**
+	 * HTTP response
+	 */
+	protected final HttpURLConnection response;
 
-	private Object body;
+	/**
+	 * Response body
+	 */
+	protected final Object body;
+
+	/**
+	 * Links to other pages
+	 */
+	protected PageLinks links;
 
 	/**
 	 * Create response
@@ -28,9 +39,30 @@ public class GitHubResponse {
 	 * @param response
 	 * @param body
 	 */
-	public GitHubResponse(HttpResponse response, Object body) {
-		links = new PageLinks(response);
+	public GitHubResponse(HttpURLConnection response, Object body) {
+		this.response = response;
 		this.body = body;
+	}
+
+	/**
+	 * Get header value
+	 *
+	 * @param name
+	 * @return value
+	 */
+	public String getHeader(String name) {
+		return response.getHeaderField(name);
+	}
+
+	/**
+	 * Get page links
+	 *
+	 * @return links
+	 */
+	protected PageLinks getLinks() {
+		if (links == null)
+			links = new PageLinks(this);
+		return links;
 	}
 
 	/**
@@ -39,7 +71,7 @@ public class GitHubResponse {
 	 * @return possibly null uri
 	 */
 	public String getFirst() {
-		return links.getFirst();
+		return getLinks().getFirst();
 	}
 
 	/**
@@ -48,7 +80,7 @@ public class GitHubResponse {
 	 * @return possibly null uri
 	 */
 	public String getPrevious() {
-		return links.getPrev();
+		return getLinks().getPrev();
 	}
 
 	/**
@@ -57,7 +89,7 @@ public class GitHubResponse {
 	 * @return possibly null uri
 	 */
 	public String getNext() {
-		return links.getNext();
+		return getLinks().getNext();
 	}
 
 	/**
@@ -66,7 +98,7 @@ public class GitHubResponse {
 	 * @return possibly null uri
 	 */
 	public String getLast() {
-		return links.getLast();
+		return getLinks().getLast();
 	}
 
 	/**

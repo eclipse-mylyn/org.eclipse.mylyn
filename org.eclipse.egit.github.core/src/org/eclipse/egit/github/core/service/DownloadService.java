@@ -10,6 +10,7 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static java.net.HttpURLConnection.HTTP_CREATED;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_DOWNLOADS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
@@ -21,19 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ProxySelector;
+import java.net.HttpURLConnection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.eclipse.egit.github.core.Download;
 import org.eclipse.egit.github.core.DownloadResource;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
@@ -41,6 +34,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
+import org.eclipse.egit.github.core.util.MultiPartUtils;
 
 /**
  * Service for accessing, creating, and deleting repositories downloads.
@@ -90,23 +84,10 @@ public class DownloadService extends GitHubService {
 	 */
 	public static final String UPLOAD_FILE = "file"; //$NON-NLS-1$
 
-	private static class SizedInputStreamBody extends InputStreamBody {
-
-		private final long size;
-
-		/**
-		 * @param in
-		 * @param size
-		 */
-		public SizedInputStreamBody(InputStream in, long size) {
-			super(in, null);
-			this.size = size;
-		}
-
-		public long getContentLength() {
-			return size;
-		}
-	}
+	/**
+	 * UPLOAD_CONTENT_TYPE
+	 */
+	public static final String UPLOAD_CONTENT_TYPE = "Content-Type"; //$NON-NLS-1$
 
 	/**
 	 * Create download service
@@ -251,19 +232,6 @@ public class DownloadService extends GitHubService {
 	}
 
 	/**
-	 * Create client to use to upload a resource to
-	 *
-	 * @return non-null http client
-	 */
-	protected HttpClient createDownloadClient() {
-		DefaultHttpClient client = new DefaultHttpClient();
-		client.setRoutePlanner(new ProxySelectorRoutePlanner(client
-				.getConnectionManager().getSchemeRegistry(), ProxySelector
-				.getDefault()));
-		return client;
-	}
-
-	/**
 	 * Upload a resource to be available as the download described by the given
 	 * resource.
 	 *
@@ -281,28 +249,21 @@ public class DownloadService extends GitHubService {
 			throw new IllegalArgumentException(
 					"Content input stream cannot be null"); //$NON-NLS-1$
 
-		HttpClient client = createDownloadClient();
+		Map<String, Object> parts = new LinkedHashMap<String, Object>();
+		parts.put(UPLOAD_KEY, resource.getPath());
+		parts.put(UPLOAD_ACL, resource.getAcl());
+		parts.put(UPLOAD_SUCCESS_ACTION_STATUS, Integer.toString(HTTP_CREATED));
+		parts.put(UPLOAD_FILENAME, resource.getName());
+		parts.put(UPLOAD_AWS_ACCESS_KEY_ID, resource.getAccesskeyid());
+		parts.put(UPLOAD_POLICY, resource.getPolicy());
+		parts.put(UPLOAD_SIGNATURE, resource.getSignature());
+		parts.put(UPLOAD_CONTENT_TYPE, resource.getMimeType());
+		parts.put(UPLOAD_FILE, content);
 
-		HttpPost post = new HttpPost(resource.getS3Url());
-		MultipartEntity entity = new MultipartEntity();
-		entity.addPart(UPLOAD_KEY, new StringBody(resource.getPath()));
-		entity.addPart(UPLOAD_ACL, new StringBody(resource.getAcl()));
-		entity.addPart(UPLOAD_SUCCESS_ACTION_STATUS,
-				new StringBody(Integer.toString(HttpStatus.SC_CREATED)));
-		entity.addPart(UPLOAD_FILENAME, new StringBody(resource.getName()));
-		entity.addPart(UPLOAD_AWS_ACCESS_KEY_ID,
-				new StringBody(resource.getAccesskeyid()));
-		entity.addPart(UPLOAD_POLICY, new StringBody(resource.getPolicy()));
-		entity.addPart(UPLOAD_SIGNATURE,
-				new StringBody(resource.getSignature()));
-		entity.addPart(HttpHeaders.CONTENT_TYPE,
-				new StringBody(resource.getMimeType()));
-		entity.addPart(UPLOAD_FILE, new SizedInputStreamBody(content, size));
-		post.setEntity(entity);
-
-		HttpResponse response = client.execute(post);
-		int status = response.getStatusLine().getStatusCode();
-		if (status != HttpStatus.SC_CREATED)
+		HttpURLConnection connection = MultiPartUtils.post(resource.getS3Url(),
+				parts);
+		int status = connection.getResponseCode();
+		if (status != HTTP_CREATED)
 			throw new IOException("Unexpected response status of " + status); //$NON-NLS-1$
 	}
 
@@ -320,13 +281,15 @@ public class DownloadService extends GitHubService {
 	 *            raw content of the download
 	 * @param size
 	 *            size of content in the input stream
+	 * @return created resource
 	 * @throws IOException
 	 */
-	public void createDownload(IRepositoryIdProvider repository,
+	public DownloadResource createDownload(IRepositoryIdProvider repository,
 			Download download, InputStream content, long size)
 			throws IOException {
 		DownloadResource resource = createResource(repository, download);
 		uploadResource(resource, content, size);
+		return resource;
 	}
 
 	/**
@@ -338,14 +301,15 @@ public class DownloadService extends GitHubService {
 	 *            metadata about the download
 	 * @param file
 	 *            must be non-null
+	 * @return created resource
 	 * @throws IOException
 	 */
-	public void createDownload(IRepositoryIdProvider repository,
+	public DownloadResource createDownload(IRepositoryIdProvider repository,
 			Download download, File file) throws IOException {
 		if (file == null)
 			throw new IllegalArgumentException("File cannot be null"); //$NON-NLS-1$
 
-		createDownload(repository, download, new FileInputStream(file),
+		return createDownload(repository, download, new FileInputStream(file),
 				file.length());
 	}
 }

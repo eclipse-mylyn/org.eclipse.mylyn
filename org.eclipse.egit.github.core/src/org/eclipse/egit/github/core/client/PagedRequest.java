@@ -13,11 +13,7 @@ package org.eclipse.egit.github.core.client;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_PER_PAGE;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.eclipse.egit.github.core.util.UrlUtils;
 
 /**
  * Paged request class that contains the initial page size and page number of
@@ -69,17 +65,14 @@ public class PagedRequest<V> extends GitHubRequest {
 	}
 
 	@Override
-	protected List<NameValuePair> getPairs(Map<String, String> data) {
-		List<NameValuePair> pairs = super.getPairs(data);
-		int size = getPageSize();
+	protected void addParams(final StringBuilder uri) {
+		super.addParams(uri);
+		final int size = getPageSize();
 		if (size > 0)
-			pairs.add(new BasicNameValuePair(PARAM_PER_PAGE, Integer
-					.toString(size)));
-		int number = getPage();
+			UrlUtils.addParam(PARAM_PER_PAGE, Integer.toString(size), uri);
+		final int number = getPage();
 		if (number > 0)
-			pairs.add(new BasicNameValuePair(PARAM_PAGE, Integer
-					.toString(number)));
-		return pairs;
+			UrlUtils.addParam(PARAM_PAGE, Integer.toString(number), uri);
 	}
 
 	/**

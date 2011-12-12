@@ -11,14 +11,9 @@
 package org.eclipse.egit.github.core.client;
 
 import java.lang.reflect.Type;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
+import org.eclipse.egit.github.core.util.UrlUtils;
 
 /**
  * GitHub API request class that contains the URI and parameters of the request
@@ -50,18 +45,12 @@ public class GitHubRequest {
 	}
 
 	/**
-	 * Get name value pairs for data map.
+	 * Add request params to URI
 	 *
-	 * @param data
-	 * @return name value pair array
+	 * @param uri
 	 */
-	protected List<NameValuePair> getPairs(Map<String, String> data) {
-		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		if (data != null && !data.isEmpty())
-			for (Entry<String, String> entry : data.entrySet())
-				pairs.add(new BasicNameValuePair(entry.getKey(), entry
-						.getValue()));
-		return pairs;
+	protected void addParams(final StringBuilder uri) {
+		UrlUtils.addParams(getParams(), uri);
 	}
 
 	/**
@@ -75,8 +64,9 @@ public class GitHubRequest {
 			return null;
 		if (baseUri.indexOf('?') != -1)
 			return baseUri;
-		String params = URLEncodedUtils.format(getPairs(getParams()), null);
-		if (params != null && params.length() > 0)
+		final StringBuilder params = new StringBuilder();
+		addParams(params);
+		if (params.length() > 0)
 			return baseUri + '?' + params;
 		else
 			return baseUri;

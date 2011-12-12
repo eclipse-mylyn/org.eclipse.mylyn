@@ -19,9 +19,6 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.META_NEXT;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.META_PREV;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.META_REL;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-
 /**
  * Page link class to be used to determine the links to other pages of request
  * responses encoded in the current response. These will be present if the
@@ -43,10 +40,10 @@ public class PageLinks {
 	 *
 	 * @param response
 	 */
-	public PageLinks(HttpResponse response) {
-		Header[] linkHeaders = response.getHeaders(HEADER_LINK);
-		if (linkHeaders.length > 0) {
-			String[] links = linkHeaders[0].getValue().split(DELIM_LINKS);
+	public PageLinks(GitHubResponse response) {
+		String linkHeader = response.getHeader(HEADER_LINK);
+		if (linkHeader != null) {
+			String[] links = linkHeader.split(DELIM_LINKS);
 			for (String link : links) {
 				String[] segments = link.split(DELIM_LINK_PARAM);
 				if (segments.length < 2)
@@ -77,13 +74,8 @@ public class PageLinks {
 				}
 			}
 		} else {
-			Header[] nextHeaders = response.getHeaders(HEADER_NEXT);
-			if (nextHeaders.length > 0)
-				next = nextHeaders[0].getValue();
-
-			Header[] lastHeaders = response.getHeaders(HEADER_LAST);
-			if (lastHeaders.length > 0)
-				last = lastHeaders[0].getValue();
+			next = response.getHeader(HEADER_NEXT);
+			last = response.getHeader(HEADER_LAST);
 		}
 	}
 

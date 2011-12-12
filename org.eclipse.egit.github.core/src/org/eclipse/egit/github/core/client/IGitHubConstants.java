@@ -21,6 +21,8 @@ public interface IGitHubConstants {
 	/** */
 	String CHARSET_UTF8 = "UTF-8"; //$NON-NLS-1$
 	/** */
+	String CHARSET_ISO_8859_1 = "ISO-8859-1"; //$NON-NLS-1$
+	/** */
 	String CONTENT_TYPE_JSON = "application/json"; //$NON-NLS-1$
 
 	/** */
