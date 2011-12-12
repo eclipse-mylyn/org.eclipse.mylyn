@@ -34,14 +34,6 @@ public class GitHubClientTest {
 	}
 
 	/**
-	 * Create client with null host
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void constructorNullArgument() {
-		new GitHubClient((HttpHost) null);
-	}
-
-	/**
 	 * Verify prefix with API v2 host
 	 */
 	@Test

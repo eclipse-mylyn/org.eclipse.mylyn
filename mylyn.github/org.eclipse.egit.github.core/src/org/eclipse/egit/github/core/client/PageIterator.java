@@ -22,9 +22,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.eclipse.egit.github.core.IResourceProvider;
+import org.eclipse.egit.github.core.util.UrlUtils;
 
 /**
  * Iterator for getting paged responses. Each call to {@link #next()} will make
@@ -95,16 +94,20 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	protected int parsePageNumber(String uri) {
 		if (uri == null || uri.length() == 0)
 			return -1;
+		final URI parsed;
 		try {
-			for (NameValuePair pair : URLEncodedUtils.parse(new URI(uri), null))
-				if (PARAM_PAGE.equals(pair.getName()))
-					return Integer.parseInt(pair.getValue());
+			parsed = new URI(uri);
 		} catch (URISyntaxException e) {
 			return -1;
+		}
+		final String param = UrlUtils.getParam(parsed, PARAM_PAGE);
+		if (param == null || param.length() == 0)
+			return -1;
+		try {
+			return Integer.parseInt(param);
 		} catch (NumberFormatException nfe) {
 			return -1;
 		}
-		return -1;
 	}
 
 	/**

@@ -14,8 +14,6 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.codec.binary.Base64;
-
 /**
  * Encoding utilities
  */
@@ -28,11 +26,7 @@ public abstract class EncodingUtils {
 	 * @return byte array
 	 */
 	public static final byte[] fromBase64(final String content) {
-		try {
-			return Base64.decodeBase64(content.getBytes(CHARSET_UTF8));
-		} catch (UnsupportedEncodingException e) {
-			return Base64.decodeBase64(content.getBytes());
-		}
+		return Base64.decode(content);
 	}
 
 	/**
@@ -41,7 +35,23 @@ public abstract class EncodingUtils {
 	 * @param content
 	 * @return byte array
 	 */
-	public static final byte[] toBase64(final byte[] content) {
-		return Base64.encodeBase64(content);
+	public static final String toBase64(final byte[] content) {
+		return Base64.encodeBytes(content);
+	}
+
+	/**
+	 * Base64 encode given byte array
+	 *
+	 * @param content
+	 * @return byte array
+	 */
+	public static final String toBase64(final String content) {
+		byte[] bytes;
+		try {
+			bytes = content.getBytes(CHARSET_UTF8);
+		} catch (UnsupportedEncodingException e) {
+			bytes = content.getBytes();
+		}
+		return toBase64(bytes);
 	}
 }
