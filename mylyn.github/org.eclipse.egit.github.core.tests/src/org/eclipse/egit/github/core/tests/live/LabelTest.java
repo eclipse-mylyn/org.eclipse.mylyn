@@ -10,13 +10,13 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.LabelService;
@@ -29,7 +29,7 @@ public class LabelTest extends LiveTest {
 
 	/**
 	 * Test creating and deleting a label
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -64,7 +64,7 @@ public class LabelTest extends LiveTest {
 			service.getLabel(client.getUser(), writableRepo, created.getName());
 			fail("Fetch did not throw exception");
 		} catch (RequestException e) {
-			assertEquals(HttpStatus.SC_NOT_FOUND, e.getStatus());
+			assertEquals(HTTP_NOT_FOUND, e.getStatus());
 		}
 	}
 

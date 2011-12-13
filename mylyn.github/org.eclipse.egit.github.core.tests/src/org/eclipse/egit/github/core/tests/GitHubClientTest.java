@@ -12,7 +12,6 @@ package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.http.HttpHost;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.junit.Test;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests.live;
 
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -17,7 +18,6 @@ import static org.junit.Assert.fail;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.MilestoneService;
@@ -30,7 +30,7 @@ public class MilestoneTest extends LiveTest {
 
 	/**
 	 * Test creating and deleting a milestone
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -93,7 +93,7 @@ public class MilestoneTest extends LiveTest {
 					Integer.toString(created.getNumber()));
 			fail("Fetch did not throw exception");
 		} catch (RequestException e) {
-			assertEquals(HttpStatus.SC_NOT_FOUND, e.getStatus());
+			assertEquals(HTTP_NOT_FOUND, e.getStatus());
 		}
 	}
 }
