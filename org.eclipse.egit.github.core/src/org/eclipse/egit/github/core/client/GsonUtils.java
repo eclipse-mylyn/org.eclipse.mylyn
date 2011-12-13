@@ -19,6 +19,9 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventPayload;
+
 /**
  * Gson utilities.
  */
@@ -48,6 +51,11 @@ public abstract class GsonUtils {
 	public static final Gson createGson(final boolean serializeNulls) {
 		final GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Date.class, new DateFormatter());
+		EventFormatter eventFormatter = new EventFormatter();
+		builder.registerTypeAdapter(Event.class,
+				eventFormatter.getEventCreator());
+		builder.registerTypeAdapter(EventPayload.class,
+				eventFormatter.getPayloadDeserializer());
 		builder.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES);
 		if (serializeNulls)
 			builder.serializeNulls();

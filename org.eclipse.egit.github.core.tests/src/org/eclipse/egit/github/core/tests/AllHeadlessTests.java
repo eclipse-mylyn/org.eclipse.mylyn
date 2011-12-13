@@ -40,6 +40,10 @@ import org.junit.runners.Suite.SuiteClasses;
 		DownloadTest.class, //
 		DownloadResourceTest.class, //
 		EncodingUtilsTest.class, //
+		EventFormatterTest.class, //
+		EventPayloadTest.class, //
+		EventServiceTest.class, //
+		EventTest.class, //
 		FieldErrorTest.class, //
 		GistChangeStatusTest.class, //
 		GistFileTest.class, //
@@ -47,6 +51,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		GistServiceTest.class, //
 		GistTest.class, //
 		GitHubClientTest.class, //
+		GollumPageTest.class, //
 		GsonUtilsTest.class, //
 		IdTest.class, //
 		IssueEventTest.class, //
