@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventPayload;
+import org.eclipse.egit.github.core.event.EventRepository;
 import org.junit.Test;
 
 /**
@@ -52,13 +52,14 @@ public class EventTest {
 		assertEquals("PushEvent", event.setType("PushEvent").getType());
 		EventPayload payload = new EventPayload();
 		assertEquals(payload, event.setPayload(payload).getPayload());
-		Repository repo = new Repository().setName("repo");
+		EventRepository repo = new EventRepository().setName("repo");
 		assertEquals(repo, event.setRepo(repo).getRepo());
 		User actor = new User().setLogin("actor");
 		assertEquals(actor, event.setActor(actor).getActor());
 		User org = new User().setLogin("org");
 		assertEquals(org, event.setOrg(org).getOrg());
-		assertEquals(new Date(5000), event.setCreatedAt(new Date(5000)).getCreatedAt());
+		assertEquals(new Date(5000), event.setCreatedAt(new Date(5000))
+				.getCreatedAt());
 		assertTrue(event.setPublic(true).isPublic());
 	}
 

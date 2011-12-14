@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.util.DateUtils;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Event model class.
@@ -27,8 +26,8 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 3633702964380402233L;
 
 	/**
-	 * Make sure this is above payload.
-	 * Payload deserialization depends on being able to read the type first.
+	 * Make sure this is above payload. Payload deserialization depends on being
+	 * able to read the type first.
 	 */
 	private String type;
 
@@ -37,7 +36,7 @@ public class Event implements Serializable {
 
 	private EventPayload payload;
 
-	private Repository repo;
+	private EventRepository repo;
 
 	private User actor;
 
@@ -80,7 +79,7 @@ public class Event implements Serializable {
 	/**
 	 * @return the repo
 	 */
-	public Repository getRepo() {
+	public EventRepository getRepo() {
 		return repo;
 	}
 
@@ -88,7 +87,7 @@ public class Event implements Serializable {
 	 * @param repo
 	 * @return this Event
 	 */
-	public Event setRepo(Repository repo) {
+	public Event setRepo(EventRepository repo) {
 		this.repo = repo;
 		return this;
 	}
