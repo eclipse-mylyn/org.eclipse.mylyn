@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 /**
  * @author Shawn Minto
  */
-public class SearchPluginTestHelper extends TestCase {
+public class SearchPluginTestHelper {
 
 	private final ISearchPluginTest test;
 
@@ -56,8 +56,8 @@ public class SearchPluginTestHelper extends TestCase {
 				}
 			}
 		}
-		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, size);
+		Assert.assertNotNull("Results Null", results);
+		Assert.assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
@@ -78,8 +78,8 @@ public class SearchPluginTestHelper extends TestCase {
 			}
 		}
 
-		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, size);
+		Assert.assertNotNull("Results Null", results);
+		Assert.assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
@@ -95,8 +95,8 @@ public class SearchPluginTestHelper extends TestCase {
 				}
 			}
 		}
-		assertNotNull("Results Null", results);
-		assertEquals("Wrong number search results", expected, size);
+		Assert.assertNotNull("Results Null", results);
+		Assert.assertEquals("Wrong number search results", expected, size);
 		notifier.clearContext();
 	}
 
@@ -105,14 +105,14 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
-		assertNull("Results Not Null", results);
+		Assert.assertNull("Results Not Null", results);
 		notifier.clearContext();
 	}
 
 	public void searchResultsNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos)
 			throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
-		assertNull("Results Not Null", results);
+		Assert.assertNull("Results Not Null", results);
 		notifier.clearContext();
 	}
 

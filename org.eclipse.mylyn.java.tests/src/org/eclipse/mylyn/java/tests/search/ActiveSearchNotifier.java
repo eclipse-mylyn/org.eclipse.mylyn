@@ -13,11 +13,12 @@ package org.eclipse.mylyn.java.tests.search;
 
 import java.io.IOException;
 
+import junit.framework.Assert;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
-import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -26,7 +27,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Shawn Minto
  */
-public class ActiveSearchNotifier extends AbstractContextTest {
+public class ActiveSearchNotifier {
 
 	private CompositeInteractionContext context;
 
@@ -73,7 +74,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 			ContextCore.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
 			context = (CompositeInteractionContext) ContextCore.getContextManager().getActiveContext();
 		} catch (Exception e) {
-			fail();
+			Assert.fail();
 		}
 	}
 
@@ -87,4 +88,5 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		e.getInterestContribution();
 		return e;
 	}
+
 }
