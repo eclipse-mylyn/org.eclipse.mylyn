@@ -40,7 +40,11 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private Date pushedAt;
 
+	private Date updatedAt;
+
 	private int forks;
+
+	private long id;
 
 	private int openIssues;
 
@@ -491,6 +495,38 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 */
 	public Repository setOwner(User owner) {
 		this.owner = owner;
+		return this;
+	}
+
+	/**
+	 * @return updatedAt
+	 */
+	public Date getUpdatedAt() {
+		return DateUtils.clone(updatedAt);
+	}
+
+	/**
+	 * @param updatedAt
+	 * @return this repository
+	 */
+	public Repository setUpdatedAt(Date updatedAt) {
+		this.updatedAt = DateUtils.clone(updatedAt);
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this repository
+	 */
+	public Repository setId(long id) {
+		this.id = id;
 		return this;
 	}
 

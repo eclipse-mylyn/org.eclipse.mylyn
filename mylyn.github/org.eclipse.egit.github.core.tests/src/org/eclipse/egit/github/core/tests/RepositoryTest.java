@@ -58,6 +58,8 @@ public class RepositoryTest {
 		assertFalse(repo.isHasIssues());
 		assertFalse(repo.isHasWiki());
 		assertFalse(repo.isPrivate());
+		assertEquals(0, repo.getId());
+		assertNull(repo.getUpdatedAt());
 	}
 
 	/**
@@ -97,6 +99,9 @@ public class RepositoryTest {
 		assertTrue(repo.setHasWiki(true).isHasWiki());
 		assertTrue(repo.setPrivate(true).isPrivate());
 		assertEquals("mirror", repo.setMirrorUrl("mirror").getMirrorUrl());
+		assertEquals(14, repo.setId(14).getId());
+		assertEquals(new Date(50000), repo.setUpdatedAt(new Date(50000))
+				.getUpdatedAt());
 	}
 
 	/**
