@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.sdk.java;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.zip.ZipException;
@@ -68,6 +69,18 @@ public class WorkspaceSetupHelper {
 		ZipFile zip = new ZipFile(CommonTestUtil.getFile(source, "testdata/projects/" + zipFileName));
 
 		CommonTestUtil.unzip(zip, project.getLocation().toFile());
+
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		IJavaProject javaProject = createPluginProject(project);
+		return javaProject;
+	}
+
+	public static IJavaProject createJavaPluginProjectFromDirectory(File sourceDirectory, String projectName)
+			throws CoreException, ZipException, IOException {
+		IProject project = createProject(projectName);
+
+		CommonTestUtil.copyFolder(sourceDirectory, project.getLocation().toFile());
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
