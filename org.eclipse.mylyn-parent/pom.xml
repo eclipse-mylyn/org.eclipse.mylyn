@@ -197,7 +197,7 @@
       <id>indigo</id>
       <activation>
 		<property>
-          <name>t</name>
+          <name>target-profile</name>
           <value>indigo</value>
 		</property>
       </activation>
