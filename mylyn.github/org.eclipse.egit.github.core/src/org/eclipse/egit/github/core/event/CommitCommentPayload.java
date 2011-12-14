@@ -12,7 +12,7 @@ package org.eclipse.egit.github.core.event;
 
 import java.io.Serializable;
 
-import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 
 /**
  * CommitCommentEvent payload model class.
@@ -22,12 +22,12 @@ public class CommitCommentPayload extends EventPayload implements
 
 	private static final long serialVersionUID = -2606554911096551099L;
 
-	private Comment comment;
+	private CommitComment comment;
 
 	/**
 	 * @return comment
 	 */
-	public Comment getComment() {
+	public CommitComment getComment() {
 		return comment;
 	}
 
@@ -35,7 +35,7 @@ public class CommitCommentPayload extends EventPayload implements
 	 * @param comment
 	 * @return this CommitCommentPayload
 	 */
-	public CommitCommentPayload setComment(Comment comment) {
+	public CommitCommentPayload setComment(CommitComment comment) {
 		this.comment = comment;
 		return this;
 	}
