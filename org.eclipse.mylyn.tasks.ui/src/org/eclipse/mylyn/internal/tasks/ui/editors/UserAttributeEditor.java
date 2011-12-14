@@ -89,7 +89,7 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			data = CommonImages.PERSON_LARGE.getImageData();
 		}
-		Image image = new Image(label.getDisplay(), data);
+		image = new Image(label.getDisplay(), data);
 		label.setImage(image);
 		return image;
 	}
