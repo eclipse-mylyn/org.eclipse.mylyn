@@ -13,7 +13,7 @@ package org.eclipse.egit.github.core.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.junit.Test;
 
@@ -37,7 +37,8 @@ public class CommitCommentPayloadTest {
 	@Test
 	public void updateFields() {
 		CommitCommentPayload payload = new CommitCommentPayload();
-		Comment comment = new Comment().setBody("comment");
+		CommitComment comment = new CommitComment();
+		comment.setBody("comment");
 		assertEquals(comment, payload.setComment(comment).getComment());
 	}
 }
