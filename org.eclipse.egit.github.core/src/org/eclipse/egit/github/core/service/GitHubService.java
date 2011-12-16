@@ -32,6 +32,21 @@ import org.eclipse.egit.github.core.client.RequestException;
 public abstract class GitHubService {
 
 	/**
+	 * Accept header for full response
+	 */
+	protected static final String ACCEPT_FULL = "application/vnd.github.beta.full+json"; //$NON-NLS-1$
+
+	/**
+	 * Accept header for HTML response
+	 */
+	protected static final String ACCEPT_HTML = "application/vnd.github.beta.html+json"; //$NON-NLS-1$
+
+	/**
+	 * Accept header for text response
+	 */
+	protected static final String ACCEPT_TEXT = "application/vnd.github.beta.text+json"; //$NON-NLS-1$
+
+	/**
 	 * Client field
 	 */
 	protected final GitHubClient client;

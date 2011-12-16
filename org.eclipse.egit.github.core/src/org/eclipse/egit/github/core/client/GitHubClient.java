@@ -602,6 +602,9 @@ public class GitHubClient {
 	 */
 	public GitHubResponse get(GitHubRequest request) throws IOException {
 		HttpURLConnection httpRequest = createGet(request.generateUri());
+		String accept = request.getResponseContentType();
+		if (accept != null)
+			httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
 		final int code = httpRequest.getResponseCode();
 		if (isOk(code))
 			return new GitHubResponse(httpRequest, getBody(request,

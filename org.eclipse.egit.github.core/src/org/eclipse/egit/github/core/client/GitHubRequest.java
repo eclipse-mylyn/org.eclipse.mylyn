@@ -30,6 +30,8 @@ public class GitHubRequest {
 
 	private Type type;
 
+	private String responseContentType;
+
 	/**
 	 * Create empty request
 	 */
@@ -118,6 +120,24 @@ public class GitHubRequest {
 	 */
 	public GitHubRequest setType(Type type) {
 		this.type = type;
+		return this;
+	}
+
+	/**
+	 * @return responseContentType
+	 */
+	public String getResponseContentType() {
+		return responseContentType;
+	}
+
+	/**
+	 * Set the desired response content type
+	 *
+	 * @param responseContentType
+	 * @return this request
+	 */
+	public GitHubRequest setResponseContentType(String responseContentType) {
+		this.responseContentType = responseContentType;
 		return this;
 	}
 
