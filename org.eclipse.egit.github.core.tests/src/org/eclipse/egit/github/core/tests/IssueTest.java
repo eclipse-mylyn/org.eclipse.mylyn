@@ -38,6 +38,8 @@ public class IssueTest {
 		Issue issue = new Issue();
 		assertNull(issue.getAssignee());
 		assertNull(issue.getBody());
+		assertNull(issue.getBodyHtml());
+		assertNull(issue.getBodyText());
 		assertNull(issue.getClosedAt());
 		assertEquals(0, issue.getComments());
 		assertNull(issue.getCreatedAt());
@@ -63,6 +65,8 @@ public class IssueTest {
 		User assignee = new User().setLogin("assignee");
 		assertEquals(assignee, issue.setAssignee(assignee).getAssignee());
 		assertEquals("body", issue.setBody("body").getBody());
+		assertEquals("<body>", issue.setBodyHtml("<body>").getBodyHtml());
+		assertEquals("text", issue.setBodyText("text").getBodyText());
 		assertEquals(new Date(1000), issue.setClosedAt(new Date(1000))
 				.getClosedAt());
 		assertEquals(5, issue.setComments(5).getComments());

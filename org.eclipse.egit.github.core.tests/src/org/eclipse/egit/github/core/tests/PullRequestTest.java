@@ -39,6 +39,8 @@ public class PullRequestTest {
 		assertEquals(0, request.getAdditions());
 		assertNull(request.getBase());
 		assertNull(request.getBody());
+		assertNull(request.getBodyHtml());
+		assertNull(request.getBodyText());
 		assertEquals(0, request.getChangedFiles());
 		assertNull(request.getClosedAt());
 		assertEquals(0, request.getComments());
@@ -73,6 +75,8 @@ public class PullRequestTest {
 		PullRequestMarker base = new PullRequestMarker();
 		assertEquals(base, request.setBase(base).getBase());
 		assertEquals("a pr", request.setBody("a pr").getBody());
+		assertEquals("<body>", request.setBodyHtml("<body>").getBodyHtml());
+		assertEquals("text", request.setBodyText("text").getBodyText());
 		assertEquals(20, request.setChangedFiles(20).getChangedFiles());
 		assertEquals(new Date(1000), request.setClosedAt(new Date(1000))
 				.getClosedAt());

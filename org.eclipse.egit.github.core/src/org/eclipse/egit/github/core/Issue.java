@@ -43,6 +43,10 @@ public class Issue implements Serializable {
 
 	private String body;
 
+	private String bodyHtml;
+
+	private String bodyText;
+
 	private String htmlUrl;
 
 	private String state;
@@ -196,6 +200,38 @@ public class Issue implements Serializable {
 	 */
 	public Issue setBody(String body) {
 		this.body = body;
+		return this;
+	}
+
+	/**
+	 * @return bodyHtml
+	 */
+	public String getBodyHtml() {
+		return bodyHtml;
+	}
+
+	/**
+	 * @param bodyHtml
+	 * @return this issue
+	 */
+	public Issue setBodyHtml(String bodyHtml) {
+		this.bodyHtml = bodyHtml;
+		return this;
+	}
+
+	/**
+	 * @return bodyText
+	 */
+	public String getBodyText() {
+		return bodyText;
+	}
+
+	/**
+	 * @param bodyText
+	 * @return this issue
+	 */
+	public Issue setBodyText(String bodyText) {
+		this.bodyText = bodyText;
 		return this;
 	}
 
