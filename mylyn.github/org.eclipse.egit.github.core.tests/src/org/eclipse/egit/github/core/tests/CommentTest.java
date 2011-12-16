@@ -32,6 +32,8 @@ public class CommentTest {
 	public void defaultState() {
 		Comment comment = new Comment();
 		assertNull(comment.getBody());
+		assertNull(comment.getBodyHtml());
+		assertNull(comment.getBodyText());
 		assertNull(comment.getCreatedAt());
 		assertEquals(0, comment.getId());
 		assertNull(comment.getUpdatedAt());
@@ -46,6 +48,8 @@ public class CommentTest {
 	public void updateFields() {
 		Comment comment = new Comment();
 		assertEquals("body", comment.setBody("body").getBody());
+		assertEquals("<body>", comment.setBodyHtml("<body>").getBodyHtml());
+		assertEquals("text", comment.setBodyText("text").getBodyText());
 		assertEquals(new Date(1234), comment.setCreatedAt(new Date(1234))
 				.getCreatedAt());
 		assertEquals(100, comment.setId(100).getId());

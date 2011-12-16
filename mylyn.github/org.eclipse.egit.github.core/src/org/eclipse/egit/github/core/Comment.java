@@ -29,6 +29,10 @@ public class Comment implements Serializable {
 
 	private String body;
 
+	private String bodyHtml;
+
+	private String bodyText;
+
 	private long id;
 
 	private String url;
@@ -80,6 +84,38 @@ public class Comment implements Serializable {
 	 */
 	public Comment setBody(String body) {
 		this.body = body;
+		return this;
+	}
+
+	/**
+	 * @return bodyHtml
+	 */
+	public String getBodyHtml() {
+		return bodyHtml;
+	}
+
+	/**
+	 * @param bodyHtml
+	 * @return this comment
+	 */
+	public Comment setBodyHtml(String bodyHtml) {
+		this.bodyHtml = bodyHtml;
+		return this;
+	}
+
+	/**
+	 * @return bodyText
+	 */
+	public String getBodyText() {
+		return bodyText;
+	}
+
+	/**
+	 * @param bodyText
+	 * @return this comment
+	 */
+	public Comment setBodyText(String bodyText) {
+		this.bodyText = bodyText;
 		return this;
 	}
 
