@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylyn.commons.notifications" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.mylyn.commons.notifications.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.mylyn.commons.notifications" id="notifications" name="Notifications"/>
+         <meta.schema plugin="org.eclipse.mylyn.commons.notifications.ui" id="notifications" name="Notifications"/>
       </appinfo>
       <documentation>
          Provides support for event categories, types and sinks.
@@ -94,7 +94,7 @@
                   parent category identifier.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/category/@id"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/category/@id"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -158,7 +158,7 @@
                   the event sink implementation.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.commons.notifications.NotificationSink:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.commons.notifications.core.NotificationSink:"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -198,7 +198,7 @@ A similar effect is achieved by the &lt;i&gt;eventMapping&lt;/i&gt; extension.
                   Identifier of the sink that should handle the event.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/sink/@id"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/sink/@id"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -220,7 +220,7 @@ Also see the &lt;i&gt;defaultHandler&lt;/i&gt; element of &lt;i&gt;event&lt;/i&g
                   Identifier of the sink that should handle the event.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.notifications/sink/@id"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.mylyn.commons.notifications.ui.notifications/sink/@id"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -251,7 +251,7 @@ Also see the &lt;i&gt;defaultHandler&lt;/i&gt; element of &lt;i&gt;event&lt;/i&g
          Following is an example of use:
 &lt;pre&gt;
  &lt;extension
-       point=&quot;org.eclipse.mylyn.commons.notifications.notifications&quot;&gt;
+       point=&quot;org.eclipse.mylyn.commons.notifications.ui.notifications&quot;&gt;
     &lt;event
           categoryId=&quot;org.eclipse.mylyn.builds.ui.category.Builds&quot;
           id=&quot;org.eclipse.mylyn.builds.ui.events.BuildServiceChanged&quot;
@@ -275,7 +275,7 @@ Also see the &lt;i&gt;defaultHandler&lt;/i&gt; element of &lt;i&gt;event&lt;/i&g
     &lt;/sink&gt;
     &lt;eventMapping
           eventIds=&quot;org.eclipse.mylyn.builds.ui.events.*&quot;
-          sinkId=&quot;org.eclipse.mylyn.commons.notifications.sink.Popup&quot;&gt;
+          sinkId=&quot;org.eclipse.mylyn.commons.notifications.ui.sink.Popup&quot;&gt;
     &lt;/eventMapping&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
@@ -290,7 +290,7 @@ This example will declare a new event and assign it to the builds view notificat
       </appinfo>
       <documentation>
          The value of the class attribute in sink must represent a class 
-that implements &lt;samp&gt;org.eclipse.mylyn.commons.notifications.NotificationSink&lt;/samp&gt;.
+that implements &lt;samp&gt;org.eclipse.mylyn.commons.notifications.core.NotificationSink&lt;/samp&gt;.
       </documentation>
    </annotation>
 

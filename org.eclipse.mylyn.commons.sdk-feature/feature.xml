@@ -33,7 +33,33 @@
          version="0.0.0"/>
 
    <includes
+         id="org.eclipse.mylyn.discovery"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.mylyn.monitor"
+         version="0.0.0"/>
+
+   <!--
+   <includes
+         id="org.eclipse.mylyn.commons.activity"
+         version="0.0.0"/>
+   -->
+   
+   <includes
+         id="org.eclipse.mylyn.commons.identity"
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.mylyn.commons.notifications"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.mylyn.commons.repositories"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.mylyn.commons.repositories.http"
          version="0.0.0"/>
 
    <!-- bug 278474 -->   
@@ -44,6 +70,31 @@
          version="0.0.0"
          unpack="false"/>
 
+   <!-- bundles not included in other features -->
+
+   <plugin
+         id="org.eclipse.mylyn.commons.net"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.soap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.xmlrpc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <!-- sdk bundles -->
+
    <plugin
          id="org.eclipse.mylyn.commons.sdk.util"
          download-size="0"
@@ -51,49 +102,7 @@
          version="0.0.0"
          unpack="false"/>
 
-<!--
-   <plugin
-         id="org.eclipse.mylyn.commons.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.discovery.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.monitor.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.commons.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.discovery.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.monitor.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
+   <!-- source bundles -->
 
    <plugin
          id="org.eclipse.mylyn.source"
@@ -110,12 +119,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.identity.source"
+         id="org.eclipse.mylyn.commons.identity.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
+   <!--
+   <plugin
+         id="org.eclipse.mylyn.commons.identity.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+   -->
+   
    <plugin
          id="org.eclipse.mylyn.commons.net.source"
          download-size="0"
@@ -145,14 +163,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.repositories.source"
+         id="org.eclipse.mylyn.commons.repositories.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.soap.source"
+         id="org.eclipse.mylyn.commons.repositories.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.repositories.http.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -173,7 +198,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.team.source"
+         id="org.eclipse.mylyn.commons.soap.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -223,6 +248,130 @@
 
    <plugin
          id="org.eclipse.mylyn.monitor.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <!-- Orbit bundles -->
+
+   <plugin
+         id="org.apache.xmlrpc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.ws.commons.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.xml.bind"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.axis"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="javax.wsdl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.xml.rpc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="javax.xml.soap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.discovery"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.logging"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.activation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.mail"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.lang"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.xml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.io"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jdom"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.syndication"
          download-size="0"
          install-size="0"
          version="0.0.0"

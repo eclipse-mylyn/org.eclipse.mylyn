@@ -16,7 +16,16 @@
    <feature url="features/org.eclipse.mylyn.commons_0.0.0.jar" id="org.eclipse.mylyn.commons" version="0.0.0">
       <category name="Features"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.commons.identity_0.0.0.jar" id="org.eclipse.mylyn.commons.identity" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.commons.notifications_0.0.0.jar" id="org.eclipse.mylyn.commons.notifications" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.commons.repositories_0.0.0.jar" id="org.eclipse.mylyn.commons.repositories" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.commons.repositories.http_0.0.0.jar" id="org.eclipse.mylyn.commons.repositories.http" version="0.0.0">
       <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.discovery_0.0.0.jar" id="org.eclipse.mylyn.discovery" version="0.0.0">

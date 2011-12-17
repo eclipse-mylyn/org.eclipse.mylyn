@@ -36,6 +36,7 @@
       <import plugin="org.apache.commons.httpclient" version="3.1.0" match="compatible"/>
       <import plugin="com.sun.syndication" version="0.9.0" match="compatible"/>
       <import plugin="org.jdom" version="1.1.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons" version="3.7.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

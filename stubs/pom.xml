@@ -10,6 +10,9 @@
   <artifactId>org.eclipse.mylyn.commons.stubs-parent</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>org.eclipse.mylyn.commons.identity</module>
     <module>org.eclipse.mylyn.commons.notifications</module>
+    <module>org.eclipse.mylyn.commons.repositories</module>
+    <module>org.eclipse.mylyn.commons.team</module>
   </modules>
 </project>
