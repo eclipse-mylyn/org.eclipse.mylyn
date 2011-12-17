@@ -57,9 +57,7 @@
     <module>org.eclipse.mylyn.commons.activity.ui</module>
     <module>org.eclipse.mylyn.commons.identity-feature</module>
     <module>org.eclipse.mylyn.commons.identity.core</module>
-	<!--
     <module>org.eclipse.mylyn.commons.identity.ui</module>
-	-->
     <module>org.eclipse.mylyn.commons.notifications-feature</module>
     <module>org.eclipse.mylyn.commons.notifications.core</module>
     <module>org.eclipse.mylyn.commons.notifications.feed</module>

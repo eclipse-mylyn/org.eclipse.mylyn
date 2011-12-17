@@ -9,14 +9,14 @@
             category="org.eclipse.mylyn.ui"
             class="org.eclipse.mylyn.internal.commons.identity.ui.PeopleView"
             icon="icons/obj16/people.gif"
-            id="org.eclipse.mylyn.commons.ui.identity.navigator.People"
+            id="org.eclipse.mylyn.commons.identity.ui.navigator.People"
             name="People">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewerContentBinding
-            viewerId="org.eclipse.mylyn.commons.ui.identity.navigator.People">
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
          <includes>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.linkHelper">
@@ -24,18 +24,18 @@
          </includes>
       </viewerContentBinding>
       <viewerContentBinding
-            viewerId="org.eclipse.mylyn.commons.ui.identity.navigator.People">
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
          <includes>
             <contentExtension
-                  pattern="org.eclipse.mylyn.commons.ui.identity.navigator.*">
+                  pattern="org.eclipse.mylyn.commons.identity.ui.navigator.*">
             </contentExtension>
          </includes>
       </viewerContentBinding>
       <viewerActionBinding
-            viewerId="org.eclipse.mylyn.commons.ui.identity.navigator.People">
+            viewerId="org.eclipse.mylyn.commons.identity.ui.navigator.People">
          <includes>
             <actionExtension
-                  pattern="org.eclipse.mylyn.commons.ui.identity.navigator.*">
+                  pattern="org.eclipse.mylyn.commons.identity.ui.navigator.*">
             </actionExtension>
          </includes>
       </viewerActionBinding>
@@ -46,7 +46,7 @@
             activeByDefault="true"
             contentProvider="org.eclipse.mylyn.internal.commons.identity.ui.PeopleContentProvider"
             icon="icons/obj16/person.gif"
-            id="org.eclipse.mylyn.commons.ui.identity.navigator.People"
+            id="org.eclipse.mylyn.commons.identity.ui.navigator.People"
             labelProvider="org.eclipse.mylyn.internal.commons.identity.ui.PersonLabelProvider"
             name="People">
          <possibleChildren>
@@ -67,7 +67,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="toolbar:org.eclipse.mylyn.commons.ui.identity.navigator.People">
+            locationURI="toolbar:org.eclipse.mylyn.commons.identity.ui.navigator.People">
          <command
                commandId="org.eclipse.ui.file.refresh"
                style="push">
@@ -81,7 +81,7 @@
             commandId="org.eclipse.ui.file.refresh">
          <activeWhen>
 			<with variable="activePartId">
-			    <equals value="org.eclipse.mylyn.commons.ui.identity.navigator.People"/>
+			    <equals value="org.eclipse.mylyn.commons.identity.ui.navigator.People"/>
 			</with> 
          </activeWhen>
       </handler>

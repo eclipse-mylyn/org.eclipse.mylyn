@@ -13,3 +13,4 @@ Export-Package: org.eclipse.mylyn.commons.identity.core;x-internal:=true,
  org.eclipse.mylyn.commons.identity.core.spi;x-internal:=true,
  org.eclipse.mylyn.internal.commons.identity.core;x-internal:=true,
  org.eclipse.mylyn.internal.commons.identity.core.gravatar;x-internal:=true
+Service-Component: OSGI-INF/component.xml

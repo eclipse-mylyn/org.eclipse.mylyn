@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.commons.identity.ui;
 
+import org.eclipse.mylyn.commons.identity.core.IIdentityService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * @author Steffen Pingel
@@ -21,6 +23,8 @@ public class IdentityUiPlugin extends AbstractUIPlugin {
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui.identity"; //$NON-NLS-1$
 
 	private static IdentityUiPlugin plugin;
+
+	private ServiceTracker identityServiceTracker;
 
 	public IdentityUiPlugin() {
 	}
@@ -33,6 +37,10 @@ public class IdentityUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (identityServiceTracker != null) {
+			identityServiceTracker.close();
+			identityServiceTracker = null;
+		}
 		plugin = null;
 		super.stop(context);
 	}
@@ -44,6 +52,15 @@ public class IdentityUiPlugin extends AbstractUIPlugin {
 	 */
 	public static IdentityUiPlugin getDefault() {
 		return plugin;
+	}
+
+	public IIdentityService getIdentityService() {
+		if (identityServiceTracker == null) {
+			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),
+					IIdentityService.class.getName(), null);
+			identityServiceTracker.open();
+		}
+		return (IIdentityService) identityServiceTracker.getService();
 	}
 
 }

@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.commons.identity.ui;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.identity.core.IIdentity;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.commons.identity.core.IIdentityService;
 
 /**
  * @author Steffen Pingel
@@ -36,7 +36,11 @@ public class PeopleContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return TasksUiPlugin.getDefault().getIdentityModel().getIdentities();
+		IIdentityService identityService = IdentityUiPlugin.getDefault().getIdentityService();
+		if (identityService != null) {
+			return identityService.getIdentities();
+		}
+		return null;
 	}
 
 	public Object[] getChildren(Object parentElement) {

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.commons.identity.core;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public final class IdentityModel implements Serializable {
 
 	private final Map<UUID, Identity> identityById;
 
-	public IdentityModel(File cacheDirectory) {
+	public IdentityModel() {
 		connectors = new CopyOnWriteArrayList<IdentityConnector>();
 		identityById = new WeakHashMap<UUID, Identity>();
 	}
