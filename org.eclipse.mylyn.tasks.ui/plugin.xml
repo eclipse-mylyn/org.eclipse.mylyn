@@ -1505,7 +1505,7 @@
 				    <equals value="org.eclipse.mylyn.tasks.ui.views.repositories"/>
 				</with> 
 				<with variable="activePartId">
-				    <equals value="org.eclipse.mylyn.commons.team.navigator.Repositories"/>
+				    <equals value="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories"/>
 				</with>
 			</or> 
          </activeWhen>
@@ -1973,7 +1973,7 @@
     <extension
           point="org.eclipse.ui.navigator.viewer">
        <viewerContentBinding
-             viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+             viewerId="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
           <includes>
              <contentExtension
                    pattern="org.eclipse.mylyn.tasks.ui.navigator.Repositories">
@@ -2038,7 +2038,7 @@
                <with
                      variable="activePartId">
                   <equals
-                        value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                        value="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
                   </equals>
                </with>
                <count

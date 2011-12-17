@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
