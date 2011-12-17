@@ -51,6 +51,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.identity.core.IIdentityService;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
@@ -58,8 +59,6 @@ import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.workbench.TaskBarManager;
-import org.eclipse.mylyn.internal.commons.identity.core.IdentityModel;
-import org.eclipse.mylyn.internal.commons.identity.core.gravatar.GravatarConnector;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
@@ -116,6 +115,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Main entry point for the Tasks UI.
@@ -774,6 +774,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 				context.ungetService(proxyServiceReference);
 			}
+			if (identityServiceTracker != null) {
+				identityServiceTracker.close();
+				identityServiceTracker = null;
+			}
 
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
@@ -1004,7 +1008,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
-	private IdentityModel identityModel;
+	private IIdentityService identityService;
+
+	private ServiceTracker identityServiceTracker;
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
 		return menuContributors;
@@ -1384,12 +1390,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return synchronizationManger;
 	}
 
-	public IdentityModel getIdentityModel() {
-		if (identityModel == null) {
-			identityModel = new IdentityModel(new File(getDataDirectory(), "cache")); //$NON-NLS-1$
-			identityModel.addConnector(new GravatarConnector());
+	public IIdentityService getIdentityService() {
+		if (identityServiceTracker == null) {
+			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),
+					IIdentityService.class.getName(), null);
+			identityServiceTracker.open();
 		}
-		return identityModel;
+		return (IIdentityService) identityServiceTracker.getService();
 	}
 
 	public static synchronized AbstractTaskContextStore getContextStore() {

@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.mylyn.commons.identity.core.Account;
 import org.eclipse.mylyn.commons.identity.core.IIdentity;
+import org.eclipse.mylyn.commons.identity.core.IIdentityService;
 import org.eclipse.mylyn.commons.identity.core.IProfileImage;
 import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -140,18 +141,21 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 			label.setToolTipText(getDescription());
 		}
 		Account account = TasksUiInternal.getAccount(getTaskAttribute());
-		identity = TasksUiPlugin.getDefault().getIdentityModel().getIdentity(account);
-		identity.addPropertyChangeListener(imageListener);
-		Future<IProfileImage> result = identity.requestImage(IMAGE_SIZE, IMAGE_SIZE);
-		if (result.isDone()) {
-			try {
-				updateImage(result.get(0, TimeUnit.SECONDS));
-			} catch (Exception e) {
-				// the event listener will eventually update the image
+		IIdentityService identityService = TasksUiPlugin.getDefault().getIdentityService();
+		if (identityService != null) {
+			identity = identityService.getIdentity(account);
+			identity.addPropertyChangeListener(imageListener);
+			Future<IProfileImage> result = identity.requestImage(IMAGE_SIZE, IMAGE_SIZE);
+			if (result.isDone()) {
+				try {
+					updateImage(result.get(0, TimeUnit.SECONDS));
+				} catch (Exception e) {
+					// the event listener will eventually update the image
+					updateImage(null);
+				}
+			} else {
 				updateImage(null);
 			}
-		} else {
-			updateImage(null);
 		}
 	}
 
