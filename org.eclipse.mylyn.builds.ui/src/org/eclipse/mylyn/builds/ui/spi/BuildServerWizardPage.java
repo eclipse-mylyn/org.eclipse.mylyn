@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.ui.team.RepositoryWizardPage;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.ui.RepositoryWizardPage;
 
 /**
  * @author Steffen Pingel

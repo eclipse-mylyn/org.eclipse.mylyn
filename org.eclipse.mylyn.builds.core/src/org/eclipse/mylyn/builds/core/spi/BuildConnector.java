@@ -13,7 +13,7 @@ package org.eclipse.mylyn.builds.core.spi;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 
 /**
  * @author Steffen Pingel

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.osgi.framework.Bundle;
 

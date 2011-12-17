@@ -48,7 +48,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.builds.core.TestCaseResult;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 
 /**
  * <!-- begin-user-doc --> The <b>Package</b> for the model. It contains accessors for the meta objects to represent
@@ -1875,7 +1875,7 @@ public class BuildPackage extends EPackageImpl {
 	 * The meta object id for the '<em>Repository Location</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
+	 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 	 * @generated
 	 */
@@ -3816,11 +3816,11 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.RepositoryLocation
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
 	 * <em>Repository Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for data type '<em>Repository Location</em>'.
-	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
+	 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
 	 * @generated
 	 */
 	public EDataType getRepositoryLocation() {
@@ -5686,7 +5686,7 @@ public class BuildPackage extends EPackageImpl {
 		 * The meta object literal for the '<em>Repository Location</em>' data type. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
+		 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 		 * @generated
 		 */

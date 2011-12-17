@@ -45,8 +45,8 @@ import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationOpe
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
-import org.eclipse.mylyn.commons.ui.team.RepositoryLocationPart;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryValidator;
+import org.eclipse.mylyn.commons.repositories.ui.RepositoryLocationPart;
 import org.eclipse.mylyn.commons.workbench.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.builds.ui.BuildServerValidator;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;

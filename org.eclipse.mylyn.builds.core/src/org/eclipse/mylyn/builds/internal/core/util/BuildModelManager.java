@@ -35,7 +35,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
 import org.eclipse.mylyn.builds.internal.core.IBuildLoader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.osgi.util.NLS;
 
 /**

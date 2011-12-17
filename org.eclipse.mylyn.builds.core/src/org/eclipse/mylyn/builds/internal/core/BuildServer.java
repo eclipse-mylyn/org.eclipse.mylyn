@@ -35,7 +35,7 @@ import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationOpe
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshSession;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Server</b></em>'. <!-- end-user-doc -->

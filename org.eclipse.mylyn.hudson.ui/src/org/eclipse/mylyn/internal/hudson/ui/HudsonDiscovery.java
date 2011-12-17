@@ -34,7 +34,7 @@ import org.eclipse.ecf.discovery.identity.IServiceTypeID;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.BuildsUiStartup;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.osgi.util.NLS;
 
 /**

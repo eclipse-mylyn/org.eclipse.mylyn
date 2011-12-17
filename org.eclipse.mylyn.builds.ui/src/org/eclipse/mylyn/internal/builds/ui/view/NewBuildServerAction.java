@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
-import org.eclipse.mylyn.commons.ui.team.RepositoryUi;
+import org.eclipse.mylyn.commons.repositories.ui.RepositoryUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;

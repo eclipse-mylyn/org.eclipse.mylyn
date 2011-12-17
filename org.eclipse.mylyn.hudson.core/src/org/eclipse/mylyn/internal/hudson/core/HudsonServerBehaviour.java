@@ -66,7 +66,7 @@ import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.RepositoryWebLocation;
 import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;

@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
 
 /**
  * @author Steffen Pingel
@@ -36,7 +36,7 @@ public class RepositoryWebLocation extends AbstractWebLocation {
 	public AuthenticationCredentials getCredentials(AuthenticationType type) {
 		if (type != AuthenticationType.CERTIFICATE) {
 			UsernamePasswordCredentials credentials = location.getCredentials(
-					org.eclipse.mylyn.commons.repositories.auth.AuthenticationType.REPOSITORY,
+					org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType.REPOSITORY,
 					UsernamePasswordCredentials.class);
 			if (credentials != null) {
 				return new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword());
@@ -53,7 +53,7 @@ public class RepositoryWebLocation extends AbstractWebLocation {
 	@Override
 	public void requestCredentials(AuthenticationType type, String message, IProgressMonitor monitor) {
 		location.getService().requestCredentials(
-				org.eclipse.mylyn.commons.repositories.auth.AuthenticationType.REPOSITORY,
+				org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType.REPOSITORY,
 				UsernamePasswordCredentials.class, message, monitor);
 	}
 

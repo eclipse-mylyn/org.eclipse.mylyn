@@ -39,7 +39,7 @@ import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
 import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.util.BuildModelManager;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.ui.console.BuildConsoleManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;

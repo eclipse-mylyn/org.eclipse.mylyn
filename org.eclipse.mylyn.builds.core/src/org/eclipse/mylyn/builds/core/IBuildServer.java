@@ -13,7 +13,7 @@ package org.eclipse.mylyn.builds.core;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Server</b></em>'. <!-- end-user-doc -->

@@ -20,7 +20,7 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
-import org.eclipse.mylyn.commons.repositories.RepositoryValidator;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryValidator;
 
 /**
  * @author Steffen Pingel

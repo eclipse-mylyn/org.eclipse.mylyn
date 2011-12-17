@@ -23,7 +23,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.BuildsUiUtil;
-import org.eclipse.mylyn.commons.ui.team.RepositoryUi;
+import org.eclipse.mylyn.commons.repositories.ui.RepositoryUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Control;

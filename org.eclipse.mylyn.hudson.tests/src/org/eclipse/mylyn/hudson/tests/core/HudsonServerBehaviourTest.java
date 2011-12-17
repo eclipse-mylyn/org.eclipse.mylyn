@@ -13,7 +13,7 @@ package org.eclipse.mylyn.hudson.tests.core;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;

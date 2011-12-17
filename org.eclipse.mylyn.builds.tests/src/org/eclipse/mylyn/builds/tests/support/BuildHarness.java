@@ -24,8 +24,8 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.Build;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
-import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.commons.repositories.InMemoryCredentialsStore;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 
 /**
  * @author Steffen Pingel

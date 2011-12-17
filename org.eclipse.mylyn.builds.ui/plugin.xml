@@ -65,7 +65,7 @@
        </possibleChildren>
        <triggerPoints>
           <instanceof
-                value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
+                value="org.eclipse.mylyn.commons.repositories.core.RepositoryCategory">
           </instanceof>
        </triggerPoints>
        <actionProvider
@@ -76,7 +76,7 @@
  <extension
        point="org.eclipse.ui.navigator.viewer">
     <viewerContentBinding
-          viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+          viewerId="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
        <includes>
           <contentExtension
                 pattern="org.eclipse.mylyn.builds.ui.navigator.BuildRepositories">
@@ -234,7 +234,7 @@
                <with
                      variable="activePartId">
                   <equals
-                        value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                        value="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
                   </equals>
                </with>
                <count
@@ -258,7 +258,7 @@
                <with
                      variable="activePartId">
                   <equals
-                        value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                        value="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
                   </equals>
                </with>
                <count
@@ -621,7 +621,7 @@
              style="push">
           <parameter
                 name="org.eclipse.ui.views.showView.viewId"
-                value="org.eclipse.mylyn.commons.team.navigator.Repositories">
+                value="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
           </parameter>
        </command>
     </menuContribution>
