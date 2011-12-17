@@ -9,21 +9,19 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.identity.core;
+package org.eclipse.mylyn.commons.repositories.ui;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.jface.operation.IRunnableContext;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.identity.core.messages"; //$NON-NLS-1$
+/**
+ * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
+ */
+public interface IPartContainer extends IRunnableContext {
 
-	public static String Identity_Retrieving_Image;
+	public void setMessage(String message, int messageType);
 
-	public static String Identity_Retrieving_Profile;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+	public void updateButtons();
 
-	private Messages() {
-	}
 }

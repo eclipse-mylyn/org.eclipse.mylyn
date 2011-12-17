@@ -9,21 +9,15 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.identity.core;
+package org.eclipse.mylyn.commons.repositories.core.auth;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.equinox.security.storage.StorageException;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.identity.core.messages"; //$NON-NLS-1$
+/**
+ * @author Steffen Pingel
+ */
+public abstract class AuthenticationCredentials {
 
-	public static String Identity_Retrieving_Image;
+	public abstract void save(ICredentialsStore store, String prefix) throws StorageException;
 
-	public static String Identity_Retrieving_Profile;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-
-	private Messages() {
-	}
 }

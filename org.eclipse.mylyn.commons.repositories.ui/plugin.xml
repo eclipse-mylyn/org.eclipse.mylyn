@@ -5,27 +5,18 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <!--
-      <view
-            category="org.eclipse.team.ui"
-            class="org.eclipse.mylyn.internal.commons.ui.team.RepositoriesView"
-            icon="icons/eview16/repositories.gif"
-            id="org.eclipse.mylyn.commons.team.navigator.Repositories"
-            name="Team Repositories">
-      </view>
-      -->
       <view
             category="org.eclipse.mylyn.ui"
-            class="org.eclipse.mylyn.internal.commons.ui.team.RepositoriesView"
+            class="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesView"
             icon="icons/eview16/repositories.gif"
-            id="org.eclipse.mylyn.commons.team.navigator.Repositories"
+            id="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories"
             name="Team Repositories">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewerContentBinding
-            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+            viewerId="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
          <includes>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.linkHelper">
@@ -33,18 +24,18 @@
          </includes>
       </viewerContentBinding>
       <viewerContentBinding
-            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+            viewerId="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
          <includes>
             <contentExtension
-                  pattern="org.eclipse.mylyn.commons.team.navigator.*">
+                  pattern="org.eclipse.mylyn.commons.repositories.ui.navigator.*">
             </contentExtension>
          </includes>
       </viewerContentBinding>
       <viewerActionBinding
-            viewerId="org.eclipse.mylyn.commons.team.navigator.Repositories">
+            viewerId="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
          <includes>
             <actionExtension
-                  pattern="org.eclipse.mylyn.commons.team.navigator.*">
+                  pattern="org.eclipse.mylyn.commons.repositories.ui.navigator.*">
             </actionExtension>
          </includes>
       </viewerActionBinding>
@@ -53,10 +44,10 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
             activeByDefault="true"
-            contentProvider="org.eclipse.mylyn.internal.commons.ui.team.RepositoryCategoryContentProvider"
+            contentProvider="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryCategoryContentProvider"
             icon="icons/obj16/folder.gif"
-            id="org.eclipse.mylyn.commons.team.navigator.RepositoryCategories"
-            labelProvider="org.eclipse.mylyn.internal.commons.ui.team.RepositoryLabelProvider"
+            id="org.eclipse.mylyn.commons.repositories.ui.navigator.RepositoryCategories"
+            labelProvider="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryLabelProvider"
             name="Categories">
          <possibleChildren>
             <instanceof
@@ -65,28 +56,28 @@
          </possibleChildren>
          <triggerPoints>
             <instanceof
-                  value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
+                  value="org.eclipse.mylyn.commons.repositories.core.RepositoryCategory">
             </instanceof></triggerPoints>
          <commonSorter
-               class="org.eclipse.mylyn.internal.commons.ui.team.RepositoryCategorySorter">
+               class="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryCategorySorter">
          </commonSorter>
       </navigatorContent>
       <commonFilter
             activeByDefault="true"
-            class="org.eclipse.mylyn.internal.commons.ui.team.EmptyRepositoryCategoriesFilter"
-            id="org.eclipse.mylyn.commons.team.navigator.filter.EmptyCategories"
+            class="org.eclipse.mylyn.internal.commons.repositories.ui.EmptyRepositoryCategoriesFilter"
+            id="org.eclipse.mylyn.commons.repositories.ui.navigator.filter.EmptyCategories"
             name="Empty Categories">
       </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="org.eclipse.mylyn.commons.team.category"
+            id="org.eclipse.mylyn.commons.repositories.ui.category.Team"
             name="Team">
       </category>
       <command
-            categoryId="org.eclipse.mylyn.commons.team.category"
-            defaultHandler="org.eclipse.mylyn.internal.commons.ui.team.NewRepositoryHandler"
+            categoryId="org.eclipse.mylyn.commons.repositories.ui.category.Team"
+            defaultHandler="org.eclipse.mylyn.internal.commons.repositories.ui.NewRepositoryHandler"
             id="org.eclipse.mylyn.commons.ui.command.AddRepository"
             name="Add Repository">
       </command>
@@ -101,7 +92,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="toolbar:org.eclipse.mylyn.commons.team.navigator.Repositories">
+            locationURI="toolbar:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
          <command
                commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
                label="Add Repository..."
@@ -109,7 +100,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.new">
+            locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.new">
          <menu
                id="new"
                label="New">
@@ -121,7 +112,7 @@
          </menu>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.properties">
+            locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.properties">
          <command
                commandId="org.eclipse.ui.file.properties"
                label="Properties"
@@ -135,12 +126,12 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.goto">
+            locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.goto">
          <menu
                label="Show In">
             <dynamic
-                  class="org.eclipse.mylyn.internal.commons.ui.team.ShowInMenuContribution"
-                  id="org.eclipse.mylyn.commons.team.showIn">
+                  class="org.eclipse.mylyn.internal.commons.repositories.ui.ShowInMenuContribution"
+                  id="org.eclipse.mylyn.commons.repositories.ui.menu.ShowIn">
             </dynamic>
             <visibleWhen
                   checkEnabled="false">
@@ -150,7 +141,7 @@
                         operator="and">
                      <not>
                         <instanceof
-                              value="org.eclipse.mylyn.commons.repositories.RepositoryCategory">
+                              value="org.eclipse.mylyn.commons.repositories.core.RepositoryCategory">
                         </instanceof>
                      </not>
                   </iterate>
@@ -159,7 +150,7 @@
          </menu>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.mylyn.commons.team.navigator.Repositories?after=group.edit">
+            locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.edit">
          <command
                commandId="org.eclipse.ui.edit.delete"
                label="Delete"
