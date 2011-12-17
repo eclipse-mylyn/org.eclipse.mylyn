@@ -35,6 +35,7 @@
       <import plugin="org.apache.ws.commons.util" version="1.0.1" match="compatible"/>
       <import plugin="javax.xml.bind" version="2.0.0" match="compatible"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="compatible"/>
+      
       <import feature="org.eclipse.mylyn_feature" version="3.7.0" match="equivalent"/>
    </requires>
 

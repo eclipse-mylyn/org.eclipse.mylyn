@@ -17,10 +17,10 @@ import java.io.ByteArrayInputStream;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.mylyn.commons.identity.Account;
-import org.eclipse.mylyn.commons.identity.IIdentity;
-import org.eclipse.mylyn.commons.identity.IProfileImage;
-import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
+import org.eclipse.mylyn.commons.identity.core.Account;
+import org.eclipse.mylyn.commons.identity.core.IIdentity;
+import org.eclipse.mylyn.commons.identity.core.IProfileImage;
+import org.eclipse.mylyn.commons.identity.core.spi.ProfileImage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;

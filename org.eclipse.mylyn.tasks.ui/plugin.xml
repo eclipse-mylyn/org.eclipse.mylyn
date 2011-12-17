@@ -2009,7 +2009,7 @@
       </navigatorContent>
     </extension>
     <extension
-          point="org.eclipse.mylyn.commons.team.newWizards">
+          point="org.eclipse.mylyn.commons.repositories.ui.newWizards">
        <category
              id="org.eclipse.mylyn.tasks.ui.category.Tasks"
              name="Tasks">
