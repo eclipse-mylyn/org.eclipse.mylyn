@@ -142,6 +142,8 @@ public class GitHubClient {
 
 	private String userAgent;
 
+	private int bufferSize = 8192;
+
 	/**
 	 * Create default client
 	 */
@@ -340,6 +342,21 @@ public class GitHubClient {
 	}
 
 	/**
+	 * Set buffer size used to send the request and read the response
+	 *
+	 * @param bufferSize
+	 * @return this client
+	 */
+	public GitHubClient setBufferSize(int bufferSize) {
+		if (bufferSize < 1)
+			throw new IllegalArgumentException(
+					"Buffer size must be greater than zero");
+
+		this.bufferSize = bufferSize;
+		return this;
+	}
+
+	/**
 	 * Get the user that this client is currently authenticating as
 	 *
 	 * @return user or null if not authentication
@@ -374,7 +391,7 @@ public class GitHubClient {
 	 */
 	protected <V> V parseJson(InputStream stream, Type type) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				stream, CHARSET_UTF8));
+				stream, CHARSET_UTF8), bufferSize);
 		try {
 			return gson.fromJson(reader, type);
 		} catch (JsonParseException jpe) {
@@ -530,7 +547,7 @@ public class GitHubClient {
 		byte[] data = toJson(params).getBytes(CHARSET_UTF8);
 		request.setFixedLengthStreamingMode(data.length);
 		BufferedOutputStream output = new BufferedOutputStream(
-				request.getOutputStream());
+				request.getOutputStream(), bufferSize);
 		try {
 			output.write(data);
 		} finally {
