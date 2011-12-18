@@ -49,14 +49,14 @@ public class GitHub {
 			+ Pattern.quote(HTTP_GITHUB_COM) + ")/([^/]+)/([^/]+)"); //$NON-NLS-1$
 
 	/** USER_AGENT */
-	public static final String USER_AGENT = "GitHubEclipse/1.2.0"; //$NON-NLS-1$
+	public static final String USER_AGENT = "GitHubEclipse/1.3.0"; //$NON-NLS-1$
 
 	/** REPOSITORY_SEGMENTS */
 	public static final String REPOSITORY_SEGMENTS = "/user/repository"; //$NON-NLS-1$
 
 	/**
 	 * Configure client with standard configuration
-	 * 
+	 *
 	 * @param client
 	 * @return given client
 	 */
@@ -66,7 +66,7 @@ public class GitHub {
 
 	/**
 	 * Set credentials on client from task repository
-	 * 
+	 *
 	 * @param client
 	 * @param repository
 	 * @return specified client
@@ -83,7 +83,7 @@ public class GitHub {
 
 	/**
 	 * Create status of severity with message
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @return status
@@ -94,7 +94,7 @@ public class GitHub {
 
 	/**
 	 * Create status of severity with message and throwable
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @param e
@@ -106,7 +106,7 @@ public class GitHub {
 
 	/**
 	 * Create error status from message
-	 * 
+	 *
 	 * @param message
 	 * @return status
 	 */
@@ -116,7 +116,7 @@ public class GitHub {
 
 	/**
 	 * Create error status from message and throwable
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 * @return status
@@ -127,7 +127,7 @@ public class GitHub {
 
 	/**
 	 * Create error status from throwable
-	 * 
+	 *
 	 * @param e
 	 * @return status
 	 */
@@ -139,7 +139,7 @@ public class GitHub {
 	/**
 	 * Create error status from {@link IOException} that wraps it in a
 	 * {@link GitHubException} if it is a {@link RequestException}
-	 * 
+	 *
 	 * @param e
 	 * @return status
 	 */
@@ -149,7 +149,7 @@ public class GitHub {
 
 	/**
 	 * Get log
-	 * 
+	 *
 	 * @return log
 	 */
 	public static ILog getLog() {
@@ -158,7 +158,7 @@ public class GitHub {
 
 	/**
 	 * Log message and throwable as error status
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 */
@@ -168,7 +168,7 @@ public class GitHub {
 
 	/**
 	 * Log throwable as error status
-	 * 
+	 *
 	 * @param t
 	 */
 	public static void logError(Throwable t) {
@@ -177,7 +177,7 @@ public class GitHub {
 
 	/**
 	 * Get repository for url
-	 * 
+	 *
 	 * @param repositoryUrl
 	 * @return repository or null if not present in url
 	 */
@@ -187,11 +187,11 @@ public class GitHub {
 
 	/**
 	 * Create url with github.com host
-	 * 
+	 *
 	 * @param user
 	 * @param project
 	 * @return url
-	 * 
+	 *
 	 * @see #createGitHubUrlAlternate(String, String)
 	 */
 	public static String createGitHubUrl(String user, String project) {
@@ -200,11 +200,11 @@ public class GitHub {
 
 	/**
 	 * Create url with github.org host
-	 * 
+	 *
 	 * @param user
 	 * @param project
 	 * @return url
-	 * 
+	 *
 	 * @see #createGitHubUrl(String, String)
 	 */
 	public static String createGitHubUrlAlternate(String user, String project) {
