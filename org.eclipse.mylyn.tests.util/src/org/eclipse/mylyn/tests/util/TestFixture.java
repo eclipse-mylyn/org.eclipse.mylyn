@@ -109,6 +109,8 @@ public abstract class TestFixture {
 
 	private String simpleInfo;
 
+	private String description;
+
 	private TestSuite suite;
 
 	public TestFixture(String connectorKind, String repositoryUrl) {
@@ -202,6 +204,7 @@ public abstract class TestFixture {
 		Assert.isNotNull(version);
 		this.repositoryName = repositoryName;
 		this.simpleInfo = version;
+		this.description = description;
 		if (description != null && description.length() > 0) {
 			this.simpleInfo += "/" + description;
 		}
@@ -243,6 +246,10 @@ public abstract class TestFixture {
 		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
 		String[] excludeFixtureArray = excludeFixture.split(",");
 		return new HashSet<String>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 }
