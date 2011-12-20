@@ -119,6 +119,10 @@ public class BugzillaClient {
 
 	private static final String POST_BUG_CGI = "/post_bug.cgi"; //$NON-NLS-1$
 
+	private static final String ENTER_BUG_PRODUCT_CGI = "/enter_bug.cgi?product="; //$NON-NLS-1$
+
+	private static final String ENTER_ATTACHMENT_CGI = "/attachment.cgi?action=enter&bugid="; //$NON-NLS-1$
+
 	private static final String PROCESS_BUG_CGI = "/process_bug.cgi"; //$NON-NLS-1$
 
 	private static final String PROCESS_ATTACHMENT_CGI = "/attachment.cgi"; //$NON-NLS-1$
@@ -974,6 +978,20 @@ public class BugzillaClient {
 					}
 				}
 			}
+			String token = null;
+			BugzillaVersion bugzillaVersion = null;
+			if (repositoryConfiguration != null) {
+				bugzillaVersion = repositoryConfiguration.getInstallVersion();
+			} else {
+				bugzillaVersion = BugzillaVersion.MIN_VERSION;
+			}
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) > 0) {
+				token = getTokenInternal(repositoryUrl + ENTER_ATTACHMENT_CGI + bugReportID, monitor);
+			}
+			if (token != null) {
+				parts.add(new StringPart(BugzillaAttribute.TOKEN.getKey(), token));
+			}
+
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
 			postMethod.setDoAuthentication(true);
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
@@ -1215,6 +1233,58 @@ public class BugzillaClient {
 		}
 	}
 
+	private String getTokenInternal(String bugUrl, IProgressMonitor monitor) throws IOException, CoreException {
+		String tokenValue = null;
+		if (!loggedIn) {
+			authenticate(new SubProgressMonitor(monitor, 1));
+		}
+		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
+
+		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$ 
+		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
+		getMethod.setDoAuthentication(true);
+
+		int code;
+		InputStream inStream = null;
+		try {
+			code = WebUtil.execute(httpClient, hostConfiguration, getMethod, monitor);
+			if (code == HttpURLConnection.HTTP_OK) {
+				inStream = getResponseStream(getMethod, monitor);
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(
+						inStream, getCharacterEncoding())), null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
+							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						String name = tag.getAttribute("name"); //$NON-NLS-1$
+						String value = tag.getAttribute("value"); //$NON-NLS-1$
+						if (name != null && name.equalsIgnoreCase(BugzillaAttribute.TOKEN.getKey()) && value != null
+								&& value.length() > 0) {
+							if (tokenValue == null) {
+								tokenValue = value;
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					"Unable to retrieve group security information", e)); //$NON-NLS-1$
+		} finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					//ignore
+				}
+			}
+			WebUtil.releaseConnection(getMethod, monitor);
+		}
+
+		return tokenValue;
+	}
+
 	public RepositoryResponse postTaskDataInternal(TaskData taskData, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		NameValuePair[] formData = null;
@@ -1229,7 +1299,19 @@ public class BugzillaClient {
 		if (taskData == null) {
 			return null;
 		} else if (taskData.isNew()) {
-			formData = getPairsForNew(taskData);
+			String token = null;
+			BugzillaVersion bugzillaVersion = null;
+			if (repositoryConfiguration != null) {
+				bugzillaVersion = repositoryConfiguration.getInstallVersion();
+			} else {
+				bugzillaVersion = BugzillaVersion.MIN_VERSION;
+			}
+			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) > 0) {
+				TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
+				token = getTokenInternal(
+						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI + productAttribute.getValue(), monitor);
+			}
+			formData = getPairsForNew(taskData, token);
 		} else {
 			formData = getPairsForExisting(taskData, new SubProgressMonitor(monitor, 1));
 		}
@@ -1264,8 +1346,11 @@ public class BugzillaClient {
 
 	}
 
-	private NameValuePair[] getPairsForNew(TaskData taskData) {
+	private NameValuePair[] getPairsForNew(TaskData taskData, String token) {
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+		if (token != null) {
+			fields.put(BugzillaAttribute.TOKEN.getKey(), new NameValuePair(BugzillaAttribute.TOKEN.getKey(), token));
+		}
 		BugzillaVersion bugzillaVersion = null;
 		if (repositoryConfiguration != null) {
 			bugzillaVersion = repositoryConfiguration.getInstallVersion();
