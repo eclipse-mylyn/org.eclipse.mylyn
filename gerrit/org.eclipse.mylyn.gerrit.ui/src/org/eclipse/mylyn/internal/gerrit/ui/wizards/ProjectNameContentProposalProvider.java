@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -62,18 +63,20 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
+		String contentsLowerCase = contents.toLowerCase(Locale.ENGLISH);
 		ArrayList<IContentProposal> proposals = new ArrayList<IContentProposal>();
 		List<Project> projects = getProjects();
 		if (projects != null) {
 			for (Project project : projects) {
-				String projectName = project.getName().trim();
-				if (projectName.startsWith(contents) && !GerritUtil.isPermissionOnlyProject(client, projectName)) {
+				String projectName = project.getName();
+				if (projectName.toLowerCase(Locale.ENGLISH).contains(contentsLowerCase)
+						&& !GerritUtil.isPermissionOnlyProject(client, projectName)) {
 					proposals.add(new ProjectNameContentProposal(projectName));
 				}
 			}
 			return proposals.toArray(new IContentProposal[] {});
 		} else {
-			// TODO Trigger refresh of repository configuration when query dialog is opened  
+			// TODO Trigger refresh of repository configuration  
 			return new IContentProposal[] { new MissingConfigurationContentProposal() };
 		}
 	}
