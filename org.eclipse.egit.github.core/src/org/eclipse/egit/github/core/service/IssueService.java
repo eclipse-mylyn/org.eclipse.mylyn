@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Label;
@@ -195,7 +196,7 @@ public class IssueService extends GitHubService {
 	 * @return iterator over pages of issues
 	 */
 	public PageIterator<Issue> pageIssues() {
-		return pageIssues(null);
+		return pageIssues((Map<String, String>) null);
 	}
 
 	/**
@@ -264,13 +265,46 @@ public class IssueService extends GitHubService {
 	public Issue getIssue(String user, String repository, String id)
 			throws IOException {
 		verifyRepository(user, repository);
+
+		String repoId = user + '/' + repository;
+		return getIssue(repoId, id);
+	}
+
+	/**
+	 * Get issue
+	 *
+	 * @param repository
+	 * @param id
+	 * @return issue
+	 * @throws IOException
+	 */
+	public Issue getIssue(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		return getIssue(repository, Integer.toString(id));
+	}
+
+	/**
+	 * Get issue
+	 *
+	 * @param repository
+	 * @param id
+	 * @return issue
+	 * @throws IOException
+	 */
+	public Issue getIssue(IRepositoryIdProvider repository, String id)
+			throws IOException {
+		String repoId = getId(repository);
+		return getIssue(repoId, id);
+	}
+
+	private Issue getIssue(String repoId, String id) throws IOException {
 		if (id == null)
 			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
 		if (id.length() == 0)
 			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(repoId);
 		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(id);
 		GitHubRequest request = createRequest();
@@ -305,13 +339,54 @@ public class IssueService extends GitHubService {
 	public List<Comment> getComments(String user, String repository, String id)
 			throws IOException {
 		verifyRepository(user, repository);
+		String repoId = user + '/' + repository;
+		return getComments(repoId, id);
+	}
+
+	/**
+	 * Get an issue's comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	public List<Comment> getComments(IRepositoryIdProvider repository, int id)
+			throws IOException {
+		return getComments(repository, Integer.toString(id));
+	}
+
+	/**
+	 * Get an issue's comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	public List<Comment> getComments(IRepositoryIdProvider repository, String id)
+			throws IOException {
+		String repoId = getId(repository);
+		return getComments(repoId, id);
+	}
+
+	/**
+	 * Get an issue's comments
+	 *
+	 * @param repository
+	 * @param id
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	private List<Comment> getComments(String repoId, String id)
+			throws IOException {
 		if (id == null)
 			throw new IllegalArgumentException("Id cannot be null"); //$NON-NLS-1$
 		if (id.length() == 0)
 			throw new IllegalArgumentException("Id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(repoId);
 		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMENTS);
@@ -325,20 +400,16 @@ public class IssueService extends GitHubService {
 	/**
 	 * Get bulk issues request
 	 *
-	 * @param user
-	 * @param repository
+	 * @param repoId
 	 * @param filterData
 	 * @param start
 	 * @param size
 	 * @return paged request
 	 */
-	protected PagedRequest<Issue> createIssuesRequest(String user,
-			String repository, Map<String, String> filterData, int start,
-			int size) {
-		verifyRepository(user, repository);
-
+	protected PagedRequest<Issue> createIssuesRequest(String repoId,
+			Map<String, String> filterData, int start, int size) {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(repoId);
 		uri.append(SEGMENT_ISSUES);
 		PagedRequest<Issue> request = createPagedRequest(start, size);
 		request.setParams(filterData).setUri(uri);
@@ -358,9 +429,20 @@ public class IssueService extends GitHubService {
 	 */
 	public List<Issue> getIssues(String user, String repository,
 			Map<String, String> filterData) throws IOException {
-		PagedRequest<Issue> request = createIssuesRequest(user, repository,
-				filterData, PAGE_FIRST, PAGE_SIZE);
-		return getAll(request);
+		return getAll(pageIssues(user, repository, filterData));
+	}
+
+	/**
+	 * Get a list of {@link Issue} objects that match the specified filter data
+	 *
+	 * @param repository
+	 * @param filterData
+	 * @return list of issues
+	 * @throws IOException
+	 */
+	public List<Issue> getIssues(IRepositoryIdProvider repository,
+			Map<String, String> filterData) throws IOException {
+		return getAll(pageIssues(repository, filterData));
 	}
 
 	/**
@@ -415,8 +497,64 @@ public class IssueService extends GitHubService {
 	 */
 	public PageIterator<Issue> pageIssues(String user, String repository,
 			Map<String, String> filterData, int start, int size) {
-		PagedRequest<Issue> request = createIssuesRequest(user, repository,
-				filterData, start, size);
+		verifyRepository(user, repository);
+		String repoId = user + '/' + repository;
+		PagedRequest<Issue> request = createIssuesRequest(repoId, filterData,
+				start, size);
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 *
+	 * @param repository
+	 * @return iterator over issue pages
+	 */
+	public PageIterator<Issue> pageIssues(IRepositoryIdProvider repository) {
+		return pageIssues(repository, null);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 *
+	 * @param repository
+	 * @param filterData
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(IRepositoryIdProvider repository,
+			Map<String, String> filterData) {
+		return pageIssues(repository, filterData, PAGE_SIZE);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 *
+	 * @param repository
+	 * @param filterData
+	 * @param size
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(IRepositoryIdProvider repository,
+			Map<String, String> filterData, int size) {
+		return pageIssues(repository, filterData, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Get page iterator over issues query
+	 *
+	 * @param repository
+	 * @param filterData
+	 * @param size
+	 *            page size
+	 * @param start
+	 *            starting page number
+	 * @return iterator
+	 */
+	public PageIterator<Issue> pageIssues(IRepositoryIdProvider repository,
+			Map<String, String> filterData, int start, int size) {
+		String repoId = getId(repository);
+		PagedRequest<Issue> request = createIssuesRequest(repoId, filterData,
+				start, size);
 		return createPageIterator(request);
 	}
 
