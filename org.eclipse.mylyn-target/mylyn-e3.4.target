@@ -4,14 +4,13 @@
 <target name="mylyn-e3.4" sequenceNumber="7">
 <locations>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.google.gwt.user" version="2.0.4.v20100709-0658"/>
-<unit id="org.apache.commons.io" version="1.4.0.v20081110-1000"/>
-<unit id="com.google.gson" version="1.6.0.v201101131530"/>
-<unit id="com.google.gwtjsonrpc" version="1.2.2.v201105211953"/>
-<unit id="com.google.gwtorm" version="1.1.4.v201105211953"/>
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201103020530"/>
 <unit id="com.google.gerrit.reviewdb" version="2.1.5.v201105211953"/>
 <unit id="com.google.gerrit.common" version="2.1.5.v201105211953"/>
+<unit id="com.google.gson" version="1.6.0.v201101131530"/>
+<unit id="com.google.gwt.user" version="2.0.4.v201111291940"/>
+<unit id="com.google.gwtjsonrpc" version="1.2.5.v201112081616"/>
+<unit id="com.google.gwtorm" version="1.1.4.v201105211953"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201105210647"/>
 <unit id="javax.activation" version="1.1.0.v201108011116"/>
@@ -46,7 +45,7 @@
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="org.apache.httpcomponents.httpclient" version="4.1.0.v201103311320"/>
 <unit id="org.apache.httpcomponents.httpcore" version="4.1.0.v201101201700"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110907174232/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20111216203947/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="5.0.2.200902130801"/>
