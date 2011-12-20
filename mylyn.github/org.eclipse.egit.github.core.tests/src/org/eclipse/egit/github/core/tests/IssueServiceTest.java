@@ -25,6 +25,7 @@ import java.util.Map;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -85,6 +86,16 @@ public class IssueServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getIssueNullUser() throws IOException {
 		issueService.getIssue(null, "not null", "not null");
+	}
+
+	/**
+	 * Get issue with null repository id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getIssueNullRepositoryId() throws IOException {
+		issueService.getIssue(null, 1);
 	}
 
 	/**
@@ -151,6 +162,20 @@ public class IssueServiceTest {
 	}
 
 	/**
+	 * Get issue with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getIssueWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.getIssue(id, 3);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/tu/tr/issues/3");
+		verify(gitHubClient).get(request);
+	}
+
+	/**
 	 * Get issue comments with null user
 	 *
 	 * @throws IOException
@@ -178,6 +203,16 @@ public class IssueServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getCommentsNullRepositoryName() throws IOException {
 		issueService.getComments("not null", null, 3);
+	}
+
+	/**
+	 * Get issue comments with null repository id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getCommentsNullRepositoryId() throws IOException {
+		issueService.getComments(null, 3);
 	}
 
 	/**
@@ -224,6 +259,20 @@ public class IssueServiceTest {
 	}
 
 	/**
+	 * Get issue comments with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getCommentsWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.getComments(id, 4);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/tu/tr/issues/4/comments"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
 	 * Get issues with null user
 	 *
 	 * @throws IOException
@@ -231,6 +280,16 @@ public class IssueServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getIssuesNullUser() throws IOException {
 		issueService.getIssues(null, "not null", null);
+	}
+
+	/**
+	 * Get issues with null repository id
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getIssuesNullRepositoryId() throws IOException {
+		issueService.getIssues(null, null);
 	}
 
 	/**
@@ -271,6 +330,20 @@ public class IssueServiceTest {
 	@Test
 	public void getIssues() throws IOException {
 		issueService.getIssues("tu", "tr", null);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/tu/tr/issues"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Get issues with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getIssuesRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.getIssues(id, null);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/tu/tr/issues"));
 		verify(gitHubClient).get(request);
@@ -569,6 +642,21 @@ public class IssueServiceTest {
 	@Test
 	public void pageRepsitoryIssues() throws IOException {
 		PageIterator<Issue> iterator = issueService.pageIssues("user", "repo");
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+		assertEquals(Utils.page("/repos/user/repo/issues"), iterator
+				.getRequest().generateUri());
+	}
+
+	/**
+	 * Page issues for repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageRepsitoryIssuesWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		PageIterator<Issue> iterator = issueService.pageIssues(id);
 		assertNotNull(iterator);
 		assertTrue(iterator.hasNext());
 		assertEquals(Utils.page("/repos/user/repo/issues"), iterator
