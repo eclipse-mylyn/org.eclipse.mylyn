@@ -44,7 +44,8 @@ public class GitHubException extends IOException {
 	 * @param cause
 	 */
 	public GitHubException(RequestException cause) {
-		super(cause);
+		super();
+		initCause(cause);
 	}
 
 	public String getMessage() {
