@@ -10,37 +10,46 @@
  *     Michael Valenta - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.commons.net;
+package org.eclipse.mylyn.internal.commons.core;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.net.proxy.IProxyService;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
- * Provides an entry point for the proxy service and potentially other web facilities
+ * Tracks core services that are bound to the bundle life-cycle.
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
- * @since 2.0
  */
-public class CommonsNetPlugin extends Plugin {
+public class CommonsCorePlugin extends Plugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.net"; //$NON-NLS-1$
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.core"; //$NON-NLS-1$
 
-	private static CommonsNetPlugin INSTANCE;
+	private static CommonsCorePlugin INSTANCE;
 
-	public static CommonsNetPlugin getDefault() {
+	private static final int MAX_CONCURRENT_REQUESTS = 100;
+
+	private static IProxyService proxyService;
+
+	private static ExecutorService service;
+
+	public static CommonsCorePlugin getDefault() {
 		return INSTANCE;
 	}
 
 	public static synchronized ExecutorService getExecutorService() {
-		return CommonsCorePlugin.getExecutorService();
+		if (service == null) {
+			service = new ThreadPoolExecutor(1, MAX_CONCURRENT_REQUESTS, 10L, TimeUnit.SECONDS,
+					new SynchronousQueue<Runnable>());
+		}
+		return service;
 	}
 
 	/**
@@ -49,23 +58,22 @@ public class CommonsNetPlugin extends Plugin {
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
 	public synchronized static IProxyService getProxyService() {
-		return CommonsCorePlugin.getProxyService();
-	}
-
-	public static void log(int error, String message, Throwable e) {
-		if (getDefault() != null) {
-			getDefault().getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, error, message, e));
+		if (proxyService == null) {
+			if (INSTANCE != null && INSTANCE.tracker != null) {
+				return (IProxyService) INSTANCE.tracker.getService();
+			}
 		}
+		return proxyService;
 	}
 
 	public synchronized static void setProxyService(IProxyService proxyService) {
-		CommonsCorePlugin.setProxyService(proxyService);
+		CommonsCorePlugin.proxyService = proxyService;
 	}
 
 	@SuppressWarnings("rawtypes")
 	private ServiceTracker tracker;
 
-	public CommonsNetPlugin() {
+	public CommonsCorePlugin() {
 		INSTANCE = this;
 	}
 
@@ -73,10 +81,18 @@ public class CommonsNetPlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		tracker = new ServiceTracker(getBundle().getBundleContext(), IProxyService.class.getName(), null);
+		tracker.open();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		tracker.close();
+		tracker = null;
+		if (service != null) {
+			service.shutdown();
+			service = null;
+		}
 		super.stop(context);
 	}
 

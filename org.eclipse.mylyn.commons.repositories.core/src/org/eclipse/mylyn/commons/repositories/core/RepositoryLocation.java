@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -94,6 +95,7 @@ public class RepositoryLocation extends PlatformObject {
 	private boolean workingCopy;
 
 	public RepositoryLocation() {
+		this.properties.put(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
 		this.service = LocationService.getDefault();
 	}
 
@@ -261,6 +263,10 @@ public class RepositoryLocation extends PlatformObject {
 
 	public void setOffline(boolean offline) {
 		properties.put(PROPERTY_OFFLINE, String.valueOf(offline));
+	}
+
+	public void setUrl(String url) {
+		setProperty(PROPERTY_URL, url);
 	}
 
 	public void setProperty(String key, String newValue) {

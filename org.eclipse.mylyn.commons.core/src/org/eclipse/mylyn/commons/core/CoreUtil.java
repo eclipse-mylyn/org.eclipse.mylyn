@@ -94,24 +94,29 @@ public class CoreUtil {
 	}
 
 	/**
+	 * Compares <code>o1</code> and <code>o2</code>.
+	 * 
 	 * @since 3.7
+	 * @return a negative integer, 0, or a positive, if o1 is less than o2, o1 equals o2 or o1 is more than o2; null is
+	 *         considered less than any value
 	 */
-	public static <T> int compare(Comparable<T> key1, T key2) {
-		if (key1 == null) {
-			return (key2 != null) ? 1 : 0;
-		} else if (key2 == null) {
+	public static <T> int compare(Comparable<T> o1, T o2) {
+		if (o1 == null) {
+			return (o2 != null) ? 1 : 0;
+		} else if (o2 == null) {
 			return -1;
 		}
-		return key1.compareTo(key2);
+		return o1.compareTo(o2);
 	}
 
 	/**
 	 * Compares a boolean value.
 	 * 
 	 * @since 3.7
+	 * @see Boolean#equals(Object)
 	 */
 	public static boolean propertyEquals(boolean value, Object expectedValue) {
-		return (expectedValue == null) ? value == true : new Boolean(value).equals(expectedValue);
+		return (expectedValue == null) ? value == true : Boolean.valueOf(value).equals(expectedValue);
 	}
 
 }

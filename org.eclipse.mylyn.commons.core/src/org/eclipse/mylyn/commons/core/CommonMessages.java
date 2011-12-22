@@ -14,6 +14,8 @@ package org.eclipse.mylyn.commons.core;
 import org.eclipse.osgi.util.NLS;
 
 /**
+ * Commons message constants.
+ * 
  * @author Steffen Pingel
  * @since 3.7
  */

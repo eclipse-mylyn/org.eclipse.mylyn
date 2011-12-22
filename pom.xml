@@ -68,6 +68,7 @@
     <module>org.eclipse.mylyn.commons.repositories.ui</module>
     <module>org.eclipse.mylyn.commons.repositories.http-feature</module>
     <module>org.eclipse.mylyn.commons.repositories.http.core</module>
+    <module>org.eclipse.mylyn.commons.repositories.http.tests</module>
     <module>org.eclipse.mylyn.commons.sdk-feature</module>
     <module>org.eclipse.mylyn.commons.sdk.util</module>
     <module>org.eclipse.mylyn.discovery-feature</module>

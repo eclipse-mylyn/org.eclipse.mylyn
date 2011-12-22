@@ -18,8 +18,8 @@ import java.util.Map;
 import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
-import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
+import org.eclipse.mylyn.commons.core.net.ProxyProvider;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
@@ -31,25 +31,36 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredenti
  */
 public class LocationService implements ILocationService {
 
-	private static LocationService instance = new LocationService(null, null, new PlatformProxyProvider());
+	private static LocationService instance = new LocationService();
 
 	public static LocationService getDefault() {
 		return instance;
 	}
 
-	private static class PlatformProxyProvider implements IProxyProvider {
+	private static class PlatformProxyProvider extends ProxyProvider {
 
+		static PlatformProxyProvider INSTANCE = new PlatformProxyProvider();
+
+		@Override
 		public Proxy getProxyForHost(String host, String proxyType) {
-			return WebUtil.getProxy(host, proxyType);
+			return NetUtil.getProxy(host, proxyType);
 		}
 
 	}
 
 	private final Map<AuthenticationType, UsernamePasswordCredentials> credentialsByType;
 
-	private final IProxyProvider proxyProvider;
+	private final ProxyProvider proxyProvider;
 
-	public LocationService(String username, String password, IProxyProvider proxyProvider) {
+	public LocationService() {
+		this(null, null, PlatformProxyProvider.INSTANCE);
+	}
+
+	public LocationService(ProxyProvider proxyProvider) {
+		this(null, null, proxyProvider);
+	}
+
+	public LocationService(String username, String password, ProxyProvider proxyProvider) {
 		this.credentialsByType = new HashMap<AuthenticationType, UsernamePasswordCredentials>();
 		this.proxyProvider = proxyProvider;
 
