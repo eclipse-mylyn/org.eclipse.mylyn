@@ -110,13 +110,15 @@ public class HudsonFixture extends TestFixture {
 	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy)
 			throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl(url);
 		location.setService(new LocationService(username, password, new ProxyProvider() {
+			@Override
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
 			}
 		}));
 		if (username != null && password != null) {
-			location.setCredentials(AuthenticationType.HTTP, new UsernamePasswordCredentials(username, password));
+			location.setCredentials(AuthenticationType.REPOSITORY, new UsernamePasswordCredentials(username, password));
 		}
 		RestfulHudsonClient hudsonClient = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return hudsonClient;

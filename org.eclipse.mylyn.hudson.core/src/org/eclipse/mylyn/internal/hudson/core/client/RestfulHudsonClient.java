@@ -37,11 +37,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.builds.core.spi.AbstractConfigurationCache;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -63,8 +61,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import com.google.gson.Gson;
 
 /**
  * Represents the Hudson repository that is accessed through REST.
@@ -119,15 +115,16 @@ public class RestfulHudsonClient {
 						.tree("builds[number,url,building,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
-				CommonHttpResponse response = executeAndCheck(request, monitor);
-				try {
-					InputStream in = response.getResponseEntityAsStream(monitor);
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
 
-					HudsonModelProject project = unmarshal(parse(in, url), HudsonModelProject.class);
-					return project.getBuild();
-				} finally {
-					response.release(monitor);
-				}
+			@Override
+			protected List<HudsonModelRun> doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
+				HudsonModelProject project = unmarshal(parse(in, response.getRequestPath()), HudsonModelProject.class);
+				return project.getBuild();
 			}
 		}.run();
 	}
@@ -139,14 +136,16 @@ public class RestfulHudsonClient {
 			public HudsonModelBuild execute() throws IOException, HudsonException, JAXBException {
 				String url = getBuildUrl(job, build) + URL_API;
 				HttpRequestBase request = createGetRequest(url);
-				CommonHttpResponse response = executeAndCheck(request, monitor);
-				try {
-					InputStream in = response.getResponseEntityAsStream(monitor);
-					HudsonModelBuild hudsonBuild = unmarshal(parse(in, url), HudsonModelBuild.class);
-					return hudsonBuild;
-				} finally {
-					response.release(monitor);
-				}
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
+
+			@Override
+			protected HudsonModelBuild doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
+				HudsonModelBuild hudsonBuild = unmarshal(parse(in, response.getRequestPath()), HudsonModelBuild.class);
+				return hudsonBuild;
 			}
 		}.run();
 	}
@@ -166,24 +165,26 @@ public class RestfulHudsonClient {
 						.tree(resultTree + "," + aggregatedTree)
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
-				CommonHttpResponse response = executeAndCheck(request, monitor);
-				try {
-					InputStream in = response.getResponseEntityAsStream(monitor);
-					Element element = parse(in, url);
-					if ("surefireAggregatedReport".equals(element.getNodeName())) {
-						HudsonMavenReportersSurefireAggregatedReport report = unmarshal(element,
-								HudsonMavenReportersSurefireAggregatedReport.class);
-						// unmarshal nested test results
-						for (HudsonTasksTestAggregatedTestResultActionChildReport child : report.getChildReport()) {
-							child.setResult(RestfulHudsonClient.unmarshal((Node) child.getResult(),
-									HudsonTasksJunitTestResult.class));
-						}
-						return new HudsonTestReport(report);
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
+
+			@Override
+			protected HudsonTestReport doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
+				Element element = parse(in, response.getRequestPath());
+				if ("surefireAggregatedReport".equals(element.getNodeName())) {
+					HudsonMavenReportersSurefireAggregatedReport report = unmarshal(element,
+							HudsonMavenReportersSurefireAggregatedReport.class);
+					// unmarshal nested test results
+					for (HudsonTasksTestAggregatedTestResultActionChildReport child : report.getChildReport()) {
+						child.setResult(RestfulHudsonClient.unmarshal((Node) child.getResult(),
+								HudsonTasksJunitTestResult.class));
 					}
-					return new HudsonTestReport(unmarshal(element, HudsonTasksJunitTestResult.class));
-				} finally {
-					response.release(monitor);
+					return new HudsonTestReport(report);
 				}
+				return new HudsonTestReport(unmarshal(element, HudsonTasksJunitTestResult.class));
 			}
 		}.run();
 	}
@@ -213,15 +214,21 @@ public class RestfulHudsonClient {
 			final IOperationMonitor monitor) throws HudsonException {
 		return new HudsonOperation<Reader>(client) {
 			@Override
-			public Reader execute() throws IOException, HudsonException {
+			public Reader execute() throws IOException, HudsonException, JAXBException {
 				HttpRequestBase request = createGetRequest(getBuildUrl(job, hudsonBuild) + "/consoleText");
-				CommonHttpResponse response = executeAndCheck(request, monitor);
+				CommonHttpResponse response = execute(request, monitor);
+				return process(response, monitor);
+			}
 
+			@Override
+			protected Reader doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
+					HudsonException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
 				String charSet = response.getResponseCharSet();
 				if (charSet == null) {
 					charSet = "UTF-8";
 				}
-				return new InputStreamReader(response.getResponseEntityAsStream(monitor), charSet);
+				return new InputStreamReader(in, charSet);
 			}
 		}.run();
 	}
@@ -245,38 +252,40 @@ public class RestfulHudsonClient {
 						.exclude("/hudson/job/build")
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
-				CommonHttpResponse response = executeAndCheck(request, monitor);
-				try {
-					InputStream in = response.getResponseEntityAsStream(monitor);
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
 
-					Map<String, String> jobNameById = new HashMap<String, String>();
+			@Override
+			protected List<HudsonModelJob> doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
 
-					HudsonModelHudson hudson = unmarshal(parse(in, url), HudsonModelHudson.class);
+				Map<String, String> jobNameById = new HashMap<String, String>();
 
-					List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
-					List<Object> jobsNodes = hudson.getJob();
-					for (Object jobNode : jobsNodes) {
-						Node node = (Node) jobNode;
-						HudsonModelJob job = unmarshal(node, HudsonModelJob.class);
-						if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
-							jobNameById.put(job.getName(), job.getDisplayName());
-						} else {
-							jobNameById.put(job.getName(), job.getName());
-						}
-						buildPlans.add(job);
+				HudsonModelHudson hudson = unmarshal(parse(in, response.getRequestPath()), HudsonModelHudson.class);
+
+				List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
+				List<Object> jobsNodes = hudson.getJob();
+				for (Object jobNode : jobsNodes) {
+					Node node = (Node) jobNode;
+					HudsonModelJob job = unmarshal(node, HudsonModelJob.class);
+					if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
+						jobNameById.put(job.getName(), job.getDisplayName());
+					} else {
+						jobNameById.put(job.getName(), job.getName());
 					}
-
-					if (ids == null) {
-						// update list of known jobs if all jobs were retrieved
-						HudsonConfiguration configuration = new HudsonConfiguration();
-						configuration.jobNameById = jobNameById;
-						setConfiguration(configuration);
-					}
-
-					return buildPlans;
-				} finally {
-					response.release(monitor);
+					buildPlans.add(job);
 				}
+
+				if (ids == null) {
+					// update list of known jobs if all jobs were retrieved
+					HudsonConfiguration configuration = new HudsonConfiguration();
+					configuration.jobNameById = jobNameById;
+					setConfiguration(configuration);
+				}
+
+				return buildPlans;
 			}
 		}.run();
 	}
@@ -306,82 +315,49 @@ public class RestfulHudsonClient {
 			@Override
 			public Document execute() throws IOException, HudsonException, JAXBException {
 				HttpRequestBase request = createGetRequest(getJobUrl(job) + "/config.xml");
-				CommonHttpResponse response = executeAndCheck(request, monitor);
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
+
+			@Override
+			protected Document doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
+					HudsonException, JAXBException {
+				InputStream in = response.getResponseEntityAsStream(monitor);
 				try {
-					InputStream in = response.getResponseEntityAsStream(monitor);
 					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					return builder.parse(in); // TODO Enhance progress monitoring
 				} catch (ParserConfigurationException e) {
 					throw new HudsonException(e);
 				} catch (SAXException e) {
 					throw new HudsonException(e);
-				} finally {
-					response.release(monitor);
 				}
 			}
 		}.run();
-	}
-
-	private class Parameters {
-
-		private NameValue[] parameter;
-	}
-
-	private static class NameValue {
-
-		@SuppressWarnings("unused")
-		private Object name;
-
-		@SuppressWarnings("unused")
-		private Object value;
-
 	}
 
 	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters, final IOperationMonitor monitor)
 			throws HudsonException {
 		new HudsonOperation<Object>(client) {
 			@Override
-			public Object execute() throws IOException, HudsonException {
+			public Object execute() throws IOException, HudsonException, JAXBException {
 				HttpPost request = createPostRequest(getJobUrl(job) + "/build");
-				//request.setFollowRedirects(false);
-				//request.setDoAuthentication(true);
 				if (parameters != null) {
-					List<NameValuePair> requestParameters = new ArrayList<NameValuePair>();
-					Parameters params = new Parameters();
-					params.parameter = new NameValue[parameters.size()];
-
-					int i = 0;
+					HudsonRunBuildForm form = new HudsonRunBuildForm();
 					for (Entry<String, String> entry : parameters.entrySet()) {
-						requestParameters.add(new BasicNameValuePair("name", entry.getKey()));
-						String value = entry.getValue();
-						if (value != null) {
-							requestParameters.add(new BasicNameValuePair("name", entry.getKey()));
-						}
-
-						NameValue param = new NameValue();
-						param.name = entry.getKey();
-						param.value = entry.getValue();
-						params.parameter[i++] = param;
+						form.add(entry.getKey(), entry.getValue());
 					}
-
-					// TODO verify if both url encoding and json representation are needed
-
-					// set url encoded entities
-					UrlEncodedFormEntity entity = new UrlEncodedFormEntity(requestParameters);
-					request.setEntity(entity);
-
-					// set json encoded entities
-					requestParameters.add(new BasicNameValuePair("json", new Gson().toJson(params)));
-					requestParameters.add(new BasicNameValuePair("Submit", "Build"));
+					request.setEntity(form.createEntity());
 				}
 
-				CommonHttpResponse response = executeAndCheck(request, 302, monitor);
-				try {
-					return null;
-				} finally {
-					response.release(monitor);
-				}
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
 			}
+
+			@Override
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
+					HudsonException {
+				validate(response, HttpStatus.SC_MOVED_TEMPORARILY, monitor);
+			};
 		}.run();
 	}
 
@@ -423,28 +399,29 @@ public class RestfulHudsonClient {
 	public HudsonServerInfo validate(final IOperationMonitor monitor) throws HudsonException {
 		return new HudsonOperation<HudsonServerInfo>(client) {
 			@Override
-			public HudsonServerInfo execute() throws IOException, HudsonException {
+			public HudsonServerInfo execute() throws IOException, HudsonException, JAXBException {
 				HttpRequestBase request = createHeadRequest(client.getLocation().getUrl());
-				CommonHttpResponse response = executeAndCheck(request, monitor);
-				try {
-					Header header = response.getResponse().getFirstHeader("X-Jenkins"); //$NON-NLS-1$
-					Type type;
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
+
+			@Override
+			protected HudsonServerInfo doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
+				Header header = response.getResponse().getFirstHeader("X-Jenkins"); //$NON-NLS-1$
+				Type type;
+				if (header == null) {
+					type = Type.HUDSON;
+					header = response.getResponse().getFirstHeader("X-Hudson"); //$NON-NLS-1$
 					if (header == null) {
-						type = Type.HUDSON;
-						header = response.getResponse().getFirstHeader("X-Hudson"); //$NON-NLS-1$
-						if (header == null) {
-							throw new HudsonException(NLS.bind(
-									"{0} does not appear to be a Hudson or Jenkins instance", client.getLocation()
-											.getUrl()));
-						}
-					} else {
-						type = Type.JENKINS;
+						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson or Jenkins instance",
+								client.getLocation().getUrl()));
 					}
-					HudsonServerInfo info = new HudsonServerInfo(type, header.getValue());
-					return info;
-				} finally {
-					response.release(monitor);
+				} else {
+					type = Type.JENKINS;
 				}
+				HudsonServerInfo info = new HudsonServerInfo(type, header.getValue());
+				return info;
 			}
 		}.run();
 	}

@@ -41,10 +41,10 @@ import org.eclipse.mylyn.builds.core.spi.BuildServerConfiguration;
 import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshConfigurationOperation;
-import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.operations.OperationUtil;
-import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryValidator;
 import org.eclipse.mylyn.commons.repositories.ui.RepositoryLocationPart;
 import org.eclipse.mylyn.commons.workbench.SubstringPatternFilter;
@@ -137,6 +137,8 @@ public class BuildServerPart extends RepositoryLocationPart {
 		super(model.getLocation());
 		this.model = model;
 		this.selectedPlans = Collections.emptyList();
+		setNeedsProxy(true);
+		setNeedsHttpAuth(true);
 	}
 
 	@Override

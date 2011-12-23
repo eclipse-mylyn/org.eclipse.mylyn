@@ -51,7 +51,7 @@ public class HudsonHarness {
 		Credentials credentials = TestUtil.readCredentials(level);
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(fixture.getRepositoryUrl());
-		location.setCredentials(AuthenticationType.HTTP, new UsernamePasswordCredentials(credentials.username,
+		location.setCredentials(AuthenticationType.REPOSITORY, new UsernamePasswordCredentials(credentials.username,
 				credentials.password));
 		client = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return client;

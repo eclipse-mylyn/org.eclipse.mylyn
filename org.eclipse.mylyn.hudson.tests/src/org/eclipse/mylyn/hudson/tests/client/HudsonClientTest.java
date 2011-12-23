@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -138,6 +139,17 @@ public class HudsonClientTest extends TestCase {
 				return null;
 			}
 		});
+	}
+
+	public void testRunBuildGuest() throws Exception {
+		final String jobName = harness.getPlanSucceeding();
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.GUEST);
+		try {
+			client.runBuild(harness.getJob(jobName), null, null);
+			fail("Expected HudsonException");
+		} catch (HudsonException expected) {
+			// ignore
+		}
 	}
 
 }
