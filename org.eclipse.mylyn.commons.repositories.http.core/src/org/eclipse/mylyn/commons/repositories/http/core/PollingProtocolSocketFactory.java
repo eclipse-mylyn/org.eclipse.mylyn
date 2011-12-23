@@ -33,7 +33,7 @@ class PollingProtocolSocketFactory implements SchemeSocketFactory {
 	private final static SocketFactory factory = SocketFactory.getDefault();
 
 	public Socket createSocket(HttpParams params) throws IOException {
-		return factory.createSocket();
+		return NetUtil.configureSocket(factory.createSocket());
 	}
 
 	public Socket connectSocket(Socket sock, InetSocketAddress remoteAddress, InetSocketAddress localAddress,
@@ -43,7 +43,7 @@ class PollingProtocolSocketFactory implements SchemeSocketFactory {
 			throw new IllegalArgumentException("Parameters may not be null"); //$NON-NLS-1$
 		}
 
-		final Socket socket = sock != null ? sock : factory.createSocket();
+		final Socket socket = sock != null ? sock : NetUtil.configureSocket(factory.createSocket());
 
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
 
@@ -55,4 +55,5 @@ class PollingProtocolSocketFactory implements SchemeSocketFactory {
 	public boolean isSecure(Socket sock) throws IllegalArgumentException {
 		return false;
 	}
+
 }

@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 /**
  * @author Steffen Pingel
  */
+// FIXME add synchronization
 public class RepositoryLocation extends PlatformObject {
 
 	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
@@ -45,11 +44,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class NetUtil {
 
-	public static final int HTTPS_PORT = 443;
+	private static final int HTTPS_PORT = 443;
 
 	private static final int HTTP_PORT = 80;
-
-	private SSLSocketFactory socketFactory;
 
 	private final static String[] enabledProtocols;
 

@@ -62,11 +62,16 @@ public class CommonHttpClient {
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 	}
 
+	protected ClientConnectionManager createHttpClientConnectionManager() {
+		// FIXME handle certificate authentication
+		return HttpUtil.getConnectionManager();
+	}
+
 	protected AbstractHttpClient createHttpClient(String userAgent) {
 		AbstractHttpClient client = new ContentEncodingHttpClient() {
 			@Override
 			protected ClientConnectionManager createClientConnectionManager() {
-				return HttpUtil.getConnectionManager();
+				return CommonHttpClient.this.createHttpClientConnectionManager();
 			}
 		};
 		HttpUtil.configureClient(client, userAgent);
