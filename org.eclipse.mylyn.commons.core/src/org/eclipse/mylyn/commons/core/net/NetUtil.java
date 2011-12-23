@@ -19,14 +19,23 @@ import java.net.ProxySelector;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.ICancellable;
 import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Provides network access related utility methods.
@@ -39,6 +48,17 @@ public class NetUtil {
 	public static final int HTTPS_PORT = 443;
 
 	private static final int HTTP_PORT = 80;
+
+	private SSLSocketFactory socketFactory;
+
+	private final static String[] enabledProtocols;
+
+	private final static AtomicBoolean loggedEnabledProtocolsException = new AtomicBoolean();
+
+	static {
+		String value = System.getProperty("org.eclipse.mylyn.https.protocols"); //$NON-NLS-1$
+		enabledProtocols = (value != null) ? value.split(",") : null; //$NON-NLS-1$
+	}
 
 	/**
 	 * Invokes {@link Socket#connect(java.net.SocketAddress, int)} on <code>socket</code> to connect to
@@ -244,6 +264,20 @@ public class NetUtil {
 
 	private static String getPlatformProxyType(Type type) {
 		return type == Type.SOCKS ? IProxyData.SOCKS_PROXY_TYPE : IProxyData.HTTP_PROXY_TYPE;
+	}
+
+	public static Socket configureSocket(Socket socket) {
+		if (socket instanceof SSLSocket && enabledProtocols != null) {
+			try {
+				((SSLSocket) socket).setEnabledProtocols(enabledProtocols);
+			} catch (IllegalArgumentException e) {
+				if (!loggedEnabledProtocolsException.getAndSet(true)) {
+					StatusHandler.log(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
+							"Failed to configure SSL protocols ''{0}''", Arrays.toString(enabledProtocols)))); //$NON-NLS-1$
+				}
+			}
+		}
+		return socket;
 	}
 
 }

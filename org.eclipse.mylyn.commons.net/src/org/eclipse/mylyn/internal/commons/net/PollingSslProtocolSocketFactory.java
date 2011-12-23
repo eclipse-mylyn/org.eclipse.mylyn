@@ -35,6 +35,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.net.SslCertificateException;
 
 /**
@@ -98,16 +99,16 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 
 	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
 			UnknownHostException {
-		return getSocketFactory().createSocket(socket, host, port, autoClose);
+		return NetUtil.configureSocket(getSocketFactory().createSocket(socket, host, port, autoClose));
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort) throws IOException, UnknownHostException {
-		return getSocketFactory().createSocket(remoteHost, remotePort);
+		return NetUtil.configureSocket(getSocketFactory().createSocket(remoteHost, remotePort));
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort)
 			throws IOException, UnknownHostException {
-		return getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+		return NetUtil.configureSocket(getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort));
 	}
 
 	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort,
@@ -117,7 +118,7 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 		}
 
 		int timeout = params.getConnectionTimeout();
-		final Socket socket = getSocketFactory().createSocket();
+		final Socket socket = NetUtil.configureSocket(getSocketFactory().createSocket());
 		socket.bind(new InetSocketAddress(localAddress, localPort));
 		MonitoredRequest.connect(socket, new InetSocketAddress(host, port), timeout);
 		return socket;

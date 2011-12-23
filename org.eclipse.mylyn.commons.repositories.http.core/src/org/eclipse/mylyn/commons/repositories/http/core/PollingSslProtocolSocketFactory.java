@@ -29,6 +29,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.LayeredSchemeSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -83,38 +84,26 @@ class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 	}
 
 	public Socket createSocket(HttpParams params) throws IOException {
-		return getSocketFactory().createSocket();
+		return NetUtil.configureSocket(getSocketFactory().createSocket());
 	}
 
 	public Socket connectSocket(Socket sock, InetSocketAddress remoteAddress, InetSocketAddress localAddress,
 			HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
+		Assert.isNotNull(params);
 
-		if (params == null) {
-			throw new IllegalArgumentException("Parameters may not be null"); //$NON-NLS-1$
-		}
-
-		final Socket socket = getSocketFactory().createSocket();
-
+		final Socket socket = NetUtil.configureSocket(getSocketFactory().createSocket());
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-
 		socket.bind(localAddress);
 		NetUtil.connect(socket, remoteAddress, connTimeout, MonitoredOperation.getCurrentOperation());
 		return socket;
 	}
 
-	/**
-	 * From SSLSocketFactory
-	 */
-	public boolean isSecure(Socket sock) throws IllegalArgumentException {
-		if (sock == null) {
-			throw new IllegalArgumentException("Socket may not be null"); //$NON-NLS-1$
+	public boolean isSecure(Socket socket) throws IllegalArgumentException {
+		Assert.isNotNull(socket);
+		if (!(socket instanceof SSLSocket)) {
+			throw new IllegalArgumentException("Socket is not secure: " + socket.getClass()); //$NON-NLS-1$
 		}
-		// This instanceof check is in line with createSocket() above.
-		if (!(sock instanceof SSLSocket)) {
-			throw new IllegalArgumentException("Socket not created by this factory"); //$NON-NLS-1$
-		}
-		// This check is performed last since it calls the argument object.
-		if (sock.isClosed()) {
+		if (socket.isClosed()) {
 			throw new IllegalArgumentException("Socket is closed"); //$NON-NLS-1$
 		}
 		return true;
@@ -122,7 +111,7 @@ class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 
 	public Socket createLayeredSocket(Socket socket, String target, int port, boolean autoClose) throws IOException,
 			UnknownHostException {
-		return getSocketFactory().createSocket(socket, target, port, autoClose);
+		return NetUtil.configureSocket(getSocketFactory().createSocket(socket, target, port, autoClose));
 	}
 
 	public SSLSocketFactory getSocketFactory() throws IOException {
