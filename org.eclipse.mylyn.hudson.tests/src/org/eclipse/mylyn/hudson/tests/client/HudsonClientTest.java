@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.builds.core.util.ProgressUtil;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.hudson.tests.support.HudsonHarness;
 import org.eclipse.mylyn.hudson.tests.support.HudsonTestUtil;
@@ -63,7 +63,7 @@ public class HudsonClientTest extends TestCase {
 		// invalid url
 		RestfulHudsonClient client = harness.getFixture().connect("http://non.existant/repository");
 		try {
-			client.validate(ProgressUtil.convert(null));
+			client.validate(OperationUtil.convert(null));
 			fail("Expected HudsonException");
 		} catch (HudsonException e) {
 		}
@@ -73,7 +73,7 @@ public class HudsonClientTest extends TestCase {
 		// non Hudson url
 		RestfulHudsonClient client = harness.getFixture().connect("http://eclipse.org/mylyn");
 		try {
-			client.validate(ProgressUtil.convert(null));
+			client.validate(OperationUtil.convert(null));
 			fail("Expected HudsonException");
 		} catch (HudsonException e) {
 		}

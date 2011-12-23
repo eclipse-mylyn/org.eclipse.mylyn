@@ -21,8 +21,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 
 /**
  * @author Steffen Pingel

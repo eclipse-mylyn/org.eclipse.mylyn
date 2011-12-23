@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
-import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryValidator;
 
 /**
@@ -38,7 +38,7 @@ public class BuildServerValidator extends RepositoryValidator {
 	public IStatus run(IProgressMonitor monitor) {
 		try {
 			BuildServerBehaviour behaviour = ((BuildServer) server).getBehaviour();
-			return behaviour.validate(ProgressUtil.convert(monitor));
+			return behaviour.validate(OperationUtil.convert(monitor));
 		} catch (CoreException e) {
 			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Server validation failed", e);
 		}

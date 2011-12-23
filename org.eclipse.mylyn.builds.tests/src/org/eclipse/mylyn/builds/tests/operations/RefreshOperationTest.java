@@ -18,11 +18,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
-import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.tests.support.BuildHarness;
 import org.eclipse.mylyn.builds.tests.support.MockBuildServerBehaviour;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 
 /**
  * @author Steffen Pingel
@@ -64,7 +64,7 @@ public class RefreshOperationTest extends TestCase {
 
 		RefreshOperation operation = new RefreshOperation(harness.getOperationService(), harness.getModel(),
 				Collections.singletonList((IBuildElement) plan));
-		operation.doExecute(ProgressUtil.convert(null));
+		operation.doExecute(OperationUtil.convert(null));
 
 		assertEquals(newBuild, plan.getLastBuild());
 		assertEquals("value2", plan.getLastBuild().getAttributes().get("key"));
@@ -78,7 +78,7 @@ public class RefreshOperationTest extends TestCase {
 
 		RefreshOperation operation = new RefreshOperation(harness.getOperationService(), harness.getModel(),
 				Collections.singletonList((IBuildElement) plan));
-		operation.doExecute(ProgressUtil.convert(null));
+		operation.doExecute(OperationUtil.convert(null));
 
 		// check that attributes were merged from plan2 into plan
 		assertEquals("value2", plan.getAttributes().get("key"));

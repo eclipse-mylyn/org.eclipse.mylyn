@@ -31,7 +31,7 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.core.IUser;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 
 /**
  * @author Steffen Pingel

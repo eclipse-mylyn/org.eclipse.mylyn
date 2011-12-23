@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IOperation;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
-import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**

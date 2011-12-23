@@ -11,12 +11,9 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
-import java.net.Proxy;
-
-import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
-import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
@@ -52,13 +49,10 @@ public class HudsonHarness {
 
 	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(level);
-		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), credentials.username, credentials.password,
-				new IProxyProvider() {
-					public Proxy getProxyForHost(String host, String proxyType) {
-						return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
-					}
-				});
-		location.setCredentials(AuthenticationType.HTTP, credentials.username, credentials.password);
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl(fixture.getRepositoryUrl());
+		location.setCredentials(AuthenticationType.HTTP, new UsernamePasswordCredentials(credentials.username,
+				credentials.password));
 		client = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return client;
 	}

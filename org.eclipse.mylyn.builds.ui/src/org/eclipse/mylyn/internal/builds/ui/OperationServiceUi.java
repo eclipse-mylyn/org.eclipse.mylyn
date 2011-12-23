@@ -16,7 +16,7 @@ import org.eclipse.mylyn.builds.internal.core.IBuildModelRealm;
 import org.eclipse.mylyn.builds.internal.core.operations.AbstractOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.util.BuildScheduler;
-import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**

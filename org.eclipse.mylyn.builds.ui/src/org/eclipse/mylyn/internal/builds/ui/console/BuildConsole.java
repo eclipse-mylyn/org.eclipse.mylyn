@@ -22,7 +22,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation.BuildOutputEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildOutputOperation.BuildOutputReader;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.osgi.util.NLS;

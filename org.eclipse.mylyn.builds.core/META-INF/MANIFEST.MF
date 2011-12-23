@@ -12,15 +12,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.mylyn.commons.core;bundle-version="3.7.0",
- org.eclipse.mylyn.commons.net;bundle-version="3.7.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="0.9.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.builds.core;x-internal:=true,
  org.eclipse.mylyn.builds.core.spi;x-internal:=true,
- org.eclipse.mylyn.builds.core.util;x-internal:=true,
  org.eclipse.mylyn.builds.internal.core;x-friends:="org.eclipse.mylyn.builds.ui",
  org.eclipse.mylyn.builds.internal.core.operations;x-friends:="org.eclipse.mylyn.builds.ui",
- org.eclipse.mylyn.builds.internal.core.util;x-friends:="org.eclipse.mylyn.builds.ui",
- org.eclipse.mylyn.commons.core;x-internal:=true,
- org.eclipse.mylyn.commons.http;x-internal:=true;uses:="org.eclipse.mylyn.commons.net",
- org.eclipse.mylyn.internal.commons.http;x-friends:="org.eclipse.mylyn.builds.ui"
+ org.eclipse.mylyn.builds.internal.core.util;x-friends:="org.eclipse.mylyn.builds.ui"

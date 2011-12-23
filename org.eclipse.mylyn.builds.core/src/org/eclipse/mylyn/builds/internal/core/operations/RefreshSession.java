@@ -31,8 +31,8 @@ import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildsCorePlugin;
 import org.eclipse.mylyn.builds.internal.core.util.BuildRunnableWithResult;
 import org.eclipse.mylyn.builds.internal.core.util.BuildRunner;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 
 /**
  * Manages refreshes for plans and builds. Each server has one associated session that may process several requests

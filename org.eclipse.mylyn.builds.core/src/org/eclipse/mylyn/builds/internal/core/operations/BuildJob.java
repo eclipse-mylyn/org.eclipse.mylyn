@@ -17,12 +17,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.builds.core.IBuildElement;
-import org.eclipse.mylyn.builds.core.util.ProgressUtil;
 import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
-import org.eclipse.mylyn.commons.core.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 
 /**
  * @author Steffen Pingel
@@ -72,7 +72,7 @@ public abstract class BuildJob extends Job {
 			monitor.setCanceled(false);
 			monitor.attach(jobMonitor);
 			try {
-				IOperationMonitor progress = ProgressUtil.convert(monitor);
+				IOperationMonitor progress = OperationUtil.convert(monitor);
 				if (!isUser()) {
 					progress.addFlag(OperationFlag.BACKGROUND);
 				}

@@ -15,11 +15,13 @@ package org.eclipse.mylyn.hudson.tests.support;
 
 import java.net.Proxy;
 
-import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.net.IProxyProvider;
-import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
+import org.eclipse.mylyn.commons.core.net.ProxyProvider;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
@@ -89,11 +91,11 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
-		return connect(repositoryUrl, WebUtil.getProxyForUrl(repositoryUrl), level);
+		return connect(repositoryUrl, NetUtil.getProxyForUrl(repositoryUrl), level);
 	}
 
 	public RestfulHudsonClient connect(String url) throws Exception {
-		return connect(url, WebUtil.getProxyForUrl(repositoryUrl), PrivilegeLevel.USER);
+		return connect(url, NetUtil.getProxyForUrl(repositoryUrl), PrivilegeLevel.USER);
 	}
 
 	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
@@ -102,18 +104,19 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password) throws Exception {
-		return connect(url, username, password, WebUtil.getProxyForUrl(repositoryUrl));
+		return connect(url, username, password, NetUtil.getProxyForUrl(repositoryUrl));
 	}
 
 	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy)
 			throws Exception {
-		WebLocation location = new WebLocation(url, username, password, new IProxyProvider() {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setService(new LocationService(username, password, new ProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
 			}
-		});
+		}));
 		if (username != null && password != null) {
-			location.setCredentials(AuthenticationType.HTTP, username, password);
+			location.setCredentials(AuthenticationType.HTTP, new UsernamePasswordCredentials(username, password));
 		}
 		RestfulHudsonClient hudsonClient = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return hudsonClient;
