@@ -107,7 +107,7 @@ public class BugzillaClient {
 
 	protected static final String USER_AGENT = "BugzillaConnector"; //$NON-NLS-1$
 
-	private static final int MAX_RETRIEVED_PER_QUERY = 50;
+	public static final int MAX_RETRIEVED_PER_QUERY = 50;
 
 	private static final String QUERY_DELIMITER = "?"; //$NON-NLS-1$
 
@@ -650,7 +650,7 @@ public class BugzillaClient {
 		return new RepositoryQueryResultsFactory(stream, getCharacterEncoding());
 	}
 
-	protected void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
+	public void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
@@ -2436,7 +2436,7 @@ public class BugzillaClient {
 				password = location.getCredentials(AuthenticationType.REPOSITORY).getPassword();
 			}
 			webLocation.setCredentials(AuthenticationType.REPOSITORY, username, password);
-			xmlRpcClient = new BugzillaXmlRpcClient(webLocation);
+			xmlRpcClient = new BugzillaXmlRpcClient(webLocation, this);
 			xmlRpcClient.setContentTypeCheckingEnabled(true);
 		}
 		return xmlRpcClient;

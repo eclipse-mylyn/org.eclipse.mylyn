@@ -13,20 +13,35 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.CustomTransitionManager;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater
@@ -40,6 +55,12 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	private static final String BUGZILLA_GE_4_0 = ">=4.0";
 
 	private BugzillaXmlRpcClient bugzillaClient;
+
+	private TaskRepository repository;
+
+	private BugzillaRepositoryConnector connector;
+
+	private BugzillaClient client;
 
 	@SuppressWarnings("serial")
 	private final Map<String, Map<String, ArrayList<String>>> fixtureTransitionsMap = new HashMap<String, Map<String, ArrayList<String>>>() {
@@ -289,7 +310,10 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	public void setUp() throws Exception {
 		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
-		bugzillaClient = new BugzillaXmlRpcClient(webLocation);
+		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
+		repository = BugzillaFixture.current().repository();
+		connector = BugzillaFixture.current().connector();
+		bugzillaClient = new BugzillaXmlRpcClient(webLocation, client);
 		bugzillaClient.setContentTypeCheckingEnabled(true);
 	}
 
@@ -461,5 +485,137 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 						ctm.getValidTransitions(start).size());
 			}
 		}
+	}
+
+	public void testXmlRpcBugGet() throws Exception {
+		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+			return;
+		} else {
+
+			Set<String> taskIds = new HashSet<String>();
+			if (repository.getRepositoryUrl().startsWith("http://mylyn.org/bugs40")) {
+				taskIds.add("1526");
+			}
+			taskIds.add("1");
+//		taskIds.add("3");
+			final Map<String, TaskData> results = new HashMap<String, TaskData>();
+			final Map<String, TaskData> resultsXMLRPC = new HashMap<String, TaskData>();
+			TaskDataCollector collector = new TaskDataCollector() {
+				@Override
+				public void accept(TaskData taskData) {
+					results.put(taskData.getTaskId(), taskData);
+				}
+			};
+			TaskDataCollector collectorXMLRPC = new TaskDataCollector() {
+				@Override
+				public void accept(TaskData taskData) {
+					resultsXMLRPC.put(taskData.getTaskId(), taskData);
+				}
+			};
+
+			final CoreException[] collectionException = new CoreException[1];
+			final Boolean[] updateConfig = new Boolean[1];
+
+			class CollectorWrapper extends TaskDataCollector {
+
+				private final IProgressMonitor monitor2;
+
+				private final TaskDataCollector collector;
+
+				@Override
+				public void failed(String taskId, IStatus status) {
+					collector.failed(taskId, status);
+				}
+
+				public CollectorWrapper(TaskDataCollector collector, IProgressMonitor monitor2) {
+					this.collector = collector;
+					this.monitor2 = monitor2;
+				}
+
+				@Override
+				public void accept(TaskData taskData) {
+					try {
+						AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+						taskDataHandler.initializeTaskData(repository, taskData, null, new SubProgressMonitor(monitor2,
+								1));
+					} catch (CoreException e) {
+						// this info CoreException is only used internal
+						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
+							if (updateConfig[0] == null) {
+								updateConfig[0] = new Boolean(true);
+							}
+						} else if (collectionException[0] == null) {
+							collectionException[0] = e;
+						}
+					}
+					collector.accept(taskData);
+					monitor2.worked(1);
+				}
+			}
+
+			TaskDataCollector collector2 = new CollectorWrapper(collector, new NullProgressMonitor());
+			TaskDataCollector collector3 = new CollectorWrapper(collectorXMLRPC, new NullProgressMonitor());
+			client.getTaskData(taskIds, collector2, new BugzillaAttributeMapper(repository, connector),
+					new NullProgressMonitor());
+			if (collectionException[0] != null) {
+				throw collectionException[0];
+			}
+			bugzillaClient.getTaskData(taskIds, collector3, new BugzillaAttributeMapper(repository, connector),
+					new NullProgressMonitor());
+
+			if (collectionException[0] != null) {
+				throw collectionException[0];
+			}
+			assertEquals(results.size(), resultsXMLRPC.size());
+			@SuppressWarnings("unused")
+			String div = "";
+			for (String taskID : results.keySet()) {
+				TaskData taskDataHTML = results.get(taskID);
+				TaskData taskDataXMLRPC = resultsXMLRPC.get(taskID);
+				assertNotNull(taskDataHTML);
+				assertNotNull(taskDataXMLRPC);
+				Map<String, TaskAttribute> attributesHTML = taskDataHTML.getRoot().getAttributes();
+				Map<String, TaskAttribute> attributesXMLRPC = taskDataXMLRPC.getRoot().getAttributes();
+				div += compareAttributes(attributesHTML, attributesXMLRPC, "", "Root-" + taskID + ": "); //$NON-NLS-1$
+			}
+			@SuppressWarnings("unused")
+			// set breakpoint to see what is the div between HTML and XMLRPC
+			int i = 9;
+			i++;
+		}
+	}
+
+	private String compareAttributes(Map<String, TaskAttribute> attributesHTML,
+			Map<String, TaskAttribute> attributesXMLRPC, String div, String prefix) {
+		for (String attributeNameHTML : attributesHTML.keySet()) {
+			TaskAttribute attributeHTML = attributesHTML.get(attributeNameHTML);
+			TaskAttribute attributeXMLRPC = attributesXMLRPC.get(attributeNameHTML);
+			if (attributeXMLRPC == null) {
+				div += (prefix + attributeNameHTML + " not in XMLRPC\n");
+				continue;
+			}
+			if (attributeHTML.getValues().size() > 1) {
+				List<String> i1 = attributeHTML.getValues();
+				List<String> i2 = attributeXMLRPC.getValues();
+				if (i1.size() != i2.size()) {
+					div += (prefix + attributeNameHTML + " has size " + i1.size() + " but got " + i2.size() + "\n");
+				}
+				for (String string : i1) {
+					if (!i2.contains(string)) {
+						div += (prefix + attributeNameHTML + " did not have " + string + "\n");
+					}
+				}
+			}
+			if (attributeHTML.getValue().compareTo(attributeXMLRPC.getValue()) != 0) {
+				div += (prefix + attributeNameHTML + " value not equal HTML = \'" + attributeHTML.getValue()
+						+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n");
+			}
+			Map<String, TaskAttribute> subAttribHTML = attributeHTML.getAttributes();
+			if (!subAttribHTML.isEmpty()) {
+				Map<String, TaskAttribute> subAttribXMLRPC = attributeXMLRPC.getAttributes();
+				div = compareAttributes(subAttribHTML, subAttribXMLRPC, div, prefix + attributeNameHTML + ": ");
+			}
+		}
+		return div;
 	}
 }
