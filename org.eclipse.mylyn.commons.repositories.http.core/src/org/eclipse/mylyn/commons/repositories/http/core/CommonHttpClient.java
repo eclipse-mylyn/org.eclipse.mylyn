@@ -32,6 +32,8 @@ import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
  */
 public class CommonHttpClient {
 
+	private boolean authenticated;
+
 	private final SyncBasicHttpContext context;
 
 	private AbstractHttpClient httpClient;
@@ -59,12 +61,15 @@ public class CommonHttpClient {
 		return location;
 	}
 
-	protected void authenticate(IOperationMonitor monitor) throws IOException {
+	public boolean isAuthenticated() {
+		return authenticated;
 	}
 
-	protected ClientConnectionManager createHttpClientConnectionManager() {
-		// FIXME handle certificate authentication
-		return HttpUtil.getConnectionManager();
+	public void setAuthenticated(boolean authenticated) {
+		this.authenticated = authenticated;
+	}
+
+	protected void authenticate(IOperationMonitor monitor) throws IOException {
 	}
 
 	protected AbstractHttpClient createHttpClient(String userAgent) {
@@ -74,8 +79,20 @@ public class CommonHttpClient {
 				return CommonHttpClient.this.createHttpClientConnectionManager();
 			}
 		};
+//		client.setTargetAuthenticationHandler(new DefaultTargetAuthenticationHandler() {
+//			@Override
+//			public boolean isAuthenticationRequested(HttpResponse response, HttpContext context) {
+//				int statusCode = response.getStatusLine().getStatusCode();
+//				return statusCode == HttpStatus.SC_UNAUTHORIZED || statusCode == HttpStatus.SC_FORBIDDEN;
+//			}
+//		});
 		HttpUtil.configureClient(client, userAgent);
 		return client;
+	}
+
+	protected ClientConnectionManager createHttpClientConnectionManager() {
+		// FIXME handle certificate authentication
+		return HttpUtil.getConnectionManager();
 	}
 
 	protected boolean needsReauthentication(HttpResponse response, IProgressMonitor monitor) throws IOException {

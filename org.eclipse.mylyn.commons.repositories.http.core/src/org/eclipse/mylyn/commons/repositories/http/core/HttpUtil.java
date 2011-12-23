@@ -138,12 +138,6 @@ public class HttpUtil {
 			int port = NetUtil.getPort(url);
 			Credentials credentials = getHttpClientCredentials(authCreds, host, false);
 			if (credentials instanceof NTCredentials) {
-				List<String> authpref = new ArrayList<String>();
-				authpref.add(AuthPolicy.NTLM);
-				authpref.add(AuthPolicy.BASIC);
-				authpref.add(AuthPolicy.DIGEST);
-				client.getParams().setParameter(AuthPNames.TARGET_AUTH_PREF, authpref);
-
 				AuthScope authScopeNTLM = new AuthScope(host, port, AuthScope.ANY_REALM, AuthPolicy.NTLM);
 				client.getCredentialsProvider().setCredentials(authScopeNTLM, credentials);
 
@@ -151,11 +145,6 @@ public class HttpUtil {
 				Credentials usernamePasswordCredentials = getHttpClientCredentials(authCreds, host, true);
 				client.getCredentialsProvider().setCredentials(authScopeAny, usernamePasswordCredentials);
 			} else {
-				List<String> authpref = new ArrayList<String>();
-				authpref.add(AuthPolicy.BASIC);
-				authpref.add(AuthPolicy.DIGEST);
-				authpref.add(AuthPolicy.NTLM);
-				client.getParams().setParameter(AuthPNames.TARGET_AUTH_PREF, authpref);
 				AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
 				client.getCredentialsProvider().setCredentials(authScope, credentials);
 			}

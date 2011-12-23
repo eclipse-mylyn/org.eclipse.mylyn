@@ -20,7 +20,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
-import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
 
 /**
  * @author Steffen Pingel
@@ -33,8 +32,8 @@ public abstract class CommonHttpOperation<T> {
 		this.client = client;
 	}
 
-	private boolean needsReauthentication(HttpResponse response, IOperationMonitor monitor) throws IOException {
-		return client.needsReauthentication(response, monitor);
+	protected void authenticate(IOperationMonitor monitor) throws IOException {
+		client.authenticate(monitor);
 	}
 
 	protected HttpGet createGetRequest(String requestPath) {
@@ -54,34 +53,44 @@ public abstract class CommonHttpOperation<T> {
 
 		// force authentication
 		if (needsAuthentication()) {
-			client.authenticate(monitor);
+			authenticate(monitor);
 		}
 
 		// first attempt
 		HttpResponse response = client.execute(request, monitor);
-		if (!needsReauthentication(response, monitor)) {
-			return new CommonHttpResponse(request, response);
-		} else {
+		boolean repeat = false;
+		try {
+			if (needsReauthentication(response, monitor)) {
+				HttpUtil.release(request, response, monitor);
+				repeat = true;
+			}
+		} catch (IOException e) {
 			HttpUtil.release(request, response, monitor);
-
-			client.authenticate(monitor);
-
-			// second attempt
-			response = client.execute(request, monitor);
-			return new CommonHttpResponse(request, response);
+			throw e;
+		} catch (RuntimeException e) {
+			HttpUtil.release(request, response, monitor);
+			throw e;
 		}
+
+		if (repeat) {
+			// second attempt
+			authenticate(monitor);
+			response = client.execute(request, monitor);
+		}
+
+		return new CommonHttpResponse(request, response);
 	}
 
 	protected final CommonHttpClient getClient() {
 		return client;
 	}
 
-	protected boolean hasCredentials(AuthenticationCredentials credentials) {
-		return credentials != null;
-	}
-
 	protected boolean needsAuthentication() {
 		return false;
+	}
+
+	protected boolean needsReauthentication(HttpResponse response, IOperationMonitor monitor) throws IOException {
+		return client.needsReauthentication(response, monitor);
 	}
 
 }
