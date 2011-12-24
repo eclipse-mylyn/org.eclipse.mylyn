@@ -45,6 +45,7 @@ import org.eclipse.ui.actions.CompoundContributionItem;
  * @author Mik Kersten
  * @author Leo Dos Santos
  * @author Steffen Pingel
+ * @author Sam Davis
  */
 public class TaskHistoryDropDown extends CompoundContributionItem {
 
@@ -198,11 +199,17 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			items.add(separator);
 		}
 
-		ITask active = TasksUi.getTaskActivityManager().getActiveTask();
+		final ITask active = TasksUi.getTaskActivityManager().getActiveTask();
 		if (active != null) {
 			Action deactivateAction = new DeactivateTaskAction();
 			ActionContributionItem item = new ActionContributionItem(deactivateAction);
 			items.add(item);
+			items.add(new ActionContributionItem(new Action(Messages.TaskHistoryDropDown_Open_Active_Task) {
+				@Override
+				public void run() {
+					TasksUiInternal.openTask(active, active.getTaskId());
+				}
+			}));
 		} else {
 			Action activateDialogAction = new ActivateDialogAction(new ActivateTaskDialogAction());
 			ActionContributionItem item = new ActionContributionItem(activateDialogAction);

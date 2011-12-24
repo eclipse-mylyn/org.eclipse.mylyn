@@ -79,6 +79,8 @@ public class Messages extends NLS {
 
 	public static String TaskHistoryDropDown_Deactivate_Task;
 
+	public static String TaskHistoryDropDown_Open_Active_Task;
+
 	public static String TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup;
 
 	public static String TaskListBackupManager_Scheduled_task_data_backup;
