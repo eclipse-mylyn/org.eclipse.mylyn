@@ -421,6 +421,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	public static final String PATH_ACTIONS = "actions"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.7
+	 */
+	public static final String PATH_ASSOCIATIONS = "associations"; //$NON-NLS-1$
+
 	public static final String PATH_ATTACHMENTS = "attachments"; //$NON-NLS-1$
 
 	public static final String PATH_ATTRIBUTES = "attributes"; //$NON-NLS-1$
@@ -820,6 +825,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		List<TaskEditorPartDescriptor> descriptors = new LinkedList<TaskEditorPartDescriptor>(createPartDescriptors());
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);
+		createParts(PATH_ASSOCIATIONS, editorComposite, descriptors);
 		createParts(PATH_ATTRIBUTES, editorComposite, descriptors);
 		createParts(PATH_ATTACHMENTS, editorComposite, descriptors);
 		createParts(PATH_PLANNING, editorComposite, descriptors);
@@ -1075,8 +1081,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 		// fire the event
 		Object[] listeners = selectionChangedListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+		for (Object listener : listeners) {
+			final ISelectionChangedListener l = (ISelectionChangedListener) listener;
 			SafeRunner.run(new SafeRunnable() {
 				public void run() {
 					l.selectionChanged(event);
