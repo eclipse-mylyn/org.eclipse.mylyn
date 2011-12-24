@@ -22,7 +22,7 @@
 <unit id="org.eclipse.emf.transaction.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.papyrus.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
