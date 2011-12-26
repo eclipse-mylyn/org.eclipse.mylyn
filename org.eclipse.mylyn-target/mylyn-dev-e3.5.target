@@ -36,7 +36,7 @@
 <unit id="org.eclipse.jgit.source.feature.group" version="1.2.0.201112221803-r"/>
 <unit id="org.eclipse.egit.source.feature.group" version="1.2.0.201112221803-r"/>
 <unit id="org.eclipse.egit.mylyn.feature.group" version="1.2.0.201112221803-r"/>
-<repository location="http://download.eclipse.org/egit/updates-1.1"/>
+<repository location="http://download.eclipse.org/egit/updates-1.2"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>

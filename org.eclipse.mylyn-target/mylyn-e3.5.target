@@ -63,7 +63,7 @@
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="1.2.0.201112221803-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="1.2.0.201112221803-r"/>
-<repository location="http://download.eclipse.org/egit/updates-1.1"/>
+<repository location="http://download.eclipse.org/egit/updates-1.2"/>
 </location>
 </locations>
 </target>
