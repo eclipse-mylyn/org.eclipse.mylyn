@@ -102,7 +102,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.google.gwt.user"
+         id="com.google.gwt.servlet"
          download-size="0"
          install-size="0"
          version="0.0.0"
