@@ -10,7 +10,7 @@
 <unit id="org.apache.httpcomponents.httpclient" version="4.1.0.v201103311320"/>
 <unit id="org.apache.httpcomponents.httpcore" version="4.1.0.v201101201700"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20111216203947/repository/"/>
+<repository location="http://build.eclipse.org/orbit/committers/orbit-I/20111224154307/I20111224154307/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
