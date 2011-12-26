@@ -4,13 +4,13 @@
 <target name="mylyn-e3.4" sequenceNumber="7">
 <locations>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.google.gerrit.prettify" version="2.1.5.v201103020530"/>
-<unit id="com.google.gerrit.reviewdb" version="2.1.5.v201105211953"/>
-<unit id="com.google.gerrit.common" version="2.1.5.v201105211953"/>
+<unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
+<unit id="com.google.gerrit.reviewdb" version="2.1.5.v201112241444"/>
+<unit id="com.google.gerrit.common" version="2.1.5.v201112241444"/>
 <unit id="com.google.gson" version="1.6.0.v201101131530"/>
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
-<unit id="com.google.gwtjsonrpc" version="1.2.5.v201112081616"/>
-<unit id="com.google.gwtorm" version="1.1.4.v201105211953"/>
+<unit id="com.google.gwtjsonrpc" version="1.2.5.v201112241444"/>
+<unit id="com.google.gwtorm" version="1.1.4.v201112241444"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.sun.xml.bind" version="2.2.0.v201105210647"/>
 <unit id="javax.activation" version="1.1.0.v201108011116"/>
