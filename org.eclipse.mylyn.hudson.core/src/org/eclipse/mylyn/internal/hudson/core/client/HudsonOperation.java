@@ -11,14 +11,27 @@
 
 package org.eclipse.mylyn.internal.hudson.core.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.text.html.HTML.Tag;
 import javax.xml.bind.JAXBException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.util.EntityUtils;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.core.HtmlTag;
+import org.eclipse.mylyn.commons.core.HtmlUtil;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
@@ -32,6 +45,8 @@ import org.eclipse.osgi.util.NLS;
  * @author Steffen Pingel
  */
 public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
+
+	private static final String ID_CONTEXT_CRUMB = ".crumb";
 
 	public HudsonOperation(CommonHttpClient client) {
 		super(client);
@@ -62,6 +77,42 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 				throw new IOException("Login failed");
 			}
 			getClient().setAuthenticated(true);
+		} finally {
+			HttpUtil.release(request, response, monitor);
+		}
+
+		updateCrumb(monitor);
+	}
+
+	private void updateCrumb(IOperationMonitor monitor) throws IOException {
+		HttpGet request = createGetRequest(getClient().getLocation().getUrl());
+		HttpResponse response = getClient().execute(request, monitor);
+		try {
+			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in,
+						EntityUtils.getContentCharSet(response.getEntity())));
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (token.getType() == Token.TAG) {
+						// <script>crumb.init(".crumb", "8aae0557456447d391f81f2ef2eafa4d");</script>
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == Tag.SCRIPT) {
+							String text = HtmlUtil.getTextContent(tokenizer);
+							Pattern pattern = Pattern.compile("crumb.init\\(\".*\",\\s*\"([a-zA-Z0-9]*)\"\\)"); //$NON-NLS-1$
+							Matcher matcher = pattern.matcher(text);
+							if (matcher.find()) {
+								getClient().getContext().setAttribute(ID_CONTEXT_CRUMB, matcher.group(1));
+								break;
+							}
+						}
+					}
+				}
+			} catch (ParseException e) {
+				// ignore
+			} finally {
+				in.close();
+			}
 		} finally {
 			HttpUtil.release(request, response, monitor);
 		}
@@ -107,6 +158,16 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			response.release(monitor);
 			throw e;
 		}
+	}
+
+	@Override
+	protected HttpPost createPostRequest(String requestPath) {
+		HttpPost post = super.createPostRequest(requestPath);
+		String crumb = (String) getClient().getContext().getAttribute(ID_CONTEXT_CRUMB);
+		if (crumb != null) {
+			post.addHeader(ID_CONTEXT_CRUMB, crumb);
+		}
+		return post;
 	}
 
 	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
