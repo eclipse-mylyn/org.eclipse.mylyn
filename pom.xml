@@ -74,6 +74,11 @@
 		  <layout>p2</layout>
 		  <url>${mylyn-reviews-repository-url}</url>
 		</repository>
+		<repository>
+		  <id>eclipse-mylyn-orbit-committers</id>
+		  <layout>p2</layout>
+		  <url>http://build.eclipse.org/orbit/committers/orbit-I/20111224154307/I20111224154307/repository/</url>
+		</repository>
 	  </repositories>
 	  <modules>
 		<module>r4e</module>
