@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.net;
+package org.eclipse.mylyn.commons.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,16 +19,12 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 /**
  * Parses HTML into tokens.
  * 
  * @author Shawn Minto
- * @since 2.0
- * @deprecated use org.eclipse.mylyn.commons.core.HtmlStreamTokenizer instead.
+ * @since 3.7
  */
-@Deprecated
 public class HtmlStreamTokenizer {
 
 	/** parser state */

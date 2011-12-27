@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.net;
+package org.eclipse.mylyn.commons.core;
 
 import java.net.URL;
 import java.text.ParseException;
@@ -22,11 +22,9 @@ import javax.swing.text.html.HTML.Tag;
 /**
  * Class representing an HTML (3.2) tag and its attributes.
  * 
- * @deprecated use org.eclipse.mylyn.commons.core.HtmlTag instead.
  * @author Shawn Minto
- * @since 2.0
+ * @since 3.7
  */
-@Deprecated
 public class HtmlTag {
 	/** tag's name */
 	private String tagName;

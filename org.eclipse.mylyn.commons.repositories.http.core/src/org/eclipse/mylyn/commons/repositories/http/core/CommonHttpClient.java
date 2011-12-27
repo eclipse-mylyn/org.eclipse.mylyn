@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.ContentEncodingHttpClient;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -48,6 +49,10 @@ public class CommonHttpClient {
 	public HttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		HttpUtil.configureProxyAndAuthentication(getHttpClient(), location, monitor);
 		return HttpUtil.execute(getHttpClient(), HttpUtil.createHost(request), context, request, monitor);
+	}
+
+	public HttpContext getContext() {
+		return context;
 	}
 
 	public synchronized AbstractHttpClient getHttpClient() {
