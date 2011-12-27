@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Label;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -99,8 +100,22 @@ public class LabelServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void getLabelsOK() throws IOException {
+	public void getLabels() throws IOException {
 		labelService.getLabels("lu", "lr");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/lu/lr/labels"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Get labels with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getLabelsWithRepositoryId() throws IOException {
+		RepositoryId repo = new RepositoryId("lu", "lr");
+		labelService.getLabels(repo);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/lu/lr/labels"));
 		verify(gitHubClient).get(request);
@@ -171,9 +186,26 @@ public class LabelServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void setLabelsOK() throws IOException {
+	public void setLabels() throws IOException {
 		List<Label> labels = new LinkedList<Label>();
 		labelService.setLabels("test_user", "test_repository", "1", labels);
+		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
+		};
+		verify(gitHubClient).put(
+				"/repos/test_user/test_repository/issues/1/labels", labels,
+				labelsToken.getType());
+	}
+
+	/**
+	 * Set labels with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void setLabelsWithRepositoryId() throws IOException {
+		RepositoryId repo = new RepositoryId("test_user", "test_repository");
+		List<Label> labels = new LinkedList<Label>();
+		labelService.setLabels(repo, "1", labels);
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
 		verify(gitHubClient).put(
@@ -217,9 +249,23 @@ public class LabelServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void createLabelOK() throws IOException {
+	public void createLabel() throws IOException {
 		Label label = new Label();
 		labelService.createLabel("test_user", "test_repository", label);
+		verify(gitHubClient).post("/repos/test_user/test_repository/labels",
+				label, Label.class);
+	}
+
+	/**
+	 * Create label with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createLabelWithRepositoryId() throws IOException {
+		RepositoryId repo = new RepositoryId("test_user", "test_repository");
+		Label label = new Label();
+		labelService.createLabel(repo, label);
 		verify(gitHubClient).post("/repos/test_user/test_repository/labels",
 				label, Label.class);
 	}
@@ -296,6 +342,18 @@ public class LabelServiceTest {
 	}
 
 	/**
+	 * Get label with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteLabelWithRepositoryId() throws IOException {
+		RepositoryId repo = new RepositoryId("user", "repo");
+		labelService.deleteLabel(repo, "label");
+		verify(gitHubClient).delete("/repos/user/repo/labels/label");
+	}
+
+	/**
 	 * Get label with null user
 	 *
 	 * @throws IOException
@@ -363,6 +421,20 @@ public class LabelServiceTest {
 	@Test
 	public void getLabel() throws IOException {
 		labelService.getLabel("user", "repo", "bugs");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/labels/bugs");
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Get label with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getLabelWithRepositoryId() throws IOException {
+		RepositoryId repo = new RepositoryId("user", "repo");
+		labelService.getLabel(repo, "bugs");
 		GitHubRequest request = new GitHubRequest();
 		request.setUri("/repos/user/repo/labels/bugs");
 		verify(gitHubClient).get(request);

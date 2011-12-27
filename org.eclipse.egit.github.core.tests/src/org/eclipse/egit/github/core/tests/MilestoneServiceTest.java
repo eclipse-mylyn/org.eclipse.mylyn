@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -136,6 +137,20 @@ public class MilestoneServiceTest {
 	}
 
 	/**
+	 * Get milestones with open state
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getMilestonesOpenStateWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("mu", "mr");
+		milestoneService.getMilestones(id, "open");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/mu/mr/milestones?state=open"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
 	 * Create milestone with null user
 	 *
 	 * @throws IOException
@@ -194,6 +209,20 @@ public class MilestoneServiceTest {
 	public void createMilestone() throws IOException {
 		Milestone milestone = new Milestone();
 		milestoneService.createMilestone("user", "repo", milestone);
+		verify(gitHubClient).post("/repos/user/repo/milestones", milestone,
+				Milestone.class);
+	}
+
+	/**
+	 * Create valid milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createMilestoneWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		Milestone milestone = new Milestone();
+		milestoneService.createMilestone(id, milestone);
 		verify(gitHubClient).post("/repos/user/repo/milestones", milestone,
 				Milestone.class);
 	}
@@ -270,6 +299,18 @@ public class MilestoneServiceTest {
 	}
 
 	/**
+	 * Delete valid milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteMilestoneWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		milestoneService.deleteMilestone(id, 40);
+		verify(gitHubClient).delete("/repos/user/repo/milestones/40");
+	}
+
+	/**
 	 * Get milestone with null user
 	 *
 	 * @throws IOException
@@ -337,6 +378,20 @@ public class MilestoneServiceTest {
 	@Test
 	public void getMilestone() throws IOException {
 		milestoneService.getMilestone("user", "repo", 15);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/user/repo/milestones/15");
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Get milestone with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getMilestoneWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		milestoneService.getMilestone(id, 15);
 		GitHubRequest request = new GitHubRequest();
 		request.setUri("/repos/user/repo/milestones/15");
 		verify(gitHubClient).get(request);
