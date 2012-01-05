@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -80,6 +81,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Shawn Minto
+ * @author Sam Davis
  */
 public class PlanningPart extends AbstractLocalEditorPart {
 
@@ -202,6 +204,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private Label scheduledLabel;
 
+	private Composite layoutControl;
+
 	public PlanningPart(int sectionStyle) {
 		super(sectionStyle, Messages.PersonalPart_Personal_Planning);
 		this.activeTimeEnabled = true;
@@ -299,24 +303,29 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private void expandSection(FormToolkit toolkit, Section section) {
 		sectionClient = toolkit.createComposite(section);
+		GridLayoutFactory.fillDefaults().applyTo(sectionClient);
+
+		// create nested composite with GridData to enable resizing behavior of maximize action
+		layoutControl = toolkit.createComposite(sectionClient);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(layoutControl);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
 		layout.numColumns = (needsDueDate) ? 6 : 4;
-		sectionClient.setLayout(layout);
+		layoutControl.setLayout(layout);
 
-		createScheduledDatePicker(toolkit, sectionClient);
+		createScheduledDatePicker(toolkit, layoutControl);
 
 		// disable due date picker if it's a repository due date
 		if (needsDueDate) {
-			createDueDatePicker(toolkit, sectionClient);
+			createDueDatePicker(toolkit, layoutControl);
 		}
 
-		createEstimatedTime(toolkit, sectionClient);
+		createEstimatedTime(toolkit, layoutControl);
 
 		if (needsNotes()) {
-			createNotesArea(toolkit, sectionClient, layout.numColumns);
+			createNotesArea(toolkit, layoutControl, layout.numColumns);
 		}
 
-		createActiveTime(toolkit, sectionClient, layout.numColumns);
+		createActiveTime(toolkit, layoutControl, layout.numColumns);
 
 		toolkit.paintBordersFor(sectionClient);
 		section.setClient(sectionClient);
@@ -742,6 +751,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	public RichTextEditor getNoteEditor() {
 		return noteEditor;
+	}
+
+	public Control getLayoutControl() {
+		return layoutControl;
 	}
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -54,6 +55,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 				NotesAction notesAction = new NotesAction();
 				notesAction.setEnabled(needsNotes());
 				toolBarManager.add(notesAction);
+				toolBarManager.add(getMaximizePartAction());
 			}
 		};
 	}
@@ -76,6 +78,11 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		part.createControl(parent, toolkit);
 		part.getSection().setToolTipText(Messages.TaskEditorPlanningPart_TaskEditorPlanningPart_tooltip);
 		setSection(toolkit, part.getSection());
+	}
+
+	@Override
+	protected Control getLayoutControl() {
+		return part.getLayoutControl();
 	}
 
 	@Override

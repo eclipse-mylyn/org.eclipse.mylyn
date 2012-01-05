@@ -213,11 +213,13 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 		@Override
 		public void run() {
+			if (getControl() instanceof Section && !((Section) getControl()).isExpanded()) {
+				CommonFormUtil.setExpanded((Section) getControl(), true);
+			}
 			Control control = getLayoutControl();
 			if (control == null || !(control.getLayoutData() instanceof GridData)) {
 				return;
 			}
-
 			GridData gd = (GridData) control.getLayoutData();
 
 			// initialize originalHeight on first invocation
@@ -238,6 +240,9 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			}
 			gd.heightHint = heightHint;
 			gd.minimumHeight = heightHint;
+			if (gd.widthHint == -1) {
+				gd.widthHint = 300;// needs to be set or else heightHint is ignored
+			}
 
 			getTaskEditorPage().reflow();
 			CommonFormUtil.ensureVisible(control);
