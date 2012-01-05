@@ -12,6 +12,7 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMPARE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
@@ -26,6 +27,7 @@ import java.util.Map;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.RepositoryCommitCompare;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -326,5 +328,37 @@ public class CommitService extends GitHubService {
 		uri.append(SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());
+	}
+
+	/**
+	 * Compare base and head commits
+	 *
+	 * @param repository
+	 * @param base
+	 * @param head
+	 * @return commit compare
+	 * @throws IOException
+	 */
+	public RepositoryCommitCompare compare(IRepositoryIdProvider repository,
+			String base, String head) throws IOException {
+		String id = getId(repository);
+		if (base == null)
+			throw new IllegalArgumentException("Base cannot be null"); //$NON-NLS-1$
+		if (base.length() == 0)
+			throw new IllegalArgumentException("Base cannot be empty"); //$NON-NLS-1$
+
+		if (head == null)
+			throw new IllegalArgumentException("Head cannot be null"); //$NON-NLS-1$
+		if (head.length() == 0)
+			throw new IllegalArgumentException("Head cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_COMPARE);
+		uri.append('/').append(base).append("...").append(head); //$NON-NLS-1$
+		GitHubRequest request = createRequest();
+		request.setType(RepositoryCommitCompare.class);
+		request.setUri(uri);
+		return (RepositoryCommitCompare) client.get(request).getBody();
 	}
 }

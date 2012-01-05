@@ -254,4 +254,62 @@ public class CommitServiceTest {
 		service.deleteComment(repo, 75);
 		verify(client).delete("/repos/o/n/comments/75");
 	}
+
+	/**
+	 * Compare commits with null base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareNullBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compare(repo, null, "HEAD");
+	}
+
+	/**
+	 * Compare commits with empty base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareEmptyBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compare(repo, "", "HEAD");
+	}
+
+	/**
+	 * Compare commits with null head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareNullHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compare(repo, "HEAD~1", null);
+	}
+
+	/**
+	 * Compare commits empty head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareEmptyHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compare(repo, "HEAD~1", "");
+	}
+
+	/**
+	 * Compare commits
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void compare() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compare(repo, "v1", "HEAD");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/o/n/compare/v1...HEAD");
+		verify(client).get(request);
+	}
 }
