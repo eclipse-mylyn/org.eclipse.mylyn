@@ -42,6 +42,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		EncodingUtilsTest.class, //
 		EventFormatterTest.class, //
 		EventPayloadTest.class, //
+		EventRepositoryTest.class, //
 		EventServiceTest.class, //
 		EventTest.class, //
 		FieldErrorTest.class, //
@@ -74,6 +75,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		PullRequestTest.class, //
 		ReferenceTest.class, //
 		RepositoryBranchTest.class, //
+		RepositoryCommitCompareTest.class, //
 		RepositoryCommitTest.class, //
 		RepositoryHookResponseTest.class, //
 		RepositoryHookTest.class, //
