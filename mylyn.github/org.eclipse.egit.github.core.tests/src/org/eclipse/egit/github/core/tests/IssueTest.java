@@ -54,6 +54,7 @@ public class IssueTest {
 		assertNull(issue.getUrl());
 		assertNull(issue.getUser());
 		assertNotNull(issue.toString());
+		assertEquals(0, issue.getId());
 	}
 
 	/**
@@ -88,6 +89,7 @@ public class IssueTest {
 		User user = new User().setLogin("user");
 		assertEquals(user, issue.setUser(user).getUser());
 		assertNull(issue.setLabels(null).getLabels());
+		assertEquals(39, issue.setId(39).getId());
 	}
 
 	/**

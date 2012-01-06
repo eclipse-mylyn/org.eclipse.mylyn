@@ -25,6 +25,8 @@ public class Issue implements Serializable {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 6358575015023539051L;
 
+	private long id;
+
 	private Date closedAt;
 
 	private Date createdAt;
@@ -328,6 +330,22 @@ public class Issue implements Serializable {
 	 */
 	public Issue setUser(User user) {
 		this.user = user;
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this issue
+	 */
+	public Issue setId(long id) {
+		this.id = id;
 		return this;
 	}
 
