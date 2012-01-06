@@ -376,19 +376,21 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList1[0]).get("real_name"));
 			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList1[0]).get("can_login"));
 
-			Object[] userList2 = bugzillaClient.getUserInfoWithMatch(monitor, new String[] { "est" });
-			assertEquals(2, userList2.length);
-			assertEquals(((Integer) 3), ((HashMap<String, Integer>) userList2[0]).get("id"));
-			assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("email"));
-			assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("name"));
-			assertEquals("Mylyn guest", ((HashMap<String, String>) userList2[0]).get("real_name"));
-			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[0]).get("can_login"));
-
-			assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList2[1]).get("id"));
-			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("email"));
-			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("name"));
-			assertEquals("Mylyn Test", ((HashMap<String, String>) userList2[1]).get("real_name"));
-			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[1]).get("can_login"));
+			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_4) {
+				Object[] userList2 = bugzillaClient.getUserInfoWithMatch(monitor, new String[] { "est" });
+				assertEquals(2, userList2.length);
+				assertEquals(((Integer) 3), ((HashMap<String, Integer>) userList2[0]).get("id"));
+				assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("email"));
+				assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("name"));
+				assertEquals("Mylyn guest", ((HashMap<String, String>) userList2[0]).get("real_name"));
+				assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[0]).get("can_login"));
+				
+				assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList2[1]).get("id"));
+				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("email"));
+				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("name"));
+				assertEquals("Mylyn Test", ((HashMap<String, String>) userList2[1]).get("real_name"));
+				assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[1]).get("can_login"));
+			}
 		}
 	}
 
@@ -488,7 +490,8 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	}
 
 	public void testXmlRpcBugGet() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
+				|| BugzillaFixture.current() == BugzillaFixture.BUGS_3_4) {
 			return;
 		} else {
 
