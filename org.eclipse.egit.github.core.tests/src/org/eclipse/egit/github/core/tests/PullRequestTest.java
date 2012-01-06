@@ -61,6 +61,7 @@ public class PullRequestTest {
 		assertNull(request.getUrl());
 		assertNull(request.getUser());
 		assertNotNull(request.toString());
+		assertEquals(0, request.getId());
 	}
 
 	/**
@@ -105,6 +106,7 @@ public class PullRequestTest {
 		assertEquals("/url", request.setUrl("/url").getUrl());
 		User user = new User().setLogin("cuser");
 		assertEquals(user, request.setUser(user).getUser());
+		assertEquals(70, request.setId(70).getId());
 	}
 
 	/**
