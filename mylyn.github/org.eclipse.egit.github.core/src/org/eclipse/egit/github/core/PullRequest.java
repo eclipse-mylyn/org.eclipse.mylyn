@@ -35,6 +35,8 @@ public class PullRequest implements Serializable {
 
 	private Date createdAt;
 
+	private long id;
+
 	private int additions;
 
 	private int changedFiles;
@@ -488,6 +490,22 @@ public class PullRequest implements Serializable {
 	 */
 	public PullRequest setUser(User user) {
 		this.user = user;
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this pull request
+	 */
+	public PullRequest setId(long id) {
+		this.id = id;
 		return this;
 	}
 
