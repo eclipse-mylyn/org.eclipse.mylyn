@@ -5,7 +5,7 @@
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
-<repository location="http://build.eclipse.org/orbit/committers/orbit-I/20111224154307/I20111224154307/repository/"/>
+<repository location="http:/download.eclipse.org/tools/orbit/downloads/drops/I20120105215809/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
