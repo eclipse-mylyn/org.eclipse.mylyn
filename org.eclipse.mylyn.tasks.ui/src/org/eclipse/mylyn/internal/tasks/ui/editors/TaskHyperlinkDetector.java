@@ -35,32 +35,36 @@ public class TaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	@Override
 	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, final String content, final int index,
 			final int contentOffset) {
-		List<IHyperlink> result = null;
+		List<IHyperlink> result = new ArrayList<IHyperlink>();
 		for (final TaskRepository repository : getTaskRepositories(textViewer)) {
-			final AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository);
-			if (connectorUi == null) {
-				continue;
-			}
-			final IHyperlink[][] links = new IHyperlink[1][];
-			SafeRunnable.run(new ISafeRunnable() {
-
-				public void handleException(Throwable exception) {
-				}
-
-				public void run() throws Exception {
-					final ITask task = (ITask) getAdapter(ITask.class);
-					links[0] = connectorUi.findHyperlinks(repository, task, content, index, contentOffset);
-				}
-
-			});
-			if (links[0] != null && links[0].length > 0) {
-				if (result == null) {
-					result = new ArrayList<IHyperlink>();
-				}
-				result.addAll(Arrays.asList(links[0]));
+			final IHyperlink[] links = detectHyperlinks(repository, content, index, contentOffset);
+			if (links != null && links.length > 0) {
+				result.addAll(Arrays.asList(links));
 			}
 		}
+		if (result.isEmpty()) {
+			return null;
+		}
 		return result;
+	}
+
+	protected IHyperlink[] detectHyperlinks(final TaskRepository repository, final String content, final int index,
+			final int contentOffset) {
+		final AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository);
+		if (connectorUi == null) {
+			return null;
+		}
+		final IHyperlink[][] links = new IHyperlink[1][];
+		SafeRunnable.run(new ISafeRunnable() {
+			public void handleException(Throwable exception) {
+			}
+
+			public void run() throws Exception {
+				final ITask task = (ITask) getAdapter(ITask.class);
+				links[0] = connectorUi.findHyperlinks(repository, task, content, index, contentOffset);
+			}
+		});
+		return links[0];
 	}
 
 	protected AbstractRepositoryConnectorUi getConnectorUi(TaskRepository repository) {
