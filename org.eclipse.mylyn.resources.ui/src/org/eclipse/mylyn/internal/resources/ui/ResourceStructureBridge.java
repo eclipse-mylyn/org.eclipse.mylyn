@@ -7,13 +7,17 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Manuel Doninger
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IContainer;
@@ -30,6 +34,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -232,5 +238,33 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getContentType(String elementHandle) {
 		return getContentType();
+	}
+
+	public Set<IProject> getProjectsInActiveContext() {
+		IInteractionContext activeContext = ContextCore.getContextManager().getActiveContext();
+		List<IInteractionElement> allElements = activeContext.getAllElements();
+		Set<IProject> projectsInContext = new HashSet<IProject>();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		List<IProject> projectsInWorkspace = new LinkedList<IProject>();
+
+		for (IProject p : workspace.getRoot().getProjects()) {
+			if (p.exists()) {
+				projectsInWorkspace.add(p);
+			}
+		}
+
+		for (IInteractionElement element : allElements) {
+			String handle = element.getHandleIdentifier();
+			IPath path = new Path(handle);
+
+			if (path.segmentCount() == 1 && path.isValidPath(handle)) {
+				String projectName = handle.substring(1);
+				IProject project = workspace.getRoot().getProject(projectName);
+				if (projectsInWorkspace.contains(project)) {
+					projectsInContext.add(project);
+				}
+			}
+		}
+		return projectsInContext;
 	}
 }

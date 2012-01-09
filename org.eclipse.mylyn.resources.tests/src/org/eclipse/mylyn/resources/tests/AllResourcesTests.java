@@ -29,6 +29,7 @@ public class AllResourcesTests {
 		suite.addTestSuite(ResourcePatternExclusionStrategyTest.class);
 		suite.addTestSuite(ResourceModificationDateExclusionStrategyTest.class);
 		suite.addTestSuite(ResourceContextTest.class);
+		suite.addTestSuite(ResourceStructureBridgeTest.class);
 		return suite;
 	}
 
