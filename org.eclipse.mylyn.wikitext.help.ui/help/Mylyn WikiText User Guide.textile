@@ -407,7 +407,7 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 p. To use this Ant task you'll need to add a @<taskdef>@ to your Ant script as follows:
 
 bc. 
-	<taskdef classpathref="wikitext.tasks.classpath" 
+	<taskdef classpathref="wikitext.classpath" 
 		resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
 
 The following describes the Ant task and its configurable options:
@@ -475,8 +475,8 @@ pre..
 p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
 
 pre.. 
-<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
-<typedef name="languageConfiguration" classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration" classpathref="wikitext.ant.classpath"/>
+<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.classpath"/>
+<typedef name="languageConfiguration" classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration" classpathref="wikitext.classpath"/>
 		
 <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
 	<languageConfiguration escapingHtmlAndXml="true"/>

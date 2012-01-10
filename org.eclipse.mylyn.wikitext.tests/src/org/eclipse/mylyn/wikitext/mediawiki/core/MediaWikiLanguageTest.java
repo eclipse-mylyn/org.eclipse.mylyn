@@ -717,14 +717,14 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	public void testTemplateExcludes() {
 		// bug 367525
-		markupLanaguage.setTemplateExcludes("one, two");
+		markupLanaguage.setTemplateExcludes("one, two, four_five");
 		markupLanaguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"), new Template(
-				"three", "3")));
-		String html = parser.parseToHtml("a{{one}} and {{two}} and {{three}}");
+				"three", "3"), new Template("four_five", "45")));
+		String html = parser.parseToHtml("a{{one}} and {{two}} and {{three}} and {{four_five}}");
 
 		TestUtil.println("HTML: \n" + html);
 
-		assertTrue(html.contains("<p>a and  and 3</p>"));
+		assertTrue(html.contains("<p>a and  and 3 and </p>"));
 	}
 
 	public void testTableOfContents() throws IOException {
