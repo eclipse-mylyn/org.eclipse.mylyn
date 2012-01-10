@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 David Green and others.
+ * Copyright (c) 2010, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,18 +22,46 @@ public class Template {
 
 	private String templateMarkup;
 
+	public Template() {
+	}
+
+	/**
+	 * @param name
+	 *            the name of the template
+	 * @param templateMarkup
+	 *            the substitution content of the template
+	 * @since 1.6
+	 */
+	public Template(String name, String templateMarkup) {
+		super();
+		this.name = name;
+		this.templateMarkup = templateMarkup;
+	}
+
+	/**
+	 * the substitution content of the template
+	 */
 	public String getTemplateMarkup() {
 		return templateMarkup;
 	}
 
+	/**
+	 * the substitution content of the template
+	 */
 	public void setTemplateMarkup(String templateMarkup) {
 		this.templateMarkup = templateMarkup;
 	}
 
+	/**
+	 * the name of the template
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * the name of the template
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}

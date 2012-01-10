@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -712,6 +713,18 @@ public class MediaWikiLanguageTest extends TestCase {
 		markupLanaguage.setTemplateExcludes("*foo");
 		MediaWikiLanguage copy = (MediaWikiLanguage) markupLanaguage.clone();
 		assertEquals(markupLanaguage.getTemplateExcludes(), copy.getTemplateExcludes());
+	}
+
+	public void testTemplateExcludes() {
+		// bug 367525
+		markupLanaguage.setTemplateExcludes("one, two");
+		markupLanaguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"), new Template(
+				"three", "3")));
+		String html = parser.parseToHtml("a{{one}} and {{two}} and {{three}}");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<p>a and  and 3</p>"));
 	}
 
 	public void testTableOfContents() throws IOException {
