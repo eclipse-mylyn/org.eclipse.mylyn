@@ -608,8 +608,36 @@ public class IssueService extends GitHubService {
 			throws IOException {
 		verifyRepository(user, repository);
 
+		String id = user + '/' + repository;
+		return createIssue(id, issue);
+	}
+
+	/**
+	 * Create issue
+	 *
+	 * @param repository
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Issue createIssue(IRepositoryIdProvider repository, Issue issue)
+			throws IOException {
+		String id = getId(repository);
+		return createIssue(id, issue);
+	}
+
+	/**
+	 * Create issue
+	 *
+	 * @param id
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	private Issue createIssue(String id, Issue issue) throws IOException {
+
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(id);
 		uri.append(SEGMENT_ISSUES);
 
 		Map<Object, Object> params = createIssueMap(issue, true);
@@ -628,11 +656,40 @@ public class IssueService extends GitHubService {
 	public Issue editIssue(String user, String repository, Issue issue)
 			throws IOException {
 		verifyRepository(user, repository);
+
+		String id = user + '/' + repository;
+		return editIssue(id, issue);
+	}
+
+	/**
+	 * Edit issue
+	 *
+	 * @param repository
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Issue editIssue(IRepositoryIdProvider repository, Issue issue)
+			throws IOException {
+		String id = getId(repository);
+		return editIssue(id, issue);
+	}
+
+	/**
+	 * Edit issue
+	 *
+	 * @param id
+	 * @param repository
+	 * @param issue
+	 * @return created issue
+	 * @throws IOException
+	 */
+	private Issue editIssue(String id, Issue issue) throws IOException {
 		if (issue == null)
 			throw new IllegalArgumentException("Issue cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(id);
 		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(issue.getNumber());
 
@@ -672,13 +729,58 @@ public class IssueService extends GitHubService {
 	public Comment createComment(String user, String repository,
 			String issueId, String comment) throws IOException {
 		verifyRepository(user, repository);
+
+		String id = user + '/' + repository;
+		return createComment(id, issueId, comment);
+	}
+
+	/**
+	 * Create comment on specified issue id
+	 *
+	 * @param repository
+	 * @param issueId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Comment createComment(IRepositoryIdProvider repository, int issueId,
+			String comment) throws IOException {
+		return createComment(repository, Integer.toString(issueId), comment);
+	}
+
+	/**
+	 * Create comment on specified issue id
+	 *
+	 * @param repository
+	 * @param issueId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
+	public Comment createComment(IRepositoryIdProvider repository,
+			String issueId, String comment) throws IOException {
+		String id = getId(repository);
+		return createComment(id, issueId, comment);
+	}
+
+	/**
+	 * Create comment on specified issue id
+	 *
+	 * @param id
+	 * @param issueId
+	 * @param comment
+	 * @return created issue
+	 * @throws IOException
+	 */
+	private Comment createComment(String id, String issueId, String comment)
+			throws IOException {
 		if (issueId == null)
 			throw new IllegalArgumentException("Issue id cannot be null"); //$NON-NLS-1$
 		if (issueId.length() == 0)
 			throw new IllegalArgumentException("Issue id cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(id);
 		uri.append(SEGMENT_ISSUES);
 		uri.append('/').append(issueId);
 		uri.append(SEGMENT_COMMENTS);
@@ -724,11 +826,40 @@ public class IssueService extends GitHubService {
 	public Comment editComment(String user, String repository, Comment comment)
 			throws IOException {
 		verifyRepository(user, repository);
+
+		String id = user + '/' + repository;
+		return editComment(id, comment);
+	}
+
+	/**
+	 * Edit issue comment
+	 *
+	 * @param repository
+	 * @param comment
+	 * @return edited comment
+	 * @throws IOException
+	 */
+	public Comment editComment(IRepositoryIdProvider repository, Comment comment)
+			throws IOException {
+		String id = getId(repository);
+		return editComment(id, comment);
+	}
+
+	/**
+	 * Edit issue comment
+	 *
+	 * @param user
+	 * @param repository
+	 * @param comment
+	 * @return edited comment
+	 * @throws IOException
+	 */
+	private Comment editComment(String id, Comment comment) throws IOException {
 		if (comment == null)
 			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(id);
 		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
 		uri.append('/').append(comment.getId());
 		return client.post(uri.toString(), comment, Comment.class);
@@ -758,13 +889,52 @@ public class IssueService extends GitHubService {
 	public void deleteComment(String user, String repository, String commentId)
 			throws IOException {
 		verifyRepository(user, repository);
+
+		String id = user + '/' + repository;
+		deleteComment(id, commentId);
+	}
+
+	/**
+	 * Delete the issue comment with the given id
+	 *
+	 * @param repository
+	 * @param commentId
+	 * @throws IOException
+	 */
+	public void deleteComment(IRepositoryIdProvider repository, long commentId)
+			throws IOException {
+		deleteComment(repository, Long.toString(commentId));
+	}
+
+	/**
+	 * Delete the issue comment with the given id
+	 *
+	 * @param repository
+	 * @param commentId
+	 * @throws IOException
+	 */
+	public void deleteComment(IRepositoryIdProvider repository, String commentId)
+			throws IOException {
+		String id = getId(repository);
+		deleteComment(id, commentId);
+	}
+
+	/**
+	 * Delete the issue comment with the given id
+	 *
+	 * @param user
+	 * @param repository
+	 * @param commentId
+	 * @throws IOException
+	 */
+	private void deleteComment(String id, String commentId) throws IOException {
 		if (commentId == null)
 			throw new IllegalArgumentException("Comment cannot be null"); //$NON-NLS-1$
 		if (commentId.length() == 0)
 			throw new IllegalArgumentException("Comment cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(user).append('/').append(repository);
+		uri.append('/').append(id);
 		uri.append(SEGMENT_ISSUES).append(SEGMENT_COMMENTS);
 		uri.append('/').append(commentId);
 		client.delete(uri.toString());
