@@ -22,10 +22,10 @@ the GitHub API JSON response.  The [Google Gson](http://code.google.com/p/google
 library is used serialize and deserialize these objects to/from JSON.
 
 ### Client (org.eclipse.egit.github.core.client)
-This package contains classes that integrate with [Apache HttpComponents](http://hc.apache.org/)
-to communicate with the GitHub API over HTTPS.  The client package is also
-responsible for converting JSON responses to appropriate Java model classes as
-well as generating request exceptions based on HTTP status codes.
+This package contains classes communicate with the GitHub API over HTTPS. 
+The client package is also responsible for converting JSON responses to
+appropriate Java model classes as well as generating request exceptions based on
+HTTP status codes.
 
 ### Service (org.eclipse.egit.github.core.service)
 This package contains the classes that invoke API calls and return model classes
@@ -95,10 +95,10 @@ service.getClient().setCredentials("user", "passw0rd");
 gist = service.createGist(gist); //returns the created gist
 ```
 
-### Using GitHub FI
+### Using GitHub Enterprise
 Clients use an address of `api.github.com` by default but this can be
 overridden when the client is created for the case where you are using
-[GitHub FI](http://fi.github.com/).
+[GitHub Enterprise](http://enterprise.github.com/).
 
 ```java
 GitHubClient client = new GitHubClient("github.mycompany.com");
@@ -115,20 +115,9 @@ without dependencies:
 
 ### All-in-one
 The GitHub Java API can also be built as a JAR that includes all the
-dependencies (Apache HttpComponents & Google Gson).  This technique uses
+dependencies (Google Gson).  This technique uses
 the [Maven Shade Plugin](http://maven.apache.org/plugins/maven-shade-plugin/) to
 build an all-in-one JAR file.
 
 `$ mvn -f pom-jar.xml clean install -P shade`
 
-
-### Android applications
-A custom build step is required to use the GitHub Java API inside an Android
-application due to classloader restrictions of the Android SDK.
-
-The Android SDK comes with a specific version of Apache HttpComponents that is
-older than the version required by the GitHub Java API. A custom Maven profile
-exists that bundles relocated versions of the Apache classes so that correct
-versions can be loaded when running inside an Android application.
-
-`$ mvn -f pom-jar.xml clean install -P android-shade`
