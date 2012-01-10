@@ -402,6 +402,19 @@ public class IssueServiceTest {
 	}
 
 	/**
+	 * Create issue with null issue
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createIssueNullIssueWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.createIssue(id, null);
+		verify(gitHubClient).post("/repos/tu/tr/issues",
+				new HashMap<String, String>(), Issue.class);
+	}
+
+	/**
 	 * Edit issue with null user
 	 *
 	 * @throws IOException
@@ -471,6 +484,28 @@ public class IssueServiceTest {
 		params.put(IssueService.FILTER_STATE, "test_state");
 		verify(gitHubClient).post("/repos/test_user/test_repository/issues/1",
 				params, Issue.class);
+	}
+
+	/**
+	 * Edit issue with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editIssueWithRepositoryId() throws IOException {
+		Issue issue = new Issue();
+		issue.setNumber(1);
+		issue.setTitle("test_title");
+		issue.setBody("test_body");
+		issue.setState("test_state");
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.editIssue(id, issue);
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(IssueService.FIELD_TITLE, "test_title");
+		params.put(IssueService.FIELD_BODY, "test_body");
+		params.put(IssueService.FILTER_STATE, "test_state");
+		verify(gitHubClient).post("/repos/tu/tr/issues/1", params, Issue.class);
 	}
 
 	/**
@@ -551,6 +586,22 @@ public class IssueServiceTest {
 	}
 
 	/**
+	 * Create issue comment with valid parameters
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createCommentWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("tu", "tr");
+		issueService.createComment(id, 1, "test_comment");
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(IssueService.FIELD_BODY, "test_comment");
+		verify(gitHubClient).post("/repos/tu/tr/issues/1/comments", params,
+				Comment.class);
+	}
+
+	/**
 	 * Delete comment with null user
 	 *
 	 * @throws IOException
@@ -618,6 +669,18 @@ public class IssueServiceTest {
 	@Test
 	public void deleteComment() throws IOException {
 		issueService.deleteComment("user", "repo", 1);
+		verify(gitHubClient).delete("/repos/user/repo/issues/comments/1");
+	}
+
+	/**
+	 * Delete issue comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteCommentWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.deleteComment(id, 1);
 		verify(gitHubClient).delete("/repos/user/repo/issues/comments/1");
 	}
 
@@ -750,6 +813,20 @@ public class IssueServiceTest {
 		Comment comment = new Comment().setId(29).setBody("new body");
 		issueService.editComment("user", "repo", comment);
 		verify(gitHubClient).post("/repos/user/repo/issues/comments/29",
+				comment, Comment.class);
+	}
+
+	/**
+	 * Edit issue comment
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editIssueCommentWithRepositoryId() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		Comment comment = new Comment().setId(44).setBody("new body");
+		issueService.editComment(id, comment);
+		verify(gitHubClient).post("/repos/user/repo/issues/comments/44",
 				comment, Comment.class);
 	}
 }
