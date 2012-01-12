@@ -14,6 +14,7 @@ package org.eclipse.egit.github.core.client;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_GONE;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
@@ -417,6 +418,7 @@ public class GitHubClient {
 		case HTTP_UNAUTHORIZED:
 		case HTTP_FORBIDDEN:
 		case HTTP_NOT_FOUND:
+		case HTTP_GONE:
 		case HTTP_UNPROCESSABLE_ENTITY:
 		case HTTP_INTERNAL_ERROR:
 			return true;
