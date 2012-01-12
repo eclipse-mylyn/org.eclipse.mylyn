@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
+import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
@@ -113,7 +114,7 @@ public class AllTasksTests {
 		// XXX long running tests, put back?
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
-
+		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
 		return suite;
 	}
 

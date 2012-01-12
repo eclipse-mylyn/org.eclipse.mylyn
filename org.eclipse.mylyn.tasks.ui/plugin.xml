@@ -1078,6 +1078,13 @@
             name="%TaskHyperlinkDetector.name"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
+      <hyperlinkDetector            
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.MultipleTaskHyperlinkDetector"
+            id="org.eclipse.mylyn.tasks.ui.hyperlinks.detectors.task.multiple"
+            name="%TaskHyperlinkDetector.name"
+            modifierKeys="Ctrl"
+            targetId="org.eclipse.mylyn.tasks.ui.TaskEditor">
+      </hyperlinkDetector>
       <hyperlinkDetector
             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector"
             description="%TaskUrlHyperlinkDetector.description"
