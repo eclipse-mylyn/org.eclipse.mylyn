@@ -41,6 +41,7 @@ public class EventTest {
 		assertNull(event.getOrg());
 		assertNull(event.getCreatedAt());
 		assertFalse(event.isPublic());
+		assertNull(event.getId());
 	}
 
 	/**
@@ -61,6 +62,7 @@ public class EventTest {
 		assertEquals(new Date(5000), event.setCreatedAt(new Date(5000))
 				.getCreatedAt());
 		assertTrue(event.setPublic(true).isPublic());
+		assertEquals("123", event.setId("123").getId());
 	}
 
 	/**

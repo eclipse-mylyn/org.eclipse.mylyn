@@ -38,6 +38,8 @@ public class Event implements Serializable {
 
 	private EventRepository repo;
 
+	private String id;
+
 	private User actor;
 
 	private User org;
@@ -153,6 +155,22 @@ public class Event implements Serializable {
 	 */
 	public Event setPayload(EventPayload payload) {
 		this.payload = payload;
+		return this;
+	}
+
+	/**
+	 * @return id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 * @return this event
+	 */
+	public Event setId(String id) {
+		this.id = id;
 		return this;
 	}
 }
