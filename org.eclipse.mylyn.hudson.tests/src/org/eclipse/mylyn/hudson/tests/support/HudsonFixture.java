@@ -16,12 +16,10 @@ package org.eclipse.mylyn.hudson.tests.support;
 import java.net.Proxy;
 
 import org.eclipse.mylyn.commons.core.net.NetUtil;
-import org.eclipse.mylyn.commons.core.net.ProxyProvider;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
@@ -111,14 +109,9 @@ public class HudsonFixture extends TestFixture {
 			throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(url);
-		location.setService(new LocationService(username, password, new ProxyProvider() {
-			@Override
-			public Proxy getProxyForHost(String host, String proxyType) {
-				return proxy;
-			}
-		}));
+		location.setProxy(proxy);
 		if (username != null && password != null) {
-			location.setCredentials(AuthenticationType.REPOSITORY, new UsernamePasswordCredentials(username, password));
+			location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(username, password));
 		}
 		RestfulHudsonClient hudsonClient = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return hudsonClient;

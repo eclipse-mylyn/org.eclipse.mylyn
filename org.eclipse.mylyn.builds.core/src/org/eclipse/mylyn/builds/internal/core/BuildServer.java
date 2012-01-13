@@ -145,11 +145,11 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void setLocation(RepositoryLocation newLocation) {
 		RepositoryLocation oldLocation = location;
 		if (oldLocation != null) {
-			oldLocation.removeChangeListener(locationChangeListener);
+			oldLocation.removePropertyChangeListener(locationChangeListener);
 		}
 		location = newLocation;
 		if (location != null) {
-			location.addChangeListener(locationChangeListener);
+			location.addPropertyChangeListener(locationChangeListener);
 		}
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__LOCATION, oldLocation,

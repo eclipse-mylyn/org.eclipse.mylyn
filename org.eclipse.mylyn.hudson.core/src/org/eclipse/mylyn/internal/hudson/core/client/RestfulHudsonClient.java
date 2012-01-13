@@ -101,6 +101,7 @@ public class RestfulHudsonClient {
 	private final CommonHttpClient client;
 
 	public RestfulHudsonClient(RepositoryLocation location, HudsonConfigurationCache cache) {
+		// FIXME register listener to location to handle credential changes
 		client = new CommonHttpClient(location);
 		setCache(cache);
 	}

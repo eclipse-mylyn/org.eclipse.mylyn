@@ -13,7 +13,7 @@ package org.eclipse.mylyn.hudson.tests.support;
 
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
@@ -51,7 +51,7 @@ public class HudsonHarness {
 		Credentials credentials = TestUtil.readCredentials(level);
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(fixture.getRepositoryUrl());
-		location.setCredentials(AuthenticationType.REPOSITORY, new UsernamePasswordCredentials(credentials.username,
+		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(credentials.username,
 				credentials.password));
 		client = new RestfulHudsonClient(location, new HudsonConfigurationCache());
 		return client;

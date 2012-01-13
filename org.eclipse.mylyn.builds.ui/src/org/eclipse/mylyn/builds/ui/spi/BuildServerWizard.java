@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -92,9 +91,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		if (model == null) {
 			model = ((BuildServer) original).createWorkingCopy();
 			RepositoryLocation workingCopy = new RepositoryLocation(original.getLocation());
-			if (workingCopy.getProperty(RepositoryLocation.PROPERTY_ID) == null) {
-				workingCopy.setProperty(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
-			}
+			// use an in memory credentials store that is backed by the actual credentials store
 			workingCopy.setCredentialsStore(new InMemoryCredentialsStore(workingCopy.getCredentialsStore()));
 			((BuildServer) model).setLocation(workingCopy);
 		}

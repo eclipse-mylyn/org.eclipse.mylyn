@@ -29,15 +29,7 @@ import org.osgi.framework.Bundle;
  */
 public class HudsonConnector extends BuildConnector {
 
-	private final HudsonConfigurationCache cache = new HudsonConfigurationCache(getCacheFile());
-
-	@Override
-	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(location, cache);
-		return behaviour;
-	}
-
-	protected File getCacheFile() {
+	protected static File getCacheFile() {
 		if (Platform.isRunning()) {
 			Bundle bundle = Platform.getBundle(HudsonCorePlugin.ID_PLUGIN);
 			if (bundle != null) {
@@ -47,6 +39,22 @@ public class HudsonConnector extends BuildConnector {
 			}
 		}
 		return null;
+	}
+
+	private final HudsonConfigurationCache cache;
+
+	public HudsonConnector() {
+		this(getCacheFile());
+	}
+
+	public HudsonConnector(File cacheFile) {
+		cache = new HudsonConfigurationCache(cacheFile);
+	}
+
+	@Override
+	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(location, cache);
+		return behaviour;
 	}
 
 }

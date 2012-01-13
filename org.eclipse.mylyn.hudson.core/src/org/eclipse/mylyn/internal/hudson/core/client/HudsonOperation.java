@@ -33,8 +33,10 @@ import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.commons.core.HtmlTag;
 import org.eclipse.mylyn.commons.core.HtmlUtil;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpOperation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
@@ -54,8 +56,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
 	@Override
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
-		UsernamePasswordCredentials credentials = getClient().getLocation().getCredentials(
-				AuthenticationType.REPOSITORY, UsernamePasswordCredentials.class);
+		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 
 		HttpPost request = createPostRequest(getClient().getLocation().getUrl() + "/j_acegi_security_check"); //$NON-NLS-1$
 		HudsonLoginForm form = new HudsonLoginForm();
@@ -65,17 +66,27 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		request.setEntity(form.createEntity());
 		HttpResponse response = getClient().execute(request, monitor);
 		try {
+			// check for proxy authentication request
+			validate(response, monitor);
+
+			// validate form submission
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
 				getClient().setAuthenticated(false);
 				throw new IOException(NLS.bind("Unexpected response from Hudson server while logging in: {0}",
 						HttpUtil.getStatusText(statusCode)));
 			}
+
+			// validate form response
 			Header header = response.getFirstHeader("Location");
 			if (header != null && header.getValue().endsWith("/loginError")) {
 				getClient().setAuthenticated(false);
-				throw new IOException("Login failed");
+				throw new AuthenticationException("Authentication failed",
+						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
+								AuthenticationType.REPOSITORY));
 			}
+
+			// success
 			getClient().setAuthenticated(true);
 		} finally {
 			HttpUtil.release(request, response, monitor);
@@ -191,13 +202,6 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}",
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
-	}
-
-	@Override
-	protected boolean needsAuthentication() {
-		return !getClient().isAuthenticated()
-				&& getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY,
-						UsernamePasswordCredentials.class) != null;
 	}
 
 }

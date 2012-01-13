@@ -858,4 +858,5 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
 	}
+
 }

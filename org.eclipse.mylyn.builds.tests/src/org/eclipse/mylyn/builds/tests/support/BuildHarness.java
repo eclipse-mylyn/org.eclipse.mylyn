@@ -13,7 +13,6 @@ package org.eclipse.mylyn.builds.tests.support;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
@@ -63,9 +62,8 @@ public class BuildHarness {
 		server.setLoader(loader);
 
 		RepositoryLocation location = new RepositoryLocation();
-		location.setProperty(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
-		location.setCredentialsStore(new InMemoryCredentialsStore(null));
-		location.setProperty(RepositoryLocation.PROPERTY_URL, "http://ci.mylyn.org/");
+		location.setCredentialsStore(new InMemoryCredentialsStore());
+		location.setUrl("http://ci.mylyn.org/");
 		server.setLocation(location);
 
 		getModel().getServers().add(server);
