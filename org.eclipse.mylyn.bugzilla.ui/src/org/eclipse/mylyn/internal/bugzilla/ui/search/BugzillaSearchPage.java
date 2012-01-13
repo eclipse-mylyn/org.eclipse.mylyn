@@ -23,7 +23,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
@@ -571,6 +574,36 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 		Button button4 = new Button(emailComposite, SWT.CHECK);
 		button4.setText(Messages.BugzillaSearchPage_qacontact);
+		button0.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		button1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		button2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		button3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		button4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
 
 		emailButtons = new Button[] { button0, button1, button2, button3, button4 };
 		new Label(basicComposite, SWT.NONE);
@@ -780,6 +813,36 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 		Button e2button4 = new Button(emailComposite2, SWT.CHECK);
 		e2button4.setText(Messages.BugzillaSearchPage_qacontact);
+		e2button0.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		e2button1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		e2button2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		e2button3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
+		e2button4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setPageComplete(isPageComplete());
+			}
+		});
 
 		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3, e2button4 };
 
@@ -1128,8 +1191,89 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException ex) {
-					setMessage(NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer, days),
-							IMessageProvider.ERROR);
+					if (getContainer() != null) {
+						setMessage(
+								NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer, days),
+								IMessageProvider.ERROR);
+					} else {
+						ErrorDialog.openError(
+								getShell(),
+								Messages.BugzillaSearchPage_ValidationTitle,
+								Messages.BugzillaSearchPage_Number_of_days_is_invalid,
+								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
+										Messages.BugzillaSearchPage_days_must_be_an_positve_integer_value_but_is, days)));
+
+					}
+					return false;
+				}
+			}
+		}
+		if (emailPattern != null) {
+			String email = emailPattern.getText();
+			if (email.length() > 0) {
+				boolean selectionMade = false;
+				for (Button button : emailButtons) {
+					if (button.getSelection()) {
+						selectionMade = true;
+						break;
+					}
+				}
+				if (!selectionMade) {
+					if (getContainer() != null) {
+						setMessage(
+								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
+										Messages.BugzillaSearchPage_Email.replace('&', ' '),
+										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
+										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
+										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
+					} else {
+						ErrorDialog.openError(
+								getShell(),
+								Messages.BugzillaSearchPage_ValidationTitle,
+								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage1,
+										Messages.BugzillaSearchPage_Email.replace('&', ' '), email),
+								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
+										Messages.BugzillaSearchPage_ValidationReason, new String[] {
+												Messages.BugzillaSearchPage_owner,
+												Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
+												Messages.BugzillaSearchPage_commenter,
+												Messages.BugzillaSearchPage_qacontact })));
+					}
+					return false;
+				}
+			}
+		}
+		if (emailPattern2 != null) {
+			String email2 = emailPattern2.getText();
+			if (email2.length() > 0) {
+				boolean selectionMade = false;
+				for (Button button : emailButtons2) {
+					if (button.getSelection()) {
+						selectionMade = true;
+						break;
+					}
+				}
+				if (!selectionMade) {
+					if (getContainer() != null) {
+						setMessage(
+								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
+										Messages.BugzillaSearchPage_Email_2.replace('&', ' '),
+										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
+										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
+										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
+					} else {
+						ErrorDialog.openError(
+								getShell(),
+								Messages.BugzillaSearchPage_ValidationTitle,
+								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage1,
+										Messages.BugzillaSearchPage_Email_2.replace('&', ' '), email2),
+								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
+										Messages.BugzillaSearchPage_ValidationReason, new String[] {
+												Messages.BugzillaSearchPage_owner,
+												Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
+												Messages.BugzillaSearchPage_commenter,
+												Messages.BugzillaSearchPage_qacontact })));
+					}
 					return false;
 				}
 			}
@@ -1300,10 +1444,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
+				sb.append("&emailtype1="); //$NON-NLS-1$
+				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
+				appendToBuffer(sb, "&email1=", emailPattern.getText()); //$NON-NLS-1$
 			}
-			sb.append("&emailtype1="); //$NON-NLS-1$
-			sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
-			appendToBuffer(sb, "&email1=", emailPattern.getText()); //$NON-NLS-1$
 		}
 
 		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) { //$NON-NLS-1$
@@ -1322,10 +1466,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
+				sb.append("&emailtype2="); //$NON-NLS-1$
+				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
+				appendToBuffer(sb, "&email2=", emailPattern2.getText()); //$NON-NLS-1$
 			}
-			sb.append("&emailtype2="); //$NON-NLS-1$
-			sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
-			appendToBuffer(sb, "&email2=", emailPattern2.getText()); //$NON-NLS-1$
 		}
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) { //$NON-NLS-1$
@@ -1472,6 +1616,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	public void handleEvent(Event event) {
 		if (getWizard() != null) {
 			getWizard().getContainer().updateButtons();
+		} else {
+			isPageComplete();
 		}
 	}
 

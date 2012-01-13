@@ -45,6 +45,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_days;
 
+	public static String BugzillaSearchPage_days_must_be_an_positve_integer_value_but_is;
+
 	public static String BugzillaSearchPage_Email;
 
 	public static String BugzillaSearchPage_Email_2;
@@ -76,6 +78,8 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Add_Chart_Button;
 
 	public static String BugzillaSearchPage_none;
+
+	public static String BugzillaSearchPage_Number_of_days_is_invalid;
 
 	public static String BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
 
@@ -168,6 +172,14 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Summary;
 
 	public static String BugzillaSearchPage_Updating_search_options_;
+
+	public static String BugzillaSearchPage_ValidationMessage;
+
+	public static String BugzillaSearchPage_ValidationMessage1;
+
+	public static String BugzillaSearchPage_ValidationReason;
+
+	public static String BugzillaSearchPage_ValidationTitle;
 
 	public static String BugzillaSearchPage_Version;
 
