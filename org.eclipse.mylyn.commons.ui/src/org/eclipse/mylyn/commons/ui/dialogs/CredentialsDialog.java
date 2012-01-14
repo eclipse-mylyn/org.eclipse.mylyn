@@ -267,7 +267,6 @@ public class CredentialsDialog extends TitleAreaDialog {
 	protected Control createContents(Composite parent) {
 		getShell().setText("Enter credentials");
 		setTitle("Authentication");
-		setMessage(getMessage());
 
 		Control control = super.createContents(parent);
 
