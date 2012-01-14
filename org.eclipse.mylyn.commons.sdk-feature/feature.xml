@@ -62,14 +62,6 @@
          id="org.eclipse.mylyn.commons.repositories.http"
          version="0.0.0"/>
 
-   <!-- bug 278474 -->   
-   <plugin
-         id="org.eclipse.core.runtime.compatibility.auth"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
    <!-- bundles not included in other features -->
 
    <plugin
