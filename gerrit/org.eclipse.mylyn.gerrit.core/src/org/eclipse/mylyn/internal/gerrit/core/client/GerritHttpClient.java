@@ -410,7 +410,7 @@ public class GerritHttpClient {
 			if (code == HttpStatus.SC_MOVED_TEMPORARILY) {
 				Header locationHeader = method.getResponseHeader("Location");
 				if (locationHeader != null) {
-					if (locationHeader.getValue().endsWith("#SignInFailure,SIGN_IN,Session cookie not available.")) {
+					if (locationHeader.getValue().endsWith("SignInFailure,SIGN_IN,Session cookie not available.")) {
 						// try different authentication method
 						return HttpStatus.SC_NOT_FOUND;
 					}
