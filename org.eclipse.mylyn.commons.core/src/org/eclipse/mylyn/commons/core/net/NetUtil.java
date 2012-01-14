@@ -98,12 +98,16 @@ public class NetUtil {
 		}
 	}
 
-	public static Proxy createProxy(String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) {
+	public static Proxy createProxy(String proxyHost, int proxyPort) {
+		return createProxy(proxyHost, proxyPort, null, null, null);
+	}
+
+	public static Proxy createProxy(String proxyHost, int proxyPort, String username, String password, String domain) {
 		if (proxyHost != null && proxyHost.length() > 0) {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
+			boolean authenticated = (username != null && password != null && username.length() > 0 && password.length() > 0);
 			if (authenticated) {
-				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+				return new AuthenticatedProxy(Type.HTTP, sockAddr, username, password, domain);
 			} else {
 				return new Proxy(Type.HTTP, sockAddr);
 			}
@@ -199,7 +203,7 @@ public class NetUtil {
 				if (proxyPort == -1) {
 					proxyPort = 0;
 				}
-				return createProxy(proxyHost, proxyPort, data.getUserId(), data.getPassword());
+				return createProxy(proxyHost, proxyPort, data.getUserId(), data.getPassword(), null);
 			}
 		} else {
 			try {

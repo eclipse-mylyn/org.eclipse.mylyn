@@ -18,8 +18,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpEntity;
@@ -30,10 +28,10 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.auth.params.AuthPNames;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
@@ -63,6 +61,7 @@ import org.eclipse.mylyn.commons.core.operations.Operation;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 
 /**
  * @author Steffen Pingel
@@ -111,10 +110,11 @@ public class HttpUtil {
 	}
 
 	public static void configureClient(AbstractHttpClient client, String userAgent) {
-		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.RFC_2109);
+		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BEST_MATCH);
 
 		HttpProtocolParams.setUserAgent(client.getParams(), userAgent);
 		HttpProtocolParams.setUseExpectContinue(client.getParams(), true);
+		client.getParams().setBooleanParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 
 		HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNNECT_TIMEOUT);
 		HttpConnectionParams.setSoTimeout(client.getParams(), SOCKET_TIMEOUT);
@@ -130,9 +130,7 @@ public class HttpUtil {
 
 		configureProxy(client, location, url);
 
-		org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials authCreds = location.getCredentials(
-				AuthenticationType.HTTP,
-				org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials.class);
+		UserCredentials authCreds = location.getCredentials(AuthenticationType.HTTP);
 		if (authCreds != null) {
 			String host = NetUtil.getHost(url);
 			int port = NetUtil.getPort(url);
@@ -185,7 +183,7 @@ public class HttpUtil {
 	}
 
 	public static Credentials getHttpClientCredentials(
-			org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials credentials, String host,
+			org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials credentials, String host,
 			boolean forceUserNamePassword) {
 		String username = credentials.getUserName();
 		String password = credentials.getPassword();
@@ -228,9 +226,9 @@ public class HttpUtil {
 
 		Proxy proxy;
 		if (NetUtil.isUrlHttps(location.getUrl())) {
-			proxy = location.getService().getProxyForHost(host, IProxyData.HTTPS_PROXY_TYPE);
+			proxy = location.getProxyForHost(host, IProxyData.HTTPS_PROXY_TYPE);
 		} else {
-			proxy = location.getService().getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
+			proxy = location.getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
 		}
 
 		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
@@ -244,11 +242,6 @@ public class HttpUtil {
 				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
 						address.getAddress(), false);
 				if (credentials instanceof NTCredentials) {
-					List<String> authpref = new ArrayList<String>();
-					authpref.add(AuthPolicy.NTLM);
-					authpref.add(AuthPolicy.BASIC);
-					authpref.add(AuthPolicy.DIGEST);
-					client.getParams().setParameter(AuthPNames.PROXY_AUTH_PREF, authpref);
 					AuthScope proxyAuthScopeNTLM = new AuthScope(address.getHostName(), address.getPort(),
 							AuthScope.ANY_REALM, AuthPolicy.NTLM);
 					client.getCredentialsProvider().setCredentials(proxyAuthScopeNTLM, credentials);
@@ -260,11 +253,6 @@ public class HttpUtil {
 					client.getCredentialsProvider().setCredentials(proxyAuthScopeAny, usernamePasswordCredentials);
 
 				} else {
-					List<String> authpref = new ArrayList<String>();
-					authpref.add(AuthPolicy.BASIC);
-					authpref.add(AuthPolicy.DIGEST);
-					authpref.add(AuthPolicy.NTLM);
-					client.getParams().setParameter(AuthPNames.PROXY_AUTH_PREF, authpref);
 					AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(),
 							AuthScope.ANY_REALM);
 					client.getCredentialsProvider().setCredentials(proxyAuthScope, credentials);

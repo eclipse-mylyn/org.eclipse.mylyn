@@ -161,5 +161,12 @@
          </command>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.repositories.core.locationServices">
+      <service
+            class="org.eclipse.mylyn.internal.commons.repositories.ui.UiLocationService"
+            id="org.eclipse.mylyn.commons.repositories.ui.LocationService">
+      </service>
+   </extension>
 
 </plugin>

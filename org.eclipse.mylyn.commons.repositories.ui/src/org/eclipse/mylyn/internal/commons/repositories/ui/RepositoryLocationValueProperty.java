@@ -36,12 +36,12 @@ public class RepositoryLocationValueProperty extends SimpleValueProperty {
 
 		@Override
 		protected void doAddTo(Object source) {
-			((RepositoryLocation) source).addChangeListener(this);
+			((RepositoryLocation) source).addPropertyChangeListener(this);
 		}
 
 		@Override
 		protected void doRemoveFrom(Object source) {
-			((RepositoryLocation) source).removeChangeListener(this);
+			((RepositoryLocation) source).removePropertyChangeListener(this);
 		}
 
 		public void propertyChange(PropertyChangeEvent evt) {

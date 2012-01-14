@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.internal.commons.repositories.core;
 
-import org.eclipse.equinox.security.storage.StorageException;
+import java.lang.reflect.Constructor;
+
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
-import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
 
 /**
  * Simple factory that creates {@link AuthenticationCredentials} objects.
@@ -23,13 +23,16 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredenti
  */
 public class CredentialsFactory {
 
-	@SuppressWarnings("unchecked")
-	public static <T extends AuthenticationCredentials> T create(Class<T> credentialsKind,
-			ICredentialsStore credentialsStore, String key) throws StorageException {
-		if (credentialsKind == UsernamePasswordCredentials.class) {
-			return (T) UsernamePasswordCredentials.create(credentialsStore, key);
+	public static <T extends AuthenticationCredentials> T create(Class<T> credentialsType,
+			ICredentialsStore credentialsStore, String key, boolean loadSecrets) {
+		try {
+			Constructor<T> constructor = credentialsType.getDeclaredConstructor(ICredentialsStore.class, String.class,
+					boolean.class);
+			constructor.setAccessible(true);
+			return constructor.newInstance(credentialsStore, key, loadSecrets);
+		} catch (Exception e) {
+			throw new RuntimeException("Unexpected error while creating credentials", e);
 		}
-		throw new IllegalArgumentException("Unknown credentials type: " + credentialsKind); //$NON-NLS-1$
 	}
 
 }

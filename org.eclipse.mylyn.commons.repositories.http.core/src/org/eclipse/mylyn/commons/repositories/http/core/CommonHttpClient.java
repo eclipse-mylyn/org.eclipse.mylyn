@@ -24,7 +24,11 @@ import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 
 /**
  * Provides an abstraction for connecting to a {@link RepositoryLocation} through HTTP.
@@ -70,6 +74,10 @@ public class CommonHttpClient {
 		return authenticated;
 	}
 
+	public boolean needsAuthentication() {
+		return !isAuthenticated() && getLocation().getCredentials(AuthenticationType.REPOSITORY, false) != null;
+	}
+
 	public void setAuthenticated(boolean authenticated) {
 		this.authenticated = authenticated;
 	}
@@ -100,29 +108,22 @@ public class CommonHttpClient {
 		return HttpUtil.getConnectionManager();
 	}
 
-	protected boolean needsReauthentication(HttpResponse response, IProgressMonitor monitor) throws IOException {
+	protected <T extends AuthenticationCredentials> T requestCredentials(
+			AuthenticationRequest<AuthenticationType<T>> request, IProgressMonitor monitor) {
+		return location.requestCredentials(request, monitor);
+	}
+
+	protected void validate(HttpResponse response, IProgressMonitor monitor) throws AuthenticationException {
 		int statusCode = response.getStatusLine().getStatusCode();
-		final AuthenticationType authenticationType;
-		if (statusCode == HttpStatus.SC_UNAUTHORIZED || statusCode == HttpStatus.SC_FORBIDDEN) {
-			authenticationType = AuthenticationType.HTTP;
+		if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+					getLocation(), AuthenticationType.HTTP);
+			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		} else if (statusCode == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-			authenticationType = AuthenticationType.PROXY;
-		} else {
-			return false;
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+					getLocation(), AuthenticationType.PROXY);
+			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		}
-
-		try {
-			org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials authCreds = location.getService()
-					.requestCredentials(AuthenticationType.HTTP,
-							org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials.class, null,
-							monitor);
-		} catch (UnsupportedOperationException e) {
-			IOException ioe = new IOException(HttpUtil.getStatusText(statusCode));
-			ioe.initCause(e);
-			throw ioe;
-		}
-
-		return true;
 	}
 
 }

@@ -21,6 +21,7 @@ import java.util.concurrent.TimeoutException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.core.operations.OperationMonitor;
@@ -49,6 +50,19 @@ public class OperationUtil {
 			return new NullOperationMonitor();
 		}
 		return new OperationMonitor(null, monitor, taskName, work);
+	}
+
+	public static boolean isBackgroundMonitor(IProgressMonitor monitor) {
+		if (monitor == null) {
+			return false;
+		}
+		if (monitor instanceof IOperationMonitor) {
+			return ((IOperationMonitor) monitor).hasFlag(OperationFlag.BACKGROUND);
+		}
+		if (monitor.getClass().getSimpleName().equals("BackgroundProgressMonitor")) { //$NON-NLS-1$
+			return true;
+		}
+		return false;
 	}
 
 	/**

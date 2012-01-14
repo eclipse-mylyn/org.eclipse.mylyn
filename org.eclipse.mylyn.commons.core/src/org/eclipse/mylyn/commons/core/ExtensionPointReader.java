@@ -1,4 +1,5 @@
 package org.eclipse.mylyn.commons.core;
+
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +10,6 @@ package org.eclipse.mylyn.commons.core;
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +75,15 @@ public class ExtensionPointReader<T> {
 	public IStatus read() {
 		items.clear();
 
-		MultiStatus result = new MultiStatus(pluginId, 0, "Extensions failed to load", null); //$NON-NLS-1$
-
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(classAttributeId + "." + extensionId); //$NON-NLS-1$
+		if (registry == null) {
+			return Status.CANCEL_STATUS;
+		}
+
+		MultiStatus result = new MultiStatus(pluginId, 0, NLS.bind(
+				"Extensions for {0}/{1} failed to load", pluginId, elementId), null); //$NON-NLS-1$
+
+		IExtensionPoint extensionPoint = registry.getExtensionPoint(pluginId + "." + extensionId); //$NON-NLS-1$
 		if (extensionPoint != null) {
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for (IExtension extension : extensions) {
@@ -103,6 +108,10 @@ public class ExtensionPointReader<T> {
 		if (!result.isOK()) {
 			StatusHandler.log(result);
 		}
+	}
+
+	public T getItem() {
+		return (items.isEmpty()) ? null : items.get(0);
 	}
 
 	public List<T> getItems() {

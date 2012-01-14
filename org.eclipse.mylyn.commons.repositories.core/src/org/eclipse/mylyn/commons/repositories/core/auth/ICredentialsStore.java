@@ -13,8 +13,6 @@ package org.eclipse.mylyn.commons.repositories.core.auth;
 
 import java.io.IOException;
 
-import org.eclipse.equinox.security.storage.StorageException;
-
 /**
  * @author Steffen Pingel
  * @noextend This interface is not intended to be extended by clients.
@@ -26,18 +24,24 @@ public interface ICredentialsStore {
 
 	public void flush() throws IOException;
 
-	public String get(String key, String def) throws StorageException;
+	public String get(String key, String def);
 
-	public byte[] getByteArray(String key, byte[] def) throws StorageException;
+	public boolean getBoolean(String key, boolean def);
+
+	public byte[] getByteArray(String key, byte[] def);
 
 	public String[] keys();
 
-	public void put(String key, String value, boolean encrypt) throws StorageException;
+	public void put(String key, String value, boolean encrypt);
 
-	public void putByteArray(String key, byte[] value, boolean encrypt) throws StorageException;
+	public void put(String key, String value, boolean encrypt, boolean persist);
+
+	public void putBoolean(String key, boolean value, boolean encrypt);
+
+	public void putByteArray(String key, byte[] value, boolean encrypt);
 
 	public void remove(String key);
 
-	public void copyTo(ICredentialsStore target) throws StorageException;
+	public void copyTo(ICredentialsStore target);
 
 }

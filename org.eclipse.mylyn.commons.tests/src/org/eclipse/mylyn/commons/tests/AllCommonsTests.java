@@ -14,11 +14,13 @@ package org.eclipse.mylyn.commons.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.TimeoutInputStreamTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
 
 /**
  * @author Mik Kersten
@@ -28,6 +30,8 @@ public class AllCommonsTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllCommonsTests.class.getName());
 		suite.addTestSuite(CoreUtilTest.class);
+		suite.addTestSuite(AuthenticatedProxyTest.class);
+		suite.addTestSuite(OperationUtilTest.class);
 		suite.addTestSuite(NetUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);

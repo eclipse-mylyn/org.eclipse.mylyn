@@ -20,6 +20,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 
 /**
  * @author Steffen Pingel
@@ -51,6 +55,22 @@ public abstract class CommonHttpOperation<T> {
 	protected CommonHttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		monitor = OperationUtil.convert(monitor);
 
+		try {
+			// first attempt
+			return executeOnce(request, monitor);
+		} catch (AuthenticationException e) {
+			try {
+				requestCredentials((AuthenticationRequest) e.getRequest(), monitor);
+			} catch (UnsupportedOperationException e2) {
+				throw e;
+			}
+		}
+
+		// second attempt
+		return executeOnce(request, monitor);
+	}
+
+	protected CommonHttpResponse executeOnce(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		// force authentication
 		if (needsAuthentication()) {
 			authenticate(monitor);
@@ -58,12 +78,10 @@ public abstract class CommonHttpOperation<T> {
 
 		// first attempt
 		HttpResponse response = client.execute(request, monitor);
-		boolean repeat = false;
 		try {
-			if (needsReauthentication(response, monitor)) {
-				HttpUtil.release(request, response, monitor);
-				repeat = true;
-			}
+			validate(response, monitor);
+			// success
+			return new CommonHttpResponse(request, response);
 		} catch (IOException e) {
 			HttpUtil.release(request, response, monitor);
 			throw e;
@@ -71,14 +89,6 @@ public abstract class CommonHttpOperation<T> {
 			HttpUtil.release(request, response, monitor);
 			throw e;
 		}
-
-		if (repeat) {
-			// second attempt
-			authenticate(monitor);
-			response = client.execute(request, monitor);
-		}
-
-		return new CommonHttpResponse(request, response);
 	}
 
 	protected final CommonHttpClient getClient() {
@@ -86,11 +96,16 @@ public abstract class CommonHttpOperation<T> {
 	}
 
 	protected boolean needsAuthentication() {
-		return false;
+		return client.needsAuthentication();
 	}
 
-	protected boolean needsReauthentication(HttpResponse response, IOperationMonitor monitor) throws IOException {
-		return client.needsReauthentication(response, monitor);
+	protected <T extends AuthenticationCredentials> T requestCredentials(
+			AuthenticationRequest<AuthenticationType<T>> request, IOperationMonitor monitor) {
+		return client.requestCredentials(request, monitor);
+	}
+
+	protected void validate(HttpResponse response, IOperationMonitor monitor) throws AuthenticationException {
+		client.validate(response, monitor);
 	}
 
 }

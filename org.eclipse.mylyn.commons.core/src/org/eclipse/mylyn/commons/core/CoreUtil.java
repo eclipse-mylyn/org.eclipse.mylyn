@@ -94,6 +94,21 @@ public class CoreUtil {
 	}
 
 	/**
+	 * Returns true, if <code>o1</code> is equal to <code>o2</code> or <code>o1</code> and <code>o2</code> are
+	 * <code>null</code>.
+	 * 
+	 * @see Object#equals(Object)
+	 * @since 3.7
+	 */
+	public static boolean areEqual(Object o1, Object o2) {
+		if (o1 == null) {
+			return (o2 == null);
+		} else {
+			return o1.equals(o2);
+		}
+	}
+
+	/**
 	 * Compares <code>o1</code> and <code>o2</code>.
 	 * 
 	 * @since 3.7

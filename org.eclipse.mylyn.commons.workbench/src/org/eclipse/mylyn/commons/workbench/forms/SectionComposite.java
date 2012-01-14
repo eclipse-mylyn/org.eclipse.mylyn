@@ -69,7 +69,7 @@ public class SectionComposite extends SharedScrolledComposite {
 	}
 
 	public ExpandableComposite createSection(String title, int expansionStyle) {
-		return createSection(title, SWT.NONE, false);
+		return createSection(title, expansionStyle, false);
 	}
 
 	public ExpandableComposite createSection(String title, int expansionStyle, final boolean grabExcessVerticalSpace) {

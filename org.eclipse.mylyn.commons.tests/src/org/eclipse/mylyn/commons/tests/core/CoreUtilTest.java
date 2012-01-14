@@ -76,4 +76,33 @@ public class CoreUtilTest extends TestCase {
 		assertFalse(CoreUtil.propertyEquals(true, "true"));
 	}
 
+	public void testAreEqualEqualStrings() {
+		assertTrue(CoreUtil.areEqual("a", "a"));
+	}
+
+	public void testAreEqualSameObject() {
+		Object o = new Object();
+		assertTrue(CoreUtil.areEqual(o, o));
+	}
+
+	public void testAreEqualNull() {
+		assertTrue(CoreUtil.areEqual(null, null));
+	}
+
+	public void testAreEqualRightNotNull() {
+		assertFalse(CoreUtil.areEqual(null, new Object()));
+	}
+
+	public void testAreEqualLeftNotNull() {
+		assertFalse(CoreUtil.areEqual(new Object(), null));
+	}
+
+	public void testAreEqualUnequalObject() {
+		assertFalse(CoreUtil.areEqual(1, "a"));
+	}
+
+	public void testAreEqualUnequalStrings() {
+		assertFalse(CoreUtil.areEqual("a", "b"));
+	}
+
 }

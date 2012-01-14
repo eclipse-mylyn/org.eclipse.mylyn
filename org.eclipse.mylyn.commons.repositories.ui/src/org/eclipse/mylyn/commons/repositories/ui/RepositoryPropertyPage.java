@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.commons.repositories.ui;
 
-import java.util.UUID;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
@@ -49,9 +47,7 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 		if (workingCopy == null) {
 			RepositoryLocation element = (RepositoryLocation) getElement().getAdapter(RepositoryLocation.class);
 			workingCopy = new RepositoryLocation(element);
-			if (workingCopy.getId() == null) {
-				workingCopy.setProperty(RepositoryLocation.PROPERTY_ID, UUID.randomUUID().toString());
-			}
+			// use an in memory credentials store that is backed by the actual credentials store
 			workingCopy.setCredentialsStore(new InMemoryCredentialsStore(workingCopy.getCredentialsStore()));
 		}
 		return workingCopy;

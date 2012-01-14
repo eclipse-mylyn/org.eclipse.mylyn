@@ -12,29 +12,43 @@
 package org.eclipse.mylyn.internal.commons.repositories.core;
 
 import java.net.Proxy;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.net.ProxyProvider;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
-import org.eclipse.mylyn.commons.repositories.core.auth.UsernamePasswordCredentials;
 
 /**
  * @author Steffen Pingel
  */
 public class LocationService implements ILocationService {
 
-	private static LocationService instance = new LocationService();
+	private static class LocationServiceInitializer {
+		private static ILocationService service;
+		static {
+			ExtensionPointReader<ILocationService> reader = new ExtensionPointReader<ILocationService>(
+					RepositoriesCoreInternal.ID_PLUGIN, "locationServices", "service", ILocationService.class); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static LocationService getDefault() {
-		return instance;
+			IStatus status = reader.read();
+			if (!status.isOK()) {
+				StatusHandler.log(status);
+			}
+
+			if (reader.getItem() != null) {
+				service = reader.getItem();
+			} else {
+				service = new LocationService();
+			}
+		}
 	}
 
 	private static class PlatformProxyProvider extends ProxyProvider {
@@ -48,37 +62,22 @@ public class LocationService implements ILocationService {
 
 	}
 
-	private final Map<AuthenticationType, UsernamePasswordCredentials> credentialsByType;
+	public static ILocationService getDefault() {
+		return LocationServiceInitializer.service;
+	}
 
 	private final ProxyProvider proxyProvider;
 
 	public LocationService() {
-		this(null, null, PlatformProxyProvider.INSTANCE);
+		this(PlatformProxyProvider.INSTANCE);
 	}
 
 	public LocationService(ProxyProvider proxyProvider) {
-		this(null, null, proxyProvider);
-	}
-
-	public LocationService(String username, String password, ProxyProvider proxyProvider) {
-		this.credentialsByType = new HashMap<AuthenticationType, UsernamePasswordCredentials>();
 		this.proxyProvider = proxyProvider;
-
-		if (username != null && password != null) {
-			setCredentials(AuthenticationType.REPOSITORY, username, password);
-		}
 	}
 
-//	public LocationService(String url, String username, String password) {
-//		this(url, username, password, new PlatformProxyProvider());
-//	}
-//
-//	public LocationService(String url) {
-//		this(url, null, null, new PlatformProxyProvider());
-//	}
-
-	public UsernamePasswordCredentials getCredentials(AuthenticationType authType) {
-		return credentialsByType.get(authType);
+	public ICredentialsStore getCredentialsStore(String id) {
+		return InMemoryCredentialsStore.getStore(id);
 	}
 
 	public Proxy getProxyForHost(String host, String proxyType) {
@@ -88,22 +87,13 @@ public class LocationService implements ILocationService {
 		return null;
 	}
 
-	public void setCredentials(AuthenticationType authType, String username, String password) {
-		credentialsByType.put(authType, new UsernamePasswordCredentials(username, password));
-	}
-
 	public X509TrustManager getTrustManager() {
-		// ignore
-		return null;
-	}
-
-	public <T extends AuthenticationCredentials> T requestCredentials(AuthenticationType type,
-			Class<T> credentialsKind, String message, IProgressMonitor monitor) {
 		throw new UnsupportedOperationException();
 	}
 
-	public ICredentialsStore getCredentialsStore(String id) {
-		return new SecureCredentialsStore(id);
+	public <T extends AuthenticationCredentials> T requestCredentials(
+			AuthenticationRequest<AuthenticationType<T>> context, IProgressMonitor monitor) {
+		throw new UnsupportedOperationException();
 	}
 
 }

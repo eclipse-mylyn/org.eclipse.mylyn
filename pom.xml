@@ -65,6 +65,7 @@
     <module>org.eclipse.mylyn.commons.notifications.ui</module>
     <module>org.eclipse.mylyn.commons.repositories-feature</module>
     <module>org.eclipse.mylyn.commons.repositories.core</module>
+    <module>org.eclipse.mylyn.commons.repositories.tests</module>
     <module>org.eclipse.mylyn.commons.repositories.ui</module>
     <module>org.eclipse.mylyn.commons.repositories.http-feature</module>
     <module>org.eclipse.mylyn.commons.repositories.http.core</module>

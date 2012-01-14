@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.CompositeSyncImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Mik Kersten
@@ -30,7 +31,23 @@ import org.eclipse.swt.graphics.Image;
  */
 public class CommonImages {
 
-	private static final URL baseURL = Platform.getBundle(CommonsUiConstants.ID_PLUGIN).getEntry("/icons/"); //$NON-NLS-1$
+	private static final URL baseUrl;
+
+	static {
+		Bundle bundle = Platform.getBundle(CommonsUiConstants.ID_PLUGIN);
+		if (bundle != null) {
+			baseUrl = bundle.getEntry("/icons/"); //$NON-NLS-1$
+		} else {
+			URL iconsUrl = null;
+			try {
+				// lookup location of CommonImages class on disk
+				iconsUrl = new URL(CommonImages.class.getResource("CommonImages.class"), "../../../../../../icons/"); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (MalformedURLException e) {
+				// ignore
+			}
+			baseUrl = iconsUrl;
+		}
+	}
 
 	private static ImageRegistry imageRegistry;
 
@@ -150,6 +167,8 @@ public class CommonImages {
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor BANNER_EXPORT = create(T_WIZBAN, "banner-export.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor BANNER_SECURE_ROLE = create(T_WIZBAN, "secur_role_wiz.gif"); //$NON-NLS-1$
 
 	// Discovery
 
@@ -401,14 +420,14 @@ public class CommonImages {
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (baseURL == null) {
+		if (baseUrl == null) {
 			throw new MalformedURLException();
 		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
 		buffer.append('/');
 		buffer.append(name);
-		return new URL(baseURL, buffer.toString());
+		return new URL(baseUrl, buffer.toString());
 	}
 
 	private static Image[] progressImages;
