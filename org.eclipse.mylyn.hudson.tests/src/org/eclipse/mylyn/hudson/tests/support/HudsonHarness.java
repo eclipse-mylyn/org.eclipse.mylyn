@@ -11,16 +11,10 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
-import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
-import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
-import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Steffen Pingel
@@ -48,12 +42,7 @@ public class HudsonHarness {
 	}
 
 	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
-		Credentials credentials = TestUtil.readCredentials(level);
-		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl(fixture.getRepositoryUrl());
-		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(credentials.username,
-				credentials.password));
-		client = new RestfulHudsonClient(location, new HudsonConfigurationCache());
+		client = HudsonFixture.connect(fixture.location(level));
 		return client;
 	}
 

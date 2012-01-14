@@ -14,11 +14,12 @@ package org.eclipse.mylyn.hudson.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
+import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
-import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
  * @author Steffen Pingel
@@ -27,7 +28,7 @@ public class AllHudsonTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
-		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(CommonTestUtil.runHeartbeatTestsOnly(), suite);
 		return suite;
 	}
 
@@ -40,7 +41,13 @@ public class AllHudsonTests {
 	private static void addTests(boolean defaultOnly, TestSuite suite) {
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
+		suite.addTestSuite(HudsonValidationTest.class);
 		for (HudsonFixture fixture : HudsonFixture.ALL) {
+			fixture.createSuite(suite);
+			fixture.add(HudsonClientTest.class);
+			fixture.done();
+		}
+		for (HudsonFixture fixture : HudsonFixture.MISC) {
 			fixture.createSuite(suite);
 			fixture.add(HudsonClientTest.class);
 			fixture.done();

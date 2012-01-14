@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.hudson.tests.support.HudsonHarness;
 import org.eclipse.mylyn.hudson.tests.support.HudsonTestUtil;
@@ -30,7 +30,6 @@ import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Test cases for {@link RestfulHudsonClient}.
@@ -58,26 +57,6 @@ public class HudsonClientTest extends TestCase {
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
 		assertEquals(harness.getFixture().getVersion(), info.getVersion());
-	}
-
-	public void testValidateNonExistantUrl() throws Exception {
-		// invalid url
-		RestfulHudsonClient client = harness.getFixture().connect("http://non.existant/repository");
-		try {
-			client.validate(OperationUtil.convert(null));
-			fail("Expected HudsonException");
-		} catch (HudsonException e) {
-		}
-	}
-
-	public void testValidateNonHudsonUrl() throws Exception {
-		// non Hudson url
-		RestfulHudsonClient client = harness.getFixture().connect("http://eclipse.org/mylyn");
-		try {
-			client.validate(OperationUtil.convert(null));
-			fail("Expected HudsonException");
-		} catch (HudsonException e) {
-		}
 	}
 
 	public void testGetJobs() throws Exception {
@@ -118,6 +97,11 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testRunBuildFailing() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate()) {
+			// ignore
+			return;
+		}
+
 		final String jobName = harness.getPlanFailing();
 		RestfulHudsonClient client = harness.connect();
 		client.runBuild(harness.getJob(jobName), null, null);
@@ -130,6 +114,11 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testRunBuildSucceeding() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate()) {
+			// ignore
+			return;
+		}
+
 		final String jobName = harness.getPlanSucceeding();
 		RestfulHudsonClient client = harness.connect();
 		client.runBuild(harness.getJob(jobName), null, null);

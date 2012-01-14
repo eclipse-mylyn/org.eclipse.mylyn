@@ -427,4 +427,8 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
+	public RepositoryLocation getLocation() {
+		return client.getLocation();
+	}
+
 }

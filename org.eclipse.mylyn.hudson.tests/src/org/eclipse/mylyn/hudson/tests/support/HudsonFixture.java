@@ -13,21 +13,13 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
-import java.net.Proxy;
-
-import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
-import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
-import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
-import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Initializes Hudson repositories to a defined state. This is done once per test run, since cleaning and initializing
@@ -36,7 +28,7 @@ import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
  * @author Markus Knittig
  * @author Steffen Pingel
  */
-public class HudsonFixture extends TestFixture {
+public class HudsonFixture extends RepositoryTestFixture {
 
 	private static HudsonFixture current;
 
@@ -46,10 +38,15 @@ public class HudsonFixture extends TestFixture {
 	private static final HudsonFixture JENKINS_1_427 = new HudsonFixture(
 			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.427", Type.JENKINS, "REST");
 
+	private static final HudsonFixture HUDSON_SECURE = new HudsonFixture(TestConfiguration.getRepositoryUrl(
+			"secure/hudson", true), "2.1.0", Type.HUDSON, "REST/Certificate Authentication");
+
 	/**
 	 * Standard configurations for running all test against.
 	 */
 	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, JENKINS_1_427 };
+
+	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_SECURE };
 
 	public static HudsonFixture current() {
 		return current(HUDSON_2_1);
@@ -74,9 +71,8 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	@Override
-	protected TestFixture activate() {
+	protected HudsonFixture activate() {
 		current = this;
-		setUpFramework();
 		return this;
 	}
 
@@ -85,36 +81,11 @@ public class HudsonFixture extends TestFixture {
 	}
 
 	public RestfulHudsonClient connect() throws Exception {
-		return connect(getRepositoryUrl());
+		return connect(location());
 	}
 
-	public RestfulHudsonClient connect(PrivilegeLevel level) throws Exception {
-		return connect(repositoryUrl, NetUtil.getProxyForUrl(repositoryUrl), level);
-	}
-
-	public RestfulHudsonClient connect(String url) throws Exception {
-		return connect(url, NetUtil.getProxyForUrl(repositoryUrl), PrivilegeLevel.USER);
-	}
-
-	public RestfulHudsonClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
-		Credentials credentials = TestUtil.readCredentials(level);
-		return connect(url, credentials.username, credentials.password, proxy);
-	}
-
-	public RestfulHudsonClient connect(String url, String username, String password) throws Exception {
-		return connect(url, username, password, NetUtil.getProxyForUrl(repositoryUrl));
-	}
-
-	public RestfulHudsonClient connect(String url, String username, String password, final Proxy proxy)
-			throws Exception {
-		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl(url);
-		location.setProxy(proxy);
-		if (username != null && password != null) {
-			location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(username, password));
-		}
-		RestfulHudsonClient hudsonClient = new RestfulHudsonClient(location, new HudsonConfigurationCache());
-		return hudsonClient;
+	public static RestfulHudsonClient connect(RepositoryLocation location) {
+		return new RestfulHudsonClient(location, new HudsonConfigurationCache());
 	}
 
 	@Override
@@ -128,6 +99,11 @@ public class HudsonFixture extends TestFixture {
 
 	public String getVersion() {
 		return version;
+	}
+
+	// XXX fix server setup to support authentication
+	public boolean canAuthenticate() {
+		return this != HUDSON_SECURE;
 	}
 
 }

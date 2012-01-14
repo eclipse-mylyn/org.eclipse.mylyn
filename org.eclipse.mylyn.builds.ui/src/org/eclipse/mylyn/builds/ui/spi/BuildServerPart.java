@@ -139,6 +139,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 		this.selectedPlans = Collections.emptyList();
 		setNeedsProxy(true);
 		setNeedsHttpAuth(true);
+		setNeedsCertificateAuth(true);
 	}
 
 	@Override
