@@ -36,7 +36,7 @@
       <import plugin="javax.xml.stream" version="1.0.1" match="compatible"/>
       
       <import feature="org.eclipse.mylyn.builds" version="0.9.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commmons.repositories.http" version="0.9.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.http" version="0.9.0" match="compatible"/>
    </requires>
 
    <plugin
