@@ -41,6 +41,8 @@ public class CommonHttpClient {
 
 	private final SyncBasicHttpContext context;
 
+	private AuthenticationType<UserCredentials> httpAuthenticationType;
+
 	private AbstractHttpClient httpClient;
 
 	private final RepositoryLocation location;
@@ -48,15 +50,20 @@ public class CommonHttpClient {
 	public CommonHttpClient(RepositoryLocation location) {
 		this.location = location;
 		this.context = new SyncBasicHttpContext(null);
+		this.httpAuthenticationType = AuthenticationType.HTTP;
 	}
 
 	public HttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
-		HttpUtil.configureProxyAndAuthentication(getHttpClient(), location, monitor);
+		prepareRequest(monitor);
 		return HttpUtil.execute(getHttpClient(), HttpUtil.createHost(request), context, request, monitor);
 	}
 
 	public HttpContext getContext() {
 		return context;
+	}
+
+	public AuthenticationType<UserCredentials> getHttpAuthenticationType() {
+		return httpAuthenticationType;
 	}
 
 	public synchronized AbstractHttpClient getHttpClient() {
@@ -80,6 +87,18 @@ public class CommonHttpClient {
 
 	public void setAuthenticated(boolean authenticated) {
 		this.authenticated = authenticated;
+	}
+
+	public void setHttpAuthenticationType(AuthenticationType<UserCredentials> httpAuthenticationType) {
+		this.httpAuthenticationType = httpAuthenticationType;
+	}
+
+	private void prepareRequest(IOperationMonitor monitor) {
+		UserCredentials credentials = location.getCredentials(httpAuthenticationType);
+		if (credentials != null) {
+			HttpUtil.configureAuthentication(getHttpClient(), location, credentials);
+		}
+		HttpUtil.configureProxy(getHttpClient(), location);
 	}
 
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
@@ -117,7 +136,7 @@ public class CommonHttpClient {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
 			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
-					getLocation(), AuthenticationType.HTTP);
+					getLocation(), httpAuthenticationType);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		} else if (statusCode == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
 			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(

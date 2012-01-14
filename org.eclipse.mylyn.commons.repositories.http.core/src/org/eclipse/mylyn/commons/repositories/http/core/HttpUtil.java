@@ -120,33 +120,33 @@ public class HttpUtil {
 		HttpConnectionParams.setSoTimeout(client.getParams(), SOCKET_TIMEOUT);
 	}
 
-	public static void configureProxyAndAuthentication(AbstractHttpClient client, RepositoryLocation location,
-			IProgressMonitor progressMonitor) {
+	public static void configureAuthentication(AbstractHttpClient client, RepositoryLocation location) {
+		UserCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
+		if (credentials != null) {
+			configureAuthentication(client, location, credentials);
+		}
+	}
+
+	public static void configureAuthentication(AbstractHttpClient client, RepositoryLocation location,
+			UserCredentials credentials) {
 		Assert.isNotNull(client);
 		Assert.isNotNull(location);
-
+		Assert.isNotNull(credentials);
 		String url = location.getUrl();
 		Assert.isNotNull("The location url must not be null", url);
 
-		configureProxy(client, location, url);
+		String host = NetUtil.getHost(url);
+		int port = NetUtil.getPort(url);
 
-		UserCredentials authCreds = location.getCredentials(AuthenticationType.HTTP);
-		if (authCreds != null) {
-			String host = NetUtil.getHost(url);
-			int port = NetUtil.getPort(url);
-			Credentials credentials = getHttpClientCredentials(authCreds, host, false);
-			if (credentials instanceof NTCredentials) {
-				AuthScope authScopeNTLM = new AuthScope(host, port, AuthScope.ANY_REALM, AuthPolicy.NTLM);
-				client.getCredentialsProvider().setCredentials(authScopeNTLM, credentials);
-
-				AuthScope authScopeAny = new AuthScope(host, port, AuthScope.ANY_REALM);
-				Credentials usernamePasswordCredentials = getHttpClientCredentials(authCreds, host, true);
-				client.getCredentialsProvider().setCredentials(authScopeAny, usernamePasswordCredentials);
-			} else {
-				AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
-				client.getCredentialsProvider().setCredentials(authScope, credentials);
-			}
+		NTCredentials ntlmCredentials = getNtCredentials(credentials, null);
+		if (ntlmCredentials != null) {
+			AuthScope authScopeNtlm = new AuthScope(host, port, AuthScope.ANY_REALM, AuthPolicy.NTLM);
+			client.getCredentialsProvider().setCredentials(authScopeNtlm, ntlmCredentials);
 		}
+
+		UsernamePasswordCredentials usernamePasswordCredentials = getUserNamePasswordCredentials(credentials);
+		AuthScope authScopeAny = new AuthScope(host, port, AuthScope.ANY_REALM);
+		client.getCredentialsProvider().setCredentials(authScopeAny, usernamePasswordCredentials);
 	}
 
 	public static HttpHost createHost(HttpRequestBase method) {
@@ -182,30 +182,27 @@ public class HttpUtil {
 		return executeInternal(monitor, executor);
 	}
 
-	public static Credentials getHttpClientCredentials(
-			org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials credentials, String host,
-			boolean forceUserNamePassword) {
+	public static NTCredentials getNtCredentials(UserCredentials credentials, String workstation) {
 		String username = credentials.getUserName();
-		String password = credentials.getPassword();
 		int i = username.indexOf("\\"); //$NON-NLS-1$
-		if (i > 0 && i < username.length() - 1 && host != null && !forceUserNamePassword) {
-			String hostName = host;
-			try {
-				InetAddress localHost = InetAddress.getLocalHost();
-				if (localHost != null) {
-					hostName = localHost.getHostName();
-				}
-			} catch (UnknownHostException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN,
-						"Unable to get hostname.  Defaulting to servers host.", e));
-			}
-			if (hostName == null) {
-				hostName = host;
-			}
-			return new NTCredentials(username.substring(i + 1), password, hostName, username.substring(0, i));
-		} else {
-			return new UsernamePasswordCredentials(username, password);
+		if (i > 0 && i < username.length() - 1) {
+//			try {
+//				InetAddress localHost = InetAddress.getLocalHost();
+//				if (localHost != null) {
+//					hostName = localHost.getHostName();
+//				}
+//			} catch (UnknownHostException e) {
+//				StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN,
+//						"Unable to get hostname.  Defaulting to servers host.", e));
+//			}
+			return new NTCredentials(username.substring(i + 1), credentials.getPassword(), workstation,
+					username.substring(0, i));
 		}
+		return null;
+	}
+
+	public static UsernamePasswordCredentials getUserNamePasswordCredentials(UserCredentials credentials) {
+		return new UsernamePasswordCredentials(credentials.getUserName(), credentials.getPassword());
 	}
 
 	public static InputStream getResponseBodyAsStream(HttpEntity entity, IProgressMonitor monitor) throws IOException {
@@ -221,11 +218,15 @@ public class HttpUtil {
 		return schemeRegistry;
 	}
 
-	private static void configureProxy(AbstractHttpClient client, RepositoryLocation location, String url) {
-		String host = NetUtil.getHost(url);
+	public static void configureProxy(AbstractHttpClient client, RepositoryLocation location) {
+		Assert.isNotNull(client);
+		Assert.isNotNull(location);
+		String url = location.getUrl();
+		Assert.isNotNull("The location url must not be null", url);
 
+		String host = NetUtil.getHost(url);
 		Proxy proxy;
-		if (NetUtil.isUrlHttps(location.getUrl())) {
+		if (NetUtil.isUrlHttps(url)) {
 			proxy = location.getProxyForHost(host, IProxyData.HTTPS_PROXY_TYPE);
 		} else {
 			proxy = location.getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
