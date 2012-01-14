@@ -90,11 +90,17 @@ public class UserCredentials extends AuthenticationCredentials {
 		} else if (!domain.equals(other.domain)) {
 			return false;
 		}
+		if (hasSecrets != other.hasSecrets) {
+			return false;
+		}
 		if (password == null) {
 			if (other.password != null) {
 				return false;
 			}
 		} else if (!password.equals(other.password)) {
+			return false;
+		}
+		if (savePassword != other.savePassword) {
 			return false;
 		}
 		if (userName == null) {
@@ -128,7 +134,9 @@ public class UserCredentials extends AuthenticationCredentials {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((domain == null) ? 0 : domain.hashCode());
+		result = prime * result + (hasSecrets ? 1231 : 1237);
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + (savePassword ? 1231 : 1237);
 		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}

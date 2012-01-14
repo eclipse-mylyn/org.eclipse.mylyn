@@ -13,21 +13,28 @@ package org.eclipse.mylyn.commons.repositories.http.core;
 
 import java.io.IOException;
 
+import javax.net.ssl.TrustManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.ContentEncodingHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.core.net.SslSupport;
+import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 
 /**
@@ -53,8 +60,15 @@ public class CommonHttpClient {
 		this.httpAuthenticationType = AuthenticationType.HTTP;
 	}
 
+	public <T> T executeGet(String requestPath, IOperationMonitor monitor, HttpRequestProcessor<T> processor)
+			throws IOException {
+		HttpGet request = new HttpGet(location.getUrl() + requestPath);
+		DefaultHttpOperation<T> op = new DefaultHttpOperation<T>(this, request, processor);
+		return op.run(monitor);
+	}
+
 	public HttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
-		prepareRequest(monitor);
+		prepareRequest(request, monitor);
 		return HttpUtil.execute(getHttpClient(), HttpUtil.createHost(request), context, request, monitor);
 	}
 
@@ -93,19 +107,32 @@ public class CommonHttpClient {
 		this.httpAuthenticationType = httpAuthenticationType;
 	}
 
-	private void prepareRequest(IOperationMonitor monitor) {
-		UserCredentials credentials = location.getCredentials(httpAuthenticationType);
-		if (credentials != null) {
-			HttpUtil.configureAuthentication(getHttpClient(), location, credentials);
+	private void prepareRequest(HttpRequestBase request, IOperationMonitor monitor) {
+		UserCredentials httpCredentials = location.getCredentials(httpAuthenticationType);
+		if (httpCredentials != null) {
+			HttpUtil.configureAuthentication(getHttpClient(), location, httpCredentials);
 		}
 		HttpUtil.configureProxy(getHttpClient(), location);
+		HttpUtil.configureProxy(getHttpClient(), location);
+
+		CertificateCredentials socketCredentials = location.getCredentials(AuthenticationType.CERTIFICATE);
+		if (socketCredentials != null) {
+			SslSupport support = new SslSupport(new TrustManager[] { new TrustAllTrustManager() },
+					socketCredentials.getKeyStoreFileName(), socketCredentials.getPassword(),
+					socketCredentials.getKeyStoreType());
+			request.getParams().setParameter(SslSupport.class.getName(), support);
+		} else {
+			// remove the token that associates certificate credentials with the connection
+			context.removeAttribute(ClientContext.USER_TOKEN);
+		}
 	}
 
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 	}
 
 	protected AbstractHttpClient createHttpClient(String userAgent) {
-		AbstractHttpClient client = new ContentEncodingHttpClient() {
+		// disabled due to https://issues.apache.org/jira/browse/HTTPCORE-257: new ContentEncodingHttpClient() {
+		AbstractHttpClient client = new DefaultHttpClient() {
 			@Override
 			protected ClientConnectionManager createClientConnectionManager() {
 				return CommonHttpClient.this.createHttpClientConnectionManager();
@@ -123,7 +150,6 @@ public class CommonHttpClient {
 	}
 
 	protected ClientConnectionManager createHttpClientConnectionManager() {
-		// FIXME handle certificate authentication
 		return HttpUtil.getConnectionManager();
 	}
 

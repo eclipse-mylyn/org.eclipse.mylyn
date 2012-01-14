@@ -27,6 +27,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import org.eclipse.osgi.util.NLS;
+
 /**
  * Provides support for managing SSL connections.
  * 
@@ -118,7 +120,8 @@ public class SslSupport {
 						}
 					}
 				} catch (Exception cause) {
-					IOException e = new SslCertificateException();
+					IOException e = new SslCertificateException(NLS.bind("Error accessing keystore: {0}",
+							cause.getMessage()));
 					e.initCause(cause);
 					throw e;
 				}

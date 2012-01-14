@@ -36,6 +36,10 @@ public abstract class CommonHttpOperation<T> {
 		this.client = client;
 	}
 
+	public CommonHttpOperation(CommonHttpClient client, HttpRequestBase request) {
+		this.client = client;
+	}
+
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 		client.authenticate(monitor);
 	}
@@ -52,7 +56,7 @@ public abstract class CommonHttpOperation<T> {
 		return new HttpPost(requestPath);
 	}
 
-	protected CommonHttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
+	public CommonHttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		monitor = OperationUtil.convert(monitor);
 
 		try {

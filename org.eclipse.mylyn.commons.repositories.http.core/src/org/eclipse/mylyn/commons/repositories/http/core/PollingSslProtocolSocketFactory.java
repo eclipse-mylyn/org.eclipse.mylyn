@@ -37,34 +37,45 @@ import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
  */
 class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 
-	private final SslSupport sslSupport;
+	private final SslSupport defaultSslSupport;
 
 	public PollingSslProtocolSocketFactory() {
 		this(new SslSupport(new TrustManager[] { new TrustAllTrustManager() }));
 	}
 
 	public PollingSslProtocolSocketFactory(SslSupport sslSupport) {
-		this.sslSupport = sslSupport;
+		this.defaultSslSupport = sslSupport;
 	}
 
 	public Socket connectSocket(Socket sock, InetSocketAddress remoteAddress, InetSocketAddress localAddress,
 			HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		Assert.isNotNull(params);
+		final Socket socket = (sock != null) ? sock : createSocket(params);
 
-		final Socket socket = NetUtil.configureSocket(getSocketFactory().createSocket());
+		if (localAddress != null) {
+			socket.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));
+			socket.bind(localAddress);
+		}
+
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-		socket.bind(localAddress);
 		NetUtil.connect(socket, remoteAddress, connTimeout, MonitoredOperation.getCurrentOperation());
-		return socket;
+
+		if (socket instanceof SSLSocket) {
+			return socket;
+		} else {
+			return getSslSupport(params).getSocketFactory().createSocket(socket, remoteAddress.getHostName(),
+					remoteAddress.getPort(), true);
+		}
 	}
 
 	public Socket createLayeredSocket(Socket socket, String target, int port, boolean autoClose) throws IOException,
 			UnknownHostException {
-		return NetUtil.configureSocket(getSocketFactory().createSocket(socket, target, port, autoClose));
+		return NetUtil.configureSocket(getDefaultSocketFactory().createSocket(socket, target, port, autoClose));
 	}
 
 	public Socket createSocket(HttpParams params) throws IOException {
-		return NetUtil.configureSocket(getSocketFactory().createSocket());
+		Assert.isNotNull(params);
+		return NetUtil.configureSocket(getSslSupport(params).getSocketFactory().createSocket());
 	}
 
 	@Override
@@ -79,25 +90,25 @@ class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 			return false;
 		}
 		PollingSslProtocolSocketFactory other = (PollingSslProtocolSocketFactory) obj;
-		if (sslSupport == null) {
-			if (other.sslSupport != null) {
+		if (defaultSslSupport == null) {
+			if (other.defaultSslSupport != null) {
 				return false;
 			}
-		} else if (!sslSupport.equals(other.sslSupport)) {
+		} else if (!defaultSslSupport.equals(other.defaultSslSupport)) {
 			return false;
 		}
 		return true;
 	}
 
-	public SSLSocketFactory getSocketFactory() throws IOException {
-		return sslSupport.getSocketFactory();
+	public SSLSocketFactory getDefaultSocketFactory() throws IOException {
+		return defaultSslSupport.getSocketFactory();
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((sslSupport == null) ? 0 : sslSupport.hashCode());
+		result = prime * result + ((defaultSslSupport == null) ? 0 : defaultSslSupport.hashCode());
 		return result;
 	}
 
@@ -110,6 +121,11 @@ class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 			throw new IllegalArgumentException("Socket is closed"); //$NON-NLS-1$
 		}
 		return true;
+	}
+
+	private SslSupport getSslSupport(HttpParams params) {
+		SslSupport sslSupport = (SslSupport) params.getParameter(SslSupport.class.getName());
+		return (sslSupport != null) ? sslSupport : defaultSslSupport;
 	}
 
 }

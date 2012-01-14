@@ -49,6 +49,17 @@ public abstract class AbstractCredentialsStoreTest {
 	}
 
 	@Test
+	public void testPutNull() {
+		ICredentialsStore store = createCredentialsStore();
+		store.put("key", "value", false);
+		store.put("key", null, false);
+		// putting null is different from removing a key
+		assertEquals(null, store.get("key", "default"));
+		store.remove("key");
+		assertEquals("default", store.get("key", "default"));
+	}
+
+	@Test
 	public void testPutGetBooleanEncrypted() {
 		ICredentialsStore store = createCredentialsStore();
 		store.putBoolean("key", true, true);

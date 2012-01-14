@@ -35,6 +35,8 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 
 		Object value;
 
+		Class<?> type;
+
 	}
 
 	static Map<String, InMemoryCredentialsStore> storeById = new HashMap<String, InMemoryCredentialsStore>();
@@ -94,11 +96,11 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 				for (Map.Entry<String, Item> entry : store.entrySet()) {
 					Item item = entry.getValue();
 					if (item != null) {
-						if (item.value instanceof String) {
+						if (item.type == String.class) {
 							target.put(entry.getKey(), (String) item.value, item.encrypted, item.persisted);
-						} else if (item.value instanceof byte[]) {
+						} else if (item.type == byte[].class) {
 							target.putByteArray(entry.getKey(), (byte[]) item.value, item.encrypted);
-						} else if (item.value instanceof Boolean) {
+						} else if (item.type == boolean.class) {
 							target.putBoolean(entry.getKey(), (Boolean) item.value, item.encrypted);
 						}
 					} else {
@@ -125,7 +127,7 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 		if (item == null && parent != null) {
 			return parent.get(key, def);
 		}
-		return (item != null && item.value instanceof String) ? (String) item.value : def;
+		return (item != null && item.type == String.class) ? (String) item.value : def;
 	}
 
 	public synchronized boolean getBoolean(String key, boolean def) {
@@ -133,7 +135,7 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 		if (item == null && parent != null) {
 			return parent.getBoolean(key, def);
 		}
-		return (item != null && item.value instanceof Boolean) ? (Boolean) item.value : def;
+		return (item != null && item.type == boolean.class) ? (Boolean) item.value : def;
 	}
 
 	public synchronized byte[] getByteArray(String key, byte[] def) {
@@ -141,7 +143,7 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 		if (item == null && parent != null) {
 			return parent.getByteArray(key, def);
 		}
-		return (item != null && item.value instanceof byte[]) ? (byte[]) item.value : def;
+		return (item != null && item.type == byte[].class) ? (byte[]) item.value : def;
 	}
 
 	public String getId() {
@@ -168,15 +170,15 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 	}
 
 	public synchronized void put(String key, String value, boolean encrypt, boolean persist) {
-		store.put(key, createItem(value, encrypt, persist));
+		store.put(key, createItem(String.class, value, encrypt, persist));
 	}
 
 	public synchronized void putBoolean(String key, boolean value, boolean encrypt) {
-		store.put(key, createItem(value, encrypt, true));
+		store.put(key, createItem(boolean.class, value, encrypt, true));
 	}
 
 	public synchronized void putByteArray(String key, byte[] value, boolean encrypt) {
-		store.put(key, createItem(value, encrypt, encrypt));
+		store.put(key, createItem(byte[].class, value, encrypt, encrypt));
 	}
 
 	public synchronized void remove(String key) {
@@ -187,11 +189,12 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 		}
 	}
 
-	private Item createItem(Object value, boolean encrypt, boolean persist) {
+	private Item createItem(Class<?> type, Object value, boolean encrypt, boolean persist) {
 		Item item = new Item();
 		item.value = value;
 		item.encrypted = encrypt;
 		item.persisted = persist;
+		item.type = type;
 		return item;
 	}
 

@@ -25,6 +25,16 @@ import org.junit.Test;
 public class InMemoryCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
+	public void testCopyToNullValue() {
+		InMemoryCredentialsStore source = new InMemoryCredentialsStore();
+		InMemoryCredentialsStore target = new InMemoryCredentialsStore();
+		target.put("key", "value", false);
+		source.put("key", null, false);
+		source.copyTo(target);
+		assertEquals(null, target.get("key", null));
+	}
+
+	@Test
 	public void testCopyTo() {
 		InMemoryCredentialsStore source = new InMemoryCredentialsStore();
 		InMemoryCredentialsStore target = new InMemoryCredentialsStore();

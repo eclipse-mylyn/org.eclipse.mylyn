@@ -78,7 +78,7 @@ public class CredentialsFactoryTest {
 	@Test
 	public void testSaveCertificateCredentials() throws StorageException {
 		ICredentialsStore store = new InMemoryCredentialsStore();
-		CertificateCredentials oldCredentials = new CertificateCredentials("keyStore", "password");
+		CertificateCredentials oldCredentials = new CertificateCredentials("keyStore", "password", "type");
 		oldCredentials.save(store, "key");
 		CertificateCredentials newCredentials = CredentialsFactory.create(CertificateCredentials.class, store, "key",
 				true);

@@ -94,6 +94,11 @@ public class RepositoryLocation extends PlatformObject {
 		this(createDefaultProperties(), LocationService.getDefault(), false);
 	}
 
+	public RepositoryLocation(String url) {
+		this();
+		setUrl(url);
+	}
+
 	public RepositoryLocation(Map<String, String> properties) {
 		this(properties, LocationService.getDefault(), true);
 	}

@@ -52,7 +52,7 @@ public class CertificateCredentialsProviderUi extends AbstractCredentialsProvide
 
 		int resultCode = dialog.open();
 		if (resultCode == Window.OK) {
-			credentials = new CertificateCredentials(dialog.getKeyStoreFileName(), dialog.getPassword());
+			credentials = new CertificateCredentials(dialog.getKeyStoreFileName(), dialog.getPassword(), null);
 			request.getLocation().setCredentials(request.getAuthenticationType(), oldCredentials);
 			return Status.OK_STATUS;
 		} else {

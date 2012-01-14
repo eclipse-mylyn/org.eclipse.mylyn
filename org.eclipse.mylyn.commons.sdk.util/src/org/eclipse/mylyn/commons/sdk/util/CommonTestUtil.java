@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -33,11 +34,22 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @author Steffen Pingel
+ */
 @SuppressWarnings("restriction")
 public class CommonTestUtil {
+
+	public enum PrivilegeLevel {
+		ADMIN, ANONYMOUS, GUEST, READ_ONLY, USER
+	}
+
+	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
 	private final static int MAX_RETRY = 5;
 
@@ -146,20 +158,65 @@ public class CommonTestUtil {
 		}
 	}
 
-	public static InputStream getResource(Object source, String filename) throws IOException {
-		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
-		ClassLoader classLoader = clazz.getClassLoader();
-		InputStream in = classLoader.getResourceAsStream(filename);
-		if (in == null) {
-			File file = getFile(source, filename);
-			if (file != null) {
-				return new FileInputStream(file);
+	public static CertificateCredentials getCertificateCredentials() {
+		File keyStoreFile;
+		try {
+			keyStoreFile = CommonTestUtil.getFile(CommonTestUtil.class, "testdata/keystore");
+			String password = CommonTestUtil.getUserCredentials().getPassword();
+			return new CertificateCredentials(keyStoreFile.getAbsolutePath(), password, null);
+		} catch (IOException cause) {
+			AssertionFailedError e = new AssertionFailedError("Failed to load keystore file");
+			e.initCause(cause);
+			throw e;
+		}
+	}
+
+	public static UserCredentials getCredentials(PrivilegeLevel level) {
+		return getCredentials(level, null);
+	}
+
+	public static UserCredentials getCredentials(PrivilegeLevel level, String realm) {
+		Properties properties = new Properties();
+		try {
+			File file;
+			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
+			if (filename == null) {
+				try {
+					file = getFile(CommonTestUtil.class, "credentials.properties");
+					if (!file.exists()) {
+						throw new AssertionFailedError();
+					}
+				} catch (AssertionFailedError e) {
+					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
+				}
+			} else {
+				file = new File(filename);
 			}
+			properties.load(new FileInputStream(file));
+		} catch (Exception e) {
+			AssertionFailedError error = new AssertionFailedError(
+					"must define credentials in $HOME/.mylyn/credentials.properties");
+			error.initCause(e);
+			throw error;
 		}
-		if (in == null) {
-			throw new IOException(NLS.bind("Failed to locate ''{0}'' for ''{1}''", filename, clazz.getName()));
+
+		String defaultPassword = properties.getProperty("pass");
+
+		realm = (realm != null) ? realm + "." : "";
+		switch (level) {
+		case ANONYMOUS:
+			return createCredentials(properties, realm + "anon.", "", "");
+		case GUEST:
+			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
+		case USER:
+			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
+		case READ_ONLY:
+			return createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
+		case ADMIN:
+			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
 		}
-		return in;
+
+		throw new AssertionFailedError("invalid privilege level");
 	}
 
 	public static File getFile(Object source, String filename) throws IOException {
@@ -212,6 +269,26 @@ public class CommonTestUtil {
 		throw new AssertionFailedError("Could not locate " + filename);
 	}
 
+	public static InputStream getResource(Object source, String filename) throws IOException {
+		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
+		ClassLoader classLoader = clazz.getClassLoader();
+		InputStream in = classLoader.getResourceAsStream(filename);
+		if (in == null) {
+			File file = getFile(source, filename);
+			if (file != null) {
+				return new FileInputStream(file);
+			}
+		}
+		if (in == null) {
+			throw new IOException(NLS.bind("Failed to locate ''{0}'' for ''{1}''", filename, clazz.getName()));
+		}
+		return in;
+	}
+
+	public static UserCredentials getUserCredentials() {
+		return getCredentials(PrivilegeLevel.USER, null);
+	}
+
 	public static String read(File source) throws IOException {
 		InputStream in = new FileInputStream(source);
 		try {
@@ -225,6 +302,59 @@ public class CommonTestUtil {
 		} finally {
 			in.close();
 		}
+	}
+
+	public static boolean runHeartbeatTestsOnly() {
+		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+	};
+
+	/**
+	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
+	 * given filter.
+	 * 
+	 * @param zipFile
+	 *            the zip file to unzip
+	 * @param dstDir
+	 *            the destination directory
+	 * @throws IOException
+	 *             in case of problem
+	 */
+	public static void unzip(ZipFile zipFile, File dstDir) throws IOException {
+		unzip(zipFile, dstDir, dstDir, 0);
+	}
+
+	public static void write(String fileName, StringBuffer content) throws IOException {
+		Writer writer = new FileWriter(fileName);
+		try {
+			writer.write(content.toString());
+		} finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				// don't need to catch this
+			}
+		}
+	}
+
+	private static UserCredentials createCredentials(Properties properties, String prefix, String defaultUsername,
+			String defaultPassword) {
+		String username = properties.getProperty(prefix + "user");
+		String password = properties.getProperty(prefix + "pass");
+
+		if (username == null) {
+			username = defaultUsername;
+		}
+
+		if (password == null) {
+			password = defaultPassword;
+		}
+
+		if (username == null || password == null) {
+			throw new AssertionFailedError(
+					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
+		}
+
+		return new UserCredentials(username, password);
 	}
 
 	/**
@@ -243,21 +373,6 @@ public class CommonTestUtil {
 		while ((len = in.read(buf)) > 0) {
 			out.write(buf, 0, len);
 		}
-	}
-
-	/**
-	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
-	 * given filter.
-	 * 
-	 * @param zipFile
-	 *            the zip file to unzip
-	 * @param dstDir
-	 *            the destination directory
-	 * @throws IOException
-	 *             in case of problem
-	 */
-	public static void unzip(ZipFile zipFile, File dstDir) throws IOException {
-		unzip(zipFile, dstDir, dstDir, 0);
 	}
 
 	private static void unzip(ZipFile zipFile, File rootDstDir, File dstDir, int depth) throws IOException {
@@ -299,19 +414,6 @@ public class CommonTestUtil {
 		} finally {
 			try {
 				zipFile.close();
-			} catch (IOException e) {
-				// don't need to catch this
-			}
-		}
-	}
-
-	public static void write(String fileName, StringBuffer content) throws IOException {
-		Writer writer = new FileWriter(fileName);
-		try {
-			writer.write(content.toString());
-		} finally {
-			try {
-				writer.close();
 			} catch (IOException e) {
 				// don't need to catch this
 			}
