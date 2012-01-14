@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -115,7 +115,7 @@ public class CommonHttpClientTest {
 		}
 	}
 
-	@Test(expected = SSLHandshakeException.class)
+	@Test(expected = SSLException.class)
 	public void testCertificateAuthenticationNoCertificate() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("https://mylyn.org/secure/index.txt");
@@ -126,7 +126,7 @@ public class CommonHttpClientTest {
 		HttpUtil.release(request, response, null);
 	}
 
-	@Test(expected = SSLHandshakeException.class)
+	@Test(expected = SSLException.class)
 	public void testCertificateAuthenticationCertificate() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("https://mylyn.org/secure/index.txt");

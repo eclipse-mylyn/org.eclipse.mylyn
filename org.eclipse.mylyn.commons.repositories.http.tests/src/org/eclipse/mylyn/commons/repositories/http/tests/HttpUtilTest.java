@@ -67,13 +67,14 @@ public class HttpUtilTest {
 
 	@Test
 	public void testGetRequestPoolConnections() throws Exception {
-		HttpRequestBase request = new HttpGet("http://" + proxyAddress.toString());
+		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		HttpRequestBase request = new HttpGet(url);
 
 		HttpUtil.configureClient(client, null);
 		assertEquals(0, connectionManager.getConnectionsInPool());
 
 		HttpResponse response = HttpUtil.execute(client, null, request, null);
-		assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+		assertEquals(HttpStatus.SC_SERVICE_UNAVAILABLE, response.getStatusLine().getStatusCode());
 		assertEquals(1, connectionManager.getConnectionsInPool());
 	}
 
