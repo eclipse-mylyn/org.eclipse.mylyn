@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -24,18 +23,13 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class TaskEditorBloatMonitor extends AbstractEditorTracker {
+public class TaskEditorBloatMonitor {
 
-	private final int MAX_EDITORS = 12;
+	private final static int MAX_EDITORS = 12;
 
-	@Override
-	protected void editorBroughtToTop(IEditorPart part) {
-		// ignore
-	}
-
-	@Override
-	public void editorOpened(IEditorPart editorPartOpened) {
+	public static void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
 		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 		int totalTaskEditors = 0;
@@ -60,7 +54,7 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 							toClose.add(editorReference);
 						}
 					}
-					if ((totalTaskEditors - toClose.size()) < MAX_EDITORS) {
+					if ((totalTaskEditors - toClose.size()) <= MAX_EDITORS) {
 						break;
 					}
 				} catch (PartInitException e) {
@@ -74,8 +68,4 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 		}
 	}
 
-	@Override
-	public void editorClosed(IEditorPart editorPart) {
-		// ignore
-	}
 }

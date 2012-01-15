@@ -55,6 +55,7 @@ import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.TaskEditorBloatMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskEditorScheduleAction;
@@ -188,6 +189,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private static boolean toolBarFailureLogged;
 
 	public TaskEditor() {
+	}
+
+	@Override
+	protected void createPages() {
+		super.createPages();
+		TaskEditorBloatMonitor.editorOpened(this);
 	}
 
 	@Override

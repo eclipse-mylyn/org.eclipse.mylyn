@@ -176,8 +176,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private ISaveParticipant saveParticipant;
 
-	private TaskEditorBloatMonitor taskEditorBloatManager;
-
 	private TaskJobFactory taskJobFactory;
 
 	// shared colors for all forms
@@ -449,9 +447,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (repositoriesView != null) {
 					repositoriesView.getViewer().refresh();
 				}
-
-				taskEditorBloatManager = new TaskEditorBloatMonitor();
-				taskEditorBloatManager.install(PlatformUI.getWorkbench());
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not finish Tasks UI initialization", t)); //$NON-NLS-1$
@@ -790,7 +785,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 //							PREFERENCE_LISTENER);
 //				}
 				serviceMessageManager.stop();
-				taskEditorBloatManager.dispose(PlatformUI.getWorkbench());
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
