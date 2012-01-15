@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Bundle-Activator: org.eclipse.mylyn.internal.commons.activity.ui.ActivityUiPlugin
+Bundle-ActivationPolicy: lazy
