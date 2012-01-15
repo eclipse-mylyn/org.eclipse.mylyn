@@ -64,7 +64,9 @@ public class BugzillaClientTest extends TestCase {
 	public void testRDFProductConfig() throws Exception {
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals(BugzillaFixture.current().getVersion(), config.getInstallVersion().toString());
+		assertEquals(BugzillaFixture.current().getVersion().toUpperCase(), config.getInstallVersion()
+				.toString()
+				.toUpperCase());
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
 			assertEquals(10, config.getStatusValues().size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {

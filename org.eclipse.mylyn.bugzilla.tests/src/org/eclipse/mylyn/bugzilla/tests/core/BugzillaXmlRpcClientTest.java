@@ -339,7 +339,7 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			String version = bugzillaClient.getVersion(monitor);
-			assertEquals(BugzillaFixture.current().getVersion(), version);
+			assertEquals(BugzillaFixture.current().getVersion().toUpperCase(), version.toUpperCase());
 		}
 	}
 
@@ -496,9 +496,10 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 		} else {
 
 			Set<String> taskIds = new HashSet<String>();
-			if (repository.getRepositoryUrl().startsWith("http://mylyn.org/bugs40")) {
-				taskIds.add("1526");
-			}
+//FB disabled after clear of the database I need to find an other bug
+//			if (repository.getRepositoryUrl().startsWith("http://mylyn.org/bugs40")) {
+//				taskIds.add("1526");
+//			}
 			taskIds.add("1");
 //		taskIds.add("3");
 			final Map<String, TaskData> results = new HashMap<String, TaskData>();
