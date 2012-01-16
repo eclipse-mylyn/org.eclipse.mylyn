@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.context;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -119,7 +120,10 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		for (ITaskAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);
-			item.setText(0, DateFormat.getInstance().format(attachment.getCreationDate()));
+			Date creationDate = attachment.getCreationDate();
+			if (creationDate != null) {
+				item.setText(0, DateFormat.getInstance().format(creationDate));
+			}
 			IRepositoryPerson author = attachment.getAuthor();
 			if (author != null) {
 				item.setText(1, author.toString());
