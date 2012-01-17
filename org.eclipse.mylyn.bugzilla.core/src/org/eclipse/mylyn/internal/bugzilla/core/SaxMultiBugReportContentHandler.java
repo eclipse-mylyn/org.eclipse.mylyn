@@ -86,8 +86,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private final SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //$NON-NLS-1$
 
-	private boolean testFirstEmptyTag;
-
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
 			BugzillaRepositoryConnector connector) {
@@ -118,7 +116,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		characters = new StringBuffer();
-		testFirstEmptyTag = true;
 		BugzillaAttribute tag = BugzillaAttribute.UNKNOWN;
 		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			return;
@@ -247,13 +244,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 
 		String parsedText = characters.toString();
-		characters = new StringBuffer();
-		if (parsedText.equals("") && testFirstEmptyTag) { //$NON-NLS-1$
-			// do not continue for empty tags
-			testFirstEmptyTag = false;
-			return;
-		}
-		testFirstEmptyTag = false;
 
 		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			TaskAttribute endAttribute = repositoryTaskData.getRoot().getAttribute(localName);
