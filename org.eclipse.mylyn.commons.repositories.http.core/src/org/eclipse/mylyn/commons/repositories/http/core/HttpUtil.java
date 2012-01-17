@@ -323,6 +323,8 @@ public class HttpUtil {
 					EntityUtils.consume(response.getEntity());
 				} catch (IOException e2) {
 					// ignore
+				} catch (NullPointerException e2) {
+					// XXX work-around for bug 368830
 				}
 			}
 		} else {
@@ -330,6 +332,8 @@ public class HttpUtil {
 				EntityUtils.consume(response.getEntity());
 			} catch (IOException e) {
 				// ignore
+			} catch (NullPointerException e) {
+				// XXX work-around for bug 368830
 			}
 		}
 	}
