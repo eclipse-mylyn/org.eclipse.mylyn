@@ -31,7 +31,7 @@ public class CredentialsFactory {
 			constructor.setAccessible(true);
 			return constructor.newInstance(credentialsStore, key, loadSecrets);
 		} catch (Exception e) {
-			throw new RuntimeException("Unexpected error while creating credentials", e);
+			throw new RuntimeException("Unexpected error while creating credentials", e); //$NON-NLS-1$
 		}
 	}
 

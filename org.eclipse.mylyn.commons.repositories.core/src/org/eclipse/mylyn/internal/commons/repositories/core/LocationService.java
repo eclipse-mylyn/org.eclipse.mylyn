@@ -32,8 +32,10 @@ import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
  */
 public class LocationService implements ILocationService {
 
-	private static class LocationServiceInitializer {
+	static class LocationServiceInitializer {
+
 		private static ILocationService service;
+
 		static {
 			ExtensionPointReader<ILocationService> reader = new ExtensionPointReader<ILocationService>(
 					RepositoriesCoreInternal.ID_PLUGIN, "locationServices", "service", ILocationService.class); //$NON-NLS-1$ //$NON-NLS-2$
@@ -49,6 +51,7 @@ public class LocationService implements ILocationService {
 				service = new LocationService();
 			}
 		}
+
 	}
 
 	private static class PlatformProxyProvider extends ProxyProvider {

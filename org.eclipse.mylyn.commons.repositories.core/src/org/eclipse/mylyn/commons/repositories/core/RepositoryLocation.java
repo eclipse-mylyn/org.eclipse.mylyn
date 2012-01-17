@@ -51,6 +51,8 @@ import org.eclipse.mylyn.internal.commons.repositories.core.RepositoriesCoreInte
 // FIXME add synchronization
 public class RepositoryLocation extends PlatformObject {
 
+	private static boolean flushCredentialsErrorLogged;
+
 	public static final String PROPERTY_ID = "id"; //$NON-NLS-1$
 
 	public static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
@@ -157,7 +159,13 @@ public class RepositoryLocation extends PlatformObject {
 			try {
 				newCredentialsStore.flush();
 			} catch (IOException e) {
-				// ignore
+				if (!flushCredentialsErrorLogged) {
+					flushCredentialsErrorLogged = true;
+					StatusHandler.log(new Status(
+							IStatus.ERROR,
+							RepositoriesCoreInternal.ID_PLUGIN,
+							"Unexpected error occured while flushing credentials. Credentials may not have been saved.", e)); //$NON-NLS-1$
+				}
 			}
 		}
 
