@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -132,9 +134,35 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(Pattern.compile("<td[^>]*>First Heading</td>").matcher(content2).find());
 	}
 
+	public void testMultipleFilesWithCrossReferences() throws IOException {
+		File markup = createTextileMarkupFile("h1. Heading One\n\n\"link to two\":#HeadingTwo\n\n\"link to two point one\":#HeadingTwoPointOne\n\nh1. Heading Two\n\nh2. Heading Two Point One\n\n\"link to one\":#HeadingOne\n");
+		task.setFile(markup);
+		task.setMultipleOutputFiles(true);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+		TestUtil.println(content);
+
+		assertTrue(content.contains("<a href=\"Heading-Two.html#HeadingTwo\">link to two</a>"));
+		assertTrue(content.contains("<a href=\"Heading-Two.html#HeadingTwoPointOne\">link to two point one</a>"));
+
+		File htmlFile2 = new File(markup.getParentFile(), "Heading-Two.html");
+		assertTrue(htmlFile2.exists());
+
+		String content2 = getContent(htmlFile2);
+		TestUtil.println(content2);
+
+		assertTrue(content2.contains("<a href=\"markup.html#HeadingOne\">link to one</a>"));
+	}
+
 	protected File createSimpleTextileMarkup() throws IOException {
-		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
+		StringWriter out = new StringWriter();
+		PrintWriter writer = new PrintWriter(out);
 		try {
 			writer.println("h1. First Heading");
 			writer.println();
@@ -143,6 +171,17 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 			writer.println("h1. Second Heading");
 			writer.println();
 			writer.println("some more content");
+		} finally {
+			writer.close();
+		}
+		return createTextileMarkupFile(out.toString());
+	}
+
+	protected File createTextileMarkupFile(String content) throws IOException {
+		File markupFile = new File(tempFolder, "markup.textile");
+		Writer writer = new FileWriter(markupFile);
+		try {
+			writer.write(content);
 		} finally {
 			writer.close();
 		}
