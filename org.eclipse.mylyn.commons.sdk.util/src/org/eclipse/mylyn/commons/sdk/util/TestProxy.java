@@ -112,6 +112,8 @@ public class TestProxy implements Runnable {
 
 	public static final Message TIMEOUT = new Message("HTTP/1.1 200 OK");
 
+	public static final Message UNAUTHORIZED = new Message("HTTP/1.1 401 Unauthorized");
+
 	public static final Message SERVICE_UNVAILABLE = createEmptyMessage("HTTP/1.1 503 Service Unavailable");
 
 	static {
@@ -119,6 +121,7 @@ public class TestProxy implements Runnable {
 		OK.headers.add(HEADER_CONNECTION_CLOSE);
 		SERVICE_UNVAILABLE.headers.add(HEADER_CONNECTION_CLOSE);
 		TIMEOUT.headers.add("Content-Length: 500");
+		UNAUTHORIZED.headers.add("WWW-Authenticate: Basic realm=\"Test\"");
 	}
 
 	private static Message createEmptyMessage(String status) {
@@ -315,6 +318,10 @@ public class TestProxy implements Runnable {
 			Thread.sleep(100);
 		}
 		return serverSocket.getLocalPort();
+	}
+
+	public String getUrl() {
+		return "http://" + serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort();
 	}
 
 	public void stop() {

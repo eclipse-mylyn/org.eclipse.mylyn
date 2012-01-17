@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  * @since 3.7
+ * @see OperationUtil
  */
 public interface IOperationMonitor extends IProgressMonitorWithBlocking {
 

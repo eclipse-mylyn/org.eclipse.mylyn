@@ -15,13 +15,16 @@ import java.io.IOException;
 
 import javax.net.ssl.TrustManager;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
@@ -43,6 +46,8 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
  * @author Steffen Pingel
  */
 public class CommonHttpClient {
+
+	private boolean preemptiveAuthenticationEnabled;
 
 	private boolean authenticated;
 
@@ -95,6 +100,10 @@ public class CommonHttpClient {
 		return authenticated;
 	}
 
+	public boolean isPreemptiveAuthenticationEnabled() {
+		return preemptiveAuthenticationEnabled;
+	}
+
 	public boolean needsAuthentication() {
 		return !isAuthenticated() && getLocation().getCredentials(AuthenticationType.REPOSITORY, false) != null;
 	}
@@ -107,12 +116,30 @@ public class CommonHttpClient {
 		this.httpAuthenticationType = httpAuthenticationType;
 	}
 
+	public void setPreemptiveAuthenticationEnabled(boolean preemptiveAuthenticationEnabled) {
+		this.preemptiveAuthenticationEnabled = preemptiveAuthenticationEnabled;
+	}
+
 	private void prepareRequest(HttpRequestBase request, IOperationMonitor monitor) {
 		UserCredentials httpCredentials = location.getCredentials(httpAuthenticationType);
 		if (httpCredentials != null) {
 			HttpUtil.configureAuthentication(getHttpClient(), location, httpCredentials);
+
+			if (isPreemptiveAuthenticationEnabled()) {
+				// create or pre-populate auth cache 
+				HttpHost host = HttpUtil.createHost(request);
+				Object authCache = context.getAttribute(ClientContext.AUTH_CACHE);
+				if (authCache == null) {
+					authCache = new BasicAuthCache();
+					context.setAttribute(ClientContext.AUTH_CACHE, authCache);
+				}
+				if (authCache instanceof BasicAuthCache) {
+					if (((BasicAuthCache) authCache).get(host) == null) {
+						((BasicAuthCache) authCache).put(host, new BasicScheme());
+					}
+				}
+			}
 		}
-		HttpUtil.configureProxy(getHttpClient(), location);
 		HttpUtil.configureProxy(getHttpClient(), location);
 
 		CertificateCredentials socketCredentials = location.getCredentials(AuthenticationType.CERTIFICATE);
