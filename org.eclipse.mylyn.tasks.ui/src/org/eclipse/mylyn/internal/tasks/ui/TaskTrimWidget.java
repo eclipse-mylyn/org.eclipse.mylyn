@@ -186,7 +186,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		layout.marginRight = 0;
 		composite.setLayout(layout);
 
-		composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
+		//composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
 
 		createStatusComposite(composite);
 

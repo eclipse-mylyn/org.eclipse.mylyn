@@ -2092,7 +2092,7 @@
 	         id="org.eclipse.mylyn.tasks.ui.trim.dropdown"/>
 	    </menuContribution>
 	
-	    <menuContribution locationURI="toolbar:org.eclipse.ui.trim.command2?after">
+	    <menuContribution locationURI="toolbar:org.eclipse.ui.trim.command2">
 	      <toolbar id="org.eclipse.mylyn.tasks.ui.trim.container">
 	        <command
 	            id="org.eclipse.mylyn.tasks.ui.trim"
