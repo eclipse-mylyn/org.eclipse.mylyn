@@ -46,6 +46,10 @@ public class BugzillaLanguageSettings {
 
 	public static final String COMMAND_SUBMITTED = "submitted"; //$NON-NLS-1$
 
+	public static final String COMMAND_ERROR_CONFIRM_MATCH = "error_confirm_match"; //$NON-NLS-1$
+
+	public static final String COMMAND_ERROR_MATCH_FAILED = "error_match_failed"; //$NON-NLS-1$
+
 	private final Map<String, List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
 
 	public BugzillaLanguageSettings(String languageName) {

@@ -24,26 +24,42 @@ public class BugzillaStatus extends Status {
 
 	private String repositoryUrl = ""; //$NON-NLS-1$
 
+	public final static int ERROR_CONFIRM_MATCH = 1024;
+
+	public final static int ERROR_MATCH_FAILED = 1025;
+
+	private final String htmlMessage;
+
+	private final BugzillaUserMatchResponse userMatchResponse;
+
 	public BugzillaStatus(int severity, String pluginId, int code) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = null;
+		this.htmlMessage = null;
+		this.userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String errorMessage) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
+		this.htmlMessage = null;
+		this.userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
 		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.repositoryUrl = repositoryUrl;
 		this.errorMessage = e.getMessage();
+		this.htmlMessage = null;
+		this.userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
 		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
+		this.htmlMessage = null;
+		this.userMatchResponse = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
@@ -51,6 +67,26 @@ public class BugzillaStatus extends Status {
 		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
+		this.htmlMessage = null;
+		this.userMatchResponse = null;
+	}
+
+	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
+			String body) {
+		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
+		this.errorMessage = errorMessage;
+		this.repositoryUrl = repositoryUrl;
+		this.htmlMessage = body;
+		this.userMatchResponse = null;
+	}
+
+	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
+			String body, BugzillaUserMatchResponse userMatchResponse) {
+		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
+		this.errorMessage = errorMessage;
+		this.repositoryUrl = repositoryUrl;
+		this.htmlMessage = body;
+		this.userMatchResponse = userMatchResponse;
 	}
 
 	/**
@@ -111,5 +147,13 @@ public class BugzillaStatus extends Status {
 
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	public String getHtmlMessage() {
+		return htmlMessage;
+	}
+
+	public BugzillaUserMatchResponse getUserMatchResponse() {
+		return userMatchResponse;
 	}
 }

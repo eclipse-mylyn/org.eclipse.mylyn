@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.bugzilla.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaUserMatchResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
@@ -1184,6 +1187,295 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
 		}
 		fail("Should have failed due to an empty password.");
+	}
+
+	public void testErrorMatchFailedToShort() throws Exception {
+		try {
+			doUserMatch("st", null);
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+			BugzillaStatus status = (BugzillaStatus) e.getStatus();
+			assertNotNull(status);
+			BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+			assertNotNull(matchUserResponse);
+			assertNotNull(matchUserResponse.getNewCCProposals());
+			assertNotNull(matchUserResponse.getAssignedToProposals());
+			assertNotNull(matchUserResponse.getQaContactProposals());
+			assertEquals(0, matchUserResponse.getNewCCProposals().size());
+			assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+			assertEquals(0, matchUserResponse.getQaContactProposals().size());
+			assertNotNull(matchUserResponse.getNewCCMsg());
+			assertNull(matchUserResponse.getAssignedToMsg());
+			assertNull(matchUserResponse.getQaContactMsg());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+				assertTrue(matchUserResponse.getNewCCMsg().equals("st  did not match anything "));
+			} else {
+				assertTrue(matchUserResponse.getNewCCMsg().equals(
+						"st  was too short for substring match (minimum 3 characters) "));
+			}
+		}
+	}
+
+	public void testErrorMatchConfirmMatch() throws Exception {
+		try {
+			doUserMatch("est", null);
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertNotNull(matchUserResponse.getNewCCMsg());
+				assertNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+				assertTrue(matchUserResponse.getNewCCMsg().equals("est  did not match anything "));
+			} else {
+				assertEquals(BugzillaStatus.ERROR_CONFIRM_MATCH, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(2, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
+				assertTrue(matchUserResponse.getNewCCProposals().contains("guest@mylyn.eclipse.org"));
+				assertNull(matchUserResponse.getNewCCMsg());
+				assertNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+			}
+		}
+	}
+
+	public void testErrorMatchConfirmMatch2() throws Exception {
+		try {
+			doUserMatch(null, "est");
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertNull(matchUserResponse.getNewCCMsg());
+				assertNotNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+				assertTrue(matchUserResponse.getAssignedToMsg().equals("est  did not match anything "));
+			} else {
+				assertEquals(BugzillaStatus.ERROR_CONFIRM_MATCH, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(2, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertTrue(matchUserResponse.getAssignedToProposals().contains("tests@mylyn.eclipse.org"));
+				assertTrue(matchUserResponse.getAssignedToProposals().contains("guest@mylyn.eclipse.org"));
+				assertNull(matchUserResponse.getNewCCMsg());
+				assertNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+			}
+		}
+	}
+
+	public void testErrorMatchConfirmMatch3() throws Exception {
+		try {
+			doUserMatch("test", "est");
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertNotNull(matchUserResponse.getNewCCMsg());
+				assertNotNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+				assertTrue(matchUserResponse.getNewCCMsg().equals("test  did not match anything "));
+				assertTrue(matchUserResponse.getAssignedToMsg().equals("est  did not match anything "));
+			} else {
+				assertEquals(BugzillaStatus.ERROR_CONFIRM_MATCH, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(1, matchUserResponse.getNewCCProposals().size());
+				assertEquals(2, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
+				assertTrue(matchUserResponse.getAssignedToProposals().contains("tests@mylyn.eclipse.org"));
+				assertTrue(matchUserResponse.getAssignedToProposals().contains("guest@mylyn.eclipse.org"));
+				assertNull(matchUserResponse.getNewCCMsg());
+				assertNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+			}
+		}
+	}
+
+	public void testErrorMatchFailed() throws Exception {
+		try {
+			doUserMatch("teste", null);
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+			BugzillaStatus status = (BugzillaStatus) e.getStatus();
+			assertNotNull(status);
+			BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+			assertNotNull(matchUserResponse);
+			assertNotNull(matchUserResponse.getNewCCProposals());
+			assertNotNull(matchUserResponse.getAssignedToProposals());
+			assertNotNull(matchUserResponse.getQaContactProposals());
+			assertEquals(0, matchUserResponse.getNewCCProposals().size());
+			assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+			assertEquals(0, matchUserResponse.getQaContactProposals().size());
+			assertNotNull(matchUserResponse.getNewCCMsg());
+			assertNull(matchUserResponse.getAssignedToMsg());
+			assertNull(matchUserResponse.getQaContactMsg());
+			assertTrue(matchUserResponse.getNewCCMsg().equals("teste  did not match anything "));
+		}
+	}
+
+	public void testErrorMatchFailed2() throws Exception {
+		try {
+			doUserMatch("est", "test1");
+		} catch (CoreException e) {
+			assertNotNull(e.getStatus());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
+				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertNotNull(matchUserResponse.getNewCCMsg());
+				assertNotNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+				assertTrue(matchUserResponse.getNewCCMsg().equals("est  did not match anything "));
+				assertTrue(matchUserResponse.getAssignedToMsg().equals("test1  did not match anything "));
+			} else {
+				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
+				BugzillaStatus status = (BugzillaStatus) e.getStatus();
+				assertNotNull(status);
+				BugzillaUserMatchResponse matchUserResponse = status.getUserMatchResponse();
+				assertNotNull(matchUserResponse);
+				assertNotNull(matchUserResponse.getNewCCProposals());
+				assertNotNull(matchUserResponse.getAssignedToProposals());
+				assertNotNull(matchUserResponse.getQaContactProposals());
+				assertEquals(2, matchUserResponse.getNewCCProposals().size());
+				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
+				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
+				assertTrue(matchUserResponse.getNewCCProposals().contains("guest@mylyn.eclipse.org"));
+				assertNull(matchUserResponse.getNewCCMsg());
+				assertNotNull(matchUserResponse.getAssignedToMsg());
+				assertNull(matchUserResponse.getQaContactMsg());
+			}
+		}
+	}
+
+	public void doUserMatch(String newCCAttributeValue, String assignedToAttributeValue) throws CoreException,
+			IOException {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test usermatch";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the usermatch";
+			}
+
+		};
+
+		final TaskData[] taskDataNew = new TaskData[1];
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute newCCAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.NEWCC.getKey());
+		TaskAttribute assignedToAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey());
+		changed.clear();
+		if (newCCAttribute != null && newCCAttributeValue != null) {
+			newCCAttribute.setValue(newCCAttributeValue);
+			model.attributeChanged(newCCAttribute);
+			changed.add(newCCAttribute);
+		}
+		if (assignedToAttribute != null && assignedToAttributeValue != null) {
+			assignedToAttribute.setValue(assignedToAttributeValue);
+			model.attributeChanged(assignedToAttribute);
+			changed.add(assignedToAttribute);
+		}
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
 	}
 
 }

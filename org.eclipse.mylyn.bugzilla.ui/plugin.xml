@@ -60,20 +60,22 @@
 		<languageAttribute command="submitted" 					response="Submitted"/>
 		<languageAttribute command="submitted" 					response="posted"/>
 		<languageAttribute command="suspicious_action" 			response="Suspicious action"/>
+    	<languageAttribute command="error_confirm_match"		response="confirm match"/> 
+        <languageAttribute command="error_match_failed"			response="match failed"/>
       </language> 
       -->
       <language 
             name="de"> 
             <languageAttribute command="error_login" 				response="Anmeldename erforderlich"/> 
             <languageAttribute command="error_login" 				response="check e-mail"/> 
-            <languageAttribute command="error_login" 				response="Ungültiger Benutzername oder ungültiges Passwort"/> 
+            <languageAttribute command="error_login" 				response="Ung√ºltiger Benutzername oder ung√ºltiges Passwort"/> 
             <languageAttribute command="error_login" 				response="Benutzerkonto gesperrt"/>
             <languageAttribute command="error_collision" 			response="Kollision!"/> 
             <languageAttribute command="error_comment_required" 	response="Kommentar erforderlich"/> 
             <languageAttribute command="error_logged_out" 			response="Abgemeldet"/> 
             <languageAttribute command="bad_login" 					response="Anmeldename erforderlich"/> 
             <languageAttribute command="bad_login" 					response="check e-mail"/> 
-            <languageAttribute command="bad_login" 					response="Ungültiger Benutzername oder ungültiges Passwort"/> 
+            <languageAttribute command="bad_login" 					response="Ung√ºltiger Benutzername oder ung√ºltiges Passwort"/> 
             <languageAttribute command="bad_login" 					response="error"/> 
             <languageAttribute command="bad_login" 					response="Benutzerkonto gesperrt"/>
             <languageAttribute command="processed" 					response="processed"/> 
@@ -84,6 +86,8 @@
 			<languageAttribute command="submitted" 					response="Submitted"/>
 			<languageAttribute command="submitted" 					response="posted"/>
 	     	<languageAttribute command="suspicious_action"			response="Suspicious action"/> 
+    	    <languageAttribute command="error_confirm_match"		response="√úbereinstimmungen best√§tigen"/> 
+            <languageAttribute command="error_match_failed"			response="Keine √úbereinstimmung gefunden"/>
        </language> 
    </extension>    
   

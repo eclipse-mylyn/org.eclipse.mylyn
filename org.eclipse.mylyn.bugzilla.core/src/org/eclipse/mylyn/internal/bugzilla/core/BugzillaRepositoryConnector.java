@@ -131,6 +131,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		enSetting.addLanguageAttribute("submitted", "Submitted"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("submitted", "posted"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("suspicious_action", "Suspicious action"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_confirm_match", "confirm match"); //$NON-NLS-1$//$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_match_failed", "match failed"); //$NON-NLS-1$ //$NON-NLS-2$
 		languages.add(enSetting);
 
 		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh! //$NON-NLS-1$ //$NON-NLS-2$

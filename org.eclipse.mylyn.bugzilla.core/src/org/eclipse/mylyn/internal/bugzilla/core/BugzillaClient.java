@@ -2015,6 +2015,35 @@ public class BugzillaClient {
 							}
 						}
 
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_CONFIRM_MATCH).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
+							BugzillaVersion bugzillaVersion = null;
+							if (repositoryConfiguration != null) {
+								bugzillaVersion = repositoryConfiguration.getInstallVersion();
+							} else {
+								bugzillaVersion = BugzillaVersion.MIN_VERSION;
+							}
+							BugzillaUserMatchResponse matchResponse = new BugzillaUserMatchResponse();
+							matchResponse.parseResultConfirmMatch(tokenizer, repositoryUrl.toString(), body,
+									bugzillaVersion.isSmaller(BugzillaVersion.BUGZILLA_4_0));
+						}
+
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_MATCH_FAILED).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
+							BugzillaUserMatchResponse matchResponse = new BugzillaUserMatchResponse();
+							matchResponse.parseResultMatchFailed(tokenizer, repositoryUrl.toString(), body);
+						}
 						isTitle = false;
 					}
 				} else {
