@@ -53,6 +53,16 @@ public class Template {
 	}
 
 	/**
+	 * The content of the template as it should be included in the document. The default implementation simply returns
+	 * {@link #getTemplateMarkup()}. Templates that produce dynamically generated content should override this method.
+	 * 
+	 * @since 1.6
+	 */
+	public String getTemplateContent() {
+		return getTemplateMarkup();
+	}
+
+	/**
 	 * the name of the template
 	 */
 	public String getName() {

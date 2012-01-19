@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -39,10 +40,22 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	private MediaWikiLanguage markupLanaguage;
 
+	private Locale locale;
+
 	@Override
 	public void setUp() {
+		locale = Locale.getDefault();
+		Locale.setDefault(Locale.ENGLISH);
+
 		markupLanaguage = new MediaWikiLanguage();
 		parser = new MarkupParser(markupLanaguage);
+	}
+
+	@Override
+	public void tearDown() throws Exception {
+		super.tearDown();
+
+		Locale.setDefault(locale);
 	}
 
 	public void testIsDetectingRawHyperlinks() {
@@ -665,6 +678,85 @@ public class MediaWikiLanguageTest extends TestCase {
 		html = parser.parseToHtml("A{{emdash}}B");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A&nbsp;&mdash; B</p></body>"));
+	}
+
+	public void testTemplateCurrentMonth() {
+		String html = parser.parseToHtml("{{CURRENTMONTH}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>[01]\\d</p>"));
+	}
+
+	public void testTemplateCurrentMonthName() {
+		String html = parser.parseToHtml("{{CURRENTMONTHNAME}}");
+		TestUtil.println(html);
+		assertContainsPattern(
+				html,
+				Pattern.compile("<p>(January|February|March|April|May|June|July|August|September|October|November|December)</p>"));
+	}
+
+	public void testTemplateCurrentMonthNameAbbrev() {
+		String html = parser.parseToHtml("{{CURRENTMONTHABBREV}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)</p>"));
+	}
+
+	public void testTemplateCurrentDay() {
+		String html = parser.parseToHtml("{{CURRENTDAY}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>[0123]\\d</p>"));
+	}
+
+	public void testTemplateCurrentDOW() {
+		String html = parser.parseToHtml("{{CURRENTDOW}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>\\d</p>"));
+	}
+
+	public void testTemplateCurrentDayName() {
+		String html = parser.parseToHtml("{{CURRENTDAYNAME}}");
+		TestUtil.println(html);
+		assertContainsPattern(html,
+				Pattern.compile("<p>(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)</p>"));
+	}
+
+	public void testTemplateCurrentTime() {
+		String html = parser.parseToHtml("{{CURRENTTIME}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>[012]\\d:[0-5]\\d</p>"));
+	}
+
+	public void testTemplateCurrentHour() {
+		String html = parser.parseToHtml("{{CURRENTHOUR}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>[012]\\d</p>"));
+	}
+
+	public void testTemplateCurrentWeek() {
+		String html = parser.parseToHtml("{{CURRENTWEEK}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>[0-5]\\d</p>"));
+	}
+
+	public void testTemplateUnmatched() {
+		String html = parser.parseToHtml("a{{ABogusTemplateName}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>a</p>"));
+
+		html = parser.parseToHtml("a{{#foo}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>a</p>"));
+	}
+
+	public void testTemplateCurrentTimestamp() {
+		String html = parser.parseToHtml("{{CURRENTTIMESTAMP}}");
+		TestUtil.println(html);
+		assertContainsPattern(html, Pattern.compile("<p>\\d{14}</p>"));
+	}
+
+	private void assertContainsPattern(String html, Pattern pattern) {
+		if (!pattern.matcher(html).find()) {
+			fail("Expected " + pattern + " but got " + html);
+		}
 	}
 
 	public void testDefinitionListIndenting() {

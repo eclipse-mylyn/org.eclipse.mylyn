@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 David Green and others.
+ * Copyright (c) 2010, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,24 +19,35 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 public class BuiltInTemplateResolver extends TemplateResolver {
 
-	private static Map<String, String> builtInTemplates = new HashMap<String, String>();
+	private static Map<String, Template> builtInTemplates = new HashMap<String, Template>();
 	static {
-		builtInTemplates.put("mdash", "&nbsp;&mdash; "); //$NON-NLS-1$//$NON-NLS-2$
-		builtInTemplates.put("ndash", "&nbsp;&ndash; "); //$NON-NLS-1$//$NON-NLS-2$
-		builtInTemplates.put("emdash", "&nbsp;&mdash; "); //$NON-NLS-1$//$NON-NLS-2$
-		builtInTemplates.put("endash", "&nbsp;&ndash; "); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new Template("mdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new Template("mdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new Template("ndash", "&nbsp;&ndash; ")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new Template("emdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new Template("endash", "&nbsp;&ndash; ")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTYEAR", "yyyy")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTMONTH", "MM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTMONTHNAME", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTMONTHNAMEGEN", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTMONTHABBREV", "MMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTDAY", "dd")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTDAY2", "dd")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTDOW", "F")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTDAYNAME", "EEEEEEEE")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTTIME", "HH:mm")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTHOUR", "HH")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTWEEK", "ww")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemlate("CURRENTTIMESTAMP", "yyyyMMddHHmmss")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	@Override
 	public Template resolveTemplate(String templateName) {
-		String templateText = builtInTemplates.get(templateName);
-		if (templateText != null) {
-			Template template = new Template();
-			template.setName(templateName);
-			template.setTemplateMarkup(templateText);
-			return template;
-		}
-		return null;
+		return builtInTemplates.get(templateName);
+	}
+
+	private static void registerTemplate(Template template) {
+		builtInTemplates.put(template.getName(), template);
 	}
 
 }

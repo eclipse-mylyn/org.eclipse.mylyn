@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 public class TemplateProcessor {
 
-	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{([a-zA-Z_ :]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
+	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z_ :]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
 
 	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)\\}\\}\\}"); //$NON-NLS-1$
 
@@ -89,7 +89,7 @@ public class TemplateProcessor {
 		if (template.getTemplateMarkup() == null) {
 			return ""; //$NON-NLS-1$
 		}
-		String macro = template.getTemplateMarkup();
+		String macro = template.getTemplateContent();
 
 		List<Parameter> parameters = processParameters(parametersText);
 
@@ -181,7 +181,7 @@ public class TemplateProcessor {
 	private Template normalize(Template template) {
 		Template normalizedTemplate = new Template();
 		normalizedTemplate.setName(template.getName());
-		normalizedTemplate.setTemplateMarkup(normalizeTemplateMarkup(template.getTemplateMarkup()));
+		normalizedTemplate.setTemplateMarkup(normalizeTemplateMarkup(template.getTemplateContent()));
 
 		return normalizedTemplate;
 	}
