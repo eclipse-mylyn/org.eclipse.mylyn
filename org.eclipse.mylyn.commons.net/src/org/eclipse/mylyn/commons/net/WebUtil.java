@@ -116,7 +116,7 @@ public class WebUtil {
 	private static final long CONNECTION_TIMEOUT_INTERVAL = 30 * 1000;
 
 	static {
-		initCommonsLoggingSettings();
+		CoreUtil.initializeLoggingSettings();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn"); //$NON-NLS-1$
@@ -615,31 +615,6 @@ public class WebUtil {
 
 	public static void init() {
 		// initialization is done in the static initializer		
-	}
-
-	/**
-	 * Disables logging by default. Set these system properties on launch enables verbose logging of HTTP communication:
-	 * 
-	 * <pre>
-	 * -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
-	 * -Dorg.apache.commons.logging.simplelog.showlogname=true 
-	 * -Dorg.apache.commons.logging.simplelog.defaultlog=off
-	 * -Dorg.apache.commons.logging.simplelog.log.httpclient.wire=debug
-	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.commons.httpclient=off
-	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
-	 * </pre>
-	 */
-	private static void initCommonsLoggingSettings() {
-		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	/**
-	 * Only sets system property if they are not already set to a value.
-	 */
-	private static void defaultSystemProperty(String key, String defaultValue) {
-		if (System.getProperty(key) == null) {
-			System.setProperty(key, defaultValue);
-		}
 	}
 
 	private static boolean isRepositoryHttps(String repositoryUrl) {

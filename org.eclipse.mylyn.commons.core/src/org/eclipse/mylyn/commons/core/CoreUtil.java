@@ -134,4 +134,23 @@ public class CoreUtil {
 		return (expectedValue == null) ? value == true : Boolean.valueOf(value).equals(expectedValue);
 	}
 
+	/**
+	 * Disables logging through the Apache commons logging system by default. This can be overridden by specifying the
+	 * <code>org.apache.commons.logging.Log</code> system property.
+	 * 
+	 * @since 3.7
+	 */
+	public static void initializeLoggingSettings() {
+		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/**
+	 * Only sets system property if they are not already set to a value.
+	 */
+	private static void defaultSystemProperty(String key, String defaultValue) {
+		if (System.getProperty(key) == null) {
+			System.setProperty(key, defaultValue);
+		}
+	}
+
 }

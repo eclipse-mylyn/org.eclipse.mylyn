@@ -70,6 +70,10 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
  */
 public class HttpUtil {
 
+	static {
+		CoreUtil.initializeLoggingSettings();
+	}
+
 	private static final int BUFFER_SIZE = 4096;
 
 	private static final long CLOSE_TIMEOUT = -1;
@@ -97,17 +101,7 @@ public class HttpUtil {
 
 	static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repositories.http"; //$NON-NLS-1$
 
-	private static ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(
-			HttpUtil.getSchemeRegistry());
-
-	static {
-		if (CoreUtil.TEST_MODE) {
-			connectionManager.setDefaultMaxPerRoute(2);
-		} else {
-			connectionManager.setDefaultMaxPerRoute(100);
-			connectionManager.setMaxTotal(1000);
-		}
-	}
+	private static ThreadSafeClientConnManager connectionManager;
 
 	public static void configureClient(AbstractHttpClient client, String userAgent) {
 		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BEST_MATCH);
@@ -302,7 +296,16 @@ public class HttpUtil {
 		}
 	}
 
-	public static ThreadSafeClientConnManager getConnectionManager() {
+	public static synchronized ThreadSafeClientConnManager getConnectionManager() {
+		if (connectionManager == null) {
+			connectionManager = new ThreadSafeClientConnManager(HttpUtil.getSchemeRegistry());
+			if (CoreUtil.TEST_MODE) {
+				connectionManager.setDefaultMaxPerRoute(2);
+			} else {
+				connectionManager.setDefaultMaxPerRoute(100);
+				connectionManager.setMaxTotal(1000);
+			}
+		}
 		return connectionManager;
 	}
 

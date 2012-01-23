@@ -41,6 +41,10 @@ public class CommonImageManger {
 		resourceManager.dispose();
 	}
 
+	public Image getFolderImage() {
+		return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
+	}
+
 	public Image getFileImage(String filename) {
 		if (filename != null) {
 			int dotIndex = filename.lastIndexOf('.');
