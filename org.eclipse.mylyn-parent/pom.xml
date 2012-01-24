@@ -42,7 +42,7 @@
 	<dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
 	<dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</dist.snapshots.url>
 
-	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/I20111216203947/repository/</orbit-repository-url>
+	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/S20120123151124/repository/</orbit-repository-url>
 	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
 	<mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
 	<mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
