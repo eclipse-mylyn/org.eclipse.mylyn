@@ -63,9 +63,14 @@ public abstract class RepositoryTestFixture {
 
 	private TestSuite suite;
 
+	private boolean useCertificateAuthentication;
+
+	private boolean useShortUsernames;
+
 	public RepositoryTestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
+		this.useCertificateAuthentication = repositoryUrl.contains("/secure/");
 	}
 
 	public void add(Class<? extends TestCase> clazz) {
@@ -112,6 +117,14 @@ public abstract class RepositoryTestFixture {
 		return new HashSet<String>(Arrays.asList(excludeFixtureArray)).contains(getRepositoryUrl());
 	}
 
+	public boolean isUseCertificateAuthentication() {
+		return useCertificateAuthentication;
+	}
+
+	public boolean isUseShortUsernames() {
+		return useShortUsernames;
+	}
+
 	public RepositoryLocation location() throws Exception {
 		return location(PrivilegeLevel.USER);
 	}
@@ -122,7 +135,11 @@ public abstract class RepositoryTestFixture {
 
 	public RepositoryLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
 		UserCredentials credentials = CommonTestUtil.getCredentials(level);
-		return location(credentials.getUserName(), credentials.getPassword(), proxy);
+		String userName = credentials.getUserName();
+		if (isUseShortUsernames() && userName.contains("@")) {
+			userName = userName.substring(0, userName.indexOf("@"));
+		}
+		return location(userName, credentials.getPassword(), proxy);
 	}
 
 	public RepositoryLocation location(String username, String password) throws Exception {
@@ -136,10 +153,18 @@ public abstract class RepositoryTestFixture {
 		if (username != null && password != null) {
 			location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(username, password));
 		}
-		if (repositoryUrl.contains("/secure/")) {
+		if (isUseCertificateAuthentication()) {
 			location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
 		}
 		return location;
+	}
+
+	public void setUseCertificateAuthentication(boolean useCertificateAuthentication) {
+		this.useCertificateAuthentication = useCertificateAuthentication;
+	}
+
+	public void setUseShortUsernames(boolean useShortUsernames) {
+		this.useShortUsernames = useShortUsernames;
 	}
 
 	protected abstract RepositoryTestFixture activate();
