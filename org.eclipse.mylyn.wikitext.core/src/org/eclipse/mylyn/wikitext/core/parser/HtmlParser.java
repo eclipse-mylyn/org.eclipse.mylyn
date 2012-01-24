@@ -13,7 +13,8 @@ package org.eclipse.mylyn.wikitext.core.parser;
 
 import java.io.IOException;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.XHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -45,7 +46,23 @@ public class HtmlParser {
 		if (builder == null) {
 			throw new IllegalArgumentException();
 		}
-		new XHtmlParser().parse(input, builder);
+		AbstractSaxHtmlParser parser;
+		if (isJsoupAvailable()) {
+			parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
+		} else {
+			parser = new XHtmlParser();
+		}
+
+		parser.parse(input, builder);
+	}
+
+	private boolean isJsoupAvailable() {
+		try {
+			Class.forName("org.jsoup.Jsoup", true, HtmlParser.class.getClassLoader()); //$NON-NLS-1$
+			return true;
+		} catch (Throwable t) {
+			return false;
+		}
 	}
 
 }

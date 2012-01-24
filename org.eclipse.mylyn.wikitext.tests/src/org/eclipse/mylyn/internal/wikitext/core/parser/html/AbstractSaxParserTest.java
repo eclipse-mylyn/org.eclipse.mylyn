@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util;
+package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -18,7 +18,6 @@ import java.io.StringWriter;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -32,7 +31,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractSaxParserTest extends TestCase {
 
-	private AbstractSaxHtmlParser parser;
+	protected AbstractSaxHtmlParser parser;
 
 	private StringWriter out;
 

@@ -455,6 +455,17 @@ When using @<mediawiki-to-eclipse-help>@ there are two modes of operation:
 
 The first option requires less effort, but results in less control over the output.  The second option is more flexible, but requires writing a master table of contents. 
 
+h2. Html To WikiText
+
+Mylyn WikiText can generate wiki markup from most simple HTML files using the @<html-to-wikitext>@ Ant task.
+In addition to "common task options":#ConversionusingAntbuildscripts the following are available:
+
+|_. Option |_. Usage |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @outputFilenameFormat@ | The filename format to use when generating output filenames.  Defaults to @$1.$2@ where $1 is the name of the input file without its file extension, and $2 is the name of the markup language.  For example, given an input file @test.html@, the default output filename is @test.textile@. |
+
+Currently Mylyn WikiText only supports Textile and Confluence as output formats, however 3rd party extensions to Mylyn WikiText can add support for generating other wiki markup.
+
 h2. Ant Examples
 
 See "the examples":examples for example Ant build scripts.
