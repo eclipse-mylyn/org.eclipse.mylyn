@@ -35,18 +35,24 @@ public class HudsonFixture extends RepositoryTestFixture {
 	private static final HudsonFixture HUDSON_2_1 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.1"),
 			"2.1.0", Type.HUDSON, "REST");
 
+	private static final HudsonFixture HUDSON_2_2 = new HudsonFixture("http://ci.mylyn.org/", "2.2.0", Type.HUDSON,
+			"REST");
+
+	private static final HudsonFixture HUDSON_3_0 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-3.0"),
+			"3.0.0-M0", Type.HUDSON, "REST");
+
 	private static final HudsonFixture JENKINS_1_427 = new HudsonFixture(
 			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.427", Type.JENKINS, "REST");
 
-	private static final HudsonFixture HUDSON_SECURE = new HudsonFixture(TestConfiguration.getRepositoryUrl(
-			"secure/hudson", true), "2.1.0", Type.HUDSON, "REST/Certificate Authentication");
+	private static final HudsonFixture HUDSON_2_1_SECURE = new HudsonFixture(TestConfiguration.getRepositoryUrl(
+			"hudson-2.1", true), "2.1.0", Type.HUDSON, "REST/Certificate Authentication");
 
 	/**
 	 * Standard configurations for running all test against.
 	 */
-	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, JENKINS_1_427 };
+	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, HUDSON_2_2, JENKINS_1_427 };
 
-	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_SECURE };
+	public static final HudsonFixture[] MISC = new HudsonFixture[] { /*HUDSON_3_0, */HUDSON_2_1_SECURE };
 
 	public static HudsonFixture current() {
 		return current(HUDSON_2_1);
@@ -68,6 +74,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 		this.version = version;
 		this.type = type;
 		setInfo(type.toString(), version, info);
+		setUseShortUsernames("2.1.0".compareTo(version) < 0);
 	}
 
 	@Override
@@ -103,7 +110,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	// XXX fix server setup to support authentication
 	public boolean canAuthenticate() {
-		return this != HUDSON_SECURE;
+		return this != HUDSON_2_1_SECURE;
 	}
 
 }
