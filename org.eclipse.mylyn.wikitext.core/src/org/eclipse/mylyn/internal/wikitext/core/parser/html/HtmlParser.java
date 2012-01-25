@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,23 +186,29 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 
 	private String readContent(InputSource input) throws IOException {
 		Reader reader = input.getCharacterStream();
-		if (reader == null) {
-			InputStream bytes = input.getByteStream();
-			if (bytes == null) {
-				String systemId = input.getSystemId();
-				if (systemId != null) {
-					bytes = new FileInputStream(systemId);
-				}
+		try {
+			if (reader == null) {
+				InputStream bytes = input.getByteStream();
 				if (bytes == null) {
-					throw new IllegalArgumentException();
+					String systemId = input.getSystemId();
+					if (systemId != null) {
+						bytes = new BufferedInputStream(new FileInputStream(systemId));
+					}
+					if (bytes == null) {
+						throw new IllegalArgumentException();
+					}
 				}
+				reader = new InputStreamReader(bytes, input.getEncoding() == null ? "utf-8" : input.getEncoding()); //$NON-NLS-1$
 			}
-			reader = new InputStreamReader(bytes, input.getEncoding() == null ? "utf-8" : input.getEncoding()); //$NON-NLS-1$
+			StringWriter writer = new StringWriter(2048);
+			for (int i = reader.read(); i != -1; i = reader.read()) {
+				writer.write(i);
+			}
+			return writer.toString();
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
 		}
-		StringWriter writer = new StringWriter(2048);
-		for (int i = reader.read(); i != -1; i = reader.read()) {
-			writer.write(i);
-		}
-		return writer.toString();
 	}
 }
