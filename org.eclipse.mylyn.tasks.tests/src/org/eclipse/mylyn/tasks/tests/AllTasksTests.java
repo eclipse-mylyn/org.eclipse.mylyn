@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.AttachmentTableLabelProviderTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.EditorUtilTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.PlanningPartTest;
+import org.eclipse.mylyn.tasks.tests.ui.editor.RegionComparatorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RepositoryCompletionProcessorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
@@ -115,6 +116,7 @@ public class AllTasksTests {
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
+		suite.addTestSuite(RegionComparatorTest.class);
 		return suite;
 	}
 
