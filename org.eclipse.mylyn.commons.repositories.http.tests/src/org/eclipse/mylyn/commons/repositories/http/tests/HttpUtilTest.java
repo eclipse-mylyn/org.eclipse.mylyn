@@ -13,8 +13,6 @@ package org.eclipse.mylyn.commons.repositories.http.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.net.InetSocketAddress;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -35,8 +33,6 @@ public class HttpUtilTest {
 
 	private TestProxy testProxy;
 
-	private InetSocketAddress proxyAddress;
-
 	private DefaultHttpClient client;
 
 	private ThreadSafeClientConnManager connectionManager;
@@ -47,10 +43,7 @@ public class HttpUtilTest {
 	@Before
 	public void setUp() throws Exception {
 		testProxy = new TestProxy();
-		int proxyPort = testProxy.startAndWait();
-		assert proxyPort > 0;
-		proxyAddress = new InetSocketAddress("localhost", proxyPort);
-
+		testProxy.startAndWait();
 		connectionManager = new ThreadSafeClientConnManager();
 		client = new DefaultHttpClient() {
 			@Override
@@ -67,8 +60,8 @@ public class HttpUtilTest {
 
 	@Test
 	public void testGetRequestPoolConnections() throws Exception {
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
-		HttpRequestBase request = new HttpGet(url);
+		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
+		HttpRequestBase request = new HttpGet(testProxy.getUrl());
 
 		HttpUtil.configureClient(client, null);
 		assertEquals(0, connectionManager.getConnectionsInPool());
