@@ -39,11 +39,12 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
 /**
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class AllTasksTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
+		TestSuite suite = new TestSuite(AllTasksTests.class.getName());
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
