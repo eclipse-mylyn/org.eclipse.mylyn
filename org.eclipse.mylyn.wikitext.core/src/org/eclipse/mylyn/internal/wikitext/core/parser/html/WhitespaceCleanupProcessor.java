@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2012 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,10 +23,13 @@ import org.jsoup.nodes.TextNode;
 /**
  * @author David Green
  */
-class WhitespaceCleanupProcessor implements HtmlParser.DocumentProcessor {
+class WhitespaceCleanupProcessor extends DocumentProcessor {
 
+	@Override
 	public void process(Document document) {
 		Element body = document.body();
+
+		Set<Node> affectedParents = new HashSet<Node>();
 
 		// for every element containing text with leading or trailing whitespace, move the whitespace out of the element.
 		for (Element element : body.getAllElements()) {
@@ -37,15 +42,21 @@ class WhitespaceCleanupProcessor implements HtmlParser.DocumentProcessor {
 						String text = textNode.getWholeText();
 						int nonWhitespaceIndex = firstIndexOfNonWhitespace(text);
 						if (nonWhitespaceIndex > 0) {
+							affectedParents.add(textNode.parent());
+
 							// split
 							textNode.splitText(nonWhitespaceIndex);
 							// move outside
 							textNode.remove();
 							computeBeforeTarget(element).before(textNode);
+
+							affectedParents.add(textNode.parent());
 						} else if (nonWhitespaceIndex == -1) {
 							// move outside
 							textNode.remove();
 							computeAfterTarget(element).after(textNode);
+
+							affectedParents.add(textNode.parent());
 						}
 					}
 					children = element.childNodes();
@@ -61,16 +72,30 @@ class WhitespaceCleanupProcessor implements HtmlParser.DocumentProcessor {
 								// move outside
 								textNode.remove();
 								computeAfterTarget(element).after(textNode);
+
+								affectedParents.add(textNode.parent());
 							} else if (lastNonWhitespaceIndex < (text.length() - 1)) {
+								affectedParents.add(textNode.parent());
+
 								// split
 								textNode.splitText(lastNonWhitespaceIndex + 1);
 								// move outside
 								textNode = (TextNode) textNode.nextSibling();
 								textNode.remove();
 								computeAfterTarget(element).after(textNode);
+
+								affectedParents.add(textNode.parent());
 							}
 						}
 					}
+				}
+				if (!affectedParents.isEmpty()) {
+					for (Node parent : affectedParents) {
+						if (parent instanceof Element) {
+							normalizeTextNodes((Element) parent);
+						}
+					}
+					affectedParents.clear();
 				}
 			}
 		}

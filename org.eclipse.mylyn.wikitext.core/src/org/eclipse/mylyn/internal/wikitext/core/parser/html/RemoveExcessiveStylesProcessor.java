@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2012 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser.DocumentProcessor;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.jsoup.nodes.Document;
@@ -28,8 +27,9 @@ import org.jsoup.select.Selector;
  * 
  * @author David Green
  */
-public class RemoveExcessiveStylesProcessor implements DocumentProcessor {
+public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 
+	@Override
 	public void process(Document document) {
 		Element body = document.body();
 
@@ -103,10 +103,15 @@ public class RemoveExcessiveStylesProcessor implements DocumentProcessor {
 	}
 
 	private void removeElementPreserveChildren(Element element) {
+		final Element parent = element.parent();
 		for (Node child : new ArrayList<Node>(element.childNodes())) {
 			child.remove();
 			element.before(child);
 		}
 		element.remove();
+
+		if (parent != null) {
+			normalizeTextNodes(parent);
+		}
 	}
 }

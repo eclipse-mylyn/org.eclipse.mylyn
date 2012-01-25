@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2012 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,9 @@ import org.jsoup.nodes.TextNode;
 /**
  * @author David Green
  */
-class RemoveEmptySpansProcessor implements HtmlParser.DocumentProcessor {
+class RemoveEmptySpansProcessor extends DocumentProcessor {
 
+	@Override
 	public void process(Document document) {
 		Element body = document.body();
 
@@ -52,6 +53,8 @@ class RemoveEmptySpansProcessor implements HtmlParser.DocumentProcessor {
 									element.remove();
 									modifiedOne = true;
 								}
+
+								normalizeTextNodes((Element) textNode.parent());
 							}
 						}
 					}
