@@ -53,14 +53,26 @@ public class HudsonClientTest extends TestCase {
 
 	public void testValidateValidUrl() throws Exception {
 		// standard connect
-		RestfulHudsonClient client = harness.getFixture().connect();
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		HudsonServerInfo info = client.validate(null);
+		assertEquals(harness.getFixture().getType(), info.getType());
+		assertEquals(harness.getFixture().getVersion(), info.getVersion());
+	}
+
+	public void testValidateValidUrlAuthenticate() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate()) {
+			// ignore
+			return;
+		}
+		// standard connect
+		RestfulHudsonClient client = harness.connect();
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
 		assertEquals(harness.getFixture().getVersion(), info.getVersion());
 	}
 
 	public void testGetJobs() throws Exception {
-		RestfulHudsonClient client = harness.connect();
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(null, null);
 		HudsonTestUtil.assertContains(jobs, harness.getPlanFailing());
 		HudsonTestUtil.assertContains(jobs, harness.getPlanSucceeding());
@@ -68,7 +80,7 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testGetJobsWithWhitespaces() throws Exception {
-		RestfulHudsonClient client = harness.connect();
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanWhitespace()), null);
 		assertEquals(1, jobs.size());
 
@@ -80,7 +92,7 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testGetJobDisabled() throws Exception {
-		RestfulHudsonClient client = harness.connect();
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanDisabled()), null);
 		assertEquals(1, jobs.size());
 

@@ -52,10 +52,12 @@ public class HudsonFixture extends RepositoryTestFixture {
 	 */
 	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, HUDSON_2_2, JENKINS_1_427 };
 
-	public static final HudsonFixture[] MISC = new HudsonFixture[] { /*HUDSON_3_0, */HUDSON_2_1_SECURE };
+	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_3_0, HUDSON_2_1_SECURE };
+
+	private static final HudsonFixture DEFAULT = HUDSON_2_1;
 
 	public static HudsonFixture current() {
-		return current(HUDSON_2_1);
+		return current(DEFAULT);
 	}
 
 	public static HudsonFixture current(HudsonFixture fixture) {
@@ -75,6 +77,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 		this.type = type;
 		setInfo(type.toString(), version, info);
 		setUseShortUsernames("2.1.0".compareTo(version) < 0);
+		setUseCertificateAuthentication(info.contains("Certificate Authentication"));
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	@Override
 	protected HudsonFixture getDefault() {
-		return HUDSON_2_1;
+		return DEFAULT;
 	}
 
 	public Type getType() {
@@ -110,7 +113,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	// XXX fix server setup to support authentication
 	public boolean canAuthenticate() {
-		return this != HUDSON_2_1_SECURE;
+		return this != HUDSON_2_1_SECURE && this != HUDSON_3_0;
 	}
 
 }
