@@ -20,10 +20,9 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -323,13 +322,13 @@ public class TestProxy implements Runnable {
 	}
 
 	public String getUrl() {
-//		InetSocketAddress address = new InetSocketAddress("localhost", serverSocket.getLocalPort());
-//		return "http://" + address.getHostName() + ":" + address.getPort() + "/";
-		try {
-			return "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort();
-		} catch (UnknownHostException e) {
-			return "http://localhost:" + serverSocket.getLocalPort();
-		}
+		InetSocketAddress address = new InetSocketAddress("localhost", serverSocket.getLocalPort());
+		return "http://" + address.getHostName() + ":" + address.getPort() + "/";
+//		try {
+//			return "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort();
+//		} catch (UnknownHostException e) {
+//			return "http://localhost:" + serverSocket.getLocalPort();
+//		}
 	}
 
 	public void stop() {
