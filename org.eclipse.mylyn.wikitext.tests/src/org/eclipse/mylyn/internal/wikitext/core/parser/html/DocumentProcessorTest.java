@@ -23,6 +23,19 @@ import org.junit.Test;
  * @author David Green
  */
 public class DocumentProcessorTest {
+	// subclass to work around cross-Bundle package access limitations
+	private static class TestDocumentProcessor extends DocumentProcessor {
+
+		@Override
+		public void process(Document document) {
+			// ignore
+		}
+
+		public static void normalizeTextNodes(Element parentElement) {
+			DocumentProcessor.normalizeTextNodes(parentElement);
+		}
+	}
+
 	@Test
 	public void testNormalizeTextNodes() {
 		Document document = new Document("");
@@ -35,7 +48,7 @@ public class DocumentProcessorTest {
 
 		assertEquals(5, element.childNodes().size());
 
-		DocumentProcessor.normalizeTextNodes(element);
+		TestDocumentProcessor.normalizeTextNodes(element);
 
 		assertEquals(3, element.childNodes().size());
 		assertTrue(element.childNode(0) instanceof TextNode);

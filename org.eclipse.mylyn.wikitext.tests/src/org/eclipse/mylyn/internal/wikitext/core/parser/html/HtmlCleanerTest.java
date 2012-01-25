@@ -24,30 +24,30 @@ import org.junit.Test;
 public class HtmlCleanerTest {
 	@Test
 	public void testFirstNode_MoveWhitespaceOutside() {
-		String result = clean("<p>foo <span> bar</span></p>");
+		String result = clean("<p>foo <span style=\"color:blue;\"> bar</span></p>");
 		TestUtil.println(result);
-		assertTrue(result.contains("<p>foo <span>bar</span></p>"));
+		assertTrue(result, result.contains("<p>foo <span style=\"color: blue;\">bar</span></p>"));
 	}
 
 	@Test
 	public void testFirstNode_MoveWhitespaceOutside2() {
-		String result = clean("<p>foo <span> <br/>bar</span></p>");
+		String result = clean("<p>foo <span style=\"color:blue;\"> <br/>bar</span></p>");
 		TestUtil.println(result);
-		assertTrue(result.contains("<p>foo <br /><span>bar</span></p>"));
+		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar</span></p>"));
 	}
 
 	@Test
 	public void testLastNode_MoveWhitespaceOutside() {
-		String result = clean("<p>foo <span><br/>bar<br/> </span></p>");
+		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/> </span></p>");
 		TestUtil.println(result);
-		assertTrue(result.contains("<p>foo <br /><span>bar</span><br /></p>"));
+		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar</span><br /></p>"));
 	}
 
 	@Test
 	public void testLastNode_MoveWhitespaceOutside2() {
-		String result = clean("<p>foo <span><br/>bar<br/>ab </span></p>");
+		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab </span></p>");
 		TestUtil.println(result);
-		assertTrue(result.contains("<p>foo <br /><span>bar<br />ab</span></p>"));
+		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar<br />ab</span></p>"));
 	}
 
 	@Test
