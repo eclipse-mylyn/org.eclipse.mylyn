@@ -35,7 +35,7 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 
 		CssParser cssParser = new CssParser();
 
-		for (Element element : Selector.select("[style], font", body)) { //$NON-NLS-1$
+		for (Element element : Selector.select("[style], font, span", body)) { //$NON-NLS-1$
 			String style = element.attr("style"); //$NON-NLS-1$
 
 			String newStyle = ""; //$NON-NLS-1$
@@ -65,11 +65,11 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 			}
 			if ("font".equalsIgnoreCase(element.nodeName())) { //$NON-NLS-1$
 				String color = element.attr("color"); //$NON-NLS-1$
-				if (color != null && color.length() > 0) {
+				if (color != null && color.trim().length() > 0) {
 					if (rules == null) {
 						rules = new ArrayList<CssRule>(1);
 					}
-					rules.add(new CssRule("color", color, 0, 0, 0, 0)); //$NON-NLS-1$
+					rules.add(new CssRule("color", color.trim(), 0, 0, 0, 0)); //$NON-NLS-1$
 				}
 			}
 
