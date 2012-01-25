@@ -23,6 +23,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
@@ -126,8 +127,25 @@ public class CommonHttpClientTest {
 		HttpUtil.release(request, response, null);
 	}
 
-	@Test(expected = SSLException.class)
+	@Test
 	public void testCertificateAuthenticationCertificate() throws Exception {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
+
+		HttpGet request = new HttpGet(location.getUrl());
+		CommonHttpClient client = new CommonHttpClient(location);
+		HttpResponse response = client.execute(request, null);
+		try {
+			assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+			assertEquals("secret\n", EntityUtils.toString(response.getEntity()));
+		} finally {
+			HttpUtil.release(request, response, null);
+		}
+	}
+
+	@Test(expected = SSLException.class)
+	public void testCertificateAuthenticationCertificateReset() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("https://mylyn.org/secure/index.txt");
 		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());

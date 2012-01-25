@@ -134,12 +134,16 @@ public abstract class RepositoryTestFixture {
 	}
 
 	public RepositoryLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
-		UserCredentials credentials = CommonTestUtil.getCredentials(level);
-		String userName = credentials.getUserName();
-		if (isUseShortUsernames() && userName.contains("@")) {
-			userName = userName.substring(0, userName.indexOf("@"));
+		if (level == PrivilegeLevel.ANONYMOUS) {
+			return location(null, null, proxy);
+		} else {
+			UserCredentials credentials = CommonTestUtil.getCredentials(level);
+			String userName = credentials.getUserName();
+			if (isUseShortUsernames() && userName.contains("@")) {
+				userName = userName.substring(0, userName.indexOf("@"));
+			}
+			return location(userName, credentials.getPassword(), proxy);
 		}
-		return location(userName, credentials.getPassword(), proxy);
 	}
 
 	public RepositoryLocation location(String username, String password) throws Exception {
