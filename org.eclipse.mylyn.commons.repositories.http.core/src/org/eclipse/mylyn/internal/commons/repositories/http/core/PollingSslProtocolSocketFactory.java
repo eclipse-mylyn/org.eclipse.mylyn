@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.repositories.http.core;
+package org.eclipse.mylyn.internal.commons.repositories.http.core;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -35,7 +35,7 @@ import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
  * 
  * @author Steffen Pingel
  */
-class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
+public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFactory {
 
 	private final SslSupport defaultSslSupport;
 

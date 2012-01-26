@@ -60,6 +60,8 @@ import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
 
 /**
  * @author Steffen Pingel

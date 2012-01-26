@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,7 +24,10 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.mylyn.commons.core.net.SslSupport;
+import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
@@ -33,12 +37,75 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpRequestProcessor;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
 import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 public class CommonHttpClientTest {
+
+	@Test
+	public void testCertificateAuthenticationCertificate() throws Exception {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
+
+		HttpGet request = new HttpGet(location.getUrl());
+		CommonHttpClient client = new CommonHttpClient(location);
+		HttpResponse response = client.execute(request, null);
+		try {
+			assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+			assertEquals("secret\n", EntityUtils.toString(response.getEntity()));
+		} finally {
+			HttpUtil.release(request, response, null);
+		}
+	}
+
+	@Test(expected = SSLException.class)
+	public void testCertificateAuthenticationCertificateReset() throws Exception {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
+
+		HttpGet request = new HttpGet(location.getUrl());
+		CommonHttpClient client = new CommonHttpClient(location);
+		// work-around for bug 369805
+		Scheme oldScheme = setUpDefaultFactory(client);
+		try {
+			HttpResponse response = client.execute(request, null);
+			try {
+				assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+			} finally {
+				HttpUtil.release(request, response, null);
+			}
+
+			location.setCredentials(AuthenticationType.CERTIFICATE, null);
+			// the request should now fail
+			request = new HttpGet(location.getUrl());
+			response = client.execute(request, null);
+			HttpUtil.release(request, response, null);
+		} finally {
+			tearDownDefaultFactory(client, oldScheme);
+		}
+	}
+
+	@Test(expected = SSLException.class)
+	public void testCertificateAuthenticationNoCertificate() throws Exception {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl("https://mylyn.org/secure/index.txt");
+
+		HttpGet request = new HttpGet(location.getUrl());
+		CommonHttpClient client = new CommonHttpClient(location);
+		// work-around for bug 369805
+		Scheme oldScheme = setUpDefaultFactory(client);
+		try {
+			HttpResponse response = client.execute(request, null);
+			HttpUtil.release(request, response, null);
+		} finally {
+			tearDownDefaultFactory(client, oldScheme);
+		}
+	}
 
 	@Test
 	public void testExecuteGet() throws IOException {
@@ -116,54 +183,18 @@ public class CommonHttpClientTest {
 		}
 	}
 
-	@Test(expected = SSLException.class)
-	public void testCertificateAuthenticationNoCertificate() throws Exception {
-		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
-
-		HttpGet request = new HttpGet(location.getUrl());
-		CommonHttpClient client = new CommonHttpClient(location);
-		HttpResponse response = client.execute(request, null);
-		HttpUtil.release(request, response, null);
+	private Scheme setUpDefaultFactory(CommonHttpClient client) {
+		PollingSslProtocolSocketFactory factory = new PollingSslProtocolSocketFactory(new SslSupport(
+				new TrustManager[] { new TrustAllTrustManager() }, null, null, null));
+		Scheme oldScheme = client.getHttpClient()
+				.getConnectionManager()
+				.getSchemeRegistry()
+				.register(new Scheme("https", 443, factory)); //$NON-NLS-1$		
+		return oldScheme;
 	}
 
-	@Test
-	public void testCertificateAuthenticationCertificate() throws Exception {
-		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
-		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
-
-		HttpGet request = new HttpGet(location.getUrl());
-		CommonHttpClient client = new CommonHttpClient(location);
-		HttpResponse response = client.execute(request, null);
-		try {
-			assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-			assertEquals("secret\n", EntityUtils.toString(response.getEntity()));
-		} finally {
-			HttpUtil.release(request, response, null);
-		}
-	}
-
-	@Test(expected = SSLException.class)
-	public void testCertificateAuthenticationCertificateReset() throws Exception {
-		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
-		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
-
-		HttpGet request = new HttpGet(location.getUrl());
-		CommonHttpClient client = new CommonHttpClient(location);
-		HttpResponse response = client.execute(request, null);
-		try {
-			assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-		} finally {
-			HttpUtil.release(request, response, null);
-		}
-
-		location.setCredentials(AuthenticationType.CERTIFICATE, null);
-		// the request should now fail
-		request = new HttpGet(location.getUrl());
-		response = client.execute(request, null);
-		HttpUtil.release(request, response, null);
+	private void tearDownDefaultFactory(CommonHttpClient client, Scheme oldScheme) {
+		client.getHttpClient().getConnectionManager().getSchemeRegistry().register(oldScheme);
 	}
 
 }

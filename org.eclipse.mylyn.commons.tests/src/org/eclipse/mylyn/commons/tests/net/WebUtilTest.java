@@ -517,7 +517,7 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testLocationConnectSslClientCert() throws Exception {
-		String url = "https://mylyn.eclipse.org/secure/";
+		String url = "https://mylyn.org/secure/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
