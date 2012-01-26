@@ -157,10 +157,20 @@ public abstract class RepositoryTestFixture {
 		if (username != null && password != null) {
 			location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(username, password));
 		}
-		if (isUseCertificateAuthentication()) {
+		if (isUseCertificateAuthentication() && !forceDefaultKeystore(proxy)) {
 			location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
 		}
 		return location;
+	}
+
+	/**
+	 * Don't set certificate credentials if behind proxy. See bug 369805 for details.
+	 */
+	private boolean forceDefaultKeystore(Proxy proxy) {
+		if (proxy != null && System.getProperty("javax.net.ssl.keyStore") != null) {
+			return true;
+		}
+		return false;
 	}
 
 	public void setUseCertificateAuthentication(boolean useCertificateAuthentication) {
