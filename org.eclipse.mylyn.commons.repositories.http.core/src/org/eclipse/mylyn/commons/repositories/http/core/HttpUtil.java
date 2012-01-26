@@ -52,8 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.core.io.PollingInputStream;
-import org.eclipse.mylyn.commons.core.io.TimeoutInputStream;
 import org.eclipse.mylyn.commons.core.net.AuthenticatedProxy;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
@@ -201,8 +199,9 @@ public class HttpUtil {
 
 	public static InputStream getResponseBodyAsStream(HttpEntity entity, IProgressMonitor monitor) throws IOException {
 		monitor = OperationUtil.convert(monitor);
-		return new PollingInputStream(new TimeoutInputStream(entity.getContent(), BUFFER_SIZE, POLL_INTERVAL,
-				CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
+		return entity.getContent();
+//		return new PollingInputStream(new TimeoutInputStream(entity.getContent(), BUFFER_SIZE, POLL_INTERVAL,
+//				CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
 	}
 
 	public static SchemeRegistry getSchemeRegistry() {
