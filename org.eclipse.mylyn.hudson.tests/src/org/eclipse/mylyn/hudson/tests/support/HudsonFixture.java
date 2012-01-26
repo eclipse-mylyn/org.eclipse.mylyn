@@ -35,8 +35,8 @@ public class HudsonFixture extends RepositoryTestFixture {
 	private static final HudsonFixture HUDSON_2_1 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.1"),
 			"2.1.0", Type.HUDSON, "REST");
 
-	private static final HudsonFixture HUDSON_2_2 = new HudsonFixture("http://ci.mylyn.org/", "2.2.0", Type.HUDSON,
-			"REST");
+	private static final HudsonFixture HUDSON_2_2 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.2"),
+			"2.2.0", Type.HUDSON, "REST");
 
 	private static final HudsonFixture HUDSON_3_0 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-3.0"),
 			"3.0.0-M0", Type.HUDSON, "REST");
