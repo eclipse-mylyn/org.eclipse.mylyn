@@ -153,6 +153,18 @@
       </properties>
     </profile>
     <profile>
+      <id>coverage-initializer</id>
+      <activation>
+		<property>
+          <name>!coverage.skip</name>
+		</property>
+      </activation>
+	  <!-- set default property values if test coverage is diabled -->
+      <properties>
+        <tycho.testArgLine></tycho.testArgLine>
+      </properties>
+    </profile>
+    <profile>
       <id>ganymede</id>
       <activation>
 		<property>
