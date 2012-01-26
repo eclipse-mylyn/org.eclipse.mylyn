@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,6 +151,16 @@ public final class TaskAttribute {
 	 * @see TaskAttributeMetaData
 	 */
 	public static final String META_DESCRIPTION = "task.meta.description"; //$NON-NLS-1$
+
+	/**
+	 * Task attribute meta-data key that should be set to "true" to have attribute value indexed as part of the task
+	 * content. Provides a way for connectors to specify non-standard attributes as plain-text indexable. By default,
+	 * {@link #SUMMARY summary} and {@link #DESCRIPTION description} are indexed. Note that setting this meta-data is
+	 * advisory only and will not guarantee that content is indexed.
+	 * 
+	 * @since 3.7
+	 */
+	public static final String META_INDEXED_AS_CONTENT = "task.meta.index.content"; //$NON-NLS-1$
 
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment"; //$NON-NLS-1$
 

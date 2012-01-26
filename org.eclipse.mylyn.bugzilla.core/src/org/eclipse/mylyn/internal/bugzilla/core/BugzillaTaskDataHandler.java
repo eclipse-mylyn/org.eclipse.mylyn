@@ -794,6 +794,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				.setKind(key.getKind())
 				.setLabel(key.toString())
 				.setType(key.getType());
+
+		if (key == BugzillaAttribute.STATUS_WHITEBOARD) {
+			attribute.getMetaData().putValue(TaskAttribute.META_INDEXED_AS_CONTENT, Boolean.TRUE.toString());
+		}
+
 		return attribute;
 	}
 
