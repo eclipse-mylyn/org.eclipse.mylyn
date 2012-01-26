@@ -9,9 +9,6 @@
   </parent>
   <artifactId>org.eclipse.mylyn.commons.stubs-parent</artifactId>
   <packaging>pom</packaging>
-  <properties>
-	<sonar.skippedModules>org.eclipse.mylyn.commons.identity,org.eclipse.mylyn.commons.notifications,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.team</sonar.skippedModules>
-  </properties>	  
   <modules>
     <module>org.eclipse.mylyn.commons.identity</module>
     <module>org.eclipse.mylyn.commons.notifications</module>
