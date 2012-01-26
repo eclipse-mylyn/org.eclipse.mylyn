@@ -65,7 +65,7 @@ public abstract class RepositoryTestFixture {
 
 	private boolean useCertificateAuthentication;
 
-	private boolean useShortUsernames;
+	private boolean useShortUserNames;
 
 	public RepositoryTestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
@@ -121,8 +121,8 @@ public abstract class RepositoryTestFixture {
 		return useCertificateAuthentication;
 	}
 
-	public boolean isUseShortUsernames() {
-		return useShortUsernames;
+	public boolean isUseShortUserNames() {
+		return useShortUserNames;
 	}
 
 	public RepositoryLocation location() throws Exception {
@@ -139,7 +139,7 @@ public abstract class RepositoryTestFixture {
 		} else {
 			UserCredentials credentials = CommonTestUtil.getCredentials(level);
 			String userName = credentials.getUserName();
-			if (isUseShortUsernames() && userName.contains("@")) {
+			if (isUseShortUserNames() && userName.contains("@")) {
 				userName = userName.substring(0, userName.indexOf("@"));
 			}
 			return location(userName, credentials.getPassword(), proxy);
@@ -177,8 +177,8 @@ public abstract class RepositoryTestFixture {
 		this.useCertificateAuthentication = useCertificateAuthentication;
 	}
 
-	public void setUseShortUsernames(boolean useShortUsernames) {
-		this.useShortUsernames = useShortUsernames;
+	public void setUseShortUserNames(boolean useShortUsernames) {
+		this.useShortUserNames = useShortUsernames;
 	}
 
 	protected abstract RepositoryTestFixture activate();
