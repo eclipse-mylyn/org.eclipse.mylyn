@@ -28,7 +28,6 @@
 	<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>${coverage.destFile}</sonar.jacoco.reportPath>
-	<tycho.testArgLine></tycho.testArgLine>
 
 	<test.skip>${maven.test.skip}</test.skip>
     <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true ${test.osvmargs}</test.vmargs>
@@ -527,6 +526,27 @@
 		</executions>
 	  </plugin>
 	  -->
+	  <!-- common coverage configuration -->
+	  <plugin>
+		<groupId>org.jacoco</groupId>
+		<artifactId>jacoco-maven-plugin</artifactId>
+		<version>0.5.6.201201232323</version>
+		<executions>
+		  <execution>
+			<goals>
+			  <goal>prepare-agent</goal>
+			</goals>
+			<configuration>
+			  <skip>${coverage.skip}</skip>
+			  <destFile>${coverage.destFile}</destFile>
+			  <includes>
+				<include>${coverage.filter}</include>
+			  </includes>
+			  <append>true</append>
+			</configuration>
+		  </execution>
+		</executions>
+	  </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -678,27 +698,6 @@
 				</files>
 				<!-- continue on failure -->
 				<quiet>true</quiet>
-			  </configuration>
-			</execution>
-		  </executions>
-		</plugin>
-		<!-- common coverage configuration -->
-		<plugin>
-		  <groupId>org.jacoco</groupId>
-		  <artifactId>jacoco-maven-plugin</artifactId>
-		  <version>0.5.7-SNAPSHOT</version>
-		  <executions>
-			<execution>
-			  <goals>
-				<goal>prepare-agent</goal>
-			  </goals>
-			  <configuration>
-				<skip>${coverage.skip}</skip>
-				<destFile>${coverage.destFile}</destFile>
-				<includes>
-				  <include>${coverage.filter}</include>
-				</includes>
-				<append>true</append>
 			  </configuration>
 			</execution>
 		  </executions>
