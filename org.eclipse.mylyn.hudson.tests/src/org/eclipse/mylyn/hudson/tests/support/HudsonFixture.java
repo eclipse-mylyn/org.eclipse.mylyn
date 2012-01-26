@@ -76,7 +76,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 		this.version = version;
 		this.type = type;
 		setInfo(type.toString(), version, info);
-		setUseShortUsernames("2.1.0".compareTo(version) < 0);
+		//setUseShortUserNames("2.1.0".compareTo(version) < 0);
 		setUseCertificateAuthentication(info.contains("Certificate Authentication"));
 	}
 
@@ -113,7 +113,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	// XXX fix server setup to support authentication
 	public boolean canAuthenticate() {
-		return this != HUDSON_2_1_SECURE && this != HUDSON_3_0;
+		return this != HUDSON_3_0;
 	}
 
 }
