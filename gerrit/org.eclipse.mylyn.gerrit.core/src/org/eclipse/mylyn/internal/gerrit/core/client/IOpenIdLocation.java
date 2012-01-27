@@ -11,8 +11,10 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 
 /**
  * Mix-in interface to {@link AbstractWebLocation}s that support OpenID authentication.
@@ -29,6 +31,7 @@ public interface IOpenIdLocation {
 	/**
 	 * Handles OpenID authentication in a blocking way.
 	 * 
+	 * @param monitor
 	 * @param providerUrl
 	 *            the Open ID provider URL
 	 * @param providerArgs
@@ -37,6 +40,7 @@ public interface IOpenIdLocation {
 	 * @throws OperationCanceledException
 	 *             if the authentication was canceled
 	 */
-	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request);
+	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request,
+			IProgressMonitor monitor) throws UnsupportedRequestException;
 
 }

@@ -271,7 +271,12 @@ public class GerritHttpClient {
 						authenticationRequest.setAlternateUrl(location.getUrl());
 						authenticationRequest.setCookie("GerritAccount");
 						authenticationRequest.setCookieUrl(location.getUrl());
-						openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest);
+						try {
+							openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest,
+									monitor);
+						} catch (UnsupportedRequestException e) {
+							throw new GerritLoginException();
+						}
 					}
 				} else {
 					throw new GerritException("Invalid OpenID provider");

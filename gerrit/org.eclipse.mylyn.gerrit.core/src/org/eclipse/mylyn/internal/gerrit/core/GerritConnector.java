@@ -257,7 +257,11 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
-			return createClient(repository, false).getInfo(Policy.backgroundMonitorFor(monitor));
+			// only allow user prompting in case of Open ID authentication 
+			if (!Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED))) {
+				monitor = Policy.backgroundMonitorFor(monitor);
+			}
+			return createClient(repository, false).getInfo(monitor);
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {

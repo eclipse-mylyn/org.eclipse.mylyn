@@ -16,8 +16,11 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -53,7 +56,12 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 	}
 
 	@Override
-	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request) {
+	public OpenIdAuthenticationResponse requestAuthentication(OpenIdAuthenticationRequest request,
+			IProgressMonitor monitor) throws UnsupportedRequestException {
+		if (Policy.isBackgroundMonitor(monitor)) {
+			throw new UnsupportedRequestException();
+		}
+
 		final String repositoryUrl = taskRepository.getUrl();
 
 		int currentVersion = version;
