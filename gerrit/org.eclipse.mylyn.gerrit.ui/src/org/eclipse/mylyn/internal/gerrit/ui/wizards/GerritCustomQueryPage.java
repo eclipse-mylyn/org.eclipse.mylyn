@@ -8,22 +8,24 @@
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Sascha Scholz (SAP) - improvements
+ *      Tasktop Technologies - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.wizards;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -44,9 +46,7 @@ import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
  * @author Thomas Westling
  * @author Sascha Scholz
  */
-public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
-
-	private final IRepositoryQuery query;
+public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 	private Button myChangesButton;
 
@@ -58,24 +58,21 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private Button customQueryButton;
 
-	private Text titleText;
-
 	private Text projectText;
 
 	private Text queryText;
 
 	public GerritCustomQueryPage(TaskRepository repository, String pageName, IRepositoryQuery query) {
 		super(pageName, repository, query);
-		this.query = query;
 		setDescription("Enter title and select a query type.");
+		setNeedsClear(true);
+		setNeedsRefresh(true);
 	}
 
-	public void createControl(Composite parent) {
-		Composite control = new Composite(parent, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		control.setLayoutData(gd);
-		GridLayout layout = new GridLayout(2, false);
-		control.setLayout(layout);
+	@Override
+	protected void createPageContent(SectionComposite parent) {
+		Composite composite = parent.getContent();
+		composite.setLayout(new GridLayout(2, false));
 
 		ModifyListener modifyListener = new ModifyListener() {
 			@Override
@@ -84,18 +81,9 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		};
 
-		if (getSearchContainer() == null) {
-			Label titleLabel = new Label(control, SWT.NONE);
-			titleLabel.setText("Title:");
-
-			titleText = new Text(control, SWT.BORDER);
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
-			titleText.addModifyListener(modifyListener);
-		}
-
-		Group group = new Group(control, SWT.NONE);
+		Group group = new Group(composite, SWT.NONE);
 		group.setText("Query type");
-		group.setLayout(new GridLayout(2, false));
+		GridLayoutFactory.swtDefaults().numColumns(2).spacing(7, 5).applyTo(group);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(group);
 
 		// radio button to select query type
@@ -119,7 +107,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		projectText.addModifyListener(modifyListener);
 		addProjectNameContentProposal(projectText);
 
-		new Label(control, SWT.NONE);
+		new Label(composite, SWT.NONE);
 		customQueryButton = new Button(group, SWT.RADIO);
 		customQueryButton.setText("Custom query:");
 
@@ -127,10 +115,88 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 		queryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		queryText.addModifyListener(modifyListener);
 
-		if (query != null) {
-			if (titleText != null) {
-				titleText.setText(query.getSummary());
+		SelectionListener buttonSelectionListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateButtons();
 			}
+		};
+		byProjectButton.addSelectionListener(buttonSelectionListener);
+		customQueryButton.addSelectionListener(buttonSelectionListener);
+	}
+
+	private void addProjectNameContentProposal(Text text) {
+		IContentProposalProvider proposalProvider = new ProjectNameContentProposalProvider(
+				GerritCorePlugin.getDefault().getConnector(), getTaskRepository());
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, new TextContentAdapter(),
+				proposalProvider, null, new char[0], true);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+	}
+
+	private GerritClient getGerritClient() {
+		GerritConnector connector = GerritCorePlugin.getDefault().getConnector();
+		return connector.getClient(getTaskRepository());
+	}
+
+	protected void updateButtons() {
+		projectText.setEnabled(byProjectButton.getSelection());
+		queryText.setEnabled(customQueryButton.getSelection());
+
+		IWizardContainer c = getContainer();
+		if (c != null && c.getCurrentPage() != null) {
+			c.updateButtons();
+		}
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		boolean ret = (getQueryTitle() != null && getQueryTitle().trim().length() > 0);
+		if (byProjectButton != null && byProjectButton.getSelection()) {
+			ret &= (projectText != null && projectText.getText().length() > 0);
+		}
+		if (customQueryButton != null && customQueryButton.getSelection()) {
+			ret &= (queryText != null && queryText.getText().length() > 0);
+		}
+		return ret;
+	}
+
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		query.setSummary(getQueryTitle());
+		if (myChangesButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_CHANGES);
+		} else if (watchedChangesButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_WATCHED_CHANGES);
+		} else if (byProjectButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
+		} else if (customQueryButton.getSelection()) {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.CUSTOM);
+		} else {
+			query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
+		}
+		query.setAttribute(GerritQuery.PROJECT, projectText.getText());
+		query.setAttribute(GerritQuery.QUERY_STRING, queryText.getText());
+	}
+
+	@Override
+	protected void doRefreshControls() {
+		// nothing to do, only the content assist uses the configuration
+	}
+
+	@Override
+	protected boolean hasRepositoryConfiguration() {
+		return getGerritClient().getConfiguration() != null;
+	}
+
+	@Override
+	protected void doClearControls() {
+		restoreState(null);
+	}
+
+	@Override
+	protected boolean restoreState(IRepositoryQuery query) {
+		if (query != null) {
+			setQueryTitle(query.getSummary());
 			if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				myChangesButton.setSelection(true);
 			} else if (GerritQuery.MY_WATCHED_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
@@ -150,82 +216,15 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		} else {
 			myChangesButton.setSelection(true);
+			watchedChangesButton.setSelection(false);
+			byProjectButton.setSelection(false);
+			customQueryButton.setSelection(false);
+			allOpenChangesButton.setSelection(false);
+			projectText.setText(""); //$NON-NLS-1$
+			queryText.setText(""); //$NON-NLS-1$
 		}
-
-		SelectionListener buttonSelectionListener = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				projectText.setEnabled(byProjectButton.getSelection());
-				queryText.setEnabled(customQueryButton.getSelection());
-				updateButtons();
-			}
-		};
-		buttonSelectionListener.widgetSelected(null);
-		byProjectButton.addSelectionListener(buttonSelectionListener);
-		customQueryButton.addSelectionListener(buttonSelectionListener);
-
-		Dialog.applyDialogFont(control);
-		setControl(control);
-	}
-
-	private void addProjectNameContentProposal(Text text) {
-		IContentProposalProvider proposalProvider = new ProjectNameContentProposalProvider(getGerritClient());
-		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, new TextContentAdapter(),
-				proposalProvider, null, new char[0], true);
-		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-	}
-
-	private GerritClient getGerritClient() {
-		GerritConnector connector = GerritCorePlugin.getDefault().getConnector();
-		return connector.getClient(getTaskRepository());
-	}
-
-	protected void updateButtons() {
-		IWizardContainer c = getContainer();
-		if (c != null && c.getCurrentPage() != null) {
-			c.updateButtons();
-		}
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		boolean ret = (titleText != null && titleText.getText().length() > 0);
-		if (byProjectButton != null && byProjectButton.getSelection()) {
-			ret &= (projectText != null && projectText.getText().length() > 0);
-		}
-		if (customQueryButton != null && customQueryButton.getSelection()) {
-			ret &= (queryText != null && queryText.getText().length() > 0);
-		}
-		return ret;
-	}
-
-	@Override
-	public void applyTo(IRepositoryQuery query) {
-		// TODO: set URL ????
-		// query.setUrl(getQueryUrl());
-		query.setSummary(getTitleText());
-		if (myChangesButton.getSelection()) {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_CHANGES);
-		} else if (watchedChangesButton.getSelection()) {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.MY_WATCHED_CHANGES);
-		} else if (byProjectButton.getSelection()) {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.OPEN_CHANGES_BY_PROJECT);
-		} else if (customQueryButton.getSelection()) {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.CUSTOM);
-		} else {
-			query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
-		}
-		query.setAttribute(GerritQuery.PROJECT, projectText.getText());
-		query.setAttribute(GerritQuery.QUERY_STRING, queryText.getText());
-	}
-
-	private String getTitleText() {
-		return (titleText != null) ? titleText.getText() : "<search>";
-	}
-
-	@Override
-	public String getQueryTitle() {
-		return "Gerrit Query";
+		updateButtons();
+		return true;
 	}
 
 }

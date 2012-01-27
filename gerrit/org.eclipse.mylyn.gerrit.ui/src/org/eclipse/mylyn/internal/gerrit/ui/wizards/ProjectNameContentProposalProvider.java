@@ -18,9 +18,11 @@ import java.util.Locale;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import com.google.gerrit.reviewdb.Project;
 
@@ -55,17 +57,21 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 
 	}
 
-	private final GerritClient client;
+	private final TaskRepository repository;
 
-	public ProjectNameContentProposalProvider(GerritClient client) {
-		this.client = client;
+	private final GerritConnector connector;
+
+	public ProjectNameContentProposalProvider(GerritConnector connector, TaskRepository repository) {
+		this.connector = connector;
+		this.repository = repository;
 	}
 
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		String contentsLowerCase = contents.toLowerCase(Locale.ENGLISH);
 		ArrayList<IContentProposal> proposals = new ArrayList<IContentProposal>();
-		List<Project> projects = getProjects();
+		GerritClient client = connector.getClient(repository);
+		List<Project> projects = getProjects(client);
 		if (projects != null) {
 			for (Project project : projects) {
 				String projectName = project.getName();
@@ -81,7 +87,7 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 		}
 	}
 
-	private List<Project> getProjects() {
+	private List<Project> getProjects(GerritClient client) {
 		GerritConfiguration config = client.getConfiguration();
 		if (config != null) {
 			return config.getProjects();
