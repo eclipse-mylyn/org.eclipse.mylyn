@@ -28,6 +28,8 @@ import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.StatusTextEvent;
 import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.graphics.Image;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -54,6 +57,8 @@ public class WebBrowserDialog extends MessageDialog {
 	private Browser browser;
 
 	private Label statusLabel;
+
+	private Text locationLabel;
 
 	public WebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
@@ -123,6 +128,10 @@ public class WebBrowserDialog extends MessageDialog {
 		layout.marginWidth = 0;
 		parent.setLayout(layout);
 
+		locationLabel = new Text(parent, SWT.READ_ONLY | SWT.BORDER);
+		locationLabel.setBackground(parent.getBackground());
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(locationLabel);
+
 		browser = new Browser(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
 
@@ -134,6 +143,20 @@ public class WebBrowserDialog extends MessageDialog {
 				statusLabel.setText((event.text != null) ? event.text : ""); //$NON-NLS-1$
 			}
 		});
+		browser.addLocationListener(new LocationListener() {
+			public void changing(LocationEvent event) {
+				// ignore			
+			}
+
+			public void changed(LocationEvent event) {
+				if (!event.top) {
+					// ignore nested frames
+					return;
+				}
+				locationLabel.setText(event.location != null ? event.location : ""); //$NON-NLS-1$
+			}
+		});
+
 		if (text != null) {
 			browser.setText(text);
 		}
