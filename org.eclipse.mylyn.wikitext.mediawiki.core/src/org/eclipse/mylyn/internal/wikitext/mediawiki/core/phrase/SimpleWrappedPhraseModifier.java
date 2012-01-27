@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase;
-
-import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -71,8 +69,35 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return Pattern.quote(startDelimiter) + "([^\\s-](?:.*?[^\\s-])?)" + // content: note that we dont allow preceding '-' or trailing '-' to avoid conflict with strikethrough and emdash //$NON-NLS-1$
-				Pattern.quote(endDelimiter);
+		String quotedStartDelimiter = quoteLite(startDelimiter);
+		String quotedStartDelimiterLastChar = quoteLite(startDelimiter.substring(startDelimiter.length() - 1,
+				startDelimiter.length()));
+		String quotedEndDelimiter = quoteLite(endDelimiter);
+
+		return quotedStartDelimiter + //
+				"(?!" + quotedStartDelimiterLastChar + ")" + //  //$NON-NLS-1$//$NON-NLS-2$
+				"([^\\s" + quotedEndDelimiter + "]+|\\S(?:.*?\\S)?)" + // conten //$NON-NLS-1$ //$NON-NLS-2$
+				quotedEndDelimiter;
+	}
+
+	/**
+	 * quote a literal for use in a regular expression
+	 */
+	private String quoteLite(String literal) {
+		StringBuilder buf = new StringBuilder(literal.length() * 2);
+		for (int x = 0; x < literal.length(); ++x) {
+			char c = literal.charAt(x);
+			switch (c) {
+			case '^':
+			case '*':
+			case '?':
+			case '+':
+			case '-':
+				buf.append('\\');
+			}
+			buf.append(c);
+		}
+		return buf.toString();
 	}
 
 	@Override

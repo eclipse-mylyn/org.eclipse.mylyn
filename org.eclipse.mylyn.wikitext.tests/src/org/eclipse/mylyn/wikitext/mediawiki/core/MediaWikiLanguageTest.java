@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,6 +103,22 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("normal<br>'''bold text''' normal");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><p>normal<br/><b>bold text</b> normal</p></body>").matcher(html).find());
+	}
+
+	public void testBold_single_character_bug369921() {
+		String html = parser.parseToHtml("'''aa''' bb '''cc'''");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p><b>aa</b> bb <b>cc</b></p></body>").matcher(html).find());
+
+		html = parser.parseToHtml("'''a''' b '''c'''");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p><b>a</b> b <b>c</b></p></body>").matcher(html).find());
+	}
+
+	public void testBold_adjacentText_bug369921() {
+		String html = parser.parseToHtml("'''aa'''bb");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile("<body><p><b>aa</b>bb</p></body>").matcher(html).find());
 	}
 
 	public void testItalic() {
