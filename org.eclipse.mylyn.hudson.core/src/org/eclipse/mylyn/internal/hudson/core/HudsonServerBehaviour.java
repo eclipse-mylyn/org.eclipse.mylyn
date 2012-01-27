@@ -201,10 +201,38 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
+	/**
+	 * Looks for a child named <code>name</code> that has a text value or a nested <code>value</code> tag.
+	 */
+	private String getDefaultValue(Element element) throws HudsonException {
+		// parsed from job config
+		String value = getElementContent(element, "defaultValue", false);
+		if (value != null) {
+			return value;
+		}
+		// parsed from job actions
+		NodeList nodes = element.getElementsByTagName("defaultParameterValue");
+		if (nodes.getLength() == 1) {
+			NodeList children = nodes.item(0).getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				if ("value".equals(tagName)) { //$NON-NLS-1$
+					return child.getTextContent();
+				}
+			}
+		}
+		return null;
+	}
+
 	private String getElementContent(Element element, String name, boolean required) throws HudsonException {
 		NodeList elements = element.getElementsByTagName(name);
-		if (required && elements.getLength() == 0) {
-			throw new HudsonException("No " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (elements.getLength() == 0) {
+			if (required) {
+				throw new HudsonException("No " + name + " element"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				return null;
+			}
 		}
 
 		if (elements.getLength() > 1) {
@@ -223,19 +251,21 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				IBuildPlan plan = parseJob(job);
 				plans.add(plan);
 
-				// TODO fetch information from job 
-				try {
-					Document document = client.getJobConfig(job, monitor);
-					parseParameters(document, plan.getParameterDefinitions());
-				} catch (HudsonException e) {
-					// ignore, might not have permission to read config
-				} catch (ParserConfigurationException e) {
-					// ignore
-				} catch (SAXException e) {
-					// ignore
-				} catch (IOException e) {
-					// ignore
-				}
+				// parsed from job now, see bug 328204
+//				if (client.getInfo(monitor).getType() == Type.JENKINS) {
+//					try {
+//						Document document = client.getJobConfig(job, monitor);
+//						parseParametersFromJobConfig(document, plan.getParameterDefinitions());
+//					} catch (HudsonException e) {
+//						// ignore, might not have permission to read config
+//					} catch (ParserConfigurationException e) {
+//						// ignore
+//					} catch (SAXException e) {
+//						// ignore
+//					} catch (IOException e) {
+//						// ignore
+//					}
+//				}
 			}
 			return plans;
 		} catch (HudsonException e) {
@@ -555,76 +585,101 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			build.setUrl(job.getLastBuild().getUrl());
 			plan.setLastBuild(build);
 		}
+		parseJobActions(plan.getParameterDefinitions(), job.getAction());
 		// TODO parse up/down stream projects from HudsonModelAbstractProject
 		return plan;
 	}
 
+	private void parseJobActions(List<IParameterDefinition> parameterDefinitions, List<Object> actions) {
+		for (Object action : actions) {
+			Node node = (Node) action;
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Element child = (Element) children.item(i);
+				String tagName = child.getTagName();
+				if ("parameterDefinition".equals(tagName)) { //$NON-NLS-1$
+					IParameterDefinition parameterDefinition;
+					try {
+						parameterDefinition = parseParameter(child);
+						parameterDefinitions.add(parameterDefinition);
+					} catch (HudsonException e) {
+						e.printStackTrace();
+						// ignore
+					}
+				}
+			}
+		}
+	}
+
 	private IParameterDefinition parseParameter(Element element) throws HudsonException {
 		String tagName = element.getTagName();
-		if ("hudson.model.ChoiceParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.ChoiceParameterDefinition".equals(tagName) || "ChoiceParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
+			// parsed from job config
 			NodeList options = element.getElementsByTagName("string"); //$NON-NLS-1$
 			for (int i = 0; i < options.getLength(); i++) {
 				Element option = (Element) options.item(i);
 				definition.getOptions().add(option.getTextContent());
 			}
-
+			// parsed from job actions
+			options = element.getElementsByTagName("choice"); //$NON-NLS-1$
+			for (int i = 0; i < options.getLength(); i++) {
+				Element option = (Element) options.item(i);
+				definition.getOptions().add(option.getTextContent());
+			}
+			definition.setDefaultValue(getDefaultValue(element));
 			return definition;
 		}
 
-		if ("hudson.model.BooleanParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.BooleanParameterDefinition".equals(tagName) || "BooleanParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IBooleanParameterDefinition definition = IBuildFactory.INSTANCE.createBooleanParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
-			String defaultValue = getElementContent(element, "defaultValue", false);
+			String defaultValue = getDefaultValue(element);
 			if (defaultValue != null) {
 				definition.setDefaultValue(Boolean.parseBoolean(defaultValue));
 			}
-
 			return definition;
 		}
 
-		if ("hudson.model.StringParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.StringParameterDefinition".equals(tagName) || "StringParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IStringParameterDefinition definition = IBuildFactory.INSTANCE.createStringParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
-			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
-
+			definition.setDefaultValue(getDefaultValue(element));
 			return definition;
 		}
 
-		if ("hudson.model.PasswordParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.PasswordParameterDefinition".equals(tagName) || "PasswordParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IPasswordParameterDefinition definition = IBuildFactory.INSTANCE.createPasswordParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
-			definition.setDefaultValue(getElementContent(element, "defaultValue", false));
-
+			definition.setDefaultValue(getDefaultValue(element));
 			return definition;
 		}
 
-		if ("hudson.model.RunParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.RunParameterDefinition".equals(tagName) || "RunParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IBuildParameterDefinition definition = IBuildFactory.INSTANCE.createBuildParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
 			definition.setBuildPlanId(getElementContent(element, "projectName", false));
-
 			return definition;
 		}
 
-		if ("hudson.model.FileParameterDefinition".equals(tagName)) { //$NON-NLS-1$
+		if ("hudson.model.FileParameterDefinition".equals(tagName) || "FileParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$
 			IFileParameterDefinition definition = IBuildFactory.INSTANCE.createFileParameterDefinition();
 			definition.setName(getElementContent(element, "name", true));
 			definition.setDescription(getElementContent(element, "description", false));
-
 			return definition;
 		}
 
-		throw new HudsonException("Unexpected parameter type: " + tagName);
+		throw new HudsonException(NLS.bind("Unexpected parameter ''{0}'' with type ''{1}''", tagName,
+				getElementContent(element, "type", false)));
 	}
 
-	private void parseParameters(Document document, List<IParameterDefinition> definitions)
+	private void parseParametersFromJobConfig(Document document, List<IParameterDefinition> definitions)
 			throws ParserConfigurationException, SAXException, IOException, HudsonException {
 		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
 		for (int i = 0; i < containers.getLength(); i++) {

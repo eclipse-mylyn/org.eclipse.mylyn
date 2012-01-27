@@ -101,8 +101,10 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		try {
 			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in,
-						EntityUtils.getContentCharSet(response.getEntity())));
+				String charSet = EntityUtils.getContentCharSet(response.getEntity());
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, (charSet != null)
+						? charSet
+						: "UTF-8"));
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG) {

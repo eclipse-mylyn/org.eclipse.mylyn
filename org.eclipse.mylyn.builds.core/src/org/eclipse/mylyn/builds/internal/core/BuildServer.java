@@ -179,10 +179,9 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void setConnectorKind(String newConnectorKind) {
 		String oldConnectorKind = connectorKind;
 		connectorKind = newConnectorKind;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__CONNECTOR_KIND,
 					oldConnectorKind, connectorKind));
-		}
 	}
 
 	/**
@@ -207,10 +206,9 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		String oldRepositoryUrl = repositoryUrl;
 		repositoryUrl = newRepositoryUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_SERVER__REPOSITORY_URL,
 					oldRepositoryUrl, repositoryUrl));
-		}
 	}
 
 	/**
@@ -303,9 +301,8 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (location: "); //$NON-NLS-1$

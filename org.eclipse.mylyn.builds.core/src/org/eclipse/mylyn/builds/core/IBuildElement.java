@@ -13,8 +13,8 @@ package org.eclipse.mylyn.builds.core;
 
 import java.util.Date;
 import java.util.List;
-
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 
 /**

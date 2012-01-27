@@ -19,6 +19,7 @@ import java.util.List;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getOptions <em>Options</em>}</li>
+ * <li>{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
  * 
@@ -38,5 +39,30 @@ public interface IChoiceParameterDefinition extends IParameterDefinition {
 	 * @generated
 	 */
 	List<String> getOptions();
+
+	/**
+	 * Returns the value of the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Default Value</em>' attribute.
+	 * @see #setDefaultValue(String)
+	 * @generated
+	 */
+	String getDefaultValue();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue
+	 * <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Default Value</em>' attribute.
+	 * @see #getDefaultValue()
+	 * @generated
+	 */
+	void setDefaultValue(String value);
 
 } // IChoiceParameterDefinition

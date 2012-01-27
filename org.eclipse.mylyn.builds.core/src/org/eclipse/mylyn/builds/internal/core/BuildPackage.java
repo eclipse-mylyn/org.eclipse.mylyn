@@ -1254,13 +1254,21 @@ public class BuildPackage extends EPackageImpl {
 	public static final int CHOICE_PARAMETER_DEFINITION__OPTIONS = PARAMETER_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Choice Parameter Definition</em>' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 1;
+	public static final int CHOICE_PARAMETER_DEFINITION_FEATURE_COUNT = PARAMETER_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
@@ -2176,8 +2184,9 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public static BuildPackage init() {
-		if (isInited)
+		if (isInited) {
 			return (BuildPackage) EPackage.Registry.INSTANCE.getEPackage(BuildPackage.eNS_URI);
+		}
 
 		// Obtain or create and register package
 		BuildPackage theBuildPackage = (BuildPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof BuildPackage
@@ -3303,6 +3312,20 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Default Value</em>'.
+	 * @see org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue()
+	 * @see #getChoiceParameterDefinition()
+	 * @generated
+	 */
+	public EAttribute getChoiceParameterDefinition_DefaultValue() {
+		return (EAttribute) choiceParameterDefinitionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition
 	 * <em>Boolean Parameter Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3816,11 +3839,11 @@ public class BuildPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.RepositoryLocation
 	 * <em>Repository Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for data type '<em>Repository Location</em>'.
-	 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
+	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 	 * @generated
 	 */
 	public EDataType getRepositoryLocation() {
@@ -3887,8 +3910,9 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
+		if (isCreated) {
 			return;
+		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -3995,6 +4019,7 @@ public class BuildPackage extends EPackageImpl {
 
 		choiceParameterDefinitionEClass = createEClass(CHOICE_PARAMETER_DEFINITION);
 		createEAttribute(choiceParameterDefinitionEClass, CHOICE_PARAMETER_DEFINITION__OPTIONS);
+		createEAttribute(choiceParameterDefinitionEClass, CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE);
 
 		booleanParameterDefinitionEClass = createEClass(BOOLEAN_PARAMETER_DEFINITION);
 		createEAttribute(booleanParameterDefinitionEClass, BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE);
@@ -4066,8 +4091,9 @@ public class BuildPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
+		if (isInitialized) {
 			return;
+		}
 		isInitialized = true;
 
 		// Initialize package
@@ -4455,6 +4481,10 @@ public class BuildPackage extends EPackageImpl {
 				getChoiceParameterDefinition_Options(),
 				ecorePackage.getEString(),
 				"options", null, 1, -1, IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getChoiceParameterDefinition_DefaultValue(),
+				ecorePackage.getEString(),
+				"defaultValue", null, 0, 1, IChoiceParameterDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(booleanParameterDefinitionEClass, IBooleanParameterDefinition.class,
 				"BooleanParameterDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -5381,6 +5411,14 @@ public class BuildPackage extends EPackageImpl {
 		public static final EAttribute CHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE.getChoiceParameterDefinition_Options();
 
 		/**
+		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getChoiceParameterDefinition_DefaultValue();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
 		 * <em>Boolean Parameter Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -5686,7 +5724,7 @@ public class BuildPackage extends EPackageImpl {
 		 * The meta object literal for the '<em>Repository Location</em>' data type. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
+		 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 		 * @generated
 		 */

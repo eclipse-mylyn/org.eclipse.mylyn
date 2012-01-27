@@ -15,7 +15,9 @@ package org.eclipse.mylyn.internal.builds.ui.view;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.builds.core.IParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition;
 import org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition;
@@ -69,6 +71,7 @@ public class ParametersDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
+
 		setTitle(NLS.bind("Build Plan {0}", plan.getLabel()));
 
 		Composite pane = new Composite(composite, SWT.NONE);
@@ -82,6 +85,11 @@ public class ParametersDialog extends TitleAreaDialog {
 			label.setText(name);
 
 			Control control = addParameter(pane, definition);
+			if (control instanceof Text) {
+				GridDataFactory.fillDefaults()
+						.hint(convertVerticalDLUsToPixels(IDialogConstants.ENTRY_FIELD_WIDTH), SWT.DEFAULT)
+						.applyTo(control);
+			}
 			control.addFocusListener(new FocusAdapter() {
 				private boolean firstTime = true;
 
@@ -109,8 +117,12 @@ public class ParametersDialog extends TitleAreaDialog {
 			for (String option : def.getOptions()) {
 				control.add(option);
 			}
-
-			control.select(0);
+			if (def.getDefaultValue() != null) {
+				int i = control.indexOf(def.getDefaultValue());
+				if (i != -1) {
+					control.select(i);
+				}
+			}
 			return control;
 		} else if (definition instanceof BooleanParameterDefinition) {
 			BooleanParameterDefinition def = (BooleanParameterDefinition) definition;
@@ -120,18 +132,18 @@ public class ParametersDialog extends TitleAreaDialog {
 		} else if (definition instanceof StringParameterDefinition) {
 			StringParameterDefinition def = (StringParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
-			control.setText(def.getDefaultValue());
+			control.setText(toValue(def.getDefaultValue()));
 			return control;
 		} else if (definition instanceof PasswordParameterDefinition) {
 			PasswordParameterDefinition def = (PasswordParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
 			control.setEchoChar('*');
-			control.setText(def.getDefaultValue());
+			control.setText(toValue(def.getDefaultValue()));
 			return control;
 		} else if (definition instanceof BuildParameterDefinition) {
 			BuildParameterDefinition def = (BuildParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
-			control.setText(def.getBuildPlanId());
+			control.setText(toValue(def.getBuildPlanId()));
 			return control;
 		} else if (definition instanceof FileParameterDefinition) {
 			FileParameterDefinition def = (FileParameterDefinition) definition;
@@ -140,6 +152,10 @@ public class ParametersDialog extends TitleAreaDialog {
 		}
 
 		throw new IllegalArgumentException("Unexpected definition type: " + definition.getClass().getName());
+	}
+
+	private String toValue(String defaultValue) {
+		return (defaultValue != null) ? defaultValue : "";
 	}
 
 	@Override

@@ -100,6 +100,8 @@ public class RestfulHudsonClient {
 
 	private final CommonHttpClient client;
 
+	private volatile HudsonServerInfo info;
+
 	public RestfulHudsonClient(RepositoryLocation location, HudsonConfigurationCache cache) {
 		// FIXME register listener to location to handle credential changes
 		client = new CommonHttpClient(location);
@@ -398,7 +400,7 @@ public class RestfulHudsonClient {
 	}
 
 	public HudsonServerInfo validate(final IOperationMonitor monitor) throws HudsonException {
-		return new HudsonOperation<HudsonServerInfo>(client) {
+		info = new HudsonOperation<HudsonServerInfo>(client) {
 			@Override
 			public HudsonServerInfo execute() throws IOException, HudsonException, JAXBException {
 				HttpRequestBase request = createHeadRequest(client.getLocation().getUrl());
@@ -425,10 +427,23 @@ public class RestfulHudsonClient {
 				return info;
 			}
 		}.run();
+		return info;
 	}
 
 	public RepositoryLocation getLocation() {
 		return client.getLocation();
+	}
+
+	public HudsonServerInfo getInfo() {
+		return info;
+	}
+
+	public HudsonServerInfo getInfo(final IOperationMonitor monitor) throws HudsonException {
+		HudsonServerInfo info = this.info;
+		if (info != null) {
+			return info;
+		}
+		return validate(monitor);
 	}
 
 }

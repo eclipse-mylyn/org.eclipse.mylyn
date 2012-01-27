@@ -19,6 +19,7 @@ import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
+import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 
 /**
@@ -45,6 +46,7 @@ public class AllHudsonTests {
 		for (HudsonFixture fixture : HudsonFixture.ALL) {
 			fixture.createSuite(suite);
 			fixture.add(HudsonClientTest.class);
+			fixture.add(HudsonIntegrationTest.class);
 			fixture.done();
 		}
 		for (HudsonFixture fixture : HudsonFixture.MISC) {
