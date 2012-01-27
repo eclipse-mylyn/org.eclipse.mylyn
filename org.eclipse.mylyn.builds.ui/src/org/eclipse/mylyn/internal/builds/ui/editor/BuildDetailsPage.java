@@ -15,6 +15,10 @@ package org.eclipse.mylyn.internal.builds.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
@@ -51,27 +55,55 @@ public class BuildDetailsPage extends BuildEditorPage {
 		form = managedForm.getForm().getForm();
 		toolkit = managedForm.getToolkit();
 
+		// the outer body uses a GridLayout to support filling the page vertically
 		Composite body = form.getBody();
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;
-//		GridLayout layout = new GridLayout(2, true);
-//		layout.verticalSpacing = 0;
-		body.setLayout(layout);
+		body.setLayout(GridLayoutFactory.fillDefaults().create());
+		body.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		for (AbstractBuildEditorPart part : parts) {
-			part.initialize(this);
-			getManagedForm().addPart(part);
-			Control control = part.createControl(body, toolkit);
-			part.setControl(control);
-			int span = part.getSpan();
-			TableWrapData data = new TableWrapData();
-			data.colspan = span;
-			data.align = TableWrapData.FILL;
-			data.valign = TableWrapData.FILL;
-			data.grabHorizontal = true;
-			part.getControl().setLayoutData(data);
-			//GridDataFactory.fillDefaults().grab(true, false).span(span, 1).applyTo(part.getControl());
+		// last part grabs excess vertical space 
+		boolean fillBottomPart = parts.size() > 0 && parts.get(parts.size() - 1).span == 2
+				&& parts.get(parts.size() - 1).expandVertically;
+
+		if (parts.size() > 1) {
+			// the top composite uses a TableWrapLayout for performance and proper support for wrapping text
+			Composite bodyTop = new Composite(body, SWT.NONE);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(bodyTop);
+
+			TableWrapLayout layout = new TableWrapLayout();
+			layout.numColumns = 2;
+			bodyTop.setLayout(layout);
+
+			for (AbstractBuildEditorPart part : parts.subList(0, (fillBottomPart) ? parts.size() - 1 : parts.size())) {
+				createPart(bodyTop, part);
+				TableWrapData data = new TableWrapData();
+				data.colspan = part.getSpan();
+				data.align = TableWrapData.FILL;
+				data.valign = TableWrapData.FILL;
+				data.grabHorizontal = true;
+				data.grabVertical = part.getExpandVertically();
+				part.getControl().setLayoutData(data);
+			}
 		}
+
+		if (fillBottomPart) {
+			// the bottom composite contains the last part only and grabs the remaining vertical space
+			Composite bodyBottom = new Composite(body, SWT.NONE);
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(bodyBottom);
+			FillLayout fillLayout = new FillLayout();
+			fillLayout.marginHeight = 5;
+			fillLayout.marginWidth = 5;
+			bodyBottom.setLayout(fillLayout);
+
+			AbstractBuildEditorPart part = parts.get(parts.size() - 1);
+			createPart(bodyBottom, part);
+		}
+	}
+
+	private void createPart(Composite body, AbstractBuildEditorPart part) {
+		part.initialize(this);
+		getManagedForm().addPart(part);
+		Control control = part.createControl(body, toolkit);
+		part.setControl(control);
 	}
 
 	@Override

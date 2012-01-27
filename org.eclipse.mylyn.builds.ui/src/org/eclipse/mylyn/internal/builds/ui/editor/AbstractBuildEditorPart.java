@@ -64,6 +64,8 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 
 	int span = 1;
 
+	boolean expandVertically;
+
 	public AbstractBuildEditorPart() {
 		this(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 	}
@@ -290,6 +292,14 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 
 	void setPartId(String partId) {
 		this.partId = partId;
+	}
+
+	public boolean getExpandVertically() {
+		return expandVertically;
+	}
+
+	public void setExpandVertically(boolean expandVertically) {
+		this.expandVertically = expandVertically;
 	}
 
 }

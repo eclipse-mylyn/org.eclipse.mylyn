@@ -123,6 +123,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 	public ChangesPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setPartName("Changes");
+		setExpandVertically(true);
 		this.span = 2;
 	}
 
@@ -138,7 +139,7 @@ public class ChangesPart extends AbstractBuildEditorPart {
 //		}
 
 		viewer = new TreeViewer(toolkit.createTree(composite, SWT.H_SCROLL));
-		GridDataFactory.fillDefaults().hint(500, 100).grab(true, false).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().hint(500, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ChangesContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ChangesLabelProvider(), null, null));
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
