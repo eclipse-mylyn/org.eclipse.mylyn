@@ -20,9 +20,9 @@
       <repository
             addAutomatically="false"
             anonymous="false"
-            label="Eclipse EGit"
+            label="Eclipse.org Reviews"
             repositoryKind="org.eclipse.mylyn.gerrit"
-            urlRepository="http://egit.eclipse.org/r">
+            urlRepository="https://git.eclipse.org/r">
       </repository>
    </extension>
 
