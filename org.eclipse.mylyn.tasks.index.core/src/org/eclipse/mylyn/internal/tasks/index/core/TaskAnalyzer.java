@@ -8,7 +8,6 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.index.core;
 
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -25,9 +24,9 @@ class TaskAnalyzer extends PerFieldAnalyzerWrapper {
 
 	public TaskAnalyzer() {
 		super(new StandardAnalyzer(Version.LUCENE_CURRENT));
-		addAnalyzer(TaskListIndex.IndexField.IDENTIFIER.fieldName(), new KeywordAnalyzer());
-		addAnalyzer(TaskListIndex.IndexField.TASK_KEY.fieldName(), new KeywordAnalyzer());
-		addAnalyzer(TaskListIndex.IndexField.REPOSITORY_URL.fieldName(), new KeywordAnalyzer());
+		addAnalyzer(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
+		addAnalyzer(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
+		addAnalyzer(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());
 	}
 
 }

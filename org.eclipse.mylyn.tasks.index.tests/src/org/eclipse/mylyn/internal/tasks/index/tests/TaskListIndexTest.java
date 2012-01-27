@@ -39,11 +39,11 @@ import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
-import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.IndexField;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
 import org.eclipse.mylyn.internal.tasks.index.tests.util.MockTestContext;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -55,6 +55,10 @@ import org.junit.Test;
  * @author David Green
  */
 public class TaskListIndexTest {
+
+	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
+
+	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_DATE_CREATION = DefaultTaskSchema.getInstance().DATE_CREATION;
 
 	private static class TestTaskCollector extends TaskCollector {
 
@@ -121,7 +125,7 @@ public class TaskListIndexTest {
 	private void setupIndex() {
 		index = new TaskListIndex(context.getTaskList(), context.getDataManager(),
 				(IRepositoryManager) context.getRepositoryManager(), tempDir, 0L);
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 		index.setReindexDelay(0L);
 	}
 
@@ -133,12 +137,12 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		assertTrue(index.matches(task, task.getSummary()));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
 
-		index.setDefaultField(IndexField.SUMMARY);
+		index.setDefaultField(FIELD_SUMMARY);
 
 		assertTrue(index.matches(task, task.getSummary()));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
@@ -152,12 +156,12 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		assertTrue(index.matches(task, ((LocalTask) task).getNotes()));
 		assertFalse(index.matches(task, "unlikely-akjfsaow"));
 
-		index.setDefaultField(IndexField.SUMMARY);
+		index.setDefaultField(FIELD_SUMMARY);
 
 		assertFalse(index.matches(task, ((LocalTask) task).getNotes()));
 	}
@@ -170,12 +174,12 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		assertTrue(index.matches(task, task.getSummary()));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
 
-		index.setDefaultField(IndexField.SUMMARY);
+		index.setDefaultField(FIELD_SUMMARY);
 
 		assertTrue(index.matches(task, task.getSummary()));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
@@ -189,7 +193,7 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		TaskData taskData = context.getDataManager().getTaskData(task);
 		assertNotNull(taskData);
@@ -199,7 +203,7 @@ public class TaskListIndexTest {
 		assertTrue(index.matches(task, taskMapping.getDescription()));
 		assertFalse(index.matches(task, "unlikely-akjfsaow"));
 
-		index.setDefaultField(IndexField.SUMMARY);
+		index.setDefaultField(FIELD_SUMMARY);
 
 		assertFalse(index.matches(task, taskMapping.getDescription()));
 	}
@@ -212,7 +216,7 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.SUMMARY);
+		index.setDefaultField(FIELD_SUMMARY);
 
 		TestTaskCollector collector = new TestTaskCollector();
 		index.find(task.getSummary(), collector, 1000);
@@ -232,12 +236,12 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		assertFalse(index.matches(task, IndexField.CREATION_DATE.fieldName() + ":[20010101 TO 20010105]"));
+		assertFalse(index.matches(task, FIELD_DATE_CREATION.getIndexKey() + ":[20010101 TO 20010105]"));
 
 		String matchDate = new SimpleDateFormat("yyyyMMdd").format(creationDate);
 		matchDate = Integer.toString(Integer.parseInt(matchDate) + 2);
 
-		String patternString = IndexField.CREATION_DATE.fieldName() + ":[20111019 TO " + matchDate + "]";
+		String patternString = FIELD_DATE_CREATION.getIndexKey() + ":[20111019 TO " + matchDate + "]";
 
 		System.out.println(patternString);
 
@@ -253,7 +257,7 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		TaskData taskData = context.getDataManager().getTaskData(repositoryTask);
 
@@ -279,7 +283,7 @@ public class TaskListIndexTest {
 		assertTrue(index.matches(localTask, content));
 		assertTrue(index.matches(repositoryTask, content));
 
-		String repositoryUrlQuery = content + " AND " + IndexField.REPOSITORY_URL.fieldName() + ":\""
+		String repositoryUrlQuery = content + " AND " + TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey() + ":\""
 				+ index.escapeFieldValue(repositoryTask.getRepositoryUrl()) + "\"";
 		assertFalse(index.matches(localTask, repositoryUrlQuery));
 		assertTrue(index.matches(repositoryTask, repositoryUrlQuery));
@@ -301,7 +305,7 @@ public class TaskListIndexTest {
 		ITask repositoryTask = context.createRepositoryTask();
 
 		index.waitUntilIdle();
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		TaskData taskData = context.getDataManager().getTaskData(repositoryTask);
 
@@ -340,7 +344,7 @@ public class TaskListIndexTest {
 		final ITask repositoryTask = context.createRepositoryTask();
 
 		index.waitUntilIdle();
-		index.setDefaultField(IndexField.CONTENT);
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
 		final int nThreads = 10;
 		final int[] concurrencyLevel = new int[1];
@@ -402,8 +406,10 @@ public class TaskListIndexTest {
 
 		index.waitUntilIdle();
 
-		Assert.assertTrue(index.matches(repositoryTask,
-				IndexField.IDENTIFIER.fieldName() + ":" + index.escapeFieldValue(repositoryTask.getHandleIdentifier())));
+		Assert.assertTrue(index.matches(
+				repositoryTask,
+				TaskListIndex.FIELD_IDENTIFIER.getIndexKey() + ":"
+						+ index.escapeFieldValue(repositoryTask.getHandleIdentifier())));
 	}
 
 }

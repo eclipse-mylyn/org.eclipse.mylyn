@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -112,6 +113,36 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeListener, IRepositoryListener {
 
+	private static final Object COMMAND_RESET_INDEX = "index:reset"; //$NON-NLS-1$
+
+	private static final String INDEX_TASK_ATTRIBUTE_PREFIX = "index:"; //$NON-NLS-1$
+
+	private static final String TASK_ATTRIBUTE_IDENTIFIER = INDEX_TASK_ATTRIBUTE_PREFIX + "handle-identifier"; //$NON-NLS-1$
+
+	private static final String TASK_ATTRIBUTE_REPOSITORY_URL = INDEX_TASK_ATTRIBUTE_PREFIX + "repository-url"; //$NON-NLS-1$
+
+	private static final String TASK_ATTRIBUTE_CONTENT = INDEX_TASK_ATTRIBUTE_PREFIX + "content"; //$NON-NLS-1$
+
+	private static final String TASK_ATTRIBUTE_PERSON = INDEX_TASK_ATTRIBUTE_PREFIX + "person"; //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_IDENTIFIER = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_IDENTIFIER, Messages.TaskListIndex_field_identifier, TaskAttribute.TYPE_SHORT_TEXT,
+			"identifier"); //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_REPOSITORY_URL = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_REPOSITORY_URL, Messages.TaskListIndex_field_repository_url, TaskAttribute.TYPE_URL,
+			"repository_url"); //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_CONTENT = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_CONTENT, Messages.TaskListIndex_field_content, TaskAttribute.TYPE_LONG_TEXT, "content"); //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_PERSON = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_PERSON, Messages.TaskListIndex_field_person, TaskAttribute.TYPE_PERSON, "person"); //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_TASK_KEY = DefaultTaskSchema.getInstance().TASK_KEY;
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
+
 	private class MaintainIndexJob extends Job {
 
 		public MaintainIndexJob() {
@@ -145,92 +176,34 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	}
 
-	private static final Object COMMAND_RESET_INDEX = "index:reset"; //$NON-NLS-1$
+	private final Set<AbstractTaskSchema.Field> specialFields = new HashSet<AbstractTaskSchema.Field>();
 
-	public static enum IndexField {
-		IDENTIFIER(false, null, TaskAttribute.TYPE_SHORT_TEXT), //
-		TASK_KEY(false, DefaultTaskSchema.getInstance().TASK_KEY), //
-		REPOSITORY_URL(false, null, TaskAttribute.TYPE_URL), //
-		SUMMARY(true, DefaultTaskSchema.getInstance().SUMMARY), //
-		CONTENT(true, null, TaskAttribute.TYPE_LONG_TEXT), //
-		ASSIGNEE(true, DefaultTaskSchema.getInstance().USER_ASSIGNED), //
-		REPORTER(true, DefaultTaskSchema.getInstance().USER_REPORTER), //
-		PERSON(true, null, TaskAttribute.TYPE_PERSON), //
-		COMPONENT(true, DefaultTaskSchema.getInstance().COMPONENT), //
-		COMPLETION_DATE(true, DefaultTaskSchema.getInstance().DATE_COMPLETION), //
-		CREATION_DATE(true, DefaultTaskSchema.getInstance().DATE_CREATION), //
-		DUE_DATE(true, DefaultTaskSchema.getInstance().DATE_DUE), //
-		MODIFICATION_DATE(true, DefaultTaskSchema.getInstance().DATE_MODIFICATION), //
-		DESCRIPTION(true, DefaultTaskSchema.getInstance().DESCRIPTION), //
-		KEYWORDS(true, DefaultTaskSchema.getInstance().KEYWORDS), //
-		PRODUCT(true, DefaultTaskSchema.getInstance().PRODUCT), //
-		RESOLUTION(true, DefaultTaskSchema.getInstance().RESOLUTION), //
-		SEVERITY(true, DefaultTaskSchema.getInstance().SEVERITY), //
-		STATUS(true, DefaultTaskSchema.getInstance().STATUS);
+	private final Set<AbstractTaskSchema.Field> indexedFields = new LinkedHashSet<AbstractTaskSchema.Field>();
+	{
+		specialFields.add(FIELD_IDENTIFIER);
+		specialFields.add(FIELD_REPOSITORY_URL);
+		specialFields.add(FIELD_CONTENT);
+		specialFields.add(FIELD_PERSON);
 
-		private final String attributeId;
-
-		private final String type;
-
-		private final boolean userVisible;
-
-		private IndexField(boolean userVisible, AbstractTaskSchema.Field field) {
-			this(userVisible, field.getKey(), field.getType());
-		}
-
-		private IndexField(boolean userVisible, String attributeId, String type) {
-			this.userVisible = userVisible;
-			this.attributeId = attributeId;
-			this.type = type;
-		}
-
-		public String fieldName() {
-			return name().toLowerCase();
-		}
-
-		/**
-		 * get the task attribute id, or null if this field has special handling
-		 */
-		public String getAttributeId() {
-			return attributeId;
-		}
-
-		/**
-		 * indicate if the field should be exposed in the UI
-		 */
-		public boolean isUserVisible() {
-			return userVisible;
-		}
-
-		/**
-		 * the type of field, as it relates to <code>TaskAttribute.TYPE_*</code>
-		 */
-		public String getType() {
-			return type;
-		}
-
-		/**
-		 * indicate if the field is a date or date/time field
-		 */
-		public boolean isTypeDate() {
-			return type != null && (TaskAttribute.TYPE_DATE.equals(type) || TaskAttribute.TYPE_DATETIME.equals(type));
-		}
-
-		/**
-		 * indicate if this is a person field
-		 */
-		public boolean isPersonField() {
-			return type != null && (TaskAttribute.TYPE_PERSON.equals(type) || TaskAttribute.TYPE_PERSON.equals(type));
-		}
-
-		public static IndexField fromFieldName(String fieldName) {
-			try {
-				return IndexField.valueOf(fieldName.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				return null;
-			}
-		}
-
+		addIndexedField(FIELD_IDENTIFIER);
+		addIndexedField(FIELD_TASK_KEY);
+		addIndexedField(FIELD_REPOSITORY_URL);
+		addIndexedField(FIELD_SUMMARY);
+		addIndexedField(FIELD_CONTENT);
+		addIndexedField(DefaultTaskSchema.getInstance().USER_ASSIGNED);
+		addIndexedField(DefaultTaskSchema.getInstance().USER_REPORTER);
+		addIndexedField(FIELD_PERSON);
+		addIndexedField(DefaultTaskSchema.getInstance().COMPONENT);
+		addIndexedField(DefaultTaskSchema.getInstance().DATE_COMPLETION);
+		addIndexedField(DefaultTaskSchema.getInstance().DATE_CREATION);
+		addIndexedField(DefaultTaskSchema.getInstance().DATE_DUE);
+		addIndexedField(DefaultTaskSchema.getInstance().DATE_MODIFICATION);
+		addIndexedField(DefaultTaskSchema.getInstance().DESCRIPTION);
+		addIndexedField(DefaultTaskSchema.getInstance().KEYWORDS);
+		addIndexedField(DefaultTaskSchema.getInstance().PRODUCT);
+		addIndexedField(DefaultTaskSchema.getInstance().RESOLUTION);
+		addIndexedField(DefaultTaskSchema.getInstance().SEVERITY);
+		addIndexedField(DefaultTaskSchema.getInstance().STATUS);
 	}
 
 	private static enum MaintainIndexType {
@@ -269,7 +242,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 */
 	private Set<String> lastResults;
 
-	private IndexField defaultField = IndexField.SUMMARY;
+	private AbstractTaskSchema.Field defaultField = FIELD_SUMMARY;
 
 	private final TaskList taskList;
 
@@ -297,6 +270,12 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		this.taskList = taskList;
 		this.dataManager = dataManager;
 		this.repositoryManager = repositoryManager;
+	}
+
+	private void addIndexedField(org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field field) {
+		Assert.isNotNull(field);
+		Assert.isNotNull(field.getIndexKey());
+		indexedFields.add(field);
 	}
 
 	/**
@@ -417,19 +396,31 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	/**
 	 * the default field used to match tasks when unspecified in the query
 	 */
-	public IndexField getDefaultField() {
+	public AbstractTaskSchema.Field getDefaultField() {
 		return defaultField;
 	}
 
 	/**
 	 * the default field used to match tasks when unspecified in the query
+	 * 
+	 * @param defaultField
+	 *            the default field to use in queries, must be one of the {@link #getIndexedFields() indexed fields}.
 	 */
-	public void setDefaultField(IndexField defaultField) {
+	public void setDefaultField(AbstractTaskSchema.Field defaultField) {
 		Assert.isNotNull(defaultField);
+		Assert.isNotNull(defaultField.getIndexKey());
+		Assert.isTrue(indexedFields.contains(defaultField));
 		this.defaultField = defaultField;
 		synchronized (this) {
 			lastResults = null;
 		}
+	}
+
+	/**
+	 * the fields that are indexed
+	 */
+	public Set<AbstractTaskSchema.Field> getIndexedFields() {
+		return Collections.unmodifiableSet(indexedFields);
 	}
 
 	/**
@@ -538,7 +529,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 						TopDocs results = indexSearcher.search(query, maxMatchSearchHits);
 						for (ScoreDoc scoreDoc : results.scoreDocs) {
 							Document document = indexReader.document(scoreDoc.doc);
-							hits.add(document.get(IndexField.IDENTIFIER.fieldName()));
+							hits.add(document.get(FIELD_IDENTIFIER.getIndexKey()));
 						}
 					} catch (IOException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
@@ -617,7 +608,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					TopDocs results = indexSearcher.search(query, resultsLimit);
 					for (ScoreDoc scoreDoc : results.scoreDocs) {
 						Document document = indexReader.document(scoreDoc.doc);
-						String taskIdentifier = document.get(IndexField.IDENTIFIER.fieldName());
+						String taskIdentifier = document.get(FIELD_IDENTIFIER.getIndexKey());
 						AbstractTask task = taskList.getTask(taskIdentifier);
 						if (task != null) {
 							collector.collect(task);
@@ -645,16 +636,16 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		boolean hasBooleanSpecifiers = upperPatternString.contains(" OR ") || upperPatternString.contains(" AND ") //$NON-NLS-1$ //$NON-NLS-2$
 				|| upperPatternString.contains(" NOT "); //$NON-NLS-1$
 
-		if (patternString.indexOf(':') == -1 && !hasBooleanSpecifiers && defaultField == IndexField.SUMMARY
+		if (patternString.indexOf(':') == -1 && !hasBooleanSpecifiers && defaultField.equals(FIELD_SUMMARY)
 				&& patternString.indexOf('"') == -1) {
-			return new PrefixQuery(new Term(defaultField.fieldName(), patternString));
+			return new PrefixQuery(new Term(defaultField.getIndexKey(), patternString));
 		}
-		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.fieldName(), new TaskAnalyzer());
+		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.getIndexKey(), new TaskAnalyzer());
 		Query q;
 		try {
 			q = qp.parse(patternString);
 		} catch (ParseException e) {
-			return new PrefixQuery(new Term(defaultField.fieldName(), patternString));
+			return new PrefixQuery(new Term(defaultField.getIndexKey(), patternString));
 		}
 
 		// relax term clauses to be prefix clauses so that we get results close
@@ -785,12 +776,12 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	private void addIndexedAttributes(Document document, ITask task, TaskAttribute root) {
-		addIndexedAttribute(document, IndexField.TASK_KEY, task.getTaskKey());
-		addIndexedAttribute(document, IndexField.REPOSITORY_URL, task.getRepositoryUrl());
-		addIndexedAttribute(document, IndexField.SUMMARY, task.getSummary());
+		addIndexedAttribute(document, FIELD_TASK_KEY, task.getTaskKey());
+		addIndexedAttribute(document, FIELD_REPOSITORY_URL, task.getRepositoryUrl());
+		addIndexedAttribute(document, FIELD_SUMMARY, root.getMappedAttribute(TaskAttribute.SUMMARY));
 
 		for (TaskAttribute contentAttribute : computeContentAttributes(root)) {
-			addIndexedAttribute(document, IndexField.CONTENT, contentAttribute);
+			addIndexedAttribute(document, FIELD_CONTENT, contentAttribute);
 		}
 
 		addIndexedDateAttributes(document, task);
@@ -806,11 +797,11 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 			String text = taskComment.getText();
 			if (text.length() != 0) {
-				addIndexedAttribute(document, IndexField.CONTENT, text);
+				addIndexedAttribute(document, FIELD_CONTENT, text);
 			}
 			IRepositoryPerson author = taskComment.getAuthor();
 			if (author != null) {
-				addIndexedAttribute(document, IndexField.PERSON, author.getPersonId());
+				addIndexedAttribute(document, FIELD_PERSON, author.getPersonId());
 			}
 		}
 
@@ -818,12 +809,12 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 				.getAttributeMapper()
 				.getAttributesByType(root.getTaskData(), TaskAttribute.TYPE_PERSON);
 		for (TaskAttribute personAttribute : personAttributes) {
-			addIndexedAttribute(document, IndexField.PERSON, personAttribute);
+			addIndexedAttribute(document, FIELD_PERSON, personAttribute);
 		}
 
-		for (IndexField field : IndexField.values()) {
-			if (field.getAttributeId() != null) {
-				addIndexedAttribute(document, field, root.getMappedAttribute(field.getAttributeId()));
+		for (AbstractTaskSchema.Field field : indexedFields) {
+			if (!specialFields.contains(field)) {
+				addIndexedAttribute(document, field, root.getMappedAttribute(field.getKey()));
 			}
 		}
 	}
@@ -856,22 +847,22 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	private void addIndexedAttributes(Document document, ITask task) {
-		addIndexedAttribute(document, IndexField.TASK_KEY, task.getTaskKey());
-		addIndexedAttribute(document, IndexField.REPOSITORY_URL, task.getRepositoryUrl());
-		addIndexedAttribute(document, IndexField.SUMMARY, task.getSummary());
-		addIndexedAttribute(document, IndexField.CONTENT, task.getSummary());
-		addIndexedAttribute(document, IndexField.CONTENT, ((AbstractTask) task).getNotes());
+		addIndexedAttribute(document, FIELD_TASK_KEY, task.getTaskKey());
+		addIndexedAttribute(document, FIELD_REPOSITORY_URL, task.getRepositoryUrl());
+		addIndexedAttribute(document, FIELD_SUMMARY, task.getSummary());
+		addIndexedAttribute(document, FIELD_CONTENT, task.getSummary());
+		addIndexedAttribute(document, FIELD_CONTENT, ((AbstractTask) task).getNotes());
 		addIndexedDateAttributes(document, task);
 	}
 
 	private void addIndexedDateAttributes(Document document, ITask task) {
-		addIndexedAttribute(document, IndexField.COMPLETION_DATE, task.getCompletionDate());
-		addIndexedAttribute(document, IndexField.CREATION_DATE, task.getCreationDate());
-		addIndexedAttribute(document, IndexField.DUE_DATE, task.getDueDate());
-		addIndexedAttribute(document, IndexField.MODIFICATION_DATE, task.getModificationDate());
+		addIndexedAttribute(document, DefaultTaskSchema.getInstance().DATE_COMPLETION, task.getCompletionDate());
+		addIndexedAttribute(document, DefaultTaskSchema.getInstance().DATE_CREATION, task.getCreationDate());
+		addIndexedAttribute(document, DefaultTaskSchema.getInstance().DATE_DUE, task.getDueDate());
+		addIndexedAttribute(document, DefaultTaskSchema.getInstance().DATE_MODIFICATION, task.getModificationDate());
 	}
 
-	private void addIndexedAttribute(Document document, IndexField indexField, TaskAttribute attribute) {
+	private void addIndexedAttribute(Document document, AbstractTaskSchema.Field indexField, TaskAttribute attribute) {
 		if (attribute == null) {
 			return;
 		}
@@ -880,7 +871,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			return;
 		}
 
-		if (indexField.isPersonField()) {
+		if (isPersonField(indexField)) {
 			IRepositoryPerson repositoryPerson = attribute.getTaskData()
 					.getAttributeMapper()
 					.getRepositoryPerson(attribute);
@@ -898,30 +889,35 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		}
 	}
 
-	private void addIndexedAttribute(Document document, IndexField indexField, IRepositoryPerson person) {
+	private boolean isPersonField(org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field indexField) {
+		return TaskAttribute.TYPE_PERSON.equals(indexField.getType());
+	}
+
+	private void addIndexedAttribute(Document document, AbstractTaskSchema.Field indexField, IRepositoryPerson person) {
 		if (person != null) {
 			addIndexedAttribute(document, indexField, person.getPersonId());
 			addIndexedAttribute(document, indexField, person.getName());
 		}
 	}
 
-	private void addIndexedAttribute(Document document, IndexField indexField, String value) {
+	private void addIndexedAttribute(Document document, AbstractTaskSchema.Field indexField, String value) {
 		if (value == null) {
 			return;
 		}
-		Field field = document.getField(indexField.fieldName());
+		Field field = document.getField(indexField.getIndexKey());
 		if (field == null) {
-			field = new Field(indexField.fieldName(), value, Store.YES, org.apache.lucene.document.Field.Index.ANALYZED);
+			field = new Field(indexField.getIndexKey(), value, Store.YES,
+					org.apache.lucene.document.Field.Index.ANALYZED);
 			document.add(field);
 		} else {
 			String existingValue = field.stringValue();
-			if (indexField != IndexField.PERSON || !existingValue.contains(value)) {
+			if (!indexField.equals(FIELD_PERSON) || !existingValue.contains(value)) {
 				field.setValue(existingValue + " " + value); //$NON-NLS-1$
 			}
 		}
 	}
 
-	private void addIndexedAttribute(Document document, IndexField indexField, Date date) {
+	private void addIndexedAttribute(Document document, AbstractTaskSchema.Field indexField, Date date) {
 		if (date == null) {
 			return;
 		}
@@ -929,9 +925,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		// move the date by the GMT offset if there is any
 
 		String value = DateTools.dateToString(date, Resolution.HOUR);
-		Field field = document.getField(indexField.fieldName());
+		Field field = document.getField(indexField.getIndexKey());
 		if (field == null) {
-			field = new Field(indexField.fieldName(), value, Store.YES, org.apache.lucene.document.Field.Index.ANALYZED);
+			field = new Field(indexField.getIndexKey(), value, Store.YES,
+					org.apache.lucene.document.Field.Index.ANALYZED);
 			document.add(field);
 		} else {
 			field.setValue(value);
@@ -949,8 +946,9 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 *            the date upper bound that the field value must match, inclusive
 	 * @return
 	 */
-	public String computeQueryFieldDateRange(IndexField field, Date lowerBoundInclusive, Date upperBoundInclusive) {
-		return field.fieldName()
+	public String computeQueryFieldDateRange(AbstractTaskSchema.Field field, Date lowerBoundInclusive,
+			Date upperBoundInclusive) {
+		return field.getIndexKey()
 				+ ":[" + DateTools.dateToString(lowerBoundInclusive, Resolution.DAY) + " TO " + DateTools.dateToString(upperBoundInclusive, Resolution.DAY) + "]"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
 
@@ -1082,7 +1080,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 						ITask task = entry.getKey();
 						TaskData taskData = entry.getValue();
 
-						writer.deleteDocuments(new Term(IndexField.IDENTIFIER.fieldName(), task.getHandleIdentifier()));
+						writer.deleteDocuments(new Term(FIELD_IDENTIFIER.getIndexKey(), task.getHandleIdentifier()));
 
 						add(writer, task, taskData);
 
@@ -1170,7 +1168,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		Document document = new Document();
 
-		document.add(new Field(IndexField.IDENTIFIER.fieldName(), task.getHandleIdentifier(), Store.YES,
+		document.add(new Field(FIELD_IDENTIFIER.getIndexKey(), task.getHandleIdentifier(), Store.YES,
 				org.apache.lucene.document.Field.Index.ANALYZED));
 		if (taskData == null) {
 			if ("local".equals(((AbstractTask) task).getConnectorKind())) { //$NON-NLS-1$

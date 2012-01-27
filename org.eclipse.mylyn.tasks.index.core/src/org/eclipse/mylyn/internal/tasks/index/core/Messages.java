@@ -8,7 +8,6 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.index.core;
 
 import org.eclipse.osgi.util.NLS;
@@ -18,6 +17,14 @@ import org.eclipse.osgi.util.NLS;
  */
 class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.tasks.index.core.messages"; //$NON-NLS-1$
+
+	public static String TaskListIndex_field_content;
+
+	public static String TaskListIndex_field_identifier;
+
+	public static String TaskListIndex_field_person;
+
+	public static String TaskListIndex_field_repository_url;
 
 	public static String TaskListIndex_indexerJob;
 

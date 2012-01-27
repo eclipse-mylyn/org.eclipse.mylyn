@@ -28,10 +28,12 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
-import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.IndexField;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -72,44 +74,38 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 			// if we have a field prefix
 			if (fieldPrefix.length() > 0) {
-				IndexField indexField = null;
-				try {
-					indexField = IndexField.fromFieldName(fieldPrefix);
-				} catch (IllegalArgumentException e) {
-				}
+				AbstractTaskSchema.Field indexField = computeIndexField(fieldPrefix);
 
 				// if it's a person field then suggest
 				// people from the task list
-				if (indexField != null && indexField.isPersonField()) {
+				if (indexField != null && TaskAttribute.TYPE_PERSON.equals(indexField.getType())) {
 					computePersonProposals(proposals, prefix);
 				}
 
 			} else {
 
 				// suggest field name prefixes
-				for (IndexField field : IndexField.values()) {
+				for (Field field : index.getIndexedFields()) {
 
 					// searching on URL is not useful
-					if (!field.isUserVisible()) {
+					if (field.equals(TaskListIndex.FIELD_IDENTIFIER)) {
 						continue;
 					}
 
-					if (field.fieldName().startsWith(prefix)) {
+					if (field.getIndexKey().startsWith(prefix)) {
 						String description;
-						switch (field) {
-						case CONTENT:
+						if (TaskListIndex.FIELD_CONTENT.equals(field)) {
 							description = Messages.IndexSearchHandler_hint_content;
-							break;
-						case PERSON:
+						} else if (TaskListIndex.FIELD_PERSON.equals(field)) {
 							description = Messages.IndexSearchHandler_hint_person;
-							break;
-						default:
-							description = NLS.bind(Messages.IndexSearchHandler_hint_generic, field.fieldName());
+						} else {
+							description = NLS.bind(Messages.IndexSearchHandler_hint_generic, field.getLabel());
 						}
-						proposals.add(new ContentProposal(field.fieldName().substring(prefix.length()) + ":", //$NON-NLS-1$
-								field.fieldName(), description));
+						proposals.add(new ContentProposal(field.getIndexKey().substring(prefix.length()) + ":", //$NON-NLS-1$
+								field.getIndexKey(), description));
 
-						if (field.isTypeDate()) {
+						if (TaskAttribute.TYPE_DATE.equals(field.getType())
+								|| TaskAttribute.TYPE_DATETIME.equals(field.getType())) {
 							computeDateRangeProposals(proposals, field);
 						}
 					}
@@ -119,7 +115,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 			return proposals.toArray(new IContentProposal[proposals.size()]);
 		}
 
-		public void computeDateRangeProposals(List<IContentProposal> proposals, IndexField field) {
+		public void computeDateRangeProposals(List<IContentProposal> proposals, Field field) {
 			// for date fields give suggestion of date range search
 			String description;
 			final Date now = new Date();
@@ -137,9 +133,9 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				dateSearchOneWeekLowerBound = calendar.getTime();
 			}
 
-			description = NLS.bind(Messages.IndexSearchHandler_Generic_date_range_search_1_week, field.fieldName());
+			description = NLS.bind(Messages.IndexSearchHandler_Generic_date_range_search_1_week, field.getLabel());
 
-			String label = NLS.bind(Messages.IndexSearchHandler_Past_week_date_range_label, field.fieldName());
+			String label = NLS.bind(Messages.IndexSearchHandler_Past_week_date_range_label, field.getIndexKey());
 
 			String queryText = index.computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound,
 					dateSearchUpperBound);
@@ -182,6 +178,15 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 	public IndexSearchHandler() {
 	}
 
+	public Field computeIndexField(String fieldPrefix) {
+		for (Field field : index.getIndexedFields()) {
+			if (field.getIndexKey().equals(fieldPrefix)) {
+				return field;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public Composite createSearchComposite(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
@@ -195,7 +200,9 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IndexField newDefaultField = button.getSelection() ? IndexField.SUMMARY : IndexField.CONTENT;
+				Field newDefaultField = button.getSelection()
+						? TaskListIndex.FIELD_SUMMARY
+						: TaskListIndex.FIELD_CONTENT;
 				index.setDefaultField(newDefaultField);
 				fireFilterChanged();
 			}

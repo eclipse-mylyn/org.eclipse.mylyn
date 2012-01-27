@@ -95,61 +95,62 @@ public final class DefaultTaskSchema extends AbstractTaskSchema {
 			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
 
 	public final Field COMPONENT = createField(TaskAttribute.COMPONENT, Messages.DefaultTaskSchema_Component_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_SINGLE_SELECT, "component", Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field DATE_COMPLETION = createField(TaskAttribute.DATE_COMPLETION,
-			Messages.DefaultTaskSchema_Completion_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
+			Messages.DefaultTaskSchema_Completion_Label, TaskAttribute.TYPE_DATE, "completion_date", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field DATE_CREATION = createField(TaskAttribute.DATE_CREATION,
-			Messages.DefaultTaskSchema_Created_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
+			Messages.DefaultTaskSchema_Created_Label, TaskAttribute.TYPE_DATE, "creation_date", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field DATE_DUE = createField(TaskAttribute.DATE_DUE, Messages.DefaultTaskSchema_Due_Label,
-			TaskAttribute.TYPE_DATE);
+			TaskAttribute.TYPE_DATE, "due_date"); //$NON-NLS-1$
 
 	public final Field DATE_MODIFICATION = createField(TaskAttribute.DATE_MODIFICATION,
-			Messages.DefaultTaskSchema_Modified_Label, TaskAttribute.TYPE_DATE, Flag.READ_ONLY);
+			Messages.DefaultTaskSchema_Modified_Label, TaskAttribute.TYPE_DATE, "modification_date", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field DESCRIPTION = createField(TaskAttribute.DESCRIPTION,
-			Messages.DefaultTaskSchema_Description_Label, TaskAttribute.TYPE_LONG_RICH_TEXT);
+			Messages.DefaultTaskSchema_Description_Label, "description", TaskAttribute.TYPE_LONG_RICH_TEXT); //$NON-NLS-1$
 
 	public final Field KEYWORDS = createField(TaskAttribute.KEYWORDS, Messages.DefaultTaskSchema_Keywords_Label,
-			TaskAttribute.TYPE_MULTI_SELECT, Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_MULTI_SELECT, "keywords", Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field NEW_COMMENT = createField(TaskAttribute.COMMENT_NEW, Messages.DefaultTaskSchema_Rank_Label,
 			TaskAttribute.TYPE_LONG_RICH_TEXT);
 
 	public final Field PRIORITY = createField(TaskAttribute.PRIORITY, Messages.DefaultTaskSchema_Priority_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_SINGLE_SELECT, "priority", Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field PRODUCT = createField(TaskAttribute.PRODUCT, Messages.DefaultTaskSchema_Product_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_SINGLE_SELECT, "product", Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field RANK = createField(TaskAttribute.RANK, Messages.DefaultTaskSchema_Rank_Label,
 			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 
 	public final Field RESOLUTION = createField(TaskAttribute.RESOLUTION, Messages.DefaultTaskSchema_Resolution_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.READ_ONLY);
+			TaskAttribute.TYPE_SINGLE_SELECT, "resolution", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field SEVERITY = createField(TaskAttribute.SEVERITY, Messages.DefaultTaskSchema_Severity_Label,
-			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_SINGLE_SELECT, "severity", Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field STATUS = createField(TaskAttribute.STATUS, Messages.DefaultTaskSchema_Status_Label,
-			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
+			TaskAttribute.TYPE_SHORT_TEXT, "status", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field SUMMARY = createField(TaskAttribute.SUMMARY, Messages.DefaultTaskSchema_Summary_Label,
-			TaskAttribute.TYPE_SHORT_RICH_TEXT);
+			TaskAttribute.TYPE_SHORT_RICH_TEXT, "summary"); //$NON-NLS-1$
 
 	public final Field TASK_KEY = createField(TaskAttribute.TASK_KEY, Messages.DefaultTaskSchema_Key_Label,
-			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY);
+			TaskAttribute.TYPE_SHORT_TEXT, "task_key", Flag.READ_ONLY); //$NON-NLS-1$
 
 	public final Field TASK_KIND = createField(TaskAttribute.TASK_KIND, Messages.DefaultTaskSchema_Kind_Label,
 			TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
 	public final Field USER_ASSIGNED = createField(TaskAttribute.USER_ASSIGNED, Messages.DefaultTaskSchema_Owner_Label,
-			TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
+			TaskAttribute.TYPE_PERSON, "assignee", Flag.PEOPLE); //$NON-NLS-1$
 
 	public final Field USER_REPORTER = createField(TaskAttribute.USER_REPORTER,
-			Messages.DefaultTaskSchema_Reporter_Label, TaskAttribute.TYPE_PERSON, Flag.PEOPLE, Flag.READ_ONLY);
+			Messages.DefaultTaskSchema_Reporter_Label, TaskAttribute.TYPE_PERSON, "reporter", Flag.PEOPLE, //$NON-NLS-1$
+			Flag.READ_ONLY);
 
 	public final Field TASK_URL = createField(TaskAttribute.TASK_URL, Messages.DefaultTaskSchema_URL_Label,
 			TaskAttribute.TYPE_URL, Flag.READ_ONLY);
