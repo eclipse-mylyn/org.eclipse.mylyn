@@ -518,7 +518,7 @@ public class WebUtilTest extends TestCase {
 
 	public void testLocationConnectSslClientCert() throws Exception {
 		String url = "https://mylyn.org/secure/";
-		AbstractWebLocation location = new WebLocation(url, null, null, null);
+		AbstractWebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		if (!((PollingSslProtocolSocketFactory) hostConfiguration.getProtocol().getSocketFactory()).hasKeyManager()) {
