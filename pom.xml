@@ -81,7 +81,6 @@
 		</repository>
 	  </repositories>
 	  <modules>
-		<module>r4e</module>
 		<module>tbr</module>
 		<module>releng/org.eclipse.mylyn.reviews.site</module>
 	  </modules>
