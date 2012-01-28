@@ -16,9 +16,6 @@
    <feature url="features/org.eclipse.mylyn.reviews.tasks_0.0.0.jar" id="org.eclipse.mylyn.reviews.tasks" version="0.0.0">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.reviews.r4e.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.r4e.feature" version="0.0.0">
-      <category name="Features"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
@@ -27,9 +24,6 @@
    </feature>
    <feature url="features/org.eclipse.mylyn.reviews.sdk.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.sdk.feature" version="0.0.0">
       <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.reviews.r4e.reports_0.9.0.qualifier.jar" id="org.eclipse.mylyn.reviews.r4e.reports" version="0.9.0.qualifier">
-      <category name="Integration"/>
    </feature>
    <category-def name="Features" label="Mylyn Reviews Features">
       <description>
