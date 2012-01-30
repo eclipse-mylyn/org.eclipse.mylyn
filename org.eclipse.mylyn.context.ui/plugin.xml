@@ -191,31 +191,6 @@
                optional="false">
          </commandParameter>
       </command>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
-            id="org.eclipse.mylyn.context.ui.commands.task.attachContext"
-            name="%commands.task.attachContext.name">
-      </command>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
-            id="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
-            name="%commands.task.retrieveContext.name">
-      </command>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
-            id="org.eclipse.mylyn.context.ui.commands.task.copyContext"
-            name="%commands.task.copyContext.name">
-      </command>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
-            id="org.eclipse.mylyn.context.ui.commands.task.clearContext"
-            name="%commands.task.clearContext.name">
-      </command>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
-            id="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
-            name="%commands.attachment.retrieveContext.name">
-      </command>
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     

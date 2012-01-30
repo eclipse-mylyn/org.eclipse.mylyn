@@ -31,8 +31,6 @@ public class Messages extends NLS {
 
 	public static String AbstractInterestManipulationAction_Not_a_valid_landmark;
 
-	public static String FocusTaskListAction_No_tasks_scheduled_for_this_week;
-
 	public static String ToggleDecorateInterestLevelAction_Decorate_Interest;
 
 	public static String ToggleDecorateInterestLevelAction_Toggle_Interest_Level_Decorator;

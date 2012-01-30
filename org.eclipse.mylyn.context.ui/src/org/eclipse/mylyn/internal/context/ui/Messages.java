@@ -25,18 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String TaskContextWorkingSetPage_Cannot_create_another_Active_Taskscape_Working_Set;
-
-	public static String TaskContextWorkingSetPage_CREATE_THE_MYLYN_CONTEXT_WORKING_SET;
-
-	public static String TaskContextWorkingSetPage_Mylyn_Task_Context_Working_Set;
-
-	public static String TaskContextWorkingSetPage_Name;
-
-	public static String TaskContextWorkingSetPage_NOTE_THIS_WORKING_SET_SHOULD_ONLY_BE_USED_FOR_SEARCHS;
-
-	public static String TaskContextWorkingSetPage_TASK_CONTEXT_FOR_SEARCH;
-
 	public static String AbstractFocusViewAction_Apply_Mylyn;
 
 	public static String AbstractFocusViewAction_Empty_task_context;
@@ -48,4 +36,5 @@ public class Messages extends NLS {
 	public static String FilteredChildrenDecorationDrawer_No_Filtered_Children;
 
 	public static String FilteredChildrenDecorationDrawer_Show_Filtered_Children;
+
 }

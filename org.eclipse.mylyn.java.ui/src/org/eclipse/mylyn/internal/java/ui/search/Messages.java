@@ -25,7 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String AbstractJavaRelationProvider_could_not_run_Java_search;
-
 	public static String AbstractJavaRelationProvider_Mylyn_degree_of_separation;
+
 }
