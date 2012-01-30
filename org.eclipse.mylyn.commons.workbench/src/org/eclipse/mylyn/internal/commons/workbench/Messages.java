@@ -34,31 +34,13 @@ public class Messages extends NLS {
 
 	public static String WorkbenchUtil_Open_Location_Title;
 
-	public static String ColorSelectionWindow_Close;
-
-	public static String SwtUtil_Fading;
-
 	public static String AbstractFilteredTree_Find;
-
-	public static String AbstractNotificationPopup_Close_Notification_Job;
-
-	public static String AbstractNotificationPopup_Notification;
 
 	public static String DatePicker_Choose_Date;
 
 	public static String DatePicker_Clear;
 
-	public static String DateSelectionDialog_Clear;
-
 	public static String DateSelectionDialog_Date_Selection;
-
-	public static String ScreenshotCreationPage_After_capturing;
-
-	public static String ScreenshotCreationPage_CAPTURE_SCRRENSHOT;
-
-	public static String ScreenshotCreationPage_NOTE_THAT_YOU_CONTINUTE;
-
-	public static String AbstractColumnViewerSupport_Restore_defaults;
 
 	public static String DatePickerPanel_Today;
 
@@ -66,16 +48,6 @@ public class Messages extends NLS {
 
 	public static String TextControl_AccessibleListenerFindButton;
 
-	public static String CollapseAllAction_Label;
-
-	public static String CollapseAllAction_ToolTip;
-
-	public static String ExpandAllAction_Label;
-
-	public static String ExpandAllAction_ToolTip;
-
 	public static String PropertiesAction_Properties;
-
-	public static String ValidatableWizardDialog_Validate_Button_Label;
 
 }

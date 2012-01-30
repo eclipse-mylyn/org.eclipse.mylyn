@@ -59,12 +59,6 @@ public class Messages extends NLS {
 
 	public static String AbstractColumnViewerSupport_Restore_defaults;
 
-	public static String DatePickerPanel_Today;
-
-	public static String TextControl_FindToolTip;
-
-	public static String TextControl_AccessibleListenerFindButton;
-
 	public static String CollapseAllAction_Label;
 
 	public static String CollapseAllAction_ToolTip;
@@ -72,8 +66,6 @@ public class Messages extends NLS {
 	public static String ExpandAllAction_Label;
 
 	public static String ExpandAllAction_ToolTip;
-
-	public static String PropertiesAction_Properties;
 
 	public static String ValidatableWizardDialog_Validate_Button_Label;
 
