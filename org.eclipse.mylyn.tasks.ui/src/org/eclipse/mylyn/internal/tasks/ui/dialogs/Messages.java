@@ -47,8 +47,6 @@ public class Messages extends NLS {
 
 	public static String TaskRepositoryCredentialsDialog_Enter_Credentials;
 
-	public static String TaskRepositoryCredentialsDialog_Enter_repository_certificate;
-
 	public static String TaskRepositoryCredentialsDialog_Enter_repository_credentials;
 
 	public static String TaskRepositoryCredentialsDialog_HTML_Open_Repository_Properties;

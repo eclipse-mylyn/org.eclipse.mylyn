@@ -63,10 +63,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Enter_search_option;
 
-	public static String BugzillaSearchPage_Error_updating_search_options;
-
-	public static String BugzillaSearchPage_Error_was_X;
-
 	public static String BugzillaSearchPage_Hardware;
 
 	public static String BugzillaSearchPage_Keywords;
@@ -170,8 +166,6 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Status;
 
 	public static String BugzillaSearchPage_Summary;
-
-	public static String BugzillaSearchPage_Updating_search_options_;
 
 	public static String BugzillaSearchPage_ValidationMessage;
 
