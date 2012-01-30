@@ -295,4 +295,15 @@
             icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/rebase.gif">
       </image>
    </extension>
+   <extension
+         point="org.eclipse.egit.ui.cloneSourceProvider">
+      <source
+            hasFixLocation="true"
+            icon="icons/obj16/github.png"
+            label="%githubMenuLabel">
+      </source>
+      <repositorySearchPage
+            class="org.eclipse.mylyn.internal.github.ui.RepositorySearchWizardPage">
+      </repositorySearchPage>
+   </extension>
 </plugin>
