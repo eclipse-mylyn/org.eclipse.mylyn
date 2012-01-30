@@ -55,6 +55,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -236,7 +237,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 //		//sectionComposite.setMinHeight(150);
 //		sectionComposite.setExpandVertical(false);
 
-		ExpandableComposite section = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE
+		final ExpandableComposite section = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE
 				| ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT | ExpandableComposite.EXPANDED);
 		section.clientVerticalSpacing = 0;
 		section.setBackground(parent.getBackground());
@@ -244,6 +245,9 @@ public class BuildServerPart extends RepositoryLocationPart {
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
+				if (section.getLayoutData() instanceof GridData) {
+					((GridData) section.getLayoutData()).grabExcessVerticalSpace = e.getState();
+				}
 				parent.layout(true);
 			}
 		});
