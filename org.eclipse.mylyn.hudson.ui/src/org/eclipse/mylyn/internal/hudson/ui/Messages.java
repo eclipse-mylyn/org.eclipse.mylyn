@@ -16,8 +16,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.hudson.ui.messages"; //$NON-NLS-1$
 
-	public static String Discovery_CannotConvertURI;
-
 	public static String Discovery_CouldNotStartService;
 
 	public static String Discovery_IncorrectURI;
