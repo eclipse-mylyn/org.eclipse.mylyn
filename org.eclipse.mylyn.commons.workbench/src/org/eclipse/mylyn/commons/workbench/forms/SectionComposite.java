@@ -94,20 +94,24 @@ public class SectionComposite extends SharedScrolledComposite {
 					g.grabExcessVerticalSpace = false;
 					section.setLayoutData(g);
 				}
+
+				layout(true);
+
 				Point newSize = section.getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 				Rectangle currentbounds = section.getShell().getBounds();
 				if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
 					Object shellData = section.getShell().getData();
 					if (shellData instanceof Window) {
 						Window window = (Window) shellData;
-						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, newSize.x, newSize.y);
+						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, Math.max(
+								currentbounds.x, newSize.x), Math.max(currentbounds.y, newSize.y));
 						Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
 						section.getShell().setBounds(result);
 					}
-				} else {
-					layout(true);
-					reflow(true);
 				}
+
+				reflow(true);
+				getParent().layout(true, true);
 			}
 		});
 		section.setText(title);

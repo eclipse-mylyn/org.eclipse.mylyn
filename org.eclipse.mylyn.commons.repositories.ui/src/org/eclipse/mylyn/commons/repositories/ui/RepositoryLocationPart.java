@@ -53,12 +53,15 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -82,9 +85,158 @@ public class RepositoryLocationPart {
 
 	}
 
+	private class CertificateCredentialsListener implements ModifyListener, SelectionListener {
+
+		private final AuthenticationType<CertificateCredentials> authenticationType;
+
+		private final Button enabledButton;
+
+		private final Text keyStoreFileNameText;
+
+		private final Text passwordText;
+
+		private final Button savePasswordButton;
+
+		private boolean updating;
+
+		public CertificateCredentialsListener(AuthenticationType<CertificateCredentials> authenticationType,
+				Button enabledButton, Text keyStoreFileNameText, Text passwordText, Button savePasswordButton) {
+			Assert.isNotNull(authenticationType);
+			Assert.isNotNull(enabledButton);
+			Assert.isNotNull(keyStoreFileNameText);
+			Assert.isNotNull(passwordText);
+			this.authenticationType = authenticationType;
+			this.enabledButton = enabledButton;
+			this.keyStoreFileNameText = keyStoreFileNameText;
+			this.passwordText = passwordText;
+			this.savePasswordButton = savePasswordButton;
+			init();
+		}
+
+		public void modifyText(ModifyEvent event) {
+			apply();
+		}
+
+		public void setEnabled(boolean enabled) {
+			if (!enabled) {
+				enabledButton.setEnabled(false);
+				setInputFieldsEnabled(false);
+			} else {
+				enabledButton.setEnabled(true);
+				updateWidgetEnablement();
+			}
+		}
+
+		public void widgetDefaultSelected(SelectionEvent event) {
+			apply();
+		}
+
+		public void widgetSelected(SelectionEvent event) {
+			apply();
+			if (event.widget == enabledButton) {
+				updateWidgetEnablement();
+			}
+		}
+
+		private void apply() {
+			if (updating) {
+				return;
+			}
+			if (getEnabledButtonSelection()) {
+				CertificateCredentials credentials = new CertificateCredentials(keyStoreFileNameText.getText(),
+						passwordText.getText(), null, savePasswordButton.getSelection());
+				getWorkingCopy().setCredentials(authenticationType, credentials);
+			} else {
+				getWorkingCopy().setCredentials(authenticationType, null);
+			}
+		}
+
+		private void restore() {
+			try {
+				updating = true;
+				CertificateCredentials credentials = getWorkingCopy().getCredentials(authenticationType);
+				if (credentials != null) {
+					enabledButton.setSelection(true);
+					keyStoreFileNameText.setText(credentials.getKeyStoreFileName());
+					passwordText.setText(credentials.getPassword());
+					savePasswordButton.setSelection(credentials.getSavePassword());
+				} else {
+					enabledButton.setSelection(false);
+					keyStoreFileNameText.setText(""); //$NON-NLS-1$
+					passwordText.setText(""); //$NON-NLS-1$
+					savePasswordButton.setSelection(true);
+				}
+			} finally {
+				updating = false;
+			}
+			updateWidgetEnablement();
+		}
+
+		private void setInputFieldsEnabled(boolean enabled) {
+			keyStoreFileNameText.setEnabled(enabled);
+			passwordText.setEnabled(enabled);
+			savePasswordButton.setEnabled(enabled);
+		}
+
+		private void updateWidgetEnablement() {
+			setInputFieldsEnabled(getEnabledButtonSelection());
+		}
+
+		protected boolean getEnabledButtonSelection() {
+			return enabledButton.getSelection();
+		}
+
+		protected void init() {
+			enabledButton.addSelectionListener(this);
+			keyStoreFileNameText.addModifyListener(this);
+			passwordText.addModifyListener(this);
+			savePasswordButton.addSelectionListener(this);
+		}
+
+	}
+
+	private class ResizingSectionComposite extends SectionComposite {
+
+		private boolean ignoreUpdate;
+
+		public ResizingSectionComposite(Composite parent, int style) {
+			super(parent, style);
+		}
+
+		@Override
+		public void reflow(boolean flushCache) {
+			super.reflow(flushCache);
+			updateLayout();
+		}
+
+		public void updateLayout() {
+			if (ignoreUpdate) {
+				return;
+			}
+
+			try {
+				ignoreUpdate = true;
+
+				// if the available space is smaller than the size, a scrollbar needs to be displayed
+				((GridData) getLayoutData()).grabExcessVerticalSpace = true;
+				boolean grab = getSize().y <= computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y;
+				if (grab != ((GridData) getLayoutData()).grabExcessVerticalSpace) {
+					// grab flag needs to be true to force scrollbar
+					((GridData) getLayoutData()).grabExcessVerticalSpace = grab;
+					getParent().layout(true, true);
+				}
+			} finally {
+				ignoreUpdate = false;
+			}
+		};
+
+	}
+
 	private class UserCredentialsListener implements ModifyListener, SelectionListener {
 
 		private final AuthenticationType<UserCredentials> authenticationType;
+
+		private final Text domainText;
 
 		private final Button enabledButton;
 
@@ -97,8 +249,6 @@ public class RepositoryLocationPart {
 		private boolean updating;
 
 		private final Text userText;
-
-		private final Text domainText;
 
 		public UserCredentialsListener(AuthenticationType<UserCredentials> authenticationType, Button enabledButton,
 				Text userText, Text passwordText, Text domainText, Button savePasswordButton) {
@@ -115,6 +265,39 @@ public class RepositoryLocationPart {
 			init();
 		}
 
+		public boolean isEnablementReversed() {
+			return enablementReversed;
+		}
+
+		public void modifyText(ModifyEvent event) {
+			apply();
+		}
+
+		public void setEnabled(boolean enabled) {
+			if (!enabled) {
+				enabledButton.setEnabled(false);
+				setInputFieldsEnabled(false);
+			} else {
+				enabledButton.setEnabled(true);
+				updateWidgetEnablement();
+			}
+		}
+
+		public void setEnablementReversed(boolean enablementReversed) {
+			this.enablementReversed = enablementReversed;
+		}
+
+		public void widgetDefaultSelected(SelectionEvent event) {
+			apply();
+		}
+
+		public void widgetSelected(SelectionEvent event) {
+			apply();
+			if (event.widget == enabledButton) {
+				updateWidgetEnablement();
+			}
+		}
+
 		private void apply() {
 			if (updating) {
 				return;
@@ -127,28 +310,6 @@ public class RepositoryLocationPart {
 			} else {
 				getWorkingCopy().setCredentials(authenticationType, null);
 			}
-		}
-
-		protected void init() {
-			enabledButton.addSelectionListener(this);
-			userText.addModifyListener(this);
-			passwordText.addModifyListener(this);
-			if (domainText != null) {
-				domainText.addModifyListener(this);
-			}
-			savePasswordButton.addSelectionListener(this);
-		}
-
-		protected boolean getEnabledButtonSelection() {
-			return enabledButton.getSelection() != isEnablementReversed();
-		}
-
-		public boolean isEnablementReversed() {
-			return enablementReversed;
-		}
-
-		public void modifyText(ModifyEvent event) {
-			apply();
 		}
 
 		private void restore() {
@@ -178,35 +339,6 @@ public class RepositoryLocationPart {
 			updateWidgetEnablement();
 		}
 
-		public void setEnablementReversed(boolean enablementReversed) {
-			this.enablementReversed = enablementReversed;
-		}
-
-		private void updateWidgetEnablement() {
-			setInputFieldsEnabled(getEnabledButtonSelection());
-		}
-
-		public void widgetDefaultSelected(SelectionEvent event) {
-			apply();
-		}
-
-		public void widgetSelected(SelectionEvent event) {
-			apply();
-			if (event.widget == enabledButton) {
-				updateWidgetEnablement();
-			}
-		}
-
-		public void setEnabled(boolean enabled) {
-			if (!enabled) {
-				enabledButton.setEnabled(false);
-				setInputFieldsEnabled(false);
-			} else {
-				enabledButton.setEnabled(true);
-				updateWidgetEnablement();
-			}
-		}
-
 		private void setInputFieldsEnabled(boolean enabled) {
 			userText.setEnabled(enabled);
 			passwordText.setEnabled(enabled);
@@ -216,114 +348,22 @@ public class RepositoryLocationPart {
 			savePasswordButton.setEnabled(enabled);
 		}
 
-	}
-
-	private class CertificateCredentialsListener implements ModifyListener, SelectionListener {
-
-		private final AuthenticationType<CertificateCredentials> authenticationType;
-
-		private final Button enabledButton;
-
-		private final Text passwordText;
-
-		private final Button savePasswordButton;
-
-		private boolean updating;
-
-		private final Text keyStoreFileNameText;
-
-		public CertificateCredentialsListener(AuthenticationType<CertificateCredentials> authenticationType,
-				Button enabledButton, Text keyStoreFileNameText, Text passwordText, Button savePasswordButton) {
-			Assert.isNotNull(authenticationType);
-			Assert.isNotNull(enabledButton);
-			Assert.isNotNull(keyStoreFileNameText);
-			Assert.isNotNull(passwordText);
-			this.authenticationType = authenticationType;
-			this.enabledButton = enabledButton;
-			this.keyStoreFileNameText = keyStoreFileNameText;
-			this.passwordText = passwordText;
-			this.savePasswordButton = savePasswordButton;
-			init();
-		}
-
-		private void apply() {
-			if (updating) {
-				return;
-			}
-			if (getEnabledButtonSelection()) {
-				CertificateCredentials credentials = new CertificateCredentials(keyStoreFileNameText.getText(),
-						passwordText.getText(), null, savePasswordButton.getSelection());
-				getWorkingCopy().setCredentials(authenticationType, credentials);
-			} else {
-				getWorkingCopy().setCredentials(authenticationType, null);
-			}
-		}
-
-		protected void init() {
-			enabledButton.addSelectionListener(this);
-			keyStoreFileNameText.addModifyListener(this);
-			passwordText.addModifyListener(this);
-			savePasswordButton.addSelectionListener(this);
-		}
-
-		protected boolean getEnabledButtonSelection() {
-			return enabledButton.getSelection();
-		}
-
-		public void modifyText(ModifyEvent event) {
-			apply();
-		}
-
-		private void restore() {
-			try {
-				updating = true;
-				CertificateCredentials credentials = getWorkingCopy().getCredentials(authenticationType);
-				if (credentials != null) {
-					enabledButton.setSelection(true);
-					keyStoreFileNameText.setText(credentials.getKeyStoreFileName());
-					passwordText.setText(credentials.getPassword());
-					savePasswordButton.setSelection(credentials.getSavePassword());
-				} else {
-					enabledButton.setSelection(false);
-					keyStoreFileNameText.setText(""); //$NON-NLS-1$
-					passwordText.setText(""); //$NON-NLS-1$
-					savePasswordButton.setSelection(true);
-				}
-			} finally {
-				updating = false;
-			}
-			updateWidgetEnablement();
-		}
-
 		private void updateWidgetEnablement() {
 			setInputFieldsEnabled(getEnabledButtonSelection());
 		}
 
-		public void widgetDefaultSelected(SelectionEvent event) {
-			apply();
+		protected boolean getEnabledButtonSelection() {
+			return enabledButton.getSelection() != isEnablementReversed();
 		}
 
-		public void widgetSelected(SelectionEvent event) {
-			apply();
-			if (event.widget == enabledButton) {
-				updateWidgetEnablement();
+		protected void init() {
+			enabledButton.addSelectionListener(this);
+			userText.addModifyListener(this);
+			passwordText.addModifyListener(this);
+			if (domainText != null) {
+				domainText.addModifyListener(this);
 			}
-		}
-
-		public void setEnabled(boolean enabled) {
-			if (!enabled) {
-				enabledButton.setEnabled(false);
-				setInputFieldsEnabled(false);
-			} else {
-				enabledButton.setEnabled(true);
-				updateWidgetEnablement();
-			}
-		}
-
-		private void setInputFieldsEnabled(boolean enabled) {
-			keyStoreFileNameText.setEnabled(enabled);
-			passwordText.setEnabled(enabled);
-			savePasswordButton.setEnabled(enabled);
+			savePasswordButton.addSelectionListener(this);
 		}
 
 	}
@@ -336,13 +376,13 @@ public class RepositoryLocationPart {
 
 	private boolean needsAnonymousLogin;
 
+	private boolean needsCertificateAuth;
+
 	private boolean needsHttpAuth;
 
 	private boolean needsProxy;
 
 	private boolean needsValidation;
-
-	private boolean needsCertificateAuth;
 
 	private IAdaptable serviceLocator;
 
@@ -354,71 +394,6 @@ public class RepositoryLocationPart {
 		setNeedsHttpAuth(false);
 		setNeedsCertificateAuth(false);
 		setNeedsValidation(true);
-	}
-
-	protected void applyValidatorResult(RepositoryValidator validator) {
-		IStatus status = validator.getResult();
-		String message = status.getMessage();
-		if (message == null || message.length() == 0) {
-			message = null;
-		}
-		switch (status.getSeverity()) {
-		case IStatus.OK:
-			if (status == Status.OK_STATUS) {
-//				if (getUserName().length() > 0) {
-//					message = "Credentials are valid.";
-//				} else {
-				message = Messages.RepositoryLocationPart_Repository_is_valid;
-//				}
-			}
-			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.INFO:
-			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
-			break;
-		case IStatus.WARNING:
-			getPartContainer().setMessage(message, IMessageProvider.WARNING);
-			break;
-		default:
-			getPartContainer().setMessage(message, IMessageProvider.ERROR);
-			break;
-		}
-	}
-
-	private UserCredentialsListener bindUserCredentials(AuthenticationType<UserCredentials> authType,
-			Button enabledButton, Text userText, Text passwordText, Text domainText, Button savePasswordButton,
-			boolean reverseEnablement) {
-		UserCredentialsListener listener = new UserCredentialsListener(authType, enabledButton, userText, passwordText,
-				domainText, savePasswordButton);
-		listener.setEnablementReversed(reverseEnablement);
-		listener.restore();
-		return listener;
-	}
-
-	private CertificateCredentialsListener bindCertificateCredentials(
-			AuthenticationType<CertificateCredentials> authType, Button enabledButton, Text userText,
-			Text passwordText, Button savePasswordButton) {
-		CertificateCredentialsListener listener = new CertificateCredentialsListener(authType, enabledButton, userText,
-				passwordText, savePasswordButton);
-		listener.restore();
-		return listener;
-	}
-
-	protected void bind(Button button, String property) {
-		ISWTObservableValue uiElement = SWTObservables.observeSelection(button);
-		IObservableValue modelElement = new RepositoryLocationValueProperty(property, Boolean.FALSE.toString()).observe(workingCopy);
-		bindingContext.bindValue(uiElement, modelElement, null, null);
-	}
-
-	protected void bind(Text text, String property) {
-		bind(text, property, null, null);
-	}
-
-	protected void bind(Text text, String property, UpdateValueStrategy targetObservableValue,
-			UpdateValueStrategy modelObservableValue) {
-		ISWTObservableValue uiElement = SWTObservables.observeText(text, SWT.Modify);
-		IObservableValue modelElement = new RepositoryLocationValueProperty(property, null).observe(workingCopy);
-		bindingContext.bindValue(uiElement, modelElement, targetObservableValue, modelObservableValue);
 	}
 
 	/**
@@ -435,10 +410,6 @@ public class RepositoryLocationPart {
 		return getValidator() != null;
 	}
 
-	protected Control createAdditionalContents(Composite composite) {
-		return null;
-	}
-
 	public Control createContents(Composite parent) {
 		bindingContext = new DataBindingContext();
 		WizardPage wizardPage = getContainer(WizardPage.class);
@@ -453,20 +424,22 @@ public class RepositoryLocationPart {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.swtDefaults().numColumns(3).applyTo(composite);
 
-//		Composite this = new Composite(parent, SWT.NULL);
-//		Layout layout = new FillLayout();
-//		this.setLayout(layout);
-
 		createServerSection(composite);
 		createUserSection(composite);
 
 		Control control = createAdditionalContents(composite);
 		if (control != null) {
-			GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(control);
+			int minHeight = control.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+			GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, minHeight).span(3, 1).applyTo(control);
 		}
 
 		if (needsHttpAuth() || needsCertificateAuth() || needsProxy() || needsAdditionalSections()) {
-			SectionComposite sectionComposite = new SectionComposite(composite, SWT.NONE);
+			final ResizingSectionComposite sectionComposite = new ResizingSectionComposite(composite, SWT.NONE);
+			composite.addListener(SWT.Resize, new Listener() {
+				public void handleEvent(Event event) {
+					sectionComposite.updateLayout();
+				}
+			});
 			GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(sectionComposite);
 
 			if (needsHttpAuth()) {
@@ -493,41 +466,140 @@ public class RepositoryLocationPart {
 		return composite;
 	}
 
-	private void createHttpAuthSection(SectionComposite parent) {
-		int style = SWT.NONE;
-		if (getWorkingCopy().getCredentials(AuthenticationType.HTTP, false) != null) {
-			style |= ExpandableComposite.EXPANDED;
+	public <T> T getContainer(Class<T> clazz) {
+		return (T) getServiceLocator().getAdapter(clazz);
+	}
+
+	public IPartContainer getPartContainer() {
+		return getContainer(IPartContainer.class);
+	}
+
+	public boolean isValidUrl(String url) {
+		if (url.startsWith("https://") || url.startsWith("http://")) { //$NON-NLS-1$//$NON-NLS-2$
+			try {
+				new URI(url);
+				return true;
+			} catch (Exception e) {
+				// fall through
+			}
 		}
-		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_HTTP_Authentication, style);
-		section.clientVerticalSpacing = 5;
+		return false;
+	}
 
-		Composite composite = new Composite(section, SWT.NONE);
-		section.setClient(composite);
-		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
+	public boolean needsAdditionalSections() {
+		return needsAdditionalSections;
+	}
 
-		Label label;
+	public boolean needsAnonymousLogin() {
+		return needsAnonymousLogin;
+	}
 
-		Button enableButton = new Button(composite, SWT.CHECK);
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
-		enableButton.setText(Messages.RepositoryLocationPart_Enable_HTTP_Authentication);
+	public boolean needsCertificateAuth() {
+		return needsCertificateAuth;
+	}
 
-		label = new Label(composite, SWT.NONE);
-		label.setText(Messages.RepositoryLocationPart_User);
+	public boolean needsHttpAuth() {
+		return this.needsHttpAuth;
+	}
 
-		Text userText = new Text(composite, SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
+	public boolean needsProxy() {
+		return this.needsProxy;
+	}
 
-		label = new Label(composite, SWT.NONE);
-		label.setText(Messages.RepositoryLocationPart_Password);
+	public boolean needsValidation() {
+		return needsValidation;
+	}
 
-		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+	public void setNeedsAdditionalSections(boolean needsAdditionalSections) {
+		this.needsAdditionalSections = needsAdditionalSections;
+	}
 
-		Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText(Messages.RepositoryLocationPart_Save_Password);
+	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
+		this.needsAnonymousLogin = needsAnonymousLogin;
+	}
 
-		bindUserCredentials(AuthenticationType.HTTP, enableButton, userText, passwordText, null, savePasswordButton,
-				false);
+	public void setNeedsCertificateAuth(boolean needsCertificateAuth) {
+		this.needsCertificateAuth = needsCertificateAuth;
+	}
+
+	public void setNeedsHttpAuth(boolean needsHttpAuth) {
+		this.needsHttpAuth = needsHttpAuth;
+	}
+
+	public void setNeedsProxy(boolean needsProxy) {
+		this.needsProxy = needsProxy;
+	}
+
+	public void setNeedsValidation(boolean needsValidation) {
+		this.needsValidation = needsValidation;
+	}
+
+	public void setServiceLocator(IAdaptable container) {
+		this.serviceLocator = container;
+	}
+
+	/**
+	 * Validate settings provided by the {@link #getValidator() validator}, typically the server settings.
+	 */
+	public void validate() {
+		final RepositoryValidator validator = getValidator();
+		if (validator == null) {
+			return;
+		}
+
+		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
+		try {
+			getContainer(IPartContainer.class).run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask(Messages.RepositoryLocationPart_Validating_repository, IProgressMonitor.UNKNOWN);
+					try {
+						result.set(validator.run(monitor));
+					} catch (OperationCanceledException e) {
+						result.set(Status.CANCEL_STATUS);
+						throw new InterruptedException();
+					} catch (Exception e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						monitor.done();
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
+							Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
+					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+			return;
+		} catch (InterruptedException e) {
+			// canceled
+			return;
+		}
+		if (result.get() == null) {
+			validator.setResult(Status.OK_STATUS);
+		} else {
+			validator.setResult(result.get());
+		}
+		getPartContainer().updateButtons();
+		applyValidatorResult(validator);
+	}
+
+	private CertificateCredentialsListener bindCertificateCredentials(
+			AuthenticationType<CertificateCredentials> authType, Button enabledButton, Text userText,
+			Text passwordText, Button savePasswordButton) {
+		CertificateCredentialsListener listener = new CertificateCredentialsListener(authType, enabledButton, userText,
+				passwordText, savePasswordButton);
+		listener.restore();
+		return listener;
+	}
+
+	private UserCredentialsListener bindUserCredentials(AuthenticationType<UserCredentials> authType,
+			Button enabledButton, Text userText, Text passwordText, Text domainText, Button savePasswordButton,
+			boolean reverseEnablement) {
+		UserCredentialsListener listener = new UserCredentialsListener(authType, enabledButton, userText, passwordText,
+				domainText, savePasswordButton);
+		listener.setEnablementReversed(reverseEnablement);
+		listener.restore();
+		return listener;
 	}
 
 	private void createCertificateAuthSection(SectionComposite parent) {
@@ -583,6 +655,43 @@ public class RepositoryLocationPart {
 
 		bindCertificateCredentials(AuthenticationType.CERTIFICATE, enableButton, keyStoreFileNameText, passwordText,
 				savePasswordButton);
+	}
+
+	private void createHttpAuthSection(SectionComposite parent) {
+		int style = SWT.NONE;
+		if (getWorkingCopy().getCredentials(AuthenticationType.HTTP, false) != null) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_HTTP_Authentication, style);
+		section.clientVerticalSpacing = 5;
+
+		Composite composite = new Composite(section, SWT.NONE);
+		section.setClient(composite);
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(composite);
+
+		Label label;
+
+		Button enableButton = new Button(composite, SWT.CHECK);
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
+		enableButton.setText(Messages.RepositoryLocationPart_Enable_HTTP_Authentication);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText(Messages.RepositoryLocationPart_User);
+
+		Text userText = new Text(composite, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(userText);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText(Messages.RepositoryLocationPart_Password);
+
+		Text passwordText = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
+
+		Button savePasswordButton = new Button(composite, SWT.CHECK);
+		savePasswordButton.setText(Messages.RepositoryLocationPart_Save_Password);
+
+		bindUserCredentials(AuthenticationType.HTTP, enableButton, userText, passwordText, null, savePasswordButton,
+				false);
 	}
 
 	private void createProxySection(final SectionComposite parent) {
@@ -661,16 +770,6 @@ public class RepositoryLocationPart {
 		updateProxyEnablement(listener, proxyPortText, proxyHostText, !systemProxyButton.getSelection());
 	}
 
-	protected void updateProxyEnablement(UserCredentialsListener listener, Text hostText, Text portText,
-			boolean selected) {
-		hostText.setEnabled(selected);
-		portText.setEnabled(selected);
-		listener.setEnabled(selected);
-	}
-
-	protected void createSections(SectionComposite sectionComposite) {
-	}
-
 	private void createServerSection(Composite parent) {
 		Label label;
 
@@ -691,10 +790,6 @@ public class RepositoryLocationPart {
 		Button disconnectedButton = new Button(parent, SWT.CHECK);
 		disconnectedButton.setText(Messages.RepositoryLocationPart_Disconnected);
 		bind(disconnectedButton, RepositoryLocation.PROPERTY_OFFLINE);
-	}
-
-	protected UpdateValueStrategy getUrlUpdateValueStrategy() {
-		return new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator());
 	}
 
 	private void createUserSection(Composite parent) {
@@ -723,16 +818,65 @@ public class RepositoryLocationPart {
 				savePasswordButton, true);
 	}
 
-	public <T> T getContainer(Class<T> clazz) {
-		return (T) getServiceLocator().getAdapter(clazz);
-	}
-
-	public IPartContainer getPartContainer() {
-		return getContainer(IPartContainer.class);
-	}
-
 	private IAdaptable getServiceLocator() {
 		return serviceLocator;
+	}
+
+	protected void applyValidatorResult(RepositoryValidator validator) {
+		IStatus status = validator.getResult();
+		String message = status.getMessage();
+		if (message == null || message.length() == 0) {
+			message = null;
+		}
+		switch (status.getSeverity()) {
+		case IStatus.OK:
+			if (status == Status.OK_STATUS) {
+//				if (getUserName().length() > 0) {
+//					message = "Credentials are valid.";
+//				} else {
+				message = Messages.RepositoryLocationPart_Repository_is_valid;
+//				}
+			}
+			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
+			break;
+		case IStatus.INFO:
+			getPartContainer().setMessage(message, IMessageProvider.INFORMATION);
+			break;
+		case IStatus.WARNING:
+			getPartContainer().setMessage(message, IMessageProvider.WARNING);
+			break;
+		default:
+			getPartContainer().setMessage(message, IMessageProvider.ERROR);
+			break;
+		}
+	}
+
+	protected void bind(Button button, String property) {
+		ISWTObservableValue uiElement = SWTObservables.observeSelection(button);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property, Boolean.FALSE.toString()).observe(workingCopy);
+		bindingContext.bindValue(uiElement, modelElement, null, null);
+	}
+
+	protected void bind(Text text, String property) {
+		bind(text, property, null, null);
+	}
+
+	protected void bind(Text text, String property, UpdateValueStrategy targetObservableValue,
+			UpdateValueStrategy modelObservableValue) {
+		ISWTObservableValue uiElement = SWTObservables.observeText(text, SWT.Modify);
+		IObservableValue modelElement = new RepositoryLocationValueProperty(property, null).observe(workingCopy);
+		bindingContext.bindValue(uiElement, modelElement, targetObservableValue, modelObservableValue);
+	}
+
+	protected Control createAdditionalContents(Composite composite) {
+		return null;
+	}
+
+	protected void createSections(SectionComposite sectionComposite) {
+	}
+
+	protected UpdateValueStrategy getUrlUpdateValueStrategy() {
+		return new UpdateValueStrategy().setAfterConvertValidator(new UrlValidator());
 	}
 
 	protected RepositoryValidator getValidator() {
@@ -743,113 +887,11 @@ public class RepositoryLocationPart {
 		return workingCopy;
 	}
 
-	public boolean isValidUrl(String url) {
-		if (url.startsWith("https://") || url.startsWith("http://")) { //$NON-NLS-1$//$NON-NLS-2$
-			try {
-				new URI(url);
-				return true;
-			} catch (Exception e) {
-				// fall through
-			}
-		}
-		return false;
-	}
-
-	public boolean needsAdditionalSections() {
-		return needsAdditionalSections;
-	}
-
-	public boolean needsAnonymousLogin() {
-		return needsAnonymousLogin;
-	}
-
-	public boolean needsCertificateAuth() {
-		return needsCertificateAuth;
-	}
-
-	public boolean needsHttpAuth() {
-		return this.needsHttpAuth;
-	}
-
-	public boolean needsProxy() {
-		return this.needsProxy;
-	}
-
-	public boolean needsValidation() {
-		return needsValidation;
-	}
-
-	public void setNeedsAdditionalSections(boolean needsAdditionalSections) {
-		this.needsAdditionalSections = needsAdditionalSections;
-	}
-
-	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
-		this.needsAnonymousLogin = needsAnonymousLogin;
-	}
-
-	public void setNeedsHttpAuth(boolean needsHttpAuth) {
-		this.needsHttpAuth = needsHttpAuth;
-	}
-
-	public void setNeedsCertificateAuth(boolean needsCertificateAuth) {
-		this.needsCertificateAuth = needsCertificateAuth;
-	}
-
-	public void setNeedsProxy(boolean needsProxy) {
-		this.needsProxy = needsProxy;
-	}
-
-	public void setNeedsValidation(boolean needsValidation) {
-		this.needsValidation = needsValidation;
-	}
-
-	public void setServiceLocator(IAdaptable container) {
-		this.serviceLocator = container;
-	}
-
-	/**
-	 * Validate settings provided by the {@link #getValidator() validator}, typically the server settings.
-	 */
-	public void validate() {
-		final RepositoryValidator validator = getValidator();
-		if (validator == null) {
-			return;
-		}
-
-		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
-		try {
-			getContainer(IPartContainer.class).run(true, true, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.RepositoryLocationPart_Validating_repository, IProgressMonitor.UNKNOWN);
-					try {
-						result.set(validator.run(monitor));
-					} catch (OperationCanceledException e) {
-						result.set(Status.CANCEL_STATUS);
-						throw new InterruptedException();
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						monitor.done();
-					}
-				}
-			});
-		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN,
-							Messages.RepositoryLocationPart_Unexpected_error_during_repository_validation, e),
-					StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
-			return;
-		} catch (InterruptedException e) {
-			// canceled
-			return;
-		}
-		if (result.get() == null) {
-			validator.setResult(Status.OK_STATUS);
-		} else {
-			validator.setResult(result.get());
-		}
-		getPartContainer().updateButtons();
-		applyValidatorResult(validator);
+	protected void updateProxyEnablement(UserCredentialsListener listener, Text hostText, Text portText,
+			boolean selected) {
+		hostText.setEnabled(selected);
+		portText.setEnabled(selected);
+		listener.setEnabled(selected);
 	}
 
 }
