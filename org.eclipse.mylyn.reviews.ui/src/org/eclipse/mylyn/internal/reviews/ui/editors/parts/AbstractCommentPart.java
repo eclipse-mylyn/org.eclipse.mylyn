@@ -134,6 +134,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginTop = 0;
 		layout.marginLeft = 9;
+		layout.marginRight = 11;
 		sectionClient.setLayout(layout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(sectionClient);
 

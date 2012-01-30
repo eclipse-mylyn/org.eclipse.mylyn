@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.reviews.ui.editors.parts.TopicPart;
 import org.eclipse.swt.SWT;
@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -61,10 +60,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-
-		if (toolkit == null) {
-			toolkit = new FormToolkit(getShell().getDisplay());
-		}
+		toolkit = new FormToolkit(CommonFormUtil.getSharedColors());
 
 		scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
 		scrolledComposite.setExpandHorizontal(true);
@@ -75,10 +71,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		composite.setLayout(new GridLayout());
 		scrolledComposite.setContent(composite);
 
-		parent.setBackground(toolkit.getColors().getBackground());
-		getShell().setBackground(toolkit.getColors().getBackground());
-
-		return composite;
+		return scrolledComposite;
 	}
 
 	public void dispose() {
@@ -159,7 +152,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 			width = computeSize.x;
 		}
 		getShell().setSize(width, height);
-		scrolledComposite.setSize(width, height);
+//		scrolledComposite.setSize(width, height);
 	}
 
 	public void setInput(Object input) {
@@ -175,19 +168,19 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 			// FIXME
 			for (CommentAnnotation annotation : annotationInput.getCrucibleAnnotations()) {
 				TopicPart part = new TopicPart(annotation.getTopic());
-
 				part.hookCustomActionRunListener(this);
-
-				toolkit.adapt(part.createControl(composite, toolkit), true, true);
-				toolkit.adapt(composite);
-				toolkit.adapt(scrolledComposite);
-				toolkit.adapt(scrolledComposite.getParent());
-
-				getShell().setBackground(toolkit.getColors().getBackground());
+				Control control = part.createControl(composite, toolkit);
+				toolkit.adapt(control, true, true);
 			}
-			focusLabel = toolkit.createLabel(composite, "Press 'F2' for focus.");
-			focusLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(focusLabel);
+
+			composite.setBackground(toolkit.getColors().getBackground());
+
+			scrolledComposite.layout(true, true);
+			scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+//			focusLabel = toolkit.createLabel(composite, "Press 'F2' for focus.");
+//			focusLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+//			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(focusLabel);
 		} else {
 			input = null;
 		}
@@ -213,4 +206,5 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	public CommentInformationControl getInformationControl() {
 		return informationControl;
 	}
+
 }
