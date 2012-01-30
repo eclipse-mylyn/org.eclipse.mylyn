@@ -237,4 +237,15 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		return (getEditor() != null) ? getEditor().getControl() : null;
 	}
 
+	@Override
+	public boolean setFormInput(Object input) {
+		if (input instanceof String && getAttribute() != null) {
+			if (input.equals(getAttribute().getId())) {
+				EditorUtil.focusOn(getTaskEditorPage().getManagedForm().getForm(), getControl());
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
