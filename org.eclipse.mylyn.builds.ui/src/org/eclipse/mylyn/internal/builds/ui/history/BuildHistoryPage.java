@@ -11,11 +11,8 @@
 
 package org.eclipse.mylyn.internal.builds.ui.history;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -32,11 +29,9 @@ import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildsOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
 import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
-import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
 import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildDurationLabelProvider;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
@@ -52,7 +47,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.team.ui.history.HistoryPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
@@ -223,39 +217,7 @@ public class BuildHistoryPage extends HistoryPage {
 				Object item = ((IStructuredSelection) event.getSelection()).getFirstElement();
 				if (item instanceof IBuild) {
 					IBuild build = (IBuild) item;
-					final IBuildPlan plan = build.getPlan();
-					GetBuildsRequest request = new GetBuildsRequest(build.getPlan(),
-							Collections.singletonList(build.getLabel()), Scope.FULL);
-					GetBuildsOperation operation = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
-					operation.addOperationChangeListener(new OperationChangeListener() {
-						@Override
-						public void done(OperationChangeEvent event) {
-							if (!event.getStatus().isOK()) {
-								return;
-							}
-							if (Display.getDefault().isDisposed()) {
-								return;
-							}
-							final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-										IBuild build2 = operation.getBuilds().get(0);
-										build2.setPlan(plan);
-										build2.setServer(plan.getServer());
-										BuildEditorInput input = new BuildEditorInput(build2);
-										try {
-											getSite().getPage().openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
-										} catch (PartInitException e) {
-											StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-													"Unexpected error while opening build", e)); //$NON-NLS-1$
-										}
-									}
-								}
-							});
-						}
-					});
-					operation.execute();
+					OpenHandler.fetchAndOpen(getSite().getPage(), build);
 				}
 			}
 		});

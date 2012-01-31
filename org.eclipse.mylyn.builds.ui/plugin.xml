@@ -790,4 +790,11 @@
        </adapter>
     </factory>
  </extension>
+ <extension
+       point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+    <handler
+          class="org.eclipse.mylyn.internal.builds.ui.util.BuildsUrlHandler"
+          id="org.eclipse.mylyn.builds.ui.urlHandler.BuildsUrlHandler">
+    </handler>
+ </extension>
 </plugin>

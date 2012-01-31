@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildCause;
+import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildReference;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
@@ -106,5 +108,9 @@ public abstract class BuildServerBehaviour {
 	public abstract void runBuild(RunBuildRequest request, IOperationMonitor monitor) throws CoreException;
 
 	public abstract IStatus validate(IOperationMonitor monitor) throws CoreException;
+
+	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
+		return null;
+	}
 
 }
