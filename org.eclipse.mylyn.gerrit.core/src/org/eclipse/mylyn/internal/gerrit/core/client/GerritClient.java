@@ -668,7 +668,7 @@ public class GerritClient {
 		SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeListService().allQueryNext(queryString, "z", 25, this); //$NON-NLS-1$
+				getChangeListService().allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
 			}
 		});
 		return sl.getChanges();
