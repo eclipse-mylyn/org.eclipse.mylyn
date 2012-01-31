@@ -47,6 +47,14 @@ public class TestUtil {
 		public String toString() {
 			return getClass().getSimpleName() + " [username=" + username + ",password=" + password + "]";
 		}
+
+		public String getShortUserName() {
+			if (username.contains("@")) {
+				return username.substring(0, username.indexOf("@"));
+			}
+			return username;
+		}
+
 	}
 
 	public static Credentials readCredentials() {
