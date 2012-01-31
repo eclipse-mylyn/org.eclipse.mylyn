@@ -23,6 +23,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -30,6 +31,8 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenEvent;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -366,6 +369,24 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 		return TasksUiInternal.openTask(repository, taskId, null);
+	}
+
+	/**
+	 * @since 3.7
+	 */
+	public static EditorHandle openTaskWithResult(TaskRepository repository, String taskId) {
+		Assert.isNotNull(repository);
+		Assert.isNotNull(taskId);
+		final EditorHandle handle = new EditorHandle();
+		boolean opened = TasksUiInternal.openTask(repository, taskId, new TaskOpenListener() {
+			@Override
+			public void taskOpened(TaskOpenEvent event) {
+				handle.setPart(event.getEditor());
+				handle.setItem(event.getTask());
+				handle.setStatus(Status.OK_STATUS);
+			}
+		});
+		return (opened) ? handle : null;
 	}
 
 	/**
