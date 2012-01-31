@@ -33,4 +33,11 @@
             id="org.eclipse.mylyn.gerrit.ui.pageFactory">
       </pageFactory>   
    </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.internal.gerrit.ui.GerritUrlHandler"
+            id="org.eclipse.mylyn.gerrit.ui.urlHandler.UrlHandler">
+      </handler>
+   </extension>
 </plugin>

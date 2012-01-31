@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
+import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 
 /**
  * @author Steffen Pingel
@@ -37,6 +38,8 @@ public class AllGerritTests {
 	}
 
 	private static void addTests(boolean defaultOnly, TestSuite suite) {
+		suite.addTestSuite(GerritUrlHandlerTest.class);
+
 		// network tests
 		for (GerritFixture fixture : GerritFixture.ALL) {
 			fixture.createSuite(suite);
