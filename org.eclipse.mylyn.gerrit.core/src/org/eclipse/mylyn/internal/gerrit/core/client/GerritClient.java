@@ -28,21 +28,22 @@ import java.util.Set;
 import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.core.HtmlTag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
@@ -544,12 +545,16 @@ public class GerritClient {
 	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
 	 * portion of the page.
 	 */
-	private GerritConfig refreshGerritConfig(IProgressMonitor monitor) throws GerritException {
-		GerritConfig gerritConfig = null;
+	private GerritConfig refreshGerritConfig(final IProgressMonitor monitor) throws GerritException {
 		try {
-			GetMethod method = client.getRequest("/", monitor); //$NON-NLS-1$
-			try {
-				if (method.getStatusCode() == HttpStatus.SC_OK) {
+			GerritConfig gerritConfig = client.execute(new Request<GerritConfig>() {
+				@Override
+				public HttpMethodBase createMethod() throws IOException {
+					return new GetMethod(client.getUrl() + "/"); //$NON-NLS-1$
+				}
+
+				@Override
+				public GerritConfig process(HttpMethodBase method) throws IOException {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
 						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
@@ -563,9 +568,9 @@ public class GerritClient {
 										String text = getText(tokenizer);
 										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-										gerritConfig = parseConfig(text);
+										GerritConfig gerritConfig = parseConfig(text);
 										if (gerritConfig != null) {
-											break;
+											return gerritConfig;
 										}
 									}
 								}
@@ -576,15 +581,14 @@ public class GerritClient {
 					} finally {
 						in.close();
 					}
+					return null;
 				}
+			}, monitor);
 
-				if (gerritConfig == null) {
-					throw new GerritException("Failed to obtain Gerrit configuration");
-				}
-				return gerritConfig;
-			} finally {
-				method.releaseConnection();
+			if (gerritConfig == null) {
+				throw new GerritException("Failed to obtain Gerrit configuration");
 			}
+			return gerritConfig;
 		} catch (IOException cause) {
 			GerritException e = new GerritException();
 			e.initCause(cause);

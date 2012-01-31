@@ -11,12 +11,24 @@
   <artifactId>org.eclipse.mylyn.gerrit.tests</artifactId>
   <version>0.9.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
+  <properties>
+	<test.suite>${project.artifactId}.AllGerritTests</test.suite>
+  </properties>
   <build>
-	<plugins>
+    <plugins>
 	  <plugin>
 		<groupId>org.eclipse.tycho</groupId>
-		<artifactId>tycho-source-plugin</artifactId>
+		<artifactId>tycho-surefire-plugin</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
+		</configuration>
 	  </plugin>
-	</plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 </project>

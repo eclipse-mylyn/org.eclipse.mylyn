@@ -24,6 +24,7 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -53,6 +54,43 @@ import com.google.gerrit.common.auth.userpass.LoginResult;
  * @author Christian Trutz
  */
 public class GerritHttpClient {
+
+	public static abstract class Request<T> {
+
+		public abstract HttpMethodBase createMethod() throws IOException;
+
+		public abstract T process(HttpMethodBase method) throws IOException;
+
+	}
+
+	private class JsonRequest extends Request<String> {
+
+		private final String serviceUri;
+
+		private final JsonEntity entity;
+
+		public JsonRequest(final String serviceUri, final JsonEntity entity) {
+			this.serviceUri = serviceUri;
+			this.entity = entity;
+		}
+
+		@Override
+		public PostMethod createMethod() throws IOException {
+			PostMethod method = new PostMethod(getUrl() + serviceUri);
+			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+
+			RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
+			method.setRequestEntity(requestEntity);
+			return method;
+		}
+
+		@Override
+		public String process(HttpMethodBase method) throws IOException {
+			return method.getResponseBodyAsString();
+		}
+
+	}
 
 	public static abstract class JsonEntity {
 
@@ -100,11 +138,15 @@ public class GerritHttpClient {
 	 * @return The JSON response
 	 * @throws GerritException
 	 */
-	public String postJsonRequest(String serviceUri, JsonEntity entity, IProgressMonitor monitor) throws IOException,
-			GerritException {
+	public String postJsonRequest(final String serviceUri, final JsonEntity entity, IProgressMonitor monitor)
+			throws IOException, GerritException {
 		Assert.isNotNull(serviceUri, "Service URI must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(entity, "JSON entity must be not null."); //$NON-NLS-1$
 
+		return execute(new JsonRequest(serviceUri, entity), monitor);
+	}
+
+	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
 		String openIdProvider = getOpenIdProvider();
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
@@ -118,11 +160,25 @@ public class GerritHttpClient {
 				}
 			}
 
-			PostMethod method = postJsonRequestInternal(serviceUri, entity, monitor);
+			HttpMethodBase method = request.createMethod();
+			try {
+				// Execute the method.
+				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			} catch (IOException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
+			} catch (RuntimeException e) {
+				WebUtil.releaseConnection(method, monitor);
+				throw e;
+			}
 
 			int code = method.getStatusCode();
 			if (code == HttpURLConnection.HTTP_OK) {
-				return method.getResponseBodyAsString();
+				try {
+					return request.process(method);
+				} finally {
+					WebUtil.releaseConnection(method, monitor);
+				}
 			} else {
 				WebUtil.releaseConnection(method, monitor);
 				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
@@ -137,29 +193,6 @@ public class GerritHttpClient {
 		}
 
 		throw new GerritLoginException();
-	}
-
-	private PostMethod postJsonRequestInternal(String serviceUri, JsonEntity entity, IProgressMonitor monitor)
-			throws IOException {
-		PostMethod method = new PostMethod(getUrl() + serviceUri);
-		method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
-		method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
-
-		try {
-			RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
-			method.setRequestEntity(requestEntity);
-
-			// Execute the method.
-			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			return method;
-		} catch (IOException e) {
-			WebUtil.releaseConnection(method, monitor);
-			throw e;
-		} catch (RuntimeException e) {
-			WebUtil.releaseConnection(method, monitor);
-			throw e;
-		}
-
 	}
 
 	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
@@ -178,7 +211,7 @@ public class GerritHttpClient {
 		}
 	}
 
-	private String getUrl() {
+	String getUrl() {
 		String url = location.getUrl();
 		if (url.endsWith("/")) { //$NON-NLS-1$
 			url = url.substring(0, url.length() - 1);
@@ -254,15 +287,16 @@ public class GerritHttpClient {
 		};
 
 		OpenIdAuthenticationResponse openIdResponse = null;
-		PostMethod method = postJsonRequestInternal("/gerrit/rpc/OpenIdService", entity, monitor); //$NON-NLS-1$
+		JsonRequest jsonRequest = new JsonRequest("/gerrit/rpc/OpenIdService", entity);
+		PostMethod method = jsonRequest.createMethod();
 		try {
-			int code = method.getStatusCode();
+			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			if (needsReauthentication(code, monitor)) {
 				return -1;
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
-				DiscoveryResult result = json.parseResponse(method.getResponseBodyAsString(), DiscoveryResult.class);
+				DiscoveryResult result = json.parseResponse(jsonRequest.process(method), DiscoveryResult.class);
 				if (result.status == Status.VALID) {
 					if (location instanceof IOpenIdLocation) {
 						String returnUrl = result.providerArgs.get("openid.return_to"); //$NON-NLS-1$
@@ -330,15 +364,16 @@ public class GerritHttpClient {
 			}
 		};
 
-		PostMethod method = postJsonRequestInternal("/gerrit/rpc/UserPassAuthService", entity, monitor);
+		JsonRequest jsonRequest = new JsonRequest("/gerrit/rpc/UserPassAuthService", entity);
+		PostMethod method = jsonRequest.createMethod();
 		try {
-			int code = method.getStatusCode();
+			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			if (needsReauthentication(code, monitor)) {
 				return -1;
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
-				LoginResult result = json.parseResponse(method.getResponseBodyAsString(), LoginResult.class);
+				LoginResult result = json.parseResponse(jsonRequest.process(method), LoginResult.class);
 				if (result.success) {
 					return HttpStatus.SC_TEMPORARY_REDIRECT;
 				} else {

@@ -38,12 +38,26 @@ public class GerritHarness {
 
 	public GerritClient client() {
 		readCredentials();
-		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), credentials.username, credentials.password,
-				new IProxyProvider() {
-					public Proxy getProxyForHost(String host, String proxyType) {
-						return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
-					}
-				});
+		String username = credentials.username;
+		String password = credentials.password;
+		if (!fixture.canAuthenticate()) {
+			username = null;
+			password = null;
+		}
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), username, password, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
+			}
+		});
+		return new GerritClient(location);
+	}
+
+	public GerritClient clientAnonymous() {
+		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), null, null, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
+			}
+		});
 		return new GerritClient(location);
 	}
 
