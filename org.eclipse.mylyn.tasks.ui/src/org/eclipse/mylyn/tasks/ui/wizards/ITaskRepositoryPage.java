@@ -49,4 +49,9 @@ public interface ITaskRepositoryPage extends IWizardPage {
 	 */
 	public abstract void performFinish(TaskRepository repository);
 
+	/**
+	 * @since 3.7
+	 */
+	public abstract boolean doPerformFinish(TaskRepository repository);
+
 }

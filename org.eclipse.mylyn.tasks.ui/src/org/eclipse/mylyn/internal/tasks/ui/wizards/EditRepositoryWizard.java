@@ -76,7 +76,10 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 				repository.setRepositoryUrl(newUrl);
 			}
-			settingsPage.performFinish(repository);
+			boolean result = settingsPage.doPerformFinish(repository);
+			if (!result) {
+				return false;
+			}
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
 			}

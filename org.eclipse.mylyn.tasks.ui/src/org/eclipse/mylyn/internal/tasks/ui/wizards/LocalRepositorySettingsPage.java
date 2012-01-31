@@ -64,4 +64,9 @@ public class LocalRepositorySettingsPage extends AbstractTaskRepositoryPage {
 		}
 	}
 
+	public boolean doPerformFinish(TaskRepository repository) {
+		performFinish(repository);
+		return true;
+	}
+
 }
