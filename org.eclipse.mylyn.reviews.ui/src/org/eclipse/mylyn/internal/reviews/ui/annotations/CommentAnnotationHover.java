@@ -78,7 +78,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	}
 
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
-		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(sourceViewer, lineNumber);
+		List<CommentAnnotation> commentAnnotations = getAnnotationsForLine(sourceViewer, lineNumber);
 		if (commentAnnotations != null && commentAnnotations.size() > 0) {
 
 			if (commentAnnotations.size() == 1) {
@@ -127,8 +127,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	}
 
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
-		List<CommentAnnotation> annotationsForLine = getCrucibleAnnotationsForLine(sourceViewer,
-				lineRange.getStartLine());
+		List<CommentAnnotation> annotationsForLine = getAnnotationsForLine(sourceViewer, lineRange.getStartLine());
 		if (annotationsForLine == null || annotationsForLine.size() == 0) {
 			return getHoverInfo(sourceViewer, lineRange.getStartLine());
 		} else {
@@ -139,7 +138,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		currentAnnotationHover = this;
 		currentSourceViewer = viewer;
-		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(viewer, lineNumber);
+		List<CommentAnnotation> commentAnnotations = getAnnotationsForLine(viewer, lineNumber);
 		if (commentAnnotations != null && commentAnnotations.size() > 0) {
 			IDocument document = viewer.getDocument();
 			int lowestStart = Integer.MAX_VALUE;
@@ -227,7 +226,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<CommentAnnotation> getCrucibleAnnotationsForLine(ISourceViewer viewer, int line) {
+	private List<CommentAnnotation> getAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {
 			return null;
@@ -235,11 +234,10 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 		IDocument document = viewer.getDocument();
 		List<CommentAnnotation> commentAnnotations = new ArrayList<CommentAnnotation>();
-		Iterator<Annotation> iterator = model.getAnnotationIterator();
 
-		while (iterator.hasNext()) {
-			Annotation annotation = iterator.next();
-
+		for (Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext();) {
+			Annotation annotation = it.next();
+			System.err.println(((CommentAnnotation) annotation).getTopic().getCreationDate());
 			Position position = model.getPosition(annotation);
 			if (position == null) {
 				continue;

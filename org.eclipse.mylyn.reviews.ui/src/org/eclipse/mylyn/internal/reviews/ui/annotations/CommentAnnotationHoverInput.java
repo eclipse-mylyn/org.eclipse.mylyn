@@ -30,7 +30,7 @@ public class CommentAnnotationHoverInput {
 		return annotations != null && annotations.size() > 0;
 	}
 
-	public List<CommentAnnotation> getCrucibleAnnotations() {
+	public List<CommentAnnotation> getAnnotations() {
 		return annotations;
 	}
 

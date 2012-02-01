@@ -79,7 +79,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 	}
 
 	private void runMarkCommentAsReadJob(CommentAnnotationHoverInput input) {
-		List<CommentAnnotation> annotations = input.getCrucibleAnnotations();
+		List<CommentAnnotation> annotations = input.getAnnotations();
 		if (annotations == null || annotations.size() == 0) {
 			return;
 		}

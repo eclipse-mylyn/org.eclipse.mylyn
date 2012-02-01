@@ -166,7 +166,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 			currentPopupDialog = this;
 			// FIXME
-			for (CommentAnnotation annotation : annotationInput.getCrucibleAnnotations()) {
+			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
 				TopicPart part = new TopicPart(annotation.getTopic());
 				part.hookCustomActionRunListener(this);
 				Control control = part.createControl(composite, toolkit);

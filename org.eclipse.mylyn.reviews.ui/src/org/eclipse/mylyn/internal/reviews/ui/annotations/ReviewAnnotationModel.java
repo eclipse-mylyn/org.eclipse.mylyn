@@ -50,7 +50,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotationModel {
 
-	private final Set<CommentAnnotation> annotations = new HashSet<CommentAnnotation>(32);
+	private final List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
 
 	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
 
@@ -171,8 +171,7 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 	}
 
 	public void addAnnotationModelListener(IAnnotationModelListener listener) {
-		if (!annotationModelListeners.contains(listener)) {
-			annotationModelListeners.add(listener);
+		if (annotationModelListeners.add(listener)) {
 			fireModelChanged(new AnnotationModelEvent(this, true));
 		}
 	}
