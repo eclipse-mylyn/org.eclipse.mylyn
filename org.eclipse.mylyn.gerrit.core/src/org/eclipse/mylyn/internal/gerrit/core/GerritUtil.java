@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -118,7 +119,7 @@ public class GerritUtil {
 
 	private static void addComments(IFileRevision revision, List<PatchLineComment> comments,
 			AccountInfoCache accountInfoCache) {
-		if (comments == null) {
+		if (comments == null || comments.isEmpty()) {
 			return;
 		}
 		for (PatchLineComment comment : comments) {
@@ -143,6 +144,7 @@ public class GerritUtil {
 			topic.setItem(revision);
 			topic.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
 			topic.setDescription(comment.getMessage());
+			topic.setTitle(shortenText(comment.getMessage(), 10, 20));
 			topic.getComments().add(topicComment);
 
 			revision.getTopics().add(topic);
@@ -192,6 +194,21 @@ public class GerritUtil {
 		} else {
 			return false;
 		}
+	}
+
+	public static String shortenText(String t, int minChars, int maxChars) {
+		Assert.isTrue(minChars >= 0);
+		Assert.isTrue(maxChars >= 0);
+		Assert.isTrue(minChars <= maxChars);
+		if (t.length() < maxChars) {
+			return t;
+		}
+		for (int i = maxChars - 1; i >= minChars; i--) {
+			if (Character.isWhitespace(t.charAt(i))) {
+				return NLS.bind("{0}...", t.substring(0, i));
+			}
+		}
+		return NLS.bind("{0}...", t.substring(0, minChars));
 	}
 
 }
