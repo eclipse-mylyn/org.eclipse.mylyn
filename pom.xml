@@ -92,7 +92,6 @@
 	<module>org.eclipse.mylyn.reviews.core</module>
 	<module>org.eclipse.mylyn.reviews.feature</module>
 	<module>org.eclipse.mylyn.reviews.sdk.feature</module>
-	<module>org.eclipse.mylyn.reviews.site</module>
 	<module>org.eclipse.mylyn.reviews.ui</module>
   </modules>
 </project>
