@@ -14,6 +14,8 @@ package org.eclipse.mylyn.commons.workbench.browser;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -77,7 +79,15 @@ public class BrowserUtil {
 			if (!status.isOK()) {
 				StatusHandler.log(status);
 			}
+
 			handlers = reader.getItems();
+
+			// handlers with higher priories are sorted first
+			Collections.sort(handlers, new Comparator<AbstractUrlHandler>() {
+				public int compare(AbstractUrlHandler o1, AbstractUrlHandler o2) {
+					return o2.getPriority() - o1.getPriority();
+				};
+			});
 		}
 
 	}

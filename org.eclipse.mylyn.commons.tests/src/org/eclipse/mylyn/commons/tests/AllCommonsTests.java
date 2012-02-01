@@ -21,6 +21,7 @@ import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.TimeoutInputStreamTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
+import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
 
 /**
  * @author Mik Kersten
@@ -36,6 +37,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(TimeoutInputStreamTest.class);
+		suite.addTestSuite(BrowserUtilTest.class);
 		return suite;
 	}
 

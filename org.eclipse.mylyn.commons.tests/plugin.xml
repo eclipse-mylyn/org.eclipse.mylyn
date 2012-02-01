@@ -10,5 +10,16 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest$HighPriorityHandler"
+            id="org.eclipse.mylyn.commons.tests.handler.HighPriority">
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest$LowPriorityHandler"
+            id="org.eclipse.mylyn.commons.tests.handler.LowPriority">
+      </handler>
+   </extension>
 
 </plugin>

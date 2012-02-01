@@ -23,6 +23,7 @@ Export-Package: org.eclipse.mylyn.commons.core;x-internal:=true,
  org.eclipse.mylyn.commons.tests.net;x-internal:=true,
  org.eclipse.mylyn.commons.tests.operations;x-internal:=true,
  org.eclipse.mylyn.commons.tests.support;x-internal:=true,
+ org.eclipse.mylyn.commons.tests.workbench.browser;x-internal:=true,
  org.eclipse.mylyn.commons.tests.xmlrpc;x-internal:=true,
  org.eclipse.mylyn.commons.ui.screenshots;x-internal:=true
 Bundle-Vendor: Eclipse Mylyn

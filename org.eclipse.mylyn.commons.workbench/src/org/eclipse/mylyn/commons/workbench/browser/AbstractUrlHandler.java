@@ -21,4 +21,13 @@ public abstract class AbstractUrlHandler {
 
 	public abstract EditorHandle openUrl(IWorkbenchPage page, String location, int customFlags);
 
+	/**
+	 * Returns the priority of this handler. Handlers with higher priorities are queried first.
+	 * 
+	 * @return the priority; the default priority is <code>100</code>
+	 */
+	public int getPriority() {
+		return 100;
+	}
+
 }
