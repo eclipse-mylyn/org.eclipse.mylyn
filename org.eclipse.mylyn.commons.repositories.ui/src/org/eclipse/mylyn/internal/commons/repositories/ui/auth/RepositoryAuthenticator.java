@@ -87,6 +87,7 @@ public class RepositoryAuthenticator<T extends AuthenticationCredentials> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected AbstractCredentialsProviderUi<T> getCredentialsProviderUi() {
 		Class<T> credentialsType = request.getAuthenticationType().getCredentialsType();
 		if (credentialsType == UserCredentials.class) {

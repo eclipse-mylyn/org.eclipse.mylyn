@@ -59,7 +59,7 @@ public final class RepositoryUi {
 		} else {
 			// @issue the following is resource-specific legacy code
 			// Build the selection from the IFile of the editor
-			Class resourceClass = LegacyResourceSupport.getResourceClass();
+			Class<?> resourceClass = LegacyResourceSupport.getResourceClass();
 			if (resourceClass != null) {
 				IWorkbenchPart part = workbenchWindow.getPartService().getActivePart();
 				if (part instanceof IEditorPart) {

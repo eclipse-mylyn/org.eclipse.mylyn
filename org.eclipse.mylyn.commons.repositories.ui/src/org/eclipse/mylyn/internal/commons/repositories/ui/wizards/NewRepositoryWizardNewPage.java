@@ -178,7 +178,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 			}
 		}
 
-		primaryWizards = (WorkbenchWizardElement[]) newPrimaryWizards.toArray(new WorkbenchWizardElement[newPrimaryWizards.size()]);
+		primaryWizards = newPrimaryWizards.toArray(new WorkbenchWizardElement[newPrimaryWizards.size()]);
 	}
 
 	/**
@@ -277,6 +277,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	 *            the parent <code>Composite</code>.
 	 * @since 3.0
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected FilteredTree createFilteredTree(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -606,9 +607,9 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 	protected void storeExpandedCategories() {
 		Object[] expandedElements = filteredTree.getViewer().getExpandedElements();
 		List<String> expandedElementPaths = new ArrayList<String>(expandedElements.length);
-		for (int i = 0; i < expandedElements.length; ++i) {
-			if (expandedElements[i] instanceof IWizardCategory) {
-				expandedElementPaths.add(((IWizardCategory) expandedElements[i]).getPath().toString());
+		for (Object expandedElement : expandedElements) {
+			if (expandedElement instanceof IWizardCategory) {
+				expandedElementPaths.add(((IWizardCategory) expandedElement).getPath().toString());
 			}
 		}
 		settings.put(STORE_EXPANDED_CATEGORIES_ID,

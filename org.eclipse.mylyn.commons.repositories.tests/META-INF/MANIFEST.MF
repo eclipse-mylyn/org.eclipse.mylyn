@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.repositories.core,
  org.eclipse.mylyn.commons.repositories.ui,
  org.eclipse.mylyn.commons.sdk.util
-Export-Package: org.eclipse.mylyn.commons.repositories.tests.core;x-internal:=true
+Export-Package: org.eclipse.mylyn.commons.repositories.tests.core;x-internal:=true,
+ org.eclipse.mylyn.commons.repositories.tests.support
 Bundle-Vendor: Eclipse Mylyn

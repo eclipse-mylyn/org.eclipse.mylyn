@@ -117,6 +117,7 @@ public class RepositoryLocationPart {
 			apply();
 		}
 
+		@SuppressWarnings("unused")
 		public void setEnabled(boolean enabled) {
 			if (!enabled) {
 				enabledButton.setEnabled(false);
@@ -466,6 +467,7 @@ public class RepositoryLocationPart {
 		return composite;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getContainer(Class<T> clazz) {
 		return (T) getServiceLocator().getAdapter(clazz);
 	}
