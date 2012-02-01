@@ -25,15 +25,20 @@ import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
 
 /**
  * @author Steffen Pingel
  */
 public class GerritUrlHandlerTest extends TestCase {
 
+	private IWorkbenchPage activePage;
+
 	@Override
 	protected void setUp() throws Exception {
 		TestFixture.resetTaskListAndRepositories();
+		activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		assertNotNull(activePage);
 	}
 
 	@Override
@@ -42,9 +47,6 @@ public class GerritUrlHandlerTest extends TestCase {
 	}
 
 	public void testOpenUrl() throws Exception {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertNotNull(activePage);
-
 		TaskRepository repository = GerritFixture.GERRIT_2_2_2.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/1", 0); //$NON-NLS-1$
 
@@ -62,6 +64,13 @@ public class GerritUrlHandlerTest extends TestCase {
 
 		assertEquals(Status.OK_STATUS, handler.getStatus());
 		assertEquals(TaskEditor.class, activePage.getActiveEditor().getClass());
+	}
+
+	public void testOpenUrlInvalid() throws Exception {
+		TaskRepository repository = GerritFixture.GERRIT_2_2_2.singleRepository();
+		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
+		assertNotNull("Expected a browser instance, got: " + handler.getClass(), handler.getAdapter(IWebBrowser.class));
+		assertEquals(Status.OK_STATUS, handler.getStatus());
 	}
 
 }
