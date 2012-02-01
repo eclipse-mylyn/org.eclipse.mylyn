@@ -13,12 +13,18 @@
 package org.eclipse.mylyn.internal.hudson.core;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.IBuildFactory;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
-import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.osgi.framework.Bundle;
@@ -52,9 +58,30 @@ public class HudsonConnector extends BuildConnector {
 	}
 
 	@Override
-	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(location, cache);
-		return behaviour;
+	public HudsonServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
+		return new HudsonServerBehaviour(location, cache);
+	}
+
+	@Override
+	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
+		if (url.startsWith(server.getUrl())) {
+			String path = url.substring(server.getUrl().length());
+			Pattern p = Pattern.compile(".*/job/(.*)/(\\d+)");
+			Matcher matcher = p.matcher(url);
+			if (matcher.find()) {
+				IBuildPlan plan = IBuildFactory.INSTANCE.createBuildPlan();
+				plan.setServer(server);
+				plan.setName(matcher.group(1));
+				plan.setId(matcher.group(1));
+
+				IBuild build = IBuildFactory.INSTANCE.createBuild();
+				build.setId(matcher.group(2));
+				build.setLabel(matcher.group(2));
+				build.setPlan(plan);
+				return build;
+			}
+		}
+		return null;
 	}
 
 }

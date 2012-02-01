@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.builds.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -55,6 +57,16 @@ public class BuildConnectorDelegate extends BuildConnector {
 	@Override
 	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
 		return getCore().getBehaviour(location);
+	}
+
+	@Override
+	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
+		try {
+			return getCore().getBuildElementFromUrl(server, url);
+		} catch (CoreException e) {
+			// ignore
+			return null;
+		}
 	}
 
 }

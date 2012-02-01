@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
+import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
 import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
@@ -40,6 +41,7 @@ public class AllHudsonTests {
 	}
 
 	private static void addTests(boolean defaultOnly, TestSuite suite) {
+		suite.addTestSuite(HudsonConnectorTest.class);
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
 		// network tests
 		suite.addTestSuite(HudsonValidationTest.class);

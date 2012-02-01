@@ -12,6 +12,11 @@
 package org.eclipse.mylyn.builds.tests.support;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.builds.core.IBuild;
+import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.IBuildFactory;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -29,6 +34,24 @@ public class MockBuildConnector extends BuildConnector {
 	@Override
 	public BuildServerBehaviour getBehaviour(RepositoryLocation location) throws CoreException {
 		return new MockBuildServerBehaviour();
+	}
+
+	@Override
+	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
+		if (url.startsWith(server.getUrl())) {
+			IBuildPlan plan = IBuildFactory.INSTANCE.createBuildPlan();
+			plan.setId("1");
+			plan.setServer(server);
+
+			IBuild build = IBuildFactory.INSTANCE.createBuild();
+			build.setUrl(server.getUrl());
+			build.setId("1");
+			build.setLabel("1");
+			build.setPlan(plan);
+
+			return build;
+		}
+		return null;
 	}
 
 }

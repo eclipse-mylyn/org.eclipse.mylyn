@@ -95,30 +95,31 @@ public class OpenHandler extends AbstractHandler {
 		operation.addOperationChangeListener(new OperationChangeListener() {
 			@Override
 			public void done(OperationChangeEvent event) {
-				if (!event.getStatus().isOK()) {
-					return;
-				}
-				if (Display.getDefault().isDisposed()) {
-					return;
-				}
-				final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (!page.getWorkbenchWindow().getShell().isDisposed()) {
-							IBuild build2 = operation.getBuilds().get(0);
-							build2.setPlan(plan);
-							build2.setServer(plan.getServer());
-							BuildEditorInput input = new BuildEditorInput(build2);
-							try {
-								IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
-								handle.setPart(part);
-							} catch (PartInitException e) {
-								StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-										"Unexpected error while opening build", e)); //$NON-NLS-1$
+				if (event.getStatus().isOK() && !Display.getDefault().isDisposed()) {
+					final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							if (!page.getWorkbenchWindow().getShell().isDisposed()) {
+								IBuild build2 = operation.getBuilds().get(0);
+								build2.setPlan(plan);
+								build2.setServer(plan.getServer());
+								BuildEditorInput input = new BuildEditorInput(build2);
+								try {
+									IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
+									handle.setPart(part);
+									handle.setStatus(Status.OK_STATUS);
+								} catch (PartInitException e) {
+									IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+											"Unexpected error while opening build", e); //$NON-NLS-1$
+									StatusHandler.log(status);
+									handle.setStatus(status);
+								}
 							}
 						}
-					}
-				});
+					});
+				} else {
+					handle.setStatus(event.getStatus());
+				}
 			}
 		});
 		operation.execute();

@@ -18,11 +18,13 @@ import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildFactory;
+import org.eclipse.mylyn.builds.core.IBuildModel;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.Build;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
+import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 
@@ -39,13 +41,18 @@ public class BuildHarness {
 
 	private BuildServer server;
 
-	public BuildHarness() {
-		model = (BuildModel) IBuildFactory.INSTANCE.createBuildModel();
+	public BuildHarness(IBuildModel model) {
+		this.model = (BuildModel) model;
 		loader = new MockBuildLoader();
 		operationService = new MockOperationService(loader.getRealm());
 	}
 
+	public BuildHarness() {
+		this(BuildsUi.getModel());
+	}
+
 	public void dispose() {
+		getModel().getServers().clear();
 	}
 
 	public BuildModel getModel() {
@@ -62,9 +69,10 @@ public class BuildHarness {
 		server.setLoader(loader);
 
 		RepositoryLocation location = new RepositoryLocation();
+		server.setLocation(location);
+
 		location.setCredentialsStore(new InMemoryCredentialsStore());
 		location.setUrl("http://ci.mylyn.org/");
-		server.setLocation(location);
 
 		getModel().getServers().add(server);
 

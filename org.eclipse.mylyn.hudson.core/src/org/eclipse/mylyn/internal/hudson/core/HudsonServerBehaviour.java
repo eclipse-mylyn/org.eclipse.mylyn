@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -40,12 +38,10 @@ import org.eclipse.mylyn.builds.core.IArtifact;
 import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildCause;
-import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildFactory;
 import org.eclipse.mylyn.builds.core.IBuildParameterDefinition;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildReference;
-import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.IChange;
 import org.eclipse.mylyn.builds.core.IChangeArtifact;
 import org.eclipse.mylyn.builds.core.IChangeSet;
@@ -916,26 +912,6 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		} catch (HudsonException e) {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
-	}
-
-	@Override
-	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
-		if (url.startsWith(location.getUrl())) {
-			String path = url.substring(location.getUrl().length());
-			Pattern p = Pattern.compile(".*/job/(.*)/(\\d+)");
-			Matcher matcher = p.matcher(url);
-			if (matcher.find()) {
-				IBuildPlan plan = createBuildPlan();
-				plan.setServer(server);
-				plan.setId(matcher.group(1));
-				IBuild build = createBuild();
-				build.setId(matcher.group(2));
-				build.setLabel(matcher.group(2));
-				build.setPlan(plan);
-				return build;
-			}
-		}
-		return null;
 	}
 
 }

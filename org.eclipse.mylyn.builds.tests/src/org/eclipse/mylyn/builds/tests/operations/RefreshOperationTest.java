@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
+import org.eclipse.mylyn.builds.core.IBuildFactory;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
@@ -39,7 +40,7 @@ public class RefreshOperationTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		harness = new BuildHarness();
+		harness = new BuildHarness(IBuildFactory.INSTANCE.createBuildModel());
 
 		server = harness.createServer();
 		behavior = (MockBuildServerBehaviour) server.getBehaviour();

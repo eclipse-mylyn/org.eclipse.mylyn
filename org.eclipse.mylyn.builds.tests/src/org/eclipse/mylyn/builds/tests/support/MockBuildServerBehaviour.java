@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.builds.tests.support;
 
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -44,6 +45,15 @@ public class MockBuildServerBehaviour extends BuildServerBehaviour {
 
 	public MockBuildServerBehaviour(BuildServer server) {
 		this.server = server;
+
+		IBuildPlan plan = createBuildPlan();
+		plan.setId("1");
+		this.plans = Collections.singletonList(plan);
+
+		IBuild build = createBuild();
+		build.setId("1");
+		build.setPlan(plan);
+		this.builds = Collections.singletonList(build);
 	}
 
 	@Override
