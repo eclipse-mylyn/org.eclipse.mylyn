@@ -248,19 +248,6 @@ public class BugzillaClient {
 					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 							"XMLRPC user could not login")); //$NON-NLS-1$					
 				}
-				String version = xmlRpcClient.getVersion(monitor);
-				// We only support XMLRPC for Bugzilla >= 3.2
-				// Reason: product.get was new in version 3.2
-				if (version != null) {
-					BugzillaVersion versionToCompare = new BugzillaVersion(version);
-					if (versionToCompare != null) {
-						if (BugzillaVersion.BUGZILLA_3_2.compareTo(versionToCompare) > 0) {
-							throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-									"XMLRPC need version >= 3.2")); //$NON-NLS-1$															
-						}
-					}
-				}
-
 			} catch (XmlRpcException e) {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						"XMLRPC is not installed")); //$NON-NLS-1$

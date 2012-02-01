@@ -741,29 +741,4 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return repository;
 	}
 
-	boolean doFinish;
-
-	boolean isvalid;
-
-	@Override
-	public boolean doPerformFinish(TaskRepository repository) {
-		doFinish = true;
-		isvalid = false;
-		validateSettings();
-		doFinish = false;
-		if (!isvalid) {
-			return false;
-		}
-		super.doPerformFinish(repository);
-		return true;
-	}
-
-	@Override
-	protected void applyValidatorResult(Validator validator) {
-		super.applyValidatorResult(validator);
-		if (doFinish) {
-			IStatus status = validator.getStatus();
-			isvalid = IStatus.OK == status.getSeverity();
-		}
-	}
 }

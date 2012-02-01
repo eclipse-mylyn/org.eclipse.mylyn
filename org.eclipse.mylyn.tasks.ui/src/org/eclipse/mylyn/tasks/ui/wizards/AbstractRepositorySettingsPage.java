@@ -2017,12 +2017,4 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		return null;
 	}
 
-	/**
-	 * @since 3.7
-	 */
-	public boolean doPerformFinish(TaskRepository repository) {
-		performFinish(repository);
-		return true;
-	}
-
 }
