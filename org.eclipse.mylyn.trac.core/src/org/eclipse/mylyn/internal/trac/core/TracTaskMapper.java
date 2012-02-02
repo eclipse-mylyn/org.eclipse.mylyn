@@ -124,10 +124,14 @@ public class TracTaskMapper extends TaskMapper {
 
 	@Override
 	public PriorityLevel getPriorityLevel() {
-		if (client != null) {
-			String priority = getPriority();
-			TracPriority[] tracPriorities = client.getPriorities();
-			return TracRepositoryConnector.getTaskPriority(priority, tracPriorities);
+		String priority = getPriority();
+		if (priority != null) {
+			if (client != null) {
+				TracPriority[] tracPriorities = client.getPriorities();
+				return TracRepositoryConnector.getTaskPriority(priority, tracPriorities);
+			} else {
+				return TracRepositoryConnector.getTaskPriority(priority);
+			}
 		}
 		return null;
 	}
