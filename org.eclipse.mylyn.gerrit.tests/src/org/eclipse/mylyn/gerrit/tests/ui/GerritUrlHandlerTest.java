@@ -60,8 +60,8 @@ public class GerritUrlHandlerTest extends TestCase {
 				if (handler.await(500, TimeUnit.MILLISECONDS)) {
 					break;
 				}
-				assertTrue("Expected editor did not open within 10 seconds",
-						System.currentTimeMillis() - startTime < 10 * 1000);
+				assertTrue("Expected editor did not open within 30 seconds",
+						System.currentTimeMillis() - startTime < 30 * 1000);
 			}
 		}
 
@@ -69,7 +69,7 @@ public class GerritUrlHandlerTest extends TestCase {
 		assertEquals(TaskEditor.class, activePage.getActiveEditor().getClass());
 	}
 
-	public void atestOpenUrlInvalid() throws Exception {
+	public void testOpenUrlInvalid() throws Exception {
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup
 		TaskRepository repository = GerritFixture.GERRIT_2_2_1.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
