@@ -258,15 +258,19 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
-		TracTicket ticket = new TracTicket(456);
-		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
 		assertEquals(client.getAccessMode().name(), repository.getVersion());
-		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
-		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
+		// prepare task data
+		TracTicket ticket = new TracTicket(456);
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
+		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		task.setPriority("P1");
+
+		// create task from task data
 		connector.updateTaskFromTaskData(repository, task, taskData);
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456", task.getTaskKey());

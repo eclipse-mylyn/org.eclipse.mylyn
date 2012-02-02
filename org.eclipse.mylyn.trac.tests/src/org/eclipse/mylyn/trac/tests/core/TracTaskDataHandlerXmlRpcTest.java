@@ -93,6 +93,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	public void testMarkStaleTasks() throws Exception {
 		SynchronizationSession session;
+		// sleep for one second to ensure that the created ticket has a unique time stamp
+		Thread.sleep(1000);
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
 		long lastModified = TracUtil.toTracTime(task.getModificationDate());
