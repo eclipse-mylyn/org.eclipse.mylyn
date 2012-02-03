@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -590,8 +591,12 @@ public class GerritClient {
 				throw new GerritException("Failed to obtain Gerrit configuration");
 			}
 			return gerritConfig;
+		} catch (UnknownHostException cause) {
+			GerritException e = new GerritException("Unknown host: " + cause.getMessage());
+			e.initCause(cause);
+			throw e;
 		} catch (IOException cause) {
-			GerritException e = new GerritException();
+			GerritException e = new GerritException(cause.getMessage());
 			e.initCause(cause);
 			throw e;
 		}
