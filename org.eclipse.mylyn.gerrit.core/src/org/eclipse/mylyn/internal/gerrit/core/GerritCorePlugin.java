@@ -7,18 +7,22 @@
  * 
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
+ *      Sascha Scholz (SAP) - improvements
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle.
  * 
  * @author Thomas Westling
+ * @author Sascha Scholz
  */
 public class GerritCorePlugin extends Plugin {
 
@@ -64,6 +68,12 @@ public class GerritCorePlugin extends Plugin {
 
 	public static void logWarning(final String message, final Throwable throwable) {
 		getDefault().getLog().log(new Status(IStatus.WARNING, PLUGIN_ID, 0, message, throwable));
+	}
+
+	public static GerritClient getGerritClient(TaskRepository repository) {
+		GerritConnector connector = getDefault().getConnector();
+		GerritClient client = connector.getClient(repository);
+		return client;
 	}
 
 }
