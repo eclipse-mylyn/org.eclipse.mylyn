@@ -19,7 +19,6 @@ import java.util.Locale;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
-import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -75,14 +74,12 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 		if (projects != null) {
 			for (Project project : projects) {
 				String projectName = project.getName();
-				if (projectName.toLowerCase(Locale.ENGLISH).contains(contentsLowerCase)
-						&& !GerritUtil.isPermissionOnlyProject(client, projectName)) {
+				if (projectName.toLowerCase(Locale.ENGLISH).contains(contentsLowerCase)) {
 					proposals.add(new ProjectNameContentProposal(projectName));
 				}
 			}
 			return proposals.toArray(new IContentProposal[] {});
 		} else {
-			// TODO Trigger refresh of repository configuration  
 			return new IContentProposal[] { new MissingConfigurationContentProposal() };
 		}
 	}

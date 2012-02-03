@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
@@ -185,12 +186,11 @@ public class GerritUtil {
 		return sb.toString();
 	}
 
-	public static boolean isPermissionOnlyProject(GerritClient client, String projectName) {
-		// TODO this filters only the global permission-only project, but it's possible to create additional permission-only projects on Gerrit
-		GerritConfig config = client.getGerritConfig();
-		if (config != null) {
-			String wildProjectName = config.getWildProject().get();
-			return projectName.equals(wildProjectName);
+	public static boolean isPermissionOnlyProject(ProjectDetailX projectDetail, GerritConfig config) {
+		if (projectDetail.isPermissionOnly) {
+			return true;
+		} else if (projectDetail.project.getName().equals(config.getWildProject().get())) {
+			return true;
 		} else {
 			return false;
 		}

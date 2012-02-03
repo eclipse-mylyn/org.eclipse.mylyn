@@ -48,6 +48,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -68,7 +70,6 @@ import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
-import com.google.gerrit.common.data.ProjectAdminService;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.common.data.SystemInfoService;
@@ -599,7 +600,7 @@ public class GerritClient {
 	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {
 		configRefreshed = true;
 		GerritConfig gerritConfig = refreshGerritConfig(monitor);
-		List<Project> projects = getVisibleProjects(monitor);
+		List<Project> projects = getVisibleProjects(monitor, gerritConfig);
 		config = new GerritConfiguration(gerritConfig, projects);
 		configurationChanged(config);
 		return config;
@@ -731,14 +732,43 @@ public class GerritClient {
 		return getService(SystemInfoService.class);
 	}
 
-	private List<Project> getVisibleProjects(IProgressMonitor monitor) throws GerritException {
-		List<Project> projects = execute(monitor, new Operation<List<Project>>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getProjectAdminService().visibleProjects(this);
+	private List<Project> getVisibleProjects(IProgressMonitor monitor, GerritConfig gerritConfig)
+			throws GerritException {
+		List<Project> result = new ArrayList<Project>();
+		try {
+			List<ProjectDetailX> projectDetails = execute(monitor, new Operation<List<ProjectDetailX>>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getProjectAdminService().visibleProjectDetails(this);
+				}
+			});
+			for (ProjectDetailX projectDetail : projectDetails) {
+				if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
+					result.add(projectDetail.project);
+				}
 			}
-		});
-		return projects;
+		} catch (GerritException e) {
+			// Gerrit <= 2.2.1
+			String message = e.getMessage();
+			if (message != null && message.contains("No such service method")) { //$NON-NLS-1$
+				List<Project> projects = execute(monitor, new Operation<List<Project>>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getProjectAdminService().visibleProjects(this);
+					}
+				});
+				for (Project project : projects) {
+					ProjectDetailX projectDetail = new ProjectDetailX();
+					projectDetail.setProject(project);
+					if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
+						result.add(project);
+					}
+				}
+			} else {
+				throw e;
+			}
+		}
+		return result;
 	}
 
 	private ProjectAdminService getProjectAdminService() {
