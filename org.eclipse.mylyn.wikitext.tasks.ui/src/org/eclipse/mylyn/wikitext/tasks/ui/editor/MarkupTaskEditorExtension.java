@@ -29,8 +29,8 @@ import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.commons.workbench.browser.UrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
-import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.PlatformUrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
@@ -424,7 +424,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	private static class PlatformUrlAnnotationHyperlinkDetector extends AnnotationHyperlinkDetector {
 		@Override
 		protected IHyperlink createUrlHyperlink(IRegion region, String href) {
-			return new PlatformUrlHyperlink(region, href);
+			return new UrlHyperlink(region, href);
 		}
 	}
 
