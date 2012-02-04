@@ -12,6 +12,9 @@
   <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
   <version>1.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <properties>
+	<sonar.skippedModules>org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk</sonar.skippedModules>
+  </properties>	  
   <mailingLists>
     <mailingList>
       <name>Mylyn Docs Mailing List</name>
