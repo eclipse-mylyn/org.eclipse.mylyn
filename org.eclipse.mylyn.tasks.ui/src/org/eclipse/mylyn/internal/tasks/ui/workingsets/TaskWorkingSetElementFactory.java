@@ -67,8 +67,9 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 					return project;
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not not determine project for handle: " + taskHandle, t)); //$NON-NLS-1$
+				// ignore, happens when a restoring a query handle from a URL for instance
+//				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+//						"Could not not determine project for handle: " + taskHandle, t)); //$NON-NLS-1$
 			}
 		}
 		return null;
