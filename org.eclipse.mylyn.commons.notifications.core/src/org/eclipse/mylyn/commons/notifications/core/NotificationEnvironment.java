@@ -65,11 +65,7 @@ public class NotificationEnvironment {
 	}
 
 	public Version getRuntimeVersion() {
-		Version result = parseRuntimeVersion(System.getProperty("java.runtime.version")); //$NON-NLS-1$
-		if (result == Version.emptyVersion) {
-			result = parseRuntimeVersion(System.getProperty("java.version")); //$NON-NLS-1$
-		}
-		return result;
+		return CoreUtil.getRuntimeVersion();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -114,21 +110,6 @@ public class NotificationEnvironment {
 		return true;
 	}
 
-	private int findLastNumberIndex(String versionString, int secondSeparator) {
-		int lastDigit = secondSeparator;
-		for (int i = secondSeparator + 1; i < versionString.length(); i++) {
-			if (Character.isDigit(versionString.charAt(i))) {
-				lastDigit++;
-			} else {
-				break;
-			}
-		}
-		if (lastDigit == secondSeparator) {
-			return secondSeparator - 1;
-		}
-		return lastDigit;
-	}
-
 	public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
 		return Collections.emptySet();
 	}
@@ -153,26 +134,6 @@ public class NotificationEnvironment {
 			return requiredFeature.substring(0, i);
 		}
 		return requiredFeature;
-	}
-
-	private Version parseRuntimeVersion(String versionString) {
-		if (versionString != null) {
-			int firstSeparator = versionString.indexOf('.');
-			if (firstSeparator != -1) {
-				try {
-					int secondSeparator = versionString.indexOf('.', firstSeparator + 1);
-					if (secondSeparator != -1) {
-						return new Version(versionString.substring(0,
-								findLastNumberIndex(versionString, secondSeparator) + 1));
-					}
-					return new Version(versionString.substring(0,
-							findLastNumberIndex(versionString, firstSeparator) + 1));
-				} catch (IllegalArgumentException e) {
-					// ignore
-				}
-			}
-		}
-		return Version.emptyVersion;
 	}
 
 }

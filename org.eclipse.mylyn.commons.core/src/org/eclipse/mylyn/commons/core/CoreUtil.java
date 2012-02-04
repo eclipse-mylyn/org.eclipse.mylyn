@@ -153,4 +153,59 @@ public class CoreUtil {
 		}
 	}
 
+	/**
+	 * Returns the version of the Java runtime.
+	 * 
+	 * @since 3.7
+	 * @return {@link Version#emptyVersion} if the version can not be determined
+	 */
+	public static Version getRuntimeVersion() {
+		Version result = parseRuntimeVersion(System.getProperty("java.runtime.version")); //$NON-NLS-1$
+		if (result == Version.emptyVersion) {
+			result = parseRuntimeVersion(System.getProperty("java.version")); //$NON-NLS-1$
+		}
+		return result;
+	}
+
+	private static Version parseRuntimeVersion(String versionString) {
+		if (versionString != null) {
+			int firstSeparator = versionString.indexOf('.');
+			if (firstSeparator != -1) {
+				try {
+					int secondSeparator = versionString.indexOf('.', firstSeparator + 1);
+					if (secondSeparator != -1) {
+						int index = findLastNumberIndex(versionString, secondSeparator);
+						String qualifier = versionString.substring(index + 1);
+						if (qualifier.startsWith("_") && qualifier.length() > 1) { //$NON-NLS-1$
+							versionString = versionString.substring(0, index + 1) + "." + qualifier.substring(1); //$NON-NLS-1$
+						} else {
+							versionString = versionString.substring(0, index + 1);
+						}
+						return new Version(versionString);
+					}
+					return new Version(versionString.substring(0,
+							findLastNumberIndex(versionString, firstSeparator) + 1));
+				} catch (IllegalArgumentException e) {
+					// ignore
+				}
+			}
+		}
+		return Version.emptyVersion;
+	}
+
+	private static int findLastNumberIndex(String versionString, int secondSeparator) {
+		int lastDigit = secondSeparator;
+		for (int i = secondSeparator + 1; i < versionString.length(); i++) {
+			if (Character.isDigit(versionString.charAt(i))) {
+				lastDigit++;
+			} else {
+				break;
+			}
+		}
+		if (lastDigit == secondSeparator) {
+			return secondSeparator - 1;
+		}
+		return lastDigit;
+	}
+
 }

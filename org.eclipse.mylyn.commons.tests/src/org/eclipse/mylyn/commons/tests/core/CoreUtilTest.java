@@ -14,6 +14,8 @@ package org.eclipse.mylyn.commons.tests.core;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.osgi.service.resolver.VersionRange;
+import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
@@ -103,6 +105,83 @@ public class CoreUtilTest extends TestCase {
 
 	public void testAreEqualUnequalStrings() {
 		assertFalse(CoreUtil.areEqual("a", "b"));
+	}
+
+	public void testGetRuntimeVersion() {
+		String oldValue = System.setProperty("java.runtime.version", "1.5.0_2");
+		try {
+			assertEquals(new Version(1, 5, 0, "2"), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
+	}
+
+	public void testGetRuntimeVersionShort() {
+		String oldValue = System.setProperty("java.runtime.version", "1.7");
+		try {
+			assertEquals(new Version(1, 7, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
+	}
+
+	public void testGetRuntimeVersionLetters() {
+		String oldValue = System.setProperty("java.runtime.version", "1.7-CUSTOM");
+		try {
+			assertEquals(new Version(1, 7, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
+	}
+
+	public void testGetRuntimeVersionTrailingUnderscore() {
+		String oldValue = System.setProperty("java.runtime.version", "1.5.0_");
+		try {
+			assertEquals(new Version(1, 5, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
+	}
+
+	public void testGetRuntimeVersionNoQualifier() {
+		String oldValue = System.setProperty("java.runtime.version", "1.2.0");
+		try {
+			assertEquals(new Version(1, 2, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
+	}
+
+	public void testGetRuntimeVersionProperty() {
+		String oldValue1 = System.setProperty("java.runtime.version", "1.2.0");
+		String oldValue2 = System.setProperty("java.version", "1.3.0");
+		try {
+			assertEquals(new Version(1, 2, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue1);
+			System.setProperty("java.version", oldValue2);
+		}
+	}
+
+	public void testGetRuntimeVersionPropertyNull() {
+		String oldValue1 = System.clearProperty("java.runtime.version");
+		String oldValue2 = System.setProperty("java.version", "1.3.0");
+		try {
+			assertEquals(new Version(1, 3, 0), CoreUtil.getRuntimeVersion());
+		} finally {
+			System.setProperty("java.runtime.version", oldValue1);
+			System.setProperty("java.version", oldValue2);
+		}
+	}
+
+	public void testGetRuntimeVersionMatch() {
+		String oldValue = System.setProperty("java.runtime.version", "1.6.0_26");
+		try {
+			assertFalse(new VersionRange("[0.0.0,1.6.0.25]").isIncluded(CoreUtil.getRuntimeVersion()));
+			assertTrue(new VersionRange("[0.0.0,1.6.0.26]").isIncluded(CoreUtil.getRuntimeVersion()));
+		} finally {
+			System.setProperty("java.runtime.version", oldValue);
+		}
 	}
 
 }

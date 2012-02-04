@@ -34,9 +34,11 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
+import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -418,6 +420,11 @@ public class CommonTestUtil {
 				// don't need to catch this
 			}
 		}
+	}
+
+	public static boolean isCertificateAuthBroken() {
+		// not entirely correct since 1.6.0_3 would also satisfy this check but it should be sufficient in reality
+		return new VersionRange("[0.0.0,1.6.0.25]").isIncluded(CoreUtil.getRuntimeVersion());
 	}
 
 }

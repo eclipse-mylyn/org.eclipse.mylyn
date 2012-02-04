@@ -40,6 +40,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.tests.support.TestProxy;
 import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
@@ -517,13 +518,16 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testLocationConnectSslClientCert() throws Exception {
+		if (CommonTestUtil.isCertificateAuthBroken()) {
+			return; // skip test 
+		}
+
 		String url = "https://mylyn.org/secure/";
 		AbstractWebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		if (!((PollingSslProtocolSocketFactory) hostConfiguration.getProtocol().getSocketFactory()).hasKeyManager()) {
-			// skip test if keystore property is not set
-			return;
+			return; // skip test if keystore property is not set
 		}
 
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
