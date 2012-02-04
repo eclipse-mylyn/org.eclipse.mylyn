@@ -20,8 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -68,9 +67,7 @@ public class BrowserPreviewViewer {
 
 				if (event.location != null && !event.location.startsWith("about")) { //$NON-NLS-1$
 					event.doit = false;
-					IHyperlink link = new TaskUrlHyperlink(
-							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
-					link.open();
+					BrowserUtil.openUrl(event.location);
 				}
 			}
 

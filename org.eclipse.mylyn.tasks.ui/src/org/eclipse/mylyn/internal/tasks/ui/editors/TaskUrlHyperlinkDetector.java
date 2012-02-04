@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.commons.workbench.browser.UrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
@@ -56,7 +57,7 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 		while (m.find()) {
 			if (isInRegion(indexInContent, m)) {
 				String urlString = getUrlString(content, m);
-				TaskUrlHyperlink link = null;
+				IHyperlink link = null;
 				if (getAdapter(TaskRepository.class) != null) {
 					try {
 						new URL(urlString);
@@ -104,8 +105,8 @@ public class TaskUrlHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 		return (offsetInText == -1) || (offsetInText >= m.start() && offsetInText <= m.end());
 	}
 
-	private static TaskUrlHyperlink createTaskUrlHyperlink(int textOffset, Matcher m, String urlString) {
-		return new TaskUrlHyperlink(new Region(textOffset + m.start(), urlString.length()), urlString);
+	private static IHyperlink createTaskUrlHyperlink(int textOffset, Matcher m, String urlString) {
+		return new UrlHyperlink(new Region(textOffset + m.start(), urlString.length()), urlString);
 	}
 
 }

@@ -22,8 +22,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.commons.workbench.browser.UrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
@@ -63,7 +63,7 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		IHyperlink[] links = detect("http://foo", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo", ((UrlHyperlink) links[0]).getURLString());
 	}
 
 	public void testInvalidUrl() {
@@ -81,39 +81,39 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		IHyperlink[] links = detect("(http://foo)", 2, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo", ((UrlHyperlink) links[0]).getURLString());
 
 		links = detect("( http://foo)", 2, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo", ((UrlHyperlink) links[0]).getURLString());
 
 		links = detect("( http://foo).", 2, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo", ((UrlHyperlink) links[0]).getURLString());
 	}
 
 	public void testClosingParenthesis() {
 		IHyperlink[] links = detect("http://foo?(bar)", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo?(bar)", ((UrlHyperlink) links[0]).getURLString());
 
 		links = detect("(http://foo?(bar))", 0, 18);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo?(bar)", ((UrlHyperlink) links[0]).getURLString());
 
 		links = detect("http://foo?((((bar).", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo?((((bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo?((((bar)", ((UrlHyperlink) links[0]).getURLString());
 
 		links = detect("http://foo?(bar))))))))", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://foo?(bar)", ((TaskUrlHyperlink) links[0]).getURLString());
+		assertEquals("http://foo?(bar)", ((UrlHyperlink) links[0]).getURLString());
 	}
 
 	public void testDetectionUsingExtent() {

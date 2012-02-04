@@ -13,12 +13,15 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
+import org.eclipse.mylyn.commons.workbench.browser.UrlHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Rob Elves
+ * @deprecated use {@link UrlHyperlink} instead
  */
+@Deprecated
 public class TaskUrlHyperlink extends URLHyperlink {
 
 	private final String hyperlinkText;
