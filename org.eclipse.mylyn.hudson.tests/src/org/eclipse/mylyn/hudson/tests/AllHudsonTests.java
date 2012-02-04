@@ -52,6 +52,9 @@ public class AllHudsonTests {
 			fixture.done();
 		}
 		for (HudsonFixture fixture : HudsonFixture.MISC) {
+			if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
+				return; // skip test 
+			}
 			fixture.createSuite(suite);
 			fixture.add(HudsonClientTest.class);
 			fixture.done();
