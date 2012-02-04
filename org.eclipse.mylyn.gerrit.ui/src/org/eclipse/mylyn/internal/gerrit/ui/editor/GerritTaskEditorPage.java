@@ -47,6 +47,10 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
 					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 					return editor;
+				} else if (taskAttribute.getId().equals(GerritTaskSchema.getDefault().PROJECT.getKey())) {
+					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
+					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
+					return editor;
 				}
 				return super.createEditor(type, taskAttribute);
 			}

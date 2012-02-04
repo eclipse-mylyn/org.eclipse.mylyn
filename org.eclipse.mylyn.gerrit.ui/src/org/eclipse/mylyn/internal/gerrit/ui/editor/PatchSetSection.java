@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -409,12 +410,17 @@ public class PatchSetSection extends AbstractGerritSection {
 			if (mapper.find() != null) {
 				return mapper;
 			} else if (mapper.getGerritProject() != null) {
-				String uri = NLS.bind("{0}/p/{1}", getTaskEditorPage().getTaskRepository(), mapper.getGerritProject());
-				WizardDialog dlg = new WizardDialog(WorkbenchUtil.getShell(), new GitCloneWizard(uri));
-				dlg.setHelpAvailable(false);
-				int response = dlg.open();
-				if (response == Window.OK && mapper.find() != null) {
-					return mapper;
+				boolean create = MessageDialog.openQuestion(getShell(), "Clone Git Repository",
+						"The referenced Git repository was not found in the workspace. Clone Git repository?");
+				if (create) {
+					String uri = NLS.bind("{0}/p/{1}", getTaskEditorPage().getTaskRepository(),
+							mapper.getGerritProject());
+					WizardDialog dlg = new WizardDialog(WorkbenchUtil.getShell(), new GitCloneWizard(uri));
+					dlg.setHelpAvailable(false);
+					int response = dlg.open();
+					if (response == Window.OK && mapper.find() != null) {
+						return mapper;
+					}
 				}
 			} else {
 				String message = NLS.bind("No Git repository found for fetching Gerrit change {0}",
