@@ -48,6 +48,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -205,9 +206,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private void initLazyStart() {
 		if (!lazyStarted.getAndSet(true)) {
-			IWorkbench workbench = PlatformUI.getWorkbench();
 			try {
-				lazyStart(workbench);
+				if (Display.getCurrent() != null) {
+					lazyStart(PlatformUI.getWorkbench());
+				} else {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							lazyStart(PlatformUI.getWorkbench());
+						}
+					});
+				}
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
 						"Could not lazy start context plug-in", t)); //$NON-NLS-1$

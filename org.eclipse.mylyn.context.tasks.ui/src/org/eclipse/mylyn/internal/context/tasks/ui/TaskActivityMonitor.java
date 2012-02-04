@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -62,6 +63,12 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 	};
 
 	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
+
+		@Override
+		public void preTaskActivated(ITask task) {
+			// make sure that org.eclipse.mylyn.context.ui is active prior to the first task activation
+			ContextUiPlugin.getDefault();
+		}
 
 		@Override
 		public void taskActivated(final ITask task) {
