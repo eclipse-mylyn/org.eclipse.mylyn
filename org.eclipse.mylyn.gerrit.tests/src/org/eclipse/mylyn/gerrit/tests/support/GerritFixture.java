@@ -23,7 +23,7 @@ public class GerritFixture extends TestFixture {
 
 	public static GerritFixture GERRIT_2_2_1 = new GerritFixture("http://review.mylyn.org/", "2.2.1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture GERRIT_2_2_2 = new GerritFixture("http://mylyn.org/gerrit-2.2.2", "2.2.2-rc1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static GerritFixture GERRIT_2_2_2 = new GerritFixture("http://mylyn.org/gerrit-2.2.2", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static GerritFixture[] ALL = new GerritFixture[] { GERRIT_2_2_1, GERRIT_2_2_2 };
 

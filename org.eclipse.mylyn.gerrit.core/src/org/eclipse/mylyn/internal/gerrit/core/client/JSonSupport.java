@@ -24,6 +24,7 @@ import java.util.Map;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 
+import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategory.Id;
 import com.google.gerrit.reviewdb.AuthType;
@@ -103,7 +104,8 @@ public class JSonSupport {
 
 			public boolean shouldSkipField(FieldAttributes f) {
 				// commentLinks requires instantiation of com.google.gwtexpui.safehtml.client.RegexFindReplace which is not on classpath
-				if (f.getDeclaredClass() == List.class && f.getName().equals("commentLinks")) { //$NON-NLS-1$
+				if (f.getDeclaredClass() == List.class
+						&& f.getName().equals("commentLinks") && f.getDeclaringClass() == GerritConfig.class) { //$NON-NLS-1$
 					return true;
 				}
 				if (f.getDeclaredClass() == Map.class && f.getName().equals("given")) { //$NON-NLS-1$

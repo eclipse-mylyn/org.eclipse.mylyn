@@ -12,6 +12,9 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
@@ -19,6 +22,7 @@ import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,8 +63,7 @@ public class GerritClientTest extends TestCase {
 	@Test
 	public void testGetAccount() throws Exception {
 		if (!GerritFixture.current().canAuthenticate()) {
-			// skip
-			return;
+			return; // skip
 		}
 		Account account = client.getAccount(null);
 		assertEquals(harness.readCredentials().getShortUserName(), account.getUserName());
@@ -75,6 +78,23 @@ public class GerritClientTest extends TestCase {
 		} catch (GerritException e) {
 			assertEquals("Not Signed In", e.getMessage());
 		}
+	}
+
+	@Test
+	public void testRefreshConfigCommentLinks() throws Exception {
+		if (!GerritFixture.current().canAuthenticate()) {
+			return; // skip
+		}
+
+		List<CommentLink> expected = new ArrayList<CommentLink>();
+		expected.add(new CommentLink("(I[0-9a-f]{8,40})", "<a href=\"#q,$1,n,z\">$&</a>"));
+		expected.add(new CommentLink("(bug\\s+)(\\d+)", "<a href=\"http://bugs.mylyn.org/show_bug.cgi?id=$2\">$&</a>"));
+		expected.add(new CommentLink("([Tt]ask:\\s+)(\\d+)", "$1<a href=\"http://tracker.mylyn.org/$2\">$2</a>"));
+
+		client = harness.client();
+		GerritConfiguration config = client.refreshConfig(null);
+		List<CommentLink> links = config.getGerritConfig().getCommentLinks2();
+		assertEquals(expected, links);
 	}
 
 }

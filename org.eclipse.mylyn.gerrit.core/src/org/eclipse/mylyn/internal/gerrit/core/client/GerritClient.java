@@ -48,6 +48,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
@@ -311,7 +312,7 @@ public class GerritClient {
 		return result;
 	}
 
-	public GerritConfig getGerritConfig() {
+	public GerritConfigX getGerritConfig() {
 		return config == null ? null : config.getGerritConfig();
 	}
 
@@ -547,16 +548,16 @@ public class GerritClient {
 	 * Retrieves the root URL for the Gerrit instance and attempts to parse the configuration from the JavaScript
 	 * portion of the page.
 	 */
-	private GerritConfig refreshGerritConfig(final IProgressMonitor monitor) throws GerritException {
+	private GerritConfigX refreshGerritConfig(final IProgressMonitor monitor) throws GerritException {
 		try {
-			GerritConfig gerritConfig = client.execute(new Request<GerritConfig>() {
+			GerritConfigX gerritConfig = client.execute(new Request<GerritConfigX>() {
 				@Override
 				public HttpMethodBase createMethod() throws IOException {
 					return new GetMethod(client.getUrl() + "/"); //$NON-NLS-1$
 				}
 
 				@Override
-				public GerritConfig process(HttpMethodBase method) throws IOException {
+				public GerritConfigX process(HttpMethodBase method) throws IOException {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
 						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
@@ -570,7 +571,7 @@ public class GerritClient {
 										String text = getText(tokenizer);
 										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-										GerritConfig gerritConfig = parseConfig(text);
+										GerritConfigX gerritConfig = parseConfig(text);
 										if (gerritConfig != null) {
 											return gerritConfig;
 										}
@@ -604,7 +605,7 @@ public class GerritClient {
 
 	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {
 		configRefreshed = true;
-		GerritConfig gerritConfig = refreshGerritConfig(monitor);
+		GerritConfigX gerritConfig = refreshGerritConfig(monitor);
 		List<Project> projects = getVisibleProjects(monitor, gerritConfig);
 		config = new GerritConfiguration(gerritConfig, projects);
 		configurationChanged(config);
@@ -787,7 +788,7 @@ public class GerritClient {
 	/**
 	 * Parses the configuration from <code>text</code>.
 	 */
-	private GerritConfig parseConfig(String text) {
+	private GerritConfigX parseConfig(String text) {
 		String prefix = "var gerrit_hostpagedata={\"config\":"; //$NON-NLS-1$
 		String[] tokens = text.split("};"); //$NON-NLS-1$
 		for (String token : tokens) {
@@ -799,10 +800,10 @@ public class GerritClient {
 		return null;
 	}
 
-	private static GerritConfig gerritConfigFromString(String token) {
+	private static GerritConfigX gerritConfigFromString(String token) {
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritConfig.class);
+			return support.getGson().fromJson(token, GerritConfigX.class);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
 					"Failed to deserialize Gerrit configuration: '" + token + "'", e));

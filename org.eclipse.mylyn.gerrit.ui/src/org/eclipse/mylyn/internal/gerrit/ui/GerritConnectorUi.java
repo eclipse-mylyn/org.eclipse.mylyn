@@ -23,6 +23,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.ui.wizards.GerritCustomQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -30,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
@@ -46,6 +49,12 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final Pattern PATTERN_CHANGE_ID = Pattern.compile("(?:\\W||^)(I[0-9a-f]{8}([0-9a-f]{32})?)"); //$NON-NLS-1$
+
+	private final GerritConnector connector;
+
+	public GerritConnectorUi() {
+		connector = (GerritConnector) TasksUi.getRepositoryConnector(GerritConnector.CONNECTOR_KIND);
+	}
 
 	@Override
 	public String getConnectorKind() {
@@ -106,6 +115,20 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 				int start = matcher.start(1);
 				Region region = new Region(textOffset + start, matcher.end(1) - start);
 				links.add(new TaskHyperlink(region, repository, key));
+			}
+		}
+		GerritConfiguration configuration = connector.getConfiguration(repository);
+		if (configuration != null) {
+			GerritConfigX config = configuration.getGerritConfig();
+			if (config != null) {
+				GerritCommentLinkDetector detector = new GerritCommentLinkDetector(repository, config);
+				List<IHyperlink> commentLinks = detector.findHyperlinks(text, index, textOffset);
+				if (commentLinks != null) {
+					if (links == null) {
+						links = new ArrayList<IHyperlink>();
+					}
+					links.addAll(commentLinks);
+				}
 			}
 		}
 		return links != null ? links.toArray(new IHyperlink[links.size()]) : null;

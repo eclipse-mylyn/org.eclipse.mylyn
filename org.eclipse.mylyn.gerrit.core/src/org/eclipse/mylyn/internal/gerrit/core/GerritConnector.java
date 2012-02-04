@@ -15,6 +15,8 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,6 +97,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 
 	private TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
+
+	private final ConcurrentMap<TaskRepository, GerritConfiguration> configurationCache = new ConcurrentHashMap<TaskRepository, GerritConfiguration>();
 
 	public GerritConnector() {
 		if (GerritCorePlugin.getDefault() != null) {
@@ -270,16 +274,14 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	}
 
 	private GerritClient createClient(final TaskRepository repository, boolean cachedConfig) {
-		GerritConfiguration config = (cachedConfig)
-				? configurationFromString(repository.getProperty(KEY_REPOSITORY_CONFIG))
-				: null;
+		GerritConfiguration config = (cachedConfig) ? loadConfiguration(repository) : null;
 		GerritAuthenticationState authState = (cachedConfig)
 				? GerritClient.authStateFromString(repository.getProperty(KEY_REPOSITORY_AUTH))
 				: null;
 		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config, authState) {
 			@Override
 			protected void configurationChanged(GerritConfiguration config) {
-				repository.setProperty(KEY_REPOSITORY_CONFIG, configurationToString(config));
+				saveConfiguration(repository, config);
 			}
 
 			@Override
@@ -287,6 +289,28 @@ public class GerritConnector extends AbstractRepositoryConnector {
 				repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
 			}
 		};
+	}
+
+	protected GerritConfiguration loadConfiguration(TaskRepository repository) {
+		GerritConfiguration configuration = configurationCache.get(repository);
+		if (configuration == null) {
+			configuration = configurationFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
+			configurationCache.put(repository, configuration);
+		}
+		return configuration;
+	}
+
+	protected void saveConfiguration(TaskRepository repository, GerritConfiguration configuration) {
+		configurationCache.put(repository, configuration);
+		repository.setProperty(KEY_REPOSITORY_CONFIG, configurationToString(configuration));
+	}
+
+	public GerritConfiguration getConfiguration(TaskRepository repository) {
+		GerritConfiguration configuration = configurationCache.get(repository);
+		if (configuration == null) {
+			configuration = loadConfiguration(repository);
+		}
+		return configuration;
 	}
 
 	private static GerritConfiguration configurationFromString(String token) {
