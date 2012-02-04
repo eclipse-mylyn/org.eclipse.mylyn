@@ -67,4 +67,15 @@ public class UrlHyperlink extends URLHyperlink {
 		return NLS.bind("Open ''{0}''", getURLString()); //$NON-NLS-1$
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UrlHyperlink [hyperlinkRegion="); //$NON-NLS-1$
+		builder.append(getHyperlinkRegion());
+		builder.append(", urlString="); //$NON-NLS-1$
+		builder.append(getURLString());
+		builder.append("]"); //$NON-NLS-1$
+		return builder.toString();
+	}
+
 }
