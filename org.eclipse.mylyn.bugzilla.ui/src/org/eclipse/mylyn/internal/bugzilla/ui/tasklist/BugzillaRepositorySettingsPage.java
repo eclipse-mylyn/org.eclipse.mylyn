@@ -529,7 +529,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
 	}
 
-	@SuppressWarnings({ "restriction" })
 	@Override
 	public void applyTo(final TaskRepository repository) {
 		AuthenticationCredentials repositoryAuth = repository.getCredentials(AuthenticationType.REPOSITORY);

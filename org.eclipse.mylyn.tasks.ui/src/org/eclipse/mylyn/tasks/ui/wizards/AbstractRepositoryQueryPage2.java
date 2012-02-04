@@ -62,7 +62,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private boolean firstTime = true;
 
-	@SuppressWarnings("restriction")
 	private SectionComposite innerComposite;
 
 	/**
@@ -407,7 +406,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		progressContainer.setCancelButton(cancelButton);
 	}
 
-	@SuppressWarnings("restriction")
 	protected abstract void createPageContent(SectionComposite parent);
 
 	protected void doClearControls() {

@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskListNotificationReminder extends TaskListNotification {
 
-	private final static String ID_EVENT_TASK_DUE = "org.eclipse.mylyn.tasks.ui.events.TaskDue";
+	private final static String ID_EVENT_TASK_DUE = "org.eclipse.mylyn.tasks.ui.events.TaskDue"; //$NON-NLS-1$
 
 	public TaskListNotificationReminder(AbstractTask task) {
 		super(ID_EVENT_TASK_DUE, task);

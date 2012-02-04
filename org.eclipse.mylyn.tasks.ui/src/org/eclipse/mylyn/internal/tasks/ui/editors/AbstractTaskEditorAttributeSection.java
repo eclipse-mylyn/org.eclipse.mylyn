@@ -332,7 +332,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 			String label = getModel().getTaskData().getAttributeMapper().getValueLabel(attribute);
 			if (label != null) {
 				if (sb.length() > 0) {
-					sb.append(" / ");
+					sb.append(" / "); //$NON-NLS-1$
 				}
 			}
 			sb.append(label);

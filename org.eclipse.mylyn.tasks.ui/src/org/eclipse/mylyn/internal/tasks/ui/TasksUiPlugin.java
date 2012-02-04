@@ -1002,8 +1002,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
-	private IIdentityService identityService;
-
 	private ServiceTracker identityServiceTracker;
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
@@ -1386,7 +1384,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public IIdentityService getIdentityService() {
 		if (identityServiceTracker == null) {
-			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),
+			identityServiceTracker = new ServiceTracker<Object, Object>(getBundle().getBundleContext(),
 					IIdentityService.class.getName(), null);
 			identityServiceTracker.open();
 		}

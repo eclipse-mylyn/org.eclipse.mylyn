@@ -596,7 +596,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				for (String option : optionValues) {
 					attributeTargetMilestone.putOption(option, option);
 				}
-				if (repositoryConfiguration != null && product != null && !product.equals("")) { //$NON-NLS-1$
+				if (product != null && !product.equals("")) { //$NON-NLS-1$
 					String defaultMilestone = repositoryConfiguration.getDefaultMilestones(product);
 					if (defaultMilestone != null) {
 						attributeTargetMilestone.setValue(defaultMilestone);
@@ -737,7 +737,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			}
 		}
-
 		return true;
 	}
 

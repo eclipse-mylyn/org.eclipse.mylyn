@@ -24,7 +24,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-@SuppressWarnings({ "restriction" })
 public class ContextRetrieveWizard extends Wizard {
 
 	private final TaskRepository repository;
