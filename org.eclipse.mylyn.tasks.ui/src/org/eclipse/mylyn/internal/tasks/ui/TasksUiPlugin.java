@@ -1384,7 +1384,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public IIdentityService getIdentityService() {
 		if (identityServiceTracker == null) {
-			identityServiceTracker = new ServiceTracker<Object, Object>(getBundle().getBundleContext(),
+			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),
 					IIdentityService.class.getName(), null);
 			identityServiceTracker.open();
 		}
