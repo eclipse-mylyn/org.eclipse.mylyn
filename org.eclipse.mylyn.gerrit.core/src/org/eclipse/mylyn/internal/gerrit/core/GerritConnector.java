@@ -295,7 +295,9 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		GerritConfiguration configuration = configurationCache.get(repository);
 		if (configuration == null) {
 			configuration = configurationFromString(repository.getProperty(KEY_REPOSITORY_CONFIG));
-			configurationCache.put(repository, configuration);
+			if (configuration != null) {
+				configurationCache.put(repository, configuration);
+			}
 		}
 		return configuration;
 	}
