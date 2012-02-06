@@ -246,6 +246,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		client.updateAttributes(new NullProgressMonitor(), false);
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
@@ -260,6 +261,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		client.updateAttributes(new NullProgressMonitor(), false);
 		assertEquals(client.getAccessMode().name(), repository.getVersion());
 
 		// prepare task data
