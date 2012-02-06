@@ -26,6 +26,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -69,7 +70,9 @@ public class CommonHttpClientTest {
 
 	@Test(expected = SSLException.class)
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken()) {
+		if (CommonTestUtil.isCertificateAuthBroken()
+				|| NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null) {
+			// bug 369805
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset");
 			throw new SSLException(""); // skip test 
 		}
