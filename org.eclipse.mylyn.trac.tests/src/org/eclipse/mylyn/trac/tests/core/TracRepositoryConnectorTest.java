@@ -268,11 +268,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		System.err.println(taskData.getRoot());
 
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		task.setPriority("P2");
 
 		// create task from task data
+		System.err.println(Arrays.asList(client.getPriorities()));
+		System.err.println(client.getTicketFieldByName("priority"));
 		connector.updateTaskFromTaskData(repository, task, taskData);
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456", task.getTaskKey());
