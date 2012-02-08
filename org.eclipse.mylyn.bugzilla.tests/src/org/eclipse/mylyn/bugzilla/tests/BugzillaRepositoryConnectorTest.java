@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -1192,8 +1193,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testErrorMatchFailedToShort() throws Exception {
 		try {
 			doUserMatch("st", null);
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 			BugzillaStatus status = (BugzillaStatus) e.getStatus();
 			assertNotNull(status);
@@ -1220,8 +1221,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testErrorMatchConfirmMatch() throws Exception {
 		try {
 			doUserMatch("est", null);
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
@@ -1231,9 +1232,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getNewCCProposals());
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
-				assertEquals(0, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertNotNull(matchUserResponse.getNewCCMsg());
 				assertNull(matchUserResponse.getAssignedToMsg());
 				assertNull(matchUserResponse.getQaContactMsg());
@@ -1248,8 +1249,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
 				assertEquals(2, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
 				assertTrue(matchUserResponse.getNewCCProposals().contains("guest@mylyn.eclipse.org"));
 				assertNull(matchUserResponse.getNewCCMsg());
@@ -1262,8 +1263,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testErrorMatchConfirmMatch2() throws Exception {
 		try {
 			doUserMatch(null, "est");
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
@@ -1273,9 +1274,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getNewCCProposals());
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
-				assertEquals(0, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertNull(matchUserResponse.getNewCCMsg());
 				assertNotNull(matchUserResponse.getAssignedToMsg());
 				assertNull(matchUserResponse.getQaContactMsg());
@@ -1289,9 +1290,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getNewCCProposals());
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
-				assertEquals(0, matchUserResponse.getNewCCProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
 				assertEquals(2, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertTrue(matchUserResponse.getAssignedToProposals().contains("tests@mylyn.eclipse.org"));
 				assertTrue(matchUserResponse.getAssignedToProposals().contains("guest@mylyn.eclipse.org"));
 				assertNull(matchUserResponse.getNewCCMsg());
@@ -1304,8 +1305,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testErrorMatchConfirmMatch3() throws Exception {
 		try {
 			doUserMatch("test", "est");
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
@@ -1315,9 +1316,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getNewCCProposals());
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
-				assertEquals(0, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertNotNull(matchUserResponse.getNewCCMsg());
 				assertNotNull(matchUserResponse.getAssignedToMsg());
 				assertNull(matchUserResponse.getQaContactMsg());
@@ -1334,7 +1335,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getQaContactProposals());
 				assertEquals(1, matchUserResponse.getNewCCProposals().size());
 				assertEquals(2, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
 				assertTrue(matchUserResponse.getAssignedToProposals().contains("tests@mylyn.eclipse.org"));
 				assertTrue(matchUserResponse.getAssignedToProposals().contains("guest@mylyn.eclipse.org"));
@@ -1347,9 +1348,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testErrorMatchFailed() throws Exception {
 		try {
-			doUserMatch("teste", null);
+			doUserMatch("tests1@mylyn.eclipse.org", null);
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 			BugzillaStatus status = (BugzillaStatus) e.getStatus();
 			assertNotNull(status);
@@ -1358,21 +1359,21 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			assertNotNull(matchUserResponse.getNewCCProposals());
 			assertNotNull(matchUserResponse.getAssignedToProposals());
 			assertNotNull(matchUserResponse.getQaContactProposals());
-			assertEquals(0, matchUserResponse.getNewCCProposals().size());
-			assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-			assertEquals(0, matchUserResponse.getQaContactProposals().size());
+			assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
+			assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+			assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 			assertNotNull(matchUserResponse.getNewCCMsg());
 			assertNull(matchUserResponse.getAssignedToMsg());
 			assertNull(matchUserResponse.getQaContactMsg());
-			assertTrue(matchUserResponse.getNewCCMsg().equals("teste  did not match anything "));
+			assertTrue(matchUserResponse.getNewCCMsg().equals("tests1@mylyn.eclipse.org  did not match anything "));
 		}
 	}
 
 	public void testErrorMatchFailed2() throws Exception {
 		try {
 			doUserMatch("est", "test1");
+			fail("CoreException expected but not found");
 		} catch (CoreException e) {
-			assertNotNull(e.getStatus());
 			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_6) < 0) {
 				assertEquals(BugzillaStatus.ERROR_MATCH_FAILED, e.getStatus().getCode());
 				BugzillaStatus status = (BugzillaStatus) e.getStatus();
@@ -1382,9 +1383,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getNewCCProposals());
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
-				assertEquals(0, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getNewCCProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertNotNull(matchUserResponse.getNewCCMsg());
 				assertNotNull(matchUserResponse.getAssignedToMsg());
 				assertNull(matchUserResponse.getQaContactMsg());
@@ -1400,8 +1401,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				assertNotNull(matchUserResponse.getAssignedToProposals());
 				assertNotNull(matchUserResponse.getQaContactProposals());
 				assertEquals(2, matchUserResponse.getNewCCProposals().size());
-				assertEquals(0, matchUserResponse.getAssignedToProposals().size());
-				assertEquals(0, matchUserResponse.getQaContactProposals().size());
+				assertEquals(Collections.emptyList(), matchUserResponse.getAssignedToProposals());
+				assertEquals(Collections.emptyList(), matchUserResponse.getQaContactProposals());
 				assertTrue(matchUserResponse.getNewCCProposals().contains("tests@mylyn.eclipse.org"));
 				assertTrue(matchUserResponse.getNewCCProposals().contains("guest@mylyn.eclipse.org"));
 				assertNull(matchUserResponse.getNewCCMsg());

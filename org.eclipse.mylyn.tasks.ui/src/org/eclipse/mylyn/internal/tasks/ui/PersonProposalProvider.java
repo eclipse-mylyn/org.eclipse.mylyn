@@ -64,6 +64,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private final Map<String, String> proposals;
 
+	private Map<String, String> errorProposals;
+
 	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
 		this(task, taskData, new HashMap<String, String>(0));
 	}
@@ -117,19 +119,21 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 		// retrieve subset of the tree set using key range
 		SortedSet<String> addressSet = getAddressSet();
-		if (!searchText.equals("")) { //$NON-NLS-1$
-			// lower bounds
-			searchText = searchText.toLowerCase();
+		if (errorProposals == null || errorProposals.isEmpty()) {
+			if (!searchText.equals("")) { //$NON-NLS-1$
+				// lower bounds
+				searchText = searchText.toLowerCase();
 
-			// compute the upper bound
-			char[] nextWord = searchText.toCharArray();
-			nextWord[searchText.length() - 1]++;
+				// compute the upper bound
+				char[] nextWord = searchText.toCharArray();
+				nextWord[searchText.length() - 1]++;
 
-			// filter matching keys 
-			addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
+				// filter matching keys 
+				addressSet = new TreeSet<String>(addressSet.subSet(searchText, new String(nextWord)));
 
-			// add matching keys based on pretty names 
-			addMatchingProposalsByPrettyName(addressSet, searchText);
+				// add matching keys based on pretty names 
+				addMatchingProposalsByPrettyName(addressSet, searchText);
+			}
 		}
 
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
@@ -206,6 +210,13 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				return s1.compareToIgnoreCase(s2);
 			}
 		});
+
+		if (errorProposals != null && !errorProposals.isEmpty()) {
+			for (String proposal : errorProposals.keySet()) {
+				addAddress(addressSet, proposal);
+			}
+			return addressSet;
+		}
 
 		if (proposals.size() > 0) {
 			if (repositoryUrl != null && connectorKind != null) {
@@ -322,4 +333,16 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 	}
 
+	public Map<String, String> getProposals() {
+		return proposals;
+	}
+
+	public Map<String, String> getErrorProposals() {
+		return errorProposals;
+	}
+
+	public void setErrorProposals(Map<String, String> errorProposals) {
+		this.errorProposals = errorProposals;
+		addressSet = null;
+	}
 }

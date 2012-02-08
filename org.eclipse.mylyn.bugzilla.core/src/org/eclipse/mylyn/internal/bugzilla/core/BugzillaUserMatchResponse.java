@@ -94,6 +94,7 @@ public class BugzillaUserMatchResponse {
 						&& divClass.equals("user_match")) { //$NON-NLS-1$
 					value = ((HtmlTag) (token.getValue())).getAttribute("value"); //$NON-NLS-1$
 					name = ((HtmlTag) (token.getValue())).getAttribute("name"); //$NON-NLS-1$
+					value = value.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
 					if (name.equals("newcc")) { //$NON-NLS-1$
 						newCCProposals.add(value);
 					} else if (name.equals("assigned_to")) { //$NON-NLS-1$
@@ -110,6 +111,7 @@ public class BugzillaUserMatchResponse {
 						&& !((HtmlTag) (token.getValue())).isEndTag() && divClass != null
 						&& divClass.equals("user_match")) { //$NON-NLS-1$
 					value = ((HtmlTag) (token.getValue())).getAttribute("value"); //$NON-NLS-1$
+					value = value.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
 					if (name.equals("newcc")) { //$NON-NLS-1$
 						newCCProposals.add(value);
 					} else if (name.equals("assigned_to")) { //$NON-NLS-1$
@@ -257,6 +259,7 @@ public class BugzillaUserMatchResponse {
 							int endText = divString.indexOf("<", startText + 1); //$NON-NLS-1$
 							String temp = divString.substring(startText, endText);
 							value = divString.substring(5, start) + temp;
+							value = value.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
 							if (lastDTValue.equals("newcc")) { //$NON-NLS-1$
 								newCCMsg = value;
 							} else if (lastDTValue.equals("assigned_to")) { //$NON-NLS-1$

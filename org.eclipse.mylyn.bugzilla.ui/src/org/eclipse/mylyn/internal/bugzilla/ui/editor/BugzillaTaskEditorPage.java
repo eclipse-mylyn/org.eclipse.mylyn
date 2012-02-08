@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -31,11 +36,15 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryResponse;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaUserMatchResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
+import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -57,12 +66,20 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.keys.IBindingService;
 
 /**
  * @author Rob Elves
+ * @author Frank Becker
  * @since 3.0
  */
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
@@ -76,6 +93,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	private final Map<TaskAttribute, AbstractAttributeEditor> attributeEditorMap;
 
 	private TaskDataModelListener productListener;
+
+	private final List<ControlDecoration> errorDecorations = new ArrayList<ControlDecoration>();
+
+	private final List<PersonAttributeEditor> editorsWithError = new ArrayList<PersonAttributeEditor>(3);
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
 		this(editor, BugzillaCorePlugin.CONNECTOR_KIND);
@@ -328,6 +349,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				attrToken.setValue(tokenString);
 			}
 		}
+		for (ControlDecoration decoration : errorDecorations) {
+			decoration.hide();
+			decoration.dispose();
+		}
+		errorDecorations.clear();
+		editorsWithError.clear();
 		if (!checkCanSubmit(IMessageProvider.ERROR)) {
 			return;
 		}
@@ -497,7 +524,15 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	protected void handleTaskSubmitted(SubmitJobEvent event) {
-		if (event.getJob().getResponse() != null && event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
+		if (event.getJob().getStatus() != null) {
+			switch (event.getJob().getStatus().getCode()) {
+			case BugzillaStatus.ERROR_CONFIRM_MATCH:
+			case BugzillaStatus.ERROR_MATCH_FAILED:
+				showError((BugzillaStatus) event.getJob().getStatus());
+				break;
+			}
+		} else if (event.getJob().getResponse() != null
+				&& event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
 			final RepositoryResponse response = event.getJob().getResponse();
 			if (response instanceof BugzillaRepositoryResponse) {
 				final BugzillaRepositoryResponse bugzillaResponse = (BugzillaRepositoryResponse) response;
@@ -506,10 +541,9 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							IMessageProvider.INFORMATION, new HyperlinkAdapter() {
 								@Override
 								public void linkActivated(HyperlinkEvent event) {
-									BugzillaResponseDetailDialog dialog = new BugzillaResponseDetailDialog(
-											WorkbenchUtil.getShell(), bugzillaResponse);
-									dialog.open();
+									showSubmitResponse(bugzillaResponse);
 								}
+
 							});
 				} else {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
@@ -567,4 +601,170 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		}
 		return true;
 	}
+
+	private void showError(BugzillaStatus bugzillaStatus) {
+		int count = 0;
+		BugzillaUserMatchResponse response = bugzillaStatus.getUserMatchResponse();
+		FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+		FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+		StringBuilder fields = new StringBuilder();
+		StringBuilder detail = new StringBuilder();
+
+		count += decorateControlsAndUpdateMessages(response.getAssignedToMsg(), response.getAssignedToProposals(),
+				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()), fields,
+				detail, fieldDecoration);
+		count += decorateControlsAndUpdateMessages(response.getQaContactMsg(), response.getQaContactProposals(),
+				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.QA_CONTACT.getKey()), fields, detail,
+				fieldDecoration);
+		count += decorateControlsAndUpdateMessages(response.getNewCCMsg(), response.getNewCCProposals(),
+				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.NEWCC.getKey()), fields, detail,
+				fieldDecoration);
+		updateTaskEditorPageMessageWithError(bugzillaStatus, detail.toString(), count == 1, fields.toString());
+	}
+
+	private int decorateControlsAndUpdateMessages(String message, List<String> proposals, TaskAttribute attribute,
+			StringBuilder fields, StringBuilder detail, FieldDecoration fieldDecoration) {
+		if (attribute == null || (message == null && proposals.size() == 0)) {
+			return 0;
+		}
+		Map<String, String> newPersonProposalMap = new HashMap<String, String>();
+		if (fields.length() > 0) {
+			fields.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_Error_Label_N, attribute.getMetaData()
+					.getLabel()));
+		} else {
+			fields.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_Error_Label_1, attribute.getMetaData()
+					.getLabel()));
+		}
+		detail.append(attribute.getMetaData().getLabel() + "\n"); //$NON-NLS-1$
+		if (message != null && !message.equals("")) { //$NON-NLS-1$
+			detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, message));
+		} else {
+			for (String proposalValue : proposals) {
+				detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, proposalValue));
+				newPersonProposalMap.put(proposalValue, proposalValue);
+			}
+		}
+		AbstractAttributeEditor editor = getEditorForAttribute(attribute);
+		if (editor != null) {
+			decorateEditorWithError(fieldDecoration, message, newPersonProposalMap, editor);
+		}
+		return 1;
+	}
+
+	/**
+	 * @param bugzillaStatus
+	 * @param resultDetail
+	 * @param oneError
+	 * @param fieldString
+	 */
+	private void updateTaskEditorPageMessageWithError(BugzillaStatus bugzillaStatus, String resultDetail,
+			boolean oneError, String fieldString) {
+		String resultString;
+		final String titleString;
+		switch (bugzillaStatus.getCode()) {
+		case BugzillaStatus.ERROR_CONFIRM_MATCH:
+			if (oneError) {
+				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_one,
+						Messages.BugzillaTaskEditorPage_Confirm, fieldString);
+			} else {
+				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_more,
+						Messages.BugzillaTaskEditorPage_Confirm, fieldString);
+			}
+			titleString = Messages.BugzillaTaskEditorPage_Confirm + Messages.BugzillaTaskEditorPage_match_Detail;
+			break;
+		case BugzillaStatus.ERROR_MATCH_FAILED:
+			if (oneError) {
+				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_one,
+						Messages.BugzillaTaskEditorPage_Error, fieldString);
+			} else {
+				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_more,
+						Messages.BugzillaTaskEditorPage_Error, fieldString);
+			}
+			titleString = Messages.BugzillaTaskEditorPage_Confirm + Messages.BugzillaTaskEditorPage_match_Detail;
+			break;
+		default:
+			resultString = ""; //$NON-NLS-1$
+			titleString = ""; //$NON-NLS-1$
+			break;
+		}
+
+		final String resultDetailString = resultDetail;
+		getTaskEditor().setMessage(resultString, IMessageProvider.ERROR, new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent event) {
+				BugzillaResponseDetailDialog dialog = new BugzillaResponseDetailDialog(WorkbenchUtil.getShell(),
+						titleString, resultDetailString);
+				dialog.open();
+			}
+		});
+	}
+
+	/**
+	 * @param fieldDecoration
+	 * @param message
+	 * @param newPersonProposalMap
+	 * @param editor
+	 */
+	private void decorateEditorWithError(FieldDecoration fieldDecoration, String message,
+			Map<String, String> newPersonProposalMap, AbstractAttributeEditor editor) {
+		final Control control = editor.getControl();
+
+		final ControlDecoration decoration = new ControlDecoration(control, SWT.LEFT | SWT.DOWN);
+		decoration.setImage(fieldDecoration.getImage());
+		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		if (message != null && !message.equals("")) { //$NON-NLS-1$
+			decoration.setDescriptionText(message);
+			errorDecorations.add(decoration);
+		} else {
+			decoration.setDescriptionText(NLS.bind(
+					Messages.BugzillaTaskEditorPage_Content_Assist_for_Error_Available,
+					bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
+			errorDecorations.add(decoration);
+
+			PersonAttributeEditor personEditor = ((PersonAttributeEditor) editor);
+			final PersonProposalProvider personProposalProvider = (PersonProposalProvider) personEditor.getContentAssistCommandAdapter()
+					.getContentProposalProvider();
+			personProposalProvider.setErrorProposals(newPersonProposalMap);
+
+			editorsWithError.add(personEditor);
+			if (newPersonProposalMap.size() == 1) {
+				personEditor.setValue(newPersonProposalMap.keySet().iterator().next());
+
+			}
+			personEditor.getText().addModifyListener(new ModifyListener() {
+
+				public void modifyText(ModifyEvent e) {
+					decoration.hide();
+					errorDecorations.remove(decoration);
+					decoration.dispose();
+					personProposalProvider.setErrorProposals(null);
+				}
+			});
+		}
+	}
+
+	/**
+	 * @param bugzillaResponse
+	 */
+	private void showSubmitResponse(final BugzillaRepositoryResponse bugzillaResponse) {
+		StringBuilder message = new StringBuilder();
+		for (String iterable_map : bugzillaResponse.getResponseData().keySet()) {
+			if (message.length() > 0) {
+				message.append("\n"); //$NON-NLS-1$
+			}
+			message.append(NLS.bind(Messages.BugzillaTaskEditorPage_Bug_Line, iterable_map));
+			Map<String, List<String>> responseMap = bugzillaResponse.getResponseData().get(iterable_map);
+			for (String iterable_list : responseMap.keySet()) {
+				message.append(NLS.bind(Messages.BugzillaTaskEditorPage_Action_Line, iterable_list));
+				List<String> responseList = responseMap.get(iterable_list);
+				for (String string : responseList) {
+					message.append(NLS.bind(Messages.BugzillaTaskEditorPage_Email_Line, string));
+				}
+			}
+		}
+		BugzillaResponseDetailDialog dialog = new BugzillaResponseDetailDialog(WorkbenchUtil.getShell(),
+				Messages.BugzillaTaskEditorPage_submitted_Changes_Details, message.toString());
+		dialog.open();
+	}
+
 }

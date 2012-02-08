@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -35,6 +36,8 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  * @author Steffen Pingel
  */
 public class PersonAttributeEditor extends TextAttributeEditor {
+
+	private ContentAssistCommandAdapter contentAssistCommandAdapter = null;
 
 	public PersonAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -65,6 +68,8 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 
 			final ImageHyperlink selfLink = new ImageHyperlink(composite, SWT.NO_FOCUS);
 			selfLink.setToolTipText(Messages.PersonAttributeEditor_Insert_My_User_Id_Tooltip);
+			//this is inserted to not get org.eclipse.swt.SWTException: Graphic is disposed on Mac OS Lion
+			selfLink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 			selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 			selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 			selfLink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -85,7 +90,6 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 				public void mouseEnter(MouseEvent e) {
 					((GridData) selfLink.getLayoutData()).exclude = false;
 					composite.layout();
-					selfLink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 					selfLink.redraw();
 					version++;
 				}
@@ -98,7 +102,6 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 							if (version != lastVersion || selfLink.isDisposed()) {
 								return;
 							}
-							selfLink.setImage(null);
 							selfLink.redraw();
 							((GridData) selfLink.getLayoutData()).exclude = true;
 							composite.layout();
@@ -139,5 +142,13 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 		if (getText() != null && getText() != getControl()) {
 			getText().setBackground(color);
 		}
+	}
+
+	public ContentAssistCommandAdapter getContentAssistCommandAdapter() {
+		return contentAssistCommandAdapter;
+	}
+
+	public void setContentAssistCommandAdapter(ContentAssistCommandAdapter contentAssistCommandAdapter) {
+		this.contentAssistCommandAdapter = contentAssistCommandAdapter;
 	}
 }

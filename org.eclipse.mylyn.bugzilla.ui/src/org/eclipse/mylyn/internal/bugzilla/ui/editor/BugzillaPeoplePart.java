@@ -68,6 +68,7 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		Composite peopleComposite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 5;
+		layout.horizontalSpacing = 10;
 		peopleComposite.setLayout(layout);
 
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
