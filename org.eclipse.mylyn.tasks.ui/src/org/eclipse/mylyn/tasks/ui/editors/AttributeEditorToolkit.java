@@ -99,6 +99,9 @@ public class AttributeEditorToolkit {
 							ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
 					adapter.setLabelProvider(labelPropsalProvider);
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+					if (editor instanceof PersonAttributeEditor) {
+						((PersonAttributeEditor) editor).setContentAssistCommandAdapter(adapter);
+					}
 				}
 			}
 		} else if (editor instanceof RichTextAttributeEditor) {

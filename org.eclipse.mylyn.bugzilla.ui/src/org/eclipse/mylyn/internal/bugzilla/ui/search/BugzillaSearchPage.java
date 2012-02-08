@@ -83,7 +83,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  * @author Mik Kersten (hardening of prototype)
  * @author Frank Becker
  */
-@SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements Listener {
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 30;

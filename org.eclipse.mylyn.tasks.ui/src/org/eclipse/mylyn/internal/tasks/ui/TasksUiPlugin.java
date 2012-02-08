@@ -1002,8 +1002,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
-	private IIdentityService identityService;
-
 	private ServiceTracker identityServiceTracker;
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {

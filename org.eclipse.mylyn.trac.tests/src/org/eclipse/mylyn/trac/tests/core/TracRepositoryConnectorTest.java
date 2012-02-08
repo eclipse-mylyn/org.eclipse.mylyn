@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -246,6 +247,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		client.updateAttributes(new NullProgressMonitor(), false);
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
@@ -258,25 +260,39 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
-		TracTicket ticket = new TracTicket(456);
-		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		// ensure that client has the correct field configuration
+		client.updateAttributes(new NullProgressMonitor(), true);
 		assertEquals(client.getAccessMode().name(), repository.getVersion());
-		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
-		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 
+		// prepare task data
+		TracTicket ticket = new TracTicket(456);
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
+		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
+		System.err.println(taskData.getRoot());
+		if (attribute != null) {
+			assertEquals("major", attribute.getValue());
+		}
+
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		task.setPriority("P2");
+
+		// create task from task data
+		System.err.println(Arrays.asList(client.getPriorities()));
+		System.err.println(client.getTicketFieldByName("priority"));
 		connector.updateTaskFromTaskData(repository, task, taskData);
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
-		assertEquals("P3", task.getPriority());
 		// depending on the access mode createTaskDataFromTicket() creates different default attributes  
 		if (client.getAccessMode() == Version.TRAC_0_9) {
 			assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
+			assertEquals("P2", task.getPriority());
 		} else {
 			assertEquals("Defect", task.getTaskKind());
+			assertEquals("P3", task.getPriority());
 		}
 	}
 

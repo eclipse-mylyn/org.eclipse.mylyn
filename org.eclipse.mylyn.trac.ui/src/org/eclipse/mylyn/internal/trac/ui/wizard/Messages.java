@@ -73,13 +73,9 @@ public class Messages extends NLS {
 
 	public static String TracQueryPage_Milestone;
 
-	public static String TracQueryPage_No_repository_available;
-
 	public static String TracQueryPage_Owner;
 
 	public static String TracQueryPage_Priority;
-
-	public static String TracQueryPage_Query_Title;
 
 	public static String TracQueryPage_Reporter;
 
@@ -90,10 +86,6 @@ public class Messages extends NLS {
 	public static String TracQueryPage_Summary;
 
 	public static String TracQueryPage_Type;
-
-	public static String TracQueryPage_Update_Attributes_Failed;
-
-	public static String TracQueryPage_Update_Attributes_from_Repository;
 
 	public static String TracQueryPage_Version;
 

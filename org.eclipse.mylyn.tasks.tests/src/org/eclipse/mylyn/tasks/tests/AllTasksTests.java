@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.AttachmentTableLabelProviderTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.EditorUtilTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.PlanningPartTest;
+import org.eclipse.mylyn.tasks.tests.ui.editor.RegionComparatorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RepositoryCompletionProcessorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
@@ -38,11 +39,12 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
 /**
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class AllTasksTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
+		TestSuite suite = new TestSuite(AllTasksTests.class.getName());
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
@@ -115,6 +117,7 @@ public class AllTasksTests {
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
+		suite.addTestSuite(RegionComparatorTest.class);
 		return suite;
 	}
 

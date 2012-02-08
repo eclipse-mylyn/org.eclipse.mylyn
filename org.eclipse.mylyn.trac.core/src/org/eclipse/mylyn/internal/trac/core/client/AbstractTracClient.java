@@ -176,18 +176,16 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	public TracTicketField getTicketFieldByName(String name) {
 		if (data.ticketFields != null) {
-			// lazily fill fieldByName map
-			if (data.ticketFieldByName == null) {
-				synchronized (data) {
-					if (data.ticketFieldByName == null) {
-						data.ticketFieldByName = new HashMap<String, TracTicketField>();
-						for (TracTicketField field : data.ticketFields) {
-							data.ticketFieldByName.put(field.getName(), field);
-						}
+			synchronized (this) {
+				// lazily fill fieldByName map
+				if (data.ticketFieldByName == null) {
+					data.ticketFieldByName = new HashMap<String, TracTicketField>();
+					for (TracTicketField field : data.ticketFields) {
+						data.ticketFieldByName.put(field.getName(), field);
 					}
 				}
+				return data.ticketFieldByName.get(name);
 			}
-			return data.ticketFieldByName.get(name);
 		}
 		return null;
 	}

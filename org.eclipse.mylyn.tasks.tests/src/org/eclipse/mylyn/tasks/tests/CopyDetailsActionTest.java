@@ -17,6 +17,7 @@ import org.eclipse.mylyn.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -75,9 +76,17 @@ public class CopyDetailsActionTest extends TestCase {
 				return "http://321.com";
 			}
 		};
-		((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
-		assertEquals("321: s321" + ClipboardCopier.LINE_SEPARATOR + "http://321.com",
-				CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				MockRepositoryConnector.CONNECTOR_KIND);
+		try {
+			((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
+			assertEquals("321: s321" + ClipboardCopier.LINE_SEPARATOR + "http://321.com",
+					CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+		} finally {
+			if (oldConnector != null) {
+				((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(oldConnector);
+			}
+		}
 	}
 
 }

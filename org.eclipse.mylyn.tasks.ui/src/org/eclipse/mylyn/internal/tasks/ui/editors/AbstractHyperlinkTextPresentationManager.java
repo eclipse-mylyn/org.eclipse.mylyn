@@ -35,7 +35,10 @@ import org.eclipse.swt.custom.StyleRange;
  */
 public abstract class AbstractHyperlinkTextPresentationManager {
 
-	private static class RegionComparator implements Comparator<IRegion> {
+	/**
+	 * Regions with a lower offset and a shorter length are ordered before other regions.
+	 */
+	public static class RegionComparator implements Comparator<IRegion> {
 
 		public int compare(IRegion o1, IRegion o2) {
 			if (o1 == o2) {
@@ -47,8 +50,10 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 				return 1;
 			} else if (o1.getLength() < o2.getLength()) {
 				return -1;
-			} else {
+			} else if (o1.getLength() > o2.getLength()) {
 				return 1;
+			} else {
+				return 0;
 			}
 		}
 

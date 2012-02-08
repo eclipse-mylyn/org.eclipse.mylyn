@@ -32,7 +32,7 @@ import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 public class TracRepositoryQueryTest extends TestCase {
 
 	public void testChangeRepositoryUrl() throws Exception {
-		TaskRepository repository = TracFixture.DEFAULT.singleRepository();
+		TaskRepository repository = TracFixture.TRAC_0_12_XML_RPC.singleRepository();
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();

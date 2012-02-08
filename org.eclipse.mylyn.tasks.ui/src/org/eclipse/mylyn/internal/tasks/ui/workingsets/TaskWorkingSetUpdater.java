@@ -57,8 +57,6 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
 
-	private static TaskWorkingSetUpdater INSTANCE;
-
 	private static class TaskWorkingSetDelta {
 
 		private final IWorkingSet workingSet;
@@ -94,10 +92,24 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
+	private static boolean enabled = true;
+
 	public TaskWorkingSetUpdater() {
-		INSTANCE = this;
 		TasksUiInternal.getTaskList().addChangeListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+	}
+
+	/**
+	 * Set <code>enabled</code> to false to disable processing of task list changes, e.g. during import operations.
+	 * 
+	 * @param enabled
+	 */
+	public static void setEnabled(boolean enabled) {
+		TaskWorkingSetUpdater.enabled = enabled;
+	}
+
+	public static boolean isEnabled() {
+		return enabled;
 	}
 
 	public void dispose() {
@@ -157,6 +169,9 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public void containersChanged(Set<TaskContainerDelta> delta) {
+		if (!isEnabled()) {
+			return;
+		}
 		for (TaskContainerDelta taskContainerDelta : delta) {
 			if (taskContainerDelta.getElement() instanceof TaskCategory
 					|| taskContainerDelta.getElement() instanceof IRepositoryQuery) {
@@ -358,10 +373,6 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		} else {
 			return Collections.emptySet();
 		}
-	}
-
-	public static TaskWorkingSetUpdater getInstance() {
-		return INSTANCE;
 	}
 
 }

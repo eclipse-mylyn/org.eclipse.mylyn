@@ -77,25 +77,25 @@ public class BugzillaFixture extends TestFixture {
 	 */
 	@Deprecated
 	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
-			"3.4.13", "");
+			"3.4.14", "");
 
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
-			"3.6.7", "");
+			"3.6.8", "");
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-custom-wf", "3.6.7", CUSTOM_WF);
+			+ "-custom-wf", "3.6.8", CUSTOM_WF);
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
-			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6.7", CUSTOM_WF_AND_STATUS);
+			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6.8", CUSTOM_WF_AND_STATUS);
 
 	public static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-xml-rpc-disabled", "3.6.7", XML_RPC_DISABLED);
+			+ "-xml-rpc-disabled", "3.6.8", XML_RPC_DISABLED);
 
 	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
-			"4.0.3", "");
+			"4.0.4", "");
 
 	public static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
-			"4.2RC1+", "");
+			"4.2RC2+", "");
 
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.3", "");

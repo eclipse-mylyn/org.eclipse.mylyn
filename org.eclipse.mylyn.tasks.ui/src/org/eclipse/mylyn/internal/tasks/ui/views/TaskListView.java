@@ -1015,7 +1015,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
 
 		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
-			ServiceMessage message = new ServiceMessage("welcome");
+			ServiceMessage message = new ServiceMessage("welcome"); //$NON-NLS-1$
 			message.setDescription(Messages.TaskListView_Welcome_Message);
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);

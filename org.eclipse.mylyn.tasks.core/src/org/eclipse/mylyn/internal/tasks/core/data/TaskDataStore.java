@@ -136,7 +136,8 @@ public class TaskDataStore {
 						return readStateInternal(file, false);
 					} catch (SAXException e) {
 						// bug 268456: if reading fails, try again using a different XML version
-						if (e.getMessage() != null && e.getMessage().contains("invalid XML character")) { //$NON-NLS-1$
+						if (e.getMessage() != null
+								&& (e.getMessage().contains("invalid XML character") || e.getMessage().contains("Character reference \"&#"))) { //$NON-NLS-1$ //$NON-NLS-2$
 							return readStateInternal(file, true);
 						} else {
 							throw e;

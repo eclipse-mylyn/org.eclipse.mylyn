@@ -2357,5 +2357,12 @@
        </enabledWhen>
     </handler>
  </extension>
+ <extension
+       point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+    <handler
+          class="org.eclipse.mylyn.internal.tasks.ui.TaskUrlHandler"
+          id="org.eclipse.mylyn.tasks.ui.urlHandler.TaskUrlHandler">
+    </handler>
+ </extension>
 
 </plugin>

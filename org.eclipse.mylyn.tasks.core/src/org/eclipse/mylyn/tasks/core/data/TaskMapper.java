@@ -86,7 +86,8 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private String getPriorityLevelString() {
-		return (getPriorityLevel() != null) ? getPriorityLevel().toString() : PriorityLevel.getDefault().toString();
+		PriorityLevel priorityLevel = getPriorityLevel();
+		return (priorityLevel != null) ? priorityLevel.toString() : PriorityLevel.getDefault().toString();
 	}
 
 	private boolean hasChanges(Object existingValue, Object newValue, String attributeId) {

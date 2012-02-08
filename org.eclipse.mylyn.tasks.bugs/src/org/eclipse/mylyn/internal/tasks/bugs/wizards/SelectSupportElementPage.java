@@ -58,7 +58,6 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("restriction")
 public class SelectSupportElementPage extends WizardPage {
 
 	private class SupportElementItem extends ControlListItem {

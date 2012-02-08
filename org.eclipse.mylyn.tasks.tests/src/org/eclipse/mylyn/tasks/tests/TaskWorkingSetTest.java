@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -52,6 +53,7 @@ public class TaskWorkingSetTest extends TestCase {
 	protected void setUp() throws Exception {
 		workingSetManager = Workbench.getInstance().getWorkingSetManager();
 		root = ResourcesPlugin.getWorkspace().getRoot();
+		TestFixture.resetTaskList();
 	}
 
 	@Override

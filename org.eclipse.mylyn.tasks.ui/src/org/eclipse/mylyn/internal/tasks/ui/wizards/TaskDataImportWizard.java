@@ -45,7 +45,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.UIJob;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -116,32 +115,23 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 	public static boolean performFinish(final File sourceZipFile, final IWizardContainer container) {
 		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
-		TasksUiInternal.getTaskList().removeChangeListener(TaskWorkingSetUpdater.getInstance());
-
 		try {
+			TaskWorkingSetUpdater.setEnabled(false);
+
 			if (container != null) {
 				CommonUiUtil.run(container, new FileCopyJob(sourceZipFile));
 			} else {
 				WorkbenchUtil.busyCursorWhile(new FileCopyJob(sourceZipFile));
 			}
-
 		} catch (CoreException e) {
 			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Problems encountered importing task data: {0}", e.getMessage()), e); //$NON-NLS-1$
 			TasksUiInternal.logAndDisplayStatus(Messages.TaskDataImportWizard_task_data_import_failed, status);
 		} catch (OperationCanceledException e) {
 			// canceled
+		} finally {
+			TaskWorkingSetUpdater.setEnabled(true);
 		}
-
-		new UIJob("") { //$NON-NLS-1$
-
-			@Override
-			public IStatus runInUIThread(IProgressMonitor monitor) {
-				TasksUiInternal.getTaskList().addChangeListener(TaskWorkingSetUpdater.getInstance());
-				return Status.OK_STATUS;
-			}
-		}.schedule();
-
 		return true;
 	}
 

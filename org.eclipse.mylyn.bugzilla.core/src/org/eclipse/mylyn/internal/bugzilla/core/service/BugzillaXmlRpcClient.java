@@ -501,6 +501,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}).execute();
 	}
 
+	@SuppressWarnings("unchecked")
 	private HashMap<String, HashMap<String, Object[]>> response2HashMapHashMap(HashMap<?, ?> response, String name)
 			throws XmlRpcException {
 		HashMap<String, HashMap<String, Object[]>> result;
@@ -516,6 +517,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HashMap<String, Object[]> response2HashMap(HashMap<?, ?> response, String name) throws XmlRpcException {
 		HashMap<String, Object[]> result;
 		if (response == null) {
@@ -724,6 +726,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateTaskDataFromMap(final TaskAttributeMapper mapper, List<BugzillaCustomField> customFields,
 			Map<?, ?> taskDataResultMap, TaskData taskData) {
 		for (String attrib : (Set<String>) taskDataResultMap.keySet()) {
@@ -823,20 +826,22 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			Object[] attachments) {
 		if (attachments != null) {
 			for (Object attachmentTemp : attachments) {
-				HashMap<?, ?> attachment = (HashMap<?, ?>) attachmentTemp;
-				Date creation_time = (Date) attachment.get("creation_time");
-				Date last_change_time = (Date) attachment.get("last_change_time");
-				Integer id = (Integer) attachment.get("id");
-				Integer bug_id = (Integer) attachment.get("bug_id");
-				String file_name = (String) attachment.get("file_name");
-				String summary = (String) attachment.get("summary");
-				String content_type = (String) attachment.get("content_type");
+				// We have the following information which are not used:
+				// (Date) attachment.get("last_change_time");
+				// (Integer) attachment.get("bug_id");
+				// (Integer) attachment.get("is_private");
+				// (Integer) attachment.get("is_url");
 
-				Integer is_private = (Integer) attachment.get("is_private");
-				Integer is_obsolete = (Integer) attachment.get("is_obsolete");
-				Integer is_url = (Integer) attachment.get("is_url");
-				Integer is_patch = (Integer) attachment.get("is_patch");
-				String creator = (String) attachment.get("creator");
+				HashMap<?, ?> attachment = (HashMap<?, ?>) attachmentTemp;
+				Date creation_time = (Date) attachment.get("creation_time"); //$NON-NLS-1$
+				Integer id = (Integer) attachment.get("id"); //$NON-NLS-1$
+				String file_name = (String) attachment.get("file_name"); //$NON-NLS-1$
+				String summary = (String) attachment.get("summary"); //$NON-NLS-1$
+				String content_type = (String) attachment.get("content_type"); //$NON-NLS-1$
+
+				Integer is_obsolete = (Integer) attachment.get("is_obsolete"); //$NON-NLS-1$
+				Integer is_patch = (Integer) attachment.get("is_patch"); //$NON-NLS-1$
+				String creator = (String) attachment.get("creator"); //$NON-NLS-1$
 				TaskAttribute attachmentAttribute = taskData.getRoot().createAttribute(
 						TaskAttribute.PREFIX_ATTACHMENT + id);
 				BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
@@ -847,15 +852,12 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 //				attachmentMapper.setComment(summary);
 				attachmentMapper.setContentType(content_type);
 				attachmentMapper.setCreationDate(creation_time);
-				attachmentMapper.setDeprecated(is_obsolete.equals("1"));
+				attachmentMapper.setDeprecated(is_obsolete.equals("1")); //$NON-NLS-1$
 				attachmentMapper.setDescription(summary);
 				attachmentMapper.setFileName(file_name);
 				attachmentMapper.setLength(-1L);
-				attachmentMapper.setPatch(is_patch.equals("1"));
+				attachmentMapper.setPatch(is_patch.equals("1")); //$NON-NLS-1$
 				attachmentMapper.applyTo(attachmentAttribute);
-				int z = 9;
-				z++;
-
 			}
 		}
 	}
@@ -867,6 +869,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			if (commentArray != null) {
 				int commentNum = 0;
 				for (Object object2 : commentArray) {
+					@SuppressWarnings("unchecked")
 					HashMap<String, Object> commentHash = (HashMap<String, Object>) object2;
 					String text = (String) commentHash.get("text"); //$NON-NLS-1$
 					if (commentNum == 0) {
@@ -881,6 +884,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					Date time = (Date) commentHash.get("time"); //$NON-NLS-1$
 					String creator = (String) commentHash.get("creator"); //$NON-NLS-1$
 					Boolean is_private = (Boolean) commentHash.get("is_private"); //$NON-NLS-1$
+					@SuppressWarnings("unused")
 					Integer attachment_id = (Integer) commentHash.get("attachment_id"); //$NON-NLS-1$
 
 					taskComment.setCommentId(commentID.toString());
@@ -980,17 +984,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					if (object instanceof String || object instanceof Boolean || object instanceof Integer
 							|| object instanceof Date) {
 						attribute.addValue(getValueStringFromObject(object, true));
-					} else {
-						int ii1 = 9;
-						ii1++;
 					}
 				}
 
 			}
 			return attribute;
-		} else {
-			int ii1 = 9;
-			ii1++;
 		}
 		return null;
 	}

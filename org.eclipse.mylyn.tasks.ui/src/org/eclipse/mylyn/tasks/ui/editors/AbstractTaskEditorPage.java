@@ -1328,6 +1328,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				// for outline
 				if (ID_PART_COMMENTS.equals(part.getPartId())) {
 					EditorUtil.setMarker(part.getControl(), TaskEditorOutlineNode.LABEL_COMMENTS);
+				} else if (ID_PART_ATTACHMENTS.equals(part.getPartId())) {
+					EditorUtil.setMarker(part.getControl(), TaskEditorOutlineNode.LABEL_ATTACHMENTS);
 				}
 			}
 		}

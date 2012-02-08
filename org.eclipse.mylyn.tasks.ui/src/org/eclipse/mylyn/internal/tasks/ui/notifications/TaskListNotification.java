@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotification extends AbstractUiNotification {
 
-	private final static String ID_EVENT_TASK_CHANGED = "org.eclipse.mylyn.tasks.ui.events.TaskChanged";
+	private final static String ID_EVENT_TASK_CHANGED = "org.eclipse.mylyn.tasks.ui.events.TaskChanged"; //$NON-NLS-1$
 
 	private static DecoratingLabelProvider labelProvider;
 

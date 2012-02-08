@@ -11,12 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryResponse;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,17 +22,20 @@ import org.eclipse.swt.widgets.Text;
 
 public class BugzillaResponseDetailDialog extends Dialog {
 
-	private final BugzillaRepositoryResponse response;
+	private final String titleText;
 
-	public BugzillaResponseDetailDialog(Shell parentShell, BugzillaRepositoryResponse response) {
+	private final String messageText;
+
+	public BugzillaResponseDetailDialog(Shell parentShell, String titleText, String messageText) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.response = response;
+		this.titleText = titleText;
+		this.messageText = messageText;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.BugzillaResponseDetailDialog_Titel);
+		getShell().setText(titleText);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -50,24 +48,7 @@ public class BugzillaResponseDetailDialog extends Dialog {
 		gd.widthHint = 300;
 		text.setLayoutData(gd);
 		text.setEditable(false);
-
-		String mes = ""; //$NON-NLS-1$
-		for (String iterable_map : response.getResponseData().keySet()) {
-			if (mes.length() > 0) {
-				mes += "\n"; //$NON-NLS-1$
-			}
-			mes += NLS.bind(Messages.BugzillaResponseDetailDialog_Bug_Line, iterable_map);
-			Map<String, List<String>> responseMap = response.getResponseData().get(iterable_map);
-			for (String iterable_list : responseMap.keySet()) {
-				mes += NLS.bind(Messages.BugzillaResponseDetailDialog_Action_Line, iterable_list);
-				List<String> responseList = responseMap.get(iterable_list);
-				for (String string : responseList) {
-					mes += NLS.bind(Messages.BugzillaResponseDetailDialog_Email_Line, string);
-				}
-			}
-
-		}
-		text.setText(mes);
+		text.setText(messageText);
 		parent.pack();
 		applyDialogFont(composite);
 		return composite;

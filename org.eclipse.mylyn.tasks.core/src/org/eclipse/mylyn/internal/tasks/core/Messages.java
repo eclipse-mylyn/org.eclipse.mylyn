@@ -61,8 +61,6 @@ public class Messages extends NLS {
 
 	public static String PriorityLevel_Very_Low;
 
-	public static String ScheduledTaskContainer_Dash_Pattern;
-
 	public static String ScheduledTaskContainer_Next_Day;
 
 	public static String TaskJobFactory_Refreshing_repository_configuration;

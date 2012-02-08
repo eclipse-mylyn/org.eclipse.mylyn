@@ -25,8 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String AddTaskRepositoryHandler_Add_Task_Repository;
-
 	public static String NewLocalTaskHandler_Could_not_create_local_task;
 
 	public static String OpenTaskAttachmentHandler_failedToOpenViewer;
@@ -48,8 +46,6 @@ public class Messages extends NLS {
 	public static String RemoteTaskSelectionDialog_Select_a_task_repository;
 
 	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Install_Connectors;
-
-	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_new_connectors_are_available;
 
 	public static String ShowTasksConnectorDiscoveryWizardCommandHandler_Notify_when_updates_are_available_Text;
 
