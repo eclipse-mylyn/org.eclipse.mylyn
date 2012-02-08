@@ -17,7 +17,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.text.IFindReplaceTargetExtension;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.commands.AbstractTextViewerHandler;
+import org.eclipse.mylyn.commons.workbench.texteditor.AbstractTextViewerHandler;
 
 /**
  * A command handler for incremental find.
