@@ -35,11 +35,6 @@
    <includes
          id="org.eclipse.mylyn.gerrit.feature"
          version="0.0.0"/>
-<!--
-   <includes
-         id="org.eclipse.mylyn.reviews.r4e.feature"
-         version="0.0.0"/>
--->
 
    <plugin
          id="org.eclipse.mylyn.gerrit.core.source"
@@ -113,27 +108,6 @@
 
    <plugin
          id="com.google.gwtorm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.activation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.io"
          download-size="0"
          install-size="0"
          version="0.0.0"
