@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -261,14 +262,19 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
 		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
-		client.updateAttributes(new NullProgressMonitor(), false);
+		// ensure that client has the correct field configuration
+		client.updateAttributes(new NullProgressMonitor(), true);
 		assertEquals(client.getAccessMode().name(), repository.getVersion());
 
 		// prepare task data
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
 		System.err.println(taskData.getRoot());
+		if (attribute != null) {
+			assertEquals("major", attribute.getValue());
+		}
 
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		task.setPriority("P2");
