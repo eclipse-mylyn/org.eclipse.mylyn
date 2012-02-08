@@ -71,6 +71,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskEditorPage_Confirm;
 
+	public static String BugzillaTaskEditorPage_ConfirmDetailTitle;
+
 	public static String BugzillaTaskEditorPage_Content_Assist_for_Error_Available;
 
 	public static String BugzillaTaskEditorPage_DetailLine;
@@ -80,6 +82,8 @@ public class Messages extends NLS {
 	public static String BugzillaTaskEditorPage_Error_Label_1;
 
 	public static String BugzillaTaskEditorPage_Error_Label_N;
+
+	public static String BugzillaTaskEditorPage_ErrorDetailTitle;
 
 	public static String BugzillaTaskEditorPage_Legal_Value_1;
 

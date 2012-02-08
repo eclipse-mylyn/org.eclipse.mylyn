@@ -670,7 +670,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_more,
 						Messages.BugzillaTaskEditorPage_Confirm, fieldString);
 			}
-			titleString = Messages.BugzillaTaskEditorPage_Confirm + Messages.BugzillaTaskEditorPage_match_Detail;
+			titleString = Messages.BugzillaTaskEditorPage_ConfirmDetailTitle;
 			break;
 		case BugzillaStatus.ERROR_MATCH_FAILED:
 			if (oneError) {
@@ -680,12 +680,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				resultString = MessageFormat.format(Messages.BugzillaTaskEditorPage_Message_more,
 						Messages.BugzillaTaskEditorPage_Error, fieldString);
 			}
-			titleString = Messages.BugzillaTaskEditorPage_Confirm + Messages.BugzillaTaskEditorPage_match_Detail;
+			titleString = Messages.BugzillaTaskEditorPage_ErrorDetailTitle;
 			break;
 		default:
-			resultString = ""; //$NON-NLS-1$
-			titleString = ""; //$NON-NLS-1$
-			break;
+			throw new RuntimeException("unexpected BugzillaStatus: " + bugzillaStatus.getCode()); //$NON-NLS-1$
 		}
 
 		final String resultDetailString = resultDetail;
