@@ -678,6 +678,7 @@ public class TracWebClient extends AbstractTracClient {
 		while ((tokenType = t.nextToken()) != StreamTokenizer.TT_EOF) {
 			switch (tokenType) {
 			case StreamTokenizer.TT_WORD:
+			case '"':
 				if (state == AttributeState.IN_LIST) {
 					attributeFactory = configuration.getFactoryByField(t.sval);
 					if (attributeFactory != null) {
@@ -685,10 +686,7 @@ public class TracWebClient extends AbstractTracClient {
 					}
 				} else if (state == AttributeState.IN_ATTRIBUTE_KEY) {
 					attributeType = t.sval;
-				}
-				break;
-			case '"':
-				if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST && "options".equals(attributeType)) { //$NON-NLS-1$
+				} else if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST && "options".equals(attributeType)) { //$NON-NLS-1$
 					if (attributeFactory != null) {
 						attributeFactory.addAttribute(t.sval);
 					}
