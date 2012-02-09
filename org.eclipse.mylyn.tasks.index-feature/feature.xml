@@ -18,6 +18,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.mylyn_feature" version="3.7.0" match="compatible"/>
+   </requires>
+	
    <plugin
          id="org.eclipse.mylyn.tasks.index.core"
          download-size="0"

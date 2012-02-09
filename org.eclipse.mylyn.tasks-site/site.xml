@@ -16,6 +16,9 @@
    <feature url="features/org.eclipse.mylyn_feature_0.0.0.jar" id="org.eclipse.mylyn_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.tasks.index_0.0.0.jar" id="org.eclipse.mylyn.tasks.index" version="0.0.0">
+      <category name="Features"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.bugzilla_feature_0.0.0.jar" id="org.eclipse.mylyn.bugzilla_feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
