@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ListBlock;
+import org.eclipse.mylyn.internal.wikitext.textile.core.block.NotextileBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.QuoteBlock;
@@ -109,6 +110,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		blocks.add(new QuoteBlock());
 		blocks.add(new CodeBlock());
 		blocks.add(new FootnoteBlock());
+		blocks.add(new NotextileBlock());
 		TableBlock tableBlock = new TableBlock();
 		blocks.add(tableBlock);
 		paragraphBreakingBlocks.add(tableBlock);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -909,6 +909,28 @@ public class TextileLanguageTest extends TestCase {
 		TestUtil.println(html);
 
 		assertTrue(html.contains("<body><p>{toc} Generates a table of contents.  Eg: {toc} or {toc:style=disc|maxLevel=3}</p></body>"));
+	}
+
+	public void testEscaping_NoTextile() throws IOException {
+		String html = parser.parseToHtml("notextile. foo <b>bar</b>\n<i>baz</i>\n\ntextile *here*");
+
+		TestUtil.println(html);
+
+		assertTrue(Pattern.compile("<body>foo <b>bar</b>\\s+<i>baz</i>\\s+<p>textile <strong>here</strong></p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testEscaping_NoTextile_Extended() throws IOException {
+		String html = parser.parseToHtml("notextile.. foo <b>bar</b>\n<i>baz</i>\n\nnotextile *here*\n\np. textile *here*");
+
+		TestUtil.println(html);
+
+		assertTrue(Pattern.compile(
+				"<body>foo <b>bar</b>\\s+<i>baz</i>" + "\\s*notextile \\*here\\*"
+						+ "\\s+<p>textile <strong>here</strong></p></body>")
+				.matcher(html)
+				.find());
 	}
 
 	public void testReplacements() throws IOException {
