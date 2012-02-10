@@ -45,8 +45,17 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * Provides a utilities for opening locations in a browser.
  * 
  * @author Steffen Pingel
+ * @since 3.7
  */
 public class BrowserUtil {
+
+	/**
+	 * Flag that indicates that a URL should be opened in browser and not in a rich editor.
+	 * 
+	 * @see #openUrl(IWorkbenchPage, String, int)
+	 * @since 3.7
+	 */
+	public static final int NO_RICH_EDITOR = 1 << 17;
 
 	static class BrowserHandle extends EditorHandle {
 
@@ -98,6 +107,7 @@ public class BrowserUtil {
 	 * @param location
 	 *            the url to open
 	 * @see #openUrl(IWorkbenchPage, String, int)
+	 * @since 3.7
 	 */
 	public static void openUrl(String location) {
 		openUrl(location, SWT.NONE);
@@ -113,6 +123,7 @@ public class BrowserUtil {
 	 *            additional flags that are passed to {@link IWorkbenchBrowserSupport}, pass
 	 *            {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to force opening external browser
 	 * @see #openUrl(IWorkbenchPage, String, int)
+	 * @since 3.7
 	 */
 	public static void openUrl(String location, int customFlags) {
 		IWorkbenchPage page = null;
@@ -135,6 +146,7 @@ public class BrowserUtil {
 	 *            {@link IWorkbenchBrowserSupport#AS_EXTERNAL} to force opening external browser
 	 * @return a handle that describes the editor or browser that was opened; if {@link EditorHandle#getStatus()}
 	 *         returns an error status the operation was not successful
+	 * @since 3.7
 	 */
 	public static EditorHandle openUrl(IWorkbenchPage page, String location, int customFlags) {
 		try {
@@ -175,7 +187,8 @@ public class BrowserUtil {
 
 	private static EditorHandle openUrlInternal(IWorkbenchPage page, String location, int customFlags)
 			throws MalformedURLException, PartInitException {
-		if (location != null && (customFlags & IWorkbenchBrowserSupport.AS_EXTERNAL) == 0) {
+		if (location != null && (customFlags & IWorkbenchBrowserSupport.AS_EXTERNAL) == 0
+				&& (customFlags & NO_RICH_EDITOR) == 0) {
 			// delegate to handler
 			if (page != null) {
 				EditorHandle handle = openUrlByHandler(page, location, customFlags);
