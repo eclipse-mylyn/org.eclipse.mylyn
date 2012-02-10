@@ -51,24 +51,21 @@ public class BugzillaTaskEditorCommentPart extends TaskEditorCommentPart {
 					isprivate = taskComment.getTaskAttribute().createMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
 				}
 				isprivate.setValue(taskComment.getIsPrivate() ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
-				TaskAttribute commentID = taskComment.getTaskAttribute().getMappedAttribute(TaskAttribute.COMMENT_ID);
-				if (commentID != null) {
-					String value = commentID.getValue();
-					TaskAttribute definedIsPrivate = taskComment.getTaskAttribute().getAttribute(
+				String value = taskComment.getTaskAttribute().getValue();
+				TaskAttribute definedIsPrivate = taskComment.getTaskAttribute().getAttribute(
+						IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+				if (definedIsPrivate == null) {
+					definedIsPrivate = taskComment.getTaskAttribute().createAttribute(
 							IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
-					if (definedIsPrivate == null) {
-						definedIsPrivate = taskComment.getTaskAttribute().createAttribute(
-								IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
-					}
-					TaskAttribute isPrivate = taskComment.getTaskAttribute().getAttribute(
-							IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
-					if (isPrivate == null) {
-						isPrivate = taskComment.getTaskAttribute().createAttribute(
-								IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
-					}
-					definedIsPrivate.setValue("1"); //$NON-NLS-1$
-					isPrivate.setValue(taskComment.getIsPrivate() ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
+				TaskAttribute isPrivate = taskComment.getTaskAttribute().getAttribute(
+						IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+				if (isPrivate == null) {
+					isPrivate = taskComment.getTaskAttribute().createAttribute(
+							IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+				}
+				definedIsPrivate.setValue("1"); //$NON-NLS-1$
+				isPrivate.setValue(taskComment.getIsPrivate() ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 				getModel().attributeChanged(taskComment.getTaskAttribute());
 				updateActionState();
 			}

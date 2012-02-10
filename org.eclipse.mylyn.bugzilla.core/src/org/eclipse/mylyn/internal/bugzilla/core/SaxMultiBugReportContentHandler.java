@@ -709,13 +709,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			workTime.setValue(comment.timeWorked);
 		}
 
-		if (comment.id != 0) {
-			TaskAttribute commentID = BugzillaTaskDataHandler.createAttribute(attribute, BugzillaAttribute.COMMENTID);
-			commentID.setValue(Integer.toString(comment.id));
-		}
-
 		parseAttachment(taskComment);
-
 	}
 
 	/** determines attachment id from comment */

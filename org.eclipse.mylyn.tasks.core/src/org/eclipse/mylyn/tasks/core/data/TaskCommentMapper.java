@@ -125,10 +125,6 @@ public class TaskCommentMapper {
 		if (child != null) {
 			comment.setCreationDate(mapper.getDateValue(child));
 		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_ID);
-		if (child != null) {
-			comment.setCommentId(mapper.getValue(child));
-		}
 		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
 		if (child != null) {
 			comment.setNumber(mapper.getIntegerValue(child));
@@ -153,12 +149,8 @@ public class TaskCommentMapper {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_COMMENT);
-		if (getNumber() != null) {
-			mapper.setIntegerValue(taskAttribute, getNumber());
-		}
 		if (getCommentId() != null) {
-			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_ID).createAttribute(taskAttribute);
-			mapper.setValue(child, getCommentId());
+			mapper.setValue(taskAttribute, getCommentId());
 		}
 		if (getAuthor() != null) {
 			TaskAttribute child = DefaultTaskSchema.getField(TaskAttribute.COMMENT_AUTHOR).createAttribute(
@@ -200,9 +192,6 @@ public class TaskCommentMapper {
 		}
 		if (getNumber() != null) {
 			taskComment.setNumber(getNumber());
-		}
-		if (getCommentId() != null) {
-			taskComment.setCommentID(getCommentId());
 		}
 		if (getUrl() != null) {
 			taskComment.setUrl(getUrl());

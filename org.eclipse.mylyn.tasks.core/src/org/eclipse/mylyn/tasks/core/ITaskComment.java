@@ -110,9 +110,4 @@ public interface ITaskComment {
 	 */
 	public abstract void setIsPrivate(Boolean isPrivate);
 
-	/**
-	 * @since 3.7
-	 */
-	public abstract void setCommentID(String commentID);
-
 }
