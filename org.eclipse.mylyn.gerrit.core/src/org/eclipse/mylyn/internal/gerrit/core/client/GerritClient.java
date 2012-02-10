@@ -120,6 +120,7 @@ public class GerritClient {
 
 		public void onFailure(Throwable exception) {
 			if (isAuthenticationException(exception)) {
+				// invalidate login cookie to force re-authentication
 				client.setXsrfCookie(null);
 			}
 			this.exception = exception;
@@ -132,6 +133,12 @@ public class GerritClient {
 		protected void setResult(T result) {
 			this.result = result;
 		}
+
+		public void reset() {
+			this.result = null;
+			this.exception = null;
+		}
+
 	}
 
 	public boolean isAuthenticationException(Throwable exception) {
@@ -155,6 +162,9 @@ public class GerritClient {
 
 	// XXX belongs in GerritConnector
 	public static String authStateToString(GerritAuthenticationState authState) {
+		if (authState == null) {
+			return null;
+		}
 		try {
 			JSonSupport support = new JSonSupport();
 			return support.getGson().toJson(authState);
@@ -820,22 +830,34 @@ public class GerritClient {
 	protected <T> T execute(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
 		try {
 			GerritRequest.setCurrentRequest(new GerritRequest(monitor));
-			operation.execute(monitor);
-			if (operation.getException() instanceof GerritException) {
-				throw (GerritException) operation.getException();
-			} else if (operation.getException() instanceof OperationCanceledException) {
-				throw (OperationCanceledException) operation.getException();
-			} else if (operation.getException() instanceof RuntimeException) {
-				throw (RuntimeException) operation.getException();
-			} else if (operation.getException() != null) {
-				GerritException e = new GerritException();
-				e.initCause(operation.getException());
+			try {
+				return executeOnce(monitor, operation);
+			} catch (GerritException e) {
+				if (isAuthenticationException(e)) {
+					operation.reset();
+					return executeOnce(monitor, operation);
+				}
 				throw e;
 			}
-			return operation.getResult();
 		} finally {
 			GerritRequest.setCurrentRequest(null);
 		}
+	}
+
+	private <T> T executeOnce(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
+		operation.execute(monitor);
+		if (operation.getException() instanceof GerritException) {
+			throw (GerritException) operation.getException();
+		} else if (operation.getException() instanceof OperationCanceledException) {
+			throw (OperationCanceledException) operation.getException();
+		} else if (operation.getException() instanceof RuntimeException) {
+			throw (RuntimeException) operation.getException();
+		} else if (operation.getException() != null) {
+			GerritException e = new GerritException();
+			e.initCause(operation.getException());
+			throw e;
+		}
+		return operation.getResult();
 	}
 
 	protected synchronized <T extends RemoteJsonService> T getService(Class<T> clazz) {

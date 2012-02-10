@@ -37,6 +37,10 @@ public class GerritHarness {
 	}
 
 	public GerritClient client() {
+		return new GerritClient(location());
+	}
+
+	public WebLocation location() {
 		readCredentials();
 		String username = credentials.username;
 		String password = credentials.password;
@@ -49,7 +53,7 @@ public class GerritHarness {
 				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
 			}
 		});
-		return new GerritClient(location);
+		return location;
 	}
 
 	public GerritClient clientAnonymous() {

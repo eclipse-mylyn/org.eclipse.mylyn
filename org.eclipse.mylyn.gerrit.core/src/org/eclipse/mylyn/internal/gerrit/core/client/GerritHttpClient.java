@@ -526,8 +526,12 @@ public class GerritHttpClient {
 			oldCookie = this.xsrfCookie;
 			this.xsrfCookie = xsrfCookie;
 		}
-		if (xsrfCookie != null && !xsrfCookie.equals(oldCookie)) {
-			httpClient.getState().addCookie(xsrfCookie);
+		if (xsrfCookie != null) {
+			if (!xsrfCookie.equals(oldCookie)) {
+				httpClient.getState().addCookie(xsrfCookie);
+			}
+		} else {
+			httpClient.getState().clear();
 		}
 		sessionChanged(xsrfCookie);
 	}
