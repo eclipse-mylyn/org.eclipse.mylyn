@@ -71,7 +71,9 @@ public class TasksUiUtil {
 	 * editor was available.
 	 * 
 	 * @see #openTask(String)
+	 * @deprecated use {@link BrowserUtil#NO_RICH_EDITOR} instead
 	 */
+	@Deprecated
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
 
 	/**
@@ -393,7 +395,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openUrl(String location) {
-		BrowserUtil.openUrl(location, FLAG_NO_RICH_EDITOR);
+		BrowserUtil.openUrl(location, BrowserUtil.NO_RICH_EDITOR);
 	}
 
 	/**

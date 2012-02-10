@@ -17,6 +17,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -143,7 +144,7 @@ public class TasksUiUtilTest extends TestCase {
 		Field f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);
 		int style = (Integer) f.get(input);
-		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+		assertFalse((style & BrowserUtil.NO_RICH_EDITOR) == 0);
 
 		TasksUiUtil.openUrl("http://eclipse.org/mylyn");
 		assertEquals(2, activePage.getEditorReferences().length);
@@ -155,7 +156,7 @@ public class TasksUiUtilTest extends TestCase {
 		f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);
 		style = (Integer) f.get(input);
-		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+		assertFalse((style & BrowserUtil.NO_RICH_EDITOR) == 0);
 
 		IEditorPart editor2 = activePage.getEditorReferences()[1].getEditor(true);
 		assertEquals(WebBrowserEditor.class, editor2.getClass());
@@ -166,7 +167,7 @@ public class TasksUiUtilTest extends TestCase {
 		f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);
 		style = (Integer) f.get(input);
-		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+		assertFalse((style & BrowserUtil.NO_RICH_EDITOR) == 0);
 
 		// open task should not set FLAG_NO_RICH_EDITOR
 		TasksUiUtil.openTask("http://eclipse.org/mylyn/test");
@@ -180,7 +181,7 @@ public class TasksUiUtilTest extends TestCase {
 		f = input.getClass().getDeclaredField("style");
 		f.setAccessible(true);
 		style = (Integer) f.get(input);
-		assertTrue((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+		assertTrue((style & BrowserUtil.NO_RICH_EDITOR) == 0);
 	}
 
 }
