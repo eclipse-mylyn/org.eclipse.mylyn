@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
+import org.eclipse.mylyn.tasks.tests.core.PriorityLevelTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
@@ -118,6 +119,7 @@ public class AllTasksTests {
 		//suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(RegionComparatorTest.class);
+		suite.addTestSuite(PriorityLevelTest.class);
 		return suite;
 	}
 

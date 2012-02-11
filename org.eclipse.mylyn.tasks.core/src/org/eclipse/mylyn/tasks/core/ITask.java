@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.Messages;
 
 /**
@@ -72,10 +73,28 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	}
 
 	/**
+	 * Defines an interface for priorities that have an associated integer value.
+	 * 
+	 * @author Steffen Pingel
+	 * @since 3.7
+	 * @see PriorityLevel#fromValue(IPriorityValue[], IPriorityValue)
+	 */
+	public static interface IPriorityValue {
+
+		/**
+		 * Returns the integer value of this priority.
+		 */
+		int getPriorityValue();
+
+	}
+
+	/**
 	 * @since 3.0
 	 */
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
+
+		private static final int LEVEL_COUNT = PriorityLevel.values().length;
 
 		@Override
 		public String toString() {
@@ -182,6 +201,34 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 				return P5;
 			}
 			return getDefault();
+		}
+
+		/**
+		 * Maps a priority value to a {@link PriorityLevel}. The value needs to be present in <code>priorities</code>,
+		 * otherwise {@link PriorityLevel#getDefault()} is returned.
+		 * <p>
+		 * NOTE: <code>priorities</code> needs to be sorted in ascending order.
+		 * 
+		 * @param priorities
+		 *            a sorted array of priority levels
+		 * @param value
+		 *            the value to map
+		 * @since 3.7
+		 */
+		public static PriorityLevel fromValue(IPriorityValue[] priorities, IPriorityValue value) {
+			Assert.isNotNull(priorities);
+			if (value != null) {
+				int minValue = priorities[0].getPriorityValue();
+				int range = priorities[priorities.length - 1].getPriorityValue() - minValue;
+				for (IPriorityValue priority : priorities) {
+					if (value.equals(priority)) {
+						float relativeValue = (float) (priority.getPriorityValue() - minValue) / range;
+						int level = (int) (relativeValue * LEVEL_COUNT) + 1;
+						return PriorityLevel.fromLevel(level);
+					}
+				}
+			}
+			return PriorityLevel.getDefault();
 		}
 
 		/**
