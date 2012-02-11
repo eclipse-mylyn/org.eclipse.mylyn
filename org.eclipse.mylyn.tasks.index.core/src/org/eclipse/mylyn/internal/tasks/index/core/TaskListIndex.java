@@ -787,7 +787,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	private void addIndexedAttributes(Document document, ITask task, TaskAttribute root) {
 		addIndexedAttribute(document, IndexField.TASK_KEY, task.getTaskKey());
 		addIndexedAttribute(document, IndexField.REPOSITORY_URL, task.getRepositoryUrl());
-		addIndexedAttribute(document, IndexField.SUMMARY, root.getMappedAttribute(TaskAttribute.SUMMARY));
+		addIndexedAttribute(document, IndexField.SUMMARY, task.getSummary());
 
 		for (TaskAttribute contentAttribute : computeContentAttributes(root)) {
 			addIndexedAttribute(document, IndexField.CONTENT, contentAttribute);
