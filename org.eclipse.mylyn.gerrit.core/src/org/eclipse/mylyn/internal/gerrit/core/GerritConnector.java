@@ -257,6 +257,11 @@ public class GerritConnector extends AbstractRepositoryConnector {
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		TaskMapper mapper = (TaskMapper) getTaskMapping(taskData);
 		mapper.applyTo(task);
+		String key = task.getTaskKey();
+		if (key != null) {
+			task.setSummary(NLS.bind("{0} [{1}]", mapper.getSummary(), key));
+			task.setTaskKey(task.getTaskId());
+		}
 	}
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
