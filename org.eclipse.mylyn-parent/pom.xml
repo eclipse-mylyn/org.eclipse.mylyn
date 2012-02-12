@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.eclipse.mylyn</groupId>
@@ -18,46 +18,46 @@
     <tycho-version>0.13.0</tycho-version>
 
     <mylyn-credentials>${user.home}/.mylyn/credentials.properties</mylyn-credentials>
-	<mylyn-test-append></mylyn-test-append>
+    <mylyn-test-append></mylyn-test-append>
 
     <analysis.skip>true</analysis.skip>
 
     <coverage.skip>true</coverage.skip>
     <coverage.filter>org.eclipse.mylyn.*</coverage.filter>
     <coverage.destFile>../target/jacoco.exec</coverage.destFile>
-	<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>${coverage.destFile}</sonar.jacoco.reportPath>
 
-	<test.skip>${maven.test.skip}</test.skip>
+    <test.skip>${maven.test.skip}</test.skip>
     <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true ${test.osvmargs}</test.vmargs>
-	<test.osvmargs></test.osvmargs>
+    <test.osvmargs></test.osvmargs>
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password}</test.args>
     <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
     <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
 
-	<sign.skip>true</sign.skip>
-	<pack.skip>false</pack.skip>
-	<promote.skip>true</promote.skip>
+    <sign.skip>true</sign.skip>
+    <pack.skip>false</pack.skip>
+    <promote.skip>true</promote.skip>
 
-	<dist.qualifier>'I'yyyyMMdd-HHmm</dist.qualifier>
-	<dist.repository>${project.name}</dist.repository>
-	<dist.archive>${basedir}/target/drops</dist.archive>
-	<dist.site></dist.site>
-	<dist.pack200>${java.home}/bin</dist.pack200>
+    <dist.qualifier>'I'yyyyMMdd-HHmm</dist.qualifier>
+    <dist.repository>${project.name}</dist.repository>
+    <dist.archive>${basedir}/target/drops</dist.archive>
+    <dist.site></dist.site>
+    <dist.pack200>${java.home}/bin</dist.pack200>
 
-	<dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
-	<dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</dist.snapshots.url>
+    <dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
+    <dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</dist.snapshots.url>
 
-	<orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/S20120123151124/repository/</orbit-repository-url>
-	<mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-	<mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
-	<mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
-	<mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
-	<mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
-	<mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
-	<mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
-	<mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
+    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/S20120123151124/repository/</orbit-repository-url>
+    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
+    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
+    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
+    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
+    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
+    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
+    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
+    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
@@ -76,18 +76,18 @@
   </issueManagement>
   
   <distributionManagement>
-	<repository>
-	  <uniqueVersion>false</uniqueVersion>
-	  <id>mylyn-releases</id>
-	  <name>Mylyn Release Repository</name>
-	  <url>${dist.releases.url}</url>
-	</repository>
-	<snapshotRepository>
-	  <uniqueVersion>false</uniqueVersion>
-	  <id>mylyn-snapshot</id>
-	  <name>Mylyn Snapshot Repository</name>
-	  <url>${dist.snapshots.url}</url>
-	</snapshotRepository>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>mylyn-releases</id>
+      <name>Mylyn Release Repository</name>
+      <url>${dist.releases.url}</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>mylyn-snapshot</id>
+      <name>Mylyn Snapshot Repository</name>
+      <url>${dist.snapshots.url}</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <repositories>
@@ -107,59 +107,59 @@
   </repositories>
 
   <pluginRepositories>
-	<pluginRepository>
-	  <id>tycho-snapshots</id>
-	  <url>https://oss.sonatype.org/content/groups/public/</url>
-	</pluginRepository>
+    <pluginRepository>
+      <id>tycho-snapshots</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </pluginRepository>
   </pluginRepositories>
 
   <licenses>
     <license>
       <name>Eclipse Public License v1.0</name>
-	  <url>http://www.eclipse.org/legal/epl-v10.html</url>
-	  <distribution>repo</distribution>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <distribution>repo</distribution>
       <comments>
-		All rights reserved.
+	All rights reserved.
 
-		This program and the accompanying materials are made
-		available under the terms of the Eclipse Public License v1.0
-		which accompanies this distribution, and is available at
-		http://www.eclipse.org/legal/epl-v10.htm
+	This program and the accompanying materials are made
+	available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.htm
       </comments>
     </license>
   </licenses>
 
   <organization>
-	<name>Eclipse Foundation</name>
-	<url>http://www.eclipse.org/</url>
+    <name>Eclipse Foundation</name>
+    <url>http://www.eclipse.org/</url>
   </organization>
 
   <profiles>
-	<!-- Target profiles -->
+    <!-- Target profiles -->
     <profile>
       <id>default-target</id>
       <activation>
-		<property>
+	<property>
           <name>!target-profile</name>
-		</property>
+	</property>
       </activation>
-	  <!-- Properties get overridden if a specific target profile is activated. -->
+      <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>coverage-initializer</id>
       <activation>
-		<property>
+	<property>
           <name>!coverage.skip</name>
-		</property>
+	</property>
       </activation>
-	  <!-- set default property values if test coverage is diabled -->
+      <!-- set default property values if test coverage is diabled -->
       <properties>
         <tycho.testArgLine></tycho.testArgLine>
       </properties>
@@ -167,278 +167,278 @@
     <profile>
       <id>ganymede</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>ganymede</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>3.4</target-version>
         <target-platform>mylyn-e3.4</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/ganymede/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/ganymede/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/ganymede/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/ganymede/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>galileo</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>galileo</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/galileo/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/galileo/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>helios</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>helios</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/helios/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/helios/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>indigo</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>indigo</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>juno</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>juno</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>3.8</target-version>
         <target-platform>mylyn-e3.8</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>e4.1</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>e4.1</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>4.1</target-version>
         <target-platform>mylyn-e4.1</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
     <profile>
       <id>e4.2</id>
       <activation>
-		<property>
+	<property>
           <name>target-profile</name>
           <value>e4.2</value>
-		</property>
+	</property>
       </activation>
       <properties>
         <target-version>4.2</target-version>
         <target-platform>mylyn-e4.2</target-platform>
-		<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
-		<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
-		<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
+	<platform-repository-url>http://download.eclipse.org/releases/staging/</platform-repository-url>
+	<egit-repository-url>http://download.eclipse.org/egit/updates-1.1/</egit-repository-url>
+	<swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
     </profile>
 
-	<!-- Target definition profiles -->
+    <!-- Target definition profiles -->
     <profile>
       <id>explicit-target</id>
       <activation>
-		<property>
-		  <name>explicit-target</name>
-		</property>
+	<property>
+	  <name>explicit-target</name>
+	</property>
       </activation>
-	  <build>
-		<plugins>
-		  <plugin>
-			<groupId>org.eclipse.tycho</groupId>
-			<artifactId>target-platform-configuration</artifactId>
-			<version>${tycho-version}</version>
-			<configuration>
-			  <resolver>p2</resolver>
-			  <target>
-				<artifact>
-				  <groupId>org.eclipse.mylyn</groupId>
-				  <artifactId>org.eclipse.mylyn-target</artifactId>
-				  <version>3.7.0-SNAPSHOT</version>
-				  <classifier>${target-platform}</classifier>
-				</artifact>
-			  </target>
-			  <ignoreTychoRepositories>true</ignoreTychoRepositories>
-			  <dependency-resolution>
-				<optionalDependencies>ignore</optionalDependencies>
-			  </dependency-resolution>
-			  <environments>
-				<environment>
-				  <os>macosx</os>
-				  <ws>cocoa</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>macosx</os>
-				  <ws>cocoa</ws>
-				  <arch>x86_64</arch>
-				</environment>
-				<!--
-				<environment>
-				  <os>macosx</os>
-				  <ws>carbon</ws>
-				  <arch>x86</arch>
-				</environment>
-				-->
-				<environment>
-				  <os>win32</os>
-				  <ws>win32</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>win32</os>
-				  <ws>win32</ws>
-				  <arch>x86_64</arch>
-				</environment>
-				<environment>
-				  <os>linux</os>
-				  <ws>gtk</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>linux</os>
-				  <ws>gtk</ws>
-				  <arch>x86_64</arch>
-				</environment>
-			  </environments>
-			</configuration>
-		  </plugin>
-		</plugins>
-	  </build>
-	</profile>
+      <build>
+	<plugins>
+	  <plugin>
+	    <groupId>org.eclipse.tycho</groupId>
+	    <artifactId>target-platform-configuration</artifactId>
+	    <version>${tycho-version}</version>
+	    <configuration>
+	      <resolver>p2</resolver>
+	      <target>
+		<artifact>
+		  <groupId>org.eclipse.mylyn</groupId>
+		  <artifactId>org.eclipse.mylyn-target</artifactId>
+		  <version>3.7.0-SNAPSHOT</version>
+		  <classifier>${target-platform}</classifier>
+		</artifact>
+	      </target>
+	      <ignoreTychoRepositories>true</ignoreTychoRepositories>
+	      <dependency-resolution>
+		<optionalDependencies>ignore</optionalDependencies>
+	      </dependency-resolution>
+	      <environments>
+		<environment>
+		  <os>macosx</os>
+		  <ws>cocoa</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>macosx</os>
+		  <ws>cocoa</ws>
+		  <arch>x86_64</arch>
+		</environment>
+		<!--
+		    <environment>
+		    <os>macosx</os>
+		    <ws>carbon</ws>
+		    <arch>x86</arch>
+		    </environment>
+		-->
+		<environment>
+		  <os>win32</os>
+		  <ws>win32</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>win32</os>
+		  <ws>win32</ws>
+		  <arch>x86_64</arch>
+		</environment>
+		<environment>
+		  <os>linux</os>
+		  <ws>gtk</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>linux</os>
+		  <ws>gtk</ws>
+		  <arch>x86_64</arch>
+		</environment>
+	      </environments>
+	    </configuration>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
     <profile>
       <id>implicit-target</id>
       <activation>
-		<property>
-		  <name>!explicit-target</name>
-		</property>
+	<property>
+	  <name>!explicit-target</name>
+	</property>
       </activation>
-	  <build>
-		<plugins>
-		  <plugin>
-			<groupId>org.eclipse.tycho</groupId>
-			<artifactId>target-platform-configuration</artifactId>
-			<version>${tycho-version}</version>
-			<configuration>
-			  <resolver>p2</resolver>
-			  <ignoreTychoRepositories>false</ignoreTychoRepositories>
-			  <dependency-resolution>
-				<optionalDependencies>ignore</optionalDependencies>
-			  </dependency-resolution>
-			  <environments>
-				<environment>
-				  <os>macosx</os>
-				  <ws>cocoa</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>macosx</os>
-				  <ws>cocoa</ws>
-				  <arch>x86_64</arch>
-				</environment>
-				<!--
-				<environment>
-				  <os>macosx</os>
-				  <ws>carbon</ws>
-				  <arch>x86</arch>
-				</environment>
-				-->
-				<environment>
-				  <os>win32</os>
-				  <ws>win32</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>win32</os>
-				  <ws>win32</ws>
-				  <arch>x86_64</arch>
-				</environment>
-				<environment>
-				  <os>linux</os>
-				  <ws>gtk</ws>
-				  <arch>x86</arch>
-				</environment>
-				<environment>
-				  <os>linux</os>
-				  <ws>gtk</ws>
-				  <arch>x86_64</arch>
-				</environment>
-			  </environments>
-			</configuration>
-		  </plugin>
-		</plugins>
-	  </build>
-	  <repositories>
-		<repository>
-		  <id>eclipse-platform</id>
-		  <layout>p2</layout>
-		  <url>${platform-repository-url}</url>
-		</repository>
-		<repository>
-		  <id>eclipse-egit</id>
-		  <layout>p2</layout>
-		  <url>${egit-repository-url}</url>
-		</repository>
-		<repository>
-		  <id>eclipse-orbit</id>
-		  <layout>p2</layout>
-		  <url>${orbit-repository-url}</url>
-		</repository>
+      <build>
+	<plugins>
+	  <plugin>
+	    <groupId>org.eclipse.tycho</groupId>
+	    <artifactId>target-platform-configuration</artifactId>
+	    <version>${tycho-version}</version>
+	    <configuration>
+	      <resolver>p2</resolver>
+	      <ignoreTychoRepositories>false</ignoreTychoRepositories>
+	      <dependency-resolution>
+		<optionalDependencies>ignore</optionalDependencies>
+	      </dependency-resolution>
+	      <environments>
+		<environment>
+		  <os>macosx</os>
+		  <ws>cocoa</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>macosx</os>
+		  <ws>cocoa</ws>
+		  <arch>x86_64</arch>
+		</environment>
 		<!--
-		<repository>
-		  <id>eclipse-mylyn</id>
-		  <layout>p2</layout>
-		  <url>${mylyn-repository-url}</url>
-		</repository>
+		    <environment>
+		    <os>macosx</os>
+		    <ws>carbon</ws>
+		    <arch>x86</arch>
+		    </environment>
 		-->
-	  </repositories>
-	</profile>
+		<environment>
+		  <os>win32</os>
+		  <ws>win32</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>win32</os>
+		  <ws>win32</ws>
+		  <arch>x86_64</arch>
+		</environment>
+		<environment>
+		  <os>linux</os>
+		  <ws>gtk</ws>
+		  <arch>x86</arch>
+		</environment>
+		<environment>
+		  <os>linux</os>
+		  <ws>gtk</ws>
+		  <arch>x86_64</arch>
+		</environment>
+	      </environments>
+	    </configuration>
+	  </plugin>
+	</plugins>
+      </build>
+      <repositories>
+	<repository>
+	  <id>eclipse-platform</id>
+	  <layout>p2</layout>
+	  <url>${platform-repository-url}</url>
+	</repository>
+	<repository>
+	  <id>eclipse-egit</id>
+	  <layout>p2</layout>
+	  <url>${egit-repository-url}</url>
+	</repository>
+	<repository>
+	  <id>eclipse-orbit</id>
+	  <layout>p2</layout>
+	  <url>${orbit-repository-url}</url>
+	</repository>
+	<!--
+	    <repository>
+	    <id>eclipse-mylyn</id>
+	    <layout>p2</layout>
+	    <url>${mylyn-repository-url}</url>
+	    </repository>
+	-->
+      </repositories>
+    </profile>
 
-	<!-- OS and machine specific profiles -->
-	<profile>
+    <!-- OS and machine specific profiles -->
+    <profile>
       <id>osx</id>
       <activation>
         <property>
@@ -453,67 +453,68 @@
     <profile>
       <id>hudson.eclipse.org</id>
       <activation>
-		<property>
+	<property>
           <name>user.name</name>
           <value>hudsonbuild</value>
-		</property>
+	</property>
       </activation>
       <properties>
-		<mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
-		<mylyn-keystore>/shared/mylyn/spingel/.keystore</mylyn-keystore>
-		<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org -Djavax.net.ssl.keyStore=${mylyn-keystore} -Djavax.net.ssl.keyStorePassword=mylyntest</test.vmargs>
-		<!--
-		<mylyn-test-append>@e${target-version}</mylyn-test-append>
-		-->
-		<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
-		<maven.test.error.ignore>true</maven.test.error.ignore>
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+	<mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
+	<mylyn-keystore>/shared/mylyn/spingel/.keystore</mylyn-keystore>
+	<test.keyring.password>/shared/mylyn/spingel/.secret<test.keyring.password>
+	<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org -Djavax.net.ssl.keyStore=${mylyn-keystore} -Djavax.net.ssl.keyStorePassword=mylyntest</test.vmargs>
+	<!--
+	    <mylyn-test-append>@e${target-version}</mylyn-test-append>
+	-->
+	<dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
+	<maven.test.error.ignore>true</maven.test.error.ignore>
+	<maven.test.failure.ignore>true</maven.test.failure.ignore>
       </properties>
     </profile>
 
-	<!-- Release type profiles -->
+    <!-- Release type profiles -->
     <profile>
       <id>heartbeat</id>
     </profile>
     <profile>
       <id>snapshot</id>
       <activation>
-		<property>
+	<property>
           <name>env.TYPE</name>
           <value>snapshot</value>
-		</property>
+	</property>
       </activation>
       <properties>
-		<sign.skip>false</sign.skip>
-		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
-	  </properties>
-	</profile>
+	<sign.skip>false</sign.skip>
+	<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+      </properties>
+    </profile>
     <profile>
       <id>release</id>
       <activation>
-		<property>
+	<property>
           <name>env.TYPE</name>
           <value>release</value>
-		</property>
+	</property>
       </activation>
       <properties>
-		<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
-		<sign.skip>false</sign.skip>
-		<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
-	  </properties>
-	</profile>
+	<forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
+	<sign.skip>false</sign.skip>
+	<dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+      </properties>
+    </profile>
     <profile>
       <id>publish</id>
       <activation>
-		<property>
+	<property>
           <name>env.PUBLISH</name>
           <value>true</value>
-		</property>
+	</property>
       </activation>
       <properties>
-		<promote.skip>false</promote.skip>
-	  </properties>
-	</profile>
+	<promote.skip>false</promote.skip>
+      </properties>
+    </profile>
   </profiles>
 
   <build>
@@ -524,47 +525,47 @@
         <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
-	  <!--
+      <!--
 	  <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-antrun-plugin</artifactId>
-		<version>1.6</version>
-		<executions>
-		  <execution>
-			<phase>pre-integration-test</phase>
-			<configuration>
-			  <target if="test.suite">
-				<echo file="${test.keyring.password}">.</echo>
-			  </target>
-			</configuration>
-			<goals>
-			  <goal>run</goal>
-			</goals>
-		  </execution>
-		</executions>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-antrun-plugin</artifactId>
+	  <version>1.6</version>
+	  <executions>
+	  <execution>
+	  <phase>pre-integration-test</phase>
+	  <configuration>
+	  <target if="test.suite">
+	  <echo file="${test.keyring.password}">.</echo>
+	  </target>
+	  </configuration>
+	  <goals>
+	  <goal>run</goal>
+	  </goals>
+	  </execution>
+	  </executions>
 	  </plugin>
-	  -->
-	  <!-- common coverage configuration -->
-	  <plugin>
-		<groupId>org.jacoco</groupId>
-		<artifactId>jacoco-maven-plugin</artifactId>
-		<version>0.5.6.201201232323</version>
-		<executions>
-		  <execution>
-			<goals>
-			  <goal>prepare-agent</goal>
-			</goals>
-			<configuration>
-			  <skip>${coverage.skip}</skip>
-			  <destFile>${coverage.destFile}</destFile>
-			  <includes>
-				<include>${coverage.filter}</include>
-			  </includes>
-			  <append>true</append>
-			</configuration>
-		  </execution>
-		</executions>
-	  </plugin>
+      -->
+      <!-- common coverage configuration -->
+      <plugin>
+	<groupId>org.jacoco</groupId>
+	<artifactId>jacoco-maven-plugin</artifactId>
+	<version>0.5.6.201201232323</version>
+	<executions>
+	  <execution>
+	    <goals>
+	      <goal>prepare-agent</goal>
+	    </goals>
+	    <configuration>
+	      <skip>${coverage.skip}</skip>
+	      <destFile>${coverage.destFile}</destFile>
+	      <includes>
+		<include>${coverage.filter}</include>
+	      </includes>
+	      <append>true</append>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -598,7 +599,7 @@
             <encoding>ISO-8859-1</encoding>
           </configuration>
         </plugin>
-		<!-- computes git revision for manifest -->
+	<!-- computes git revision for manifest -->
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-packaging-plugin</artifactId>
@@ -606,15 +607,15 @@
           <configuration>
             <format>${dist.qualifier}</format>
             <archiveSite>false</archiveSite>
-			<archive>
-			  <manifestEntries>
-				<Source-Control-Identifier>${source.control.id}</Source-Control-Identifier>
-			  </manifestEntries>
-			  <addMavenDescriptor>false</addMavenDescriptor>
-			</archive>
+	    <archive>
+	      <manifestEntries>
+		<Source-Control-Identifier>${source.control.id}</Source-Control-Identifier>
+	      </manifestEntries>
+	      <addMavenDescriptor>false</addMavenDescriptor>
+	    </archive>
           </configuration>
         </plugin>
-		<!-- code analysis -->
+	<!-- code analysis -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
@@ -622,7 +623,7 @@
           <configuration>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <failOnError>false</failOnError>
-			<skip>${analysis.skip}</skip>
+	    <skip>${analysis.skip}</skip>
           </configuration>
           <executions>
             <execution>
@@ -642,7 +643,7 @@
             <targetJdk>1.5</targetJdk>
             <format>xml</format>
             <failOnViolation>false</failOnViolation>
-			<skip>${analysis.skip}</skip>
+	    <skip>${analysis.skip}</skip>
           </configuration>
           <executions>
             <execution>
@@ -652,104 +653,104 @@
             </execution>
           </executions>
         </plugin>
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-deploy-plugin</artifactId>
-		  <version>2.5</version>
-		  <!-- support for scp -->
-		  <!--
-		  <dependencies>
-			<dependency>
-			  <groupId>org.apache.maven.wagon</groupId>
-			  <artifactId>wagon-ssh</artifactId>
-			  <version>1.0-beta-7</version>
-			</dependency>
-		  </dependencies>
-		  -->
-		  <configuration>
-			<uniqueVersion>false</uniqueVersion>
-		  </configuration>
-		</plugin>
-		<!-- record git revision in manifest -->
-		<plugin>
-		  <groupId>org.codehaus.mojo</groupId>
-		  <artifactId>exec-maven-plugin</artifactId>
-		  <version>1.1.1</version>
-		  <executions>
-			<execution>
-			  <phase>validate</phase>
-			  <goals>
-				<goal>exec</goal>
-			  </goals>
-			</execution>
-		  </executions>
-		  <configuration>
-			<executable>git</executable>
-			<arguments>
-			  <argument>log</argument>
-			  <argument>--pretty=format:source.control.id=%H</argument>
-			  <argument>-n1</argument>
-			</arguments>
-			<outputFile>${project.build.directory}/git.properties</outputFile>
-			<successCodes>
-			  <successCode>0</successCode>
-			  <successCode>1</successCode>
-			  <successCode>127</successCode>
-			  <successCode>128</successCode>
-			</successCodes>
-		  </configuration>
-		</plugin>
-		<plugin>
-		  <groupId>org.codehaus.mojo</groupId>
-		  <artifactId>properties-maven-plugin</artifactId>
-		  <version>1.0-alpha-2</version>
-		  <executions>
-			<execution>
-			  <phase>initialize</phase>
-			  <goals>
-				<goal>read-project-properties</goal>
-			  </goals>
-			  <configuration>
-				<files>
-				  <file>${project.build.directory}/git.properties</file>
-				</files>
-				<!-- continue on failure -->
-				<quiet>true</quiet>
-			  </configuration>
-			</execution>
-		  </executions>
-		</plugin>
-		<!-- common test configuration -->
-		<plugin>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-deploy-plugin</artifactId>
+	  <version>2.5</version>
+	  <!-- support for scp -->
+	  <!--
+	      <dependencies>
+	      <dependency>
+	      <groupId>org.apache.maven.wagon</groupId>
+	      <artifactId>wagon-ssh</artifactId>
+	      <version>1.0-beta-7</version>
+	      </dependency>
+	      </dependencies>
+	  -->
+	  <configuration>
+	    <uniqueVersion>false</uniqueVersion>
+	  </configuration>
+	</plugin>
+	<!-- record git revision in manifest -->
+	<plugin>
+	  <groupId>org.codehaus.mojo</groupId>
+	  <artifactId>exec-maven-plugin</artifactId>
+	  <version>1.1.1</version>
+	  <executions>
+	    <execution>
+	      <phase>validate</phase>
+	      <goals>
+		<goal>exec</goal>
+	      </goals>
+	    </execution>
+	  </executions>
+	  <configuration>
+	    <executable>git</executable>
+	    <arguments>
+	      <argument>log</argument>
+	      <argument>--pretty=format:source.control.id=%H</argument>
+	      <argument>-n1</argument>
+	    </arguments>
+	    <outputFile>${project.build.directory}/git.properties</outputFile>
+	    <successCodes>
+	      <successCode>0</successCode>
+	      <successCode>1</successCode>
+	      <successCode>127</successCode>
+	      <successCode>128</successCode>
+	    </successCodes>
+	  </configuration>
+	</plugin>
+	<plugin>
+	  <groupId>org.codehaus.mojo</groupId>
+	  <artifactId>properties-maven-plugin</artifactId>
+	  <version>1.0-alpha-2</version>
+	  <executions>
+	    <execution>
+	      <phase>initialize</phase>
+	      <goals>
+		<goal>read-project-properties</goal>
+	      </goals>
+	      <configuration>
+		<files>
+		  <file>${project.build.directory}/git.properties</file>
+		</files>
+		<!-- continue on failure -->
+		<quiet>true</quiet>
+	      </configuration>
+	    </execution>
+	  </executions>
+	</plugin>
+	<!-- common test configuration -->
+	<plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
-			<skip>${test.skip}</skip>
-			<useUIThread>${test.useUIThread}</useUIThread>
-			<useUIHarness>true</useUIHarness>
-			<failIfNoTests>true</failIfNoTests>
-			<forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
-			<product>org.eclipse.sdk.ide</product>
-			<application>org.eclipse.ui.ide.workbench</application>
-			<argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
-			<appArgLine>${test.args}</appArgLine> 	
-			<!--
-			<environmentVariables>
-			  <http_proxy>${http_proxy}</http_proxy>
-			  <https_proxy>${https_proxy}</https_proxy>
-			</environmentVariables>
-			-->
-			<application>org.eclipse.ui.ide.workbench</application>
-			<dependencies>
-			  <dependency>
-				<type>p2-installable-unit</type>
-				<artifactId>org.eclipse.sdk.feature.group</artifactId>
-				<version>${platform-version}</version>
-			  </dependency>
-			</dependencies>
+	    <skip>${test.skip}</skip>
+	    <useUIThread>${test.useUIThread}</useUIThread>
+	    <useUIHarness>true</useUIHarness>
+	    <failIfNoTests>true</failIfNoTests>
+	    <forkedProcessTimeoutInSeconds>7200</forkedProcessTimeoutInSeconds>
+	    <product>org.eclipse.sdk.ide</product>
+	    <application>org.eclipse.ui.ide.workbench</application>
+	    <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+	    <appArgLine>${test.args}</appArgLine> 	
+	    <!--
+		<environmentVariables>
+		<http_proxy>${http_proxy}</http_proxy>
+		<https_proxy>${https_proxy}</https_proxy>
+		</environmentVariables>
+	    -->
+	    <application>org.eclipse.ui.ide.workbench</application>
+	    <dependencies>
+	      <dependency>
+		<type>p2-installable-unit</type>
+		<artifactId>org.eclipse.sdk.feature.group</artifactId>
+		<version>${platform-version}</version>
+	      </dependency>
+	    </dependencies>
           </configuration>
-		</plugin>
+	</plugin>
       </plugins>
     </pluginManagement>
   </build>
