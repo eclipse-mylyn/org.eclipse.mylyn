@@ -461,7 +461,7 @@
       <properties>
 	<mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
 	<mylyn-keystore>/shared/mylyn/spingel/.keystore</mylyn-keystore>
-	<test.keyring.password>/shared/mylyn/spingel/.secret<test.keyring.password>
+	<test.keyring.password>/shared/mylyn/spingel/.secret</test.keyring.password>
 	<test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org -Djavax.net.ssl.keyStore=${mylyn-keystore} -Djavax.net.ssl.keyStorePassword=mylyntest</test.vmargs>
 	<!--
 	    <mylyn-test-append>@e${target-version}</mylyn-test-append>
