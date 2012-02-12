@@ -47,6 +47,25 @@ public class TaskAttributeMapper {
 	}
 
 	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+		if (TaskAttribute.TYPE_COMMENT.equals(newAttribute.getMetaData().getType())) {
+			if (newAttribute.getValues().equals(oldAttribute.getValues())) {
+				return true;
+			}
+			// the comment mapping accidentally changed throughout the Mylyn 3.7 cycle therefore some 
+			// cases need to be considered equal even though attribute values differ
+			if (oldAttribute != null) {
+				TaskAttribute commentIdAttribute = oldAttribute.getAttribute("task.common.comment.id"); //$NON-NLS-1$
+				// ID not present 
+				if ((commentIdAttribute == null || commentIdAttribute.getValue().equals("")) //$NON-NLS-1$
+						&& newAttribute.getValue().equals("")) { //$NON-NLS-1$
+					return true;
+				}
+				// ID previously stored in a sub attribute
+				if (commentIdAttribute != null && commentIdAttribute.getValue().equals(newAttribute.getValue())) {
+					return true;
+				}
+			}
+		}
 		return newAttribute.getValues().equals(oldAttribute.getValues());
 	}
 

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.PriorityLevelTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
+import org.eclipse.mylyn.tasks.tests.data.TaskAttributeMapperTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
@@ -120,6 +121,7 @@ public class AllTasksTests {
 		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(RegionComparatorTest.class);
 		suite.addTestSuite(PriorityLevelTest.class);
+		suite.addTestSuite(TaskAttributeMapperTest.class);
 		return suite;
 	}
 

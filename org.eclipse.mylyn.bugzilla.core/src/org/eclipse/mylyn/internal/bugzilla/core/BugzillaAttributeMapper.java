@@ -317,6 +317,10 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+		if (TaskAttribute.TYPE_COMMENT.equals(newAttribute.getMetaData().getType())) {
+			// the ID mapping for Bugzilla changed in Mylyn 3.7, always consider existing comments equal
+			return true;
+		}
 		if (oldAttribute.getId().startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
 			TaskAttachmentMapper oldAttachment;
 			oldAttachment = TaskAttachmentMapper.createFrom(oldAttribute);
