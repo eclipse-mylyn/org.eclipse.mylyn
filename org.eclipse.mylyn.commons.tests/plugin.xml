@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="extensionPointReaderTest" name="ExtensionPointReader Test" schema="schema/extensionPointReaderTest.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -20,6 +21,11 @@
             class="org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest$LowPriorityHandler"
             id="org.eclipse.mylyn.commons.tests.handler.LowPriority">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.tests.extensionPointReaderTest">
+      <extensionElement
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$ExtensionPointReaderExtensionImplementation"></extensionElement>
    </extension>
 
 </plugin>
