@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		List<CommentAnnotation> commentAnnotations = getAnnotationsForLine(sourceViewer, lineNumber);
-		if (commentAnnotations != null && commentAnnotations.size() > 0) {
+		if (commentAnnotations.size() > 0) {
 
 			if (commentAnnotations.size() == 1) {
 				CommentAnnotation annotation = commentAnnotations.get(0);
@@ -106,10 +107,8 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 					return formatMultipleMessages(messages);
 				}
 			}
-		} else {
-			if (parentHover != null) {
-				return parentHover.getHoverInfo(sourceViewer, lineNumber);
-			}
+		} else if (parentHover != null) {
+			return parentHover.getHoverInfo(sourceViewer, lineNumber);
 		}
 		return null;
 	}
@@ -128,18 +127,21 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
 		List<CommentAnnotation> annotationsForLine = getAnnotationsForLine(sourceViewer, lineRange.getStartLine());
-		if (annotationsForLine == null || annotationsForLine.size() == 0) {
-			return getHoverInfo(sourceViewer, lineRange.getStartLine());
-		} else {
-			return new CommentAnnotationHoverInput(annotationsForLine);
+		if (annotationsForLine.size() > 0) {
+			IAnnotationModel model = sourceViewer.getAnnotationModel();
+			if (model instanceof ReviewAnnotationModel) {
+				return new CommentAnnotationHoverInput(annotationsForLine,
+						((ReviewAnnotationModel) model).getBehavior());
+			}
 		}
+		return getHoverInfo(sourceViewer, lineRange.getStartLine());
 	}
 
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		currentAnnotationHover = this;
 		currentSourceViewer = viewer;
 		List<CommentAnnotation> commentAnnotations = getAnnotationsForLine(viewer, lineNumber);
-		if (commentAnnotations != null && commentAnnotations.size() > 0) {
+		if (commentAnnotations.size() > 0) {
 			IDocument document = viewer.getDocument();
 			int lowestStart = Integer.MAX_VALUE;
 			int highestEnd = 0;
@@ -229,7 +231,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	private List<CommentAnnotation> getAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		IDocument document = viewer.getDocument();
@@ -237,7 +239,6 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 		for (Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext();) {
 			Annotation annotation = it.next();
-			System.err.println(((CommentAnnotation) annotation).getTopic().getCreationDate());
 			Position position = model.getPosition(annotation);
 			if (position == null) {
 				continue;

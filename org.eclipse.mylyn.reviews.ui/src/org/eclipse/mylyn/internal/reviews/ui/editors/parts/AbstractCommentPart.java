@@ -29,7 +29,6 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
-import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.mylyn.reviews.ui.SizeCachingComposite;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -60,8 +59,13 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	protected SizeCachingComposite sectionClient;
 
-	public AbstractCommentPart(IComment comment) {
+	private final ReviewBehavior behavior;
+
+	public AbstractCommentPart(IComment comment, ReviewBehavior behavior) {
+		Assert.isNotNull(comment);
+		Assert.isNotNull(behavior);
 		this.comment = comment;
+		this.behavior = behavior;
 	}
 
 	@Override
@@ -70,6 +74,10 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		headerText += DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(
 				comment.getCreationDate());
 		return headerText;
+	}
+
+	public ReviewBehavior getBehavior() {
+		return behavior;
 	}
 
 	@Override
@@ -188,10 +196,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 		int style = SWT.FLAT | SWT.READ_ONLY | SWT.MULTI | SWT.WRAP;
 
-		ReviewBehavior activeReview = ReviewUi.getActiveReview();
-		Assert.isNotNull(activeReview, "No active review.");
-
-		ITask task = activeReview.getTask();
+		ITask task = getBehavior().getTask();
 
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());

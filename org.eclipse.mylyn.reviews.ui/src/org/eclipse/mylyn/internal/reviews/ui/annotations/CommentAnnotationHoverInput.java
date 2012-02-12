@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import java.util.List;
 
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
+
 /**
  * Data model to represent the annotations that we need to display in the hover.
  * 
@@ -22,8 +24,11 @@ public class CommentAnnotationHoverInput {
 
 	private final List<CommentAnnotation> annotations;
 
-	public CommentAnnotationHoverInput(List<CommentAnnotation> annotations) {
+	private final ReviewBehavior behavior;
+
+	public CommentAnnotationHoverInput(List<CommentAnnotation> annotations, ReviewBehavior behavior) {
 		this.annotations = annotations;
+		this.behavior = behavior;
 	}
 
 	public boolean containsInput() {
@@ -32,6 +37,10 @@ public class CommentAnnotationHoverInput {
 
 	public List<CommentAnnotation> getAnnotations() {
 		return annotations;
+	}
+
+	public ReviewBehavior getBehavior() {
+		return behavior;
 	}
 
 }

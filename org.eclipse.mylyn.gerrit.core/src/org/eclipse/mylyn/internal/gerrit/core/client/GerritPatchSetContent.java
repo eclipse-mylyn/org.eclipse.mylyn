@@ -14,7 +14,9 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 import java.util.Map;
 
 import com.google.gerrit.common.data.PatchScript;
+import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.PatchSet;
 
 /**
  * @author Steffen Pingel
@@ -23,12 +25,30 @@ public class GerritPatchSetContent {
 
 	Map<Patch.Key, PatchScript> patchScriptByPatchKey;
 
-	public Map<Patch.Key, PatchScript> getPatchScriptByPatchKey() {
-		return patchScriptByPatchKey;
+	private final PatchSet base;
+
+	private final PatchSetDetail target;
+
+	public GerritPatchSetContent(PatchSet base, PatchSetDetail target, Map<Patch.Key, PatchScript> patchScriptByPatchKey) {
+		this.base = base;
+		this.target = target;
+		this.patchScriptByPatchKey = patchScriptByPatchKey;
 	}
 
-	void setPatchScriptByPatchKey(Map<Patch.Key, PatchScript> patchScriptByPatchKey) {
-		this.patchScriptByPatchKey = patchScriptByPatchKey;
+	public GerritPatchSetContent(PatchSetDetail target) {
+		this(null, target, null);
+	}
+
+	public PatchSet getBase() {
+		return base;
+	}
+
+	public PatchSetDetail getTarget() {
+		return target;
+	}
+
+	public Map<Patch.Key, PatchScript> getPatchScriptByPatchKey() {
+		return patchScriptByPatchKey;
 	}
 
 }

@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
@@ -42,7 +43,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  */
 public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
-	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list.
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getItems()
@@ -97,7 +98,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 */
 	public List<IReviewItem> getItems() {
 		if (items == null) {
-			items = new EObjectContainmentEList<IReviewItem>(IReviewItem.class, this,
+			items = new EObjectResolvingEList<IReviewItem>(IReviewItem.class, this,
 					ReviewsPackage.REVIEW_ITEM_SET__ITEMS);
 		}
 		return items;
@@ -123,20 +124,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION,
 					oldRevision, revision));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
-			return ((InternalEList<?>) getItems()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

@@ -9,7 +9,7 @@
  *     Atlassian - initial API and implementation
  ******************************************************************************/
 
-package org.eclipse.mylyn.internal.reviews.ui.annotations;
+package org.eclipse.mylyn.internal.reviews.ui.compare;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +39,11 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.actions.AddLineCommentToFileAction;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotationHover;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentInformationControlCreator;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.IReviewCompareSourceViewer;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
@@ -63,9 +68,13 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
  * @author Thomas Ehrnhoefer
+ * @author Steffen Pingel
  */
 class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSourceViewer {
 
+	/**
+	 * Ensures that the line background is fully colored in the compare editor.
+	 */
 	private final class ColoringLineBackgroundListener implements LineBackgroundListener {
 
 		private Color colorCommented;
@@ -80,9 +89,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		}
 
 		public void lineGetBackground(LineBackgroundEvent event) {
-			int documentOffset = 0;
-			documentOffset = getDocumentOffset(event);
-			int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1 + documentOffset;
+			int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1;
 			Iterator<CommentAnnotation> it = annotationModel.getAnnotationIterator();
 			while (it.hasNext()) {
 				CommentAnnotation annotation = it.next();
@@ -107,6 +114,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		 * @param event
 		 * @return
 		 */
+		@SuppressWarnings("unused")
 		private int getDocumentOffset(LineBackgroundEvent event) {
 			/*
 			 * there is no access to DefaultDocumentAdapter and thus the (master or slave) document.. so we have to assume
@@ -192,9 +200,9 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 	private final SourceViewer sourceViewer;
 
-	ReviewCompareInputListener(MergeSourceViewer sourceViewer, ReviewAnnotationModel annotationModel) {
-		this.sourceViewer = ReviewCompareAnnotationModel.getSourceViewer(sourceViewer);
-		this.mergeSourceViewer = sourceViewer;
+	ReviewCompareInputListener(MergeSourceViewer mergeSourceViewer, ReviewAnnotationModel annotationModel) {
+		this.sourceViewer = CompareUtil.getSourceViewer(mergeSourceViewer);
+		this.mergeSourceViewer = mergeSourceViewer;
 		this.annotationModel = annotationModel;
 	}
 
@@ -286,8 +294,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			IAnnotationModel originalAnnotationModel = sourceViewer.getAnnotationModel();
 			if (originalAnnotationModel instanceof IAnnotationModelExtension) {
 				IAnnotationModelExtension annotationModelExtension = (IAnnotationModelExtension) originalAnnotationModel;
-				annotationModelExtension.addAnnotationModel("test", originalAnnotationModel);
-				this.annotationModel.setEditorDocument(sourceViewer.getDocument());
+				annotationModelExtension.addAnnotationModel(ReviewsUiPlugin.PLUGIN_ID, originalAnnotationModel);
 			} else {
 				try {
 					Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
@@ -301,13 +308,12 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 					originalAnnotationModel.connect(newInput);
 					sourceViewer.showAnnotations(true);
 
-					this.annotationModel.setEditorDocument(sourceViewer.getDocument());
 					createVerticalRuler(newInput, sourceViewerClazz);
 					createOverviewRuler(newInput, sourceViewerClazz);
 					createHighlighting(sourceViewerClazz);
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error attaching Crucible annotation model", t));
+							"Error attaching annotation model", t));
 				}
 			}
 		}
@@ -318,7 +324,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 	}
 
 	public void registerContextMenu() {
-		addLineCommentAction = new AddLineCommentToFileAction(this, annotationModel.getItem());
+		addLineCommentAction = new AddLineCommentToFileAction(this);
 //				addLineCommentAction.setImageDescriptor(CrucibleImages.ADD_COMMENT);
 //				addGeneralCommentAction = new AddGeneralCommentToFileAction(crucibleAnnotationModel.getCrucibleFile());
 

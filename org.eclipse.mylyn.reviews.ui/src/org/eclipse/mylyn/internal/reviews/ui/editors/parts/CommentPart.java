@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 import java.text.DateFormat;
 
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -23,8 +24,8 @@ public class CommentPart extends AbstractCommentPart<CommentPart> {
 
 	private Composite composite;
 
-	public CommentPart(IComment comment) {
-		super(comment);
+	public CommentPart(IComment comment, ReviewBehavior behavior) {
+		super(comment, behavior);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class CommentPart extends AbstractCommentPart<CommentPart> {
 
 	@Override
 	protected CommentPart createChildPart(IComment comment) {
-		return new CommentPart(comment);
+		return new CommentPart(comment, getBehavior());
 	}
 
 	@Override

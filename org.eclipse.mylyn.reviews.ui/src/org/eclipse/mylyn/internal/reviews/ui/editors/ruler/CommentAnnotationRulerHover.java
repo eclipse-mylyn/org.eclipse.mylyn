@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotationHoverInput;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentInformationControlCreator;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
@@ -99,7 +100,11 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleNumberOfLines) {
 		List<CommentAnnotation> annotationsForLine = rulerColumn.getAnnotations(lineRange.getStartLine());
 		if (annotationsForLine != null && annotationsForLine.size() > 0) {
-			return new CommentAnnotationHoverInput(annotationsForLine);
+			IAnnotationModel model = sourceViewer.getAnnotationModel();
+			if (model instanceof ReviewAnnotationModel) {
+				return new CommentAnnotationHoverInput(annotationsForLine,
+						((ReviewAnnotationModel) model).getBehavior());
+			}
 		}
 		return null;
 	}
@@ -107,7 +112,7 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		currentAnnotationHover = this;
 		currentSourceViewer = viewer;
-		List<CommentAnnotation> commentAnnotations = getCrucibleAnnotationsForLine(viewer, lineNumber);
+		List<CommentAnnotation> commentAnnotations = getCommentAnnotationsForLine(viewer, lineNumber);
 		if (commentAnnotations != null && commentAnnotations.size() > 0) {
 			IDocument document = viewer.getDocument();
 			int lowestStart = Integer.MAX_VALUE;
@@ -195,7 +200,7 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<CommentAnnotation> getCrucibleAnnotationsForLine(ISourceViewer viewer, int line) {
+	private List<CommentAnnotation> getCommentAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {
 			return null;

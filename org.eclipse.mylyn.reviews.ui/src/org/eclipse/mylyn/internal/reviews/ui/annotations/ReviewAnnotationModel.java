@@ -39,135 +39,57 @@ import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 
 /**
- * The model for the annotations
+ * A model for review annotations.
  * 
  * @author Shawn Minto
  * @author Steffen Pingel
  */
-public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotationModel {
-
-	private final List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
+public class ReviewAnnotationModel implements IAnnotationModel {
 
 	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
 
-	private final ITextEditor textEditor;
+	private final List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
 
-	private final IEditorInput editorInput;
+	private ReviewBehavior behavior;
 
-	private IDocument editorDocument;
-
-	private IReviewItem reviewItem;
-
-	private boolean annotated = false;
+	private IDocument document;
 
 	private final IDocumentListener documentListener = new IDocumentListener() {
-		public void documentChanged(DocumentEvent event) {
-			updateAnnotations(false);
+		public void documentAboutToBeChanged(DocumentEvent event) {
 		}
 
-		public void documentAboutToBeChanged(DocumentEvent event) {
+		public void documentChanged(DocumentEvent event) {
+			// TODO consider hiding annotations if the document changes
+			//updateAnnotations(false);
 		}
 	};
 
-	private EContentAdapter modelAdapter;
-
-	public ReviewAnnotationModel(ITextEditor editor, IEditorInput editorInput, IDocument document,
-			IReviewItem reviewItem) {
-		this.textEditor = editor;
-		this.editorInput = editorInput;
-		this.editorDocument = document;
-		this.reviewItem = reviewItem;
-		updateAnnotations(true);
-	}
-
-	protected void updateAnnotations(boolean force) {
-
-		boolean annotate = false;
-
-		// TODO make sure that the local files is in sync otherwise remove the annotations
-
-		if (textEditor == null && editorInput == null && editorDocument != null) {
-			annotate = true;
-		} else {
-			if (editorDocument == null) {
-				annotate = false;
-			} else if (!textEditor.isDirty() && editorInput != null && reviewItem != null) {
-				annotate = true;
-			} else {
-				annotate = false;
+	private final EContentAdapter modelAdapter = new EContentAdapter() {
+		@Override
+		public void notifyChanged(Notification notification) {
+			if (document == null) {
+				return;
 			}
-		}
-
-		if (annotate) {
-			if (!annotated || force) {
-				createAnnotations();
-				annotated = true;
-			}
-		} else {
-			if (annotated) {
-				clear();
-				annotated = false;
-			}
-		}
-	}
-
-	protected void clear() {
-		AnnotationModelEvent event = new AnnotationModelEvent(this);
-		clear(event);
-		fireModelChanged(event);
-	}
-
-	protected void clear(AnnotationModelEvent event) {
-		for (CommentAnnotation commentAnnotation : annotations) {
-			event.annotationRemoved(commentAnnotation, commentAnnotation.getPosition());
-		}
-		annotations.clear();
-	}
-
-	protected void createAnnotations() {
-		AnnotationModelEvent event = new AnnotationModelEvent(this);
-		clear(event);
-
-		for (ITopic comment : reviewItem.getTopics()) {
-			createCommentAnnotation(event, comment);
-		}
-
-		fireModelChanged(event);
-	}
-
-	private void createCommentAnnotation(AnnotationModelEvent event, ITopic comment) {
-		try {
-
-			int startLine = 0;
-			int endLine = 0;
-
-			ILineLocation location = (ILineLocation) comment.getLocation();
-			final List<ILineRange> lineRanges = location.getRanges();
-			startLine = location.getTotalMin();
-			endLine = location.getTotalMax();
-
-			int offset = 0;
-			int length = 0;
-			if (startLine != 0) {
-				offset = editorDocument.getLineOffset(startLine - 1);
-				if (endLine == 0) {
-					endLine = startLine;
+			if (notification.getEventType() == Notification.ADD) {
+				AnnotationModelEvent event = new AnnotationModelEvent(ReviewAnnotationModel.this);
+				if (notification.getNewValue() instanceof ITopic) {
+					createCommentAnnotation(document, event, (ITopic) notification.getNewValue());
 				}
-				length = Math.max(editorDocument.getLineOffset(endLine - 1) - offset, 0);
-
+				fireModelChanged(event);
 			}
-			length = Math.max(1, length);
-			CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
-			annotations.add(ca);
-			event.annotationAdded(ca);
-
-		} catch (BadLocationException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", e));
 		}
+	};
+
+	private IReviewItem reviewItem;
+
+	public ReviewAnnotationModel() {
+	}
+
+	public void addAnnotation(Annotation annotation, Position position) {
+		// do nothing, we do not support external modification
 	}
 
 	public void addAnnotationModelListener(IAnnotationModelListener listener) {
@@ -176,24 +98,10 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		}
 	}
 
-	public void removeAnnotationModelListener(IAnnotationModelListener listener) {
-		annotationModelListeners.remove(listener);
-	}
+	public void connect(final IDocument document) {
+		this.document = document;
+		connectItem();
 
-	protected void fireModelChanged(AnnotationModelEvent event) {
-		event.markSealed();
-		if (!event.isEmpty()) {
-			for (IAnnotationModelListener listener : annotationModelListeners) {
-				if (listener instanceof IAnnotationModelListenerExtension) {
-					((IAnnotationModelListenerExtension) listener).modelChanged(event);
-				} else {
-					listener.modelChanged(this);
-				}
-			}
-		}
-	}
-
-	public void connect(IDocument document) {
 		for (CommentAnnotation commentAnnotation : annotations) {
 			try {
 				document.addPosition(commentAnnotation.getPosition());
@@ -203,71 +111,28 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		}
 		document.addDocumentListener(documentListener);
 
-		modelAdapter = new EContentAdapter() {
-			@Override
-			public void notifyChanged(Notification notification) {
-				if (notification.getEventType() == Notification.ADD) {
-					AnnotationModelEvent event = new AnnotationModelEvent(ReviewAnnotationModel.this);
-					if (notification.getNewValue() instanceof ITopic) {
-						createCommentAnnotation(event, (ITopic) notification.getNewValue());
-					}
-					fireModelChanged(event);
-				}
-			}
-		};
-		((EObject) reviewItem).eAdapters().add(modelAdapter);
+		updateAnnotations();
 	}
 
 	public void disconnect(IDocument document) {
-		((EObject) reviewItem).eAdapters().remove(modelAdapter);
-
 		for (CommentAnnotation commentAnnotation : annotations) {
 			document.removePosition(commentAnnotation.getPosition());
 		}
 		document.removeDocumentListener(documentListener);
+
+		disconnectItem();
+		this.document = null;
 	}
 
-	public void addAnnotation(Annotation annotation, Position position) {
-		// do nothing, we do not support external modification
-	}
-
-	public void removeAnnotation(Annotation annotation) {
-		// do nothing, we do not support external modification
+	public void disconnectItem() {
+		if (reviewItem != null) {
+			((EObject) reviewItem).eAdapters().remove(modelAdapter);
+		}
+		clear();
 	}
 
 	public Iterator<CommentAnnotation> getAnnotationIterator() {
 		return annotations.iterator();
-	}
-
-	public Position getPosition(Annotation annotation) {
-		if (annotation instanceof CommentAnnotation) {
-			return ((CommentAnnotation) annotation).getPosition();
-		} else {
-			// we dont understand any other annotations
-			return null;
-		}
-	}
-
-	public void update(IReviewItem reviewItem) {
-		this.reviewItem = reviewItem;
-		updateAnnotations(true);
-	}
-
-	public IReviewItem getItem() {
-		return reviewItem;
-	}
-
-	/**
-	 * Returns the first annotation that this knows about for the given offset in the document
-	 */
-	public CommentAnnotation getFirstAnnotationForOffset(int offset) {
-		for (CommentAnnotation annotation : annotations) {
-			if (annotation.getPosition().offset <= offset
-					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
-				return annotation;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -284,60 +149,127 @@ public class ReviewAnnotationModel implements IAnnotationModel, IReviewAnnotatio
 		return result;
 	}
 
-	public void setEditorDocument(IDocument editorDocument) {
-		this.editorDocument = editorDocument;
-		updateAnnotations(true);
+	public ReviewBehavior getBehavior() {
+		return behavior;
 	}
 
-	// FIXME
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = 1;
-//		result = prime
-//				* result
-//				+ ((crucibleFile.getCrucibleFileInfo().getFileDescriptor().getAbsoluteUrl() == null) ? 0
-//						: crucibleFile.getCrucibleFileInfo().getFileDescriptor().getAbsoluteUrl().hashCode());
-//		result = prime
-//				* result
-//				+ ((crucibleFile.getCrucibleFileInfo().getFileDescriptor().getRevision() == null) ? 0
-//						: crucibleFile.getCrucibleFileInfo().getFileDescriptor().getRevision().hashCode());
-//		return result;
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj) {
-//			return true;
-//		}
-//		if (obj == null) {
-//			return false;
-//		}
-//		if (getClass() != obj.getClass()) {
-//			return false;
-//		}
-//		CrucibleAnnotationModel other = (CrucibleAnnotationModel) obj;
-//		if (crucibleFile.getCrucibleFileInfo().getFileDescriptor().getAbsoluteUrl() == null) {
-//			if (other.crucibleFile.getCrucibleFileInfo().getFileDescriptor().getAbsoluteUrl() != null) {
-//				return false;
-//			}
-//		} else if (!crucibleFile.getCrucibleFileInfo()
-//				.getFileDescriptor()
-//				.getAbsoluteUrl()
-//				.equals(other.crucibleFile.getCrucibleFileInfo().getFileDescriptor().getAbsoluteUrl())) {
-//			return false;
-//		}
-//		if (crucibleFile.getCrucibleFileInfo().getFileDescriptor().getRevision() == null) {
-//			if (other.crucibleFile.getCrucibleFileInfo().getFileDescriptor().getRevision() != null) {
-//				return false;
-//			}
-//		} else if (!crucibleFile.getCrucibleFileInfo()
-//				.getFileDescriptor()
-//				.getRevision()
-//				.equals(other.crucibleFile.getCrucibleFileInfo().getFileDescriptor().getRevision())) {
-//			return false;
-//		}
-//		return true;
-//	}
+	/**
+	 * Returns the first annotation that this knows about for the given offset in the document
+	 */
+	public CommentAnnotation getFirstAnnotationForOffset(int offset) {
+		for (CommentAnnotation annotation : annotations) {
+			if (annotation.getPosition().offset <= offset
+					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
+				return annotation;
+			}
+		}
+		return null;
+	}
+
+	public IReviewItem getItem() {
+		return reviewItem;
+	}
+
+	public Position getPosition(Annotation annotation) {
+		if (annotation instanceof CommentAnnotation) {
+			return ((CommentAnnotation) annotation).getPosition();
+		} else {
+			// we dont understand any other annotations
+			return null;
+		}
+	}
+
+	public void removeAnnotation(Annotation annotation) {
+		// do nothing, we do not support external modification
+	}
+
+	public void removeAnnotationModelListener(IAnnotationModelListener listener) {
+		annotationModelListeners.remove(listener);
+	}
+
+	public void setItem(IReviewItem reviewItem, ReviewBehavior behavior) {
+		disconnectItem();
+
+		this.reviewItem = reviewItem;
+		this.behavior = behavior;
+
+		connectItem();
+	}
+
+	private void connectItem() {
+		if (reviewItem != null) {
+			((EObject) reviewItem).eAdapters().add(modelAdapter);
+		}
+	}
+
+	private void createCommentAnnotation(IDocument document, AnnotationModelEvent event, ITopic comment) {
+		try {
+
+			int startLine = 0;
+			int endLine = 0;
+
+			ILineLocation location = (ILineLocation) comment.getLocation();
+			final List<ILineRange> lineRanges = location.getRanges();
+			startLine = location.getTotalMin();
+			endLine = location.getTotalMax();
+
+			int offset = 0;
+			int length = 0;
+			if (startLine != 0) {
+				offset = document.getLineOffset(startLine - 1);
+				if (endLine == 0) {
+					endLine = startLine;
+				}
+				length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
+
+			}
+			length = Math.max(1, length);
+			CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
+			annotations.add(ca);
+			event.annotationAdded(ca);
+
+		} catch (BadLocationException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", e));
+		}
+	}
+
+	protected void clear() {
+		AnnotationModelEvent event = new AnnotationModelEvent(this);
+		clear(event);
+		fireModelChanged(event);
+	}
+
+	protected void clear(AnnotationModelEvent event) {
+		for (CommentAnnotation commentAnnotation : annotations) {
+			event.annotationRemoved(commentAnnotation, commentAnnotation.getPosition());
+		}
+		annotations.clear();
+	}
+
+	protected void fireModelChanged(AnnotationModelEvent event) {
+		event.markSealed();
+		if (!event.isEmpty()) {
+			for (IAnnotationModelListener listener : annotationModelListeners) {
+				if (listener instanceof IAnnotationModelListenerExtension) {
+					((IAnnotationModelListenerExtension) listener).modelChanged(event);
+				} else {
+					listener.modelChanged(this);
+				}
+			}
+		}
+	}
+
+	protected void updateAnnotations() {
+		AnnotationModelEvent event = new AnnotationModelEvent(this);
+		clear(event);
+
+		if (document != null && reviewItem != null) {
+			for (ITopic comment : reviewItem.getTopics()) {
+				createCommentAnnotation(document, event, comment);
+			}
+		}
+
+		fireModelChanged(event);
+	}
 
 }

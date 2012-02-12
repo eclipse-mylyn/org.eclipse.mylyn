@@ -114,7 +114,7 @@ public class AddCommentDialog extends ProgressDialog {
 		try {
 			run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					result.set(reviewBehavior.addTopic(topic, monitor));
+					result.set(reviewBehavior.addTopic(item, topic, monitor));
 				}
 			});
 		} catch (InvocationTargetException e) {

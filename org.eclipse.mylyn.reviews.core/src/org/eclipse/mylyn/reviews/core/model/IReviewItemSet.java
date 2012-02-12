@@ -29,7 +29,7 @@ import java.util.List;
  */
 public interface IReviewItemSet extends IReviewItem {
 	/**
-	 * Returns the value of the '<em><b>Items</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Items</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -37,7 +37,7 @@ public interface IReviewItemSet extends IReviewItem {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Items</em>' containment reference list.
+	 * @return the value of the '<em>Items</em>' reference list.
 	 * @generated
 	 */
 	List<IReviewItem> getItems();

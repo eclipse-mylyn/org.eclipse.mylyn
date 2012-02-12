@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -35,8 +36,11 @@ public class TopicPart {
 
 	private IReviewActionListener actionListener;
 
-	public TopicPart(ITopic topic) {
+	private final ReviewBehavior behavior;
+
+	public TopicPart(ITopic topic, ReviewBehavior behavior) {
 		this.topic = topic;
+		this.behavior = behavior;
 	}
 
 	public void hookCustomActionRunListener(IReviewActionListener actionRunListener) {
@@ -51,7 +55,7 @@ public class TopicPart {
 		composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout());
 		for (IComment comment : topic.getComments()) {
-			CommentPart part = new CommentPart(comment);
+			CommentPart part = new CommentPart(comment, behavior);
 			part.createControl(composite, toolkit);
 		}
 		return composite;

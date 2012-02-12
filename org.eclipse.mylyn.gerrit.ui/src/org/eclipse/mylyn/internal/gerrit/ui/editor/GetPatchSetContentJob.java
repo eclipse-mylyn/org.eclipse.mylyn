@@ -27,6 +27,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 
+/**
+ * @author Steffen Pingel
+ */
 public class GetPatchSetContentJob extends Job {
 
 	private GerritPatchSetContent patchSetContent;
@@ -51,8 +54,7 @@ public class GetPatchSetContentJob extends Job {
 		GerritClient client = connector.getClient(repository);
 		try {
 			int reviewId = patchSetDetail.getInfo().getKey().getParentKey().get();
-			patchSetContent = client.getPatchSetContent(
-					reviewId + "", patchSetDetail.getPatchSet().getId().get(), monitor); //$NON-NLS-1$
+			patchSetContent = client.getPatchSetContent(reviewId + "", null, patchSetDetail, monitor); //$NON-NLS-1$
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (GerritException e) {
@@ -62,4 +64,5 @@ public class GetPatchSetContentJob extends Job {
 		}
 		return Status.OK_STATUS;
 	}
+
 }

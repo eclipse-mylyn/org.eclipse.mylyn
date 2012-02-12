@@ -28,7 +28,7 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
-import org.eclipse.mylyn.reviews.ui.ReviewUi;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -45,12 +45,9 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 
 	private LineRange selectedRange;
 
-	private final IReviewItem item;
-
-	public AddLineCommentToFileAction(IReviewCompareSourceViewer compareSourceViewer, IReviewItem item) {
+	public AddLineCommentToFileAction(IReviewCompareSourceViewer compareSourceViewer) {
 		super("Add Comment...");
 		this.compareSourceViewer = compareSourceViewer;
-		this.item = item;
 	}
 
 	@Override
@@ -115,8 +112,10 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 	}
 
 	public void run(IAction action) {
-		AddCommentDialog dialog = new AddCommentDialog(WorkbenchUtil.getShell(), ReviewUi.getActiveReview(), item,
-				getLocation());
+		IReviewItem item = compareSourceViewer.getAnnotationModel().getItem();
+		ReviewBehavior reviewBehavior = compareSourceViewer.getAnnotationModel().getBehavior();
+
+		AddCommentDialog dialog = new AddCommentDialog(WorkbenchUtil.getShell(), reviewBehavior, item, getLocation());
 		dialog.open();
 	}
 

@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
-import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -30,11 +30,8 @@ import com.google.gerrit.reviewdb.PatchLineComment;
  */
 public class GerritReviewBehavior extends ReviewBehavior {
 
-	private final IFileItem fileItem;
-
-	public GerritReviewBehavior(ITask task, IFileItem fileItem) {
+	public GerritReviewBehavior(ITask task) {
 		super(task);
-		this.fileItem = fileItem;
 	}
 
 	public GerritOperationFactory getOperationFactory() {
@@ -42,13 +39,20 @@ public class GerritReviewBehavior extends ReviewBehavior {
 	}
 
 	@Override
-	public IStatus addTopic(ITopic topic, IProgressMonitor monitor) {
-		Patch.Key key = Patch.Key.parse(fileItem.getId());
-		short side = (topic.getItem() == fileItem.getBase()) ? (short) 0 : (short) 1;
+	public IStatus addTopic(IReviewItem item, ITopic topic, IProgressMonitor monitor) {
+		short side = 1;
+		String id = item.getId();
+		if (id.startsWith("base-")) {
+			// base revision
+			id = id.substring(5);
+			side = 0;
+		}
+		Patch.Key key = Patch.Key.parse(id);
 		SaveDraftRequest request = new SaveDraftRequest(key, ((ILineLocation) topic.getLocation()).getTotalMin(), side);
 		request.setMessage(topic.getDescription());
 
 		GerritOperation<PatchLineComment> operation = getOperationFactory().createSaveDraftOperation(getTask(), request);
 		return operation.run(monitor);
 	}
+
 }

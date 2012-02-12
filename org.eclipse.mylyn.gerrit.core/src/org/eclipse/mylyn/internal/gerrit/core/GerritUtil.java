@@ -14,12 +14,11 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -43,7 +42,6 @@ import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.CommentDetail;
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchScript;
-import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.Patch;
@@ -73,44 +71,77 @@ public class GerritUtil {
 		review.setId(detail.getChange().getId().get() + "");
 		List<PatchSet> patchSets = detail.getPatchSets();
 		for (PatchSet patchSet : patchSets) {
-			IReviewItemSet itemSet = FACTORY.createReviewItemSet();
-			itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
-			itemSet.setId(patchSet.getPatchSetId() + "");
-			itemSet.setAddedBy(createUser(patchSet.getUploader(), detail.getAccounts()));
-			itemSet.setRevision(patchSet.getRevision().get());
+			IReviewItemSet itemSet = toReviewItemSet(detail, null, patchSet);
 			itemSet.setReview(review);
 			review.getItems().add(itemSet);
 		}
 		return review;
 	}
 
-	public static List<IReviewItem> toReviewItems(PatchSetDetail detail,
-			Map<Patch.Key, PatchScript> patchScriptByPatchKey) {
+	public static IReviewItemSet toReviewItemSet(ChangeDetail detail, PatchSet base, PatchSet patchSet) {
+		IReviewItemSet itemSet = FACTORY.createReviewItemSet();
+		if (base == null) {
+			itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
+		} else {
+			itemSet.setName(NLS.bind("Compare Patch Set {0} and {1}", patchSet.getPatchSetId(), base.getPatchSetId()));
+		}
+		itemSet.setId(patchSet.getPatchSetId() + "");
+		itemSet.setAddedBy(createUser(patchSet.getUploader(), detail.getAccounts()));
+		itemSet.setRevision(patchSet.getRevision().get());
+		return itemSet;
+	}
+
+	public static List<IReviewItem> toReviewItems(GerritPatchSetContent content, ReviewItemCache cache) {
 		List<IReviewItem> items = new ArrayList<IReviewItem>();
-		for (Patch patch : detail.getPatches()) {
-			IFileItem item = FACTORY.createFileItem();
-			item.setId(patch.getKey().toString());
-			item.setName(patch.getFileName());
+		for (Patch patch : content.getTarget().getPatches()) {
+			String targetId = patch.getKey().toString();
+			String sourceFileName = (patch.getSourceFileName() != null)
+					? patch.getSourceFileName()
+					: patch.getFileName();
+			String baseId = (content.getBase() != null)
+					? new Patch.Key(content.getBase().getId(), sourceFileName).toString()
+					: "base-" + targetId;
+			String id = baseId + ":" + targetId; //$NON-NLS-1$
+			IFileItem item = (IFileItem) cache.getItem(id);
+			if (item == null) {
+				item = FACTORY.createFileItem();
+				item.setId(id);
+				item.setName(patch.getFileName());
+				cache.put(item);
+			}
 			items.add(item);
 
-			if (patchScriptByPatchKey != null) {
-				PatchScript patchScript = patchScriptByPatchKey.get(patch.getKey());
+			if (content.getPatchScriptByPatchKey() != null) {
+				PatchScript patchScript = content.getPatchScriptByPatchKey().get(patch.getKey());
 				if (patchScript != null) {
 					CommentDetail commentDetail = patchScript.getCommentDetail();
 
-					IFileRevision revisionA = FACTORY.createFileRevision();
-					revisionA.setContent(patchScript.getA().asString());
-					revisionA.setPath(patchScript.getA().getPath());
-					revisionA.setRevision("Base");
-					addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
+					IFileRevision revisionA = (IFileRevision) cache.getItem(baseId);
+					if (revisionA == null) {
+						revisionA = FACTORY.createFileRevision();
+						revisionA.setId(baseId);
+						revisionA.setContent(patchScript.getA().asString());
+						revisionA.setPath(patchScript.getA().getPath());
+						revisionA.setRevision((content.getBase() != null) ? NLS.bind("Patch Set {0}", content.getBase()
+								.getPatchSetId()) : "Base");
+						addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
+						cache.put(revisionA);
+					}
 					item.setBase(revisionA);
 
-					IFileRevision revisionB = FACTORY.createFileRevision();
-					SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-					revisionB.setContent(target.asString());
-					revisionB.setPath(patchScript.getB().getPath());
-					revisionB.setRevision(NLS.bind("Patch Set {0}", detail.getPatchSet().getPatchSetId()));
-					addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
+					IFileRevision revisionB = (IFileRevision) cache.getItem(targetId);
+					if (revisionB == null) {
+						revisionB = FACTORY.createFileRevision();
+						revisionB.setId(targetId);
+						SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
+						revisionB.setContent(target.asString());
+						revisionB.setPath(patchScript.getB().getPath());
+						revisionB.setRevision(NLS.bind("Patch Set {0}", content.getTarget()
+								.getPatchSet()
+								.getPatchSetId()));
+						addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
+						cache.put(revisionB);
+					}
 					item.setTarget(revisionB);
 				}
 			}
@@ -209,6 +240,15 @@ public class GerritUtil {
 			}
 		}
 		return NLS.bind("{0}...", t.substring(0, minChars));
+	}
+
+	public static IReviewItemSet createInput(ChangeDetail changeDetail, GerritPatchSetContent content,
+			ReviewItemCache cache) {
+		IReviewItemSet itemSet = GerritUtil.toReviewItemSet(changeDetail, content.getBase(), content.getTarget()
+				.getPatchSet());
+		List<IReviewItem> items = GerritUtil.toReviewItems(content, cache);
+		itemSet.getItems().addAll(items);
+		return itemSet;
 	}
 
 }

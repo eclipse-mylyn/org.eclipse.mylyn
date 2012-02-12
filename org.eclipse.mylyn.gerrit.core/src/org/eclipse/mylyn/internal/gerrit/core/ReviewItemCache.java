@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,29 +9,30 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.ui;
+package org.eclipse.mylyn.internal.gerrit.core;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
  */
-public abstract class ReviewBehavior {
+public class ReviewItemCache {
 
-	private final ITask task;
+	private final Map<String, IReviewItem> reviewItemById;
 
-	public ReviewBehavior(ITask task) {
-		this.task = task;
+	public ReviewItemCache() {
+		reviewItemById = new HashMap<String, IReviewItem>();
 	}
 
-	public ITask getTask() {
-		return task;
+	public IReviewItem getItem(String id) {
+		return reviewItemById.get(id);
 	}
 
-	public abstract IStatus addTopic(IReviewItem fileItem, ITopic topic, IProgressMonitor monitor);
+	public void put(IReviewItem item) {
+		reviewItemById.put(item.getId(), item);
+	}
 
 }

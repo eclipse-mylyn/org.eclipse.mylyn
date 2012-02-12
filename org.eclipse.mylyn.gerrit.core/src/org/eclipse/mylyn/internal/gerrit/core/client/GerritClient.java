@@ -304,22 +304,19 @@ public class GerritClient {
 		});
 	}
 
-	public GerritPatchSetContent getPatchSetContent(String reviewId, int patchSetId, IProgressMonitor monitor)
-			throws GerritException {
+	public GerritPatchSetContent getPatchSetContent(String reviewId, PatchSet base, PatchSetDetail target,
+			IProgressMonitor monitor) throws GerritException {
 		Map<Patch.Key, PatchScript> patchScriptByPatchKey = new HashMap<Patch.Key, PatchScript>();
 
-		Change.Id changeId = new Change.Id(id(reviewId));
-		PatchSetDetail detail = getPatchSetDetail(changeId, patchSetId, monitor);
-		for (Patch patch : detail.getPatches()) {
-			PatchScript patchScript = getPatchScript(patch.getKey(), null, detail.getPatchSet().getId(), monitor);
+		for (Patch patch : target.getPatches()) {
+			PatchScript patchScript = getPatchScript(patch.getKey(), (base != null) ? base.getId() : null,
+					target.getPatchSet().getId(), monitor);
 			if (patchScript != null) {
 				patchScriptByPatchKey.put(patch.getKey(), patchScript);
 			}
 		}
 
-		GerritPatchSetContent result = new GerritPatchSetContent();
-		result.setPatchScriptByPatchKey(patchScriptByPatchKey);
-		return result;
+		return new GerritPatchSetContent(base, target, patchScriptByPatchKey);
 	}
 
 	public GerritConfigX getGerritConfig() {
@@ -377,12 +374,7 @@ public class GerritClient {
 			IProgressMonitor monitor) throws GerritException {
 		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
 		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
-		final AccountDiffPreference diffPrefs = new AccountDiffPreference((Account.Id) null);
-		diffPrefs.setLineLength(Integer.MAX_VALUE);
-		diffPrefs.setTabSize(4);
-		diffPrefs.setContext(AccountDiffPreference.WHOLE_FILE_CONTEXT);
-		diffPrefs.setIgnoreWhitespace(Whitespace.IGNORE_NONE);
-		diffPrefs.setIntralineDifference(false);
+		final AccountDiffPreference diffPrefs = createAccountDiffPreference();
 		return execute(monitor, new Operation<PatchScript>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
@@ -391,20 +383,25 @@ public class GerritClient {
 		});
 	}
 
-	public PatchSetDetail getPatchSetDetail(Change.Id changeId, int patchSetId, IProgressMonitor monitor)
-			throws GerritException {
-		final PatchSet.Id id = new PatchSet.Id(changeId, patchSetId);
-		return getPatchSetDetail(id, monitor);
+	private AccountDiffPreference createAccountDiffPreference() {
+		AccountDiffPreference diffPrefs = new AccountDiffPreference((Account.Id) null);
+		diffPrefs.setLineLength(Integer.MAX_VALUE);
+		diffPrefs.setTabSize(4);
+		diffPrefs.setContext(AccountDiffPreference.WHOLE_FILE_CONTEXT);
+		diffPrefs.setIgnoreWhitespace(Whitespace.IGNORE_NONE);
+		diffPrefs.setIntralineDifference(false);
+		return diffPrefs;
 	}
 
-	public PatchSetDetail getPatchSetDetail(final PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
+	public PatchSetDetail getPatchSetDetail(final PatchSet.Id idBase, final PatchSet.Id idTarget,
+			IProgressMonitor monitor) throws GerritException {
 		PatchSetDetail result = null;
 		try {
 			// Gerrit 2.2
 			result = execute(monitor, new Operation<PatchSetDetail>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeDetailService().patchSetDetail2(null, id, null, this);
+					getChangeDetailService().patchSetDetail2(idBase, idTarget, createAccountDiffPreference(), this);
 				}
 			});
 		} catch (GerritException e) {
@@ -415,7 +412,7 @@ public class GerritClient {
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
-							getChangeDetailService().patchSetDetail(id, this);
+							getChangeDetailService().patchSetDetail(idTarget, this);
 						}
 					});
 				} else {
@@ -428,7 +425,8 @@ public class GerritClient {
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
-							getChangeDetailService().patchSetDetail(null, id, null, this);
+							getChangeDetailService().patchSetDetail(idBase, idTarget, createAccountDiffPreference(),
+									this);
 						}
 					});
 				} else {
@@ -468,7 +466,7 @@ public class GerritClient {
 		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
 		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetailX>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
-			PatchSetDetail patchSetDetail = getPatchSetDetail(patchSet.getId(), monitor);
+			PatchSetDetail patchSetDetail = getPatchSetDetail(null, patchSet.getId(), monitor);
 			patchSets.add(patchSetDetail);
 			if (!isAnonymous()) {
 				PatchSetPublishDetailX patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);

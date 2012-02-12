@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -49,6 +50,7 @@ import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.internal.gerrit.core.ReviewItemCache;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
@@ -59,12 +61,11 @@ import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
-import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewCompareAnnotationModel;
-import org.eclipse.mylyn.internal.reviews.ui.operations.ReviewCompareEditorInput;
+import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
-import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -146,9 +147,12 @@ public class PatchSetSection extends AbstractGerritSection {
 	// XXX drafts added after the publish detail was refreshed from server
 	private int addedDrafts;
 
+	private final ReviewItemCache cache;
+
 	public PatchSetSection() {
 		setPartName("Patch Sets");
-		jobs = new ArrayList<Job>();
+		this.jobs = new ArrayList<Job>();
+		this.cache = new ReviewItemCache();
 	}
 
 	@Override
@@ -332,7 +336,8 @@ public class PatchSetSection extends AbstractGerritSection {
 		return numComments;
 	}
 
-	private void subSectionExpanded(final PatchSetDetail patchSetDetail, final Section composite, final Viewer viewer) {
+	private void subSectionExpanded(final ChangeDetail changeDetail, final PatchSetDetail patchSetDetail,
+			final Section composite, final Viewer viewer) {
 		updateTextClient(composite, patchSetDetail, true);
 
 		final GetPatchSetContentJob job = new GetPatchSetContentJob(getTaskEditorPage().getTaskRepository(),
@@ -346,9 +351,7 @@ public class PatchSetSection extends AbstractGerritSection {
 							if (event.getResult().isOK()) {
 								GerritPatchSetContent content = job.getPatchSetContent();
 								if (content != null && content.getPatchScriptByPatchKey() != null) {
-									List<IReviewItem> items = GerritUtil.toReviewItems(patchSetDetail,
-											content.getPatchScriptByPatchKey());
-									viewer.setInput(items);
+									viewer.setInput(GerritUtil.createInput(changeDetail, content, cache));
 								}
 							}
 
@@ -439,12 +442,18 @@ public class PatchSetSection extends AbstractGerritSection {
 		return null;
 	}
 
-	protected void doCompareWith(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
+	protected void doCompareWithInSynchronizeView(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
 		GerritToGitMapping mapping = getRepository(changeDetail);
 		if (mapping != null) {
 			ComparePatchSetJob job = new ComparePatchSetJob(mapping.getRepository(), mapping.getRemote(), base, target);
 			job.schedule();
 		}
+	}
+
+	protected void doCompareWith(ChangeDetail changeDetail, PatchSet base, PatchSet target) {
+		OpenPatchSetJob job = new OpenPatchSetJob(getTaskEditorPage().getTaskRepository(), getTask(), changeDetail,
+				base, target, cache);
+		job.schedule();
 	}
 
 	private String getGerritProject(ChangeDetail changeDetail) {
@@ -532,18 +541,25 @@ public class PatchSetSection extends AbstractGerritSection {
 			}
 
 			public Object[] getElements(Object inputElement) {
-				return ((List) inputElement).toArray();
+				return getReviewItems(inputElement).toArray();
+			}
+
+			private List<IReviewItem> getReviewItems(Object inputElement) {
+				if (inputElement instanceof IReviewItemSet) {
+					return ((IReviewItemSet) inputElement).getItems();
+				}
+				return Collections.emptyList();
 			}
 
 			public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
-				if (oldInput instanceof List<?> && modelAdapter != null) {
-					for (IReviewItem item : (List<IReviewItem>) oldInput) {
+				if (modelAdapter != null) {
+					for (IReviewItem item : getReviewItems(oldInput)) {
 						((EObject) item).eAdapters().remove(modelAdapter);
 					}
 					addedDrafts = 0;
 				}
 
-				if (newInput instanceof List<?>) {
+				if (newInput instanceof IReviewItemSet) {
 					// monitors any new topics that are added
 					modelAdapter = new EContentAdapter() {
 						@Override
@@ -556,7 +572,7 @@ public class PatchSetSection extends AbstractGerritSection {
 							}
 						}
 					};
-					for (Object item : (List) newInput) {
+					for (Object item : getReviewItems(newInput)) {
 						((EObject) item).eAdapters().add(modelAdapter);
 					}
 				}
@@ -567,30 +583,31 @@ public class PatchSetSection extends AbstractGerritSection {
 			public void open(OpenEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				IFileItem item = (IFileItem) selection.getFirstElement();
-
-				ReviewUi.setActiveReview(new GerritReviewBehavior(getTask(), item));
-
-				ReviewCompareAnnotationModel model = new ReviewCompareAnnotationModel(item, null);
-				CompareConfiguration configuration = new CompareConfiguration();
-				if (item.getBase() != null && item.getTarget() != null) {
-					CompareUI.openCompareEditor(new ReviewCompareEditorInput(item, model, configuration));
-				} else {
-					// the content has not been cached, yet
-					getTaskEditorPage().getEditor().setMessage("The selected file is not available, yet",
-							IMessageProvider.WARNING);
-				}
+				doOpen((IReviewItemSet) viewer.getInput(), item);
 			}
 		});
 
-		List<IReviewItem> items = GerritUtil.toReviewItems(patchSetDetail, null);
-		viewer.setInput(items);
+		IReviewItemSet itemSet = GerritUtil.createInput(changeDetail, new GerritPatchSetContent(patchSetDetail), cache);
+		viewer.setInput(itemSet);
 
 		Composite actionComposite = createActions(changeDetail, patchSetDetail, publishDetail, composite);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 
-		subSectionExpanded(patchSetDetail, subSection, viewer);
+		subSectionExpanded(changeDetail, patchSetDetail, subSection, viewer);
 
 		getTaskEditorPage().reflow();
+	}
+
+	private void doOpen(IReviewItemSet items, IFileItem item) {
+		if (item.getBase() == null || item.getTarget() == null) {
+			getTaskEditorPage().getEditor().setMessage("The selected file is not available, yet",
+					IMessageProvider.WARNING);
+			return;
+		}
+
+		GerritReviewBehavior behavior = new GerritReviewBehavior(getTask());
+		CompareConfiguration configuration = new CompareConfiguration();
+		CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, item, behavior));
 	}
 
 }
