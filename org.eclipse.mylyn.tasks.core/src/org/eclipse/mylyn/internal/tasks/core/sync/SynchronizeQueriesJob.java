@@ -86,12 +86,12 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			} else {
 				removedQueryResults.remove(task);
 			}
+			taskList.addTask(task, repositoryQuery);
 			try {
 				session.putTaskData(task, taskData);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e)); //$NON-NLS-1$
 			}
-			taskList.addTask(task, repositoryQuery);
 			resultCount++;
 		}
 
