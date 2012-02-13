@@ -700,6 +700,49 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Edit given fields in repository
+	 * <p>
+	 * Only values in the given fields map will be updated on the repository
+	 *
+	 * @param owner
+	 * @param name
+	 * @param fields
+	 * @return edited repository
+	 * @throws IOException
+	 */
+	public Repository editRepository(String owner, String name,
+			Map<String, Object> fields) throws IOException {
+		verifyRepository(owner, name);
+		if (fields == null)
+			throw new IllegalArgumentException("Fields cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(owner).append('/').append(name);
+		return client.post(uri.toString(), fields, Repository.class);
+	}
+
+	/**
+	 * Edit given fields in repository
+	 * <p>
+	 * Only values in the given fields map will be updated on the repository
+	 *
+	 * @param provider
+	 * @param fields
+	 * @return edited repository
+	 * @throws IOException
+	 */
+	public Repository editRepository(IRepositoryIdProvider provider,
+			Map<String, Object> fields) throws IOException {
+		String id = getId(provider);
+		if (fields == null)
+			throw new IllegalArgumentException("Fields cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		return client.post(uri.toString(), fields, Repository.class);
+	}
+
+	/**
 	 * Fork given repository into new repository under the currently
 	 * authenticated user.
 	 *

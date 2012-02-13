@@ -18,12 +18,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Language;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.util.UrlUtils;
 import org.eclipse.egit.ui.UIIcons;
+import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
+import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
+import org.eclipse.egit.ui.internal.provisional.wizards.NoRepositoryInfoException;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -39,6 +43,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -56,7 +61,8 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Search for GitHub repositories wizard page.
  */
-public class RepositorySearchWizardPage extends WizardPage {
+@SuppressWarnings("restriction")
+public class RepositorySearchWizardPage extends WizardPage implements IRepositorySearchResult {
 
 	private SearchRepository[] repositories = null;
 
@@ -69,9 +75,9 @@ public class RepositorySearchWizardPage extends WizardPage {
 	private Text searchText;
 
 	/**
-	 * 
+	 *
 	 */
-	protected RepositorySearchWizardPage() {
+	public RepositorySearchWizardPage() {
 		super("repoSearchPage", Messages.RepositorySearchWizardPage_Title, null); //$NON-NLS-1$
 		setDescription(Messages.RepositorySearchWizardPage_Description);
 		setPageComplete(false);
@@ -284,5 +290,19 @@ public class RepositorySearchWizardPage extends WizardPage {
 		} catch (InterruptedException e) {
 			GitHubUi.logError(e);
 		}
+	}
+
+	public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
+		GitHubClient client = GitHub
+				.configureClient(new GitHubClient());
+		RepositoryService service = new RepositoryService(client);
+		String cloneUrl = null;
+		try {
+			Repository fullRepo = service.getRepository(repositories[0]);
+			cloneUrl = fullRepo.getCloneUrl();
+		} catch (IOException e) {
+			throw new NoRepositoryInfoException(e.getMessage(), e);
+		}
+		return new GitRepositoryInfo(cloneUrl);
 	}
 }

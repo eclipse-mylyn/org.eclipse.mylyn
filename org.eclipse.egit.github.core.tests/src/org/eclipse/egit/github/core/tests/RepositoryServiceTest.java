@@ -17,6 +17,8 @@ import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryHook;
@@ -114,6 +116,54 @@ public class RepositoryServiceTest {
 		repo.setOwner(new User().setLogin("o"));
 		service.editRepository(repo);
 		verify(client).post("/repos/o/n", repo, Repository.class);
+	}
+
+	/**
+	 * Edit repository with fields
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editRepositoryWithNullFields() throws IOException {
+		service.editRepository("o", "n", null);
+	}
+
+	/**
+	 * Edit repository with fields
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editRepositoryWithFields() throws IOException {
+		Map<String, Object> fields = new HashMap<String, Object>();
+		fields.put("has_issues", true);
+		fields.put("homepage", "test://address");
+		service.editRepository("o", "n", fields);
+		verify(client).post("/repos/o/n", fields, Repository.class);
+	}
+
+	/**
+	 * Edit repository with fields
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editRepositoryProviderWithNullFields() throws IOException {
+		service.editRepository(repo, null);
+	}
+
+	/**
+	 * Edit repository with fields
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editRepositoryProviderWithFields() throws IOException {
+		Map<String, Object> fields = new HashMap<String, Object>();
+		fields.put("has_issues", true);
+		fields.put("homepage", "test://address");
+		service.editRepository(repo, fields);
+		verify(client).post("/repos/o/n", fields, Repository.class);
 	}
 
 	/**
