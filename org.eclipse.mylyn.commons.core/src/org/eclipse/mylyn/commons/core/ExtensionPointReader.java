@@ -1,5 +1,3 @@
-package org.eclipse.mylyn.commons.core;
-
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
@@ -10,8 +8,11 @@ package org.eclipse.mylyn.commons.core;
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylyn.commons.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -27,9 +28,42 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
+ * @author Sam Davis
  * @since 3.7
  */
 public class ExtensionPointReader<T> {
+
+	private static final String ATTRIBUTE_EXTENSION_PRIORITY = "extensionPriority"; //$NON-NLS-1$
+
+	private static final class PriorityComparator implements Comparator<IConfigurationElement> {
+
+		public int compare(IConfigurationElement arg0, IConfigurationElement arg1) {
+			double p0 = 0;
+			double p1 = 0;
+			try {
+				String priorityAttribute = arg0.getAttribute(ATTRIBUTE_EXTENSION_PRIORITY);
+				if (priorityAttribute != null) {
+					p0 = Double.parseDouble(priorityAttribute);
+				}
+			} catch (NumberFormatException e) {
+			}
+			try {
+				String priorityAttribute = arg1.getAttribute(ATTRIBUTE_EXTENSION_PRIORITY);
+				if (priorityAttribute != null) {
+					p1 = Double.parseDouble(priorityAttribute);
+				}
+			} catch (NumberFormatException e) {
+			}
+			if (p1 > p0) {
+				return 1;
+			} else if (p1 < -p0) {
+				return -1;
+			}
+			return 0;
+		}
+	}
+
+	private static final PriorityComparator PRIORITY_COMPARATOR = new PriorityComparator();
 
 	private final String extensionId;
 
@@ -42,6 +76,17 @@ public class ExtensionPointReader<T> {
 	private final String pluginId;
 
 	private final List<T> items;
+
+	private String filterAttributeId;
+
+	private String filterAttributeValue;
+
+	public ExtensionPointReader(String pluginId, String extensionId, String elementId, Class<T> clazz,
+			String filterAttributeId, String filterAttributeValue) {
+		this(pluginId, extensionId, elementId, clazz);
+		this.filterAttributeId = filterAttributeId;
+		this.filterAttributeValue = filterAttributeValue;
+	}
 
 	public ExtensionPointReader(String pluginId, String extensionId, String elementId, Class<T> clazz) {
 		Assert.isNotNull(pluginId);
@@ -88,8 +133,9 @@ public class ExtensionPointReader<T> {
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for (IExtension extension : extensions) {
 				IConfigurationElement[] elements = extension.getConfigurationElements();
+				Arrays.sort(elements, PRIORITY_COMPARATOR);
 				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(elementId)) {
+					if (element.getName().equals(elementId) && shouldRead(element)) {
 						T item = readElement(element, result);
 						if (item != null) {
 							items.add(item);
@@ -102,6 +148,20 @@ public class ExtensionPointReader<T> {
 		handleResult(result);
 
 		return result;
+	}
+
+	/**
+	 * Determines whether the element should be instantiated by this ExtensionPointReader. This implementation checks
+	 * whether the element defines an attribute with id and value matching filterAttributeId and filterAttributeValue.
+	 * If filterAttributeValue is the empty string, an element is also considered to match if it does not define the
+	 * attribute.
+	 * <p>
+	 * Subclasses may override.
+	 */
+	protected boolean shouldRead(IConfigurationElement element) {
+		return filterAttributeId == null || filterAttributeValue == null
+				|| filterAttributeValue.equals(element.getAttribute(filterAttributeId))
+				|| (filterAttributeValue.length() == 0 && element.getAttribute(filterAttributeId) == null);
 	}
 
 	protected void handleResult(IStatus result) {

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.tests.core;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import junit.framework.TestCase;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 
 /**
  * @author Steffen Pingel
+ * @author Sam Davis
  */
 public class ExtensionPointReaderTest extends TestCase {
 
@@ -62,6 +64,18 @@ public class ExtensionPointReaderTest extends TestCase {
 		}
 	}
 
+	public static class P5ExtensionPointReaderExtensionImplementation extends
+			ExtensionPointReaderExtensionImplementation {
+	}
+
+	public static class PNegative5ExtensionPointReaderExtensionImplementation extends
+			ExtensionPointReaderExtensionImplementation {
+	}
+
+	public static class P10ExtensionPointReaderExtensionImplementation extends
+			ExtensionPointReaderExtensionImplementation {
+	}
+
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.tests";
 
 	public void testRead() {
@@ -69,7 +83,21 @@ public class ExtensionPointReaderTest extends TestCase {
 				ID_PLUGIN, "extensionPointReaderTest", "extensionElement", ExtensionPointReaderExtension.class);
 		IStatus status = reader.read();
 		assertEquals(IStatus.OK, status.getSeverity());
-		assertEquals(Collections.singletonList(new ExtensionPointReaderExtensionImplementation()), reader.getItems());
+		assertEquals(
+				Arrays.asList(new ExtensionPointReaderExtension[] {
+						new P10ExtensionPointReaderExtensionImplementation(),
+						new P5ExtensionPointReaderExtensionImplementation(),
+						new ExtensionPointReaderExtensionImplementation(),
+						new PNegative5ExtensionPointReaderExtensionImplementation() }), reader.getItems());
+	}
+
+	public void testReadWithFiltering() {
+		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<ExtensionPointReaderExtension>(
+				ID_PLUGIN, "extensionPointReaderTest", "extensionElement", ExtensionPointReaderExtension.class,
+				"testFilterAttribute", "value1");
+		IStatus status = reader.read();
+		assertEquals(IStatus.OK, status.getSeverity());
+		assertEquals(Collections.singletonList(new P5ExtensionPointReaderExtensionImplementation()), reader.getItems());
 	}
 
 }
