@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
@@ -69,7 +70,6 @@ import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.ChangeManageService;
 import com.google.gerrit.common.data.GerritConfig;
-import com.google.gerrit.common.data.PatchDetailService;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
@@ -504,12 +504,27 @@ public class GerritClient {
 	public ReviewerResult addReviewers(String reviewId, final List<String> reviewers, IProgressMonitor monitor)
 			throws GerritException {
 		final Change.Id id = new Change.Id(id(reviewId));
-		return execute(monitor, new Operation<ReviewerResult>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService().addReviewers(id, reviewers, this);
+		try {
+			return execute(monitor, new Operation<ReviewerResult>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getPatchDetailService().addReviewers(id, reviewers, this);
+				}
+			});
+		} catch (GerritException e) {
+			// Gerrit 2.2
+			String message = e.getMessage();
+			if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+				return execute(monitor, new Operation<ReviewerResult>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getPatchDetailService().addReviewers(id, reviewers, false, this);
+					}
+				});
+			} else {
+				throw e;
 			}
-		});
+		}
 	}
 
 	/**

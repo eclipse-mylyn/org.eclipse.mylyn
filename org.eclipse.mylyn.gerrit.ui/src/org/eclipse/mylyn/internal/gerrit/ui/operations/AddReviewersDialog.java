@@ -58,7 +58,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 		setMessage("Enter a comma separated list of names or email addresses.");
 
 		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = GridLayoutFactory.fillDefaults().margins(5, 5).create();
+		GridLayout layout = GridLayoutFactory.fillDefaults().margins(8, 8).create();
 		composite.setLayout(layout);
 
 		messageEditor = createPersonTextEditor(composite, "");
