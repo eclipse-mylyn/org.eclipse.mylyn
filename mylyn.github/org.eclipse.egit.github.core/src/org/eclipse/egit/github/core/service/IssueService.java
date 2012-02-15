@@ -581,7 +581,7 @@ public class IssueService extends GitHubService {
 					params.put(FILTER_MILESTONE, Integer.toString(number));
 				else {
 					if (!newIssue)
-						params.put(FILTER_MILESTONE, null);
+						params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
 				}
 			}
 			List<Label> labels = issue.getLabels();
