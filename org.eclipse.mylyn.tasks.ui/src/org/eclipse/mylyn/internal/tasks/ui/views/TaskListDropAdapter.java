@@ -38,9 +38,9 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Uns
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
+import org.eclipse.mylyn.tasks.ui.TaskDropListener.Operation;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves (added URL based task creation support)
  * @author Jevgeni Holodkov
+ * @author Sam Davis
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
@@ -64,18 +65,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	@Override
-	public void dragOver(DropTargetEvent event) {
-		// support dragging from sources only supporting DROP_LINK
-		if (event.detail == DND.DROP_NONE && (event.operations & DND.DROP_LINK) == DND.DROP_LINK) {
-			event.detail = DND.DROP_LINK;
-		}
-		super.dragOver(event);
-	}
-
-	@Override
 	public boolean performDrop(final Object data) {
 		List<ITask> tasksToMove = new ArrayList<ITask>();
-
 		if (localTransfer) {
 			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 			List<ITask> tasks = TasksUiInternal.getTasksFromSelection(selection);
@@ -107,49 +98,57 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				}
 			}
 		} else {
-			for (ITask task : tasksToMove) {
-				if (currentTarget instanceof UncategorizedTaskContainer) {
-					moveTask(task, (UncategorizedTaskContainer) currentTarget);
-				} else if (currentTarget instanceof TaskCategory) {
-					moveTask(task, (TaskCategory) currentTarget);
-				} else if (currentTarget instanceof UnmatchedTaskContainer) {
-					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						moveTask(task, (AbstractTaskCategory) currentTarget);
-					}
-				} else if (currentTarget instanceof ITask) {
-					ITask targetTask = (ITask) currentTarget;
-					TaskListView view = TaskListView.getFromActivePerspective();
-					if ((getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER)
-							&& view != null && view.isScheduledPresentation()) {
-						if (targetTask instanceof AbstractTask) {
-							DateRange targetDate = ((AbstractTask) targetTask).getScheduledForDate();
-							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, targetDate);
+			if (currentTarget instanceof ITask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
+					&& getCurrentOperation() != DND.DROP_MOVE) {
+				TasksUiInternal.getTaskDropHandler().loadTaskDropListeners();
+				Operation operation = (getCurrentOperation() == DND.DROP_COPY) ? Operation.COPY : Operation.LINK;
+				TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, (ITask) currentTarget, operation);
+			} else {
+				for (ITask task : tasksToMove) {
+					if (currentTarget instanceof UncategorizedTaskContainer) {
+						moveTask(task, (UncategorizedTaskContainer) currentTarget);
+					} else if (currentTarget instanceof TaskCategory) {
+						moveTask(task, (TaskCategory) currentTarget);
+					} else if (currentTarget instanceof UnmatchedTaskContainer) {
+						if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+							moveTask(task, (AbstractTaskCategory) currentTarget);
 						}
-					} else {
-						AbstractTaskCategory targetCategory = null;
-						// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-						ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-						if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
-							targetCategory = (AbstractTaskCategory) container;
-						} else if (container instanceof UnmatchedTaskContainer) {
-							if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+					} else if (currentTarget instanceof ITask) {
+						ITask targetTask = (ITask) currentTarget;
+						TaskListView view = TaskListView.getFromActivePerspective();
+						if ((getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER)
+								&& view != null && view.isScheduledPresentation()) {
+							if (targetTask instanceof AbstractTask) {
+								DateRange targetDate = ((AbstractTask) targetTask).getScheduledForDate();
+								TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, targetDate);
+							}
+						} else {
+							AbstractTaskCategory targetCategory = null;
+							// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+							ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
 								targetCategory = (AbstractTaskCategory) container;
+							} else if (container instanceof UnmatchedTaskContainer) {
+								if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(
+										task.getRepositoryUrl())) {
+									targetCategory = (AbstractTaskCategory) container;
+								}
+							}
+							if (targetCategory != null) {
+								moveTask(task, targetCategory);
 							}
 						}
-						if (targetCategory != null) {
-							moveTask(task, targetCategory);
+					} else if (currentTarget instanceof ScheduledTaskContainer) {
+						ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
+						if (container instanceof Unscheduled) {
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
+						} else if (isValidTarget(container)) {
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+									container.getDateRange());
 						}
+					} else if (currentTarget == null) {
+						moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 					}
-				} else if (currentTarget instanceof ScheduledTaskContainer) {
-					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-					if (container instanceof Unscheduled) {
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
-					} else if (isValidTarget(container)) {
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-								container.getDateRange());
-					}
-				} else if (currentTarget == null) {
-					moveTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 				}
 			}
 		}
@@ -259,6 +258,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else if (target instanceof LocalTask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON) {
+				return true;
+			} else if (target instanceof ITask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
+					&& getCurrentOperation() != DND.DROP_MOVE) {
 				return true;
 			} else {
 				return false;

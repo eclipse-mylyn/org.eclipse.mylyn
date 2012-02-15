@@ -14,11 +14,17 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.io.File;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TaskDropListener.Operation;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -50,9 +56,10 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		}
 		// will accept text but prefer to have files dropped
 		for (TransferData dataType : event.dataTypes) {
-			if (FileTransfer.getInstance().isSupportedType(dataType)) {
+			if (LocalSelectionTransfer.getTransfer().isSupportedType(dataType)
+					|| FileTransfer.getInstance().isSupportedType(dataType)) {
 				event.currentDataType = dataType;
-				// files should only be copied
+				// files and tasks should only be copied
 				if (event.detail != DND.DROP_COPY) {
 					event.detail = DND.DROP_NONE;
 				}
@@ -86,6 +93,15 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 	}
 
 	public void drop(DropTargetEvent event) {
+		if (LocalSelectionTransfer.getTransfer().isSupportedType(event.currentDataType)) {
+			TasksUiInternal.getTaskDropHandler().loadTaskDropListeners();
+			ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+			List<ITask> tasksToMove = TasksUiInternal.getTasksFromSelection(selection);
+			if (!tasksToMove.isEmpty()) {
+				TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, page.getTask(),
+						Operation.DROP_ON_TASK_EDITOR);
+			}
+		}
 		if (TextTransfer.getInstance().isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
 			EditorUtil.openNewAttachmentWizard(page, null, new TextTaskAttachmentSource(text));

@@ -41,6 +41,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -1487,9 +1488,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
+		LocalSelectionTransfer localSelectionTransfer = LocalSelectionTransfer.getTransfer();
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		final FileTransfer fileTransfer = FileTransfer.getInstance();
-		Transfer[] types = new Transfer[] { textTransfer, fileTransfer };
+		Transfer[] types = new Transfer[] { localSelectionTransfer, textTransfer, fileTransfer };
 		target.setTransfer(types);
 		if (defaultDropListener == null) {
 			defaultDropListener = new TaskAttachmentDropListener(this);

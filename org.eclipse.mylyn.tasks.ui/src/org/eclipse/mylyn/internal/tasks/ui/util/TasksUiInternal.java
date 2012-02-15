@@ -149,6 +149,8 @@ public class TasksUiInternal {
 
 	private static SynchronizationScheduler synchronizationScheduler = new SynchronizationScheduler();
 
+	private static final TaskDropHandler taskDropHandler = new TaskDropHandler();
+
 	// TODO e3.5 replace by SWT.SHEET
 	public static final int SWT_SHEET = 1 << 28;
 
@@ -1438,6 +1440,10 @@ public class TasksUiInternal {
 	public static boolean isActivityTrackingEnabled() {
 		return TasksUiPlugin.getTaskActivityMonitor().isEnabled()
 				&& MonitorUiPlugin.getDefault().isActivityTrackingEnabled();
+	}
+
+	public static TaskDropHandler getTaskDropHandler() {
+		return taskDropHandler;
 	}
 
 }

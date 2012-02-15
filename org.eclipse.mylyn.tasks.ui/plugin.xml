@@ -22,6 +22,7 @@
     <extension-point id="taskEditorPageContribution" name="Task Editor Page Contribution" schema="schema/taskEditorPageContribution.exsd"/>
     <extension-point id="searchProvider" name="Search Handling Provider" schema="schema/searchProvider.exsd"/>
     <extension-point id="searchHandler" name="Search Handler" schema="schema/searchHandler.exsd"/>
+    <extension-point id="taskDropListener" name="Task Drop Listener" schema="schema/taskDropListener.exsd"/>
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">
