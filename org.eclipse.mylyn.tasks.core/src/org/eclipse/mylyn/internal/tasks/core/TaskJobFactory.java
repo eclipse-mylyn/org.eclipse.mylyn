@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +25,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
@@ -32,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskJobListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -44,6 +50,12 @@ import org.eclipse.mylyn.tasks.core.sync.TaskJob;
  * @author Steffen Pingel
  */
 public class TaskJobFactory implements ITaskJobFactory {
+	private static final String ALL_CONNECTORS = "org.eclipse.mylyn.tasks.core.all.connectors"; //$NON-NLS-1$
+
+	/**
+	 * listeners provided by extension point
+	 */
+	private static Map<String, List<TaskJobListener>> taskJobListeners;
 
 	private final TaskList taskList;
 
@@ -52,6 +64,33 @@ public class TaskJobFactory implements ITaskJobFactory {
 	private final IRepositoryManager repositoryManager;
 
 	private final IRepositoryModel tasksModel;
+
+	protected static synchronized List<TaskJobListener> getTaskJobListeners(AbstractRepositoryConnector connector) {
+		if (taskJobListeners == null) {
+			taskJobListeners = new HashMap<String, List<TaskJobListener>>();
+			List<TaskJobListener> listeners = loadTaskJobListeners(""); //$NON-NLS-1$
+			taskJobListeners.put(ALL_CONNECTORS, listeners);
+		}
+		if (taskJobListeners.get(connector.getConnectorKind()) == null) {
+			List<TaskJobListener> listeners = loadTaskJobListeners(connector.getConnectorKind());
+			taskJobListeners.put(connector.getConnectorKind(), listeners);
+		}
+		List<TaskJobListener> listeners = new ArrayList<TaskJobListener>();
+		listeners.addAll(taskJobListeners.get(ALL_CONNECTORS));
+		listeners.addAll(taskJobListeners.get(connector.getConnectorKind()));
+		return listeners;
+	}
+
+	protected static List<TaskJobListener> loadTaskJobListeners(String connectorKind) {
+		ExtensionPointReader<TaskJobListener> reader = new ExtensionPointReader<TaskJobListener>(
+				ITasksCoreConstants.ID_PLUGIN,
+				"taskJobListeners", "listener", TaskJobListener.class, "connectorKind", connectorKind); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		IStatus status = reader.read();
+		if (!status.isOK()) {
+			StatusHandler.log(status);
+		}
+		return reader.getItems();
+	}
 
 	public TaskJobFactory(TaskList taskList, TaskDataManager taskDataManager, IRepositoryManager repositoryManager,
 			IRepositoryModel tasksModel) {
@@ -102,7 +141,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			final ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
-		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, oldAttributes);
+		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, oldAttributes,
+				getTaskJobListeners(connector));
 		job.setPriority(Job.INTERACTIVE);
 		try {
 			taskList.run(new ITaskListRunnable() {

@@ -11,12 +11,16 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -28,6 +32,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskJobEvent;
+import org.eclipse.mylyn.tasks.core.TaskJobListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -49,21 +55,34 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private ITask task;
 
+	private final ITask originalTask;
+
 	private final Set<TaskAttribute> oldAttributes;
 
 	private final TaskDataManager taskDataManager;
 
 	private RepositoryResponse response;
 
+	private final List<TaskJobListener> taskJobListeners;
+
 	public SubmitTaskJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
+		this(taskDataManager, connector, taskRepository, task, taskData, oldAttributes,
+				Collections.<TaskJobListener> emptyList());
+	}
+
+	public SubmitTaskJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
+			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes,
+			List<TaskJobListener> taskJobListeners) {
 		super("Submitting Task"); //$NON-NLS-1$
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.task = task;
+		this.originalTask = task;
 		this.taskData = taskData;
 		this.oldAttributes = oldAttributes;
+		this.taskJobListeners = taskJobListeners;
 		setRule(new MutexSchedulingRule());
 	}
 
@@ -75,7 +94,7 @@ public class SubmitTaskJob extends SubmitJob {
 			try {
 				monitor.beginTask(Messages.SubmitTaskJob_Submitting_task,
 						2 * (1 + getSubmitJobListeners().length) * 100);
-
+				fireTaskAboutToSubmit();
 				// post task data
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 				monitor.subTask(Messages.SubmitTaskJob_Sending_data);
@@ -96,6 +115,7 @@ public class SubmitTaskJob extends SubmitJob {
 				task = createTask(monitor, updatedTaskData);
 				taskDataManager.putSubmittedTaskData(task, updatedTaskData, monitor);
 				fireTaskSynchronized(monitor);
+				fireTaskSubmissionComplete();
 			} catch (CoreException e) {
 				errorStatus = e.getStatus();
 			} catch (OperationCanceledException e) {
@@ -112,6 +132,36 @@ public class SubmitTaskJob extends SubmitJob {
 			return (errorStatus == Status.CANCEL_STATUS) ? Status.CANCEL_STATUS : Status.OK_STATUS;
 		} finally {
 			monitor.detach(jobMonitor);
+		}
+	}
+
+	protected void fireTaskAboutToSubmit() {
+		for (final TaskJobListener listener : taskJobListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void run() throws Exception {
+					listener.aboutToSubmit(new TaskJobEvent(originalTask, task));
+				}
+
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error thrown by TaskJobListener", e)); //$NON-NLS-1$
+				}
+			});
+		}
+	}
+
+	protected void fireTaskSubmissionComplete() {
+		for (final TaskJobListener listener : taskJobListeners) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void run() throws Exception {
+					listener.taskSubmitted(new TaskJobEvent(originalTask, task));
+				}
+
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error thrown by TaskJobListener", e)); //$NON-NLS-1$
+				}
+			});
 		}
 	}
 
