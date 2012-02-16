@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
@@ -70,6 +71,10 @@ public class GerritUrlHandlerTest extends TestCase {
 	}
 
 	public void testOpenUrlInvalid() throws Exception {
+		if (!PlatformUiUtil.hasInternalBrowser()) {
+			System.err.println("Skipping GerritUrlHandlerTest.testOpenUrlInvalid() due to lack of browser support");
+			return;
+		}
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup
 		TaskRepository repository = GerritFixture.GERRIT_2_2_1.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
