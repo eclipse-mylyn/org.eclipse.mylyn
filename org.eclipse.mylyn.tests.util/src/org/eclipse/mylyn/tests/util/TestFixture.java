@@ -212,7 +212,9 @@ public abstract class TestFixture {
 
 	public TaskRepository singleRepository() {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		if (manager != null) {
+			manager.clearRepositories();
+		}
 		resetRepositories();
 
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
@@ -220,7 +222,9 @@ public abstract class TestFixture {
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), true);
 		configureRepository(repository);
-		manager.addRepository(repository);
+		if (manager != null) {
+			manager.addRepository(repository);
+		}
 		return repository;
 	}
 
