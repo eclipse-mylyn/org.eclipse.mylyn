@@ -351,7 +351,7 @@ public class GitHubClient {
 	public GitHubClient setBufferSize(int bufferSize) {
 		if (bufferSize < 1)
 			throw new IllegalArgumentException(
-					"Buffer size must be greater than zero");
+					"Buffer size must be greater than zero"); //$NON-NLS-1$
 
 		this.bufferSize = bufferSize;
 		return this;
@@ -498,9 +498,15 @@ public class GitHubClient {
 			} catch (IOException e) {
 				return e;
 			}
-			return new RequestException(error, code);
-		} else
-			return new IOException(status);
+			if (error != null)
+				return new RequestException(error, code);
+		}
+		String message;
+		if (status != null && status.length() > 0)
+			message = status + " (" + code + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		else
+			message = "Unknown error occurred (" + code + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		return new IOException(message);
 	}
 
 	/**
