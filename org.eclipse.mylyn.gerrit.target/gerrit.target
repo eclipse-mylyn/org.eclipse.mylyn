@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Mylyn Reviews Target" sequenceNumber="87">
+<target name="Mylyn Reviews Target" sequenceNumber="94">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
@@ -9,17 +9,7 @@
 <unit id="org.eclipse.egit.mylyn.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jgit.source.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/egit/updates"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.ide.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit3.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+<repository location="http://download.eclipse.org/egit/updates-1.3"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gerrit.common" version="0.0.0"/>
@@ -50,7 +40,17 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.test_feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/snapshots/weekly/"/>
+<repository location="http://download.eclipse.org/mylyn/snapshots/nightly/tasks/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/snapshots/nightly/commons/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<repository location="http://download.eclipse.org/mylyn/snapshots/nightly/context/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<repository location="http://download.eclipse.org/mylyn/snapshots/nightly/reviews/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.wb.swt.feature.feature.group" version="0.0.0"/>
