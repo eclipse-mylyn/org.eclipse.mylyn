@@ -17,6 +17,11 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 
+
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Project;
+
+import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Project;
 
 /**
@@ -29,15 +34,18 @@ public final class GerritConfiguration {
 
 	private List<Project> projects;
 
+	private Account account;
+
 	GerritConfiguration() {
 		// no-args constructor needed by gson	
 	}
 
-	public GerritConfiguration(GerritConfigX gerritConfig, List<Project> projects) {
+	public GerritConfiguration(GerritConfigX gerritConfig, List<Project> projects, Account account) {
 		Assert.isNotNull(gerritConfig, "gerritConfig must not be null");
 		Assert.isNotNull(projects, "projects must not be null");
 		this.gerritConfig = gerritConfig;
 		this.projects = projects;
+		this.account = account;
 	}
 
 	/**
@@ -52,6 +60,13 @@ public final class GerritConfiguration {
 	 */
 	public List<Project> getProjects() {
 		return projects;
+	}
+
+	/**
+	 * @return the account instance, null if not authenticated
+	 */
+	public Account getAccount() {
+		return account;
 	}
 
 }

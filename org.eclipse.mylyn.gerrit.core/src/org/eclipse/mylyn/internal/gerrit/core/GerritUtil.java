@@ -12,11 +12,16 @@
 
 package org.eclipse.mylyn.internal.gerrit.core;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
@@ -32,6 +37,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
@@ -43,10 +49,13 @@ import com.google.gerrit.common.data.CommentDetail;
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.prettify.common.SparseFileContent;
+import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
+import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.Project;
 import com.google.gerrit.reviewdb.UserIdentity;
 
 /**
@@ -251,4 +260,118 @@ public class GerritUtil {
 		return itemSet;
 	}
 
+	public static String getSshCloneUri(TaskRepository repository, GerritConfiguration config, Project project)
+			throws URISyntaxException {
+		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
+		if (supportedDownloadSchemes.contains(DownloadScheme.SSH)
+				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
+			String sshAddress = config.getGerritConfig().getSshdAddress();
+			Account account = config.getAccount();
+			final StringBuilder sb = new StringBuilder();
+			sb.append("ssh://"); //$NON-NLS-1$
+			if (account != null) {
+				String user = account.getUserName();
+				if (user != null && !user.equals("")) { //$NON-NLS-1$
+					sb.append(user);
+					sb.append("@"); //$NON-NLS-1$
+				}
+			}
+			if (sshAddress.startsWith("*:") || "".equals(sshAddress)) { //$NON-NLS-1$ //$NON-NLS-2$
+				sb.append(new URI(repository.getRepositoryUrl()).getHost());
+			}
+			if (sshAddress.startsWith("*:")) { //$NON-NLS-1$
+				sb.append(sshAddress.substring(1));
+			} else {
+				sb.append(sshAddress);
+			}
+			sb.append("/"); //$NON-NLS-1$
+			sb.append(project.getName());
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public static String getHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
+		if (supportedDownloadSchemes.contains(DownloadScheme.HTTP)
+				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
+			Account account = config.getAccount();
+			final StringBuilder sb = new StringBuilder();
+			String httpAddress;
+			if (config.getGerritConfig().getGitHttpUrl() != null) {
+				httpAddress = config.getGerritConfig().getGitHttpUrl();
+			} else {
+				httpAddress = repository.getUrl();
+			}
+			int schemeEndIndex = httpAddress.indexOf("://") + 3; //$NON-NLS-1$
+			sb.append(httpAddress.substring(0, schemeEndIndex));
+			if (!httpAddress.contains("@") && account != null) { //$NON-NLS-1$
+				String user = account.getUserName();
+				if (user != null && !user.equals("")) { //$NON-NLS-1$
+					sb.append(user);
+					sb.append('@');
+				}
+			}
+			sb.append(httpAddress.substring(schemeEndIndex));
+			if (!httpAddress.substring(schemeEndIndex).endsWith("/")) { //$NON-NLS-1$
+				sb.append("/"); //$NON-NLS-1$
+			}
+			sb.append("p/"); //$NON-NLS-1$
+			sb.append(project.getName());
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public static String getAnonHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
+		if (supportedDownloadSchemes.contains(DownloadScheme.ANON_HTTP)
+				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
+			final StringBuilder sb = new StringBuilder();
+			String httpAddress;
+			if (config.getGerritConfig().getGitHttpUrl() != null) {
+				httpAddress = config.getGerritConfig().getGitHttpUrl();
+			} else {
+				httpAddress = repository.getUrl();
+			}
+			sb.append(httpAddress);
+			if (!httpAddress.endsWith("/")) { //$NON-NLS-1$
+				sb.append("/"); //$NON-NLS-1$
+			}
+			sb.append("p/"); //$NON-NLS-1$
+			sb.append(project.getName());
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public static String getAnonGitCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
+		String gitAddress = config.getGerritConfig().getGitDaemonUrl();
+		if (gitAddress != null
+				&& (supportedDownloadSchemes.contains(DownloadScheme.ANON_GIT) || supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS))) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append(gitAddress);
+			if (!gitAddress.endsWith("/")) { //$NON-NLS-1$
+				sb.append("/"); //$NON-NLS-1$
+			}
+			sb.append(project.getName());
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public static HashMap<DownloadScheme, String> getCloneUris(GerritConfiguration config, TaskRepository repository,
+			Project project) throws URISyntaxException {
+		HashMap<DownloadScheme, String> uriMap = new HashMap<DownloadScheme, String>();
+		uriMap.put(DownloadScheme.SSH, getSshCloneUri(repository, config, project));
+		uriMap.put(DownloadScheme.HTTP, getHttpCloneUri(repository, config, project));
+		uriMap.put(DownloadScheme.ANON_HTTP, getAnonHttpCloneUri(repository, config, project));
+		uriMap.put(DownloadScheme.ANON_GIT, getAnonGitCloneUri(repository, config, project));
+		return uriMap;
+	}
 }

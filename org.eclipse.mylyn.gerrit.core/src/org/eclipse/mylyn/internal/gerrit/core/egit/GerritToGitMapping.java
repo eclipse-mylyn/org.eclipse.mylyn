@@ -28,6 +28,8 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import com.google.gerrit.common.data.GerritConfig;
+import com.google.gerrit.reviewdb.Project;
+import com.google.gerrit.reviewdb.Project.NameKey;
 
 /**
  * @author Sascha Scholz
@@ -116,8 +118,12 @@ public class GerritToGitMapping {
 		return gerritHost;
 	}
 
-	public String getGerritProject() {
+	public String getGerritProjectName() {
 		return gerritProject;
+	}
+
+	public Project getGerritProject() {
+		return new Project(new NameKey(gerritProject));
 	}
 
 	public RemoteConfig getRemote() {

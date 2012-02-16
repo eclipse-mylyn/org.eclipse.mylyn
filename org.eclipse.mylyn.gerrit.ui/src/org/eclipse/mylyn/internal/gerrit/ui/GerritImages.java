@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
@@ -18,31 +19,32 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class GerritImages {
 
 	private static final URL baseURL = GerritUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	public static final String T_VIEW = "eview16"; //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_REVIEW = create("eview16/overlay-review.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_REVIEW = create(T_VIEW, "overlay-review.png"); //$NON-NLS-1$
+	public static final ImageDescriptor GERRIT_OVERLAY = create("gerrit-overlay.png"); //$NON-NLS-1$
 
-	private static ImageDescriptor create(String prefix, String name) {
+	public static final ImageDescriptor GERRIT = create("gerrit.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor GIT_REPOSITORY = create("repository_rep.gif"); //$NON-NLS-1$
+
+	private static ImageDescriptor create(String path) {
 		try {
-			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
+			return ImageDescriptor.createFromURL(makeIconFileURL(path));
 		} catch (MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}
 
-	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+	private static URL makeIconFileURL(String path) throws MalformedURLException {
 		if (baseURL == null) {
 			throw new MalformedURLException();
 		}
-
-		StringBuffer buffer = new StringBuffer(prefix);
-		buffer.append('/');
-		buffer.append(name);
-		return new URL(baseURL, buffer.toString());
+		return new URL(baseURL, path);
 	}
 }

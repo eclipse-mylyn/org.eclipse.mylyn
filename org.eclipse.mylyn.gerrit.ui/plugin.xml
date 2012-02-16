@@ -22,7 +22,7 @@
             anonymous="false"
             label="Eclipse.org Reviews"
             repositoryKind="org.eclipse.mylyn.gerrit"
-            urlRepository="https://git.eclipse.org/r">
+            urlRepository="https://git.eclipse.org/r/">
       </repository>
    </extension>
 
@@ -33,6 +33,7 @@
             id="org.eclipse.mylyn.gerrit.ui.pageFactory">
       </pageFactory>   
    </extension>
+
    <extension
          point="org.eclipse.mylyn.commons.workbench.urlHandlers">
       <handler
@@ -40,4 +41,17 @@
             id="org.eclipse.mylyn.gerrit.ui.urlHandler.UrlHandler">
       </handler>
    </extension>
+
+   <extension
+         point="org.eclipse.egit.ui.cloneSourceProvider">
+      <source
+            hasFixLocation="true"
+            icon="icons/gerrit.png"
+            label="Gerrit">
+      </source>
+      <repositorySearchPage
+            class="org.eclipse.mylyn.internal.gerrit.ui.egit.GerritRepositorySearchPage">
+      </repositorySearchPage>
+   </extension>
+   
 </plugin>

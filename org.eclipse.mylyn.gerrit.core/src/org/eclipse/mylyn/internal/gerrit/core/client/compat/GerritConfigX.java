@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
@@ -17,13 +18,20 @@ import com.google.gerrit.common.data.GerritConfig;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class GerritConfigX extends GerritConfig {
 
 	private List<CommentLink> commentLinks;
 
+	private String gitHttpUrl;
+
 	public List<CommentLink> getCommentLinks2() {
 		return commentLinks;
+	}
+
+	public String getGitHttpUrl() {
+		return gitHttpUrl;
 	}
 
 }

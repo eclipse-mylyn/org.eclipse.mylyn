@@ -149,6 +149,14 @@ public class GerritClient {
 		return false;
 	}
 
+	public boolean isNotSignedInException(Throwable exception) {
+		if (exception instanceof GerritException) {
+			return ((GerritException) exception).getCode() == -32603
+					&& "not signed in".equalsIgnoreCase(((GerritException) exception).getMessage());
+		}
+		return false;
+	}
+
 	// XXX belongs in GerritConnector
 	public static GerritAuthenticationState authStateFromString(String token) {
 		try {
@@ -630,7 +638,15 @@ public class GerritClient {
 		configRefreshed = true;
 		GerritConfigX gerritConfig = refreshGerritConfig(monitor);
 		List<Project> projects = getVisibleProjects(monitor, gerritConfig);
-		config = new GerritConfiguration(gerritConfig, projects);
+		Account account = null;
+		try {
+			account = getAccount(monitor);
+		} catch (GerritException e) {
+			if (!isNotSignedInException(e)) {
+				throw e;
+			}
+		}
+		config = new GerritConfiguration(gerritConfig, projects, account);
 		configurationChanged(config);
 		return config;
 	}

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sascha Scholz (SAP) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.egit;
@@ -23,7 +24,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
+import org.eclipse.egit.ui.internal.clone.AbstractGitCloneWizard;
+import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
+import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
+import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
+import org.eclipse.egit.ui.internal.provisional.wizards.NoRepositoryInfoException;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -35,14 +42,22 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.swt.widgets.Shell;
 
+import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.Project;
 
 /**
  * Provides common UI utilities.
  * 
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class EGitUiUtil {
 
@@ -92,10 +107,31 @@ public class EGitUiUtil {
 			// commit was already fetched
 			return EGitUiUtil.getRevCommit(repository, patchSet);
 		} catch (MissingObjectException e) {
-			// need to getch it
+			// need to fetch it
 			RefSpec refSpec = new RefSpec(patchSet.getRefName() + ":FETCH_HEAD"); //$NON-NLS-1$
 			return fetchRefSpec(monitor, repository, remote, refSpec);
 		}
+	}
+
+	public static int openCloneRepositoryWizard(Shell shell, final TaskRepository repository, final Project project) {
+		AbstractGitCloneWizard cloneWizard = new GitCloneWizard(new IRepositorySearchResult() {
+
+			@Override
+			public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
+				GitRepositoryInfo gitRepositoryInfo;
+				try {
+					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).getConfiguration();
+					gitRepositoryInfo = new GitRepositoryInfo(GerritUtil.getCloneUris(config, repository, project).get(
+							DownloadScheme.SSH));
+				} catch (URISyntaxException e) {
+					throw new NoRepositoryInfoException(e.getMessage(), e);
+				}
+				return gitRepositoryInfo;
+			}
+		});
+		WizardDialog dlg = new WizardDialog(shell, cloneWizard);
+		dlg.setHelpAvailable(true);
+		return dlg.open();
 	}
 
 }

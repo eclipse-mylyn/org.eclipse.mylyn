@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
 import org.eclipse.egit.ui.internal.fetch.FetchGerritChangeWizard;
 import org.eclipse.emf.common.notify.Notification;
@@ -46,7 +45,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
@@ -57,6 +55,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
@@ -103,6 +102,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 
 /**
  * @author Steffen Pingel
+ * @author Sascha Scholz
  */
 public class PatchSetSection extends AbstractGerritSection {
 
@@ -416,11 +416,8 @@ public class PatchSetSection extends AbstractGerritSection {
 				boolean create = MessageDialog.openQuestion(getShell(), "Clone Git Repository",
 						"The referenced Git repository was not found in the workspace. Clone Git repository?");
 				if (create) {
-					String uri = NLS.bind("{0}/p/{1}", getTaskEditorPage().getTaskRepository(),
-							mapper.getGerritProject());
-					WizardDialog dlg = new WizardDialog(WorkbenchUtil.getShell(), new GitCloneWizard(uri));
-					dlg.setHelpAvailable(false);
-					int response = dlg.open();
+					int response = EGitUiUtil.openCloneRepositoryWizard(getShell(),
+							getTaskEditorPage().getTaskRepository(), mapper.getGerritProject());
 					if (response == Window.OK && mapper.find() != null) {
 						return mapper;
 					}
@@ -430,7 +427,7 @@ public class PatchSetSection extends AbstractGerritSection {
 						getTask().getTaskKey());
 				String reason = NLS.bind(
 						"No remote config found that has fetch URL with host ''{0}'' and path matching ''{1}''",
-						mapper.getGerritHost(), mapper.getGerritProject());
+						mapper.getGerritHost(), mapper.getGerritProjectName());
 				GerritCorePlugin.logError(message, null);
 				ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
 						GerritUiPlugin.PLUGIN_ID, reason));
