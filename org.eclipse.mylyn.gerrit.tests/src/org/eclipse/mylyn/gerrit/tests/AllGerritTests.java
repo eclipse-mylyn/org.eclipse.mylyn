@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
@@ -44,6 +45,7 @@ public class AllGerritTests {
 		for (GerritFixture fixture : GerritFixture.ALL) {
 			fixture.createSuite(suite);
 			fixture.add(GerritClientTest.class);
+			fixture.add(GerritConnectorTest.class);
 			fixture.done();
 		}
 	}

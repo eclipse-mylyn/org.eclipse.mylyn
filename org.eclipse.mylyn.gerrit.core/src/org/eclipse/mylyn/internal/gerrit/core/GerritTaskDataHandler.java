@@ -69,6 +69,13 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		return data;
 	}
 
+	public TaskData createPartialTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) {
+		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
+				repository.getRepositoryUrl(), taskId);
+		GerritQueryResultSchema.getDefault().initialize(data);
+		return data;
+	}
+
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
 		return new TaskAttributeMapper(repository);
@@ -177,7 +184,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public void updateTaskData(TaskRepository repository, TaskData data, ChangeInfo changeInfo) {
-		GerritTaskSchema schema = GerritTaskSchema.getDefault();
+		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
 		setAttributeValue(data, schema.KEY, changeInfo.getKey().abbreviate());
 		setAttributeValue(data, schema.PROJECT, changeInfo.getProject().getName());
 		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
