@@ -47,6 +47,15 @@
       </group>
    </connectorCategory>
    <connectorCategory
+         description="Review integration."
+         id="org.eclipse.mylyn.discovery.directory.categories.CodeReview"
+         name="Code Review"
+         relevance="20">
+      <group
+            id="certified">
+      </group>
+   </connectorCategory>
+   <connectorCategory
          description="Development tools for code analysis, coverage, metrics and more."
          id="org.eclipse.mylyn.discovery.directory.categories.Utilities"
          name="Utilities"
@@ -89,7 +98,7 @@
             license="%connectorDescriptor.license.trac"
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4"
+            siteUrl="http://download.eclipse.org/mylyn/releases/3.7"
             statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.trac">
          <icon
                image32="images/trac32.png"
@@ -141,6 +150,26 @@
                screenshot="images/foglyn-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.foglyn"
                url="http://www.foglyn.com/">
+         </overview>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.CodeReview"
+            description="%connectorDescriptor.description.gerrit"
+            groupId="extra"
+            id="org.eclipse.mylyn.gerrit.feature"
+            kind="task"
+            license="%connectorDescriptor.license.gerrit"
+            name="%connectorDescriptor.name.gerrit"
+            provider="%connectorDescriptor.provider.gerrit"
+            siteUrl="http://download.eclipse.org/mylyn/releases/3.7"
+            statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.gerrit">
+         <icon
+               image32="images/gerrit32.png">
+         </icon>
+         <overview
+               screenshot="images/gerrit-screenshot-320x240.png"
+               summary="%connectorDescriptor.overview.summary.gerrit"
+               url="http://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
 	</extension>
