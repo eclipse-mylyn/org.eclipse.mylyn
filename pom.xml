@@ -46,6 +46,7 @@
   <modules>
     <module>org.eclipse.mylyn.commons-feature</module>
     <module>org.eclipse.mylyn.commons-site</module>
+    <module>org.eclipse.mylyn.commons.branding</module>
     <module>org.eclipse.mylyn.commons.core</module>
     <module>org.eclipse.mylyn.commons.net</module>
     <module>org.eclipse.mylyn.commons.screenshots</module>
