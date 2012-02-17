@@ -1182,6 +1182,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 	@Override
 	public boolean isPageComplete() {
+		setMessage(""); //$NON-NLS-1$
 		if (daysText != null) {
 			String days = daysText.getText();
 			if (days.length() > 0) {
