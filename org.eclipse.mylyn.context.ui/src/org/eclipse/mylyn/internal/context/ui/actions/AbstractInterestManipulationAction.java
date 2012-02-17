@@ -97,7 +97,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 								.getActivePart()
 								.getSite()
 								.getSelectionProvider()
-								.setSelection(null);
+								.setSelection(StructuredSelection.EMPTY);
 					} catch (Exception e) {
 						// ignore
 					}
