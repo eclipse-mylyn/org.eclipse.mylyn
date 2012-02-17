@@ -33,6 +33,7 @@ public class AllContextTests {
 		suite.addTestSuite(ContextTest.class);
 		suite.addTestSuite(InteractionEventTest.class);
 		suite.addTestSuite(ShadowsBridgeTest.class);
+		suite.addTestSuite(ContextEditorManagerTest.class);
 		return suite;
 	}
 
