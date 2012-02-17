@@ -172,8 +172,10 @@ public class TasksUiInternal {
 			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
 					IHandlerService.class);
 			EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
-			// update enabled state in case something has changed (ProxyHandler caches state)
-			discoveryWizardCommand.setEnabled(evaluationContext);
+			if (!discoveryWizardCommand.isEnabled()) {
+				// update enabled state in case something has changed (ProxyHandler caches state)
+				discoveryWizardCommand.setEnabled(evaluationContext);
+			}
 		}
 		return discoveryWizardCommand;
 	}

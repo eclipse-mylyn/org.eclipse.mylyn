@@ -2130,12 +2130,14 @@
             class="org.eclipse.mylyn.internal.tasks.ui.commands.ShowTasksConnectorDiscoveryWizardCommandHandler"
             commandId="org.eclipse.mylyn.tasks.ui.discoveryWizardCommand">
          <enabledWhen>
+			<with variable="org.eclipse.core.runtime.Platform">
          	<and>
 	     		<test
 	     			property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.mylyn.discovery.ui"/>
 	     		<test
 	     			property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.equinox.p2.repository"/>
 	     	</and>
+	     	</with>
          </enabledWhen>
       </handler>
    </extension>    
