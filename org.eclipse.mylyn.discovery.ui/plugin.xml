@@ -24,10 +24,12 @@
       <handler
             class="org.eclipse.mylyn.internal.discovery.ui.commands.ShowConnectorDiscoveryWizardCommandHandler"
             commandId="org.eclipse.mylyn.discovery.ui.discoveryWizardCommand">
-         <enabledWhen>
-     		<test
-     			property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.equinox.p2.repository"/>
-         </enabledWhen>
+		<enabledWhen>
+			<with variable="org.eclipse.core.runtime.Platform">
+				<test
+					property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.equinox.p2.repository"/>
+			</with>
+		</enabledWhen>
       </handler>
    </extension>
 
