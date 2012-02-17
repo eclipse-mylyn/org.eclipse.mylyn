@@ -84,7 +84,6 @@
     <module>org.eclipse.mylyn.monitor.core</module>
     <module>org.eclipse.mylyn.monitor.tests</module>
     <module>org.eclipse.mylyn.monitor.ui</module>
-    <module>org.eclipse.mylyn</module>
     <module>stubs</module>
   </modules>
 </project>
