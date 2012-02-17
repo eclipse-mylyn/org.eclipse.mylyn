@@ -12,14 +12,11 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
-
-
-import com.google.gerrit.reviewdb.Account;
-import com.google.gerrit.reviewdb.Project;
 
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Project;
@@ -59,7 +56,11 @@ public final class GerritConfiguration {
 	 * @return the list of visible Gerrit projects, never null
 	 */
 	public List<Project> getProjects() {
-		return projects;
+		if (projects != null) {
+			return projects;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	/**
