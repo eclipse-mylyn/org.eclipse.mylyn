@@ -13,7 +13,7 @@
       id="org.eclipse.mylyn.test_feature"
       label="%featureName"
       version="3.7.0.qualifier"
-      plugin="org.eclipse.mylyn">
+      plugin="org.eclipse.mylyn.tasks.core">
 
    <description url="http://eclipse.org/mylyn">
       %description
