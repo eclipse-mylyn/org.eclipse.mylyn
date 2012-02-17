@@ -40,12 +40,7 @@ public class NotificationEnvironment {
 	}
 
 	public Version getFrameworkVersion() {
-		Bundle bundle = Platform.getBundle("org.eclipse.mylyn"); //$NON-NLS-1$
-		if (bundle != null) {
-			return CoreUtil.getVersion(bundle);
-		} else {
-			return Version.emptyVersion;
-		}
+		return CoreUtil.getFrameworkVersion();
 	}
 
 	public Version getPlatformVersion() {

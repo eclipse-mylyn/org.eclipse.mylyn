@@ -39,6 +39,8 @@ public class CoreUtil {
 		}
 	}
 
+	private static final String FRAMEWORK_VERSION = "3.7.0"; //$NON-NLS-1$
+
 	/**
 	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will
 	 * contains a comma separated list of contained elements.
@@ -206,6 +208,15 @@ public class CoreUtil {
 			return secondSeparator - 1;
 		}
 		return lastDigit;
+	}
+
+	/**
+	 * Returns the running Mylyn version without the qualifier.
+	 * 
+	 * @since 3.7
+	 */
+	public static Version getFrameworkVersion() {
+		return new Version(FRAMEWORK_VERSION);
 	}
 
 }

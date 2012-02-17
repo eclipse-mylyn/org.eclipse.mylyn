@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.notifications.core.IFilterable;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
@@ -106,7 +107,7 @@ public class NotificationEnvironmentTest extends TestCase {
 			assertTrue("Expected value > 3.6, got " + frameworkVersion,
 					new VersionRange("3.6.0").isIncluded(frameworkVersion));
 		} else {
-			assertEquals(Version.emptyVersion, frameworkVersion);
+			assertEquals(CoreUtil.getFrameworkVersion(), frameworkVersion);
 		}
 	}
 
