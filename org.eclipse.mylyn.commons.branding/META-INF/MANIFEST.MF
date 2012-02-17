@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.commons.branding;singleton:=true
-Bundle-Version: 3.7.0.qualifier
-Bundle-Vendor: %Bundle-Vendor
-Bundle-Localization: plugin
