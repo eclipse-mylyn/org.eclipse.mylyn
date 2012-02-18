@@ -474,7 +474,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		return readEditorMemento(sourceHandle) != null;
 	}
 
-	private boolean isEnabled() {
+	public boolean isEnabled() {
 		return enabled;
 	}
 
