@@ -45,6 +45,8 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 
 	private IFile fileB;
 
+	private IFile fileC;
+
 	private IWorkbenchPage page;
 
 	Comparator<IEditorReference> comparator = new Comparator<IEditorReference>() {
@@ -58,32 +60,31 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 	};
 
 	public void testCloseAllOnDeactivate() throws Exception {
-		IEditorReference[] refs = page.openEditors(new IEditorInput[] { new FileEditorInput(fileA) },
-				new String[] { editor.getId() }, 0);
+		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA) };
+		IEditorReference[] refs = openEditors(inputs);
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
 		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
 		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
 	}
 
-	// test fails when run as part of AllContextTests
-//	public void testCloseAllRestore() throws Exception {
-//		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA), new FileEditorInput(fileB) };
-//		IEditorReference[] refs = page.openEditors(inputs, new String[] { editor.getId(), editor.getId() },
-//				IWorkbenchPage.MATCH_NONE);
-//		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
-//
-//		//ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
-//		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
-//		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
-//
-//		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
-//		assertEquals(Arrays.asList(inputs), asInputList(page.getEditorReferences()));
-//	}
+	public void testCloseAllRestore() throws Exception {
+		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA), new FileEditorInput(fileB),
+				new FileEditorInput(fileC) };
+		IEditorReference[] refs = openEditors(inputs);
+		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
+
+		//ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
+		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
+
+		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
+		assertEquals(Arrays.asList(inputs), asInputList(page.getEditorReferences()));
+	}
 
 	public void testCloseAllRestoreContextAwareEditor() throws Exception {
 		FileEditorInput input = new FileEditorInput(fileA);
-		IEditorReference[] refs = page.openEditors(new IEditorInput[] { input, new FileEditorInput(fileB) {
+		IEditorInput[] inputs = new IEditorInput[] { input, new FileEditorInput(fileB) {
 			@Override
 			public Object getAdapter(@SuppressWarnings("rawtypes")
 			Class adapter) {
@@ -97,7 +98,8 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 				}
 				return super.getAdapter(adapter);
 			}
-		} }, new String[] { editor.getId(), editor.getId() }, 0);
+		} };
+		IEditorReference[] refs = openEditors(inputs);
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
 		//ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
@@ -124,6 +126,17 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		return list;
 	}
 
+	private IEditorReference[] openEditors(IEditorInput[] inputs) throws Exception {
+		String[] ids = new String[inputs.length];
+		Arrays.fill(ids, editor.getId());
+		IEditorReference[] refs = page.openEditors(inputs, ids, IWorkbenchPage.MATCH_NONE);
+		// realize editors to ensure they are persisted
+		for (IEditorReference ref : refs) {
+			ref.getEditor(true);
+		}
+		return refs;
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -136,10 +149,17 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		fileB = project.getProject().getFile("b.txt");
 		fileB.create(new ByteArrayInputStream("abc".getBytes()), false, null);
 
+		fileC = project.getProject().getFile("c.txt");
+		fileC.create(new ByteArrayInputStream("abc".getBytes()), false, null);
+
 		// ensure that EditorInteractionMonitor does not close fileB due to lack of interest
 		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(fileB);
 		InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				bridge.getHandleIdentifier(fileB), "part");
+		ContextCore.getContextManager().processInteractionEvent(selectionEvent);
+
+		selectionEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
+				bridge.getHandleIdentifier(fileC), "part");
 		ContextCore.getContextManager().processInteractionEvent(selectionEvent);
 
 		editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fileA.getName());
