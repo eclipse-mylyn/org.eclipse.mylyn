@@ -624,14 +624,14 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		int longDescsSize = longDescs.size() - 1;
 		commentNum = 1;
 		if (longDescsSize == 0) {
-			addDescription(longDescs.get(0).commentText);
+			addDescription(longDescs.get(0));
 		} else if (longDescsSize == 1) {
 			if (longDescs.get(0).createdTimeStamp.compareTo(longDescs.get(1).createdTimeStamp) <= 0) {
 				// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
-				addDescription(longDescs.get(0).commentText);
+				addDescription(longDescs.get(0));
 				addComment(longDescs.get(1));
 			} else {
-				addDescription(longDescs.get(1).commentText);
+				addDescription(longDescs.get(1));
 				addComment(longDescs.get(0));
 			}
 		} else if (longDescsSize > 1) {
@@ -640,7 +640,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			String created_n = longDescs.get(longDescsSize).createdTimeStamp;
 			if (created_0.compareTo(created_1) <= 0 && created_0.compareTo(created_n) < 0) {
 				// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
-				addDescription(longDescs.get(0).commentText);
+				addDescription(longDescs.get(0));
 
 				if (created_1.compareTo(created_n) < 0) {
 					for (int i = 1; i <= longDescsSize; i++) {
@@ -652,7 +652,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					}
 				}
 			} else {
-				addDescription(longDescs.get(longDescsSize).commentText);
+				addDescription(longDescs.get(longDescsSize));
 				if (created_0.compareTo(created_1) < 0) {
 					for (int i = 0; i < longDescsSize; i++) {
 						addComment(longDescs.get(i));
@@ -666,10 +666,23 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 	}
 
-	private void addDescription(String commentText) {
+	private void addDescription(TaskComment comment) {
 		TaskAttribute attrDescription = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
 				BugzillaAttribute.LONG_DESC);
-		attrDescription.setValue(commentText);
+		TaskAttribute idAttribute = attrDescription.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
+		TaskAttribute isprivateAttribute = attrDescription.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		attrDescription.setValue(comment.commentText);
+		idAttribute.setValue(Integer.toString(comment.id));
+		if (comment.isPrivate != null) {
+			isprivateAttribute.setValue(comment.isPrivate);
+		}
+		if (!useIsPrivate) {
+			if ("1".equals(comment.isPrivate)) { //$NON-NLS-1$
+				TaskRepository taskRepository = mapper.getTaskRepository();
+				taskRepository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, "true"); //$NON-NLS-1$
+				useIsPrivate = true;
+			}
+		}
 	}
 
 	private void addComment(TaskComment comment) {
@@ -690,8 +703,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				TaskRepository taskRepository = mapper.getTaskRepository();
 				taskRepository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, "true"); //$NON-NLS-1$
 				useIsPrivate = true;
+				taskComment.setIsPrivate("1".equals(comment.isPrivate)); //$NON-NLS-1$
+			} else {
+				taskComment.setIsPrivate(null);
 			}
-			taskComment.setIsPrivate(null);
 		}
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrTimestamp.setValue(comment.createdTimeStamp);

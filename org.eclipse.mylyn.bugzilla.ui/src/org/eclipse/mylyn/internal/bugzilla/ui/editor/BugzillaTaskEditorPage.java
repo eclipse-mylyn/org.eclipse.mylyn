@@ -75,6 +75,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.keys.IBindingService;
 
 /**
@@ -120,6 +121,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
 		boolean hasPartComments = false;
 		boolean hasPartNewComment = false;
+		boolean hasPartDescription = false;
 		// remove unnecessary default editor parts
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
@@ -138,6 +140,13 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_NEW_COMMENT)) {
 				descriptors.remove(taskEditorPartDescriptor);
 				hasPartNewComment = true;
+				break;
+			}
+		}
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_DESCRIPTION)) {
+				descriptors.remove(taskEditorPartDescriptor);
+				hasPartDescription = true;
 				break;
 			}
 		}
@@ -170,6 +179,20 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						}
 					}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_PLANNING)); //$NON-NLS-1$
 				}
+			}
+			if (hasPartDescription) {
+				descriptors.add(new TaskEditorPartDescriptor(ID_PART_DESCRIPTION) {
+					@Override
+					public AbstractTaskEditorPart createPart() {
+						BugzillaTaskEditorDescriptionPart part = new BugzillaTaskEditorDescriptionPart();
+						if (getModel().getTaskData().isNew()) {
+							part.setExpandVertically(true);
+							part.setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
+						}
+						return part;
+					}
+				}.setPath(PATH_COMMENTS));
+
 			}
 			if (hasPartComments) {
 				descriptors.add(new TaskEditorPartDescriptor(ID_PART_COMMENTS) {

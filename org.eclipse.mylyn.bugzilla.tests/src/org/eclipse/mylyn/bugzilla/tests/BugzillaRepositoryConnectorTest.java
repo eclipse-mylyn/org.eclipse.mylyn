@@ -1479,4 +1479,189 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		response = BugzillaFixture.current().submitTask(taskData, client);
 	}
 
+	public void testPrivateDescription() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test private comments";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the private comments task";
+			}
+
+		};
+		if (BugzillaFixture.current().equals(BugzillaFixture.BUGS_3_4)) {
+			return;
+		}
+		final TaskData[] taskDataNew = new TaskData[1];
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute description = taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey());
+		TaskAttribute isPrivateAttribute = description.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		assertEquals("0", isPrivateAttribute.getValue());
+		TaskAttribute idAttribute = description.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
+
+		String value = idAttribute.getValue();
+		TaskAttribute definedIsPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
+				+ value);
+		if (definedIsPrivate == null) {
+			definedIsPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+		}
+		TaskAttribute isPrivate = description.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+		if (isPrivate == null) {
+			isPrivate = description.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+		}
+		definedIsPrivate.setValue("1"); //$NON-NLS-1$
+		isPrivate.setValue("1"); //$NON-NLS-1$ 
+
+		model.attributeChanged(description);
+		changed.clear();
+		changed.add(description);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		description = taskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey());
+		isPrivateAttribute = description.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		assertEquals("1", isPrivateAttribute.getValue());
+	}
+
+	public void testPrivateComments() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test private comments";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the private comments task";
+			}
+
+		};
+		if (BugzillaFixture.current().equals(BugzillaFixture.BUGS_3_4)) {
+			return;
+		}
+
+		final TaskData[] taskDataNew = new TaskData[1];
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+
+		TaskAttribute newComment = taskData.getRoot().getAttribute(BugzillaAttribute.NEW_COMMENT.getKey());
+		newComment.setValue("New Comment");
+
+		model.attributeChanged(newComment);
+		changed.clear();
+		changed.add(newComment);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute comment1 = taskData.getRoot().getAttribute("task.common.comment-1");
+		TaskAttribute isPrivateAttribute = comment1.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		assertEquals("0", isPrivateAttribute.getValue());
+
+		String value = comment1.getValue();
+		TaskAttribute definedIsPrivate = comment1.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
+				+ value);
+		if (definedIsPrivate == null) {
+			definedIsPrivate = comment1.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE + value);
+		}
+		TaskAttribute isPrivate = comment1.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+		if (isPrivate == null) {
+			isPrivate = comment1.createAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + value);
+		}
+		definedIsPrivate.setValue("1"); //$NON-NLS-1$
+		isPrivate.setValue("1"); //$NON-NLS-1$ 
+
+		model.attributeChanged(comment1);
+		changed.clear();
+		changed.add(comment1);
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		comment1 = taskData.getRoot().getAttribute("task.common.comment-1");
+		isPrivateAttribute = comment1.getAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+		assertEquals("1", isPrivateAttribute.getValue());
+	}
+
 }

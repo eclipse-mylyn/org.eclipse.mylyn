@@ -1551,16 +1551,30 @@ public class BugzillaClient {
 						String valueID = a.getValue();
 						TaskAttribute definedIsPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
 								+ valueID);
-						if (definedIsPrivate != null) {
+						TaskAttribute isPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + valueID);
+						if (definedIsPrivate != null && isPrivate != null) {
 							fields.put(definedIsPrivate.getId(), new NameValuePair(definedIsPrivate.getId(),
 									definedIsPrivate.getValue() != null ? definedIsPrivate.getValue() : "")); //$NON-NLS-1$
-						}
-						TaskAttribute isPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE + valueID);
-						if (isPrivate != null) {
 							fields.put(isPrivate.getId(), new NameValuePair(isPrivate.getId(),
 									isPrivate.getValue() != null ? isPrivate.getValue() : "")); //$NON-NLS-1$
 						}
+						// Don't post comments ("task.common.comment-")
 						continue;
+					} else if (id.compareTo(BugzillaAttribute.LONG_DESC.getKey()) == 0) {
+						TaskAttribute idAttribute = a.getAttribute("id"); //$NON-NLS-1$
+						if (idAttribute != null) {
+							String valueID = idAttribute.getValue();
+							TaskAttribute definedIsPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_DEFINED_ISPRIVATE
+									+ valueID);
+							TaskAttribute isPrivate = a.getAttribute(IBugzillaConstants.BUGZILLA_PREFIX_ISPRIVATE
+									+ valueID);
+							if (definedIsPrivate != null && isPrivate != null) {
+								fields.put(definedIsPrivate.getId(), new NameValuePair(definedIsPrivate.getId(),
+										definedIsPrivate.getValue() != null ? definedIsPrivate.getValue() : "")); //$NON-NLS-1$
+								fields.put(isPrivate.getId(), new NameValuePair(isPrivate.getId(),
+										isPrivate.getValue() != null ? isPrivate.getValue() : "")); //$NON-NLS-1$
+							}
+						}
 					} else if (id.startsWith("task.common.")) { //$NON-NLS-1$
 						// Don't post any remaining non-bugzilla specific attributes
 						continue;

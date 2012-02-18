@@ -268,6 +268,10 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_INSIDER_GROUP = "bugzilla.insider.group"; //$NON-NLS-1$
 
+	public static final String BUGZILLA_DESCRIPTION_ID = "id"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_DESCRIPTION_IS_PRIVATE = "isprivate"; //$NON-NLS-1$
+
 	public static final String BUGZILLA_PREFIX_DEFINED_ISPRIVATE = "defined_isprivate_"; //$NON-NLS-1$
 
 	public static final String BUGZILLA_PREFIX_ISPRIVATE = "isprivate_"; //$NON-NLS-1$
