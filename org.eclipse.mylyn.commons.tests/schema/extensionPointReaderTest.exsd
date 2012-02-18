@@ -17,9 +17,10 @@
          </appinfo>
       </annotation>
       <complexType>
-         <sequence>
-            <element ref="extensionElement" minOccurs="1" maxOccurs="unbounded"/>
-         </sequence>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="extensionElement"/>
+            <element ref="extensionElementWithPriority"/>
+         </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -73,7 +74,36 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="extensionPriority" type="string">
+      </complexType>
+   </element>
+
+   <element name="extensionElementWithPriority">
+      <complexType>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$ExtensionPointReaderExtension"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="testFilterAttribute" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="priority" type="string">
             <annotation>
                <documentation>
                   

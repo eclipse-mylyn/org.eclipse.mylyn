@@ -33,22 +33,20 @@ import org.eclipse.osgi.util.NLS;
  */
 public class ExtensionPointReader<T> {
 
-	private static final String ATTRIBUTE_EXTENSION_PRIORITY = "extensionPriority"; //$NON-NLS-1$
-
 	private static final class PriorityComparator implements Comparator<IConfigurationElement> {
 
 		public int compare(IConfigurationElement arg0, IConfigurationElement arg1) {
 			double p0 = 0;
 			double p1 = 0;
 			try {
-				String priorityAttribute = arg0.getAttribute(ATTRIBUTE_EXTENSION_PRIORITY);
+				String priorityAttribute = arg0.getAttribute(DEFAULT_ATTRIBUTE_ID_PRIORITY);
 				if (priorityAttribute != null) {
 					p0 = Double.parseDouble(priorityAttribute);
 				}
 			} catch (NumberFormatException e) {
 			}
 			try {
-				String priorityAttribute = arg1.getAttribute(ATTRIBUTE_EXTENSION_PRIORITY);
+				String priorityAttribute = arg1.getAttribute(DEFAULT_ATTRIBUTE_ID_PRIORITY);
 				if (priorityAttribute != null) {
 					p1 = Double.parseDouble(priorityAttribute);
 				}
@@ -61,34 +59,39 @@ public class ExtensionPointReader<T> {
 			}
 			return 0;
 		}
+
 	}
+
+	private static final String DEFAULT_ATTRIBUTE_ID_CLASS = "class"; //$NON-NLS-1$
+
+	private static final String DEFAULT_ATTRIBUTE_ID_PRIORITY = "priority"; //$NON-NLS-1$
 
 	private static final PriorityComparator PRIORITY_COMPARATOR = new PriorityComparator();
 
-	private final String extensionId;
-
-	private final String elementId;
+	private String classAttributeId;
 
 	private final Class<T> clazz;
 
-	private String classAttributeId;
+	private final String elementId;
 
-	private final String pluginId;
-
-	private final List<T> items;
+	private final String extensionId;
 
 	private String filterAttributeId;
 
 	private String filterAttributeValue;
 
-	public ExtensionPointReader(String pluginId, String extensionId, String elementId, Class<T> clazz,
-			String filterAttributeId, String filterAttributeValue) {
-		this(pluginId, extensionId, elementId, clazz);
-		this.filterAttributeId = filterAttributeId;
-		this.filterAttributeValue = filterAttributeValue;
-	}
+	private final List<T> items;
+
+	private final String pluginId;
+
+	private String priorityAttributeId;
 
 	public ExtensionPointReader(String pluginId, String extensionId, String elementId, Class<T> clazz) {
+		this(pluginId, extensionId, elementId, clazz, null, null);
+	}
+
+	public ExtensionPointReader(String pluginId, String extensionId, String elementId, Class<T> clazz,
+			String filterAttributeId, String filterAttributeValue) {
 		Assert.isNotNull(pluginId);
 		Assert.isNotNull(extensionId);
 		Assert.isNotNull(elementId);
@@ -97,24 +100,35 @@ public class ExtensionPointReader<T> {
 		this.extensionId = extensionId;
 		this.elementId = elementId;
 		this.clazz = clazz;
-		this.classAttributeId = "class"; //$NON-NLS-1$
+		this.filterAttributeId = filterAttributeId;
+		this.filterAttributeValue = filterAttributeValue;
+		this.classAttributeId = DEFAULT_ATTRIBUTE_ID_CLASS;
+		this.priorityAttributeId = DEFAULT_ATTRIBUTE_ID_PRIORITY;
 		this.items = new ArrayList<T>();
 	}
 
-	public final String getPluginId() {
-		return pluginId;
+	public final String getClassAttributeId() {
+		return classAttributeId;
 	}
 
 	public final String getElementId() {
 		return elementId;
 	}
 
-	public final void setClassAttributeId(String classAttributeId) {
-		this.classAttributeId = classAttributeId;
+	public T getItem() {
+		return (items.isEmpty()) ? null : items.get(0);
 	}
 
-	public final String getClassAttributeId() {
-		return classAttributeId;
+	public List<T> getItems() {
+		return new ArrayList<T>(items);
+	}
+
+	public final String getPluginId() {
+		return pluginId;
+	}
+
+	public String getPriorityAttributeId() {
+		return priorityAttributeId;
 	}
 
 	public IStatus read() {
@@ -150,32 +164,26 @@ public class ExtensionPointReader<T> {
 		return result;
 	}
 
-	/**
-	 * Determines whether the element should be instantiated by this ExtensionPointReader. This implementation checks
-	 * whether the element defines an attribute with id and value matching filterAttributeId and filterAttributeValue.
-	 * If filterAttributeValue is the empty string, an element is also considered to match if it does not define the
-	 * attribute.
-	 * <p>
-	 * Subclasses may override.
-	 */
-	protected boolean shouldRead(IConfigurationElement element) {
-		return filterAttributeId == null || filterAttributeValue == null
-				|| filterAttributeValue.equals(element.getAttribute(filterAttributeId))
-				|| (filterAttributeValue.length() == 0 && element.getAttribute(filterAttributeId) == null);
+	public final void setClassAttributeId(String classAttributeId) {
+		this.classAttributeId = classAttributeId;
+	}
+
+	public void setFilterAttributeId(String filterAttributeId) {
+		this.filterAttributeId = filterAttributeId;
+	}
+
+	public void setFilterAttributeValue(String filterAttributeValue) {
+		this.filterAttributeValue = filterAttributeValue;
+	}
+
+	public void setPriorityAttributeId(String priorityAttributeId) {
+		this.priorityAttributeId = priorityAttributeId;
 	}
 
 	protected void handleResult(IStatus result) {
 		if (!result.isOK()) {
 			StatusHandler.log(result);
 		}
-	}
-
-	public T getItem() {
-		return (items.isEmpty()) ? null : items.get(0);
-	}
-
-	public List<T> getItems() {
-		return new ArrayList<T>(items);
 	}
 
 	protected T readElement(IConfigurationElement element, MultiStatus result) {
@@ -193,6 +201,20 @@ public class ExtensionPointReader<T> {
 					"Failed to load for extension contributed by {0}", getPluginId()), e)); //$NON-NLS-1$
 		}
 		return null;
+	}
+
+	/**
+	 * Determines whether the element should be instantiated by this ExtensionPointReader. This implementation checks
+	 * whether the element defines an attribute with id and value matching filterAttributeId and filterAttributeValue.
+	 * If filterAttributeValue is the empty string, an element is also considered to match if it does not define the
+	 * attribute.
+	 * <p>
+	 * Subclasses may override.
+	 */
+	protected boolean shouldRead(IConfigurationElement element) {
+		return filterAttributeId == null || filterAttributeValue == null
+				|| filterAttributeValue.equals(element.getAttribute(filterAttributeId))
+				|| (filterAttributeValue.length() == 0 && element.getAttribute(filterAttributeId) == null);
 	}
 
 }

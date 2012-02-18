@@ -26,20 +26,23 @@
          point="org.eclipse.mylyn.commons.tests.extensionPointReaderTest">
       <extensionElement
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$ExtensionPointReaderExtensionImplementation"></extensionElement>
-      <extensionElement
+      <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P5ExtensionPointReaderExtensionImplementation"
-            extensionPriority="5"
+            priority="5"
             testFilterAttribute="value1">
-      </extensionElement>
-      <extensionElement
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$PNegative5ExtensionPointReaderExtensionImplementation"
-            extensionPriority="-5"
+            priority="-5"
             testFilterAttribute="value2">
-      </extensionElement>
-      <extensionElement
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P10ExtensionPointReaderExtensionImplementation"
-            extensionPriority="10">
-      </extensionElement>
+            priority="10">
+      </extensionElementWithPriority>
+      <extensionElementWithPriority
+            class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P0ExtensionPointReaderExtensionImplementation">
+      </extensionElementWithPriority>
    </extension>
 
 </plugin>
