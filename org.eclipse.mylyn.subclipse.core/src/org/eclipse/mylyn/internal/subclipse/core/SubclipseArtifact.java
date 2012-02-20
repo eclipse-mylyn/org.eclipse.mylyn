@@ -94,7 +94,7 @@ public class SubclipseArtifact extends ScmArtifact {
 	}
 
 	public SVNUrl getRepositoryURL() throws MalformedURLException {
-		return new SVNUrl(appendToPath(repository.getLocation().getLocation(), getPath()));
+		return new SVNUrl(appendToPath(repository.getLocation().getRepositoryRoot().toString(), getPath()));
 	}
 
 	public void setRemoteResource(ISVNRemoteResource remoteResource) {
