@@ -197,6 +197,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaAttachmentMapper_Creation_Date;
 
+	public static String BugzillaAttachmentMapper_DELTA_TS;
+
 	public static String BugzillaAttachmentMapper_Description;
 
 	public static String BugzillaAttachmentMapper_Filename;

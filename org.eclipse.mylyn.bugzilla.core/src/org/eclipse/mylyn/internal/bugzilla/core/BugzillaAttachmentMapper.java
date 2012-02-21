@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -23,6 +25,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class BugzillaAttachmentMapper extends TaskAttachmentMapper {
 	private String token;
+
+	private Date deltaDate;
 
 	public String getToken() {
 		return token;
@@ -41,7 +45,7 @@ public class BugzillaAttachmentMapper extends TaskAttachmentMapper {
 		if (getAttachmentId() != null) {
 			mapper.setValue(taskAttribute, getAttachmentId());
 		}
-		if (getAuthor() != null) {
+		if (getAuthor() != null && getAuthor().getPersonId() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_PERSON);
@@ -111,6 +115,13 @@ public class BugzillaAttachmentMapper extends TaskAttachmentMapper {
 			defaults.setLabel(Messages.BugzillaAttachmentMapper_Token);
 			mapper.setValue(child, getToken());
 		}
+		if (getDeltaDate() != null) {
+			TaskAttribute child = taskAttribute.createMappedAttribute(BugzillaAttribute.DELTA_TS.getKey());
+			TaskAttributeMetaData defaults = child.getMetaData().defaults();
+			defaults.setType(TaskAttribute.TYPE_DATE);
+			defaults.setLabel(Messages.BugzillaAttachmentMapper_DELTA_TS);
+			mapper.setDateValue(child, getDeltaDate());
+		}
 	}
 
 	public static BugzillaAttachmentMapper createFrom(TaskAttribute taskAttribute) {
@@ -161,6 +172,18 @@ public class BugzillaAttachmentMapper extends TaskAttachmentMapper {
 		if (child != null) {
 			attachment.setToken(mapper.getValue(child));
 		}
+		child = taskAttribute.getMappedAttribute(BugzillaAttribute.DELTA_TS.getKey());
+		if (child != null) {
+			attachment.setDeltaDate(mapper.getDateValue(child));
+		}
 		return attachment;
+	}
+
+	public Date getDeltaDate() {
+		return deltaDate;
+	}
+
+	public void setDeltaDate(Date deltaDate) {
+		this.deltaDate = deltaDate;
 	}
 }

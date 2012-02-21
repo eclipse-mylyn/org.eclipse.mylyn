@@ -393,6 +393,23 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setContentType(parsedText);
 			}
 			break;
+		case DELTA_TS:
+			if (attachment != null) {
+				try {
+					if (parsedText != null) {
+						try {
+							attachment.setDeltaDate(simpleFormatter.parse(parsedText));
+						} catch (ParseException e) {
+						}
+					}
+				} catch (NumberFormatException e) {
+					// ignore
+				}
+			} else {
+				createAttrribute(parsedText, tag);
+			}
+			break;
+
 		case SIZE:
 			if (attachment != null) {
 				try {

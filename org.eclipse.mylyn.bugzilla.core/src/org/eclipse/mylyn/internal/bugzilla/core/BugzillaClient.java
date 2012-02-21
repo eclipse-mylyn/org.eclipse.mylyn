@@ -1072,6 +1072,9 @@ public class BugzillaClient {
 		while (itr.hasNext()) {
 			TaskAttribute attrib = itr.next();
 			String id = attrib.getId();
+			if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
+				continue;
+			}
 			String value = attrib.getValue();
 			if (id.equals(TaskAttribute.ATTACHMENT_AUTHOR) || id.equals("date") || id.equals("size") //$NON-NLS-1$ //$NON-NLS-2$
 					|| id.equals(TaskAttribute.ATTACHMENT_URL)) {
