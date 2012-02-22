@@ -104,7 +104,7 @@ public class SectionComposite extends SharedScrolledComposite {
 					if (shellData instanceof Window) {
 						Window window = (Window) shellData;
 						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, Math.max(
-								currentbounds.x, newSize.x), Math.max(currentbounds.y, newSize.y));
+								currentbounds.width, newSize.x), Math.max(currentbounds.height, newSize.y));
 						Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
 						section.getShell().setBounds(result);
 					}
