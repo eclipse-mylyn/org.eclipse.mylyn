@@ -209,7 +209,8 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 			setPageComplete(true);
 		} else {
 			clearCloneUris();
-			showError(null, "No download scheme is offered");
+			showError(null,
+					"No download scheme is offered. Additional schemes may be available after a refresh of the repository configuration.");
 		}
 	}
 

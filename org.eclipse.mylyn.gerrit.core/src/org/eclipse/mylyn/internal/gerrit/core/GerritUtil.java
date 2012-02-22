@@ -367,9 +367,12 @@ public class GerritUtil {
 
 	public static HashMap<DownloadScheme, String> getCloneUris(GerritConfiguration config, TaskRepository repository,
 			Project project) throws URISyntaxException {
+		boolean isAuthenticated = config.getAccount() != null;
 		HashMap<DownloadScheme, String> uriMap = new HashMap<DownloadScheme, String>();
-		uriMap.put(DownloadScheme.SSH, getSshCloneUri(repository, config, project));
-		uriMap.put(DownloadScheme.HTTP, getHttpCloneUri(repository, config, project));
+		if (isAuthenticated) {
+			uriMap.put(DownloadScheme.SSH, getSshCloneUri(repository, config, project));
+			uriMap.put(DownloadScheme.HTTP, getHttpCloneUri(repository, config, project));
+		}
 		uriMap.put(DownloadScheme.ANON_HTTP, getAnonHttpCloneUri(repository, config, project));
 		uriMap.put(DownloadScheme.ANON_GIT, getAnonGitCloneUri(repository, config, project));
 		return uriMap;

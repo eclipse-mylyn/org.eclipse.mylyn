@@ -49,7 +49,6 @@ import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 
-import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.Project;
 
@@ -121,8 +120,7 @@ public class EGitUiUtil {
 				GitRepositoryInfo gitRepositoryInfo;
 				try {
 					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).getConfiguration();
-					gitRepositoryInfo = new GitRepositoryInfo(GerritUtil.getCloneUris(config, repository, project).get(
-							DownloadScheme.SSH));
+					gitRepositoryInfo = new GitRepositoryInfo(GerritUtil.getSshCloneUri(repository, config, project));
 				} catch (URISyntaxException e) {
 					throw new NoRepositoryInfoException(e.getMessage(), e);
 				}
