@@ -25,7 +25,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.ContentEncodingHttpClient;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -158,8 +158,7 @@ public class CommonHttpClient {
 	}
 
 	protected AbstractHttpClient createHttpClient(String userAgent) {
-		// disabled due to https://issues.apache.org/jira/browse/HTTPCORE-257: new ContentEncodingHttpClient() {
-		AbstractHttpClient client = new DefaultHttpClient() {
+		AbstractHttpClient client = new ContentEncodingHttpClient() {
 			@Override
 			protected ClientConnectionManager createClientConnectionManager() {
 				return CommonHttpClient.this.createHttpClientConnectionManager();
