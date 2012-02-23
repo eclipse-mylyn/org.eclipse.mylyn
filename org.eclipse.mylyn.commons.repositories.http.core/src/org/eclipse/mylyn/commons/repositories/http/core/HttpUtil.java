@@ -60,6 +60,7 @@ import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.internal.commons.repositories.http.core.IdleConnectionMonitorThread;
 import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
 
@@ -81,9 +82,9 @@ public class HttpUtil {
 	private static final long CLOSE_TIMEOUT = -1;
 
 	/**
-	 * @see IdleConnectionTimeoutThread#setTimeoutInterval(long)
+	 * @see IdleConnectionMonitorThread
 	 */
-	private static final int CONNECTION_TIMEOUT_INTERVAL = 30 * 1000;
+	private static final int CONNECTION_TIMEOUT_INTERVAL = 1 * 30 * 1000;
 
 	private static final int CONNNECT_TIMEOUT = 60 * 1000;
 
@@ -311,6 +312,11 @@ public class HttpUtil {
 				connectionManager.setDefaultMaxPerRoute(100);
 				connectionManager.setMaxTotal(1000);
 			}
+
+			IdleConnectionMonitorThread thread = new IdleConnectionMonitorThread(CONNECTION_TIMEOUT_INTERVAL);
+			thread.setTimeout(CONNNECT_TIMEOUT);
+			thread.addConnectionManager(connectionManager);
+			thread.start();
 		}
 		return connectionManager;
 	}
