@@ -23,10 +23,10 @@ Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
 Import-Package: com.google.gson;version="1.6.0",
  javax.activation,
  javax.xml.stream;version="1.0.1",
- org.apache.http;version="4.1.0",
- org.apache.http.client;version="4.1.0",
- org.apache.http.client.entity;version="4.1.0",
- org.apache.http.client.methods;version="4.1.0",
- org.apache.http.message;version="4.1.0",
- org.apache.http.protocol;version="4.1.0",
- org.apache.http.util;version="4.1.0"
+ org.apache.http;version="4.1.4",
+ org.apache.http.message;version="4.1.4",
+ org.apache.http.protocol;version="4.1.4",
+ org.apache.http.util;version="4.1.4",
+ org.apache.http.client;version="4.1.2",
+ org.apache.http.client.entity;version="4.1.2",
+ org.apache.http.client.methods;version="4.1.2"
