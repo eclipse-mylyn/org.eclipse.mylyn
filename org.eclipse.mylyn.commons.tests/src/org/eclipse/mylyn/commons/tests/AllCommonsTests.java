@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
+import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest;
 import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
@@ -40,6 +41,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(TimeoutInputStreamTest.class);
 		suite.addTestSuite(BrowserUtilTest.class);
 		suite.addTestSuite(ExtensionPointReaderTest.class);
+		suite.addTestSuite(CommonListenerListTest.class);
 		return suite;
 	}
 
