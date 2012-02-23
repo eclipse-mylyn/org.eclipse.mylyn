@@ -54,7 +54,7 @@ public class ExtensionPointReader<T> {
 			}
 			if (p1 > p0) {
 				return 1;
-			} else if (p1 < -p0) {
+			} else if (p1 < p0) {
 				return -1;
 			}
 			return 0;
