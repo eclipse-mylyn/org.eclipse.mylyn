@@ -184,4 +184,20 @@ public class CoreUtilTest extends TestCase {
 		}
 	}
 
+	public void testAsFileName() {
+		assertEquals("abc", CoreUtil.asFileName("abc"));
+		assertEquals("a.b.c", CoreUtil.asFileName("a.b.c"));
+		assertEquals("", CoreUtil.asFileName(""));
+	}
+
+	public void testAsFileNameSpaces() {
+		assertEquals("%20%20", CoreUtil.asFileName("  "));
+		assertEquals(".%20", CoreUtil.asFileName(". "));
+	}
+
+	public void testAsFileNamePercent() {
+		assertEquals("%25abc", CoreUtil.asFileName("%abc"));
+		assertEquals("%2525abc", CoreUtil.asFileName("%25abc"));
+	}
+
 }

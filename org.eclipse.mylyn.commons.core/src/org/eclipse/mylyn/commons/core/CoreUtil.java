@@ -219,4 +219,22 @@ public class CoreUtil {
 		return new Version(FRAMEWORK_VERSION);
 	}
 
+	/**
+	 * Returns a representation of <code>name</code> that is a valid file name.
+	 * 
+	 * @since 3.7
+	 */
+	public static String asFileName(String name) {
+		StringBuffer sb = new StringBuffer(name.length());
+		char[] chars = name.toCharArray();
+		for (char c : chars) {
+			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
+				sb.append(c);
+			} else {
+				sb.append("%" + Integer.toHexString(c).toUpperCase()); //$NON-NLS-1$
+			}
+		}
+		return sb.toString();
+	}
+
 }

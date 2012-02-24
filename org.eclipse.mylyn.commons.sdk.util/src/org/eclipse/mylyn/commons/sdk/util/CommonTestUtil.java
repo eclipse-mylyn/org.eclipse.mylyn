@@ -122,6 +122,13 @@ public class CommonTestUtil {
 		return stateLocation.toFile();
 	}
 
+	public static File createTempFolder(String prefix) throws IOException {
+		File location = File.createTempFile(prefix, null);
+		location.delete();
+		location.mkdirs();
+		return location;
+	}
+
 	public static void delete(File file) {
 		if (file.exists()) {
 			for (int i = 0; i < MAX_RETRY; i++) {
@@ -158,6 +165,7 @@ public class CommonTestUtil {
 				}
 			}
 		}
+		path.delete();
 	}
 
 	public static CertificateCredentials getCertificateCredentials() {
