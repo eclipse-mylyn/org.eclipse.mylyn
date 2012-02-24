@@ -865,7 +865,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public void initializeDataSources() {
 		taskDataManager.setDataPath(getDataDirectory());
 		externalizationManager.setRootFolderPath(getDataDirectory());
-		getContextStore().setContextDirectory(getContextStoreDir());
+		getContextStore().setDirectory(new File(getDataDirectory(), "tasks")); //$NON-NLS-1$
 
 		externalizationManager.load();
 		// TODO: Move management of template repositories to TaskRepositoryManager
@@ -912,14 +912,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			});
 		}
-	}
-
-	private File getContextStoreDir() {
-		File storeFile = new File(getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
-		if (!storeFile.exists()) {
-			storeFile.mkdirs();
-		}
-		return storeFile;
 	}
 
 	@SuppressWarnings("deprecation")

@@ -15,6 +15,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * A store for persisting task contexts.
@@ -23,6 +24,13 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @since 3.7
  */
 public abstract class AbstractTaskContextStore {
+
+	/**
+	 * Clears the context of <code>task</code>.
+	 * 
+	 * @since 3.7
+	 */
+	public abstract void clearContext(ITask task);
 
 	/**
 	 * Copies the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
@@ -34,15 +42,8 @@ public abstract class AbstractTaskContextStore {
 	public abstract IAdaptable copyContext(ITask sourceTask, ITask destinationTask);
 
 	/**
-	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
-	 * <code>sourceTask</code> does not have a context.
+	 * Deletes the context of <code>task</code>.
 	 * 
-	 * @return result of the move operation
-	 * @since 3.7
-	 */
-	public abstract IAdaptable moveContext(ITask sourceTask, ITask destinationTask);
-
-	/**
 	 * @since 3.7
 	 */
 	public abstract void deleteContext(ITask task);
@@ -63,7 +64,28 @@ public abstract class AbstractTaskContextStore {
 	/**
 	 * @since 3.7
 	 */
-	public abstract void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl);
+	public abstract void mergeContext(ITask sourceTask, ITask targetTask);
+
+	/**
+	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
+	 * <code>sourceTask</code> does not have a context.
+	 * 
+	 * @return result of the move operation
+	 * @since 3.7
+	 */
+	public abstract IAdaptable moveContext(ITask sourceTask, ITask destinationTask);
+
+	/**
+	 * @since 3.7
+	 */
+	public abstract void refactorRepositoryUrl(TaskRepository repository, String oldRepositoryUrl,
+			String newRepositoryUrl);
+
+	/**
+	 * Returns an object for persisting task related information. The object needs to be released when it is no longer
+	 * used.
+	 */
+	//public abstract ICommonStorable getStorable(ITask task);
 
 	/**
 	 * @since 3.7
@@ -71,13 +93,10 @@ public abstract class AbstractTaskContextStore {
 	public abstract void saveActiveContext();
 
 	/**
+	 * Sets the location of task file.
+	 * 
 	 * @since 3.7
 	 */
-	public abstract void setContextDirectory(File contextStoreDir);
-
-	/**
-	 * @since 3.7
-	 */
-	public abstract void mergeContext(ITask sourceTask, ITask targetTask);
+	public abstract void setDirectory(File directory);
 
 }

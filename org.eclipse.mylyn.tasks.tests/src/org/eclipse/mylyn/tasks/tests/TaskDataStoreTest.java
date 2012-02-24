@@ -241,7 +241,7 @@ public class TaskDataStoreTest extends TestCase {
 		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
-		if (System.getProperty("java.version").compareTo("1.5") <= 0) {
+		if (System.getProperty("java.version").compareTo("1.6") < 0) {
 			// Java 1.5 fails to parse C1 characters with XML 1.1
 			try {
 				TaskDataState state2 = storage.getTaskDataState(file);

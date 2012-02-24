@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -353,24 +354,11 @@ public class TaskDataManager implements ITaskDataManager {
 //			String pathName = task.getConnectorKind() + "-"
 //					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-		String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl); //$NON-NLS-1$
-		String fileName = encode(task.getTaskId()) + EXTENSION;
+		String repositoryPath = task.getConnectorKind() + "-" + CoreUtil.asFileName(repositoryUrl); //$NON-NLS-1$
+		String fileName = CoreUtil.asFileName(task.getTaskId()) + EXTENSION;
 		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
 				+ File.separator + FOLDER_DATA);
 		return new File(path, fileName);
-	}
-
-	private static String encode(String text) {
-		StringBuffer sb = new StringBuffer(text.length());
-		char[] chars = text.toCharArray();
-		for (char c : chars) {
-			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
-				sb.append(c);
-			} else {
-				sb.append("%" + Integer.toHexString(c).toUpperCase()); //$NON-NLS-1$
-			}
-		}
-		return sb.toString();
 	}
 
 	private File getFile10(ITask task, String kind) {

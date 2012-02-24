@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 
 /**
@@ -32,6 +33,8 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 
 	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip"; //$NON-NLS-1$
 
+	private File directory;
+
 	private File contextDirectory;
 
 	@Override
@@ -40,15 +43,19 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	}
 
 	@Override
-	public void deleteContext(ITask task) {
+	public void clearContext(ITask task) {
 		File file = getFileForContext(task);
 		if (file.exists()) {
 			file.delete();
 		}
 	}
 
-	public File getContextDirectory() {
-		return contextDirectory;
+	@Override
+	public void deleteContext(ITask task) {
+		File file = getFileForContext(task);
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 
 	@Override
@@ -84,11 +91,8 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 		return null;
 	}
 
-	/**
-	 * @since 3.7
-	 */
 	@Override
-	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
+	public void refactorRepositoryUrl(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
 		// ignore
 	}
 
@@ -98,8 +102,21 @@ public class DefaultTaskContextStore extends AbstractTaskContextStore {
 	}
 
 	@Override
-	public synchronized void setContextDirectory(File directory) {
-		this.contextDirectory = directory;
+	public synchronized void setDirectory(File directory) {
+		this.directory = directory;
+
+		contextDirectory = new File(directory.getParent(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
+		if (!contextDirectory.exists()) {
+			contextDirectory.mkdirs();
+		}
+	}
+
+	public File getDirectory() {
+		return directory;
+	}
+
+	private File getContextDirectory() {
+		return contextDirectory;
 	}
 
 }

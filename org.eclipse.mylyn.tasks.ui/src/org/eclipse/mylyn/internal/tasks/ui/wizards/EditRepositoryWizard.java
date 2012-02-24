@@ -59,7 +59,8 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUi.getTaskActivityManager().deactivateActiveTask();
 
-				RefactorRepositoryUrlOperation operation = new RefactorRepositoryUrlOperation(oldUrl, newUrl);
+				RefactorRepositoryUrlOperation operation = new RefactorRepositoryUrlOperation(repository, oldUrl,
+						newUrl);
 				try {
 					getContainer().run(true, false, operation);
 				} catch (InvocationTargetException e) {

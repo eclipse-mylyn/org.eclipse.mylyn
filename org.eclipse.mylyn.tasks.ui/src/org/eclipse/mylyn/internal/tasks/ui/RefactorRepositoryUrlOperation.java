@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Rob Elves
@@ -29,11 +30,18 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 
 	private final String newUrl;
 
+	private final TaskRepository repository;
+
 	public RefactorRepositoryUrlOperation(String oldUrl, String newUrl) {
+		this(null, oldUrl, newUrl);
+	}
+
+	public RefactorRepositoryUrlOperation(TaskRepository repository, String oldUrl, String newUrl) {
 		super(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 		Assert.isNotNull(oldUrl);
 		Assert.isNotNull(newUrl);
 		Assert.isTrue(!oldUrl.equals(newUrl));
+		this.repository = repository;
 		this.oldUrl = oldUrl;
 		this.newUrl = newUrl;
 	}
@@ -46,7 +54,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 			monitor.beginTask(Messages.RefactorRepositoryUrlOperation_Repository_URL_update, IProgressMonitor.UNKNOWN);
 			refactorOfflineHandles(oldUrl, newUrl);
 			getTaskList().refactorRepositoryUrl(oldUrl, newUrl);
-			TasksUiPlugin.getContextStore().refactorRepositoryUrl(oldUrl, newUrl);
+			TasksUiPlugin.getContextStore().refactorRepositoryUrl(repository, oldUrl, newUrl);
 			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {
 			monitor.done();
