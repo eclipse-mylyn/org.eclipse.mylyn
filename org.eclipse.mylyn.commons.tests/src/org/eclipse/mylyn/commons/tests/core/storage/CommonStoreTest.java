@@ -98,14 +98,6 @@ public class CommonStoreTest extends TestCase {
 		assertTrue(storable.exists("handle"));
 	}
 
-	public void testGetPathWrite() throws Exception {
-		ICommonStorable storable = store.get(new Path("sub"));
-		writeHello(storable, "handle");
-		File subFile = new File(location, "sub");
-		assertEquals(Collections.singletonList(subFile), Arrays.asList(location.listFiles()));
-		assertEquals(Collections.singletonList(new File(subFile, "handle")), Arrays.asList(subFile.listFiles()));
-	}
-
 	public void testGet() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		ICommonStorable storable2 = store.get(Path.EMPTY);
@@ -124,6 +116,45 @@ public class CommonStoreTest extends TestCase {
 		ICommonStorable storable = store.get(new Path("sub"));
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
 		assertFalse(storable.exists("handle"));
+		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
+	}
+
+	public void testGetPathWrite() throws Exception {
+		ICommonStorable storable = store.get(new Path("sub"));
+		writeHello(storable, "handle");
+		File subFile = new File(location, "sub");
+		assertEquals(Collections.singletonList(subFile), Arrays.asList(location.listFiles()));
+		assertEquals(Collections.singletonList(new File(subFile, "handle")), Arrays.asList(subFile.listFiles()));
+	}
+
+	public void testMove() throws Exception {
+		ICommonStorable storable = store.get(new Path("source"));
+		writeHello(storable, "handle");
+		store.move(new Path("source"), new Path("target"));
+		File targetFile = new File(location, "target");
+		assertEquals(Collections.singletonList(targetFile), Arrays.asList(location.listFiles()));
+		assertEquals(Collections.singletonList(new File(targetFile, "handle")), Arrays.asList(targetFile.listFiles()));
+	}
+
+	public void testMoveExistant() throws Exception {
+		ICommonStorable storable = store.get(new Path("source"));
+		writeHello(storable, "handle");
+		ICommonStorable storable2 = store.get(new Path("target"));
+		writeHello(storable2, "handle2");
+		try {
+			store.move(new Path("source"), new Path("target"));
+			fail("Expected CoreException");
+		} catch (CoreException expected) {
+			File sourceFile = new File(location, "source");
+			File targetFile = new File(location, "target");
+			assertEquals(Arrays.asList(sourceFile, targetFile), Arrays.asList(location.listFiles()));
+			assertEquals(Collections.singletonList(new File(targetFile, "handle2")),
+					Arrays.asList(targetFile.listFiles()));
+		}
+	}
+
+	public void testMoveNonExistant() throws Exception {
+		store.move(new Path("source"), new Path("target"));
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
 	}
 

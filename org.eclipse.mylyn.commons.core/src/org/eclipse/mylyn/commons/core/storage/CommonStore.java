@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -75,10 +77,6 @@ public class CommonStore {
 		return storable;
 	}
 
-	public synchronized void copy(IPath source, IPath target, boolean overwrite) {
-		// FIXME
-	}
-
 	public File getLocation() {
 		return location;
 	}
@@ -99,8 +97,12 @@ public class CommonStore {
 	}
 
 	private File getFile(IPath path) {
+		return getFile(path, true);
+	}
+
+	private File getFile(IPath path, boolean create) {
 		File file = new File(location, path.toOSString());
-		if (!file.getParentFile().exists()) {
+		if (create && !file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
 		return file;
@@ -130,6 +132,19 @@ public class CommonStore {
 
 	synchronized void release(CommonStorable storable) {
 		storableByLocation.remove(storable.getPath());
+	}
+
+	public void move(IPath oldPath, IPath newPath) throws CoreException {
+		File oldFile = getFile(oldPath, false);
+		// TODO lock hierarchy and throw an exception if oldFile is in use 
+		if (oldFile.exists()) {
+			File newFile = getFile(newPath, false);
+			newFile.getParentFile().mkdirs();
+			if (!oldFile.renameTo(newFile)) {
+				throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
+						"The target path ''{0}'' already exists", newPath)));
+			}
+		}
 	}
 
 }
