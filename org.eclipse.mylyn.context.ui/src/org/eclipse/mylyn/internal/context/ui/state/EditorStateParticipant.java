@@ -11,9 +11,11 @@
 
 package org.eclipse.mylyn.internal.context.ui.state;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,12 +43,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.EditorManager;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.internal.WorkbenchWindow;
 
 /**
  * @author Mik Kersten
@@ -154,10 +154,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		// try to match the open windows to the one that we want to restore
 		Set<IWorkbenchWindow> monitoredWindows = MonitorUi.getMonitoredWindows();
 		for (IWorkbenchWindow window : monitoredWindows) {
-			int windowNumber = 0;
-			if (window instanceof WorkbenchWindow) {
-				windowNumber = ((WorkbenchWindow) window).getNumber();
-			}
+			int windowNumber = getNumber(window);
 			if (window.getClass().getCanonicalName().equals(windowToRestoreClassName)
 					&& windowNumber == windowToRestorenumber) {
 				return (WorkbenchPage) window.getActivePage();
@@ -206,21 +203,39 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
 		Set<IWorkbenchWindow> monitoredWindows = MonitorUi.getMonitoredWindows();
 
-		IMemento rootMemento = state.createMemento(MEMENTO_EDITORS);
-		for (IWorkbenchWindow window : monitoredWindows) {
-			IMemento memento = rootMemento.createChild(KEY_MONITORED_WINDOW_OPEN_EDITORS);
+		try {
+			IMemento rootMemento = state.createMemento(MEMENTO_EDITORS);
+			for (IWorkbenchWindow window : monitoredWindows) {
+				IMemento memento = rootMemento.createChild(KEY_MONITORED_WINDOW_OPEN_EDITORS);
 
-			memento.putString(ATTRIBUTE_CLASS, window.getClass().getCanonicalName());
-			int number = 0;
-			if (window instanceof WorkbenchWindow) {
-				number = ((WorkbenchWindow) window).getNumber();
+				memento.putString(ATTRIBUTE_CLASS, window.getClass().getCanonicalName());
+				int number = getNumber(window);
+				memento.putInteger(ATTRIBUTE_NUMER, number);
+				memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
+				memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
+				saveEditors_e_3_x((WorkbenchPage) window.getActivePage(), memento);
 			}
-			memento.putInteger(ATTRIBUTE_NUMER, number);
-			memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
-			memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
-			((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
+		} catch (Exception e) {
+			// FIXME fall back to workbench API
 		}
+	}
 
+	private void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
+		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager");
+		Object editorManager = getEditorManagerMethod.invoke(page);
+
+		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("saveState", IMemento.class);
+		getEditorsMethod.invoke(editorManager, memento);
+	}
+
+	private int getNumber(IWorkbenchWindow window) {
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (int i = 0; i < windows.length; i++) {
+			if (windows[i] == window) {
+				return i;
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -251,32 +266,20 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	 * HACK: will fail to restore different parts with same name
 	 */
 	private void restoreEditors(WorkbenchPage page, IMemento memento, boolean isActiveWindow) {
-		EditorManager editorManager = page.getEditorManager();
 		final ArrayList<?> visibleEditors = new ArrayList<Object>(5);
 		final IEditorReference activeEditor[] = new IEditorReference[1];
 		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 
 		try {
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
-			Set<IMemento> editorMementoSet = new HashSet<IMemento>();
+			Set<IMemento> editorMementoSet = new LinkedHashSet<IMemento>();
 			editorMementoSet.addAll(Arrays.asList(editorMementos));
 			// HACK: same parts could have different editors
-			Set<String> restoredPartNames = new HashSet<String>();
-			List<IEditorReference> alreadyVisibleEditors = Arrays.asList(editorManager.getEditors());
-			for (IEditorReference editorReference : alreadyVisibleEditors) {
-				restoredPartNames.add(editorReference.getPartName());
-			}
-			for (IMemento editorMemento : editorMementoSet) {
-				String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
-				if (!restoredPartNames.contains(partName)) {
-					editorManager.restoreEditorState(editorMemento, visibleEditors, activeEditor, result);
-				} else {
-					restoredPartNames.add(partName);
-				}
-			}
 
-			for (int i = 0; i < visibleEditors.size(); i++) {
-				editorManager.setVisibleEditor((IEditorReference) visibleEditors.get(i), false);
+			try {
+				restoreEditors_e_3_x(page, visibleEditors, activeEditor, result, editorMementoSet);
+			} catch (Exception e) {
+				// FIXME fall back to workbench API
 			}
 
 			if (activeEditor[0] != null && isActiveWindow) {
@@ -287,6 +290,39 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not restore editors", e)); //$NON-NLS-1$
+		}
+	}
+
+	private void restoreEditors_e_3_x(WorkbenchPage page, final ArrayList<?> visibleEditors,
+			final IEditorReference[] activeEditor, final MultiStatus result, Set<IMemento> editorMementoSet)
+			throws Exception {
+		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager");
+		Object editorManager = getEditorManagerMethod.invoke(page);
+
+		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("getEditors");
+
+		List<IEditorReference> alreadyVisibleEditors = Arrays.asList((IEditorReference[]) getEditorsMethod.invoke(editorManager));
+		Set<String> restoredPartNames = new HashSet<String>();
+		for (IEditorReference editorReference : alreadyVisibleEditors) {
+			restoredPartNames.add(editorReference.getPartName());
+		}
+
+		Method restoreEditorStateMethod = editorManager.getClass().getDeclaredMethod("restoreEditorState",
+				IMemento.class, ArrayList.class, IEditorReference[].class, MultiStatus.class);
+
+		for (IMemento editorMemento : editorMementoSet) {
+			String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
+			if (!restoredPartNames.contains(partName)) {
+				restoreEditorStateMethod.invoke(editorManager, editorMemento, visibleEditors, activeEditor, result);
+			} else {
+				restoredPartNames.add(partName);
+			}
+		}
+
+		Method setVisibleEditorMethod = editorManager.getClass().getDeclaredMethod("setVisibleEditor",
+				IEditorReference.class, boolean.class);
+		for (int i = 0; i < visibleEditors.size(); i++) {
+			setVisibleEditorMethod.invoke(editorManager, visibleEditors.get(i), false);
 		}
 	}
 
