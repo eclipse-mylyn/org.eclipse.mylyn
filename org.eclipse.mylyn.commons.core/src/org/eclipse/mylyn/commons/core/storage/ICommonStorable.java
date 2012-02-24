@@ -25,12 +25,14 @@ public interface ICommonStorable {
 
 	public void delete(String handle) throws CoreException;
 
+	public void deleteAll() throws CoreException;
+
 	public boolean exists(String handle);
 
 	public InputStream read(String handle, IProgressMonitor monitor) throws IOException, CoreException;
 
-	public OutputStream write(String handle, IProgressMonitor monitor) throws IOException, CoreException;
-
 	public void release();
+
+	public OutputStream write(String handle, IProgressMonitor monitor) throws IOException, CoreException;
 
 }

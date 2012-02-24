@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -39,6 +41,28 @@ class CommonStorable implements ICommonStorable {
 
 	public void delete(String item) throws CoreException {
 		getFile(item).delete();
+	}
+
+	public void deleteAll() throws CoreException {
+		File[] children = path.listFiles();
+		if (children != null) {
+			// validate
+			for (File child : children) {
+				if (child.isDirectory()) {
+					throw new CoreException(new Status(IStatus.ERROR, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
+							"The storage location ''{0}'' contains sub directories", path)));
+				}
+			}
+
+			// delete all files
+			for (File child : children) {
+				child.delete();
+			}
+		}
+
+		if (path.exists()) {
+			path.delete();
+		}
 	}
 
 	public boolean exists(String handle) {
