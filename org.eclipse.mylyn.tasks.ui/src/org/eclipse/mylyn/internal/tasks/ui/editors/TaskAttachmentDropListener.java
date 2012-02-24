@@ -14,11 +14,15 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -100,6 +104,8 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 			if (!tasksToMove.isEmpty()) {
 				TasksUiInternal.getTaskDropHandler().fireTaskDropped(tasksToMove, page.getTask(),
 						Operation.DROP_ON_TASK_EDITOR);
+			} else {
+				attachFirstFile(getFilesFromSelection(selection));
 			}
 		}
 		if (TextTransfer.getInstance().isSupportedType(event.currentDataType)) {
@@ -108,7 +114,12 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 		}
 		if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
-			if (files != null && files.length > 0) {
+			attachFirstFile(files);
+		}
+	}
+
+	protected void attachFirstFile(String[] files) {
+		if (files != null && files.length > 0) {
 				File file = new File(files[0]);
 				NewAttachmentWizardDialog dialog = EditorUtil.openNewAttachmentWizard(page, null,
 						new FileTaskAttachmentSource(file));
@@ -119,6 +130,24 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 				}
 			}
 		}
+
+	public static String[] getFilesFromSelection(ISelection selection) {
+		List<String> files = new ArrayList<String>();
+		if (selection instanceof IStructuredSelection) {
+			for (Object element : ((IStructuredSelection) selection).toList()) {
+				IResource resource = null;
+				if (element instanceof IResource) {
+					resource = (IResource) element;
+				} else if (element instanceof IAdaptable) {
+					IAdaptable adaptable = (IAdaptable) element;
+					resource = (IResource) adaptable.getAdapter(IResource.class);
+				}
+				if (resource != null && resource.getRawLocation() != null) {
+					files.add(resource.getRawLocation().toOSString());
+				}
+			}
+		}
+		return files.toArray(new String[files.size()]);
 	}
 
 }
