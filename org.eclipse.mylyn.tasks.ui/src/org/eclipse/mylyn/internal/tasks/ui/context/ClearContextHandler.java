@@ -39,8 +39,7 @@ public class ClearContextHandler extends AbstractTaskHandler {
 			return;
 		}
 
-		TasksUiPlugin.getDefault();
-		TasksUiPlugin.getContextStore().deleteContext(task);
+		TasksUiPlugin.getContextStore().clearContext(task);
 		TasksUiInternal.getTaskList().notifyElementChanged(task);
 	}
 
