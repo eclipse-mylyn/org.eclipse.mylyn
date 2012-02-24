@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -147,7 +148,9 @@ public class CommonStoreTest extends TestCase {
 		} catch (CoreException expected) {
 			File sourceFile = new File(location, "source");
 			File targetFile = new File(location, "target");
-			assertEquals(Arrays.asList(sourceFile, targetFile), Arrays.asList(location.listFiles()));
+			List<File> list = Arrays.asList(location.listFiles());
+			Collections.sort(list);
+			assertEquals(Arrays.asList(sourceFile, targetFile), list);
 			assertEquals(Collections.singletonList(new File(targetFile, "handle2")),
 					Arrays.asList(targetFile.listFiles()));
 		}
