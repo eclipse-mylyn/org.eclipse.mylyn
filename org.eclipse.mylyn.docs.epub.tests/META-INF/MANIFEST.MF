@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn EPUB Tests
+Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.tests
+Bundle-Version: 0.8.0.qualifier
+Bundle-Vendor: Torkild U. Resheim
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
+ org.eclipse.emf.ecore.change.edit;bundle-version="2.5.0",
+ org.eclipse.emf.ecore.editor;bundle-version="2.6.0",
+ org.eclipse.emf.exporter;bundle-version="2.6.0",
+ org.eclipse.emf.importer;bundle-version="2.6.0",
+ org.eclipse.emf.mapping.ecore2ecore.editor;bundle-version="2.4.0",
+ org.eclipse.emf.mapping.ecore2xml.ui;bundle-version="2.5.0",
+ org.junit,
+ org.apache.ant;bundle-version="1.8.2",
+ org.eclipse.mylyn.docs.epub.core,
+ org.apache.ant.source;bundle-version="1.8.2"
+Bundle-ClassPath: .,
+ epubcheck/epubcheck-1.2.jar,
+ epubcheck/lib/jing.jar,
+ epubcheck/lib/saxon.jar
+Import-Package: org.junit

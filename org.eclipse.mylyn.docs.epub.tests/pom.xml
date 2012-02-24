@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>1.6.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.eclipse.mylyn.docs.epub.tests</artifactId>
+	<version>0.8.0-SNAPSHOT</version>
+	<packaging>eclipse-test-plugin</packaging>
+
+	<properties>
+		<platform-version-name>indigo</platform-version-name>
+		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+		<test.suite>${project.artifactId}.AllTests</test.suite>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>indigo</id>
+			<name>Eclipse Indigo p2 Repository</name>
+			<layout>p2</layout>
+			<url>${eclipse-site}</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<configuration>
+							<tasks>
+							  <mkdir dir="${basedir}/epubcheck/" />
+							  <get src="http://epubcheck.googlecode.com/files/epubcheck-1.2.zip" dest="${basedir}/epubcheck/epubcheck-1.2.zip"/>
+							  <unzip src="${basedir}/epubcheck/epubcheck-1.2.zip" dest="${basedir}/epubcheck/" />
+							  <delete file="${basedir}/epubcheck/epubcheck-1.2.zip" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<useUIHarness>false</useUIHarness>
+					<testSuite>${project.artifactId}</testSuite>
+					<testClass>${test.suite}</testClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<groupId>org.eclipse.mylyn.docs.epub</groupId>
+</project>

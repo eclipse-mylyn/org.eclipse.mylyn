@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Test markup-to-epub" basedir=".">
+	<property name="testdir" location="${basedir}/test/ant" />
+	<property name="srcdir" location="${basedir}/testdata" />
+
+	<path id="java.class.path">
+		<pathelement path="${java.class.path}" />
+	</path>
+
+	<path id="epub-classpath">
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.core/bin/" />
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant.core/bin/" />
+	</path>
+
+	<taskdef classpathref="epub-classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
+
+	<!-- Prepare source files that we need for the tests -->
+	<target name="init">
+		<delete dir="${testdir}" failonerror="false">
+			<fileset dir="${testdir}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<mkdir dir="${testdir}" />
+	</target>
+
+	<target name="test.publication">	
+		<epub identifierId="uuid" file="${testdir}/simple.epub" workingFolder="${testdir}/work">			
+			<title>Mylyn Docs Test EPUB</title>
+			<language code="en" />
+			<identifier id="uuid" scheme="UUID">urn:uuid:15bcb770-882d-11e0-9d78-0800200c9a66</identifier>
+			<subject>Testing</subject>
+			<creator fileAs="Resheim, Torkild U." role="aut" name="Torkild U. Resheim"/>
+			<publisher>Eclipse.org</publisher>
+			<item file="${srcdir}/plain-page.xhtml" />
+		</epub>
+	</target>
+
+</project>

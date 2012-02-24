@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<extension point="org.eclipse.help.toc">
+		<toc file="help/introduction-toc.xml" primary="false"/>
+		<toc file="help/epub-format-toc.xml" primary="false"/>
+		<toc file="help/generate-ant-toc.xml" primary="false"/>
+		<toc file="help/generate-epub-toc.xml" primary="false"/>
+		<toc file="help/epub-ant-task-toc.xml" primary="false"/>
+		<toc file="help/examples-toc.xml" primary="false"/>
+		<toc file="toc.xml" primary="true"/>
+	</extension>
+
+</plugin>

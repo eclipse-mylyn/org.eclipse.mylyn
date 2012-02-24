@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opf:package xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid">
+  <opf:metadata>
+    <dc:title>Building EPUBs with Eclipse</dc:title>
+    <dc:creator opf:role="aut" opf:file-as="Resheim, Torkild Ulvøy">Torkild Ulvøy Resheim</dc:creator>
+    <dc:subject>Computing, Eclipse, Mylyn, EPUB</dc:subject>
+    <dc:publisher>Eclipse.Org</dc:publisher>
+    <dc:contributor opf:role="red">Eclipse Committers and Contributors</dc:contributor>
+    <dc:date opf:event="creation">2011-12-08</dc:date>
+    <dc:type>Technical article.</dc:type>
+    <dc:format>application/epub+zip</dc:format>
+    <dc:identifier id="uuid" opf:scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</dc:identifier>
+    <dc:language>en</dc:language>
+    <dc:rights>Copyright (c) 2011, Torkild Ulvøy Resheim. Licensed under the Eclipse Public License version 1.0</dc:rights>
+    <opf:meta name="cover" content="cover-image"/>
+  </opf:metadata>
+  <opf:manifest>
+    <opf:item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <opf:item id="cover-image" href="cover.jpg" media-type="image/jpeg"/>
+    <opf:item id="title-page" href="title-page.html" media-type="application/xhtml+xml"/>
+    <opf:item id="copyright" href="copyright.html" media-type="application/xhtml+xml"/>
+    <opf:item id="introduction" href="introduction.html" media-type="application/xhtml+xml"/>
+    <opf:item id="epub-format" href="epub-format.html" media-type="application/xhtml+xml"/>
+    <opf:item id="generate-ant" href="generate-ant.html" media-type="application/xhtml+xml"/>
+    <opf:item id="generate-epub" href="generate-epub.html" media-type="application/xhtml+xml"/>
+    <opf:item id="epub-ant-task" href="epub-ant-task.html" media-type="application/xhtml+xml"/>
+    <opf:item id="examples" href="examples.html" media-type="application/xhtml+xml"/>
+    <opf:item id="text-style" href="style.css" media-type="text/css"/>
+    <opf:item id="image-Illustrations.002" href="Illustrations.002.jpg" media-type="image/jpeg"/>
+    <opf:item id="image-generate-epub" href="generate-epub.png" media-type="image/png"/>
+    <opf:item id="image-nook-cover" href="nook-cover.png" media-type="image/png"/>
+    <opf:item id="image-runtime-jre" href="runtime-jre.png" media-type="image/png"/>
+    <opf:item id="cover" href="cover-page.xhtml" media-type="application/xhtml+xml"/>
+  </opf:manifest>
+  <opf:spine toc="ncx">
+    <opf:itemref idref="cover" linear="no"/>
+    <opf:itemref idref="title-page"/>
+    <opf:itemref idref="copyright"/>
+    <opf:itemref idref="introduction"/>
+    <opf:itemref idref="epub-format"/>
+    <opf:itemref idref="generate-ant"/>
+    <opf:itemref idref="generate-epub"/>
+    <opf:itemref idref="epub-ant-task"/>
+    <opf:itemref idref="examples"/>
+  </opf:spine>
+  <opf:guide>
+    <opf:reference type="title-page" title="Building EPUBs" href="title-page.html"/>
+    <opf:reference type="preface" title="Introduction" href="introduction.html"/>
+    <opf:reference type="copyright-page" title="Copyright" href="copyright.html"/>
+    <opf:reference type="cover" title="Cover page" href="cover-page.xhtml"/>
+  </opf:guide>
+</opf:package>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EPUB Ant Support
+Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.ant.core;singleton:=true
+Bundle-Version: 0.8.0.qualifier
+Bundle-Vendor: Torkild U. Resheim
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.docs.epub.ant;x-internal:=true,
+ org.eclipse.mylyn.docs.epub.ant.core;x-internal:=true;uses:="org.eclipse.mylyn.docs.epub,org.apache.tools.ant.types,org.apache.tools.ant"
+Require-Bundle: org.apache.ant;bundle-version="[1.8.2,2.0.0)",
+ org.eclipse.mylyn.docs.epub.core;bundle-version="[0.8.0,1.0.0)",
+ org.eclipse.ant.core;bundle-version="3.2.300"
+Bundle-ClassPath: .

@@ -73,8 +73,10 @@
   <modules>
     <module>org.eclipse.mylyn.docs-site</module>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
+    
     <module>org.eclipse.mylyn.htmltext-feature</module>
     <module>org.eclipse.mylyn.htmltext.ui</module>
+    
     <module>org.eclipse.mylyn.wikitext-feature</module>
     <module>org.eclipse.mylyn.wikitext.confluence.core</module>
     <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
@@ -99,5 +101,12 @@
     <module>org.eclipse.mylyn.wikitext.creole.tests</module>
 	<!-- needs to be last -->
     <module>org.eclipse.mylyn.wikitext-standalone</module>
+    
+    <module>org.eclipse.mylyn.docs.epub.core</module>
+    <module>org.eclipse.mylyn.docs.epub.ant.core</module>
+    <module>org.eclipse.mylyn.docs.epub.ui</module>
+    <module>org.eclipse.mylyn.docs.epub.help</module>
+    <module>org.eclipse.mylyn.docs.epub.tests</module>
+    <module>org.eclipse.mylyn.docs.epub-feature</module>
   </modules>
 </project>

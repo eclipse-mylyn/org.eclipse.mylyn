@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ocf:container xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container" version="2.0">
+  <ocf:rootfiles>
+    <ocf:rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+  </ocf:rootfiles>
+</ocf:container>

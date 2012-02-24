@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.mylyn.docs.epub.ant.core.EpubTask"
+            library="lib/epub-ant.jar"
+            name="epub">
+      </antTask>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/epub-ant.jar">
+      </extraClasspathEntry>
+   </extension>
+
+</plugin>

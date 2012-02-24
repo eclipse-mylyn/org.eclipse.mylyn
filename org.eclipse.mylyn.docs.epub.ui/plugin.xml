@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.mylyn.internal.docs.epub.ui.commands.ConvertMarkupToEPUB"
+            id="org.eclipse.mylyn.docs.epub.ui.convertToEPUBCommand"
+            name="%command.name">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.mylyn.wikitext.ui.contextmenu?after=additions">
+         <command
+               commandId="org.eclipse.mylyn.docs.epub.ui.convertToEPUBCommand"
+               label="%command.label"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

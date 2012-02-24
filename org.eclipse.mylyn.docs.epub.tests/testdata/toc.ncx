@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx:ncx xmlns:ncx="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <ncx:head>
+    <ncx:meta content="3063f615-672e-4083-911a-65c5ff245e75" name="dtb:uid"/>
+  </ncx:head>
+  <ncx:docTitle>
+    <ncx:text>Table of contents</ncx:text>
+  </ncx:docTitle>
+  <ncx:navMap>
+    <ncx:navPoint id="navpoint1" playOrder="1">
+      <ncx:navLabel>
+        <ncx:text>First item</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="plain-page.xhtml#h1_1"/>
+      <ncx:navPoint id="navpoint2" playOrder="2">
+        <ncx:navLabel>
+          <ncx:text>First sub-item</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="plain-page.xhtml#h2_1"/>
+      </ncx:navPoint>
+      <ncx:navPoint id="navpoint3" playOrder="3">
+        <ncx:navLabel>
+          <ncx:text>Second sub-item</ncx:text>
+        </ncx:navLabel>
+        <ncx:content src="plain-page.xhtml#h2_2"/>
+      </ncx:navPoint>
+    </ncx:navPoint>
+    <ncx:navPoint id="navpoint4" playOrder="4">
+      <ncx:navLabel>
+        <ncx:text>Second item</ncx:text>
+      </ncx:navLabel>
+      <ncx:content src="plain-page.xhtml#h1_2"/>
+    </ncx:navPoint>
+  </ncx:navMap>
+</ncx:ncx>
