@@ -288,6 +288,19 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Invokes {@link #applyTo(TaskRepository)} by default. Client may override.
+	 * 
+	 * @since 3.7
+	 * @return true to indicate the finish request was accepted, and false to indicate that the finish request was
+	 *         refused
+	 */
+	public boolean preFinish(TaskRepository repository) {
+		return true;
+	}
+
+	/**
 	 * Returns a status if there is a message to display, otherwise null.
 	 */
 	private IStatus computeValidation() {

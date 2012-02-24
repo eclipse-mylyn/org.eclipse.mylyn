@@ -54,37 +54,39 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			String oldUrl = repository.getRepositoryUrl();
-			String newUrl = settingsPage.getRepositoryUrl();
-			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
-				TasksUi.getTaskActivityManager().deactivateActiveTask();
+			boolean finishAccepted = settingsPage.preFinish(repository);
+			if (finishAccepted) {
+				String oldUrl = repository.getRepositoryUrl();
+				String newUrl = settingsPage.getRepositoryUrl();
+				if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
+					TasksUi.getTaskActivityManager().deactivateActiveTask();
 
-				RefactorRepositoryUrlOperation operation = new RefactorRepositoryUrlOperation(repository, oldUrl,
-						newUrl);
-				try {
-					getContainer().run(true, false, operation);
-				} catch (InvocationTargetException e) {
-					StatusManager.getManager().handle(
-							new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-									Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls),
-							StatusManager.SHOW | StatusManager.LOG);
-					return false;
-				} catch (InterruptedException e) {
-					// should not get here
+					RefactorRepositoryUrlOperation operation = new RefactorRepositoryUrlOperation(repository, oldUrl,
+							newUrl);
+					try {
+						getContainer().run(true, false, operation);
+					} catch (InvocationTargetException e) {
+						StatusManager.getManager().handle(
+								new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+										Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls),
+								StatusManager.SHOW | StatusManager.LOG);
+						return false;
+					} catch (InterruptedException e) {
+						// should not get here
+					}
 				}
+				if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+					repository.setRepositoryUrl(newUrl);
+				}
+				settingsPage.performFinish(repository);
+				if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
+					TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
+				}
+				TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository,
+						new TaskRepositoryDelta(Type.ALL));
+				TasksUiPlugin.getExternalizationManager().requestSave();
 			}
-
-			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				repository.setRepositoryUrl(newUrl);
-			}
-			settingsPage.performFinish(repository);
-			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
-				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
-			}
-			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository,
-					new TaskRepositoryDelta(Type.ALL));
-			TasksUiPlugin.getExternalizationManager().requestSave();
-			return true;
+			return finishAccepted;
 		}
 		return false;
 	}

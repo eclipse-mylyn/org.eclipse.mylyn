@@ -241,6 +241,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_User_ID_;
 
+	public static String AbstractRepositorySettingsPage_Validate_on_Finish;
+
 	public static String AbstractRepositorySettingsPage_Validate_Settings;
 
 	public static String AbstractRepositorySettingsPage_Validate_Settings_Button_Label;

@@ -131,6 +131,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		setNeedsEncoding(true);
 		setNeedsTimeZone(false);
 		setNeedsHttpAuth(true);
+		setNeedsValidateOnFinish(true);
 	}
 
 	@Override

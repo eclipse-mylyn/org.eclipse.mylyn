@@ -47,6 +47,16 @@ public interface ITaskRepositoryPage extends IWizardPage {
 	 * @since 3.6
 	 * @see #applyTo(TaskRepository)
 	 */
-	public abstract void performFinish(TaskRepository repository);
+	public void performFinish(TaskRepository repository);
+
+	/**
+	 * Invoked when the wizard that contains page finishes. This method should validate all entered data to the
+	 * <code>repository</code> object.
+	 * 
+	 * @since 3.7
+	 * @return true to indicate the validation request was successful, and false to indicate that the validation request
+	 *         was not successful
+	 */
+	public abstract boolean preFinish(TaskRepository repository);
 
 }

@@ -174,6 +174,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private boolean needsValidation;
 
+	private boolean needsValidateOnFinish;
+
 	private boolean needsAdvanced;
 
 	protected Composite compositeContainer;
@@ -229,6 +231,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private Button disconnectedButton;
 
+	private Button validateOnFinishButton;
+
+	private boolean isValid;
+
 	/**
 	 * @since 3.0
 	 */
@@ -242,6 +248,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		setNeedsProxy(true);
 		setNeedsValidation(true);
 		setNeedsAdvanced(true);
+		setNeedsValidateOnFinish(false);
 	}
 
 	/**
@@ -278,7 +285,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		createSettingControls(compositeContainer);
 		createValidationControls(compositeContainer);
-
+		if (needsValidateOnFinish()) {
+			validateOnFinishButton = new Button(compositeContainer, SWT.CHECK);
+			validateOnFinishButton.setText(Messages.AbstractRepositorySettingsPage_Validate_on_Finish);
+			validateOnFinishButton.setSelection(true);
+		}
 		Dialog.applyDialogFont(compositeContainer);
 		setControl(compositeContainer);
 	}
@@ -1963,6 +1974,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			break;
 		}
 		setErrorMessage(null);
+
+		isValid = status.getSeverity() == IStatus.OK || status.getSeverity() == IStatus.INFO;
 	}
 
 	/**
@@ -2015,6 +2028,34 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			};
 		}
 		return null;
+	}
+
+	/**
+	 * @since 3.7
+	 */
+	public boolean needsValidateOnFinish() {
+		return needsValidateOnFinish;
+	}
+
+	/**
+	 * @since 3.7
+	 */
+	public void setNeedsValidateOnFinish(boolean needsValidateOnFinish) {
+		this.needsValidateOnFinish = needsValidateOnFinish;
+	}
+
+	@Override
+	public boolean preFinish(TaskRepository repository) {
+		if (validateOnFinishButton != null && validateOnFinishButton.getSelection()) {
+			isValid = false;
+			validateSettings();
+		} else {
+			isValid = true;
+		}
+		if (isValid) {
+			isValid = super.preFinish(repository);
+		}
+		return isValid;
 	}
 
 }
