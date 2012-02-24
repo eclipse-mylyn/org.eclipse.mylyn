@@ -42,10 +42,13 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaFlagMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -125,6 +128,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public static final String XML_RESPONSE_PRODUCTS = "products"; //$NON-NLS-1$
 
 	public static final String XML_RESPONSE_BUGS = "bugs"; //$NON-NLS-1$
+
+	private static final String Date = null;
 
 	/*
 	 * Fields
@@ -714,6 +719,8 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 						updateTaskDataFromMap(mapper, customFields, taskDataResultMap, taskData);
 						addCommentsFromHashToTaskData(mapper, taskData, comments);
 						addAttachmentsFromHashToTaskData(mapper, taskData, attachments);
+						updateCustomFields(taskData);
+						updateAttachmentMetaData(taskData);
 						collector.accept(taskData);
 					}
 				}
@@ -731,71 +738,21 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			Map<?, ?> taskDataResultMap, TaskData taskData) {
 		for (String attrib : (Set<String>) taskDataResultMap.keySet()) {
 			Object value = taskDataResultMap.get(attrib);
-			if (attrib.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			if (attrib.compareTo("flags") == 0) { //$NON-NLS-1$
+				addFlags(taskData, value, taskData.getRoot());
+			} else if (attrib.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 				TaskAttribute endAttribute = taskData.getRoot().getAttribute(attrib);
 				if (endAttribute == null) {
-					String desc = "???"; //$NON-NLS-1$
-					BugzillaCustomField customField = null;
-					for (BugzillaCustomField bugzillaCustomField : customFields) {
-						if (attrib.equals(bugzillaCustomField.getName())) {
-							customField = bugzillaCustomField;
-							break;
-						}
-					}
-					if (customField != null) {
-						TaskAttribute atr = taskData.getRoot().createAttribute(attrib);
-						desc = customField.getDescription();
-						atr.getMetaData().defaults().setLabel(desc).setReadOnly(false);
-						atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
-						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-						switch (customField.getFieldType()) {
-						case FreeText:
-							atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-							break;
-						case DropDown:
-							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-							break;
-						case MultipleSelection:
-							atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
-							break;
-						case LargeText:
-							atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
-							break;
-						case DateTime:
-							atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
-							break;
-
-						default:
-							List<String> options = customField.getOptions();
-							if (options.size() > 0) {
-								atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-							} else {
-								atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-							}
-						}
-						atr.getMetaData().setReadOnly(false);
-						if (value instanceof String || value instanceof Boolean || value instanceof Integer
-								|| value instanceof Date) {
-							atr.setValue(getValueStringFromObject(value, false));
-						} else if (value instanceof Object[]) {
-							for (Object object1 : (Object[]) value) {
-								if (object1 instanceof String || object1 instanceof Boolean
-										|| object1 instanceof Integer || object1 instanceof Date) {
-									atr.addValue(getValueStringFromObject(object1, true));
-								}
-							}
-						}
-					}
-				} else {
-					if (value instanceof String || value instanceof Boolean || value instanceof Integer
-							|| value instanceof Date) {
-						endAttribute.addValue(getValueStringFromObject(value, false));
-					} else if (value instanceof Object[]) {
-						for (Object object1 : (Object[]) value) {
-							if (object1 instanceof String || object1 instanceof Boolean || object1 instanceof Integer
-									|| object1 instanceof Date) {
-								endAttribute.addValue(getValueStringFromObject(object1, true));
-							}
+					endAttribute = taskData.getRoot().createAttribute(attrib);
+				}
+				if (value instanceof String || value instanceof Boolean || value instanceof Integer
+						|| value instanceof Date) {
+					endAttribute.addValue(getValueStringFromObject(value, false));
+				} else if (value instanceof Object[]) {
+					for (Object object1 : (Object[]) value) {
+						if (object1 instanceof String || object1 instanceof Boolean || object1 instanceof Integer
+								|| object1 instanceof Date) {
+							endAttribute.addValue(getValueStringFromObject(object1, true));
 						}
 					}
 				}
@@ -822,12 +779,36 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}
 	}
 
+	private void addFlags(TaskData taskData, Object value, TaskAttribute rootAttribute) {
+		if (value instanceof Object[]) {
+			for (Object valueTemp : (Object[]) value) {
+				HashMap<?, ?> flag = (HashMap<?, ?>) valueTemp;
+				// We have the following information which are not used:
+				// Integer type_id = (Integer) flag.get("type_id");
+				// Date creation_date = (Date) flag.get("creation_date");
+				// Date modification_date = (Date) flag.get("modification_date");
+				Integer id = (Integer) flag.get("id"); //$NON-NLS-1$
+				String name = (String) flag.get("name"); //$NON-NLS-1$
+				String status = (String) flag.get("status"); //$NON-NLS-1$
+				String setter = (String) flag.get("setter"); //$NON-NLS-1$
+				Object requestee = flag.get("requestee"); //$NON-NLS-1$
+				TaskAttribute attribute = rootAttribute.createAttribute(BugzillaAttribute.KIND_FLAG + id);
+				BugzillaFlagMapper flagMapper = new BugzillaFlagMapper(bugzillaClient.getConnector());
+				flagMapper.setRequestee((String) requestee);
+				flagMapper.setSetter(setter);
+				flagMapper.setState(status);
+				flagMapper.setFlagId(name);
+				flagMapper.setNumber(id);
+				flagMapper.applyTo(attribute);
+			}
+		}
+	}
+
 	private void addAttachmentsFromHashToTaskData(final TaskAttributeMapper mapper, TaskData taskData,
 			Object[] attachments) {
 		if (attachments != null) {
 			for (Object attachmentTemp : attachments) {
 				// We have the following information which are not used:
-				// (Date) attachment.get("last_change_time");
 				// (Integer) attachment.get("bug_id");
 				// (Integer) attachment.get("is_private");
 				// (Integer) attachment.get("is_url");
@@ -838,10 +819,25 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				String file_name = (String) attachment.get("file_name"); //$NON-NLS-1$
 				String summary = (String) attachment.get("summary"); //$NON-NLS-1$
 				String content_type = (String) attachment.get("content_type"); //$NON-NLS-1$
+				Integer size = (Integer) attachment.get("size"); //$NON-NLS-1$
 
 				Integer is_obsolete = (Integer) attachment.get("is_obsolete"); //$NON-NLS-1$
 				Integer is_patch = (Integer) attachment.get("is_patch"); //$NON-NLS-1$
 				String creator = (String) attachment.get("creator"); //$NON-NLS-1$
+				Date lastChangeTime = (Date) attachment.get("last_change_time"); //$NON-NLS-1$
+
+				try {
+					SimpleDateFormat x0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US); //$NON-NLS-1$
+					SimpleDateFormat x1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZ"); //$NON-NLS-1$
+					String dateString = x0.format(creation_time);
+					creation_time = x1.parse(dateString + " GMT"); //$NON-NLS-1$
+					dateString = x0.format(lastChangeTime);
+					lastChangeTime = x1.parse(dateString + " GMT"); //$NON-NLS-1$
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				TaskAttribute attachmentAttribute = taskData.getRoot().createAttribute(
 						TaskAttribute.PREFIX_ATTACHMENT + id);
 				BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachmentAttribute);
@@ -850,14 +846,17 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				author.setName(creator);
 				attachmentMapper.setAuthor(author);
 //				attachmentMapper.setComment(summary);
+				attachmentMapper.setDeltaDate(lastChangeTime);
 				attachmentMapper.setContentType(content_type);
 				attachmentMapper.setCreationDate(creation_time);
 				attachmentMapper.setDeprecated(is_obsolete.equals("1")); //$NON-NLS-1$
 				attachmentMapper.setDescription(summary);
 				attachmentMapper.setFileName(file_name);
-				attachmentMapper.setLength(-1L);
+				attachmentMapper.setLength(size != null ? size : -1L);
 				attachmentMapper.setPatch(is_patch.equals("1")); //$NON-NLS-1$
 				attachmentMapper.applyTo(attachmentAttribute);
+
+				addFlags(taskData, attachment.get("flags"), attachmentAttribute);
 			}
 		}
 	}
@@ -865,6 +864,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	private void addCommentsFromHashToTaskData(final TaskAttributeMapper mapper, TaskData taskData,
 			HashMap<String, Object[]> comments) {
 		if (comments != null) {
+			TaskRepository taskRepository = mapper.getTaskRepository();
+			String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP);
+			boolean useIsPrivate = (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
 			Object[] commentArray = comments.get("comments"); //$NON-NLS-1$
 			if (commentArray != null) {
 				int commentNum = 0;
@@ -873,7 +875,18 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					HashMap<String, Object> commentHash = (HashMap<String, Object>) object2;
 					String text = (String) commentHash.get("text"); //$NON-NLS-1$
 					if (commentNum == 0) {
-						createAttrribute(taskData, mapper, text, BugzillaAttribute.LONG_DESC, true);
+						TaskAttribute description = createAttrribute(taskData, mapper, text,
+								BugzillaAttribute.LONG_DESC, true);
+						if (useIsPrivate) {
+							Boolean is_private = (Boolean) commentHash.get("is_private"); //$NON-NLS-1$
+							Integer commentID = (Integer) commentHash.get("id"); //$NON-NLS-1$
+							TaskAttribute idAttribute = description.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_ID);
+							idAttribute.setValue(commentID.toString());
+							if (useIsPrivate) {
+								TaskAttribute isprivateAttribute = description.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
+								isprivateAttribute.setValue(is_private ? "1" : "0");
+							}
+						}
 						commentNum++;
 						continue;
 					}
@@ -889,9 +902,13 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 					taskComment.setCommentId(commentID.toString());
 					taskComment.setNumber(commentNum);
-					IRepositoryPerson author = taskData.getAttributeMapper().getTaskRepository().createPerson(creator);
-					author.setName(creator);
-					taskComment.setAuthor(author);
+					if (creator != null) {
+						IRepositoryPerson author = taskData.getAttributeMapper()
+								.getTaskRepository()
+								.createPerson(creator);
+						author.setName(creator);
+						taskComment.setAuthor(author);
+					}
 					taskComment.setIsPrivate(is_private);
 					TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 					attrTimestamp.setValue(getValueStringFromObject(time, false));
@@ -910,6 +927,16 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					taskComment.applyTo(attribute);
 					commentNum++;
 				}
+				// Need to set LONGDESCLENGTH to number of comments + 1 for description
+				TaskAttribute numCommentsAttribute = taskData.getRoot().getMappedAttribute(
+						BugzillaAttribute.LONGDESCLENGTH.getKey());
+				if (numCommentsAttribute == null) {
+					numCommentsAttribute = BugzillaTaskDataHandler.createAttribute(taskData,
+							BugzillaAttribute.LONGDESCLENGTH);
+				}
+
+				numCommentsAttribute.setValue("" + commentNum); //$NON-NLS-1$
+
 			}
 		}
 
@@ -988,9 +1015,72 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				}
 
 			}
-			return attribute;
 		}
-		return null;
+		return attribute;
 	}
 
+	private void updateCustomFields(TaskData taskData) {
+		String repURL = taskData.getRepositoryUrl();
+		if (repURL.indexOf("/xmlrpc.cgi") == -1) { //$NON-NLS-1$
+			return;
+		}
+		RepositoryConfiguration config = bugzillaClient.getConnector().getRepositoryConfiguration(
+				repURL.substring(0, repURL.indexOf("/xmlrpc.cgi"))); //$NON-NLS-1$
+		if (config != null) {
+			for (BugzillaCustomField bugzillaCustomField : config.getCustomFields()) {
+
+				TaskAttribute atr = taskData.getRoot().getAttribute(bugzillaCustomField.getName());
+				if (atr == null) {
+					atr = taskData.getRoot().createAttribute(bugzillaCustomField.getName());
+				}
+
+				if (atr != null) {
+					atr.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
+					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+
+					switch (bugzillaCustomField.getFieldType()) {
+					case FreeText:
+						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						break;
+					case DropDown:
+						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						break;
+					case MultipleSelection:
+						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+						break;
+					case LargeText:
+						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+						break;
+					case DateTime:
+						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+						break;
+
+					default:
+						List<String> options = bugzillaCustomField.getOptions();
+						if (options.size() > 0) {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						} else {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						}
+					}
+					atr.getMetaData().setReadOnly(false);
+				}
+			}
+		}
+	}
+
+	private void updateAttachmentMetaData(TaskData taskData) {
+		List<TaskAttribute> taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT);
+		String repURL = taskData.getRepositoryUrl();
+		if (repURL.indexOf("/xmlrpc.cgi") == -1) { //$NON-NLS-1$
+			return;
+		}
+		for (TaskAttribute attachment : taskAttachments) {
+			BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachment);
+			attachmentMapper.setUrl(repURL.substring(0, repURL.indexOf("/xmlrpc.cgi"))
+					+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentMapper.getAttachmentId());
+			attachmentMapper.applyTo(attachment);
+		}
+	}
 }

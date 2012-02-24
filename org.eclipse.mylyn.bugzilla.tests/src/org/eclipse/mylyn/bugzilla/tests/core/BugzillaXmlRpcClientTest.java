@@ -11,12 +11,17 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
@@ -30,17 +35,37 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.CustomTransitionManager;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
@@ -59,6 +84,8 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 	private TaskRepository repository;
 
 	private BugzillaRepositoryConnector connector;
+
+	protected TaskRepositoryManager manager;
 
 	private BugzillaClient client;
 
@@ -308,6 +335,11 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 
 	@Override
 	public void setUp() throws Exception {
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		manager = TasksUiPlugin.getRepositoryManager();
+		TestFixture.resetTaskListAndRepositories();
 		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
 		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
@@ -315,6 +347,282 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 		connector = BugzillaFixture.current().connector();
 		bugzillaClient = new BugzillaXmlRpcClient(webLocation, client);
 		bugzillaClient.setContentTypeCheckingEnabled(true);
+		TasksUi.getRepositoryManager().addRepository(repository);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		TestFixture.resetTaskList();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+	}
+
+	protected TaskDataModel createModel(ITask task) throws CoreException {
+		ITaskDataWorkingCopy taskDataState = getWorkingCopy(task);
+		return new TaskDataModel(repository, task, taskDataState);
+	}
+
+	protected ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException {
+		return TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+	}
+
+	protected void submit(TaskDataModel model) {
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
+				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
+		submitJob.schedule();
+		try {
+			submitJob.join();
+		} catch (InterruptedException e) {
+			fail(e.getMessage());
+		}
+	}
+
+//	protected void synchAndAssertState(Set<ITask> tasks, SynchronizationState state) {
+//		for (ITask task : tasks) {
+//			TasksUiInternal.synchronizeTask(connector, task, true, null);
+//			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+//			assertEquals(task.getSynchronizationState(), state);
+//		}
+//	}
+
+	protected ITask generateLocalTaskAndDownload(String id) throws CoreException {
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, id);
+		TasksUiPlugin.getTaskList().addTask(task);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
+		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+		return task;
+	}
+
+	protected String taskExists() {
+		String taskID = null;
+		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20XMLRPC%20getBugData&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
+		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			taskID = sks.last().toString();
+		}
+		return taskID;
+	}
+
+	protected String createTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test XMLRPC getBugData";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the XMLRPC getBugData Bug";
+			}
+		};
+		TaskAttribute flagA = null;
+		TaskAttribute flagB = null;
+		TaskAttribute flagC = null;
+		TaskAttribute flagD = null;
+		TaskAttribute stateA = null;
+		TaskAttribute stateB = null;
+		TaskAttribute stateC = null;
+		TaskAttribute stateD = null;
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		//new NullProgressMonitor());
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+
+		ITask task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+
+		/* Test uploading a proper file */
+		String fileName = "test-attach-1.txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		attachFile.deleteOnExit();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		write.write("test file from " + System.currentTimeMillis());
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType("text/plain");
+		attachment.setDescription("Description");
+		attachment.setName("My Attachment 1");
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+
+		TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
+		int flagCount = 0;
+		int flagCountUnused = 0;
+		TaskAttribute attachmentFlag1 = null;
+		TaskAttribute attachmentFlag2 = null;
+		for (TaskAttribute attribute : attachmentAttribute.getAttributes().values()) {
+			if (!attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
+				continue;
+			}
+			flagCount++;
+			if (attribute.getId().startsWith(BugzillaAttribute.KIND_FLAG_TYPE)) {
+				flagCountUnused++;
+				TaskAttribute stateAttribute = taskData.getAttributeMapper().getAssoctiatedAttribute(attribute);
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag1")) {
+					attachmentFlag1 = attribute;
+				}
+				if (stateAttribute.getMetaData().getLabel().equals("AttachmentFlag2")) {
+					attachmentFlag2 = attribute;
+				}
+			}
+		}
+		assertEquals(2, flagCount);
+		assertEquals(2, flagCountUnused);
+		assertNotNull(attachmentFlag1);
+		assertNotNull(attachmentFlag2);
+		TaskAttribute stateAttribute1 = taskData.getAttributeMapper().getAssoctiatedAttribute(attachmentFlag1);
+		stateAttribute1.setValue("?");
+		TaskAttribute requestee = attachmentFlag1.getAttribute("requestee"); //$NON-NLS-1$
+		requestee.setValue("guest@mylyn.eclipse.org");
+		client.postUpdateAttachment(attachmentAttribute, "update", null);
+
+		task = generateLocalTaskAndDownload(taskId);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+
+		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
+			if (taskAttribute.getId().startsWith(BugzillaAttribute.KIND_FLAG)) {
+				TaskAttribute state = taskAttribute.getAttribute("state");
+				if (state.getMetaData().getLabel().equals("BugFlag1")) {
+					flagA = taskAttribute;
+					stateA = state;
+				} else if (state.getMetaData().getLabel().equals("BugFlag2")) {
+					flagB = taskAttribute;
+					stateB = state;
+				} else if (state.getMetaData().getLabel().equals("BugFlag3")) {
+					flagC = taskAttribute;
+					stateC = state;
+				} else if (state.getMetaData().getLabel().equals("BugFlag4")) {
+					flagD = taskAttribute;
+					stateD = state;
+				}
+			}
+		}
+		assertNotNull(flagA);
+		assertNotNull(flagB);
+		assertNotNull(flagC);
+		assertNotNull(flagD);
+		assertNotNull(stateA);
+		assertNotNull(stateB);
+		assertNotNull(stateC);
+		assertNotNull(stateD);
+		if (flagD != null) {
+			TaskAttribute requesteeD = flagD.getAttribute("requestee");
+			requesteeD.setValue("guest@mylyn.eclipse.org");
+		}
+		if (stateA != null) {
+			stateA.setValue("+");
+		}
+		if (stateB != null) {
+			stateB.setValue("?");
+		}
+		if (stateC != null) {
+			stateC.setValue("?");
+		}
+		if (stateD != null) {
+			stateD.setValue("?");
+		}
+
+		TaskAttribute cf_freetext = taskData.getRoot().getAttribute("cf_freetext");
+		TaskAttribute cf_dropdown = taskData.getRoot().getAttribute("cf_dropdown");
+		TaskAttribute cf_largetextbox = taskData.getRoot().getAttribute("cf_largetextbox");
+		TaskAttribute cf_multiselect = taskData.getRoot().getAttribute("cf_multiselect");
+		TaskAttribute cf_datetime = taskData.getRoot().getAttribute("cf_datetime");
+		TaskAttribute cf_bugid = taskData.getRoot().getAttribute("cf_bugid");
+		cf_freetext.setValue("Freetext");
+		cf_dropdown.setValue("one");
+		cf_largetextbox.setValue("large text box");
+		cf_multiselect.setValue("Blue");
+		cf_datetime.setValue("2012-01-01 00:00:00");
+		cf_bugid.setValue("3");
+//		<cf_freetext>aaaa</cf_freetext>
+//		<cf_dropdown>one</cf_dropdown>
+//		<cf_largetextbox>aaaaaaaaaaa</cf_largetextbox>
+//		<cf_multiselect>Blue</cf_multiselect>
+//		<cf_datetime>2012-02-01 00:00:00</cf_datetime>
+//		<cf_bugid>3</cf_bugid>
+		model.attributeChanged(cf_freetext);
+		model.attributeChanged(cf_dropdown);
+		model.attributeChanged(cf_largetextbox);
+		model.attributeChanged(cf_multiselect);
+		model.attributeChanged(cf_datetime);
+		model.attributeChanged(cf_bugid);
+		model.attributeChanged(flagA);
+		model.attributeChanged(flagB);
+		model.attributeChanged(flagC);
+		model.attributeChanged(flagD);
+		changed.clear();
+		changed.add(flagA);
+		changed.add(flagB);
+		changed.add(flagC);
+		changed.add(flagD);
+		changed.add(cf_freetext);
+		changed.add(cf_dropdown);
+		changed.add(cf_largetextbox);
+		changed.add(cf_multiselect);
+		changed.add(cf_datetime);
+		changed.add(cf_bugid);
+
+		workingCopy.save(changed, null);
+		response = BugzillaFixture.current().submitTask(taskData, client);
+
+		return taskId;
 	}
 
 //	@SuppressWarnings("unused")
@@ -332,7 +640,6 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 //			}
 //		}
 //	}
-
 	public void testGetVersion() throws Exception {
 		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
 			return;
@@ -384,7 +691,7 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 				assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("name"));
 				assertEquals("Mylyn guest", ((HashMap<String, String>) userList2[0]).get("real_name"));
 				assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[0]).get("can_login"));
-				
+
 				assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList2[1]).get("id"));
 				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("email"));
 				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("name"));
@@ -494,14 +801,13 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 				|| BugzillaFixture.current() == BugzillaFixture.BUGS_3_4) {
 			return;
 		} else {
-
 			Set<String> taskIds = new HashSet<String>();
-//FB disabled after clear of the database I need to find an other bug
-//			if (repository.getRepositoryUrl().startsWith("http://mylyn.org/bugs40")) {
-//				taskIds.add("1526");
-//			}
-			taskIds.add("1");
-//		taskIds.add("3");
+			String taskId = taskExists();
+			if (taskId == null) {
+				taskId = createTask();
+			}
+
+			taskIds.add(taskId);
 			final Map<String, TaskData> results = new HashMap<String, TaskData>();
 			final Map<String, TaskData> resultsXMLRPC = new HashMap<String, TaskData>();
 			TaskDataCollector collector = new TaskDataCollector() {
@@ -581,6 +887,17 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 				Map<String, TaskAttribute> attributesHTML = taskDataHTML.getRoot().getAttributes();
 				Map<String, TaskAttribute> attributesXMLRPC = taskDataXMLRPC.getRoot().getAttributes();
 				div += compareAttributes(attributesHTML, attributesXMLRPC, "", "Root-" + taskID + ": "); //$NON-NLS-1$
+//				TaskAttribute aa0 = taskDataHTML.getRoot().getAttribute("estimated_time");
+//				TaskAttribute aa1 = taskDataXMLRPC.getRoot().getAttribute("estimated_time");
+//				TaskAttribute ab0 = taskDataHTML.getRoot().getAttribute("remaining_time");
+//				TaskAttribute ab1 = taskDataXMLRPC.getRoot().getAttribute("remaining_time");
+//				TaskAttribute ac0 = taskDataHTML.getRoot().getAttribute("actual_time");
+//				TaskAttribute ac1 = taskDataXMLRPC.getRoot().getAttribute("actual_time");
+//				TaskAttribute ad0 = taskDataHTML.getRoot().getAttribute("deadline");
+//				TaskAttribute ad1 = taskDataXMLRPC.getRoot().getAttribute("deadline");
+//				@SuppressWarnings("unused")
+//				int i = 9;
+//				i++;
 			}
 			@SuppressWarnings("unused")
 			// set breakpoint to see what is the div between HTML and XMLRPC
@@ -613,6 +930,35 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 			if (attributeHTML.getValue().compareTo(attributeXMLRPC.getValue()) != 0) {
 				div += (prefix + attributeNameHTML + " value not equal HTML = \'" + attributeHTML.getValue()
 						+ "\' XMLRPC = \'" + attributeXMLRPC.getValue() + "\'\n");
+			}
+			TaskAttributeMetaData metaHTML = attributeHTML.getMetaData();
+			TaskAttributeMetaData metaXMLRPC = attributeXMLRPC.getMetaData();
+			if (metaHTML != null && metaXMLRPC == null) {
+				div += (prefix + attributeNameHTML + " MetaData not in XMLRPC\n");
+			}
+
+			if (metaHTML != null && metaXMLRPC != null) {
+				String a0 = metaHTML.getKind();
+				String a1 = metaXMLRPC.getKind();
+
+				if (metaHTML.getKind() != null && metaXMLRPC.getKind() == null) {
+					div += (prefix + attributeNameHTML + " MetaData Kind not in XMLRPC\n");
+				} else if (metaHTML.getKind() != null && metaHTML.getKind().compareTo(metaXMLRPC.getKind()) != 0) {
+					div += (prefix + attributeNameHTML + " Meta Kind not equal HTML = \'" + metaHTML.getKind()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getKind() + "\'\n");
+				}
+				if (metaHTML.getType() != null && metaXMLRPC.getType() == null) {
+					div += (prefix + attributeNameHTML + " MetaData Type not in XMLRPC\n");
+				} else if (metaHTML.getType() != null && metaHTML.getType().compareTo(metaXMLRPC.getType()) != 0) {
+					div += (prefix + attributeNameHTML + " Meta Type not equal HTML = \'" + metaHTML.getType()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getType() + "\'\n");
+				}
+				if (metaHTML.getLabel() != null && metaXMLRPC.getLabel() == null) {
+					div += (prefix + attributeNameHTML + " MetaData Label not in XMLRPC\n");
+				} else if (metaHTML.getLabel() != null && metaHTML.getLabel().compareTo(metaXMLRPC.getLabel()) != 0) {
+					div += (prefix + attributeNameHTML + " Meta Label not equal HTML = \'" + metaHTML.getLabel()
+							+ "\' XMLRPC = \'" + metaXMLRPC.getLabel() + "\'\n");
+				}
 			}
 			Map<String, TaskAttribute> subAttribHTML = attributeHTML.getAttributes();
 			if (!subAttribHTML.isEmpty()) {

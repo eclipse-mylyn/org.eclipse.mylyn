@@ -86,6 +86,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private final SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //$NON-NLS-1$
 
+	private final SimpleDateFormat simpleFormatter_deltaTS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
+
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
 			BugzillaRepositoryConnector connector) {
@@ -405,7 +407,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				try {
 					if (parsedText != null) {
 						try {
-							attachment.setDeltaDate(simpleFormatter.parse(parsedText));
+							attachment.setDeltaDate(simpleFormatter_deltaTS.parse(parsedText));
 						} catch (ParseException e) {
 						}
 					}

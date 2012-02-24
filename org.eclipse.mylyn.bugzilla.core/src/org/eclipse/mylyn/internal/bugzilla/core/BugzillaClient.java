@@ -2556,4 +2556,8 @@ public class BugzillaClient {
 		}
 	}
 
+	public BugzillaRepositoryConnector getConnector() {
+		return connector;
+	}
+
 }
