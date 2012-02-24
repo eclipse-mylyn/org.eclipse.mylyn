@@ -120,16 +120,16 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 
 	protected void attachFirstFile(String[] files) {
 		if (files != null && files.length > 0) {
-				File file = new File(files[0]);
-				NewAttachmentWizardDialog dialog = EditorUtil.openNewAttachmentWizard(page, null,
-						new FileTaskAttachmentSource(file));
-				if (files.length > 1) {
-					dialog.setMessage(
-							Messages.TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached,
-							IMessageProvider.WARNING);
-				}
+			File file = new File(files[0]);
+			NewAttachmentWizardDialog dialog = EditorUtil.openNewAttachmentWizard(page, null,
+					new FileTaskAttachmentSource(file));
+			if (files.length > 1) {
+				dialog.setMessage(
+						Messages.TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached,
+						IMessageProvider.WARNING);
 			}
 		}
+	}
 
 	public static String[] getFilesFromSelection(ISelection selection) {
 		List<String> files = new ArrayList<String>();
