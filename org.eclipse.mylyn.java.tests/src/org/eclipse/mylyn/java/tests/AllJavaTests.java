@@ -35,7 +35,6 @@ public class AllJavaTests {
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
-		suite.addTestSuite(EditorManagerTest.class);
 		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
@@ -55,6 +54,7 @@ public class AllJavaTests {
 		suite.addTestSuite(JavaEditingMonitorTest.class);
 		suite.addTestSuite(JavaStackTraceContextComputationStrategyTest.class);
 		suite.addTestSuite(JavaTaskTemplateVariableResolverTest.class);
+		suite.addTestSuite(JavaEditorManagerTest.class);
 		return suite;
 	}
 

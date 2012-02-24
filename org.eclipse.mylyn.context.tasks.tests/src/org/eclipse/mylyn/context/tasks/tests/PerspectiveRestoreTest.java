@@ -11,22 +11,30 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Collections;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class ContextPerspectiveManagerTest extends TestCase {
+public class PerspectiveRestoreTest {
 
 	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
 
@@ -34,8 +42,8 @@ public class ContextPerspectiveManagerTest extends TestCase {
 
 	private boolean previousSetting;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 
 		TestFixture.resetTaskListAndRepositories();
@@ -47,18 +55,33 @@ public class ContextPerspectiveManagerTest extends TestCase {
 				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		ContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
 		TestFixture.resetTaskListAndRepositories();
 	}
 
+	@Test
+	public void testHasPlanningAndResourcePerspective() throws Exception {
+		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, getWorkbenchWindow());
+		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
+		PlatformUI.getWorkbench().showPerspective(ID_PLANNING_PERSPECTIVE, getWorkbenchWindow());
+		assertEquals(ID_PLANNING_PERSPECTIVE, getActivePerspective());
+	}
+
+	@Test
+	public void testHasActiveWorkbenchWindow() throws Exception {
+		assertNotNull("No active workbench window. Following tests are likely to fail.", PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
+	}
+
+	@Test
 	public void testRestorePerspective() throws Exception {
 		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, getWorkbenchWindow());
 		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
-		TaskTask task = TaskTestUtil.createMockTask("1");
+		TaskTask task = TaskTestUtil.createMockTask("testRestorePerspective");
 
 		// check that perspective is not switched for new task
 		TasksUi.getTaskActivityManager().activateTask(task);
@@ -75,27 +98,29 @@ public class ContextPerspectiveManagerTest extends TestCase {
 		assertEquals(ID_PLANNING_PERSPECTIVE, getActivePerspective());
 	}
 
-	// FIXME 3.5 re-enable test
-//	public void testRecreateTask() throws Exception {
-//		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, MonitorUi.getLaunchingWorkbenchWindow());
-//		TaskTask task = TaskTestUtil.createMockTask("1");
-//
-//		// check that deleting task switches back to original perspective
-//		TasksUi.getTaskActivityManager().activateTask(task);
-//		PlatformUI.getWorkbench().showPerspective(ID_PLANNING_PERSPECTIVE, MonitorUi.getLaunchingWorkbenchWindow());
-//		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
-//		TasksUiPlugin.getTaskList().deleteTask(task);
-//		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
-//
-//		task = TaskTestUtil.createMockTask("1");
-//
-//		// check that activating new task with the same id does not switch the perspective 
-//		TasksUi.getTaskActivityManager().activateTask(task);
-//		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
-//	}
+	@Test
+	public void testRecreateTask() throws Exception {
+		PlatformUI.getWorkbench().showPerspective(ID_RESOURCE_PERSPECTIVE, getWorkbenchWindow());
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		TasksUiPlugin.getTaskList().addTask(task);
+
+		// check that deleting task switches back to original perspective
+		TasksUi.getTaskActivityManager().activateTask(task);
+		PlatformUI.getWorkbench().showPerspective(ID_PLANNING_PERSPECTIVE, getWorkbenchWindow());
+		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
+		// XXX ensure that InteractionContextManager is notified, TasksUiPlugin.getTaskList().deleteTask(task) does not do that
+		DeleteAction.performDeletion(Collections.singleton(task));
+		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
+
+		task = TaskTestUtil.createMockTask("1");
+
+		// check that activating new task with the same id does not switch the perspective 
+		TasksUi.getTaskActivityManager().activateTask(task);
+		assertEquals(ID_RESOURCE_PERSPECTIVE, getActivePerspective());
+	}
 
 	private IWorkbenchWindow getWorkbenchWindow() {
-		IWorkbenchWindow window = ContextUiPlugin.getPerspectiveManager().getWorkbenchWindow();
+		IWorkbenchWindow window = ContextUiPlugin.getPerspectiveStateParticipant().getWorkbenchWindow();
 		assertNotNull(window);
 		return window;
 	}

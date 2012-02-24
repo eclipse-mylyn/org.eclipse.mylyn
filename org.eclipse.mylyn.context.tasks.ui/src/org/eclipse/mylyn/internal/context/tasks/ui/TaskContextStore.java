@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CommonListenerList;
+import org.eclipse.mylyn.commons.core.CommonListenerList.Notifier;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.storage.CommonStore;
@@ -31,6 +33,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.tasks.ui.TaskContextStoreEvent.Kind;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -38,6 +41,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -46,31 +51,53 @@ public class TaskContextStore extends AbstractTaskContextStore {
 
 	private static final String FOLDER_DATA = "data"; //$NON-NLS-1$
 
+	private final CommonListenerList<TaskContextStoreListener> listeners;
+
 	private File directory;
 
 	private CommonStore taskStore;
 
-	public ICommonStorable getStorable(ITask task) {
-		return getTaskStore().get(getPath(task));
+	private final ContextStatePersistenceHandler stateHandler;
+
+	public TaskContextStore() {
+		this.listeners = new CommonListenerList<TaskContextStoreListener>(TasksUiPlugin.ID_PLUGIN);
+		this.stateHandler = new ContextStatePersistenceHandler();
 	}
 
-	private IPath getPath(ITask task) {
-		IPath path = new Path(""); //$NON-NLS-1$
-		path = path.append(task.getConnectorKind() + "-" + CoreUtil.asFileName(task.getRepositoryUrl())); //$NON-NLS-1$
-		path = path.append(FOLDER_DATA);
-		path = path.append(CoreUtil.asFileName(task.getTaskId()));
-		return path;
-	}
-
-	@Override
-	public IAdaptable copyContext(ITask sourceTask, ITask targetTask) {
-		IInteractionContext result = copyContextInternal(sourceTask, targetTask);
-		return asAdaptable(result);
+	public void addListener(TaskContextStoreListener listener) {
+		listeners.add(listener);
 	}
 
 	@Override
 	public void clearContext(ITask task) {
 		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+
+		stateHandler.clear(task);
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.CLEAR, task);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
+	}
+
+	@Override
+	public IAdaptable copyContext(ITask sourceTask, ITask targetTask) {
+		IInteractionContext result = copyContextInternal(sourceTask, targetTask);
+
+		stateHandler.copy(sourceTask, targetTask);
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.COPY, sourceTask, targetTask);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
+
+		return asAdaptable(result);
 	}
 
 	@Override
@@ -86,11 +113,24 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 
 		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+		stateHandler.clear(task);
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.DELETE, task);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
 	}
 
 	@Override
 	public File getFileForContext(ITask task) {
 		return ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+	}
+
+	public ICommonStorable getStorable(ITask task) {
+		return getTaskStore().get(getPath(task));
 	}
 
 	@Override
@@ -102,8 +142,15 @@ public class TaskContextStore extends AbstractTaskContextStore {
 	public void mergeContext(ITask sourceTask, ITask targetTask) {
 		ContextCorePlugin.getContextStore().merge(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
 
-		// FIXME migrate local state
-		taskStore.copy(getPath(sourceTask), getPath(targetTask), false);
+		stateHandler.merge(sourceTask, targetTask);
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.MERGE, sourceTask, targetTask);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
 	}
 
 	@Override
@@ -122,6 +169,21 @@ public class TaskContextStore extends AbstractTaskContextStore {
 			// ignore
 		}
 
+		try {
+			taskStore.move(getPath(sourceTask), getPath(targetTask));
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Failed to migrate context state to new task", e)); //$NON-NLS-1$
+		}
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.MOVE, sourceTask, targetTask);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
+
 		return asAdaptable(result);
 	}
 
@@ -134,22 +196,38 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 	}
 
-	private void refactorTasksStoreLocation(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
-		IPath oldPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(oldRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
-		IPath newPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(newRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
-
-		File oldFile = new File(directory, oldPath.toOSString());
-		if (oldFile.exists()) {
-			File newFile = new File(directory, newPath.toOSString());
-			newFile.getParentFile().mkdirs();
-			oldFile.renameTo(newFile);
-		}
+	public void removeListener(TaskContextStoreListener listener) {
+		listeners.remove(listener);
 	}
 
 	@Override
 	public void saveActiveContext() {
-		// FIXME save local state
 		ContextCorePlugin.getContextStore().saveActiveContext();
+
+		ITask task = TasksUi.getTaskActivityManager().getActiveTask();
+		stateHandler.saved(task);
+
+		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.SAVE, task);
+		listeners.notify(new Notifier<TaskContextStoreListener>() {
+			@Override
+			public void run(TaskContextStoreListener listener) throws Exception {
+				listener.taskContextChanged(event);
+			}
+		});
+	}
+
+	@Override
+	public synchronized void setDirectory(File directory) {
+		this.directory = directory;
+		if (taskStore != null) {
+			taskStore.setLocation(directory);
+		}
+
+		File contextDirectory = new File(directory.getParent(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
+		if (!contextDirectory.exists()) {
+			contextDirectory.mkdirs();
+		}
+		ContextCorePlugin.getContextStore().setContextDirectory(contextDirectory);
 	}
 
 	private IAdaptable asAdaptable(final IInteractionContext result) {
@@ -167,11 +245,22 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		ContextCorePlugin.getContextStore().saveActiveContext();
 		final IInteractionContext result = ContextCore.getContextStore().cloneContext(sourceTask.getHandleIdentifier(),
 				targetTask.getHandleIdentifier());
-
-		// FIXME migrate local state
-		taskStore.copy(getPath(sourceTask), getPath(targetTask), true);
-
 		return result;
+	}
+
+	private IPath getPath(ITask task) {
+		IPath path = new Path(""); //$NON-NLS-1$
+		path = path.append(task.getConnectorKind() + "-" + CoreUtil.asFileName(task.getRepositoryUrl())); //$NON-NLS-1$
+		path = path.append(FOLDER_DATA);
+		path = path.append(CoreUtil.asFileName(task.getTaskId()));
+		return path;
+	}
+
+	private synchronized CommonStore getTaskStore() {
+		if (taskStore == null) {
+			taskStore = new CommonStore(directory);
+		}
+		return taskStore;
 	}
 
 	@SuppressWarnings("restriction")
@@ -231,25 +320,19 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 	}
 
-	@Override
-	public synchronized void setDirectory(File directory) {
-		this.directory = directory;
-		if (taskStore != null) {
-			taskStore.setLocation(directory);
+	private void refactorTasksStoreLocation(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
+		IPath oldPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(oldRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
+		IPath newPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(newRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
+		try {
+			taskStore.move(oldPath, newPath);
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+					"Failed to migrate data store for repository {0}", newRepositoryUrl), e)); //$NON-NLS-1$
 		}
-
-		File contextDirectory = new File(directory.getParent(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
-		if (!contextDirectory.exists()) {
-			contextDirectory.mkdirs();
-		}
-		ContextCorePlugin.getContextStore().setContextDirectory(contextDirectory);
 	}
 
-	private synchronized CommonStore getTaskStore() {
-		if (taskStore == null) {
-			taskStore = new CommonStore(directory);
-		}
-		return taskStore;
+	public ContextStatePersistenceHandler getStateHandler() {
+		return stateHandler;
 	}
 
 }

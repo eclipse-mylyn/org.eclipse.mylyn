@@ -11,9 +11,10 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import java.util.Calendar;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import java.util.Calendar;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -29,22 +30,24 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Robert Elves
  * @author Steffen Pingel
  */
-public class RefactorRepositoryUrlOperationTest extends TestCase {
+public class RefactorRepositoryUrlOperationTest {
 
 	private TaskList taskList;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		taskList = TasksUiPlugin.getTaskList();
 		TaskTestUtil.resetTaskList();
 	}
 
+	@Test
 	public void testMigrateQueryUrlHandles() throws Exception {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://foo.bar");
@@ -58,6 +61,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("http://bar.baz/b", changedQuery.getUrl());
 	}
 
+	@Test
 	public void testRefactorMetaContextHandles() throws Exception {
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";

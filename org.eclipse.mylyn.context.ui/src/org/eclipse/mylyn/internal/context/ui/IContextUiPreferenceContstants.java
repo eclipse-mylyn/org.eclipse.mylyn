@@ -30,6 +30,4 @@ public interface IContextUiPreferenceContstants {
 
 	public static final String PERSPECTIVE_NO_ACTIVE_TASK = "org.eclipse.mylyn.ui.perspectives.task.none"; //$NON-NLS-1$
 
-	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylyn.ui.perspectives.task."; //$NON-NLS-1$
-
 }

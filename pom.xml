@@ -73,6 +73,7 @@
     <module>org.eclipse.mylyn.context.sdk-feature</module>
     <module>org.eclipse.mylyn.context.sdk.java</module>
     <module>org.eclipse.mylyn.context.sdk.util</module>
+    <module>org.eclipse.mylyn.context.tasks.tests</module>
     <module>org.eclipse.mylyn.context.tasks.ui</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>

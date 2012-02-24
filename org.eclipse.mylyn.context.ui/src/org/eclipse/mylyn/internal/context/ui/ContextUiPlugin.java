@@ -46,6 +46,9 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.context.ui.state.ContextStateManager;
+import org.eclipse.mylyn.internal.context.ui.state.EditorStateParticipant;
+import org.eclipse.mylyn.internal.context.ui.state.PerspectiveStateParticipant;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -95,7 +98,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private FocusedViewerManager viewerManager;
 
-	private ContextPerspectiveManager perspectiveManager;
+	private PerspectiveStateParticipant perspectiveStateParticipant;
 
 	private final ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
@@ -181,6 +184,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
+	private EditorStateParticipant editorStateParticipant;
+
+	private ContextStateManager stateManager;
+
 	private ContextEditorManager editorManager;
 
 	public ContextUiPlugin() {
@@ -193,8 +200,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		initDefaultPrefs(getPreferenceStore());
 
+		stateManager = new ContextStateManager();
+
 		viewerManager = new FocusedViewerManager();
-		perspectiveManager = new ContextPerspectiveManager(getPreferenceStore());
+
+		perspectiveStateParticipant = new PerspectiveStateParticipant(getPreferenceStore());
+		stateManager.addParticipant(perspectiveStateParticipant);
+
+		editorStateParticipant = new EditorStateParticipant();
+		stateManager.addParticipant(editorStateParticipant);
 
 		editorManager = new ContextEditorManager();
 
@@ -227,9 +241,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		try {
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUi.addWindowPartListener(contentOutlineManager);
-			MonitorUi.addWindowPerspectiveListener(perspectiveManager.getPerspectiveListener());
-			ContextCore.getContextManager().addListener(perspectiveManager.getContextListener());
-			ContextCore.getContextManager().addListener(editorManager);
+			editorManager.start(ContextCore.getContextManager());
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", //$NON-NLS-1$
 					e));
@@ -262,15 +274,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void lazyStop() {
-		if (editorManager != null) {
-			ContextCore.getContextManager().removeListener(editorManager);
+		editorManager.stop(ContextCore.getContextManager());
+		if (editorStateParticipant != null) {
+			stateManager.removeParticipant(editorStateParticipant);
+		}
+		if (perspectiveStateParticipant != null) {
+			stateManager.removeParticipant(perspectiveStateParticipant);
 		}
 
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUi.removeWindowPartListener(contentOutlineManager);
-
-		MonitorUi.removeWindowPerspectiveListener(perspectiveManager.getPerspectiveListener());
-		ContextCore.getContextManager().removeListener(perspectiveManager.getContextListener());
 	}
 
 	/**
@@ -550,7 +563,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						"Could not load startup extension", e)); //$NON-NLS-1$
 			}
 		}
-
 	}
 
 	private void setActiveSearchIcon(AbstractContextUiBridge bridge, ImageDescriptor descriptor) {
@@ -607,12 +619,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static ContextEditorManager getEditorManager() {
-		return INSTANCE.editorManager;
+	public static EditorStateParticipant getEditorStateParticipant() {
+		return INSTANCE.editorStateParticipant;
 	}
 
-	public static ContextPerspectiveManager getPerspectiveManager() {
-		return INSTANCE.perspectiveManager;
+	public static PerspectiveStateParticipant getPerspectiveStateParticipant() {
+		return INSTANCE.perspectiveStateParticipant;
 	}
 
 	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
@@ -635,6 +647,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$
 			}
 		}
+	}
+
+	public ContextStateManager getStateManager() {
+		return stateManager;
 	}
 
 }

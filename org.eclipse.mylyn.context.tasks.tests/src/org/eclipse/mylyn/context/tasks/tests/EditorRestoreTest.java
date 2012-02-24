@@ -9,7 +9,10 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.tests;
+package org.eclipse.mylyn.context.tasks.tests;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -19,13 +22,19 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.context.ui.ContextAwareEditorInput;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -33,11 +42,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class ContextEditorManagerTest extends AbstractResourceContextTest {
+public class EditorRestoreTest {
 
 	private IEditorDescriptor editor;
 
@@ -59,15 +71,36 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		}
 	};
 
+	private TestProject project;
+
+	private LocalTask task;
+
+	@Test
 	public void testCloseAllOnDeactivate() throws Exception {
 		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA) };
 		IEditorReference[] refs = openEditors(inputs);
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
-		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
 	}
 
+	@Test
+	public void testActivationPreservesActiveTaskEditor() throws Exception {
+		ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
+		// need to ensure that the context is empty otherwise the last element is opened in addition to the task
+		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		TaskEditorInput input = new TaskEditorInput(repository, task);
+
+		TasksUiUtil.openTask(task);
+		assertEquals(Arrays.asList(input), asInputList(page.getEditorReferences()));
+		ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
+		assertEquals(Arrays.asList(input), asInputList(page.getEditorReferences()));
+	}
+
+	@Test
 	public void testCloseAllRestore() throws Exception {
 		IEditorInput[] inputs = new IEditorInput[] { new FileEditorInput(fileA), new FileEditorInput(fileB),
 				new FileEditorInput(fileC) };
@@ -75,13 +108,14 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
 		//ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
-		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
 
-		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
 		assertEquals(Arrays.asList(inputs), asInputList(page.getEditorReferences()));
 	}
 
+	@Test
 	public void testCloseAllRestoreContextAwareEditor() throws Exception {
 		FileEditorInput input = new FileEditorInput(fileA);
 		IEditorInput[] inputs = new IEditorInput[] { input, new FileEditorInput(fileB) {
@@ -103,11 +137,11 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		assertEquals(asInputList(refs), asInputList(page.getEditorReferences()));
 
 		//ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
-		ContextCore.getContextManager().deactivateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		assertEquals(Collections.emptyList(), asList(page.getEditorReferences()));
 
 		// fileB should not be restored in this case
-		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
 		assertEquals(input, page.getEditorReferences()[0].getEditorInput());
 	}
 
@@ -137,11 +171,14 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 		return refs;
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		task = new LocalTask(getClass().getName(), getClass().getName());
+		TasksUiPlugin.getTaskList().addTask(task);
 
-		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
+
+		project = new TestProject(getClass().getName());
 
 		fileA = project.getProject().getFile("a.txt");
 		fileA.create(new ByteArrayInputStream("abc".getBytes()), false, null);
@@ -164,17 +201,19 @@ public class ContextEditorManagerTest extends AbstractResourceContextTest {
 
 		editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fileA.getName());
 		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		page.closeAllEditors(false);
 
 		assertTrue(ContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
-		assertTrue(ContextUiPlugin.getEditorManager().isEnabled());
+		assertTrue(ContextUiPlugin.getEditorStateParticipant().isEnabled());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
+		TasksUiPlugin.getTaskList().deleteTask(task);
 		page.closeAllEditors(false);
-		super.tearDown();
+		ResourceTestUtil.deleteProject(project.getProject());
 	}
 
 }

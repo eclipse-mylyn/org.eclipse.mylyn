@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.context.tasks.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -36,7 +38,6 @@ import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -95,13 +96,28 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 
 	private class ContextActivationListener extends AbstractContextListener {
 
+		private ContextStatePersistenceHandler stateHandler;
+
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
 			case PRE_ACTIVATED:
 				ContextTasksStartupHandler.this.contextActivated(event);
 				break;
+			case ACTIVATED:
+				getStateHandler().activated(event.getContext());
+				break;
+			case DEACTIVATED:
+				getStateHandler().deactivated(event.getContext());
+				break;
+			case CLEARED:
+				getStateHandler().clear(event.getContextHandle(), event.isActiveContext());
+				break;
 			}
+		}
+
+		private ContextStatePersistenceHandler getStateHandler() {
+			return ((TaskContextStore) TasksUiPlugin.getContextStore()).getStateHandler();
 		}
 
 	}
@@ -110,12 +126,12 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 
 		@Override
 		public void preTaskDeactivated(ITask task) {
-			ContextUiPlugin.getEditorManager().setEnabled(!TaskMigrator.isActive());
+			ContextUiPlugin.getEditorStateParticipant().setEnabled(!TaskMigrator.isActive());
 		}
 
 		@Override
 		public void preTaskActivated(ITask task) {
-			ContextUiPlugin.getEditorManager().setEnabled(!TaskMigrator.isActive());
+			ContextUiPlugin.getEditorStateParticipant().setEnabled(!TaskMigrator.isActive());
 		}
 
 		@SuppressWarnings("restriction")
@@ -150,7 +166,12 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		externalizationManager.addParticipant(activeContextExternalizationParticipant);
 		activeContextExternalizationParticipant.registerListeners();
 
-		ContextUiPlugin.getPerspectiveManager().addManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
+		ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager());
+		IStatus status = migrator.migrateContextMementos();
+		if (!status.isOK()) {
+			StatusHandler.log(status);
+		}
+
 		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 
 		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
@@ -168,7 +189,6 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 	private void lazyStop() {
 		ContextCore.getContextManager().removeListener(contextActivationListener);
 
-		ContextUiPlugin.getPerspectiveManager().removeManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 	}
 
