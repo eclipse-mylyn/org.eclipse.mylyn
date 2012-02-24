@@ -552,10 +552,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			case BugzillaStatus.ERROR_CONFIRM_MATCH:
 			case BugzillaStatus.ERROR_MATCH_FAILED:
 				showError((BugzillaStatus) event.getJob().getStatus());
-				break;
+				return;
 			}
-		} else if (event.getJob().getResponse() != null
-				&& event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
+		}
+		if (event.getJob().getResponse() != null && event.getJob().getResponse() instanceof BugzillaRepositoryResponse) {
 			final RepositoryResponse response = event.getJob().getResponse();
 			if (response instanceof BugzillaRepositoryResponse) {
 				final BugzillaRepositoryResponse bugzillaResponse = (BugzillaRepositoryResponse) response;
