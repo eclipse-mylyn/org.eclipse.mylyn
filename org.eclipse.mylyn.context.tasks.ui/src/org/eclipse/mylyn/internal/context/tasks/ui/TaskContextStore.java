@@ -205,15 +205,17 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		ContextCorePlugin.getContextStore().saveActiveContext();
 
 		ITask task = TasksUi.getTaskActivityManager().getActiveTask();
-		stateHandler.saved(task);
+		if (task != null) {
+			stateHandler.saved(task);
 
-		final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.SAVE, task);
-		listeners.notify(new Notifier<TaskContextStoreListener>() {
-			@Override
-			public void run(TaskContextStoreListener listener) throws Exception {
-				listener.taskContextChanged(event);
-			}
-		});
+			final TaskContextStoreEvent event = new TaskContextStoreEvent(Kind.SAVE, task);
+			listeners.notify(new Notifier<TaskContextStoreListener>() {
+				@Override
+				public void run(TaskContextStoreListener listener) throws Exception {
+					listener.taskContextChanged(event);
+				}
+			});
+		}
 	}
 
 	@Override
