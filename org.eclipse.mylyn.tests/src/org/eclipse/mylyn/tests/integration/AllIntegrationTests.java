@@ -14,15 +14,13 @@ package org.eclipse.mylyn.tests.integration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-
 /**
  * @author Mik Kersten
  */
 public class AllIntegrationTests {
 
 	public static Test suite() {
-		TestSuite suite = new ManagedTestSuite(AllIntegrationTests.class.getName());
+		TestSuite suite = new TestSuite(AllIntegrationTests.class.getName());
 		suite.addTestSuite(ChangeDataDirTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
 		return suite;
