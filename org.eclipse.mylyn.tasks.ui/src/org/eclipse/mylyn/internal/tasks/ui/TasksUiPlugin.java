@@ -863,6 +863,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("restriction")
 	public void initializeDataSources() {
+		// ensure that context directory exists
+		File storeFile = new File(getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
+		if (!storeFile.exists()) {
+			storeFile.mkdirs();
+		}
+
 		taskDataManager.setDataPath(getDataDirectory());
 		externalizationManager.setRootFolderPath(getDataDirectory());
 		getContextStore().setDirectory(new File(getDataDirectory(), "tasks")); //$NON-NLS-1$
