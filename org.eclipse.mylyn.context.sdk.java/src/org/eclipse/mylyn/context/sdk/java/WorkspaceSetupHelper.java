@@ -80,7 +80,7 @@ public class WorkspaceSetupHelper {
 			throws CoreException, ZipException, IOException {
 		IProject project = createProject(projectName);
 
-		CommonTestUtil.copyFolder(sourceDirectory, project.getLocation().toFile());
+		CommonTestUtil.copyFolderRecursively(sourceDirectory, project.getLocation().toFile());
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
