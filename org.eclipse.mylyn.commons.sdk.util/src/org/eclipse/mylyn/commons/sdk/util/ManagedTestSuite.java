@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import junit.framework.AssertionFailedError;
@@ -78,7 +79,10 @@ public class ManagedTestSuite extends TestSuite {
 
 	private class Listener implements TestListener {
 
-		private DumpThreadTask task;
+		/**
+		 * Tests may execute in parallel and hence multiple dump threads maybe scheduled concurrently.
+		 */
+		private final ConcurrentHashMap<Test, DumpThreadTask> taskByTest = new ConcurrentHashMap<Test, ManagedTestSuite.DumpThreadTask>();
 
 		private final Timer timer = new Timer(true);
 
@@ -100,11 +104,15 @@ public class ManagedTestSuite extends TestSuite {
 		}
 
 		public void dumpResults(TestResult result) {
-			System.err.println();
-			dumpList("Failures: ", result.failures());
+			if (result.failureCount() > 0) {
+				System.err.println();
+				dumpList("Failures: ", result.failures());
+			}
 
-			System.err.println();
-			dumpList("Errors: ", result.errors());
+			if (result.errorCount() > 0) {
+				System.err.println();
+				dumpList("Errors: ", result.errors());
+			}
 
 			int failedCount = result.errorCount() + result.failureCount();
 			System.err.println();
@@ -112,15 +120,22 @@ public class ManagedTestSuite extends TestSuite {
 		}
 
 		public void endTest(Test test) {
+			DumpThreadTask task = taskByTest.remove(test);
 			if (task != null) {
 				task.cancel();
-				task = null;
 			}
 		}
 
 		public void startTest(Test test) {
-			System.err.println("Running " + test.toString());
-			task = new DumpThreadTask(test);
+			startTest(test, false);
+		}
+
+		public void startTest(Test test, boolean silent) {
+			if (!silent) {
+				System.err.println("Running " + test.toString());
+			}
+			DumpThreadTask task = new DumpThreadTask(test);
+			taskByTest.put(test, task);
 			timer.schedule(task, DELAY);
 		}
 
@@ -158,7 +173,7 @@ public class ManagedTestSuite extends TestSuite {
 			public String toString() {
 				return "ShutdownWatchdog";
 			}
-		});
+		}, true);
 	}
 
 	private static void dumpSystemInfo() {
