@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.context.sdk.util,
  org.eclipse.mylyn.ide.ui,
+ org.eclipse.mylyn.ide.ant,
  org.eclipse.mylyn.resources.ui,
  org.eclipse.mylyn.team.ui
 Export-Package: org.eclipse.mylyn.ide.tests;x-internal:=true
