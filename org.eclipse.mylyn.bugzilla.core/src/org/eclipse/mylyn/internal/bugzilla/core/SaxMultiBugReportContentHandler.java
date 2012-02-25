@@ -244,6 +244,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 
 		String parsedText = characters.toString();
+		if (parsedText.equals("")) { //$NON-NLS-1$
+			// bug 367861: avoid showing incomings for fields that were previously not part of the schema when empty
+			if (localName.equals("resolution") || localName.equals("bug_file_loc") //$NON-NLS-1$ //$NON-NLS-2$
+					|| localName.equals("status_whiteboard") || localName.equals("keywords")) { //$NON-NLS-1$ //$NON-NLS-2$
+				return;
+			}
+		}
 
 		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			TaskAttribute endAttribute = repositoryTaskData.getRoot().getAttribute(localName);
