@@ -192,12 +192,14 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	}
 
 	@Override
-	public void saveState(ContextState state) {
+	public void saveState(ContextState state, boolean allowModifications) {
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
 
-		closeContextAwareEditors(state.getContextHandle());
+		if (allowModifications) {
+			closeContextAwareEditors(state.getContextHandle());
+		}
 
 		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();

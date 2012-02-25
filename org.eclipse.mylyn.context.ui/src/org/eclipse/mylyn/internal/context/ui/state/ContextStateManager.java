@@ -129,12 +129,16 @@ public class ContextStateManager {
 	}
 
 	public void saveState(IInteractionContext context, OutputStream storable) {
+		saveState(context, storable, false);
+	}
+
+	public void saveState(IInteractionContext context, OutputStream storable, final boolean allowModifications) {
 		final ContextState memento = createMemento(context, CHARSET);
 		participants.notify(new Notifier<ContextStateParticipant>() {
 			@Override
 			public void run(ContextStateParticipant participant) throws Exception {
 				if (participant.isEnabled()) {
-					participant.saveState(memento);
+					participant.saveState(memento, allowModifications);
 				}
 			}
 		});

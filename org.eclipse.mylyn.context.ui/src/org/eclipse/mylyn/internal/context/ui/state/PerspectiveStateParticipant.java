@@ -103,7 +103,7 @@ public class PerspectiveStateParticipant extends ContextStateParticipant {
 	}
 
 	@Override
-	public void saveState(ContextState state) {
+	public void saveState(ContextState state, boolean allowModifications) {
 		String id = getActivePerspectiveId();
 		if (id != null) {
 			IMemento memento = state.createMemento(MEMENTO_PERSPECTIVE);

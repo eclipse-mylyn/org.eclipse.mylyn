@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Manages the persistence for {@link ContextStateManager}.
@@ -44,6 +45,10 @@ public class ContextStatePersistenceHandler {
 	}
 
 	public void activated(IInteractionContext context) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		getStateManager().saveDefaultState();
 
 		ICommonStorable storable = getStorable(context.getHandleIdentifier());
@@ -73,6 +78,10 @@ public class ContextStatePersistenceHandler {
 	}
 
 	public void clear(ITask task) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		ICommonStorable storable = getStorable(task);
 		try {
 			storable.delete(FILE_NAME);
@@ -90,25 +99,45 @@ public class ContextStatePersistenceHandler {
 	}
 
 	public void copy(ITask sourceTask, ITask targetTask) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		copyState(sourceTask, targetTask, true);
 	}
 
 	public void deactivated(IInteractionContext context) {
-		save(context);
+		if (!isOnUiThread()) {
+			return;
+		}
+
+		save(context, true);
 		getStateManager().restoreDefaultState();
 	}
 
 	public void merge(ITask sourceTask, ITask targetTask) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		copyState(sourceTask, targetTask, false);
 	}
 
 	public void save(IInteractionContext context) {
+		save(context, false);
+	}
+
+	public void save(IInteractionContext context, boolean allowModifications) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		ICommonStorable storable = getStorable(context.getHandleIdentifier());
 		if (storable != null) {
 			try {
 				OutputStream out = storable.write(FILE_NAME, null);
 				try {
-					getStateManager().saveState(context, out);
+					getStateManager().saveState(context, out, allowModifications);
 				} finally {
 					out.close();
 				}
@@ -125,6 +154,10 @@ public class ContextStatePersistenceHandler {
 	}
 
 	public void saved(ITask task) {
+		if (!isOnUiThread()) {
+			return;
+		}
+
 		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
 		if (context != null && task.getHandleIdentifier().equals(context.getHandleIdentifier())) {
 			save(context);
@@ -176,13 +209,17 @@ public class ContextStatePersistenceHandler {
 		return ContextUiPlugin.getDefault().getStateManager();
 	}
 
+	private ICommonStorable getStorable(ITask task) {
+		return ((TaskContextStore) TasksUiPlugin.getContextStore()).getStorable(task);
+	}
+
 	private ICommonStorable getStorable(String contextHandle) {
 		ITask task = TasksUi.getRepositoryModel().getTask(contextHandle);
 		return (task != null) ? getStorable(task) : null;
 	}
 
-	private ICommonStorable getStorable(ITask task) {
-		return ((TaskContextStore) TasksUiPlugin.getContextStore()).getStorable(task);
+	private boolean isOnUiThread() {
+		return Display.getCurrent() != null;
 	}
 
 }

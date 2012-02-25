@@ -26,6 +26,6 @@ public abstract class ContextStateParticipant {
 
 	public abstract void saveDefaultState(ContextState memento);
 
-	public abstract void saveState(ContextState memento);
+	public abstract void saveState(ContextState memento, boolean allowModifications);
 
 }
