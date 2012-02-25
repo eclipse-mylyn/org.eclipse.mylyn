@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
@@ -80,7 +81,7 @@ public class ContextMementoMigrator {
 	 * 
 	 * @since 3.4
 	 */
-	public IStatus migrateContextMementos() {
+	public IStatus migrateContextMementos(SubMonitor monitor) {
 		MultiStatus status = new MultiStatus(ContextUiPlugin.ID_PLUGIN, 0,
 				"Errors migrating saved editors and perspective settings", null); //$NON-NLS-1$
 
@@ -92,6 +93,9 @@ public class ContextMementoMigrator {
 		// migrate editor mementos first
 		IEclipsePreferences[] perspectiveNodes = perspectivePreferenceStore.getPreferenceNodes(false);
 		IEclipsePreferences[] editorNodes = editorPreferenceStore.getPreferenceNodes(false);
+
+		monitor.beginTask("Migrating context information", editorNodes.length + perspectiveNodes.length);
+
 		if (editorNodes.length > 0) {
 			String[] keys;
 			try {
@@ -137,11 +141,14 @@ public class ContextMementoMigrator {
 							}
 						}
 					}
+					monitor.worked(1);
 				}
 			} catch (BackingStoreException e) {
 				status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Reading of editor mementos failed", e)); //$NON-NLS-1$
 			}
 		}
+
+		monitor.setWorkRemaining(perspectiveNodes.length);
 
 		// migrate remaining perspective mementos
 		if (perspectiveNodes.length > 0) {
@@ -176,6 +183,7 @@ public class ContextMementoMigrator {
 							perspectiveNodes[0].remove(key);
 						}
 					}
+					monitor.worked(1);
 				}
 			} catch (BackingStoreException e) {
 				status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,

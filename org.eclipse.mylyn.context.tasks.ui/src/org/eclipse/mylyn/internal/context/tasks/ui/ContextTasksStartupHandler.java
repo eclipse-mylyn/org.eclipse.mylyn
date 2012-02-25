@@ -11,9 +11,15 @@
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.CoreUtil;
@@ -39,6 +45,7 @@ import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -166,10 +173,27 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		externalizationManager.addParticipant(activeContextExternalizationParticipant);
 		activeContextExternalizationParticipant.registerListeners();
 
-		ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager());
-		IStatus status = migrator.migrateContextMementos();
-		if (!status.isOK()) {
-			StatusHandler.log(status);
+		try {
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						SubMonitor progress = SubMonitor.convert(monitor);
+						ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault()
+								.getStateManager());
+						IStatus status = migrator.migrateContextMementos(progress);
+						if (!status.isOK()) {
+							StatusHandler.log(status);
+						}
+					} finally {
+						monitor.done();
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+					"Unexpected error migrating context state", e));
+		} catch (InterruptedException e) {
+			// ignore
 		}
 
 		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
