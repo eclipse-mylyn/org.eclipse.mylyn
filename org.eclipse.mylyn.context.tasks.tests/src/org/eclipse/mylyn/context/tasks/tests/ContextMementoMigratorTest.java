@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -70,7 +71,7 @@ public class ContextMementoMigratorTest {
 
 		ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager());
 		migrator.setDeleteOldDataEnabled(true);
-		IStatus status = migrator.migrateContextMementos();
+		IStatus status = migrator.migrateContextMementos(SubMonitor.convert(null));
 		assertEquals(IStatus.OK, status.getSeverity());
 		assertEquals(
 				"",
@@ -86,7 +87,7 @@ public class ContextMementoMigratorTest {
 				.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
 						ID_PLANNING_PERSPECTIVE);
 
-		IStatus status = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager()).migrateContextMementos();
+		IStatus status = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager()).migrateContextMementos(SubMonitor.convert(null));
 		assertEquals(IStatus.OK, status.getSeverity());
 
 		InteractionContext context = new InteractionContext(task.getHandleIdentifier(),

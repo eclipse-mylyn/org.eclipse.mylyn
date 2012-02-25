@@ -94,12 +94,14 @@ public class ContextMementoMigrator {
 		IEclipsePreferences[] perspectiveNodes = perspectivePreferenceStore.getPreferenceNodes(false);
 		IEclipsePreferences[] editorNodes = editorPreferenceStore.getPreferenceNodes(false);
 
-		monitor.beginTask("Migrating context information", editorNodes.length + perspectiveNodes.length);
+		monitor.beginTask("Migrating context information", 100);
 
 		if (editorNodes.length > 0) {
 			String[] keys;
 			try {
 				keys = editorNodes[0].keys();
+				SubMonitor progress = monitor.newChild(80);
+				progress.setWorkRemaining(keys.length);
 				for (String key : keys) {
 					if (key.startsWith(EDITOR_MEMENTO_PREFS_PREFIX)) {
 						String contextHandle = key.substring(EDITOR_MEMENTO_PREFS_PREFIX.length());
@@ -141,19 +143,20 @@ public class ContextMementoMigrator {
 							}
 						}
 					}
-					monitor.worked(1);
+					progress.worked(1);
 				}
+				progress.done();
 			} catch (BackingStoreException e) {
 				status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Reading of editor mementos failed", e)); //$NON-NLS-1$
 			}
 		}
 
-		monitor.setWorkRemaining(perspectiveNodes.length);
-
 		// migrate remaining perspective mementos
 		if (perspectiveNodes.length > 0) {
 			try {
 				String[] keys = perspectiveNodes[0].keys();
+				SubMonitor progress = monitor.newChild(20);
+				progress.setWorkRemaining(keys.length);
 				for (String key : keys) {
 					if (key.startsWith(PREFIX_TASK_TO_PERSPECTIVE)
 							&& !key.equals(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK)) {
@@ -183,8 +186,9 @@ public class ContextMementoMigrator {
 							perspectiveNodes[0].remove(key);
 						}
 					}
-					monitor.worked(1);
+					progress.worked(1);
 				}
+				progress.done();
 			} catch (BackingStoreException e) {
 				status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 						"Reading of perspective mementos failed", e)); //$NON-NLS-1$
