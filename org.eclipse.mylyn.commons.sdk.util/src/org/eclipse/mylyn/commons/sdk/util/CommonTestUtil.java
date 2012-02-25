@@ -93,25 +93,30 @@ public class CommonTestUtil {
 	 * Copies all files in the current data directory to the specified folder. Will overwrite.
 	 */
 	public static void copyFolder(File sourceFolder, File targetFolder) throws IOException {
-		for (File currFile : sourceFolder.listFiles()) {
-			if (currFile.isFile()) {
-				File destFile = new File(targetFolder, currFile.getName());
-				copy(currFile, destFile);
-			} else if (currFile.isDirectory()) {
-				File destDir = new File(targetFolder, currFile.getName());
+		for (File sourceFile : sourceFolder.listFiles()) {
+			if (sourceFile.isFile()) {
+				File destFile = new File(targetFolder, sourceFile.getName());
+				copy(sourceFile, destFile);
+			}
+		}
+	}
+
+	/**
+	 * Copies all files in the current data directory to the specified folder. Will overwrite.
+	 */
+	public static void copyFolderRecursively(File sourceFolder, File targetFolder) throws IOException {
+		for (File sourceFile : sourceFolder.listFiles()) {
+			if (sourceFile.isFile()) {
+				File destFile = new File(targetFolder, sourceFile.getName());
+				copy(sourceFile, destFile);
+			} else if (sourceFile.isDirectory()) {
+				File destDir = new File(targetFolder, sourceFile.getName());
 				if (!destDir.exists()) {
 					if (!destDir.mkdir()) {
-						throw new IOException("Unable to create destination context folder: "
-								+ destDir.getAbsolutePath());
+						throw new IOException("Unable to create destination folder: " + destDir.getAbsolutePath());
 					}
 				}
-				for (File file : currFile.listFiles()) {
-					File destFile = new File(destDir, file.getName());
-					if (destFile.exists()) {
-						destFile.delete();
-					}
-					copy(file, destFile);
-				}
+				copyFolderRecursively(sourceFile, destDir);
 			}
 		}
 	}
