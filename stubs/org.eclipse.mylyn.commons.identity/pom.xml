@@ -8,7 +8,7 @@
     <version>3.7.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.commons.identity</artifactId>
-  <version>0.9.0.v20111206-0100</version>
+  <version>0.9.0.v20120225-0100</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
