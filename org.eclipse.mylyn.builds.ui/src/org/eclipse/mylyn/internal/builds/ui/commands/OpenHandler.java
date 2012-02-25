@@ -46,45 +46,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class OpenHandler extends AbstractHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		IWorkbenchPage page = window.getActivePage();
-		if (page == null) {
-			throw new ExecutionException("No active workbench window"); //$NON-NLS-1$
-		}
-
-		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
-		openBuildElements(page, elements);
-
-		return null;
-	}
-
-	public static List<IEditorPart> openBuildElements(IWorkbenchPage page, List<?> elements) {
-		if (elements.size() > 0) {
-			List<IEditorPart> parts = new ArrayList<IEditorPart>(elements.size());
-			Object item = elements.get(0);
-			BuildEditorInput input = null;
-			if (item instanceof IBuild) {
-				input = new BuildEditorInput((IBuild) item);
-			}
-			// TODO bug 324364
-//			if (item instanceof IBuildPlan) {
-//				input = new BuildEditorInput((IBuildPlan) item);
-//			}
-			if (input != null) {
-				try {
-					IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
-					parts.add(part);
-				} catch (PartInitException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-							"Unexpected error while opening build", e)); //$NON-NLS-1$
-				}
-			}
-			return parts;
-		}
-		return Collections.emptyList();
-	}
-
 	public static EditorHandle fetchAndOpen(final IWorkbenchPage page, IBuild build) {
 		final EditorHandle handle = new EditorHandle();
 
@@ -125,6 +86,74 @@ public class OpenHandler extends AbstractHandler {
 		operation.execute();
 
 		return handle;
+	}
+
+	public static List<EditorHandle> open(IWorkbenchPage page, List<? extends IBuildElement> elements) {
+		List<EditorHandle> handles = new ArrayList<EditorHandle>();
+		for (IBuildElement element : elements) {
+			// open last build in case of build plans
+			IBuildElement openElement = null;
+			if (element instanceof IBuildPlan) {
+				IBuildPlan plan = (IBuildPlan) element;
+				if (plan.getLastBuild() != null) {
+					openElement = plan.getLastBuild();
+				}
+			}
+			if (openElement == null) {
+				openElement = element;
+			}
+
+			if (openElement instanceof IBuild && isPartial((IBuild) openElement)) {
+				EditorHandle handle = fetchAndOpen(page, (IBuild) openElement);
+				handles.add(handle);
+			} else {
+				EditorHandle handle = openInEditor(page, openElement);
+				handles.add(handle);
+			}
+		}
+		return handles;
+	}
+
+	public static EditorHandle openInEditor(IWorkbenchPage page, IBuildElement item) {
+		BuildEditorInput input = null;
+		if (item instanceof IBuild) {
+			input = new BuildEditorInput((IBuild) item);
+		}
+
+		if (input != null) {
+			try {
+				IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
+				EditorHandle handle = new EditorHandle(Status.OK_STATUS);
+				handle.setPart(part);
+				return handle;
+			} catch (PartInitException e) {
+				Status status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						"Unexpected error while opening build", e);
+				StatusHandler.log(status);
+				EditorHandle handle = new EditorHandle(status);
+				return handle;
+			}
+		}
+
+		Status status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "No editor available to open " + item);
+		return new EditorHandle(status);
+	}
+
+	private static boolean isPartial(IBuild element) {
+		return element.getName() == null;
+	}
+
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+		IWorkbenchPage page = window.getActivePage();
+		if (page == null) {
+			throw new ExecutionException("No active workbench window"); //$NON-NLS-1$
+		}
+
+		List<IBuildElement> elements = BuildsUiInternal.getElements(event);
+		open(page, elements);
+
+		return null;
 	}
 
 }

@@ -27,20 +27,19 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildModel;
-import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.notifications.ui.NotificationsUi;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.internal.builds.ui.BuildConnectorDescriptor;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.commands.OpenHandler;
 import org.eclipse.mylyn.internal.builds.ui.notifications.BuildsServiceNotification;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -123,18 +122,8 @@ public class BuildsUi {
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
-				IBuildElement openElement = null;
-				if (element instanceof IBuildPlan) {
-					IBuildPlan plan = (IBuildPlan) element;
-					if (plan.getLastBuild() != null) {
-						openElement = plan.getLastBuild();
-					}
-				}
-				if (openElement == null) {
-					openElement = element;
-				}
-				List<IEditorPart> parts = OpenHandler.openBuildElements(page, Collections.singletonList(openElement));
-				if (parts.size() > 0) {
+				List<EditorHandle> handle = OpenHandler.open(page, Collections.singletonList(element));
+				if (handle.get(0).getStatus() != null && handle.get(0).getStatus().isOK()) {
 					return;
 				}
 			}

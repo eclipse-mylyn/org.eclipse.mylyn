@@ -60,18 +60,18 @@ public class RefreshSession {
 	}
 
 	private boolean isStale(IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
-		if (monitor.hasFlag(OperationFlag.BACKGROUND)) {
-			if (oldPlan.getLastBuild() != null && newPlan.getLastBuild() != null) {
-				// only refresh if there is a new build or if build status has changed
-				return isStale(oldPlan.getLastBuild(), newPlan.getLastBuild(), monitor);
-			}
+		if (oldPlan.getStatus() != newPlan.getStatus() || oldPlan.getState() != newPlan.getState()) {
+			return true;
 		}
-		return true;
+		if (oldPlan.getLastBuild() != null && newPlan.getLastBuild() != null) {
+			// only refresh if there is a new build or if build status has changed
+			return isStale(oldPlan.getLastBuild(), newPlan.getLastBuild(), monitor);
+		}
+		return oldPlan.getLastBuild() == null && newPlan.getLastBuild() == null;
 	}
 
 	private boolean isStale(IBuild oldBuild, IBuild newBuild, IOperationMonitor monitor) {
-		if (oldBuild.getBuildNumber() != newBuild.getBuildNumber() || oldBuild.getStatus() != newBuild.getStatus()
-				|| oldBuild.getState() != newBuild.getState()) {
+		if (oldBuild.getBuildNumber() != newBuild.getBuildNumber()) {
 			return true;
 		}
 		return false;
@@ -122,19 +122,22 @@ public class RefreshSession {
 				Date refreshDate = new Date();
 				for (IBuildPlan modelPlan : request.getModel().getPlans()) {
 					if (modelPlan.getServer() == original && modelPlan.getId().equals(buildRequest.getPlan().getId())) {
-						if (modelPlan.getLastBuild() != null) {
-							request.getModel().getBuilds().remove(modelPlan.getLastBuild());
-						}
-						IBuild build = result.get(0);
-						modelPlan.setLastBuild(build);
-						build.setPlan(modelPlan);
-						build.setServer(original);
-						build.setRefreshDate(refreshDate);
-						request.getModel().getBuilds().add(build);
+						updateLastBuild(request, modelPlan, result.get(0), refreshDate);
 					}
 				}
 			}
 		});
+	}
+
+	private void updateLastBuild(final RefreshRequest request, IBuildPlan plan, IBuild build, Date refreshDate) {
+		if (plan.getLastBuild() != null) {
+			request.getModel().getBuilds().remove(plan.getLastBuild());
+		}
+		plan.setLastBuild(build);
+		build.setPlan(plan);
+		build.setServer(plan.getServer());
+		build.setRefreshDate(refreshDate);
+		request.getModel().getBuilds().add(build);
 	}
 
 	public void refreshPlans(final RefreshRequest request, final IOperationMonitor monitor) throws CoreException {
@@ -199,9 +202,13 @@ public class RefreshSession {
 	}
 
 	protected void update(RefreshRequest request, IBuildPlan oldPlan, BuildPlan newPlan, IOperationMonitor monitor) {
-		((BuildPlan) oldPlan).merge(newPlan);
-		if (isStale(oldPlan, newPlan, monitor)) {
+		boolean stale = isStale(oldPlan, newPlan, monitor);
+		if (stale || !monitor.hasFlag(OperationFlag.BACKGROUND)) {
 			markStale(request, newPlan);
+		}
+		((BuildPlan) oldPlan).merge(newPlan);
+		if (stale && newPlan.getLastBuild() != null) {
+			updateLastBuild(request, oldPlan, newPlan.getLastBuild(), new Date());
 		}
 	}
 

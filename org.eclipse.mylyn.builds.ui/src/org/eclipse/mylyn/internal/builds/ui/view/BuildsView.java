@@ -404,9 +404,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (element instanceof IBuildPlan && ((IBuildPlan) element).getLastBuild() != null) {
-					OpenHandler.openBuildElements(getSite().getPage(),
-							Collections.singletonList(((IBuildPlan) element).getLastBuild()));
+				if (element instanceof IBuildElement) {
+					OpenHandler.open(getSite().getPage(), Collections.singletonList((IBuildElement) element));
 				}
 			}
 		});

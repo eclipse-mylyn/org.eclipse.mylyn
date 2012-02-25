@@ -581,6 +581,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		if (job.getLastBuild() != null) {
 			IBuild build = createBuild();
 			build.setId(job.getLastBuild().getNumber() + "");
+			build.setLabel(job.getLastBuild().getNumber() + ""); //$NON-NLS-1$
 			build.setBuildNumber(job.getLastBuild().getNumber());
 			build.setUrl(job.getLastBuild().getUrl());
 			plan.setLastBuild(build);

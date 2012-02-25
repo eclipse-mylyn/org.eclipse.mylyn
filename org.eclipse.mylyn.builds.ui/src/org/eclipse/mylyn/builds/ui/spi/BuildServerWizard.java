@@ -28,7 +28,6 @@ import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
-import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -113,7 +112,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		updateSubscription(BuildsUiInternal.getModel());
 		BuildsView.openInActivePerspective();
 
-		BuildsUiPlugin.getDefault().refreshBuilds();
+		BuildsUiInternal.getFactory().getRefreshOperation(original).execute();
 
 		return true;
 	}
