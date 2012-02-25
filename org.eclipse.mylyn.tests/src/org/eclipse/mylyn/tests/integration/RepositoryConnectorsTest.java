@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.integration;
@@ -22,28 +23,26 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * Test harness for iterating over all connectors and performing a test.
  * 
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
 public class RepositoryConnectorsTest extends TestCase {
 
 	private final AbstractRepositoryConnector connector;
 
-	public RepositoryConnectorsTest(AbstractRepositoryConnector connector) {
-		super("testRepositoryConnector");
+	public RepositoryConnectorsTest(AbstractRepositoryConnector connector, String name) {
+		super(name);
 		this.connector = connector;
 	}
 
-	public void testRepositoryConnector() {
-		assertNotNull(connector.getConnectorKind());
-		// add bulk connector tests here...
+	public void testConnectorKind() {
+		assertNotNull("Expected non-null value for " + connector.getClass(), connector.getConnectorKind());
 	}
 
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(RepositoryConnectorsTest.class.getName());
-
 		for (AbstractRepositoryConnector repositoryConnector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
-			suite.addTest(new RepositoryConnectorsTest(repositoryConnector));
+			suite.addTest(new RepositoryConnectorsTest(repositoryConnector, "testConnectorKind"));
 		}
-
 		return suite;
 	}
 

@@ -26,6 +26,7 @@ import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
 import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
 import org.eclipse.mylyn.resources.tests.AllResourcesTests;
+import org.eclipse.mylyn.reviews.tests.AllReviewsTests;
 import org.eclipse.mylyn.tasks.tests.AllTasksTests;
 import org.eclipse.mylyn.team.tests.AllTeamTests;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
@@ -44,6 +45,7 @@ public class AllNonConnectorTests {
 	}
 
 	static void addTests(TestSuite suite) {
+		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllNotificationsTests.suite());
 		suite.addTest(AllActivityTests.suite());
@@ -52,10 +54,10 @@ public class AllNonConnectorTests {
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllCdtTests.suite());
 		suite.addTest(AllMonitorTests.suite());
-		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllIdeTests.suite());
 		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllBuildsTests.suite());
+		suite.addTest(AllReviewsTests.suite());
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllTeamTests.suite());
 		suite.addTest(AllMiscTests.suite());
