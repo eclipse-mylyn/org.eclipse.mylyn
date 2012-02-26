@@ -92,10 +92,10 @@ public class BugzillaFixture extends TestFixture {
 			+ "-xml-rpc-disabled", "3.6.8", XML_RPC_DISABLED);
 
 	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
-			"4.0.4", "");
+			"4.0.5", "");
 
 	public static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
-			"4.2RC2+", "");
+			"4.2", "");
 
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.3", "");
