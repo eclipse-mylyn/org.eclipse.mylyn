@@ -41,6 +41,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.CustomTransitionManager;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -967,5 +968,26 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 			}
 		}
 		return div;
+	}
+
+	public void testUpdateProductInfo() throws Exception {
+		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
+				|| BugzillaFixture.current() == BugzillaFixture.BUGS_3_4) {
+			return;
+		}
+		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+
+		for (String product : repositoryConfiguration.getProducts()) {
+			repositoryConfiguration.setDefaultMilestone(product, null);
+		}
+
+		bugzillaClient.updateProductInfo(new NullProgressMonitor(), repositoryConfiguration);
+		for (String product : repositoryConfiguration.getProducts()) {
+			if (product.equals("ManualTest") || product.equals("Scratch") || product.equals("TestProduct")) {
+				assertEquals("---", repositoryConfiguration.getDefaultMilestones(product));
+			} else {
+				fail("never reach this");
+			}
+		}
 	}
 }
