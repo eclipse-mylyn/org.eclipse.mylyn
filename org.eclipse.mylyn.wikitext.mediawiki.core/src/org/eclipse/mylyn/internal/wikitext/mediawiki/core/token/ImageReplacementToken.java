@@ -36,7 +36,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[\\[Image:([^\\]\\|]+)(?:\\|(([^\\[\\]]|(\\[\\[[^\\[\\]]+\\]\\]))*))?\\]\\])"; //$NON-NLS-1$
+		return "(?:\\[\\[Image:\\s*([^\\]\\|]+)(?:\\|(([^\\[\\]]|(\\[\\[[^\\[\\]]+\\]\\]))*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override

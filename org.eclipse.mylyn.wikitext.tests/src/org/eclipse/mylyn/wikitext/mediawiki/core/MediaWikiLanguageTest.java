@@ -529,6 +529,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<img border=\"0\" src=\"ImportFedoraGit.png\"/>"));
 	}
 
+	public void testImageWithLeadingWhitespace() {
+		String html = parser.parseToHtml("[[Image: SomeImage.png]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<img border=\"0\" src=\"SomeImage.png\"/>"));
+	}
+
 	public void testTable() {
 		String html = parser.parseToHtml("{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n" + "|Pie\n" + "|-\n"
 				+ "|Butter\n" + "|Ice cream \n" + "|}");
