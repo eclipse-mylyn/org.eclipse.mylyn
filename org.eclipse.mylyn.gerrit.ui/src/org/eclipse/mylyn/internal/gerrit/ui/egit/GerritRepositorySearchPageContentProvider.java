@@ -11,18 +11,19 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.egit;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryComparator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import com.google.gerrit.reviewdb.Project;
@@ -58,7 +59,7 @@ public class GerritRepositorySearchPageContentProvider implements ITreeContentPr
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return getGerritTaskRepositories().toArray();
+		return getGerritTaskRepositories();
 	}
 
 	@Override
@@ -69,19 +70,18 @@ public class GerritRepositorySearchPageContentProvider implements ITreeContentPr
 		return null;
 	}
 
-	private static List<TaskRepository> getGerritTaskRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
-			for (TaskRepository repository : connectorRepositories) {
-				if (repository.getConnectorKind().equals(
-						GerritCorePlugin.getDefault().getConnector().getConnectorKind())) {
-					repositories.add(repository);
-				}
+	private static TaskRepository[] getGerritTaskRepositories() {
+		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
+				GerritConnector.CONNECTOR_KIND);
+		for (Iterator<TaskRepository> it = repositories.iterator(); it.hasNext();) {
+			TaskRepository repository = it.next();
+			if (repository.isOffline()) {
+				it.remove();
 			}
 		}
-		return repositories;
+		TaskRepository[] result = repositories.toArray(new TaskRepository[] {});
+		Arrays.sort(result, new TaskRepositoryComparator());
+		return result;
 	}
 
 	private List<Project> getProjects(TaskRepository repository) {

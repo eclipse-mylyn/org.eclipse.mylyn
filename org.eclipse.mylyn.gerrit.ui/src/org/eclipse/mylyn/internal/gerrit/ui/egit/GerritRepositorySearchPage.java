@@ -120,7 +120,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		buttonsComposite.setLayout(new GridLayout(2, false));
 
 		Button addButton = new Button(buttonsComposite, SWT.NONE);
-		addButton.setText("Add");
+		addButton.setText("Add...");
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
