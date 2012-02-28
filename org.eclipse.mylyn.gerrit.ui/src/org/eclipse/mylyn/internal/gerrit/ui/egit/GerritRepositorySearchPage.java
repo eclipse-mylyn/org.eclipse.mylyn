@@ -250,7 +250,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 			final GerritClient client = GerritCorePlugin.getGerritClient(repository);
 			getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Refresh Configuration", IProgressMonitor.UNKNOWN);
+					monitor.beginTask("Refreshing " + repository.getRepositoryLabel(), IProgressMonitor.UNKNOWN);
 					try {
 						client.refreshConfig(monitor);
 					} catch (GerritException e) {
