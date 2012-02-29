@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.index.ui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -19,7 +18,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -30,7 +28,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -85,7 +82,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 			} else {
 
 				// suggest field name prefixes
-				for (Field field : index.getIndexedFields()) {
+				for (Field field : reference.index().getIndexedFields()) {
 
 					// searching on URL is not useful
 					if (field.equals(TaskListIndex.FIELD_IDENTIFIER)) {
@@ -137,7 +134,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 			String label = NLS.bind(Messages.IndexSearchHandler_Past_week_date_range_label, field.getIndexKey());
 
-			String queryText = index.computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound,
+			String queryText = reference.index().computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound,
 					dateSearchUpperBound);
 			proposals.add(new ContentProposal(queryText, label, description));
 		}
@@ -165,21 +162,14 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 		}
 	}
 
-	private static TaskListIndex theIndex;
-
-	private static AtomicInteger referenceCount = new AtomicInteger();
-
-	/**
-	 * When not null serves as flag indicating that theIndex is referenced, thus preventing bad behaviour if dispose is
-	 * called multiple times.
-	 */
-	private TaskListIndex index;
+	private IndexReference reference;
 
 	public IndexSearchHandler() {
+		reference = new IndexReference();
 	}
 
 	public Field computeIndexField(String fieldPrefix) {
-		for (Field field : index.getIndexedFields()) {
+		for (Field field : reference.index().getIndexedFields()) {
 			if (field.getIndexKey().equals(fieldPrefix)) {
 				return field;
 			}
@@ -203,7 +193,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				Field newDefaultField = button.getSelection()
 						? TaskListIndex.FIELD_SUMMARY
 						: TaskListIndex.FIELD_CONTENT;
-				index.setDefaultField(newDefaultField);
+				reference.index().setDefaultField(newDefaultField);
 				fireFilterChanged();
 			}
 		});
@@ -213,21 +203,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 	@Override
 	public PatternFilter createFilter() {
-		synchronized (IndexSearchHandler.class) {
-			if (index == null) {
-				if (theIndex == null) {
-					final IRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-					final File indexLocation = new File(TasksUiPlugin.getDefault().getDataDirectory(), ".taskListIndex"); //$NON-NLS-1$
-
-					theIndex = new TaskListIndex(TasksUiPlugin.getTaskList(), TasksUiPlugin.getTaskDataManager(),
-							repositoryManager, indexLocation);
-
-				}
-				index = theIndex;
-				referenceCount.incrementAndGet();
-			}
-		}
-		return new IndexedSubstringPatternFilter(index);
+		return new IndexedSubstringPatternFilter(reference.index());
 	}
 
 	@Override
@@ -248,16 +224,8 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 	@Override
 	public void dispose() {
-		synchronized (IndexSearchHandler.class) {
-			if (index != null) {
-				index = null;
-
-				if (referenceCount.decrementAndGet() == 0) {
-					theIndex.close();
-					theIndex = null;
-				}
-			}
-		}
+		reference.dispose();
+		reference = null;
 	}
 
 }
