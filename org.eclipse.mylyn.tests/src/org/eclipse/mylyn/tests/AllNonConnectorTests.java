@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.activity.tests.AllActivityTests;
 import org.eclipse.mylyn.commons.notifications.tests.AllNotificationsTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
+import org.eclipse.mylyn.context.tasks.tests.AllContextTasksTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.discovery.tests.AllDiscoveryTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
@@ -50,6 +51,7 @@ public class AllNonConnectorTests {
 		suite.addTest(AllNotificationsTests.suite());
 		suite.addTest(AllActivityTests.suite());
 		suite.addTest(AllContextTests.suite());
+		suite.addTest(AllContextTasksTests.suite());
 		suite.addTest(AllDiscoveryTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllCdtTests.suite());
