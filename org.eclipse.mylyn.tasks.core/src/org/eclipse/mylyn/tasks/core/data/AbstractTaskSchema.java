@@ -42,7 +42,7 @@ public abstract class AbstractTaskSchema {
 		private final String indexKey;
 
 		protected Field(String key, String label, String type) {
-			this(key, label, type, (Flag[]) null);
+			this(key, label, type, null, (Flag[]) null);
 		}
 
 		protected Field(String key, String label, String type, Flag... flags) {
@@ -65,13 +65,13 @@ public abstract class AbstractTaskSchema {
 		 * @since 3.7
 		 */
 		public Field(String key, String label, String type, String indexKey, Flag... flags) {
-			this.indexKey = indexKey;
 			Assert.isNotNull(key);
 			Assert.isNotNull(label);
 			Assert.isNotNull(type);
 			this.key = key;
 			this.label = label;
 			this.type = type;
+			this.indexKey = indexKey;
 			if (flags == null || flags.length == 0) {
 				this.flags = EnumSet.noneOf(Flag.class);
 			} else {
@@ -259,7 +259,11 @@ public abstract class AbstractTaskSchema {
 	}
 
 	protected Field createField(String key, String label, String type) {
-		return createField(key, label, type, (Flag[]) null);
+		return createField(key, label, type, null, (Flag[]) null);
+	}
+
+	protected Field createField(String key, String label, String type, Flag... flags) {
+		return createField(key, label, type, null, flags);
 	}
 
 	/**
@@ -268,12 +272,6 @@ public abstract class AbstractTaskSchema {
 	 */
 	protected Field createField(String key, String label, String type, String indexKey, Flag... flags) {
 		Field field = new Field(key, label, type, indexKey, flags);
-		fieldByKey.put(key, field);
-		return field;
-	}
-
-	protected Field createField(String key, String label, String type, Flag... flags) {
-		Field field = new Field(key, label, type, flags);
 		fieldByKey.put(key, field);
 		return field;
 	}
