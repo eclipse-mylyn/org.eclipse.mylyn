@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.index.ui.commands;
 
 import org.eclipse.osgi.util.NLS;
 
-public class Messages extends NLS {
+class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.tasks.index.ui.commands.messages"; //$NON-NLS-1$
 
