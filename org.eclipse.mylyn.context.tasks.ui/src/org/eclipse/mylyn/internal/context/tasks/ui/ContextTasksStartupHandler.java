@@ -180,6 +180,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 						SubMonitor progress = SubMonitor.convert(monitor);
 						ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault()
 								.getStateManager());
+						migrator.setDeleteOldDataEnabled(true);
 						IStatus status = migrator.migrateContextMementos(progress);
 						if (!status.isOK()) {
 							StatusHandler.log(status);

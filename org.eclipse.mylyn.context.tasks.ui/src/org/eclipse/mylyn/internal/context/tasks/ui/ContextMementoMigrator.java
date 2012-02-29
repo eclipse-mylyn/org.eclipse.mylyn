@@ -131,7 +131,7 @@ public class ContextMementoMigrator {
 									write(state, task);
 								}
 							} catch (Exception e) {
-								status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, NLS.bind(
 										"Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
 							}
 						}
@@ -177,7 +177,7 @@ public class ContextMementoMigrator {
 									write(state, task);
 								}
 							} catch (Exception e) {
-								status.add(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, NLS.bind(
+								status.add(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, NLS.bind(
 										"Migration of editor memento failed for {0}", contextHandle), e)); //$NON-NLS-1$
 							}
 						}
