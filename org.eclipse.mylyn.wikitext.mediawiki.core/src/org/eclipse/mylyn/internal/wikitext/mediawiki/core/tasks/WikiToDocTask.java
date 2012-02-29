@@ -821,7 +821,7 @@ public class WikiToDocTask extends MarkupTask {
 					String relativeDir = destDir.getAbsolutePath().substring(dest.getAbsolutePath().length());
 					//URL path separator is always forward slash
 					if (File.separatorChar == '\\') {
-						relativeDir.replace('\\', '/');
+						relativeDir = relativeDir.replace('\\', '/');
 					}
 					if (relativeDir.startsWith("/")) { //$NON-NLS-1$
 						relativeDir = relativeDir.substring(1);
