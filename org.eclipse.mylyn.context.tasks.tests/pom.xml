@@ -10,8 +10,20 @@
   <artifactId>org.eclipse.mylyn.context.tasks.tests</artifactId>
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
+  <properties>
+	<test.suite>${project.artifactId}.AllContextTasksTests</test.suite>
+  </properties>
   <build>
     <plugins>
+	  <plugin>
+		<groupId>org.eclipse.tycho</groupId>
+		<artifactId>tycho-surefire-plugin</artifactId>
+		<version>${tycho-version}</version>
+		<configuration>
+		  <testSuite>${project.artifactId}</testSuite>
+		  <testClass>${test.suite}</testClass>
+		</configuration>
+	  </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>

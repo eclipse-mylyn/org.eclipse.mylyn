@@ -11,10 +11,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Calendar;
+
+import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -37,10 +36,11 @@ import org.junit.Test;
  * @author Robert Elves
  * @author Steffen Pingel
  */
-public class RefactorRepositoryUrlOperationTest {
+public class RefactorRepositoryUrlOperationTest extends TestCase {
 
 	private TaskList taskList;
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		taskList = TasksUiPlugin.getTaskList();

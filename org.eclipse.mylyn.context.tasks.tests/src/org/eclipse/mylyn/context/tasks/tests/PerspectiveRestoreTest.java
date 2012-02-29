@@ -11,10 +11,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Collections;
+
+import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -34,7 +33,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
-public class PerspectiveRestoreTest {
+public class PerspectiveRestoreTest extends TestCase {
 
 	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
 
@@ -42,6 +41,7 @@ public class PerspectiveRestoreTest {
 
 	private boolean previousSetting;
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
@@ -55,6 +55,7 @@ public class PerspectiveRestoreTest {
 				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		ContextUiPlugin.getDefault()

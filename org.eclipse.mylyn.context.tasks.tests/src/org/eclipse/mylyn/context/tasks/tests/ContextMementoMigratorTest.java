@@ -11,8 +11,7 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -35,7 +34,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
-public class ContextMementoMigratorTest {
+public class ContextMementoMigratorTest extends TestCase {
 
 	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
 
@@ -45,6 +44,7 @@ public class ContextMementoMigratorTest {
 
 	private ICommonStorable storable;
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		task = TaskTestUtil.createMockTask("1");
@@ -55,6 +55,7 @@ public class ContextMementoMigratorTest {
 		storable.delete("context-state.xml");
 	}
 
+	@Override
 	@After
 	public void tearDown() {
 		if (storable != null) {

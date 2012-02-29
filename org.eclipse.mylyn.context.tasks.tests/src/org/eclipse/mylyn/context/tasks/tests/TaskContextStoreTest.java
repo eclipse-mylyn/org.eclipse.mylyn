@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import static org.junit.Assert.assertEquals;
+import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.tasks.ui.TaskContextStore;
@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
-public class TaskContextStoreTest {
+public class TaskContextStoreTest extends TestCase {
 
 	private TaskContextStore store;
 
@@ -38,6 +38,7 @@ public class TaskContextStoreTest {
 
 	private TaskActivityManager activityManager;
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
@@ -49,6 +50,7 @@ public class TaskContextStoreTest {
 		activityManager = TasksUiPlugin.getTaskActivityManager();
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();

@@ -11,15 +11,14 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
@@ -49,7 +48,7 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
-public class EditorRestoreTest {
+public class EditorRestoreTest extends TestCase {
 
 	private IEditorDescriptor editor;
 
@@ -171,6 +170,7 @@ public class EditorRestoreTest {
 		return refs;
 	}
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		task = new LocalTask(getClass().getName(), getClass().getName());
@@ -209,6 +209,7 @@ public class EditorRestoreTest {
 		assertTrue(ContextUiPlugin.getEditorStateParticipant().isEnabled());
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		TasksUiPlugin.getTaskList().deleteTask(task);
