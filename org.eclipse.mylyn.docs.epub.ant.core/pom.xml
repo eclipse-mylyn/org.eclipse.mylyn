@@ -18,7 +18,7 @@
 				<version>1.6</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<configuration>
 							<target>
 								<jar destfile="lib/epub-ant.jar" basedir="target/classes"/>
