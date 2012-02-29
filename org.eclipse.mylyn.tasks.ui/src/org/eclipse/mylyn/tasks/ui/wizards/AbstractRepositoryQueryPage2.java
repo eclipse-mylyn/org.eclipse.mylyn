@@ -167,7 +167,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			applyTo(query);
 
 			IDialogSettings settings = getDialogSettings();
-			settings.put(getSavedStateSettingKey(), query.getUrl());
+			if (settings != null) {
+				settings.put(getSavedStateSettingKey(), query.getUrl());
+			}
 		}
 	}
 
@@ -425,11 +427,13 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	protected boolean restoreSavedState() {
 		IDialogSettings settings = getDialogSettings();
-		String queryUrl = settings.get(getSavedStateSettingKey());
-		if (queryUrl != null) {
-			RepositoryQuery query = new RepositoryQuery(getTaskRepository().getConnectorKind(), "handle"); //$NON-NLS-1$
-			query.setUrl(queryUrl);
-			return restoreState(query);
+		if (settings != null) {
+			String queryUrl = settings.get(getSavedStateSettingKey());
+			if (queryUrl != null) {
+				RepositoryQuery query = new RepositoryQuery(getTaskRepository().getConnectorKind(), "handle"); //$NON-NLS-1$
+				query.setUrl(queryUrl);
+				return restoreState(query);
+			}
 		}
 		return false;
 	}
