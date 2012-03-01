@@ -49,7 +49,11 @@ public class CommonHttpClientTest {
 	@Test
 	public void testCertificateAuthenticationCertificate() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken()) {
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate");
+			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
+			return; // skip test 
+		}
+		if (CommonTestUtil.hasCertificateCredentials()) {
+			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
 			return; // skip test 
 		}
 
@@ -73,8 +77,12 @@ public class CommonHttpClientTest {
 		if (CommonTestUtil.isCertificateAuthBroken()
 				|| NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null) {
 			// bug 369805
-			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset");
+			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
 			throw new SSLException(""); // skip test 
+		}
+		if (CommonTestUtil.hasCertificateCredentials()) {
+			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
+			return; // skip test 
 		}
 
 		RepositoryLocation location = new RepositoryLocation();

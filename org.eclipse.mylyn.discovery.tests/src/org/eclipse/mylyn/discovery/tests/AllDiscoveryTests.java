@@ -14,6 +14,7 @@ package org.eclipse.mylyn.discovery.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.discovery.tests.core.BundleDiscoveryStrategyTest;
 import org.eclipse.mylyn.discovery.tests.core.ConnectorDiscoveryRemoteTest;
 import org.eclipse.mylyn.discovery.tests.core.ConnectorDiscoveryTest;
@@ -26,15 +27,15 @@ import org.eclipse.mylyn.discovery.tests.core.RemoteBundleDiscoveryStrategyTest;
 public class AllDiscoveryTests {
 
 	public static Test suite() {
-		return suite(false);
+		return suite(TestConfiguration.getDefault());
 	}
 
-	public static Test suite(boolean localOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllDiscoveryTests.class.getName());
 		suite.addTestSuite(ConnectorDiscoveryTest.class);
 		suite.addTestSuite(DirectoryParserTest.class);
 		suite.addTestSuite(BundleDiscoveryStrategyTest.class);
-		if (!localOnly) {
+		if (!configuration.isLocalOnly()) {
 			suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
 			suite.addTestSuite(ConnectorDiscoveryRemoteTest.class);
 		}

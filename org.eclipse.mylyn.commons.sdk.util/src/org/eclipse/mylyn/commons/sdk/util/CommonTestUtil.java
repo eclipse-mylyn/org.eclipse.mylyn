@@ -440,4 +440,13 @@ public class CommonTestUtil {
 		return new VersionRange("[0.0.0,1.6.0.25]").isIncluded(CoreUtil.getRuntimeVersion());
 	}
 
+	public static boolean hasCertificateCredentials() {
+		try {
+			CommonTestUtil.getCertificateCredentials();
+			return true;
+		} catch (AssertionFailedError error) {
+			return false;
+		}
+	}
+
 }
