@@ -236,11 +236,13 @@ public class AttachmentUtil {
 	public static boolean canUploadAttachment(ITask task) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
-		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		if (attachmentHandler != null) {
-			return attachmentHandler.canPostContent(repository, task);
+		if (repository != null) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+					repository.getConnectorKind());
+			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canPostContent(repository, task);
+			}
 		}
 		return false;
 	}
@@ -248,11 +250,13 @@ public class AttachmentUtil {
 	public static boolean canDownloadAttachment(ITask task) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
-		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		if (attachmentHandler != null) {
-			return attachmentHandler.canGetContent(repository, task);
+		if (repository != null) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+					repository.getConnectorKind());
+			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canGetContent(repository, task);
+			}
 		}
 		return false;
 	}
