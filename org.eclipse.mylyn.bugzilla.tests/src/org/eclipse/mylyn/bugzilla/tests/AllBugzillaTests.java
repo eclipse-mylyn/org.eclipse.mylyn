@@ -20,10 +20,10 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
+import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
-import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 
 /**
  * @author Mik Kersten
@@ -34,37 +34,30 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
-		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(suite, TestConfiguration.getDefault());
 		return suite;
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
-		addTests(false, defaultOnly, suite);
+		addTests(suite, configuration);
 		return suite;
 	}
 
-	public static Test localSuite() {
-		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
-		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
-		return suite;
-	}
-
-	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
+	public static void addTests(TestSuite suite, TestConfiguration configuration) {
 		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(localOnly, defaultOnly));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(configuration));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
-		suite.addTestSuite(TaskEditorTest.class);
-		suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-		suite.addTestSuite(BugzillaSearchPageTest.class);
-		suite.addTestSuite(BugzillaDateTimeTests.class);
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
 
 		// network tests
-		if (!localOnly) {
-			if (defaultOnly) {
+		if (!configuration.isLocalOnly()) {
+			suite.addTestSuite(BugzillaTaskEditorTest.class);
+			suite.addTestSuite(BugzillaSearchPageTest.class);
+			suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
+			if (configuration.isDefaultOnly()) {
 				addTests(suite, BugzillaFixture.DEFAULT);
 			} else {
 				for (BugzillaFixture fixture : BugzillaFixture.ALL) {

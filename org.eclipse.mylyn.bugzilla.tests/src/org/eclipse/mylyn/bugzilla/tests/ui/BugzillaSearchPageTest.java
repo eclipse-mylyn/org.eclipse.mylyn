@@ -49,4 +49,5 @@ public class BugzillaSearchPageTest extends TestCase {
 		 */
 		assertFalse(page.getProductCount() == 0);
 	}
+
 }

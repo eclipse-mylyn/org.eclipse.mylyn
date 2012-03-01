@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
-public class TaskEditorTest extends TestCase {
+public class BugzillaTaskEditorTest extends TestCase {
 
 	private TaskRepository repository;
 

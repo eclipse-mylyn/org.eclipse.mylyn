@@ -15,35 +15,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Frank Becker
  * @author Robert Elves
+ * @author Steffen Pingel
  */
-public class BugzillaDateTimeTests extends AbstractBugzillaTest {
+public class BugzillaDateTimeTests extends TestCase {
 
 	private TaskRepository repository;
 
 	private BugzillaRepositoryConnector connector;
 
-	@SuppressWarnings("unused")
-	private BugzillaClient client;
-
 	@Override
 	public void setUp() throws Exception {
-		super.setUp();
-		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
-		repository = BugzillaFixture.current().repository();
-		connector = BugzillaFixture.current().connector();
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://mylyn.org");
+		connector = new BugzillaRepositoryConnector();
 	}
 
 	public void testDateFormatParsing() {
@@ -134,4 +130,5 @@ public class BugzillaDateTimeTests extends AbstractBugzillaTest {
 			TimeZone.setDefault(defaultTimeZone);
 		}
 	}
+
 }

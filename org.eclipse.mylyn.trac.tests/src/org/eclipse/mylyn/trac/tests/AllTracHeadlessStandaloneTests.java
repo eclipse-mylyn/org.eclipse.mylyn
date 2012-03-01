@@ -14,7 +14,7 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
@@ -32,10 +32,10 @@ import org.eclipse.mylyn.trac.tests.support.TracFixture;
 public class AllTracHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(false, CommonTestUtil.runHeartbeatTestsOnly());
+		return suite(TestConfiguration.getDefault());
 	}
 
-	public static Test suite(boolean localOnly, boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllTracHeadlessStandaloneTests.class.getName());
 		// client tests
 		suite.addTestSuite(TracSearchTest.class);
@@ -45,8 +45,8 @@ public class AllTracHeadlessStandaloneTests {
 		// core tests
 		suite.addTestSuite(TracClientManagerTest.class);
 		// network tests
-		if (!localOnly) {
-			if (defaultOnly) {
+		if (!configuration.isLocalOnly()) {
+			if (configuration.isDefaultOnly()) {
 				addTests(suite, TracFixture.DEFAULT);
 			} else {
 				for (TracFixture fixture : TracFixture.ALL) {

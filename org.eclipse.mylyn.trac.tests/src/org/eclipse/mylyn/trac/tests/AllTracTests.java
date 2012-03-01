@@ -14,8 +14,8 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
@@ -35,33 +35,27 @@ public class AllTracTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllTracTests.class.getName());
-		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(suite, TestConfiguration.getDefault());
 		return suite;
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllTracTests.class.getName());
-		addTests(false, defaultOnly, suite);
+		addTests(suite, configuration);
 		return suite;
 	}
 
-	public static Test localSuite() {
-		TestSuite suite = new TestSuite(AllTracTests.class.getName());
-		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
-		return suite;
-	}
-
-	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(localOnly, defaultOnly));
+	public static void addTests(TestSuite suite, TestConfiguration configuration) {
+		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
 		suite.addTestSuite(TracUtilTest.class);
-		suite.addTestSuite(TracRepositoryQueryTest.class);
 		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);
-		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
 
-		if (!localOnly) {
+		if (!configuration.isLocalOnly()) {
+			suite.addTestSuite(TracRepositoryQueryTest.class);
+			suite.addTestSuite(TracRepositorySettingsPageTest.class);
 			// network tests
-			if (defaultOnly) {
+			if (configuration.isDefaultOnly()) {
 				addTests(suite, TracFixture.DEFAULT);
 			} else {
 				for (TracFixture fixture : TracFixture.ALL) {

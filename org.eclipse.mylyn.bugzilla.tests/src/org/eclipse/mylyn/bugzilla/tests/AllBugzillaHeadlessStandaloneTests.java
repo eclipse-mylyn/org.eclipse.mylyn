@@ -24,7 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandalo
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskCompletionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 
 /**
@@ -35,18 +35,19 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 public class AllBugzillaHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(false, CommonTestUtil.runHeartbeatTestsOnly());
+		return suite(TestConfiguration.getDefault());
 	}
 
-	public static Test suite(boolean localOnly, boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllBugzillaHeadlessStandaloneTests.class.getName());
-		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
-		suite.addTestSuite(BugzillaTaskCompletionTest.class);
-		if (!localOnly) {
+		suite.addTestSuite(BugzillaDateTimeTests.class);
+		if (!configuration.isLocalOnly()) {
+			// network tests
+			suite.addTestSuite(BugzillaTaskCompletionTest.class);
 			// tests that run against all repository versions
-			if (defaultOnly) {
+			if (configuration.isDefaultOnly()) {
 				addTests(suite, BugzillaFixture.DEFAULT);
 			} else {
 				for (BugzillaFixture fixture : BugzillaFixture.ALL) {
