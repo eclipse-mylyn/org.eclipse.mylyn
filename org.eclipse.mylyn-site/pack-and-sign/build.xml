@@ -106,7 +106,7 @@
 	<delete file="${site}/artifacts.jar" />
 	
 	<path id="jarprocessor.classpath">
-	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-p2-runtime">
+	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-bundles-external">
 		<include name="*/eclipse/plugins/org.eclipse.equinox.p2.jarprocessor_*.jar" />
 	  </fileset>
 	</path>		
@@ -144,7 +144,7 @@
 	<delete file="${projectDir}/site/artifacts.jar" />
 
 	<path id="eclipse.classpath">
-	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-p2-runtime">
+	  <fileset dir="${localRepository}/org/eclipse/tycho/tycho-bundles-external">
 		<include name="*/eclipse/plugins/org.eclipse.equinox.launcher_*.jar" />
 	  </fileset>
 	</path>
