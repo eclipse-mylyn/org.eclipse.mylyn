@@ -15,6 +15,7 @@ package org.eclipse.mylyn.bugzilla.tests.ui;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,13 +34,12 @@ public class BugzillaTaskEditorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		BugzillaFixture.current();
-		repository = BugzillaFixture.current().repository();
+		repository = BugzillaFixture.current().singleRepository();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		UiTestUtil.closeAllEditors();
 	}
 
 	/**
