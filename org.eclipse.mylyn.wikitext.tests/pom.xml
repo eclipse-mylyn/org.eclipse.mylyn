@@ -17,6 +17,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
+          <skip>${test.component.skip}</skip> 
           <excludes>
             <exclude>**/Test*.class</exclude>
           </excludes>
