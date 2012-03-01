@@ -46,6 +46,10 @@ public class AllNonConnectorTests {
 	}
 
 	static void addTests(TestSuite suite) {
+		addTests(false, suite);
+	}
+
+	static void addTests(boolean localOnly, TestSuite suite) {
 		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllNotificationsTests.suite());
@@ -64,6 +68,7 @@ public class AllNonConnectorTests {
 		suite.addTest(AllTeamTests.suite());
 		suite.addTest(AllMiscTests.suite());
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessTests.suite());
+		suite.addTest(org.eclipse.mylyn.wikitext.tests.UITests.suite());
 	}
 
 }

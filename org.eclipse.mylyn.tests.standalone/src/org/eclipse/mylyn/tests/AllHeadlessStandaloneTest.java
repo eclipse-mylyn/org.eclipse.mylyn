@@ -73,10 +73,10 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(Xml11InputStreamTest.class);
 
 		// bugzilla
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(false, defaultOnly));
 
 		// trac
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(defaultOnly));
+		suite.addTest(AllTracHeadlessStandaloneTests.suite(false, defaultOnly));
 
 		// hudson
 		suite.addTest(AllHudsonTests.suite(defaultOnly));

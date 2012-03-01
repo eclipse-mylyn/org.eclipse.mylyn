@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
@@ -31,7 +31,7 @@
       <version>4.7</version>
       <scope>test</scope>
     </dependency>
-	<!-- Commons -->
+    <!-- Commons -->
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.core</artifactId>
@@ -82,7 +82,7 @@
       <artifactId>org.eclipse.mylyn.commons.xmlrpc</artifactId>
       <version>3.7.0-SNAPSHOT</version>
     </dependency>
-	<!-- Builds -->
+    <!-- Builds -->
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.builds.core</artifactId>
@@ -98,7 +98,7 @@
       <artifactId>org.eclipse.mylyn.hudson.tests</artifactId>
       <version>0.9.0-SNAPSHOT</version>
     </dependency>
-	<!-- Tasks -->
+    <!-- Tasks -->
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.bugzilla.core</artifactId>
@@ -134,13 +134,13 @@
       <artifactId>org.eclipse.mylyn.tests.util</artifactId>
       <version>3.7.0-SNAPSHOT</version>
     </dependency>
-	<!-- Docs -->
+    <!-- Docs -->
     <dependency>
       <groupId>org.eclipse.mylyn.docs</groupId>
       <artifactId>org.eclipse.mylyn.wikitext.tests</artifactId>
       <version>1.6.0-SNAPSHOT</version>
     </dependency>
-	<!-- Eclipse Platform -->
+    <!-- Eclipse Platform -->
     <dependency>
       <groupId>p2.osgi.bundle</groupId>
       <artifactId>org.eclipse.core.net</artifactId>
@@ -191,34 +191,34 @@
       <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
       <version>2.5.0.v20100521-1846</version>
     </dependency>
-	<!-- Orbit Bundles -->
+    <!-- Orbit Bundles -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.3</version>
-	</dependency>
+    </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
-	</dependency>
-	<dependency>
-	  <groupId>org.apache.httpcomponents</groupId>
-	  <artifactId>httpclient</artifactId>
-	  <version>4.1.2</version>
-	</dependency>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.1.2</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-client</artifactId>
       <version>3.0</version>
-	</dependency>
+    </dependency>
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
       <version>0.9</version>
-	</dependency>
+    </dependency>
     <dependency>
-	  <groupId>com.google.code.gson</groupId>
+      <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>1.6</version>
     </dependency>

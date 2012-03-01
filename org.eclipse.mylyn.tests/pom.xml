@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
@@ -14,12 +14,13 @@
   <properties>
     <test.suite>org.eclipse.mylyn.tests.AllTests</test.suite>
     <test.all.skip>${test.skip}</test.all.skip>
+    <test.integration.skip>${test.all.skip}</test.integration.skip>
   </properties>
   <profiles>
     <profile>
       <id>localonly</id>
       <properties>
-        <test.suite>org.eclipse.mylyn.tests.AllNonConnectorTests</test.suite>
+        <test.suite>org.eclipse.mylyn.tests.AllLocalTests</test.suite>
       </properties>
     </profile>
     <profile>
@@ -36,12 +37,12 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-		  <skip>${test.all.skip}</skip>
-		  <testSuite>${project.artifactId}</testSuite>
-		  <testClass>${test.suite}</testClass>
-		  <explodedBundles>
-			<explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
-		  </explodedBundles>
+          <skip>${test.integration.skip}</skip>
+          <testSuite>${project.artifactId}</testSuite>
+          <testClass>${test.suite}</testClass>
+          <explodedBundles>
+            <explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
+          </explodedBundles>
           <dependencies>
             <dependency>
               <type>p2-installable-unit</type>
@@ -81,10 +82,10 @@
           </dependencies>		  
         </configuration>
       </plugin>
-	  <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
-		<version>1.0-beta-3</version>
+        <version>1.0-beta-3</version>
         <executions>
           <execution>
             <phase>post-integration-test</phase>
@@ -95,43 +96,43 @@
         </executions>
         <configuration>
           <transformationSets>
-			<!-- append @x.y.z to repository test cases to differentiate test fixtures -->
+            <!-- append @x.y.z to repository test cases to differentiate test fixtures -->
             <transformationSet>
               <dir>${project.build.directory}/surefire-reports</dir>
               <outputDir>${project.build.directory}/surefire-reports</outputDir>
-			  <includes>
-				<include>*.xml</include>
-			  </includes>
-			  <!-- map to different file extensions since overriding source
-				   file does not work -->
-			  <fileMappers>
+              <includes>
+                <include>*.xml</include>
+              </includes>
+              <!-- map to different file extensions since overriding source
+                   file does not work -->
+              <fileMappers>
                 <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
                   <targetExtension>.tmp</targetExtension>
                 </fileMapper>
               </fileMappers>
-			  <stylesheet>${basedir}/test-fixture.xsl</stylesheet>
+              <stylesheet>${basedir}/test-fixture.xsl</stylesheet>
             </transformationSet>
-			<!-- append @ex.y to all test cases to differentiate target platform -->
+            <!-- append @ex.y to all test cases to differentiate target platform -->
             <transformationSet>
               <dir>${project.build.directory}/surefire-reports</dir>
               <outputDir>${project.build.directory}/surefire-reports</outputDir>
               <stylesheet>${basedir}/test-suite.xsl</stylesheet>
-			  <includes>
-				<include>*.tmp</include>
-			  </includes>
-			  <fileMappers>
+              <includes>
+                <include>*.tmp</include>
+              </includes>
+              <fileMappers>
                 <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
                   <targetExtension>.xml</targetExtension>
                 </fileMapper>
               </fileMappers>
-			  <!--
-              <parameters>
-                <parameter>
+              <!--
+                  <parameters>
+                  <parameter>
                   <name>append</name>
                   <value>${mylyn-test-append}</value>
-                </parameter>
-              </parameters>
-			  -->
+                  </parameter>
+                  </parameters>
+              -->
             </transformationSet>
           </transformationSets>
         </configuration>
