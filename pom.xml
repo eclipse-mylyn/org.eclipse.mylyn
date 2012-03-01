@@ -107,7 +107,6 @@
     <module>org.eclipse.mylyn.wikitext.ui</module>
     <module>org.eclipse.mylyn.wikitext.tests</module>
     <module>org.eclipse.mylyn.wikitext.creole.tests</module>
-    <!-- needs to be last -->
     <module>org.eclipse.mylyn.wikitext-standalone</module>
   </modules>
 </project>

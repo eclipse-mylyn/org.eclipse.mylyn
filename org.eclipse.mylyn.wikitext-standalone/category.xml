@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
+    <category name="WikiText"/>
+  </feature>
+
+  <category-def name="WikiText" label="WikiText">
+    <description>
+      Mylyn Docs WikiText.
+    </description>
+  </category-def>
+</site>
