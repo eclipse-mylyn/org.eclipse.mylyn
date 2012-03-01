@@ -16,6 +16,8 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 import org.eclipse.mylyn.gerrit.tests.AllGerritTests;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
@@ -28,22 +30,20 @@ import org.eclipse.mylyn.trac.tests.AllTracTests;
 public class AllConnectorTests {
 
 	public static Test suite() {
-		return suite(false);
-	}
-
-	public static Test suite(boolean defaultOnly) {
 		TestFixture.initializeTasksSettings();
 
+		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
+
 		TestSuite suite = new ManagedTestSuite(AllConnectorTests.class.getName());
-		addTests(suite, defaultOnly);
+		addTests(suite, configuration);
 		return suite;
 	}
 
-	static void addTests(TestSuite suite, boolean defaultOnly) {
-		suite.addTest(AllBugzillaTests.suite(defaultOnly));
-		suite.addTest(AllTracTests.suite(defaultOnly));
-		suite.addTest(AllHudsonTests.suite(defaultOnly));
-		suite.addTest(AllGerritTests.suite(defaultOnly));
+	static void addTests(TestSuite suite, TestConfiguration configuration) {
+		suite.addTest(AllBugzillaTests.suite(configuration));
+		suite.addTest(AllTracTests.suite(configuration));
+		suite.addTest(AllHudsonTests.suite(configuration));
+		suite.addTest(AllGerritTests.suite(configuration));
 	}
 
 }

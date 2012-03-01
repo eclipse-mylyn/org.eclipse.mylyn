@@ -19,6 +19,7 @@ import org.eclipse.mylyn.cdt.tests.AllCdtTests;
 import org.eclipse.mylyn.commons.activity.tests.AllActivityTests;
 import org.eclipse.mylyn.commons.notifications.tests.AllNotificationsTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.commons.tests.AllCommonsTests;
 import org.eclipse.mylyn.context.tasks.tests.AllContextTasksTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
@@ -41,22 +42,18 @@ public class AllNonConnectorTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllNonConnectorTests.class.getName());
-		addTests(suite);
+		addTests(suite, TestConfiguration.getDefault());
 		return suite;
 	}
 
-	static void addTests(TestSuite suite) {
-		addTests(false, suite);
-	}
-
-	static void addTests(boolean localOnly, TestSuite suite) {
+	static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllNotificationsTests.suite());
 		suite.addTest(AllActivityTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllContextTasksTests.suite());
-		suite.addTest(AllDiscoveryTests.suite());
+		suite.addTest(AllDiscoveryTests.suite(configuration));
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllCdtTests.suite());
 		suite.addTest(AllMonitorTests.suite());

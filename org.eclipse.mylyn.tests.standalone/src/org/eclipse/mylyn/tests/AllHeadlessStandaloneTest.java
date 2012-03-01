@@ -18,6 +18,8 @@ import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
 import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmentTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
@@ -41,10 +43,13 @@ import org.junit.runners.AllTests;
 public class AllHeadlessStandaloneTest {
 
 	public static Test suite() {
-		return suite(true);
+		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
+		configuration.setLocalOnly(true);
+
+		return suite(TestConfiguration.getDefault());
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new ManagedTestSuite(AllHeadlessStandaloneTest.class.getName());
 
 		// commons
@@ -73,13 +78,13 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(Xml11InputStreamTest.class);
 
 		// bugzilla
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(false, defaultOnly));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(configuration));
 
 		// trac
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(false, defaultOnly));
+		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
 
 		// hudson
-		suite.addTest(AllHudsonTests.suite(defaultOnly));
+		suite.addTest(AllHudsonTests.suite(configuration));
 
 		return suite;
 	}

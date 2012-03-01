@@ -15,6 +15,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 
 /**
  * @author Steffen Pingel
@@ -22,8 +24,11 @@ import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 public class AllHeartbeatTests {
 
 	public static Test suite() {
+		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
+		configuration.setLocalOnly(true);
+
 		TestSuite suite = new ManagedTestSuite(AllHeartbeatTests.class.getName());
-		AllNonConnectorTests.addTests(suite);
+		AllNonConnectorTests.addTests(suite, configuration);
 		return suite;
 	}
 

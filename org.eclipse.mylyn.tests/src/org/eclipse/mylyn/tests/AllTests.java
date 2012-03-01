@@ -15,6 +15,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 
 /**
  * @author Mik Kersten
@@ -22,9 +24,11 @@ import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 public class AllTests {
 
 	public static Test suite() {
+		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
+
 		TestSuite suite = new ManagedTestSuite(AllTests.class.getName());
-		AllNonConnectorTests.addTests(suite);
-		AllConnectorTests.addTests(suite, false);
+		AllNonConnectorTests.addTests(suite, configuration);
+		AllConnectorTests.addTests(suite, configuration);
 		return suite;
 	}
 
