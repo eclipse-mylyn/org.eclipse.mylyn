@@ -212,6 +212,7 @@ public class EditorRestoreTest extends TestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
+		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		TasksUiPlugin.getTaskList().deleteTask(task);
 		page.closeAllEditors(false);
 		ResourceTestUtil.deleteProject(project.getProject());
