@@ -26,12 +26,18 @@ import org.eclipse.mylyn.discovery.tests.core.RemoteBundleDiscoveryStrategyTest;
 public class AllDiscoveryTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.discovery");
+		return suite(false);
+	}
+
+	public static Test suite(boolean localOnly) {
+		TestSuite suite = new TestSuite(AllDiscoveryTests.class.getName());
 		suite.addTestSuite(ConnectorDiscoveryTest.class);
 		suite.addTestSuite(DirectoryParserTest.class);
 		suite.addTestSuite(BundleDiscoveryStrategyTest.class);
-		suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
-		suite.addTestSuite(ConnectorDiscoveryRemoteTest.class);
+		if (!localOnly) {
+			suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
+			suite.addTestSuite(ConnectorDiscoveryRemoteTest.class);
+		}
 		return suite;
 	}
 
