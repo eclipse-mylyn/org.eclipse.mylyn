@@ -82,7 +82,7 @@ public class CommonHttpClientTest {
 		}
 		if (!CommonTestUtil.hasCertificateCredentials()) {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
-			return; // skip test 
+			throw new SSLException(""); // skip test 
 		}
 
 		RepositoryLocation location = new RepositoryLocation();
