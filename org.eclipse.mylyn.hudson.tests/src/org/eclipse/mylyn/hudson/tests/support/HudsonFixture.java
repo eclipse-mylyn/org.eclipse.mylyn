@@ -54,7 +54,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_3_0, HUDSON_2_1_SECURE };
 
-	private static final HudsonFixture DEFAULT = HUDSON_2_1;
+	public static final HudsonFixture DEFAULT = HUDSON_2_1;
 
 	public static HudsonFixture current() {
 		return current(DEFAULT);

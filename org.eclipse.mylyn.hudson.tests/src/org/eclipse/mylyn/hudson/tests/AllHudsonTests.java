@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
 import org.eclipse.mylyn.hudson.tests.client.HudsonValidationTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
@@ -30,43 +31,47 @@ public class AllHudsonTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
-		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(suite, TestConfiguration.getDefault());
 		return suite;
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
-		addTests(false, defaultOnly, suite);
+		addTests(suite, configuration);
 		return suite;
 	}
 
-	public static Test localSuite() {
-		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
-		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
-		return suite;
-	}
-
-	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
+	private static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTestSuite(HudsonConnectorTest.class);
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
-		if (!localOnly) {
+		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(HudsonValidationTest.class);
-			for (HudsonFixture fixture : HudsonFixture.ALL) {
-				fixture.createSuite(suite);
-				fixture.add(HudsonClientTest.class);
-				fixture.add(HudsonIntegrationTest.class);
-				fixture.done();
-			}
-			for (HudsonFixture fixture : HudsonFixture.MISC) {
-				if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
-					return; // skip test 
+			if (configuration.isDefaultOnly()) {
+				if (configuration.isDefaultOnly()) {
+					addTests(suite, HudsonFixture.DEFAULT);
+				} else {
+					for (HudsonFixture fixture : HudsonFixture.ALL) {
+						addTests(suite, fixture);
+					}
+					for (HudsonFixture fixture : HudsonFixture.MISC) {
+						if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
+							return; // skip test 
+						}
+						fixture.createSuite(suite);
+						fixture.add(HudsonClientTest.class);
+						fixture.done();
+					}
 				}
-				fixture.createSuite(suite);
-				fixture.add(HudsonClientTest.class);
-				fixture.done();
 			}
 		}
+	}
+
+	private static void addTests(TestSuite suite, HudsonFixture fixture) {
+		fixture.createSuite(suite);
+		fixture.add(HudsonClientTest.class);
+		fixture.add(HudsonIntegrationTest.class);
+		fixture.done();
 	}
 
 }
