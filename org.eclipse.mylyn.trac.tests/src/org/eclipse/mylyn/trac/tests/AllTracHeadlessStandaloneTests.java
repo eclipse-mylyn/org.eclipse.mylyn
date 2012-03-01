@@ -14,8 +14,8 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
-import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientTest;
@@ -32,11 +32,11 @@ import org.eclipse.mylyn.trac.tests.support.TracFixture;
 public class AllTracHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(TestUtil.runHeartbeatTestsOnly());
+		return suite(false, CommonTestUtil.runHeartbeatTestsOnly());
 	}
 
-	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.trac.tests");
+	public static Test suite(boolean localOnly, boolean defaultOnly) {
+		TestSuite suite = new TestSuite(AllTracHeadlessStandaloneTests.class.getName());
 		// client tests
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
@@ -44,19 +44,21 @@ public class AllTracHeadlessStandaloneTests {
 		suite.addTestSuite(TracClientProxyTest.class);
 		// core tests
 		suite.addTestSuite(TracClientManagerTest.class);
-		if (defaultOnly) {
-			addTests(suite, TracFixture.DEFAULT);
-		} else {
-			// network tests
-			for (TracFixture fixture : TracFixture.ALL) {
-				addTests(suite, fixture);
-			}
-			// validation tests
-			for (TracFixture fixture : TracFixture.MISC) {
-				fixture.createSuite(suite);
-				fixture.add(TracClientFactoryTest.class);
-				fixture.add(TracClientTest.class);
-				fixture.done();
+		// network tests
+		if (!localOnly) {
+			if (defaultOnly) {
+				addTests(suite, TracFixture.DEFAULT);
+			} else {
+				for (TracFixture fixture : TracFixture.ALL) {
+					addTests(suite, fixture);
+				}
+				// validation tests
+				for (TracFixture fixture : TracFixture.MISC) {
+					fixture.createSuite(suite);
+					fixture.add(TracClientFactoryTest.class);
+					fixture.add(TracClientTest.class);
+					fixture.done();
+				}
 			}
 		}
 		return suite;

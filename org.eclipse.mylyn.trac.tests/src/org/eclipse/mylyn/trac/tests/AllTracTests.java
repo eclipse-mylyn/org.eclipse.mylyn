@@ -14,9 +14,9 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
-import org.eclipse.mylyn.tests.util.TestUtil;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorWebTest;
@@ -35,29 +35,38 @@ public class AllTracTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllTracTests.class.getName());
-		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
 		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllTracTests.class.getName());
-		addTests(defaultOnly, suite);
+		addTests(false, defaultOnly, suite);
 		return suite;
 	}
 
-	private static void addTests(boolean defaultOnly, TestSuite suite) {
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(defaultOnly));
+	public static Test localSuite() {
+		TestSuite suite = new TestSuite(AllTracTests.class.getName());
+		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
+	}
+
+	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
+		suite.addTest(AllTracHeadlessStandaloneTests.suite(localOnly, defaultOnly));
 		suite.addTestSuite(TracUtilTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
 		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
-		// network tests
-		if (defaultOnly) {
-			addTests(suite, TracFixture.DEFAULT);
-		} else {
-			for (TracFixture fixture : TracFixture.ALL) {
-				addTests(suite, fixture);
+
+		if (!localOnly) {
+			// network tests
+			if (defaultOnly) {
+				addTests(suite, TracFixture.DEFAULT);
+			} else {
+				for (TracFixture fixture : TracFixture.ALL) {
+					addTests(suite, fixture);
+				}
 			}
 		}
 	}

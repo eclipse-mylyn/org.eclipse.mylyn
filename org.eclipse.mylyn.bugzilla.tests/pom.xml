@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
@@ -12,28 +12,29 @@
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
-	<test.suite>${project.artifactId}.AllBugzillaTests</test.suite>
+    <test.suite>${project.artifactId}.AllBugzillaTests</test.suite>
   </properties>
   <build>
-	<!-- resources for standalone tests -->
+    <!-- resources for standalone tests -->
     <resources>
       <resource>
         <directory>${basedir}</directory>
         <includes>
           <include>testdata/**</include>
-		</includes>
-	  </resource>
-	</resources>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
-	  <plugin>
-		<groupId>org.eclipse.tycho</groupId>
-		<artifactId>tycho-surefire-plugin</artifactId>
-		<version>${tycho-version}</version>
-		<configuration>
-		  <testSuite>${project.artifactId}</testSuite>
-		  <testClass>${test.suite}</testClass>
-		</configuration>
-	  </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <skip>${test.component.skip}</skip> 
+          <testSuite>${project.artifactId}</testSuite>
+          <testClass>${test.suite}</testClass>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>

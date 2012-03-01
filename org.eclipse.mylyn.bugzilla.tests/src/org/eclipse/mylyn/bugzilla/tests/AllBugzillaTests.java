@@ -22,8 +22,8 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.TaskEditorTest;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.tests.util.TestUtil;
 
 /**
  * @author Mik Kersten
@@ -34,19 +34,25 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
-		addTests(TestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
 		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
-		addTests(defaultOnly, suite);
+		addTests(false, defaultOnly, suite);
 		return suite;
 	}
 
-	private static void addTests(boolean defaultOnly, TestSuite suite) {
+	public static Test localSuite() {
+		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
+		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
+	}
+
+	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
 		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(defaultOnly));
+		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(localOnly, defaultOnly));
 
 		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
 		suite.addTestSuite(TaskEditorTest.class);
@@ -56,13 +62,14 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
 
-		// Each of these tests gets executed against every repo in BugzillaFixture.ALL
-		// unless otherwise excluded
-		if (defaultOnly) {
-			addTests(suite, BugzillaFixture.DEFAULT);
-		} else {
-			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-				addTests(suite, fixture);
+		// network tests
+		if (!localOnly) {
+			if (defaultOnly) {
+				addTests(suite, BugzillaFixture.DEFAULT);
+			} else {
+				for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+					addTests(suite, fixture);
+				}
 			}
 		}
 	}

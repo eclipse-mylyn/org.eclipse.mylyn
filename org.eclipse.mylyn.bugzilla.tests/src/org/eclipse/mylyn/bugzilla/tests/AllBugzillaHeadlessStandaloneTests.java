@@ -24,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandalo
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskCompletionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 
 /**
@@ -34,21 +35,23 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 public class AllBugzillaHeadlessStandaloneTests {
 
 	public static Test suite() {
-		return suite(false);
+		return suite(false, CommonTestUtil.runHeartbeatTestsOnly());
 	}
 
-	public static Test suite(boolean defaultOnly) {
+	public static Test suite(boolean localOnly, boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllBugzillaHeadlessStandaloneTests.class.getName());
 		// tests that only need to run once (i.e. no network i/o so doesn't matter which repository)
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
 		suite.addTestSuite(BugzillaTaskCompletionTest.class);
-		// tests that run against all repository versions
-		if (defaultOnly) {
-			addTests(suite, BugzillaFixture.DEFAULT);
-		} else {
-			for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-				addTests(suite, fixture);
+		if (!localOnly) {
+			// tests that run against all repository versions
+			if (defaultOnly) {
+				addTests(suite, BugzillaFixture.DEFAULT);
+			} else {
+				for (BugzillaFixture fixture : BugzillaFixture.ALL) {
+					addTests(suite, fixture);
+				}
 			}
 		}
 		return suite;

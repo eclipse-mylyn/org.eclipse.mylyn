@@ -134,6 +134,10 @@ public class TestUtil {
 		return CommonTestUtil.getFile(source, filename);
 	}
 
+	/**
+	 * @deprecated use {org.eclipse.mylyn.commons.sdk.util.CommonTestUtil#runHeartbeatTestsOnly()} instead
+	 */
+	@Deprecated
 	public static boolean runHeartbeatTestsOnly() {
 		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
 	}
