@@ -52,7 +52,7 @@ public class CommonHttpClientTest {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
 			return; // skip test 
 		}
-		if (CommonTestUtil.hasCertificateCredentials()) {
+		if (!CommonTestUtil.hasCertificateCredentials()) {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
 			return; // skip test 
 		}
@@ -80,7 +80,7 @@ public class CommonHttpClientTest {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
 			throw new SSLException(""); // skip test 
 		}
-		if (CommonTestUtil.hasCertificateCredentials()) {
+		if (!CommonTestUtil.hasCertificateCredentials()) {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
 			return; // skip test 
 		}
