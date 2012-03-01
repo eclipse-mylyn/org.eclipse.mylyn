@@ -19,13 +19,15 @@ import org.osgi.framework.BundleContext;
  */
 public class HudsonUiPlugin extends AbstractUIPlugin {
 
+	public static String ID_PLUGIN = "org.eclipse.mylyn.hudson.ui";
+
 	public HudsonUiPlugin() {
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		if (HudsonDiscovery.getInstance() != null) {
-			HudsonDiscovery.getInstance().stop();
+		if (HudsonStartup.getInstance() != null) {
+			HudsonStartup.getInstance().stop();
 		}
 		super.stop(context);
 	}

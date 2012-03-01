@@ -32,7 +32,6 @@ import org.eclipse.ecf.discovery.IServiceProperties;
 import org.eclipse.ecf.discovery.identity.IServiceID;
 import org.eclipse.ecf.discovery.identity.IServiceTypeID;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
-import org.eclipse.mylyn.builds.ui.BuildsUiStartup;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.osgi.util.NLS;
@@ -43,7 +42,7 @@ import org.eclipse.osgi.util.NLS;
  * @author Torkild U. Resheim, Itema AS
  * @author Steffen Pingel
  */
-public class HudsonDiscovery extends BuildsUiStartup {
+public class HudsonDiscovery {
 
 	private static final String ECF_DISCOVERY_JMDNS = "ecf.discovery.jmdns"; //$NON-NLS-1$
 
@@ -56,16 +55,9 @@ public class HudsonDiscovery extends BuildsUiStartup {
 	/** Server id property name (Jenkins only). */
 	private static final String SERVER_ID_PROPERTY = "server-id"; //$NON-NLS-1$
 
-	private static HudsonDiscovery instance;
-
 	private IContainer container;
 
-	public static HudsonDiscovery getInstance() {
-		return instance;
-	}
-
 	public HudsonDiscovery() {
-		instance = this;
 	}
 
 	protected IContainer getContainer() throws ContainerCreateException {
@@ -94,8 +86,7 @@ public class HudsonDiscovery extends BuildsUiStartup {
 		return true;
 	}
 
-	@Override
-	public void lazyStartup() {
+	public void start() {
 		try {
 			container = getContainer();
 			final IDiscoveryLocator adapter = (IDiscoveryLocator) container.getAdapter(IDiscoveryLocator.class);

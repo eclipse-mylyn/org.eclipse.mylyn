@@ -37,7 +37,7 @@
    <extension
          point="org.eclipse.mylyn.builds.ui.startup">
       <startup
-            class="org.eclipse.mylyn.internal.hudson.ui.HudsonDiscovery">
+            class="org.eclipse.mylyn.internal.hudson.ui.HudsonStartup">
       </startup>
    </extension>
 
