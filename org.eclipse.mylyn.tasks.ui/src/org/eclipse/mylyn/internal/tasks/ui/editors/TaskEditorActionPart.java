@@ -465,12 +465,14 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @since 3.5
 	 */
 	public void refreshOperations() {
-		for (Button button : operationButtons) {
-			TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
-			button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isDisabled());
-			button.setToolTipText(taskOperation.getTaskAttribute()
-					.getMetaData()
-					.getValue(TaskAttribute.META_DESCRIPTION));
+		if (operationButtons != null) {
+			for (Button button : operationButtons) {
+				TaskOperation taskOperation = (TaskOperation) button.getData(KEY_OPERATION);
+				button.setEnabled(!taskOperation.getTaskAttribute().getMetaData().isDisabled());
+				button.setToolTipText(taskOperation.getTaskAttribute()
+						.getMetaData()
+						.getValue(TaskAttribute.META_DESCRIPTION));
+			}
 		}
 	}
 }
