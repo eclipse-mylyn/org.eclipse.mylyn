@@ -30,34 +30,42 @@ public class AllHudsonTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
-		addTests(CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		addTests(false, CommonTestUtil.runHeartbeatTestsOnly(), suite);
 		return suite;
 	}
 
 	public static Test suite(boolean defaultOnly) {
 		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
-		addTests(defaultOnly, suite);
+		addTests(false, defaultOnly, suite);
 		return suite;
 	}
 
-	private static void addTests(boolean defaultOnly, TestSuite suite) {
+	public static Test localSuite() {
+		TestSuite suite = new TestSuite(AllHudsonTests.class.getName());
+		addTests(true, CommonTestUtil.runHeartbeatTestsOnly(), suite);
+		return suite;
+	}
+
+	private static void addTests(boolean localOnly, boolean defaultOnly, TestSuite suite) {
 		suite.addTestSuite(HudsonConnectorTest.class);
 		suite.addTestSuite(HudsonServerBehaviourTest.class);
-		// network tests
-		suite.addTestSuite(HudsonValidationTest.class);
-		for (HudsonFixture fixture : HudsonFixture.ALL) {
-			fixture.createSuite(suite);
-			fixture.add(HudsonClientTest.class);
-			fixture.add(HudsonIntegrationTest.class);
-			fixture.done();
-		}
-		for (HudsonFixture fixture : HudsonFixture.MISC) {
-			if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
-				return; // skip test 
+		if (!localOnly) {
+			// network tests
+			suite.addTestSuite(HudsonValidationTest.class);
+			for (HudsonFixture fixture : HudsonFixture.ALL) {
+				fixture.createSuite(suite);
+				fixture.add(HudsonClientTest.class);
+				fixture.add(HudsonIntegrationTest.class);
+				fixture.done();
 			}
-			fixture.createSuite(suite);
-			fixture.add(HudsonClientTest.class);
-			fixture.done();
+			for (HudsonFixture fixture : HudsonFixture.MISC) {
+				if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
+					return; // skip test 
+				}
+				fixture.createSuite(suite);
+				fixture.add(HudsonClientTest.class);
+				fixture.done();
+			}
 		}
 	}
 
