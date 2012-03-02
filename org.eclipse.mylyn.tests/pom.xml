@@ -12,7 +12,7 @@
   <version>3.7.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <properties>
-    <test.suite>org.eclipse.mylyn.tests.AllTests</test.suite>
+    <test.integration.suite>org.eclipse.mylyn.tests.AllTests</test.integration.suite>
     <test.all.skip>${test.skip}</test.all.skip>
     <test.integration.skip>${test.all.skip}</test.integration.skip>
   </properties>
@@ -20,13 +20,13 @@
     <profile>
       <id>localonly</id>
       <properties>
-        <test.suite>org.eclipse.mylyn.tests.AllLocalTests</test.suite>
+        <test.integration.suite>org.eclipse.mylyn.tests.AllLocalTests</test.integration.suite>
       </properties>
     </profile>
     <profile>
       <id>heartbeat</id>
       <properties>
-        <test.suite>org.eclipse.mylyn.tests.AllHeartbeatTests</test.suite>
+        <test.integration.suite>org.eclipse.mylyn.tests.AllHeartbeatTests</test.integration.suite>
       </properties>
     </profile>
   </profiles>
@@ -39,7 +39,7 @@
         <configuration>
           <skip>${test.integration.skip}</skip>
           <testSuite>${project.artifactId}</testSuite>
-          <testClass>${test.suite}</testClass>
+          <testClass>${test.integration.suite}</testClass>
           <explodedBundles>
             <explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
           </explodedBundles>
