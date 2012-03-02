@@ -43,6 +43,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
@@ -71,6 +72,10 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			.getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 
 	private boolean enabled;
+
+	private IMemento savedMemento;
+
+	private String savedContextHandle;
 
 	public EditorStateParticipant() {
 		this.enabled = true;
@@ -102,6 +107,8 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			try {
 				IMemento memento = state.getMemento(MEMENTO_EDITORS);
+				savedMemento = memento;
+				savedContextHandle = state.getContextHandle();
 				if (memento != null) {
 					IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
 					if (children.length > 0) {
@@ -205,21 +212,39 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
 		Set<IWorkbenchWindow> monitoredWindows = MonitorUi.getMonitoredWindows();
 
-		try {
-			IMemento rootMemento = state.createMemento(MEMENTO_EDITORS);
-			for (IWorkbenchWindow window : monitoredWindows) {
-				IMemento memento = rootMemento.createChild(KEY_MONITORED_WINDOW_OPEN_EDITORS);
+		boolean failed = false;
+		IMemento newMemento = XMLMemento.createWriteRoot(MEMENTO_EDITORS);
+		for (IWorkbenchWindow window : monitoredWindows) {
+			IMemento memento = newMemento.createChild(KEY_MONITORED_WINDOW_OPEN_EDITORS);
 
-				memento.putString(ATTRIBUTE_CLASS, window.getClass().getCanonicalName());
-				int number = getNumber(window);
-				memento.putInteger(ATTRIBUTE_NUMER, number);
-				memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
-				memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
+			memento.putString(ATTRIBUTE_CLASS, window.getClass().getCanonicalName());
+			int number = getNumber(window);
+			memento.putInteger(ATTRIBUTE_NUMER, number);
+			memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
+			memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
+			try {
 				saveEditors_e_3_x((WorkbenchPage) window.getActivePage(), memento);
+			} catch (Exception e) {
+				saveEditors_e_4((WorkbenchPage) window.getActivePage(), memento);
+				failed = true;
 			}
-		} catch (Exception e) {
-			// FIXME fall back to workbench API
 		}
+
+		// retain the state in case editor save/restore fails on e4 
+		if (failed && savedMemento != null && savedContextHandle != null
+				&& savedContextHandle.equals(state.getContextHandle())) {
+			IMemento memento = state.createMemento(MEMENTO_EDITORS);
+			memento.putMemento(savedMemento);
+		} else {
+			IMemento memento = state.createMemento(MEMENTO_EDITORS);
+			memento.putMemento(newMemento);
+		}
+		savedMemento = null;
+	}
+
+	private void saveEditors_e_4(WorkbenchPage activePage, IMemento memento) {
+		// ignore
+
 	}
 
 	private void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
@@ -281,7 +306,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			try {
 				restoreEditors_e_3_x(page, visibleEditors, activeEditor, result, editorMementoSet);
 			} catch (Exception e) {
-				// FIXME fall back to workbench API
+				restoreEditors_e_4(page, visibleEditors, activeEditor, result, editorMementoSet);
 			}
 
 			if (activeEditor[0] != null && isActiveWindow) {
@@ -293,6 +318,13 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not restore editors", e)); //$NON-NLS-1$
 		}
+	}
+
+	private void restoreEditors_e_4(WorkbenchPage page, ArrayList<?> visibleEditors, IEditorReference[] activeEditor,
+			MultiStatus result, Set<IMemento> editorMementoSet) {
+
+		// ignore
+
 	}
 
 	private void restoreEditors_e_3_x(WorkbenchPage page, final ArrayList<?> visibleEditors,
