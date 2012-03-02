@@ -65,7 +65,8 @@ public class GerritToGitMapping {
 	}
 
 	private static boolean isHttpUri(URIish fetchUri) {
-		return fetchUri.getScheme().toLowerCase().startsWith("http"); //$NON-NLS-1$
+		String scheme = fetchUri.getScheme();
+		return scheme != null && scheme.toLowerCase().startsWith("http"); //$NON-NLS-1$
 	}
 
 	static String calcProjectNameFromUri(URIish uri) {
