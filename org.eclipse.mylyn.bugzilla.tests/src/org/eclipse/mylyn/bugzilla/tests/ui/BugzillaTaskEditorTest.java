@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -34,7 +35,8 @@ public class BugzillaTaskEditorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		repository = BugzillaFixture.current().singleRepository();
+		TestFixture.resetTaskListAndRepositories();
+		repository = BugzillaFixture.current().repository();
 	}
 
 	@Override
