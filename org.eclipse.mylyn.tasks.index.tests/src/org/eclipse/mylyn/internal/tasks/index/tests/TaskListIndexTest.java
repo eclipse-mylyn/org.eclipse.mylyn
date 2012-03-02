@@ -82,17 +82,30 @@ public class TaskListIndexTest {
 
 	@Before
 	public void setup() throws IOException {
-		tempDir = File.createTempFile(TaskListIndexTest.class.getSimpleName(), ".tmp");
-		tempDir.delete();
-		tempDir.mkdirs();
-
-		assertTrue(tempDir.exists() && tempDir.isDirectory());
+		tempDir = createTmpDir();
 
 		context = new MockTestContext();
 	}
 
+	private File createTmpDir() throws IOException {
+		File tempDir = File.createTempFile(TaskListIndexTest.class.getSimpleName(), ".tmp");
+		tempDir.delete();
+		tempDir.mkdirs();
+
+		assertTrue(tempDir.exists() && tempDir.isDirectory());
+		return tempDir;
+	}
+
 	@After
 	public void tearDown() {
+		disposeIndex();
+		if (tempDir != null) {
+			delete(tempDir);
+			assertFalse(tempDir.exists());
+		}
+	}
+
+	private void disposeIndex() {
 		if (index != null) {
 			try {
 				index.waitUntilIdle();
@@ -101,10 +114,6 @@ public class TaskListIndexTest {
 			}
 			index.close();
 			index = null;
-		}
-		if (tempDir != null) {
-			delete(tempDir);
-			assertFalse(tempDir.exists());
 		}
 	}
 
@@ -218,11 +227,7 @@ public class TaskListIndexTest {
 
 		index.setDefaultField(FIELD_SUMMARY);
 
-		TestTaskCollector collector = new TestTaskCollector();
-		index.find(task.getSummary(), collector, 1000);
-
-		assertEquals(1, collector.getTasks().size());
-		assertTrue(collector.getTasks().contains(task));
+		assertCanFindTask(task);
 	}
 
 	@Test
@@ -410,6 +415,42 @@ public class TaskListIndexTest {
 				repositoryTask,
 				TaskListIndex.FIELD_IDENTIFIER.getIndexKey() + ":"
 						+ index.escapeFieldValue(repositoryTask.getHandleIdentifier())));
+	}
+
+	@Test
+	public void testSetLocation() throws InterruptedException, IOException {
+		setupIndex();
+		index.setDefaultField(FIELD_SUMMARY);
+
+		ITask task = context.createLocalTask();
+
+		index.waitUntilIdle();
+
+		assertCanFindTask(task);
+
+		File newLocation = createTmpDir();
+		try {
+			assertEquals(0, newLocation.list().length);
+
+			index.setLocation(newLocation);
+
+			index.waitUntilIdle();
+			assertCanFindTask(task);
+
+			assertFalse(newLocation.list().length == 0);
+		} finally {
+			disposeIndex();
+			delete(newLocation);
+			assertFalse(newLocation.exists());
+		}
+	}
+
+	private void assertCanFindTask(ITask task) {
+		TestTaskCollector collector = new TestTaskCollector();
+		index.find(task.getSummary(), collector, 1000);
+
+		assertEquals(1, collector.getTasks().size());
+		assertTrue(collector.getTasks().contains(task));
 	}
 
 }

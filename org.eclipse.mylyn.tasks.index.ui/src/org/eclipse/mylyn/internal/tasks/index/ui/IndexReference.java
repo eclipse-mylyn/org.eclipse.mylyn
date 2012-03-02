@@ -14,18 +14,34 @@ package org.eclipse.mylyn.internal.tasks.index.ui;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 
 /**
  * @author David Green
+ * @author Steffen Pingel
  */
 public class IndexReference {
 
 	private static TaskListIndex theIndex;
 
 	private static AtomicInteger referenceCount = new AtomicInteger();
+
+	private static IRepositoryModelListener listener = new IRepositoryModelListener() {
+		public void loaded() {
+			synchronized (IndexReference.class) {
+				if (theIndex != null) {
+					theIndex.setLocation(getDefaultIndexLocation());
+				}
+			}
+		}
+	};
+
+	static File getDefaultIndexLocation() {
+		return new File(TasksUiPlugin.getDefault().getDataDirectory(), ".taskListIndex"); //$NON-NLS-1$
+	}
 
 	/**
 	 * When not null serves as flag indicating that theIndex is referenced, thus preventing bad behaviour if dispose is
@@ -38,11 +54,9 @@ public class IndexReference {
 			if (index == null) {
 				if (theIndex == null) {
 					final IRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-					final File indexLocation = new File(TasksUiPlugin.getDefault().getDataDirectory(), ".taskListIndex"); //$NON-NLS-1$
-
 					theIndex = new TaskListIndex(TasksUiPlugin.getTaskList(), TasksUiPlugin.getTaskDataManager(),
-							repositoryManager, indexLocation);
-
+							repositoryManager, getDefaultIndexLocation());
+					TasksUiPlugin.getDefault().addModelListener(listener);
 				}
 				index = theIndex;
 				referenceCount.incrementAndGet();
@@ -57,10 +71,12 @@ public class IndexReference {
 				index = null;
 
 				if (referenceCount.decrementAndGet() == 0) {
+					TasksUiPlugin.getDefault().removeModelListener(listener);
 					theIndex.close();
 					theIndex = null;
 				}
 			}
 		}
 	}
+
 }

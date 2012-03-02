@@ -110,6 +110,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * </p>
  * 
  * @author David Green
+ * @author Steffen Pingel
  */
 public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeListener, IRepositoryListener {
 
@@ -337,21 +338,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		Assert.isNotNull(indexLocation);
 
 		this.startupDelay = startupDelay;
-		if (!indexLocation.exists()) {
-			rebuildIndex = true;
-			if (!indexLocation.mkdirs()) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
-						"Cannot create task list index folder: " + indexLocation)); //$NON-NLS-1$
-			}
-		}
-		if (indexLocation.exists() && indexLocation.isDirectory()) {
-			try {
-				directory = new NIOFSDirectory(indexLocation);
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
-						"Cannot create task list index", e)); //$NON-NLS-1$
-			}
-		}
+		setLocationInternal(indexLocation);
 		initialize();
 	}
 
@@ -391,6 +378,62 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	public void setReindexDelay(long reindexDelay) {
 		Assert.isTrue(reindexDelay >= 0);
 		this.reindexDelay = reindexDelay;
+	}
+
+	public void setLocation(File indexLocation) {
+		try {
+			waitUntilIdle();
+		} catch (InterruptedException e1) {
+			// ignore
+		}
+		setLocationInternal(indexLocation);
+		rebuildIndex = true;
+		scheduleIndexMaintenance(MaintainIndexType.STARTUP);
+	}
+
+	private void setLocationInternal(File indexLocation) {
+		final boolean newLocationExists = indexLocation.exists();
+		if (!newLocationExists) {
+			if (!indexLocation.mkdirs()) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
+						"Cannot create task list index folder: " + indexLocation)); //$NON-NLS-1$
+			}
+		}
+
+		Lock writeLock = indexReaderLock.writeLock();
+		writeLock.lock();
+		try {
+			synchronized (this) {
+				if (indexReader != null) {
+					try {
+						indexReader.close();
+					} catch (IOException e) {
+						// ignore
+					}
+					indexReader = null;
+				}
+
+				if (indexLocation.exists() && indexLocation.isDirectory()) {
+					if (directory != null) {
+						try {
+							directory.close();
+						} catch (IOException e) {
+							StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
+									"Cannot close index: " + e.getMessage(), e)); //$NON-NLS-1$
+						}
+					}
+					try {
+						directory = new NIOFSDirectory(indexLocation);
+					} catch (IOException e) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
+								"Cannot create task list index", e)); //$NON-NLS-1$
+					}
+				}
+
+			}
+		} finally {
+			writeLock.unlock();
+		}
 	}
 
 	/**
