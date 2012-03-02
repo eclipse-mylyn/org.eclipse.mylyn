@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.apache.commons.httpclient.Cookie;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
@@ -70,7 +71,7 @@ public class GerritClientTest extends TestCase {
 			return; // skip
 		}
 		Account account = client.getAccount(null);
-		assertEquals(harness.readCredentials().getShortUserName(), account.getUserName());
+		assertEquals(CommonTestUtil.getShortUserName(harness.readCredentials()), account.getUserName());
 	}
 
 	@Test

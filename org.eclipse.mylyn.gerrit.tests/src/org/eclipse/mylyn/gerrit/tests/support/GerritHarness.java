@@ -17,10 +17,10 @@ import java.net.Proxy;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Steffen Pingel
@@ -30,7 +30,7 @@ public class GerritHarness {
 
 	private final GerritFixture fixture;
 
-	private Credentials credentials;
+	private UserCredentials credentials;
 
 	public GerritHarness(GerritFixture fixture) {
 		this.fixture = fixture;
@@ -42,8 +42,8 @@ public class GerritHarness {
 
 	public WebLocation location() {
 		readCredentials();
-		String username = credentials.username;
-		String password = credentials.password;
+		String username = credentials.getUserName();
+		String password = credentials.getPassword();
 		if (!fixture.canAuthenticate()) {
 			username = null;
 			password = null;
@@ -68,9 +68,9 @@ public class GerritHarness {
 	public void dispose() {
 	}
 
-	public Credentials readCredentials() {
+	public UserCredentials readCredentials() {
 		if (credentials == null) {
-			credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+			credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 		}
 		return credentials;
 	}
