@@ -23,7 +23,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -40,9 +42,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Steffen Pingel
@@ -151,8 +150,8 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public BugzillaClient client() throws CoreException, IOException {
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		return client(getRepositoryUrl(), credentials.username, credentials.password, "", "", "UTF-8");
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		return client(getRepositoryUrl(), credentials.getUserName(), credentials.getPassword(), "", "", "UTF-8");
 	}
 
 	public BugzillaClient client(String hostUrl, String username, String password, String htAuthUser,
@@ -201,7 +200,7 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public static File getFile(String filename) throws IOException {
-		return TestUtil.getFile(BugzillaFixture.class, filename);
+		return CommonTestUtil.getFile(BugzillaFixture.class, filename);
 	}
 
 	public static InputStream getResource(String filename) throws IOException {

@@ -58,7 +58,7 @@ public class TracTestUtil {
 //		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 //		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 //
-//		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+//		Credentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 //		TaskRepository repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, repositoryUrl);
 //		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 //				credentials.password), false);

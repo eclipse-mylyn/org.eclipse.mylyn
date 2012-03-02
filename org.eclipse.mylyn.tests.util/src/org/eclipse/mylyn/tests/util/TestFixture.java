@@ -26,6 +26,9 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -33,8 +36,6 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Steffen Pingel
@@ -172,8 +173,8 @@ public abstract class TestFixture {
 	}
 
 	public AbstractWebLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
-		Credentials credentials = TestUtil.readCredentials(level);
-		return location(credentials.username, credentials.password, proxy);
+		UserCredentials credentials = CommonTestUtil.getCredentials(level);
+		return location(credentials.getUserName(), credentials.getPassword(), proxy);
 	}
 
 	public AbstractWebLocation location(String username, String password) throws Exception {
@@ -190,9 +191,9 @@ public abstract class TestFixture {
 
 	public TaskRepository repository() {
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
 		return repository;
 	}
 
@@ -218,9 +219,9 @@ public abstract class TestFixture {
 		resetRepositories();
 
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), true);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), true);
 		configureRepository(repository);
 		if (manager != null) {
 			manager.addRepository(repository);

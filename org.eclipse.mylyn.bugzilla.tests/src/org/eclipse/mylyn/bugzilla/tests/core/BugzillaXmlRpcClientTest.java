@@ -67,7 +67,7 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater

@@ -22,6 +22,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.TracAttribute;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
@@ -34,9 +37,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -239,7 +239,7 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testValidate() throws Exception {
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 
 		// standard connect
 		client.validate(new NullProgressMonitor());
@@ -255,7 +255,7 @@ public class TracClientTest extends TestCase {
 		String url = TracFixture.current().getRepositoryUrl();
 
 		// invalid password
-		client = TracFixture.current().connect(url, credentials.username, "wrongpassword");
+		client = TracFixture.current().connect(url, credentials.getUserName(), "wrongpassword");
 		try {
 			client.validate(new NullProgressMonitor());
 			fail("Expected TracLoginException");
@@ -263,7 +263,7 @@ public class TracClientTest extends TestCase {
 		}
 
 		// invalid username
-		client = TracFixture.current().connect(url, "wrongusername", credentials.password);
+		client = TracFixture.current().connect(url, "wrongusername", credentials.getPassword());
 		try {
 			client.validate(new NullProgressMonitor());
 			fail("Expected TracLoginException");

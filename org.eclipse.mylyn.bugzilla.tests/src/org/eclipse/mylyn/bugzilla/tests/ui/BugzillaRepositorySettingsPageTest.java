@@ -20,6 +20,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -30,8 +33,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -49,9 +50,9 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current().getRepositoryUrl());
-		Credentials credentials = TestUtil.readCredentials();
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 

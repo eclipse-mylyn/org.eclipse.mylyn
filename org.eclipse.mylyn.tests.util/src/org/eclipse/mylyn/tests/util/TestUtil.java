@@ -23,7 +23,9 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link CommonTestUtil} instead
  */
+@Deprecated
 public class TestUtil {
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";

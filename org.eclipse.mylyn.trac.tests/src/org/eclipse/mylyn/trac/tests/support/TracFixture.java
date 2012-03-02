@@ -16,6 +16,9 @@ import java.net.Proxy;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -23,9 +26,6 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the
@@ -118,9 +118,9 @@ public class TracFixture extends TestFixture {
 
 	public static XmlRpcServer.TestData init010() throws Exception {
 		if (data010 == null) {
-			Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-			XmlRpcServer server = new XmlRpcServer(TracTestConstants.TEST_TRAC_010_URL, credentials.username,
-					credentials.password);
+			UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+			XmlRpcServer server = new XmlRpcServer(TracTestConstants.TEST_TRAC_010_URL, credentials.getUserName(),
+					credentials.getPassword());
 
 			initializeTestData(server);
 			data010 = server.getData();
@@ -191,8 +191,8 @@ public class TracFixture extends TestFixture {
 	}
 
 	public ITracClient connect(String url, Proxy proxy, PrivilegeLevel level) throws Exception {
-		Credentials credentials = TestUtil.readCredentials(level);
-		return connect(url, credentials.username, credentials.password, proxy);
+		UserCredentials credentials = CommonTestUtil.getCredentials(level);
+		return connect(url, credentials.getUserName(), credentials.getPassword(), proxy);
 	}
 
 	public ITracClient connect(String url, String username, String password) throws Exception {

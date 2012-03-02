@@ -18,6 +18,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -27,9 +30,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 
 /**
  * @author Mik Kersten
@@ -61,8 +61,8 @@ public class EncodingTest extends AbstractBugzillaTest {
 		assertTrue(data.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).getValue().equals("\u00E6"));//"\u05D0"));
 
 		WebLocation location = new WebLocation(repository.getRepositoryUrl());
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		location.setCredentials(AuthenticationType.REPOSITORY, credentials.username, credentials.password);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		location.setCredentials(AuthenticationType.REPOSITORY, credentials.getUserName(), credentials.getPassword());
 		BugzillaClient client2 = BugzillaFixture.current().client(location, "ISO-8859-1");
 		data = BugzillaFixture.current().getTask(data.getTaskId(), client2);
 		assertNotNull(data);

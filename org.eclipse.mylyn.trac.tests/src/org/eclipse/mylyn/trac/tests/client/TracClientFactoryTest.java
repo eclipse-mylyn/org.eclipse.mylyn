@@ -14,6 +14,9 @@ package org.eclipse.mylyn.trac.tests.client;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
@@ -21,9 +24,6 @@ import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
-import org.eclipse.mylyn.tests.util.TestUtil;
-import org.eclipse.mylyn.tests.util.TestUtil.Credentials;
-import org.eclipse.mylyn.tests.util.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 
 /**
@@ -57,8 +57,8 @@ public class TracClientFactoryTest extends TestCase {
 	public void testProbeClient() throws Exception {
 		String url = fixture.getRepositoryUrl();
 
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		WebLocation location = new WebLocation(url, credentials.username, credentials.password);
+		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		WebLocation location = new WebLocation(url, credentials.getUserName(), credentials.getPassword());
 		Version version = TracClientFactory.probeClient(location);
 		if (fixture.isXmlRpcEnabled()) {
 			assertEquals(Version.XML_RPC, version);
