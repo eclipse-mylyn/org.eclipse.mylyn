@@ -197,12 +197,12 @@ public class CommonTestUtil {
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
 				try {
-					file = getFile(CommonTestUtil.class, "credentials.properties");
+					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
 					if (!file.exists()) {
 						throw new AssertionFailedError();
 					}
 				} catch (AssertionFailedError e) {
-					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
+					file = getFile(CommonTestUtil.class, "testdata/credentials.properties");
 				}
 			} else {
 				file = new File(filename);
@@ -447,6 +447,14 @@ public class CommonTestUtil {
 		} catch (AssertionFailedError error) {
 			return false;
 		}
+	}
+
+	public static String getShortUserName(UserCredentials credentials) {
+		String username = credentials.getUserName();
+		if (username.contains("@")) {
+			return username.substring(0, username.indexOf("@"));
+		}
+		return username;
 	}
 
 }
