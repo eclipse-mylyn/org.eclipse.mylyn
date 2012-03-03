@@ -170,7 +170,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 
 		try {
-			taskStore.move(getPath(sourceTask), getPath(targetTask));
+			getTaskStore().move(getPath(sourceTask), getPath(targetTask));
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 					"Failed to migrate context state to new task", e)); //$NON-NLS-1$
@@ -192,7 +192,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		refactorMetaContextHandles(oldRepositoryUrl, newRepositoryUrl);
 		refactorContextFileNames(oldRepositoryUrl, newRepositoryUrl);
 		if (repository != null) {
-			refactorTasksStoreLocation(repository, oldRepositoryUrl, newRepositoryUrl);
+			refactorRepositoryLocation(repository, oldRepositoryUrl, newRepositoryUrl);
 		}
 	}
 
@@ -322,11 +322,11 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 	}
 
-	private void refactorTasksStoreLocation(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
+	private void refactorRepositoryLocation(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
 		IPath oldPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(oldRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
 		IPath newPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(newRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
 		try {
-			taskStore.move(oldPath, newPath);
+			getTaskStore().move(oldPath, newPath);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 					"Failed to migrate data store for repository {0}", newRepositoryUrl), e)); //$NON-NLS-1$
