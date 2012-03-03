@@ -11,18 +11,12 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -30,10 +24,6 @@ import junit.framework.TestFailure;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
@@ -155,7 +145,8 @@ public class ManagedTestSuite extends TestSuite {
 	@Override
 	public void run(TestResult result) {
 		result.addListener(listener);
-		dumpSystemInfo();
+		CommonTestUtil.fixProxyConfiguration();
+		CommonTestUtil.dumpSystemInfo(System.err);
 		super.run(result);
 		listener.dumpResults(result);
 
@@ -174,39 +165,6 @@ public class ManagedTestSuite extends TestSuite {
 				return "ShutdownWatchdog";
 			}
 		}, true);
-	}
-
-	private static void dumpSystemInfo() {
-		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
-				&& CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()
-				&& !CommonsNetPlugin.getProxyService().hasSystemProxies()) {
-			// XXX e3.5/gtk.x86_64 activate manual proxy configuration which
-			// defaults to Java system properties if system proxy support is
-			// not available
-			System.err.println("Forcing manual proxy configuration");
-			CommonsNetPlugin.getProxyService().setSystemProxiesEnabled(false);
-			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
-		}
-
-		Properties p = System.getProperties();
-		if (Platform.isRunning()) {
-			p.put("build.system", Platform.getOS() + "-" + Platform.getOSArch() + "-" + Platform.getWS());
-		} else {
-			p.put("build.system", "standalone");
-		}
-		String info = "System: ${os.name} ${os.version} (${os.arch}) / ${build.system} / ${java.vendor} ${java.vm.name} ${java.version}";
-		for (Entry<Object, Object> entry : p.entrySet()) {
-			info = info.replaceFirst(Pattern.quote("${" + entry.getKey() + "}"), entry.getValue().toString());
-		}
-		System.err.println(info);
-		System.err.print("Proxy : " + WebUtil.getProxyForUrl("http://mylyn.eclipse.org") + " (Platform)");
-		try {
-			System.err.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
-		} catch (URISyntaxException e) {
-			// ignore
-		}
-		System.err.println();
-		System.err.println();
 	}
 
 }

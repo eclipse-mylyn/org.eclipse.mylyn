@@ -39,12 +39,18 @@ import org.eclipse.mylyn.commons.repositories.http.core.HttpRequestProcessor;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 public class CommonHttpClientTest {
+
+	@BeforeClass
+	public static void setUpClass() {
+		CommonTestUtil.fixProxyConfiguration();
+	}
 
 	@Test
 	public void testCertificateAuthenticationCertificate() throws Exception {

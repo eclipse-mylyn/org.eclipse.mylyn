@@ -18,13 +18,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Writer;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,8 +41,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
@@ -319,7 +327,7 @@ public class CommonTestUtil {
 	}
 
 	public static boolean runHeartbeatTestsOnly() {
-		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all", "true"));
 	};
 
 	/**
@@ -454,6 +462,41 @@ public class CommonTestUtil {
 			return username.substring(0, username.indexOf("@"));
 		}
 		return username;
+	}
+
+	public static void fixProxyConfiguration() {
+		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
+				&& CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()
+				&& !CommonsNetPlugin.getProxyService().hasSystemProxies()) {
+			// XXX e3.5/gtk.x86_64 activate manual proxy configuration which
+			// defaults to Java system properties if system proxy support is
+			// not available
+			System.err.println("Forcing manual proxy configuration");
+			CommonsNetPlugin.getProxyService().setSystemProxiesEnabled(false);
+			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
+		}
+	}
+
+	public static void dumpSystemInfo(PrintStream out) {
+		Properties p = System.getProperties();
+		if (Platform.isRunning()) {
+			p.put("build.system", Platform.getOS() + "-" + Platform.getOSArch() + "-" + Platform.getWS());
+		} else {
+			p.put("build.system", "standalone");
+		}
+		String info = "System: ${os.name} ${os.version} (${os.arch}) / ${build.system} / ${java.vendor} ${java.vm.name} ${java.version}";
+		for (Entry<Object, Object> entry : p.entrySet()) {
+			info = info.replaceFirst(Pattern.quote("${" + entry.getKey() + "}"), entry.getValue().toString());
+		}
+		out.println(info);
+		out.print("Proxy : " + WebUtil.getProxyForUrl("http://mylyn.eclipse.org") + " (Platform)");
+		try {
+			out.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
+		} catch (URISyntaxException e) {
+			// ignore
+		}
+		out.println();
+		out.println();
 	}
 
 }
