@@ -497,19 +497,4 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		}
 	}
-
-	public void testEmptyTags() throws Exception {
-		TaskData taskDataNew = BugzillaFixture.current().getTask("1", client);
-		List<String> list = taskDataNew.getRoot().getAttribute(BugzillaAttribute.RESOLUTION.getKey()).getValues();
-		assertEquals(0, list.size());
-		assertEquals("", taskDataNew.getRoot().getAttribute(BugzillaAttribute.RESOLUTION.getKey()).getValue());
-		assertEquals("", taskDataNew.getRoot().getAttribute(BugzillaAttribute.BUG_FILE_LOC.getKey()).getValue());
-		list = taskDataNew.getRoot().getAttribute(BugzillaAttribute.KEYWORDS.getKey()).getValues();
-		assertEquals(0, list.size());
-		assertEquals("", taskDataNew.getRoot().getAttribute(BugzillaAttribute.KEYWORDS.getKey()).getValue());
-		list = taskDataNew.getRoot().getAttribute(BugzillaAttribute.STATUS_WHITEBOARD.getKey()).getValues();
-		assertEquals(0, list.size());
-		assertEquals("", taskDataNew.getRoot().getAttribute(BugzillaAttribute.STATUS_WHITEBOARD.getKey()).getValue());
-	}
-
 }
