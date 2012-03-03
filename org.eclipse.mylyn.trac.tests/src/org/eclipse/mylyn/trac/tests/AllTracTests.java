@@ -50,7 +50,8 @@ public class AllTracTests {
 	}
 
 	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		if (configuration.hasKind(TestKind.INTEGRATION) && CommonTestUtil.getCredentials(PrivilegeLevel.ADMIN) != null) {
+		if (configuration.hasKind(TestKind.INTEGRATION) && !configuration.isLocalOnly()
+				&& CommonTestUtil.hasCredentials(PrivilegeLevel.ADMIN)) {
 			suite.addTestSuite(TracTestCleanupUtil.class);
 		}
 
