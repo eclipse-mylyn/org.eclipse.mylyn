@@ -194,6 +194,15 @@ public class CommonTestUtil {
 		}
 	}
 
+	public static boolean hasCredentials(PrivilegeLevel level) {
+		try {
+			CommonTestUtil.getCredentials(level);
+			return true;
+		} catch (AssertionFailedError error) {
+			return false;
+		}
+	}
+
 	public static UserCredentials getCredentials(PrivilegeLevel level) {
 		return getCredentials(level, null);
 	}
@@ -376,8 +385,8 @@ public class CommonTestUtil {
 		}
 
 		if (username == null || password == null) {
-			throw new AssertionFailedError(
-					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
+			throw new AssertionFailedError("username or password not found for " + prefix
+					+ " in <plug-in dir>/credentials.properties, make sure file is valid");
 		}
 
 		return new UserCredentials(username, password);
