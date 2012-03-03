@@ -49,7 +49,9 @@ public class CommonHttpClientTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-		CommonTestUtil.fixProxyConfiguration();
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
 	}
 
 	@Test

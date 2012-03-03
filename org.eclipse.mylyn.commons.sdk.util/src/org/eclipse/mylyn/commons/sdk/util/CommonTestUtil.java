@@ -477,7 +477,7 @@ public class CommonTestUtil {
 		return username;
 	}
 
-	public static void fixProxyConfiguration() {
+	public static boolean fixProxyConfiguration() {
 		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
 				&& CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()
 				&& !CommonsNetPlugin.getProxyService().hasSystemProxies()) {
@@ -487,7 +487,9 @@ public class CommonTestUtil {
 			System.err.println("Forcing manual proxy configuration");
 			CommonsNetPlugin.getProxyService().setSystemProxiesEnabled(false);
 			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
+			return true;
 		}
+		return false;
 	}
 
 	public static void dumpSystemInfo(PrintStream out) {
