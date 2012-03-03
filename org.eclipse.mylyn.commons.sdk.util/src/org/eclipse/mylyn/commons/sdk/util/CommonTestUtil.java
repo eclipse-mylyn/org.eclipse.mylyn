@@ -326,9 +326,13 @@ public class CommonTestUtil {
 		}
 	}
 
+	/**
+	 * Returns whether to run a limited suite of tests. Returns true, unless a system property has been set to force
+	 * running of all tests.
+	 */
 	public static boolean runHeartbeatTestsOnly() {
-		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all", "true"));
-	};
+		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
+	}
 
 	/**
 	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
