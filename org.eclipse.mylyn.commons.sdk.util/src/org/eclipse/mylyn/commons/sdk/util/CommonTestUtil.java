@@ -195,17 +195,16 @@ public class CommonTestUtil {
 		try {
 			File file;
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
-			if (filename == null) {
-				try {
-					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
-					if (!file.exists()) {
-						throw new AssertionFailedError();
-					}
-				} catch (AssertionFailedError e) {
+			if (filename != null) {
+				// 1. use user specified file
+				file = new File(filename);
+			} else {
+				// 2. check in home directory
+				file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
+				if (!file.exists()) {
+					// 3. fall back to included credentials file
 					file = getFile(CommonTestUtil.class, "testdata/credentials.properties");
 				}
-			} else {
-				file = new File(filename);
 			}
 			properties.load(new FileInputStream(file));
 		} catch (Exception e) {
