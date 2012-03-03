@@ -15,6 +15,7 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttributeMapperTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaClientTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaCustomFieldsTest;
@@ -43,6 +44,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaVersionTest.class);
 		suite.addTestSuite(BugzillaDateTimeTests.class);
+		suite.addTestSuite(BugzillaAttributeMapperTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(BugzillaTaskCompletionTest.class);

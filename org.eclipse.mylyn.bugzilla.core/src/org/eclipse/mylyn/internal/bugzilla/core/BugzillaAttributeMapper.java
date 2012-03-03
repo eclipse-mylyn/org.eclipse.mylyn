@@ -321,14 +321,27 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			// the ID mapping for Bugzilla changed in Mylyn 3.7, always consider existing comments equal
 			return true;
 		}
-		if (oldAttribute.getId().startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
+		String id = oldAttribute.getId();
+		if (id.startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
 			TaskAttachmentMapper oldAttachment;
 			oldAttachment = TaskAttachmentMapper.createFrom(oldAttribute);
 			TaskAttachmentMapper newAttachment;
 			newAttachment = TaskAttachmentMapper.createFrom(newAttribute);
 			return newAttachment.equals(oldAttachment);
 		}
-		return super.equals(newAttribute, oldAttribute);
+		boolean result = super.equals(newAttribute, oldAttribute);
+		// bug 367861: avoid showing incomings for fields that were previously not part of the schema when empty
+		if (!result // 
+				&& (BugzillaAttribute.RESOLUTION.getKey().equals(id)
+						|| BugzillaAttribute.BUG_FILE_LOC.getKey().equals(id)
+						|| BugzillaAttribute.STATUS_WHITEBOARD.getKey().equals(id) //
+				|| BugzillaAttribute.KEYWORDS.getKey().equals(id))) {
+			if (oldAttribute.getValue().length() == 0 && newAttribute.getValue().length() == 0
+					&& oldAttribute.getValues().size() <= 1 && newAttribute.getValues().size() <= 1) {
+				return true;
+			}
+		}
+		return result;
 	}
 
 	@Override
