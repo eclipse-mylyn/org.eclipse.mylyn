@@ -14,8 +14,11 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
 import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
@@ -24,6 +27,7 @@ import org.eclipse.mylyn.trac.tests.core.TracRepositoryQueryTest;
 import org.eclipse.mylyn.trac.tests.core.TracTaskDataHandlerXmlRpcTest;
 import org.eclipse.mylyn.trac.tests.core.TracUtilTest;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestCleanupUtil;
 import org.eclipse.mylyn.trac.tests.ui.TracHyperlinkUtilTest;
 import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 
@@ -46,6 +50,10 @@ public class AllTracTests {
 	}
 
 	public static void addTests(TestSuite suite, TestConfiguration configuration) {
+		if (configuration.hasKind(TestKind.INTEGRATION) && CommonTestUtil.getCredentials(PrivilegeLevel.ADMIN) != null) {
+			suite.addTestSuite(TracTestCleanupUtil.class);
+		}
+
 		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
 		suite.addTestSuite(TracUtilTest.class);
 		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);
