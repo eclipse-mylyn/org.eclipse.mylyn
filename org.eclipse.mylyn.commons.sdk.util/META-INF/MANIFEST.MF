@@ -13,5 +13,5 @@ Require-Bundle: org.junit,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.repositories.core,
  org.eclipse.mylyn.commons.net
-Export-Package: org.eclipse.mylyn.commons.sdk.util
+Export-Package: org.eclipse.mylyn.commons.sdk.util;x-internal:=true
 Bundle-Vendor: Eclipse Mylyn
