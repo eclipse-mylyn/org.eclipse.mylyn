@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -46,10 +47,16 @@ import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
  */
 public class IndexSearchHandler extends AbstractSearchHandler {
 
+	private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s"); //$NON-NLS-1$
+
+	private static final Pattern PATTERN_SPECIAL_CHARACTERS = Pattern.compile("([+&\\|!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\-])"); //$NON-NLS-1$
+
 	private class ContentProposalProvider implements IContentProposalProvider {
+
 		public IContentProposal[] getProposals(String contents, int position) {
 			List<IContentProposal> proposals = new ArrayList<IContentProposal>(10);
 
+			String beforePrefixContent = contents;
 			String fieldPrefix = ""; //$NON-NLS-1$
 			String prefix = ""; //$NON-NLS-1$
 			if (position >= 0 && position <= contents.length()) {
@@ -67,6 +74,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				}
 
 				prefix = contents.substring(i, position);
+				beforePrefixContent = contents.substring(0, i);
 			}
 
 			// if we have a field prefix
@@ -76,7 +84,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				// if it's a person field then suggest
 				// people from the task list
 				if (indexField != null && TaskAttribute.TYPE_PERSON.equals(indexField.getType())) {
-					computePersonProposals(proposals, prefix);
+					computePersonProposals(proposals, beforePrefixContent, prefix);
 				}
 
 			} else {
@@ -89,7 +97,8 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 						continue;
 					}
 
-					if (field.getIndexKey().startsWith(prefix)) {
+					String indexKey = field.getIndexKey();
+					if (indexKey.startsWith(prefix)) {
 						String description;
 						if (TaskListIndex.FIELD_CONTENT.equals(field)) {
 							description = Messages.IndexSearchHandler_hint_content;
@@ -98,12 +107,12 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 						} else {
 							description = NLS.bind(Messages.IndexSearchHandler_hint_generic, field.getLabel());
 						}
-						proposals.add(new ContentProposal(field.getIndexKey().substring(prefix.length()) + ":", //$NON-NLS-1$
-								field.getIndexKey(), description));
+						proposals.add(new ContentProposal(beforePrefixContent + indexKey + ":", //$NON-NLS-1$
+								indexKey, description));
 
 						if (TaskAttribute.TYPE_DATE.equals(field.getType())
 								|| TaskAttribute.TYPE_DATETIME.equals(field.getType())) {
-							computeDateRangeProposals(proposals, prefix, field);
+							computeDateRangeProposals(proposals, beforePrefixContent, prefix, field);
 						}
 					}
 				}
@@ -112,7 +121,8 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 			return proposals.toArray(new IContentProposal[proposals.size()]);
 		}
 
-		public void computeDateRangeProposals(List<IContentProposal> proposals, String prefix, Field field) {
+		public void computeDateRangeProposals(List<IContentProposal> proposals, String beforePrefixContent,
+				String prefix, Field field) {
 			// for date fields give suggestion of date range search
 			String description;
 			final Date now = new Date();
@@ -138,11 +148,11 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 					dateSearchUpperBound);
 
 			if (queryText.startsWith(prefix)) {
-				proposals.add(new ContentProposal(queryText.substring(prefix.length()), label, description));
+				proposals.add(new ContentProposal(beforePrefixContent + queryText, label, description));
 			}
 		}
 
-		public void computePersonProposals(List<IContentProposal> proposals, String prefix) {
+		public void computePersonProposals(List<IContentProposal> proposals, String beforePrefixContent, String prefix) {
 			Set<String> addresses = new TreeSet<String>();
 
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
@@ -152,10 +162,12 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 			for (String address : addresses) {
 				if (address.startsWith(prefix)) {
-					String proposalContent = address.substring(prefix.length());
-					proposalContent = proposalContent.replaceAll(
-							"([+&\\|!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\ -])", "\\\\$1"); //$NON-NLS-1$//$NON-NLS-2$
-					proposals.add(new ContentProposal(proposalContent, address, null));
+					String proposalContent = address;
+					proposalContent = PATTERN_SPECIAL_CHARACTERS.matcher(proposalContent).replaceAll("\\\\$1"); //$NON-NLS-1$
+					if (PATTERN_WHITESPACE.matcher(proposalContent).find()) {
+						proposalContent = "\"" + proposalContent + "\""; //$NON-NLS-1$//$NON-NLS-2$
+					}
+					proposals.add(new ContentProposal(beforePrefixContent + proposalContent, address, null));
 				}
 			}
 		}
@@ -217,7 +229,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 		IContentProposalProvider proposalProvider = new ContentProposalProvider();
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(textControl, new TextContentAdapter(),
 				proposalProvider, null, new char[0]);
-		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
 		// if we decorate the control it lets the user know that they can use content assist...
 		// BUT it looks pretty bad.
