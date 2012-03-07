@@ -68,7 +68,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 					} catch (InvocationTargetException e) {
 						StatusManager.getManager().handle(
 								new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-										Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls),
+										Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls, e),
 								StatusManager.SHOW | StatusManager.LOG);
 						return false;
 					} catch (InterruptedException e) {
