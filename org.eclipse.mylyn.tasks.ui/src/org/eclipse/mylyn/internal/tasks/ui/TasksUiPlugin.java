@@ -1348,8 +1348,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		try {
 			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 //				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-			TaskListNotifier taskListNotifier = new TaskListNotifier(getRepositoryModel(), getTaskDataManager(),
-					getSynchronizationManger());
+			TaskListNotifier taskListNotifier = new TaskListNotifier(getTaskDataManager(), getSynchronizationManger());
 			getTaskDataManager().addListener(taskListNotifier);
 			taskListNotificationManager.addNotificationProvider(taskListNotifier);
 			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
