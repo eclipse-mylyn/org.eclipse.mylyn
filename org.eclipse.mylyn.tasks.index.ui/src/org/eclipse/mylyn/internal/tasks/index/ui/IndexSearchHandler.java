@@ -152,7 +152,10 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 			for (String address : addresses) {
 				if (address.startsWith(prefix)) {
-					proposals.add(new ContentProposal(address.substring(prefix.length()), address, null));
+					String proposalContent = address.substring(prefix.length());
+					proposalContent = proposalContent.replaceAll(
+							"([+&\\|!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\ -])", "\\\\$1"); //$NON-NLS-1$//$NON-NLS-2$
+					proposals.add(new ContentProposal(proposalContent, address, null));
 				}
 			}
 		}
