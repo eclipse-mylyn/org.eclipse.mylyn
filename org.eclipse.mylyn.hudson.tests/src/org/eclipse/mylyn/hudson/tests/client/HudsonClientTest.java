@@ -71,6 +71,21 @@ public class HudsonClientTest extends TestCase {
 		assertEquals(harness.getFixture().getVersion(), info.getVersion());
 	}
 
+	public void testValidateExpiredCookie() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate()) {
+			// ignore
+			return;
+		}
+		RestfulHudsonClient client = harness.connect();
+		client.validate(null);
+		// clear cookies
+		client.reset();
+		// TODO try an operation that requires authentication 
+		HudsonServerInfo info = client.validate(null);
+		assertEquals(harness.getFixture().getType(), info.getType());
+		assertEquals(harness.getFixture().getVersion(), info.getVersion());
+	}
+
 	public void testGetJobs() throws Exception {
 		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(null, null);

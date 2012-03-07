@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
@@ -57,6 +61,9 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials == null) {
+			throw new IllegalStateException("Authentication requested without valid credentials");
+		}
 
 		HttpPost request = createPostRequest(getClient().getLocation().getUrl() + "/j_acegi_security_check"); //$NON-NLS-1$
 		HudsonLoginForm form = new HudsonLoginForm();
@@ -87,7 +94,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			}
 
 			// success
-			getClient().setAuthenticated(true);
+			getClient().setAuthenticated(hasValidatAuthenticationState());
 		} finally {
 			HttpUtil.release(request, response, monitor);
 		}
@@ -203,6 +210,43 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			}
 			throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}",
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
+		}
+	}
+
+	@Override
+	protected boolean needsAuthentication() {
+		if (hasCredentials()) {
+			boolean authenticated = getClient().isAuthenticated() && hasValidatAuthenticationState();
+			return !authenticated;
+		}
+		return false;
+	}
+
+	private boolean hasCredentials() {
+		return getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY, false) != null;
+	}
+
+	private boolean hasValidatAuthenticationState() {
+		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("JSESSIONID".equals(cookie.getName())) {
+					return !cookie.isExpired(new Date());
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	protected void validate(HttpResponse response, IOperationMonitor monitor) throws AuthenticationException {
+		super.validate(response, monitor);
+
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode == HttpStatus.SC_FORBIDDEN) {
+			AuthenticationRequest<AuthenticationType<UserCredentials>> request = new AuthenticationRequest<AuthenticationType<UserCredentials>>(
+					getClient().getLocation(), AuthenticationType.REPOSITORY);
+			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request, true);
 		}
 	}
 

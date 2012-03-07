@@ -446,4 +446,8 @@ public class RestfulHudsonClient {
 		return validate(monitor);
 	}
 
+	public void reset() {
+		client.getHttpClient().getCookieStore().clear();
+	}
+
 }
