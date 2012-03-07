@@ -164,7 +164,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 			operation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
+					"Failed to migrate activity to new task", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// ignore
 		}
