@@ -103,7 +103,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 						if (TaskAttribute.TYPE_DATE.equals(field.getType())
 								|| TaskAttribute.TYPE_DATETIME.equals(field.getType())) {
-							computeDateRangeProposals(proposals, field);
+							computeDateRangeProposals(proposals, prefix, field);
 						}
 					}
 				}
@@ -112,7 +112,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 			return proposals.toArray(new IContentProposal[proposals.size()]);
 		}
 
-		public void computeDateRangeProposals(List<IContentProposal> proposals, Field field) {
+		public void computeDateRangeProposals(List<IContentProposal> proposals, String prefix, Field field) {
 			// for date fields give suggestion of date range search
 			String description;
 			final Date now = new Date();
@@ -136,7 +136,10 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 
 			String queryText = reference.index().computeQueryFieldDateRange(field, dateSearchOneWeekLowerBound,
 					dateSearchUpperBound);
-			proposals.add(new ContentProposal(queryText, label, description));
+
+			if (queryText.startsWith(prefix)) {
+				proposals.add(new ContentProposal(queryText.substring(prefix.length()), label, description));
+			}
 		}
 
 		public void computePersonProposals(List<IContentProposal> proposals, String prefix) {
