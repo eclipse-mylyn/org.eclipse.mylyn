@@ -9,7 +9,7 @@
     Contributors:
         David Green - initial API and implementation
  -->
-<project name="org.eclipse.mylyn.wikitext.ui">
+<project name="org.eclipse.mylyn.wikitext.ui" default="all">
 
 	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
 
