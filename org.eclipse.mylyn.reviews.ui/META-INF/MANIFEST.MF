@@ -29,6 +29,6 @@ Export-Package: org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.dialogs;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.editors.parts;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.editors.ruler;x-internal:=true,
- org.eclipse.mylyn.reviews.ui
+ org.eclipse.mylyn.reviews.ui;x-internal:=true
 Import-Package: org.apache.commons.io;version="1.4.0"
 Bundle-Activator: org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin
