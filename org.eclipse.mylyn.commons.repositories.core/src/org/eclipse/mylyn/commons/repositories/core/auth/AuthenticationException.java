@@ -24,18 +24,29 @@ public class AuthenticationException extends IOException {
 
 	private final AuthenticationRequest<?> request;
 
-	public AuthenticationException(String message, AuthenticationRequest<?> request) {
+	private final boolean shouldRetry;
+
+	public AuthenticationException(String message, AuthenticationRequest<?> request, boolean shouldRetry) {
 		super(message);
 		Assert.isNotNull(request);
 		this.request = request;
+		this.shouldRetry = shouldRetry;
 	}
 
+	public AuthenticationException(String message, AuthenticationRequest<?> request) {
+		this(message, request, false);
+	}
+	
 	public AuthenticationException(AuthenticationRequest<?> request) {
-		this(null, request);
+		this(null, request, false);
 	}
 
 	public AuthenticationRequest<?> getRequest() {
 		return request;
 	}
 
+	public boolean shouldRetry() {
+		return shouldRetry;
+	}
+	
 }

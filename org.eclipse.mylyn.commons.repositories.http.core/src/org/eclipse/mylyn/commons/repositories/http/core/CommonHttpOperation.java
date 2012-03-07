@@ -59,19 +59,53 @@ public abstract class CommonHttpOperation<T> {
 	public CommonHttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		monitor = OperationUtil.convert(monitor);
 
+		// first attempt
+		boolean requestCredentials;
 		try {
-			// first attempt
 			return executeOnce(request, monitor);
 		} catch (AuthenticationException e) {
+			requestCredentials = !e.shouldRetry();
+
+			handleAuthenticationError(request, e, monitor, requestCredentials);
+		}
+
+		// second attempt
+		try {
+			return executeOnce(request, monitor);
+		} catch (AuthenticationException e) {
+			if (requestCredentials) {
+				// new credentials were not correct either  
+				invalidateAuthentication(e, monitor);
+				throw e;
+			}
+
+			handleAuthenticationError(request, e, monitor, true);
+		}
+
+		// third attempt
+		return executeOnce(request, monitor);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void handleAuthenticationError(HttpRequestBase request, AuthenticationException e,
+			IOperationMonitor monitor, boolean requestCredentials) throws AuthenticationException {
+		invalidateAuthentication(e, monitor);
+
+		if (!isRepeatable()) {
+			throw e;
+		}
+
+		if (requestCredentials) {
 			try {
 				requestCredentials((AuthenticationRequest) e.getRequest(), monitor);
 			} catch (UnsupportedOperationException e2) {
 				throw e;
 			}
 		}
+	}
 
-		// second attempt
-		return executeOnce(request, monitor);
+	protected boolean isRepeatable() {
+		return true;
 	}
 
 	protected CommonHttpResponse executeOnce(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
@@ -80,7 +114,6 @@ public abstract class CommonHttpOperation<T> {
 			authenticate(monitor);
 		}
 
-		// first attempt
 		HttpResponse response = client.execute(request, monitor);
 		try {
 			validate(response, monitor);
@@ -106,6 +139,10 @@ public abstract class CommonHttpOperation<T> {
 	protected <T extends AuthenticationCredentials> T requestCredentials(
 			AuthenticationRequest<AuthenticationType<T>> request, IOperationMonitor monitor) {
 		return client.requestCredentials(request, monitor);
+	}
+
+	protected void invalidateAuthentication(AuthenticationException e, IOperationMonitor monitor) {
+		client.setAuthenticated(false);
 	}
 
 	protected void validate(HttpResponse response, IOperationMonitor monitor) throws AuthenticationException {

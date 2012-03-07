@@ -23,11 +23,18 @@ public class AuthenticationRequest<T extends AuthenticationType<?>> {
 
 	private final RepositoryLocation location;
 
-	public AuthenticationRequest(RepositoryLocation location, T authenticationType) {
+	private final String message;
+
+	public AuthenticationRequest(RepositoryLocation location, T authenticationType, String message) {
 		Assert.isNotNull(location);
 		Assert.isNotNull(authenticationType);
 		this.location = location;
 		this.authenticationType = authenticationType;
+		this.message = message;
+	}
+
+	public AuthenticationRequest(RepositoryLocation location, T authenticationType) {
+		this(location, authenticationType, null);
 	}
 
 	public T getAuthenticationType() {
@@ -39,7 +46,7 @@ public class AuthenticationRequest<T extends AuthenticationType<?>> {
 	}
 
 	public String getMessage() {
-		return null;
+		return message;
 	}
 
 }
