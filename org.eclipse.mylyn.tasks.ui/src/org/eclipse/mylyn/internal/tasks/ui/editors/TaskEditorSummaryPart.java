@@ -284,7 +284,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void setFocus() {
-		if (summaryEditor != null) {
+		if (summaryEditor != null && summaryEditor.getControl() != null) {
 			summaryEditor.getControl().setFocus();
 		}
 	}
