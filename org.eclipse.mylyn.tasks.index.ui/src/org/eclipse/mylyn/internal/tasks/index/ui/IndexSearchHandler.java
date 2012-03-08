@@ -38,7 +38,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 
@@ -227,8 +230,8 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 	@Override
 	public void adaptTextSearchControl(Text textControl) {
 		IContentProposalProvider proposalProvider = new ContentProposalProvider();
-		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(textControl, new TextContentAdapter(),
-				proposalProvider, null, new char[0]);
+		final ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(textControl,
+				new TextContentAdapter(), proposalProvider, null, new char[0]);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
 		// if we decorate the control it lets the user know that they can use content assist...
@@ -238,6 +241,24 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 //		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
 //				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 //		controlDecoration.setImage(contentProposalImage.getImage());
+
+		// FilteredTree registers a traverse listener that focuses the tree when ENTER is pressed. This 
+		// causes focus to be lost when a content proposal is selected. To avoid transfer of focus the 
+		// traverse listener registered by FilteredTree is skipped while content assist is being used.
+		Listener[] traverseListeners = textControl.getListeners(SWT.Traverse);
+		for (final Listener listener : traverseListeners) {
+			if (listener.getClass() == TypedListener.class) {
+				// replace listener with delegate that filters events
+				textControl.removeListener(SWT.Traverse, listener);
+				textControl.addListener(SWT.Traverse, new Listener() {
+					public void handleEvent(Event event) {
+						if (!adapter.isProposalPopupOpen()) {
+							listener.handleEvent(event);
+						}
+					}
+				});
+			}
+		}
 	}
 
 	@Override
