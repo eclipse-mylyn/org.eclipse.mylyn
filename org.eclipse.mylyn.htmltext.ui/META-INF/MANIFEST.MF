@@ -20,6 +20,5 @@ Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.configuration,
  org.eclipse.mylyn.htmltext.events,
  org.eclipse.mylyn.htmltext.listener,
- org.eclipse.mylyn.htmltext.model,
- org.eclipse.mylyn.internal.htmltext.configuration;x-internal:=true
+ org.eclipse.mylyn.htmltext.model
 Bundle-ClassPath: htmltext.jar

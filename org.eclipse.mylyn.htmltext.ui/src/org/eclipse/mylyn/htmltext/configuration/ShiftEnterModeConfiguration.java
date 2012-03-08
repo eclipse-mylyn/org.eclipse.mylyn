@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.htmltext.configuration;
 
 import org.eclipse.mylyn.htmltext.configuration.EnterModeConfiguration.EnterMode;
-import org.eclipse.mylyn.internal.htmltext.configuration.ConfigurationElement;
 
 /**
  * Just like the {@link EnterModeConfiguration} setting, it defines the behavior for

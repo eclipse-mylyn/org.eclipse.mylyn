@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.htmltext.HtmlComposer;
-import org.eclipse.mylyn.internal.htmltext.configuration.ConfigurationElement;
 
 
 /**

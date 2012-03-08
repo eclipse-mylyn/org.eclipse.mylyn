@@ -9,14 +9,14 @@
  * Contributors:
  *     Tom Seidel - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.htmltext.configuration;
+package org.eclipse.mylyn.htmltext.configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
  * @author Tom Seidel <tom.seidel@remus-software.org>
- * @since 0.8
+ * @since 0.9
  * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class ConfigurationElement {

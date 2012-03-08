@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
-import org.eclipse.mylyn.internal.htmltext.configuration.ConfigurationElement;
 
 /**
  * Sets the behavior for the ENTER key. It also dictates other behaviour rules
