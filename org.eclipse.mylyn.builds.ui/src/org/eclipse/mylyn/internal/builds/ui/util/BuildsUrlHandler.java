@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
+import org.eclipse.mylyn.builds.core.spi.BuildConnector;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.AbstractUrlHandler;
@@ -35,9 +36,12 @@ public class BuildsUrlHandler extends AbstractUrlHandler {
 	public EditorHandle openUrl(IWorkbenchPage page, String location, int customFlags) {
 		List<IBuildServer> servers = BuildsUi.getModel().getServers();
 		for (IBuildServer server : servers) {
-			IBuildElement element = BuildsUi.getConnector(server).getBuildElementFromUrl(server, location);
-			if (element instanceof IBuild) {
-				return OpenHandler.fetchAndOpen(page, (IBuild) element);
+			BuildConnector connector = BuildsUi.getConnector(server);
+			if (connector != null) {
+				IBuildElement element = connector.getBuildElementFromUrl(server, location);
+				if (element instanceof IBuild) {
+					return OpenHandler.fetchAndOpen(page, (IBuild) element);
+				}
 			}
 		}
 		return null;
