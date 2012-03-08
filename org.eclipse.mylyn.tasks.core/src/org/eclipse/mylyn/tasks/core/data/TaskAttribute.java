@@ -528,7 +528,7 @@ public final class TaskAttribute {
 		if (metaData == null) {
 			metaData = new LinkedHashMap<String, String>();
 		}
-		metaData.put(key, value);
+		metaData.put(key.intern(), value);
 	}
 
 	/**
@@ -545,7 +545,7 @@ public final class TaskAttribute {
 		if (optionByKey == null) {
 			optionByKey = new LinkedHashMap<String, String>();
 		}
-		optionByKey.put(key, value);
+		optionByKey.put(key.intern(), value);
 	}
 
 	public void removeAttribute(String attributeId) {
