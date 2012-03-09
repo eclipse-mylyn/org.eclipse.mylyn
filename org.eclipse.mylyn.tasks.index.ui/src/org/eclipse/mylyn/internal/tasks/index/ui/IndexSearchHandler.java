@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.index.ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -249,7 +250,15 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				textControl.removeListener(SWT.Traverse, listener);
 				textControl.addListener(SWT.Traverse, new Listener() {
 					public void handleEvent(Event event) {
-						if (!adapter.isProposalPopupOpen()) {
+						// TODO e3.6 replace with call to adapter.isProposalPopupOpen()
+						boolean popupOpen = false;
+						try {
+							Method method = ContentProposalAdapter.class.getDeclaredMethod("isProposalPopupOpen");
+							popupOpen = (Boolean) method.invoke(adapter);
+						} catch (Exception e) {
+							// ignore, Eclipse 3.5 does not support this API
+						}
+						if (!popupOpen) {
 							listener.handleEvent(event);
 						}
 					}
