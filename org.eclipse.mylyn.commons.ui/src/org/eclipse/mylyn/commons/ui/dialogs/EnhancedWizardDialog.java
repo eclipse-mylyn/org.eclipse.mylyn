@@ -36,6 +36,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public abstract class EnhancedWizardDialog extends WizardDialog {
 
+	private boolean isInFinish;
+
 	public EnhancedWizardDialog(Shell parentShell, IWizard newWizard) {
 		super(parentShell, newWizard);
 	}
@@ -93,6 +95,20 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 	protected void buttonPressed(int buttonId) {
 		if (!handleExtraButtonPressed(buttonId)) {
 			super.buttonPressed(buttonId);
+		}
+	}
+
+	@Override
+	protected void finishPressed() {
+		// ignore recursive calls
+		if (isInFinish) {
+			return;
+		}
+		try {
+			isInFinish = true;
+			super.finishPressed();
+		} finally {
+			isInFinish = false;
 		}
 	}
 
