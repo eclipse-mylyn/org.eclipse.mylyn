@@ -112,16 +112,18 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		if (canFinish()) {
 			taskRepository = new TaskRepository(connector.getConnectorKind(), settingsPage.getRepositoryUrl());
-			settingsPage.performFinish(taskRepository);
-			TasksUi.getRepositoryManager().addRepository(taskRepository);
+			boolean finishAccepted = settingsPage.preFinish(taskRepository);
+			if (finishAccepted) {
+				settingsPage.performFinish(taskRepository);
+				TasksUi.getRepositoryManager().addRepository(taskRepository);
 
-			if (showNewQueryPromptOnFinish()) {
-				if (connector.canQuery(taskRepository)) {
-					promptToAddQuery(taskRepository);
+				if (showNewQueryPromptOnFinish()) {
+					if (connector.canQuery(taskRepository)) {
+						promptToAddQuery(taskRepository);
+					}
 				}
+				return true;
 			}
-
-			return true;
 		}
 		return false;
 	}
