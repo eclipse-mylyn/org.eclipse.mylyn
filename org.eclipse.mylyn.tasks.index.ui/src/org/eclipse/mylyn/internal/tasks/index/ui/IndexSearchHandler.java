@@ -36,6 +36,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -231,16 +232,12 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 	public void adaptTextSearchControl(Text textControl) {
 		IContentProposalProvider proposalProvider = new ContentProposalProvider();
 		final ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(textControl,
-				new TextContentAdapter(), proposalProvider, null, new char[0]);
+				new TextContentAdapter(), proposalProvider, null, new char[0], true);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
-		// if we decorate the control it lets the user know that they can use content assist...
-		// BUT it looks pretty bad.
-//		ControlDecoration controlDecoration = new ControlDecoration(textControl, (SWT.TOP | SWT.LEFT));
-//		controlDecoration.setShowOnlyOnFocus(true);
-//		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
-//				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-//		controlDecoration.setImage(contentProposalImage.getImage());
+		if (textControl.getParent().getLayout() instanceof GridLayout) {
+			((GridLayout) textControl.getParent().getLayout()).marginLeft = 4;
+		}
 
 		// FilteredTree registers a traverse listener that focuses the tree when ENTER is pressed. This 
 		// causes focus to be lost when a content proposal is selected. To avoid transfer of focus the 

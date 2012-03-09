@@ -237,11 +237,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected Composite createSearchComposite(Composite container) {
 		searchComposite = new Composite(container, SWT.NONE);
 		GridLayout searchLayout = new GridLayout(2, false);
-		searchLayout.marginWidth = 8;
 		searchLayout.marginHeight = 0;
-		searchLayout.marginBottom = 0;
-		searchLayout.horizontalSpacing = 0;
-		searchLayout.verticalSpacing = 0;
+		searchLayout.marginWidth = 0;
 		searchComposite.setLayout(searchLayout);
 		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
@@ -249,7 +246,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	private void initSearchComposite() {
-
 		searchHandler.createSearchComposite(searchComposite);
 		searchHandler.adaptTextSearchControl(getTextSearchControl().getTextControl());
 		searchHandler.addFilterChangeListener(new IFilterChangeListener() {
