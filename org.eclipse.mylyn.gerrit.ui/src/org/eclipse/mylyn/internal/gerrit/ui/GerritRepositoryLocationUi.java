@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -99,7 +100,12 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 			public void run() {
 				final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "Login", null,
 						"Login to OpenID Provider", MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL },
-						0);
+						0) {
+					@Override
+					protected Point getInitialSize() {
+						return new Point(780, 580);
+					}
+				};
 				dialog.create();
 
 				dialog.getBrowser().addLocationListener(new LocationAdapter() {
