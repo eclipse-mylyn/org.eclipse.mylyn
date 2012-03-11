@@ -38,6 +38,8 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 
 	private boolean isInFinish;
 
+	private int runningOperations;
+
 	public EnhancedWizardDialog(Shell parentShell, IWizard newWizard) {
 		super(parentShell, newWizard);
 	}
@@ -114,6 +116,11 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 
 	@Override
 	public void updateButtons() {
+		// all navigation buttons should be disabled while an operation is running  
+		if (runningOperations > 0) {
+			return;
+		}
+
 		updateExtraButtons();
 		super.updateButtons();
 	}
@@ -124,12 +131,13 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 	@Override
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,
 			InterruptedException {
-
 		HashMap<String, Boolean> savedEnabledState = null;
 		try {
+			runningOperations++;
 			savedEnabledState = saveAndSetEnabledStateMylyn();
 			super.run(fork, cancelable, runnable);
 		} finally {
+			runningOperations--;
 			if (savedEnabledState != null) {
 				restoreEnabledStateMylyn(savedEnabledState);
 			}
