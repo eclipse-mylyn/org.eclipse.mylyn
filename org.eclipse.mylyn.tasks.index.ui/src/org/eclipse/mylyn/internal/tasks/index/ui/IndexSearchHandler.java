@@ -253,7 +253,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 						// TODO e3.6 replace with call to adapter.isProposalPopupOpen()
 						boolean popupOpen = false;
 						try {
-							Method method = ContentProposalAdapter.class.getDeclaredMethod("isProposalPopupOpen");
+							Method method = ContentProposalAdapter.class.getDeclaredMethod("isProposalPopupOpen"); //$NON-NLS-1$
 							popupOpen = (Boolean) method.invoke(adapter);
 						} catch (Exception e) {
 							// ignore, Eclipse 3.5 does not support this API
