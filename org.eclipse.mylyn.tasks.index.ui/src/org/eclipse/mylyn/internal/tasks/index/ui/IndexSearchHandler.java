@@ -74,15 +74,28 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 	}
 
 	@Override
-	public void adaptTextSearchControl(Text textControl) {
+	public void adaptTextSearchControl(final Text textControl) {
+		// make room for content assist decoration
+		if (textControl.getParent().getLayout() instanceof GridLayout) {
+			((GridLayout) textControl.getParent().getLayout()).marginLeft = 6;
+		}
+
+		// delay execution of to avoid empty key-binding in tooltip: The problem is that the binding service hasn't been 
+		// initialized when the decoration is created on startup.
+		textControl.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (!textControl.isDisposed()) {
+					adaptTextSearchControlInternal(textControl);
+				}
+			}
+		});
+	}
+
+	private void adaptTextSearchControlInternal(Text textControl) {
 		IContentProposalProvider proposalProvider = new ContentProposalProvider(TasksUiPlugin.getTaskList(), reference);
 		final ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(textControl,
 				new TextContentAdapter(), proposalProvider, null, new char[0], true);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-
-		if (textControl.getParent().getLayout() instanceof GridLayout) {
-			((GridLayout) textControl.getParent().getLayout()).marginLeft = 4;
-		}
 
 		// FilteredTree registers a traverse listener that focuses the tree when ENTER is pressed. This 
 		// causes focus to be lost when a content proposal is selected. To avoid transfer of focus the 
