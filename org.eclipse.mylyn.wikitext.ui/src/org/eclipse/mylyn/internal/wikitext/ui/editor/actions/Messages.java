@@ -21,13 +21,7 @@ class Messages extends NLS {
 
 	public static String ContextHelpAction_tooltip;
 
-	public static String ExpandAllFoldingRulerAction_label;
-
-	public static String CollapseAllFoldingRulerAction_label;
-
 	public static String PreviewOutlineItemAction_label;
-
-	public static String ToggleFoldingRulerAction_label;
 
 	static {
 		// initialize resource bundle
@@ -36,4 +30,5 @@ class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }
