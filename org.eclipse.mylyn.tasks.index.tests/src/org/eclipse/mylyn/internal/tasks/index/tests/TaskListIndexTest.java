@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.tasks.index.tests;
 
 import static junit.framework.Assert.assertEquals;
+import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.createTempFolder;
+import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.deleteFolderRecursively;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +32,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
@@ -40,21 +41,17 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
-import org.eclipse.mylyn.internal.tasks.index.tests.util.MockTestContext;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author David Green
  */
-public class TaskListIndexTest {
+public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
 
@@ -72,70 +69,6 @@ public class TaskListIndexTest {
 		public List<ITask> getTasks() {
 			return tasks;
 		}
-	}
-
-	private MockTestContext context;
-
-	private TaskListIndex index;
-
-	private File tempDir;
-
-	@Before
-	public void setup() throws IOException {
-		tempDir = createTmpDir();
-
-		context = new MockTestContext();
-	}
-
-	private File createTmpDir() throws IOException {
-		File tempDir = File.createTempFile(TaskListIndexTest.class.getSimpleName(), ".tmp");
-		tempDir.delete();
-		tempDir.mkdirs();
-
-		assertTrue(tempDir.exists() && tempDir.isDirectory());
-		return tempDir;
-	}
-
-	@After
-	public void tearDown() {
-		disposeIndex();
-		if (tempDir != null) {
-			delete(tempDir);
-			assertFalse(tempDir.exists());
-		}
-	}
-
-	private void disposeIndex() {
-		if (index != null) {
-			try {
-				index.waitUntilIdle();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			index.close();
-			index = null;
-		}
-	}
-
-	private void delete(File file) {
-		if (file.isDirectory()) {
-			File[] children = file.listFiles();
-			if (children != null) {
-				for (File child : children) {
-					delete(child);
-				}
-			}
-		}
-		if (!file.delete()) {
-			Logger.getLogger(TaskListIndexTest.class.getName()).severe("Cannot delete: " + file);
-		}
-	}
-
-	private void setupIndex() {
-		index = new TaskListIndex(context.getTaskList(), context.getDataManager(),
-				(IRepositoryManager) context.getRepositoryManager(), tempDir, 0L);
-		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
-		index.setReindexDelay(0L);
 	}
 
 	@Test
@@ -428,7 +361,7 @@ public class TaskListIndexTest {
 
 		assertCanFindTask(task);
 
-		File newLocation = createTmpDir();
+		File newLocation = createTempFolder(TaskListIndexTest.class.getSimpleName());
 		try {
 			assertEquals(0, newLocation.list().length);
 
@@ -440,7 +373,7 @@ public class TaskListIndexTest {
 			assertFalse(newLocation.list().length == 0);
 		} finally {
 			disposeIndex();
-			delete(newLocation);
+			deleteFolderRecursively(newLocation);
 			assertFalse(newLocation.exists());
 		}
 	}

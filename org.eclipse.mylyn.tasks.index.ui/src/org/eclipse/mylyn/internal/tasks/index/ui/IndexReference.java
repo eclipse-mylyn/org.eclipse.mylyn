@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryManager;
  * @author David Green
  * @author Steffen Pingel
  */
-public class IndexReference {
+public class IndexReference extends AbstractIndexReference {
 
 	private static TaskListIndex theIndex;
 
@@ -49,6 +49,7 @@ public class IndexReference {
 	 */
 	private TaskListIndex index;
 
+	@Override
 	public TaskListIndex index() {
 		synchronized (IndexReference.class) {
 			if (index == null) {

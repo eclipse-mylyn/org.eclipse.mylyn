@@ -11,12 +11,15 @@
 
 package org.eclipse.mylyn.internal.tasks.index.tests.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -63,7 +66,9 @@ public class MockTestContext {
 
 	private final FullMockRepositoryConnector mockRepositoryConnector;
 
-	public MockTestContext() {
+	private final File dataDir;
+
+	public MockTestContext() throws IOException {
 		taskList = new TaskList();
 		repositoryManager = new TaskRepositoryManager();
 
@@ -79,12 +84,15 @@ public class MockTestContext {
 		repositoryManager.addRepository(localRepository);
 
 		dataStore = new TaskDataStore(repositoryManager);
+
 		activityManager = new TaskActivityManager(repositoryManager, taskList);
 		repositoryModel = new RepositoryModel(taskList, repositoryManager);
 		synchronizationManger = new SynchronizationManger(repositoryModel);
 		dataManager = new TaskDataManager(dataStore, repositoryManager, taskList, activityManager,
 				synchronizationManger);
 
+		dataDir = CommonTestUtil.createTempFolder(MockTestContext.class.getSimpleName());
+		dataManager.setDataPath(dataDir.getAbsolutePath());
 	}
 
 	public TaskList getTaskList() {
@@ -173,5 +181,9 @@ public class MockTestContext {
 		getTaskList().refactorRepositoryUrl(oldUrl, newUrl);
 		getMockRepository().setRepositoryUrl(newUrl);
 		getRepositoryManager().notifyRepositoryUrlChanged(getMockRepository(), oldUrl);
+	}
+
+	public void dispose() {
+		CommonTestUtil.deleteFolderRecursively(dataDir);
 	}
 }

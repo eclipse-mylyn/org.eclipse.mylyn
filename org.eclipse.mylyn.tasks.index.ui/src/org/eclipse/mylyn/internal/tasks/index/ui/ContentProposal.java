@@ -30,6 +30,10 @@ class ContentProposal implements IContentProposal {
 		this(content, label, description, content.length());
 	}
 
+	public ContentProposal(String content, String contentSuffix, String label, String description) {
+		this(content + contentSuffix, label, description, content.length());
+	}
+
 	public ContentProposal(String content, String label, String description, int cursorPosition) {
 		this.content = content;
 		this.cursorPosition = cursorPosition;
