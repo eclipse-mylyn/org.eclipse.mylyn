@@ -85,16 +85,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskEditorPage_ErrorDetailTitle;
 
-	public static String BugzillaTaskEditorPage_Legal_Value_1;
-
-	public static String BugzillaTaskEditorPage_Legal_Value_N;
-
-	public static String BugzillaTaskEditorPage_Legal_Values_More;
-
-	public static String BugzillaTaskEditorPage_Legal_Values_One;
-
-	public static String BugzillaTaskEditorPage_match_Detail;
-
 	public static String BugzillaTaskEditorPage_Message_more;
 
 	public static String BugzillaTaskEditorPage_Message_one;

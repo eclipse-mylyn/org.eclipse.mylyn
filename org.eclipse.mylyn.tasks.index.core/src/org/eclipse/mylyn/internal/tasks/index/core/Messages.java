@@ -30,7 +30,6 @@ class Messages extends NLS {
 
 	public static String TaskListIndex_task_rebuilding_index;
 
-	public static String TaskListIndex_task_rebuildingIndex;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -38,4 +37,5 @@ class Messages extends NLS {
 
 	private Messages() {
 	}
+
 }
