@@ -32,7 +32,8 @@
 		<h1 id="Web_Templates_Connector">Web Templates Connector</h1>
 		<h2 id="Where_can_I_find_the_Web_Templates_connector.3F">Where can I find the Web Templates connector?</h2>
 		<p>It is available from the incubator update site. Please see 
-			<a href="http://www.eclipse.org/mylyn/downloads/" target="mylyn_external">http://www.eclipse.org/mylyn/downloads/</a> .
+			<a href="http://www.eclipse.org/mylyn/downloads/" target="mylyn_external">http://www.eclipse.org/mylyn/downloads/</a> for a list of update sites.  (
+			<a href="http://www.eclipse.org/mylyn/downloads" target="mylyn_external">http://www.eclipse.org/mylyn/downloads</a> is not an update site itself.)
 		</p>
 		<h2 id="Why_can.E2.80.99t_I_connect_using_one_of_the_existing_templates.3F">Why can’t I connect using one of the existing templates?</h2>
 		<p>The Web Connector have a “Preview” button in “Advanced Configuration” section in the “Query” preferences dialog. If you get an error or preview table does not show the expected list, you can use “Open” button to verify if web page downloaded by the Web Connector is correct. </p>
@@ -55,7 +56,10 @@
 		<p>To debug web application auth further, you could use the wget tool (on Windows it available as a standalone command line tool and also included with Cygwin) and run the following command:</p>
 		<pre>wget -v -d -o query.log -O query.html "http://your.query.url"
 </pre>
-		<p>If repository require basic http auth, you’ll need to use ''--http-user=USER'' and ''--http-password=PASS'' options.</p>
+		<p>If repository require basic http auth, you’ll need to use 
+			<i>--http-user=USER</i> and 
+			<i>--http-password=PASS</i> options.
+		</p>
 		<p>Then open file 
 			<i>query.html</i> in the web browser and check if it show list of issues you need to fetch from the web server. If it does have correct list, then there could be a problem with query pattern used for parsing. 
 		</p>

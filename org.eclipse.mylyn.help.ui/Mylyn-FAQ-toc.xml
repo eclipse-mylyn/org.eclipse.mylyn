@@ -2,10 +2,16 @@
 <toc topic="Mylyn/FAQ/FAQ.html" label="Mylyn FAQ">
 	<topic href="Mylyn/FAQ/FAQ.html" label="What is Mylyn?"></topic>
 	<topic href="Mylyn/FAQ/Installation.html" label="Installation">
-		<topic href="Mylyn/FAQ/Installation.html#Install_Method_1_-_Eclipse_3.4" label="Install Method 1 - Eclipse 3.4"></topic>
-		<topic href="Mylyn/FAQ/Installation.html#Install_Method_2_-_Eclipse_3.3_and_older" label="Install Method 2 - Eclipse 3.3 and older"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Install_-_Eclipse_3.4_and_later" label="Install - Eclipse 3.4 and later"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_is_the_release_schedule.3F" label="What is the release schedule?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Which_sub-projects_are_included_in_Mylyn_releases.3F" label="Which sub-projects are included in Mylyn releases?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_versions_of_Eclipse_are_supported.3F" label="What versions of Eclipse are supported?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Which_repositories_are_supported.3F" label="Which repositories are supported?">
+			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.7" label="Mylyn 3.7"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.6" label="Mylyn 3.6"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.5" label="Mylyn 3.5"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.4" label="Mylyn 3.4"></topic>
+		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_version_of_Java_is_required.3F" label="What version of Java is required?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_version_of_Mylyn_is_distributed_with_the_Eclipse_downloads.3F" label="What version of Mylyn is distributed with the Eclipse downloads?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_happened_to_the_Mylyn_JIRA_Connector.3F" label="What happened to the Mylyn JIRA Connector?"></topic>
@@ -39,7 +45,6 @@
 			<topic href="Mylyn/FAQ/Installation.html#What_does_the_message_.E2.80.9Ccontent_assist_proposals_no_longer_appear.E2.80.9D_mean.3F" label="What does the message “content assist proposals no longer appear” mean?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_errors_like_.E2.80.9CHTTP_Response_Code_407.E2.80.9D_or_.E2.80.9CProxy_Authentication_Error.E2.80.9D_when_accessing_repositories_through_a_proxy_server.3F" label="Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use &lt;code&quot;Ctrl+Alt+Shift+Arrow Up&lt;/code&quot; for'' Mark as Landmark''.  What do I do?"></topic>
-			<topic href="Mylyn/FAQ/Installation.html#How_do_I_turn_on_spell_checking.3F" label="How do I turn on spell checking?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_an_error_when_accessing_secured_web_sites.3F" label="Why do I get an error when accessing secured web sites?"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#Uninstall_troubleshooting" label="Uninstall troubleshooting"></topic>
@@ -80,6 +85,7 @@
 		</topic>
 		<topic href="Mylyn/FAQ/Task-Repositories.html#Network_Troubleshooting" label="Network Troubleshooting">
 			<topic href="Mylyn/FAQ/Task-Repositories.html#Performance_Problems_with_HTTPS" label="Performance Problems with HTTPS"></topic>
+			<topic href="Mylyn/FAQ/Task-Repositories.html#Error_.22Received_fatal_alert:_bad_record_mac.22_when_using_https" label="Error &quot;Received fatal alert: bad_record_mac&quot; when using https"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Task-Repositories.html#Why_are_task_hyperlinks_not_working.3F" label="Why are task hyperlinks not working?"></topic>
 	</topic>
@@ -124,6 +130,7 @@
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_can.E2.80.99t_I_Alt.2BClick_to_references_libraries.3F" label="Why can’t I Alt+Click to references libraries?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_is_the_.27.27Link_with_Editor.27.27_button_disabled.3F" label="Why is the ''Link with Editor'' button disabled?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#What_happened_to_the_Active_Search_and_Active_Hierarchy_views.3F" label="What happened to the Active Search and Active Hierarchy views?"></topic>
+		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_does_startup_of_org.eclipse.mylyn.context.ui_take_so_long.3F" label="Why does startup of org.eclipse.mylyn.context.ui take so long?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Context-and-Timing-data.html" label="Context and Timing data">
 		<topic href="Mylyn/FAQ/Context-and-Timing-data.html#How_do_I_prevent_code_checked_out_from_polluting_my_task_context.3F" label="How do I prevent code checked out from polluting my task context?"></topic>
@@ -165,6 +172,7 @@
 		</topic>
 		<topic href="Mylyn/FAQ/Misc.html#Command_Line" label="Command Line"></topic>
 		<topic href="Mylyn/FAQ/Misc.html#System_Properties" label="System Properties"></topic>
+		<topic href="Mylyn/FAQ/Misc.html#How_can_I_report_a_dead-lock_or_a_problem_about_a_stalled_UI.3F" label="How can I report a dead-lock or a problem about a stalled UI?"></topic>
 		<topic href="Mylyn/FAQ/Misc.html#How_do_I_enable_debugging_output_for_network_communications.3F" label="How do I enable debugging output for network communications?"></topic>
 		<topic href="Mylyn/FAQ/Misc.html#How_do_I_enable_debugging_output_for_plug-ins.3F" label="How do I enable debugging output for plug-ins?"></topic>
 		<topic href="Mylyn/FAQ/Misc.html#Which_usage_monitoring_framework_should_I_use.3F" label="Which usage monitoring framework should I use?"></topic>

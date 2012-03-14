@@ -70,7 +70,7 @@
 			</li>
 		</ul>
 		<p>
-			<img border="0" src="images/mylar-tasklist-weblink-editor.gif"/>
+			<img border="0" src="images/Mylar-tasklist-weblink-editor.gif"/>
 		</p>
 		<h2 id="Why_were_my_repository_credentials_reset.3F">Why were my repository credentials reset?</h2>
 		<p>If you upgrade Eclipse or your Java VM, you will need to reset your credentials in the 
@@ -178,6 +178,11 @@ keytool -importcert -file client.crt
 		<h3 id="Performance_Problems_with_HTTPS">Performance Problems with HTTPS</h3>
 		<p>The built-in SSL support of the JDK will to a name lookup for each new connection. In case your network setup cannot resolve the host name (e.g. no proper name server), this lookup will time out, delaying the whole job.
 			If setting up a name server is not an option, a work around would be to edit your local hosts file, and add the server IP there (and, if possible, add your computer's IP to the server's hosts file).</p>
+		<h3 id="Error_.22Received_fatal_alert:_bad_record_mac.22_when_using_https">Error "Received fatal alert: bad_record_mac" when using https</h3>
+		<p>The SSL handshake can 
+			<a href="http://docs.oracle.com/javase/1.4.2/docs/guide/plugin/developer_guide/faq/troubleshooting.html" target="mylyn_external">fail with some servers</a> and result in an exception when connecting. If you are experiencing a bad_record_mac error set the following 
+			<a href="http://wiki.eclipse.org/Mylyn/FAQ#System_Properties" target="mylyn_external">system property</a> in the eclipse.ini: <code>-Dorg.eclipse.mylyn.https.protocols=SSLv3</code>
+		</p>
 		<h2 id="Why_are_task_hyperlinks_not_working.3F">Why are task hyperlinks not working?</h2>
 		<p>For task hyperlinks in textual editors (e.g. Java editor) and other text viewers (e.g. History view comments) you must associate the project that contains the resource to the task repository.  </p>
 		<dl>
@@ -192,7 +197,7 @@ keytool -importcert -file client.crt
 		</dl>
 		<p>Note that to view a hyperlink you must hold down the <code>Ctrl</code> key when hovering over the reference to the task.  References to tasks are connector specific and the common reference is found on the top left of the task editor and other conventions tend to follow those used in the web UI (e.g. “bug 123” for Bugzilla, “ABC-123” for JIRA).</p>
 		<p>
-			<img border="0" src="images/mylyn-project-repository-association.gif"/>
+			<img border="0" src="images/Mylyn-project-repository-association.gif"/>
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>

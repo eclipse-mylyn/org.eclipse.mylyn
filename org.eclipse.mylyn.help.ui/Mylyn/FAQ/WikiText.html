@@ -39,6 +39,9 @@
 		<p>A stand-alone WikiText package is also available for download from the 
 			<a href="http://www.eclipse.org/mylyn/downloads/" target="mylyn_external">Mylyn Downloads</a> page.
 		</p>
+		<p>Incubation features and unreleased builds are available from the 
+			<a href="http://download.eclipse.org/mylyn/snapshots/nightly/docs" target="mylyn_external">nightly update site</a>.  These builds should be used with caution as they are untested and potentially unstable.
+		</p>
 		<h2 id="How_does_WikiText_integrate_with_Mylyn.3F">How does WikiText integrate with Mylyn?</h2>
 		<p>WikiText extends the Mylyn task editor to be markup-aware.  Comments and description text is formatted according to the configured markup language.  The description and comment editors are aware of markup and provide content assist, markup help and preview.</p>
 		<p>More details can be found here: 
@@ -54,10 +57,10 @@
 		<p>The same WikiText documentation is also available in the stand-alone distribution and online:</p>
 		<ul>
 			<li>
-				<a href="http://help.eclipse.org/galileo/topic/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn%20WikiText%20User%20Guide.html" target="mylyn_external">WikiText User Guide</a>
+				<a href="http://help.eclipse.org/helios/topic/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn%20WikiText%20User%20Guide.html" target="mylyn_external">WikiText User Guide</a>
 			</li>
 			<li>
-				<a href="http://help.eclipse.org/galileo/topic/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText%20Developer%20Guide.html" target="mylyn_external">WikiText Developer Guide</a>
+				<a href="http://help.eclipse.org/helios/topic/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText%20Developer%20Guide.html" target="mylyn_external">WikiText Developer Guide</a>
 			</li>
 		</ul>
 		<h2 id="How_do_I_run_the_WikiText_Ant_tasks.3F">How do I run the WikiText Ant tasks?</h2>
@@ -66,8 +69,8 @@
 		<p>Yes, the WikiText markup parser and Ant tasks may be used outside of Eclipse without reference to any Eclipse classes.</p>
 		<p>Detailed information about using WikiText APIs is available within the <i>WikiText Developer Guide</i>.  Information about using WikiText Ant tasks is available within the <i>WikiText User Guide</i>.</p>
 		<h2 id="What_output_can_WikiText_create.3F">What output can WikiText create?</h2>
-		<p>WikiText can create HTML, Eclipse Help, DITA, DocBook and FOP from wiki markup.  Using the WikiText APIs you can also extend WikiText to create other output formats.
-			DITA, DocBook and FOP can all be used to create PDF.  More information is available in the <i>WikiText User Guide</i>.</p>
+		<p>WikiText can create HTML, Eclipse Help, DITA, DocBook and XSL-FO from wiki markup.  Using the WikiText APIs you can also extend WikiText to create other output formats.
+			DITA, DocBook and XSL-FO can all be used to create PDF.  More information is available in the <i>WikiText User Guide</i>.</p>
 		<h2 id="What_wiki_markup_languages_does_WikiText_support.3F">What wiki markup languages does WikiText support?</h2>
 		<p>WikiText can parse the following markup languages:</p>
 		<ul>
@@ -76,6 +79,12 @@
 			<li>Textile</li>
 			<li>TracWiki</li>
 			<li>TWiki</li>
+		</ul>
+		<p>Additionally the following markup languages are in incubation status, available from the WikiText 
+			<a href="http://download.eclipse.org/mylyn/snapshots/nightly/docs" target="mylyn_external">nightly update site</a>:
+		</p>
+		<ul>
+			<li>Creole </li>
 		</ul>
 		<p>WikiText is also designed to make it easy to add support for new markup languages.</p>
 		<h2 id="Where_can_I_find_out_more_about_WikiText.3F">Where can I find out more about WikiText?</h2>

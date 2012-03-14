@@ -37,9 +37,14 @@
 			<a href="http://wiki.eclipse.org/Mylyn/Extensions" title="Mylyn/Extensions" target="mylyn_external">Mylyn Extensions</a> for a list of available connectors.
 		</p>
 		<h2 id="Bugzilla_Connector">Bugzilla Connector</h2>
-		<p>See 
-			<a href="../../Mylyn/FAQ/Bugzilla-Connector.html#Bugzilla_Connector" title="Mylyn/FAQ#Bugzilla_Connector">Bugzilla Connector Troubleshooting</a>.
-		</p>
+		<ul>
+			<li>See the 
+				<a href="http://wiki.eclipse.org/Mylyn/Bugzilla_Connector" title="Mylyn/Bugzilla_Connector" target="mylyn_external">Bugzilla Connector</a> wiki page.
+			</li>
+			<li>See 
+				<a href="../../Mylyn/FAQ/Bugzilla-Connector.html#Bugzilla_Connector" title="Mylyn/FAQ#Bugzilla_Connector">Bugzilla Connector Troubleshooting</a>.
+			</li>
+		</ul>
 		<h2 id="Trac_Connector">Trac Connector</h2>
 		<p>See 
 			<a href="../../Mylyn/FAQ/Trac-Connector.html#Trac_Connector" title="Mylyn/FAQ#Trac_Connector">Trac Connector Troubleshooting</a>.
@@ -106,8 +111,7 @@
 				<i>single repository is used for all projects</i>. User should create multiple queries, and set project parameters at the query level. Because web connector don't support actions like "open repository task" there is really no need to create separate repositories per project and if you think about it that is how it work for connectors for Bugzilla and JIRA. However, it is still possible to setup separate repository per project using repository url like http://sourceforge.net/tracker/?group_id=172199 and accordingly updating derived urls is the advanced repository settings.
 			</dd>
 		</dl>
-		<p><!-- TODO need login setup for above GlassFish example -->
-
+		<p>
 			<b>For the web repository that require user to login, use advanced configuration in following way.</b> 
 <i>			This configuration is for GForge, you might need to change it for other repositories</i>:
 		</p>
@@ -141,29 +145,6 @@
 		</ul>
 		<p>
 			<img border="0" src="images/Generic-web-repository-settings.gif"/>
-		</p>
-		<h2 id="XPlanner_Connector">XPlanner Connector</h2>
-		<p>The XPlanner connector is currently in the Experimental state.  It supports XPlanner version .7.</p>
-		<p>
-			<b>Query</b>
-		</p>
-		<p>XPlanner Connector supports creating queries from your XPlanner repository.  You can select to create a query for your own in progress tasks (the default), or select projects or iterations or user stories from a list.  You can also select ones assigned to you, or all.  Currently you can choose to group the results by tasks or user stories.  If you group the results by tasks, this will result in a single query with the applicable tasks underneath it.  If you choose to group the results by user stories, this will result in multiple queries added to the task list, each one corresponding to a user story, with the applicable tasks underneath it:</p>
-		<p>
-			<img border="0" src="images/XPlannerQuery.jpg"/>
-		</p>
-		<p>
-			<b>Task Editor</b>
-		</p>
-		<p>A rich editor for editing XPlanner tasks is available.  It currently doesn't support all of the attributes you can change in XPlanner itself, but allows you to modify the basic ones necessary for XP development -- e.g. summary, description, estimated time. The attributes section of the editor displays an XPlanner-like view of the meaningful attributes, some of which are not editable.</p>
-		<p>
-			<img border="0" src="images/XPlannerTaskEditor.gif"/>
-		</p>
-		<p>
-			<b>User Story Editor</b>
-		</p>
-		<p>If you open an XPlanner element by id, using the "Open Repository Task by Key/ID" dialog, and that id is a user story id, you will see the read-only user story editor.  This editor is just useful for seeing the major details of a user story -- no items in it can be changed, since there is no really good mapping between a user story and a Mylyn task.</p>
-		<p>
-			<img border="0" src="images/XPlannerUserStoryEditor.gif"/>
 		</p>
 		<p>
 			<a href="http://wiki.eclipse.org/Category:Draft_Documentation" title="Category:Draft Documentation" target="mylyn_external">Category:Draft Documentation</a>

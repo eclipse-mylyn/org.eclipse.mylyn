@@ -141,7 +141,9 @@
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=200832" target="mylyn_external">bug 200832</a>, if you have the “Show ‘Referenced Libraries’ Node” option enabled in the view menu of the 
 			<i>Package Explorer</i> you will not be able to Alt+click to library nodes if there isn’t a library visible already.  Disable this option to make Alt+Click work.
 		</p>
-		<h2 id="Why_is_the_.27.27Link_with_Editor.27.27_button_disabled.3F">Why is the ''Link with Editor'' button disabled?</h2>
+		<h2 id="Why_is_the_.27.27Link_with_Editor.27.27_button_disabled.3F">Why is the 
+			<i>Link with Editor</i> button disabled?
+		</h2>
 		<p>Mylyn automatically turns on editor linking when the view is focused, since the main use case for turning it off (having the view jump around) is remedied by focusing the view.  In other words, the button is pressed for you automatically and we need to ensure that it cannot be manually unchecked, which is why it appears disabled.</p>
 		<h2 id="What_happened_to_the_Active_Search_and_Active_Hierarchy_views.3F">What happened to the Active Search and Active Hierarchy views?</h2>
 		<p>These views were not included in the Mylyn 1.0 release because they never made it beyond the experimental phase.  </p>
@@ -155,6 +157,10 @@
 		</ul>
 		<p>These features still show promise in displaying task context and saving repetitive searches, so we have not removed them.  They have instead moved to the Mylyn Sandbox, and can be used and experimented with by following the 
 			<a href="http://wiki.eclipse.org/index.php/Mylyn_Contributor_Reference#Sandbox" target="mylyn_external">instructions on the Contributors page</a>.  For feedback on these views please use the corresponding bug reports or newsgroup.
+		</p>
+		<h2 id="Why_does_startup_of_org.eclipse.mylyn.context.ui_take_so_long.3F">Why does startup of org.eclipse.mylyn.context.ui take so long?</h2>
+		<p>If you are seeing the Eclipse splash screen stall for 10s of seconds while loading org.eclipse.mylyn.context.ui remove <code>workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.resources.ui.prefs</code> as a work-around. This files stores editor mementos and can sometimes grow very large and affect startup time. This issue is being tracked on 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=226618" target="mylyn_external">bug 226618</a>.
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>

@@ -74,7 +74,49 @@
 				</td>
 				<td>URL for the discovery directory.</td>
 			</tr>
+			<tr>
+				<td><code>org.eclipse.mylyn.wikitext.tests.disableOutput</code></td>
+				<td><center>3.4</center></td>
+				<td>false</td>
+				<td>Set to true to suppress output on the console when running Mylyn Docs tests.</td>
+			</tr>
+			<tr>
+				<td><code>org.eclipse.mylyn.tests.all</code></td>
+				<td><center>3.7</center></td>
+				<td>false</td>
+				<td>Set to true to run all connector tests. The default is to run heartbeat tests only.</td>
+			</tr>
+			<tr>
+				<td><code>mylyn.test.server</code></td>
+				<td><center>3.7</center></td>
+				<td>mylyn.org</td>
+				<td>Host name of server that hosts test repositories.</td>
+			</tr>
+			<tr>
+				<td><code>mylyn.test.exclude</code></td>
+				<td><center>3.7</center></td>
+				<td>This is a comma separated list of test repository URLs that should be excluded when running tests. Example: 
+					<a href="http://mylyn.org/bugs36,http://mylyn.org/bugs40" target="mylyn_external">http://mylyn.org/bugs36,http://mylyn.org/bugs40</a>
+				</td>
+			</tr>
+			<tr>
+				<td><code>org.eclipse.mylyn.https.protocols</code></td>
+				<td><center>3.7</center></td>
+				<td>A comma separated list of 
+					<a href="http://docs.oracle.com/javase/1.4.2/docs/guide/plugin/developer_guide/faq/troubleshooting.html" target="mylyn_external">SSL protocols</a> that should be enabled when connecting through https. Example: SSLv3
+				</td>
+			</tr>
 		</table>
+		<h2 id="How_can_I_report_a_dead-lock_or_a_problem_about_a_stalled_UI.3F">How can I report a dead-lock or a problem about a stalled UI?</h2>
+		<p>The recommended way is to file a bug with a full thread dump using jstack which is part of the Java Development Kit 6. These wiki pages have more details on using jstack on different platforms: </p>
+		<ul>
+			<li>
+				<a href="http://wiki.eclipse.org/How_to_report_a_deadlock" target="mylyn_external">How to report a deadlock</a>
+			</li>
+			<li>
+				<a href="http://wiki.eclipse.org/Mylyn_Contributor_Reference#Debugging" target="mylyn_external">Debugging Mylyn</a>
+			</li>
+		</ul>
 		<h2 id="How_do_I_enable_debugging_output_for_network_communications.3F">How do I enable debugging output for network communications?</h2>
 		<p>Add the following lines to the <code>eclipse.ini</code> file in your eclipse directory to enable tracing of header information for HTTP requests. Log output is written to the console eclipse was started from. Make sure to add these after the line that says 
 			<b><code>-vmargs</code></b>. Add a <code>-vmwargs</code> line if there is none in the file.
