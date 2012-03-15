@@ -37,17 +37,17 @@
             id="certified">
       </group>
       </connectorCategory>
-   <connectorCategory
-         description="Build and continuous integration."
-         id="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
-         name="Build Management"
-         relevance="30">
-      <group
-            id="certified">
-      </group>
-   </connectorCategory>
-   <connectorCategory
-         description="Review integration."
+	  <connectorCategory
+	  	 description="Build and continuous integration."
+	     id="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
+	     name="Build Management"
+	     relevance="30">
+	  <group
+	        id="certified">
+	  </group>
+	  </connectorCategory>
+      <connectorCategory
+         description="Code review integration."
          id="org.eclipse.mylyn.discovery.directory.categories.CodeReview"
          name="Code Review"
          relevance="20">
@@ -68,17 +68,17 @@
    
    <extension
          point="org.eclipse.mylyn.discovery.core.connectorDiscovery">
-      <!--
       <connectorDescriptor
-            categoryId="org.eclipse.mylyn.discovery.site.categories.connectorCategoryEclipseOrg"
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.bugzilla"
-            groupId="org.eclipse.mylyn.discovery-directory.bundled"
+            groupId="bundled"
             id="org.eclipse.mylyn.bugzilla_feature"
             kind="task"
             license="%connectorDescriptor.license.bugzilla"
             name="%connectorDescriptor.name.bugzilla"
             provider="%connectorDescriptor.provider.bugzilla"
-            siteUrl="http://download.eclipse.org/tools/mylyn/update/e3.4">
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.7"
+            statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.bugzilla">
          <icon
                image32="images/bugzilla32.png">
          </icon>
@@ -88,7 +88,7 @@
                url="http://eclipse.org/mylyn/">
          </overview>
       </connectorDescriptor>
-   	  -->
+
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.trac"
@@ -98,7 +98,7 @@
             license="%connectorDescriptor.license.trac"
             name="%connectorDescriptor.name.trac"
             provider="%connectorDescriptor.provider.trac"
-            siteUrl="http://download.eclipse.org/mylyn/releases/3.7"
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.7"
             statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.trac">
          <icon
                image32="images/trac32.png"
@@ -161,7 +161,7 @@
             license="%connectorDescriptor.license.gerrit"
             name="%connectorDescriptor.name.gerrit"
             provider="%connectorDescriptor.provider.gerrit"
-            siteUrl="http://download.eclipse.org/mylyn/releases/3.7"
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.7"
             statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.gerrit">
          <icon
                image32="images/gerrit32.png">
@@ -170,6 +170,26 @@
                screenshot="images/gerrit-screenshot-320x240.png"
                summary="%connectorDescriptor.overview.summary.gerrit"
                url="http://eclipse.org/mylyn/">
+         </overview>
+      </connectorDescriptor>
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.BuildManagement"
+            description="%connectorDescriptor.description.hudson"
+            groupId="extra"
+            id="org.eclipse.mylyn.hudson"
+            kind="task"
+            license="%connectorDescriptor.license.hudson"
+            name="%connectorDescriptor.name.hudson"
+            provider="%connectorDescriptor.provider.hudson"
+            siteUrl="http://download.eclipse.org/mylyn/snapshots/3.7"
+            statsUrl="http://mylyn.eclipse.org/stats/mylyn/discovery/org.eclipse.mylyn.hudson">
+         <icon
+               image32="images/hudson-32.png">
+         </icon>
+         <overview
+               screenshot="images/hudson-screenshot.png"
+               summary="%overview.summary.hudson"
+               url="http://eclipse.org/mylyn">
          </overview>
       </connectorDescriptor>
 	</extension>
