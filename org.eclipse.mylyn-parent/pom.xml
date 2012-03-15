@@ -310,7 +310,7 @@
       <properties>
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
-        <platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+        <platform-repository-url>http://download.eclipse.org/releases/indigo/201202240900/</platform-repository-url>
         <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
         <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
@@ -386,7 +386,7 @@
       <properties>
         <target-version>3.5</target-version>
         <target-platform>mylyn-e3.5</target-platform>
-        <platform-repository-url>http://download.eclipse.org/releases/galileo/</platform-repository-url>
+        <platform-repository-url>http://download.eclipse.org/releases/galileo/201002260900</platform-repository-url>
         <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
         <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site/</swtbot-repository-url>
       </properties>
@@ -446,7 +446,7 @@
       <properties>
         <target-version>3.6</target-version>
         <target-platform>mylyn-e3.6</target-platform>
-        <platform-repository-url>http://download.eclipse.org/releases/helios/</platform-repository-url>
+        <platform-repository-url>http://download.eclipse.org/releases/helios/201102250900/</platform-repository-url>
         <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
         <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
@@ -462,7 +462,7 @@
       <properties>
         <target-version>3.7</target-version>
         <target-platform>mylyn-e3.7</target-platform>
-        <platform-repository-url>http://download.eclipse.org/releases/indigo/</platform-repository-url>
+        <platform-repository-url>http://download.eclipse.org/releases/indigo/201202240900/</platform-repository-url>
         <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
         <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
       </properties>
