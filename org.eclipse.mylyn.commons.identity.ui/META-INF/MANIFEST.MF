@@ -13,8 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator.resources,
  org.eclipse.mylyn.commons.identity.core,
  org.eclipse.mylyn.commons.ui,
- org.eclipse.mylyn.commons.workbench,
- org.eclipse.mylyn.tasks.ui
+ org.eclipse.mylyn.commons.workbench
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.commons.identity.ui;x-internal:=true

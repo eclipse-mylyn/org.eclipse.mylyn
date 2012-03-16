@@ -22,7 +22,6 @@ import org.eclipse.mylyn.commons.identity.core.Account;
 import org.eclipse.mylyn.commons.identity.core.IIdentity;
 import org.eclipse.mylyn.commons.identity.core.IProfile;
 import org.eclipse.mylyn.commons.identity.core.IProfileImage;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.ISharedImages;
@@ -71,8 +70,8 @@ public class PersonLabelProvider extends LabelProvider {
 			return image;
 		} else if (object instanceof Account) {
 			Account account = (Account) object;
-			Image image = TasksUiPlugin.getDefault().getBrandingIcon(account.getKind());
-			return image;
+//			Image image = TasksUiPlugin.getDefault().getBrandingIcon(account.getKind());
+//			return image;
 		}
 		return null;
 	}
