@@ -120,7 +120,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertFalse(session.needsPerformQueries());
 		assertEquals(Collections.emptySet(), session.getStaleTasks());
 
-		// nothing has changed, should detect a change
+		// nothing has changed, should not detect a change
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		session = createSession(task);
 		connector.preSynchronization(session, null);
@@ -135,7 +135,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 			client.updateTicket(ticket, "comment", null);
 			mostRecentlyModified = TracUtil.toTracTime(ticket.getLastChanged());
 			// needs to be at least one second ahead of repository time stamp   
-			if (mostRecentlyModified > lastModified + 1) {
+			if (mostRecentlyModified >= lastModified + 1) {
 				break;
 			} else if (i == 2) {
 				fail("Failed to update ticket modification time: ticket id=" + ticket.getId() + ", lastModified="
