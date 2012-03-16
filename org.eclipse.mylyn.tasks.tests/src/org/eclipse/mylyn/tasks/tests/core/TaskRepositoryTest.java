@@ -15,6 +15,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+/**
+ * @author Shawn Minto
+ */
 public class TaskRepositoryTest extends TestCase {
 
 	private TaskRepository taskRepository;

@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 /**
  * @author Mik Kersten
  */
-public class TaskRepositoryTest extends TestCase {
+public class TaskRepositoryCredentialsTest extends TestCase {
 
 	@SuppressWarnings("deprecation")
 	public void testPlatformAuthHandlerAvailable() throws Exception {
