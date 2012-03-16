@@ -50,6 +50,7 @@
 			verticalRulerPreferenceValue="true" />
 	</extension>
 
+	<!--
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">
 		<column id="org.eclipse.mylyn.reviews.ui.editor.AnnotationRuler" name="Review Comments"
 			class="org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn"
@@ -58,11 +59,12 @@
 			includeInMenu="true">
 			
 			<placement gravity="1.0">
-				<!--<after id="org.eclipse.ui.editors.columns.annotations"/> -->
+				<after id="org.eclipse.ui.editors.columns.annotations"/>
 			</placement>
 			
 			<targetClass class="org.eclipse.ui.texteditor.AbstractDecoratedTextEditor" />
 		</column>
 	</extension>   
-
+	-->
+	
 </plugin>
