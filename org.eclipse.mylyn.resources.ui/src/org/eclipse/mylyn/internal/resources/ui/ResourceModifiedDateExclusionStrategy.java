@@ -13,23 +13,23 @@ package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.Date;
 
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.IUndoManager;
-import org.eclipse.ltk.core.refactoring.IUndoManagerListener;
-import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class ResourceModifiedDateExclusionStrategy extends AbstractContextListener implements
-		IResourceExclusionStrategy, IPropertyChangeListener, IUndoManagerListener {
+		IResourceExclusionStrategy, IPropertyChangeListener, IOperationHistoryListener {
 
 	private transient Date lastActivatedDate = null;
 
@@ -40,7 +40,7 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
-		RefactoringCore.getUndoManager().removeListener(this);
+		OperationHistoryFactory.getOperationHistory().removeOperationHistoryListener(this);
 	}
 
 	public void init() {
@@ -52,7 +52,7 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		if (ContextCore.getContextManager().isContextActive()) {
 			lastActivatedDate = new Date();
 		}
-		RefactoringCore.getUndoManager().addListener(this);
+		OperationHistoryFactory.getOperationHistory().addOperationHistoryListener(this);
 	}
 
 	public void update() {
@@ -123,20 +123,13 @@ public class ResourceModifiedDateExclusionStrategy extends AbstractContextListen
 		}
 	}
 
-	public void undoStackChanged(IUndoManager manager) {
-		// ignore
-	}
-
-	public void redoStackChanged(IUndoManager manager) {
-		// ignore		
-	}
-
-	public void aboutToPerformChange(IUndoManager manager, Change change) {
-		performingChange = true;
-	}
-
-	public void changePerformed(IUndoManager manager, Change change) {
-		performingChange = false;
+	public void historyNotification(OperationHistoryEvent event) {
+		if (event.getEventType() == OperationHistoryEvent.ABOUT_TO_EXECUTE) {
+			performingChange = true;
+		} else if (event.getEventType() == OperationHistoryEvent.DONE
+				|| event.getEventType() == OperationHistoryEvent.OPERATION_NOT_OK) {
+			performingChange = false;
+		}
 	}
 
 }
