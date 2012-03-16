@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,6 +49,10 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
+import org.eclipse.mylyn.internal.discovery.ui.AbstractInstallJob;
+import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
+import org.eclipse.mylyn.internal.discovery.ui.InstalledItem;
+import org.eclipse.mylyn.internal.discovery.ui.UninstallRequest;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.util.NLS;
@@ -360,11 +365,18 @@ class PrepareInstallProfileJob_e_3_6 extends AbstractInstallJob {
 			if (repositoryLocations.add(uri)) {
 				checkCancelled(monitor);
 				repositoryTracker.addRepository(uri, null, session);
-//					ProvisioningUtil.addMetaDataRepository(url.toURI(), true);
-//					ProvisioningUtil.addArtifactRepository(url.toURI(), true);
-//					ProvisioningUtil.setColocatedRepositoryEnablement(url.toURI(), true);
 			}
 			monitor.worked(1);
+		}
+
+		// add selected repositories to resolve dependencies 
+		URI[] knownRepositories = repositoryTracker.getKnownRepositories(session);
+		if (knownRepositories != null) {
+			for (URI uri : knownRepositories) {
+				if (Pattern.matches("http://download.eclipse.org/releases/.*", uri.toString())) {
+					repositoryLocations.add(uri);
+				}
+			}
 		}
 
 		// fetch meta-data for these repositories
