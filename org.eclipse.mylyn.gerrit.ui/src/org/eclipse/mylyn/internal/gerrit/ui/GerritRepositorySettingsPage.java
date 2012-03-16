@@ -100,7 +100,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		super("Gerrit Repository Settings", "Web based code review and project management for Git based projects.",
 				taskRepository);
 		setNeedsAnonymousLogin(true);
-		setNeedsHttpAuth(false);
+		setNeedsHttpAuth(true);
 		setNeedsAdvanced(true);
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);
