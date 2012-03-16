@@ -33,13 +33,13 @@ public class AllCommonsTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllCommonsTests.class.getName());
+		suite.addTestSuite(TimeoutInputStreamTest.class);
 		suite.addTestSuite(CoreUtilTest.class);
 		suite.addTestSuite(AuthenticatedProxyTest.class);
 		suite.addTestSuite(OperationUtilTest.class);
 		suite.addTestSuite(NetUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
-		suite.addTestSuite(TimeoutInputStreamTest.class);
 		suite.addTestSuite(BrowserUtilTest.class);
 		suite.addTestSuite(ExtensionPointReaderTest.class);
 		suite.addTestSuite(CommonListenerListTest.class);
