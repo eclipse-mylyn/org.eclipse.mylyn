@@ -11,7 +11,7 @@
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="org.apache.httpcomponents.httpclient" version="4.1.2.v201202091730"/>
 <unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201202091730"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20120216150407/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>

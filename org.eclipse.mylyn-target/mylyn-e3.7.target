@@ -45,7 +45,7 @@
 <unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201202091730"/>
 <unit id="org.jsoup" version="1.6.1.v201201201356"/>
 <unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20120216150407/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
