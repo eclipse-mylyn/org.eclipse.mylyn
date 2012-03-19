@@ -103,6 +103,7 @@ public class OperationUtil {
 			try {
 				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
 			} catch (ExecutionException e) {
+				// XXX this hides the original stack trace from the caller invoking execute() 
 				throw e.getCause();
 			} catch (TimeoutException ignored) {
 			}

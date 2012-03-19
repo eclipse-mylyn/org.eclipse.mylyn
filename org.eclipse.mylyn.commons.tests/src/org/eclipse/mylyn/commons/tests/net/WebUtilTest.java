@@ -234,6 +234,13 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testReadTimeout() throws Exception {
+		// wait 5 seconds for thread pool to be idle
+		for (int i = 0; i < 10; i++) {
+			if (((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount() == 0) {
+				break;
+			}
+			Thread.sleep(500);
+		}
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
