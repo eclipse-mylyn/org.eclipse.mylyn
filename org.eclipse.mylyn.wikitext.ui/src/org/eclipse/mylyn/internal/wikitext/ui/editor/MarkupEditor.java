@@ -1173,7 +1173,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	@Override
 	public void setAction(String actionID, IAction action) {
-		if (action.getActionDefinitionId() != null && !isCommandAction(action)) {
+		if (action != null && action.getActionDefinitionId() != null && !isCommandAction(action)) {
 			// bug 336679: don't activate handlers for CommandAction.  
 			// We do this by class name so that we don't rely on internals
 			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
