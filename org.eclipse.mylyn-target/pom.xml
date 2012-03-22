@@ -27,16 +27,6 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>mylyn-e3.4.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e3.4</classifier>
-                </artifact>
-                <artifact>
-                  <file>mylyn-e3.5.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e3.5</classifier>
-                </artifact>
-                <artifact>
                   <file>mylyn-e3.6.target</file>
                   <type>target</type>
                   <classifier>mylyn-e3.6</classifier>
@@ -50,11 +40,6 @@
                   <file>mylyn-e3.8.target</file>
                   <type>target</type>
                   <classifier>mylyn-e3.8</classifier>
-                </artifact>
-                <artifact>
-                  <file>mylyn-e4.1.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e4.1</classifier>
                 </artifact>
                 <artifact>
                   <file>mylyn-e4.2.target</file>
