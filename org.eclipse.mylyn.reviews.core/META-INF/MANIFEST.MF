@@ -14,5 +14,3 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.mylyn.gerrit.core,org.eclipse.mylyn.gerrit.ui,org.eclipse.mylyn.reviews.ui",
  org.eclipse.mylyn.reviews.internal.core.model;x-internal:=true
 Bundle-Vendor: Eclipse Mylyn
-Import-Package: com.google.gson;version="1.4.0",
- com.google.gson.reflect;version="1.4.0"

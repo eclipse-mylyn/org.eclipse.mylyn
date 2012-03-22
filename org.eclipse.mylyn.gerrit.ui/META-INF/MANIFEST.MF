@@ -39,6 +39,6 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
 Import-Package: com.google.gerrit.common;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.reviewdb;version="2.1.5",
- com.google.gson;version="1.6.0",
+ com.google.gson;version="[1.6.0,2.0.0)",
  com.google.gwtorm.client;version="1.1.4",
  org.apache.commons.io;version="1.4.0"
