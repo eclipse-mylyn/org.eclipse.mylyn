@@ -25,11 +25,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
 import org.eclipse.mylyn.commons.ui.notifications.NotificationSinkEvent;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 
@@ -52,45 +50,29 @@ public class PopupNotificationSink extends NotificationSink {
 	private final Job openJob = new Job(Messages.PopupNotificationSink_Popup_Noifier_Job_Label) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				if (Platform.isRunning() && PlatformUI.getWorkbench() != null
-						&& PlatformUI.getWorkbench().getDisplay() != null
-						&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			if (Platform.isRunning() && PlatformUI.getWorkbench() != null
+					&& PlatformUI.getWorkbench().getDisplay() != null
+					&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-						public void run() {
-							collectNotifications();
+					public void run() {
+						collectNotifications();
 
-							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-								List<AbstractNotification> notifications = popup.getNotifications();
-								for (AbstractNotification notification : notifications) {
-									if (notification.getToken() != null) {
-										cancelledTokens.put(notification.getToken(), null);
-									}
-								}
-							}
-
-							for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-								AbstractNotification notification = it.next();
-								if (notification.getToken() != null
-										&& cancelledTokens.containsKey(notification.getToken())) {
-									it.remove();
-								}
-							}
-
-							synchronized (PopupNotificationSink.class) {
-								if (currentlyNotifying.size() > 0) {
-//										popup.close();
-									showPopup();
-								}
+						for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+							AbstractNotification notification = it.next();
+							if (notification.getToken() != null && cancelledTokens.containsKey(notification.getToken())) {
+								it.remove();
 							}
 						}
-					});
-				}
-			} finally {
-				if (popup != null) {
-					schedule(popup.getDelayClose() / 2);
-				}
+
+						synchronized (PopupNotificationSink.class) {
+							if (currentlyNotifying.size() > 0) {
+//										popup.close();
+								showPopup();
+							}
+						}
+					}
+				});
 			}
 
 			if (monitor.isCanceled()) {
@@ -101,8 +83,6 @@ public class PopupNotificationSink extends NotificationSink {
 		}
 
 	};
-
-	private NotificationPopup popup;
 
 	public PopupNotificationSink() {
 	}
@@ -145,19 +125,9 @@ public class PopupNotificationSink extends NotificationSink {
 	}
 
 	public void showPopup() {
-		if (popup != null) {
-			popup.close();
-		}
-
-		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		popup = new NotificationPopup(shell);
-		popup.setFadingEnabled(isAnimationsEnabled());
 		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
 		Collections.sort(toDisplay);
-		popup.setContents(toDisplay);
 		cleanNotified();
-		popup.setBlockOnOpen(false);
-		popup.open();
 	}
 
 }

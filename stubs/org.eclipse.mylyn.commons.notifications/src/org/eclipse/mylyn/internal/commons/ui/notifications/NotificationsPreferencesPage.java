@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -35,12 +34,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,6 +48,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * @author Steffen Pingel
@@ -162,25 +159,6 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 			return super.getText(element);
 		}
 
-		@Override
-		public Image getImage(Object element) {
-			if (element instanceof NotificationEvent) {
-				NotificationEvent item = (NotificationEvent) element;
-				if (model.isSelected(item)) {
-					return CommonImages.getImage(CommonImages.CHECKED);
-				} else {
-					return null;
-				}
-			}
-			if (element instanceof NotificationElement) {
-				NotificationElement item = (NotificationElement) element;
-				ImageDescriptor imageDescriptor = item.getImageDescriptor();
-				if (imageDescriptor != null) {
-					return CommonImages.getImage(imageDescriptor);
-				}
-			}
-			return super.getImage(element);
-		}
 	}
 
 	private TreeViewer eventsViewer;
@@ -228,7 +206,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		label = new Label(composite, SWT.NONE);
 		label.setText(Messages.NotificationsPreferencesPage_Notifiers_Label);
 		// Create the tree showing all the various notification types
-		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new SubstringPatternFilter(), true);
+		FilteredTree tree = new FilteredTree(composite, SWT.BORDER, new PatternFilter(), true);
 		eventsViewer = tree.getViewer();
 		GridDataFactory.fillDefaults().span(1, 2).grab(false, true).applyTo(tree);
 		eventsViewer.setComparer(new NotificationEventComparer());

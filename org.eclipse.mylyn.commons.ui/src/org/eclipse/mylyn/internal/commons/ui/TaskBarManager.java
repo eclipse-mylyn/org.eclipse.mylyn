@@ -119,7 +119,7 @@ public class TaskBarManager {
 		}
 
 		/**
-		 * From @see org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil#getNonModalShell()
+		 * From @see org.eclipse.mylyn.commons.workbench.WorkbenchUtil#getNonModalShell()
 		 * <p>
 		 * Get the active non modal shell. If there isn't one return null.
 		 * <p>

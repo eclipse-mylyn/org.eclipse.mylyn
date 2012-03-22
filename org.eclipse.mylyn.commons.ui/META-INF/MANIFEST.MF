@@ -24,12 +24,7 @@ Export-Package: org.eclipse.mylyn.commons.ui,
  org.eclipse.mylyn.commons.ui.compatibility,
  org.eclipse.mylyn.commons.ui.dialogs,
  org.eclipse.mylyn.commons.ui.wizard,
- org.eclipse.mylyn.internal.commons.ui;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.ui;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.ui.actions;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.ui.commands;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.ui.dialogs;x-internal:=true,
- org.eclipse.mylyn.internal.provisional.commons.ui.editor;x-internal:=true
+ org.eclipse.mylyn.internal.commons.ui;x-internal:=true
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 

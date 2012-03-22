@@ -19,13 +19,12 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
-import org.eclipse.mylyn.internal.provisional.commons.ui.dialogs.IValidatable;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
  */
-public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable, IValidatable {
+public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable {
 
 	private IAdaptable element;
 

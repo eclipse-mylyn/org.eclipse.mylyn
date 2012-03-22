@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.commons.ui.team;
 
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
-import org.eclipse.mylyn.internal.provisional.commons.ui.GradientDrawer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -45,12 +44,6 @@ public class RepositoriesView extends CommonNavigator {
 	protected CommonViewer createCommonViewer(Composite aParent) {
 		CommonViewer viewer = super.createCommonViewer(aParent);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		new GradientDrawer(themeManager, viewer) {
-			@Override
-			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
-				return event.item.getData() instanceof RepositoryCategory;
-			}
-		};
 		return viewer;
 	}
 
