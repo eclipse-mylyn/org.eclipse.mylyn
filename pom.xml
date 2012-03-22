@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.8.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.docs</groupId>
   <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
-  <version>1.6.0-SNAPSHOT</version>
+  <version>1.7.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
     <sonar.skippedModules>org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
