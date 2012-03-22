@@ -20,7 +20,7 @@ Export-Package: org.eclipse.mylyn.hudson.core;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.hudson.model;x-internal:=true
 Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
-Import-Package: com.google.gson;version="1.6.0",
+Import-Package: com.google.gson;version="[1.6.0,2.0.0)",
  javax.activation,
  javax.xml.stream;version="1.0.1",
  org.apache.http;version="4.1.4",
