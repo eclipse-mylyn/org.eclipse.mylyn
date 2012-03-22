@@ -26,7 +26,6 @@ import org.eclipse.mylyn.commons.workbench.texteditor.AbstractTextViewerHandler;
  * @see IFindReplaceTarget
  * @see IFindReplaceTargetExtension
  */
-@SuppressWarnings("restriction")
 public class IncrementalFindHandler extends AbstractTextViewerHandler implements IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {

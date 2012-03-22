@@ -227,7 +227,7 @@
  <extension
        point="org.eclipse.ui.handlers">
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineHandler"
           commandId="org.eclipse.ui.edit.text.delete.line">
          <activeWhen>
          	<with variable="activeContexts">
@@ -240,7 +240,7 @@
     </handler>
     
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineHandler"
           commandId="org.eclipse.ui.edit.text.cut.line">
          <activeWhen>
          	<with variable="activeContexts">
@@ -253,7 +253,7 @@
     </handler>
     
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineToBeginningHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineToBeginningHandler"
           commandId="org.eclipse.ui.edit.text.delete.line.to.beginning">
          <activeWhen>
          	<with variable="activeContexts">
@@ -266,7 +266,7 @@
     </handler>
     
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineToBeginningHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineToBeginningHandler"
           commandId="org.eclipse.ui.edit.text.cut.line.to.beginning">
          <activeWhen>
          	<with variable="activeContexts">
@@ -280,7 +280,7 @@
     
     
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.DeleteLineToEndHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.DeleteLineToEndHandler"
           commandId="org.eclipse.ui.edit.text.delete.line.to.end">
          <activeWhen>
          	<with variable="activeContexts">
@@ -294,7 +294,7 @@
     
     
     <handler
-          class="org.eclipse.mylyn.internal.provisional.commons.ui.commands.CutLineToEndHandler"
+          class="org.eclipse.mylyn.commons.workbench.texteditor.CutLineToEndHandler"
           commandId="org.eclipse.ui.edit.text.cut.line.to.end">
          <activeWhen>
          	<with variable="activeContexts">
