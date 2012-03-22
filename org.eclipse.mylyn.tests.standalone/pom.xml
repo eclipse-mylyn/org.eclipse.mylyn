@@ -5,11 +5,11 @@
   <parent>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.7.1-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.tests.standalone</artifactId>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>3.7.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <build>
     <testSourceDirectory>src</testSourceDirectory>
@@ -35,110 +35,110 @@
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.core</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.net</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.core</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.feed</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.tests</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.repositories.core</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.repositories.http.core</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.sdk.util</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.tests</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.xmlrpc</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <!-- Builds -->
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.builds.core</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.hudson.core</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.hudson.tests</artifactId>
-      <version>0.9.0-SNAPSHOT</version>
+      <version>0.9.1-SNAPSHOT</version>
     </dependency>
     <!-- Tasks -->
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.bugzilla.core</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.bugzilla.tests</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.trac.core</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.trac.tests</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.tasks.core</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.tasks.tests</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.tasks</groupId>
       <artifactId>org.eclipse.mylyn.tests.util</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <!-- Docs -->
     <dependency>
       <groupId>org.eclipse.mylyn.docs</groupId>
       <artifactId>org.eclipse.mylyn.wikitext.tests</artifactId>
-      <version>1.6.0-SNAPSHOT</version>
+      <version>1.6.1-SNAPSHOT</version>
     </dependency>
     <!-- Eclipse Platform -->
     <dependency>

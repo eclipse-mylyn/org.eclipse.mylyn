@@ -10,10 +10,10 @@ find -name feature.xml | xargs sed -i -e "s/\(mylyn.* version=\"\)$OLD\(\" match
 
 #mvn -Dtycho.mode=maven org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=1.4.1-SNAPSHOT
 
-update 0.8.0 0.9.0
-update 1.5.0 1.6.0
-update 3.6.0 3.7.0
-update 5.2.200 5.3.0
+update 0.9.0 0.9.1
+update 1.6.0 1.6.1
+update 3.7.0 3.7.1
+update 5.3.0 5.3.1
 
  
 #grep Bundle-Version */META-INF/MANIFEST.MF | grep -v 0.9.0 | grep -v 3.7.0 | grep -v 1.5.0
