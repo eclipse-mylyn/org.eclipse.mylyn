@@ -295,7 +295,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private void addPerson(TaskData data, Set<String> addresses, String key) {
 		TaskAttribute attribute = data.getRoot().getMappedAttribute(key);
-		if (attribute != null) {
+		// ignore modifiable attributes which may have a value edited by the user which may not be a valid proposal 
+		if (attribute != null && attribute.getMetaData().isReadOnly()) {
 			addPerson(data, addresses, attribute);
 		}
 	}
