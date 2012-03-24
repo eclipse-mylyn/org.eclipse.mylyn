@@ -314,9 +314,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								IMessageProvider.WARNING, new HyperlinkAdapter() {
 									@Override
 									public void linkActivated(HyperlinkEvent e) {
-										SynchronizeEditorAction action = new SynchronizeEditorAction();
-										action.selectionChanged(new StructuredSelection(getEditor()));
-										action.run();
+										AbstractTaskEditorPage.this.refresh();
 									}
 								});
 						setSubmitEnabled(false);
