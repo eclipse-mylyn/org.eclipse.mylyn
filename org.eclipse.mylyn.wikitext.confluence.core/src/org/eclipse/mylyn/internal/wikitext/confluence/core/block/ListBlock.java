@@ -135,8 +135,9 @@ public class ListBlock extends Block {
 				String listSpec = matcher.group(1);
 				if (listSpec.charAt(0) == '-') {
 					int level = calculateLevel(listSpec);
-					if (level == 4) {
-						// don't match hr
+					if (level > 1) {
+						// don't match hr, emdash, endash etc.
+						// list block must start at level 1s
 						return false;
 					}
 				}

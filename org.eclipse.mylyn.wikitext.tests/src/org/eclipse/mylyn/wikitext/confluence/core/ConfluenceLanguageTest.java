@@ -187,10 +187,40 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("endash &#8211; foo"));
 	}
 
+	public void testEnDashAtStartOfLine() throws IOException {
+		String html = parser.parseToHtml("-- two");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("&#8211; two"));
+	}
+
+	public void testEnDashAfterWordNoWhitespace() throws IOException {
+		String html = parser.parseToHtml("one-- two");
+
+		TestUtil.println("HTML: \n" + html);
+		assertFalse(html.contains("&#8211;"));
+		assertTrue(html.contains("one-- two"));
+	}
+
 	public void testEmdash() {
 		String html = parser.parseToHtml("an emdash --- foo");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("emdash &#8212; foo"));
+	}
+
+	public void testEmDashAtStartOfLine() throws IOException {
+		String html = parser.parseToHtml("--- two");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("&#8212; two"));
+	}
+
+	public void testEmDashAfterWordNoWhitespace() throws IOException {
+		String html = parser.parseToHtml("one--- two");
+
+		TestUtil.println("HTML: \n" + html);
+		assertFalse(html.contains("&#8212;"));
+		assertTrue(html.contains("one--- two"));
 	}
 
 	public void testHorizontalRule() {
