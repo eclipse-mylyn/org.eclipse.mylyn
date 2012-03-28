@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -225,6 +226,41 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 				+ index.escapeFieldValue(repositoryTask.getRepositoryUrl()) + "\"";
 		assertFalse(index.matches(localTask, repositoryUrlQuery));
 		assertTrue(index.matches(repositoryTask, repositoryUrlQuery));
+	}
+
+	@Test
+	public void testMatchesSummaryWithExpectedQueryBehaviour() throws InterruptedException {
+		setupIndex();
+
+		ITask task = context.createLocalTask();
+		task.setSummary("one two three");
+
+		context.getTaskList().notifyElementsChanged(Collections.singleton(task));
+
+		index.waitUntilIdle();
+
+		index.setDefaultField(FIELD_SUMMARY);
+
+		// default search (without logical operators) should behave as a prefix search
+		assertTrue(index.matches(task, "one"));
+		assertTrue(index.matches(task, "two"));
+		assertTrue(index.matches(task, "three"));
+		assertTrue(index.matches(task, "thr"));
+		assertFalse(index.matches(task, "one three"));
+
+		// wildcard search should not match multiple terms separated by whitespace
+		assertFalse(index.matches(task, "one*three"));
+
+		// wildcard search should match multiple characters in a single term
+		assertTrue(index.matches(task, "t*ee"));
+
+		// logical operator makes it work with multiple terms
+		assertTrue(index.matches(task, "one AND three"));
+		assertTrue(index.matches(task, "one OR three"));
+		assertTrue(index.matches(task, "one AND thr"));
+
+		// logical operator requiring a non-existant term should not match
+		assertFalse(index.matches(task, "one AND four"));
 	}
 
 	@Test

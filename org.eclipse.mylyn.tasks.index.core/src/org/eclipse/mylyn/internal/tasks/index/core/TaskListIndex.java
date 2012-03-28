@@ -679,8 +679,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		boolean hasBooleanSpecifiers = upperPatternString.contains(" OR ") || upperPatternString.contains(" AND ") //$NON-NLS-1$ //$NON-NLS-2$
 				|| upperPatternString.contains(" NOT "); //$NON-NLS-1$
 
-		if (patternString.indexOf(':') == -1 && !hasBooleanSpecifiers && defaultField.equals(FIELD_SUMMARY)
-				&& patternString.indexOf('"') == -1) {
+		if (!hasBooleanSpecifiers && defaultField.equals(FIELD_SUMMARY) && !containsSpecialCharacters(patternString)) {
 			return new PrefixQuery(new Term(defaultField.getIndexKey(), patternString));
 		}
 		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.getIndexKey(), new TaskAnalyzer());
@@ -709,6 +708,11 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			return new PrefixQuery(((TermQuery) q).getTerm());
 		}
 		return q;
+	}
+
+	private boolean containsSpecialCharacters(String patternString) {
+		return patternString.indexOf(':') >= 0 || patternString.indexOf('"') >= 0 || patternString.indexOf('*') >= 0
+				|| patternString.indexOf('?') >= 0;
 	}
 
 	public void close() {
