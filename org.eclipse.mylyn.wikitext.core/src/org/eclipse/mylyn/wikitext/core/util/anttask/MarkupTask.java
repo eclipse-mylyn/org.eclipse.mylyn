@@ -230,6 +230,16 @@ public abstract class MarkupTask extends Task {
 	}
 
 	/**
+	 * Support a nested markup language configuration.
+	 * 
+	 * @since 1.7
+	 */
+	public void addConfigured(MarkupLanguageConfiguration markupLanguageConfiguration) {
+		// bug 367633 - this method is required for Ant to enable subclassing of MarkupLanguageConfiguration
+		addConfiguredMarkupLanguageConfiguration(markupLanguageConfiguration);
+	}
+
+	/**
 	 * @since 1.1
 	 */
 	protected String readFully(File inputFile) {

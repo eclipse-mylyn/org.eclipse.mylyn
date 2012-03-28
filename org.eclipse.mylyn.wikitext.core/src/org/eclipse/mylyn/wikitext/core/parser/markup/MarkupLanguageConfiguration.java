@@ -119,8 +119,9 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	}
 
 	/**
-	 * Indicate if newlines in the markup must cause a line break. If false, then the default markup language behaviour
-	 * should be observed. The default is false.
+	 * Adds {@link #getPhraseModifiers() phrase modifiers} to the given syntax.
+	 * 
+	 * @param phraseModifierSyntax
 	 */
 	public void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		for (PatternBasedElement element : getPhraseModifiers()) {
@@ -129,14 +130,16 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	}
 
 	/**
-	 * indicate if the markup syntax should be optimized for use with a task repository.
+	 * Indicates if the markup syntax should be optimized for use with a task repository. Some markup languages may
+	 * enable/disable specific markup constructs to be more suitable for use in a task description or comment.
 	 */
 	public boolean isOptimizeForRepositoryUsage() {
 		return optimizeForRepositoryUsage;
 	}
 
 	/**
-	 * indicate if the markup syntax should be optimized for use with a task repository.
+	 * Indicate if the markup syntax should be optimized for use with a task repository. Some markup languages may
+	 * enable/disable specific markup constructs to be more suitable for use in a task description or comment.
 	 */
 	public void setOptimizeForRepositoryUsage(boolean optimizeForRepositoryUsage) {
 		this.optimizeForRepositoryUsage = optimizeForRepositoryUsage;
@@ -196,8 +199,14 @@ public class MarkupLanguageConfiguration implements Cloneable {
 		return 0;
 	}
 
+	/**
+	 * Adds {@link #getTokens() tokens} to the given syntax
+	 * 
+	 * @param tokenSyntax
+	 *            the syntax to which tokens should be added
+	 */
 	public void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
-		for (PatternBasedElement element : getPhraseModifiers()) {
+		for (PatternBasedElement element : getTokens()) {
 			tokenSyntax.add(element);
 		}
 	}

@@ -486,14 +486,21 @@ pre..
 p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
 
 pre.. 
-<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.classpath"/>
-<typedef name="languageConfiguration" classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration" classpathref="wikitext.classpath"/>
-		
+<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"
+	classpathref="wikitext.classpath"
+	loaderref="wikitext.classpath.loader"/>
+<typedef name="languageConfiguration"
+	classname="com.example.wikitext.MyCustomizedMarkupLanguageConfiguration"
+	classpathref="wikitext.classpath"
+	loaderref="wikitext.classpath.loader"/>
+
 <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
 	<languageConfiguration escapingHtmlAndXml="true"/>
 </wikitext-to-eclipse-help>
 
-p. See the *Mylyn WikiText Developer Guide* for details on extending a markup language via subclassing.
+p. The @loaderref@ attribute is required for Ant to use the same ClassLoader for both the WikiText Ant tasks and the subclassed @MarkupLanguageConfiguration@.
+
+See the *Mylyn WikiText Developer Guide* for details on extending a markup language via subclassing.
 
 h1. Textile Syntax
 
