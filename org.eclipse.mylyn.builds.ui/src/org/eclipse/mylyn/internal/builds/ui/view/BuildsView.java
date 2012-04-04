@@ -46,9 +46,11 @@ import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
+import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.ui.AbstractColumnViewerSupport;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.TreeSorter;
@@ -100,6 +102,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 /**
  * @author Steffen Pingel
  * @author Torkild U. Resheim
+ * @author Lucas Panjer
  */
 public class BuildsView extends ViewPart implements IShowInTarget {
 
@@ -580,6 +583,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	@Override
 	public void setFocus() {
 		getViewer().getControl().setFocus();
+		if (BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED)) {
+			RefreshOperation operation = BuildsUiInternal.getFactory().getRefreshOperation();
+			operation.addFlag(OperationFlag.BACKGROUND);
+			operation.execute();
+		}
 	}
 
 	private void setTopControl(Control control) {
