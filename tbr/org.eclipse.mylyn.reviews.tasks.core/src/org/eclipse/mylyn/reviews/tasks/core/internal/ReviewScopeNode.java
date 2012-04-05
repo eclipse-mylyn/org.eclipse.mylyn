@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.tasks.core.internal;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -71,10 +72,10 @@ public class ReviewScopeNode extends AbstractTreeNode {
 				sb.append(", ");
 			}
 
-			int count = counts.get(type).counter;
+			int count = type.getValue().counter;
 			sb.append(count);
 			sb.append(" ");
-			sb.append(counts.get(type).item.getType(count));
+			sb.append(type.getValue().item.getType(count));
 		}
 		return sb.toString();
 	}
