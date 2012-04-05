@@ -14,11 +14,11 @@ import java.io.Serializable;
 
 /**
  * Parent class for event payloads
- * @see <a href="http://developer.github.com/v3/events/types">GitHub Event
- *      types API documentation</a>
+ *
+ * @see <a href="http://developer.github.com/v3/events/types">GitHub Event types
+ *      API documentation</a>
  */
-public class EventPayload implements Serializable{
+public class EventPayload implements Serializable {
 
 	private static final long serialVersionUID = 1022083387039340606L;
-
 }
