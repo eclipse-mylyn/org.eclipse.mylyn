@@ -65,6 +65,8 @@ public class User implements Serializable {
 
 	private String email;
 
+	private String gravatarId;
+
 	private String htmlUrl;
 
 	private String location;
@@ -332,6 +334,22 @@ public class User implements Serializable {
 	 */
 	public User setEmail(String email) {
 		this.email = email;
+		return this;
+	}
+
+	/**
+	 * @return gravatarId
+	 */
+	public String getGravatarId() {
+		return gravatarId;
+	}
+
+	/**
+	 * @param gravatarId
+	 * @return this user
+	 */
+	public User setGravatarId(String gravatarId) {
+		this.gravatarId = gravatarId;
 		return this;
 	}
 

@@ -29,7 +29,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test fetching currently authenticated user
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -40,6 +40,7 @@ public class UserTest extends LiveTest {
 		User user = service.getUser();
 		assertNotNull(user);
 		assertEquals(client.getUser(), user.getLogin());
+		assertNotNull(user.getGravatarId());
 		assertNotNull(user.getAvatarUrl());
 		assertNotNull(user.getCreatedAt());
 		assertNotNull(user.getPlan());
@@ -47,7 +48,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test fetching user by login name
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -58,13 +59,14 @@ public class UserTest extends LiveTest {
 		User user = service.getUser(client.getUser());
 		assertNotNull(user);
 		assertEquals(client.getUser(), user.getLogin());
+		assertNotNull(user.getGravatarId());
 		assertNotNull(user.getAvatarUrl());
 		assertNotNull(user.getCreatedAt());
 	}
 
 	/**
 	 * Test fetching followers
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -82,7 +84,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test fetching followed users
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -100,7 +102,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test finding out if user is followed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -116,7 +118,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test adding, fetching, and deleting an e-mail address to a user account
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -140,7 +142,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test adding, fetching, and deleting an e-mail addresses to a user account
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -168,7 +170,7 @@ public class UserTest extends LiveTest {
 
 	/**
 	 * Test adding, fetching, and deleting a key to a user account
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
