@@ -36,7 +36,7 @@
 		<delete dir="${wikitext.ui.textile.bin}" failonerror="false"/>
 	</target>
 	
-	<target name="all" depends="plugin-docs, new-and-noteworthy">
+	<target name="all" depends="plugin-docs">
 	</target>
 	
 	
