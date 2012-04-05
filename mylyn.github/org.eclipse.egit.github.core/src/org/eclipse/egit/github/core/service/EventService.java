@@ -17,6 +17,10 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_PUBLI
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_RECEIVED_EVENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
+
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -26,15 +30,13 @@ import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.event.Event;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
  * Service class for interacting with Events
  *
  * @see <a href="http://developer.github.com/v3/events">GitHub Event API
  *      documentation</a>
- * @see <a href="http://developer.github.com/v3/events/types">GitHub Event
- *      types API documentation</a>
+ * @see <a href="http://developer.github.com/v3/events/types">GitHub Event types
+ *      API documentation</a>
  */
 public class EventService extends GitHubService {
 
@@ -60,7 +62,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pagePublicEvents() {
-		return pagePublicEvents(PagedRequest.PAGE_SIZE);
+		return pagePublicEvents(PAGE_SIZE);
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pagePublicEvents(final int size) {
-		return pagePublicEvents(PagedRequest.PAGE_FIRST, size);
+		return pagePublicEvents(PAGE_FIRST, size);
 	}
 
 	/**
@@ -98,7 +100,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pageEvents(IRepositoryIdProvider repository) {
-		return pageEvents(repository, PagedRequest.PAGE_SIZE);
+		return pageEvents(repository, PAGE_SIZE);
 	}
 
 	/**
@@ -111,7 +113,7 @@ public class EventService extends GitHubService {
 	 */
 	public PageIterator<Event> pageEvents(IRepositoryIdProvider repository,
 			final int size) {
-		return pageEvents(repository, PagedRequest.PAGE_FIRST, size);
+		return pageEvents(repository, PAGE_FIRST, size);
 	}
 
 	/**
@@ -126,7 +128,8 @@ public class EventService extends GitHubService {
 	 */
 	public PageIterator<Event> pageEvents(IRepositoryIdProvider repository,
 			final int start, final int size) {
-		PagedRequest<Event> request = createRepoEventRequest(repository, start, size);
+		PagedRequest<Event> request = createRepoEventRequest(repository, start,
+				size);
 		return createPageIterator(request);
 	}
 
@@ -136,8 +139,9 @@ public class EventService extends GitHubService {
 	 * @param repository
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageNetworkEvents(IRepositoryIdProvider repository) {
-		return pageNetworkEvents(repository, PagedRequest.PAGE_SIZE);
+	public PageIterator<Event> pageNetworkEvents(
+			IRepositoryIdProvider repository) {
+		return pageNetworkEvents(repository, PAGE_SIZE);
 	}
 
 	/**
@@ -148,9 +152,9 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageNetworkEvents(IRepositoryIdProvider repository,
-			final int size) {
-		return pageNetworkEvents(repository, PagedRequest.PAGE_FIRST, size);
+	public PageIterator<Event> pageNetworkEvents(
+			IRepositoryIdProvider repository, final int size) {
+		return pageNetworkEvents(repository, PAGE_FIRST, size);
 	}
 
 	/**
@@ -163,8 +167,8 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageNetworkEvents(IRepositoryIdProvider repository,
-			final int start, final int size) {
+	public PageIterator<Event> pageNetworkEvents(
+			IRepositoryIdProvider repository, final int start, final int size) {
 		PagedRequest<Event> request = createNetworkRepoEventRequest(repository,
 				start, size);
 		return createPageIterator(request);
@@ -177,7 +181,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pageOrgEvents(String org) {
-		return pageOrgEvents(org, PagedRequest.PAGE_SIZE);
+		return pageOrgEvents(org, PAGE_SIZE);
 	}
 
 	/**
@@ -189,7 +193,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pageOrgEvents(String org, final int size) {
-		return pageOrgEvents(org, PagedRequest.PAGE_FIRST, size);
+		return pageOrgEvents(org, PAGE_FIRST, size);
 	}
 
 	/**
@@ -209,8 +213,8 @@ public class EventService extends GitHubService {
 	}
 
 	/**
-	 * Create page iterator for a given user's received events
-	 * Returns private events if authenticated as the user
+	 * Create page iterator for a given user's received events Returns private
+	 * events if authenticated as the user
 	 *
 	 * @param user
 	 * @return events page iterator
@@ -227,10 +231,10 @@ public class EventService extends GitHubService {
 	 *            only include public events?
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageUserReceivedEvents(String user, boolean isPublic) {
-		return pageUserReceivedEvents(user, isPublic, PagedRequest.PAGE_SIZE);
+	public PageIterator<Event> pageUserReceivedEvents(String user,
+			boolean isPublic) {
+		return pageUserReceivedEvents(user, isPublic, PAGE_SIZE);
 	}
-
 
 	/**
 	 * Create page iterator for a given user's received events
@@ -244,7 +248,7 @@ public class EventService extends GitHubService {
 	 */
 	public PageIterator<Event> pageUserReceivedEvents(String user,
 			boolean isPublic, final int size) {
-		return pageUserReceivedEvents(user, isPublic, PagedRequest.PAGE_FIRST, size);
+		return pageUserReceivedEvents(user, isPublic, PAGE_FIRST, size);
 	}
 
 	/**
@@ -259,16 +263,16 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageUserReceivedEvents(String user, boolean isPublic,
-			final int start, final int size) {
+	public PageIterator<Event> pageUserReceivedEvents(String user,
+			boolean isPublic, final int start, final int size) {
 		PagedRequest<Event> request = createUserReceivedEventRequest(user,
 				isPublic, start, size);
 		return createPageIterator(request);
 	}
 
 	/**
-	 * Create page iterator for a given user's events
-	 * Returns private events if authenticated as the user
+	 * Create page iterator for a given user's events Returns private events if
+	 * authenticated as the user
 	 *
 	 * @param user
 	 * @return events page iterator
@@ -286,9 +290,8 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pageUserEvents(String user, boolean isPublic) {
-		return pageUserEvents(user, isPublic, PagedRequest.PAGE_SIZE);
+		return pageUserEvents(user, isPublic, PAGE_SIZE);
 	}
-
 
 	/**
 	 * Create page iterator for a given user's events
@@ -300,9 +303,9 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageUserEvents(String user,
-			boolean isPublic, final int size) {
-		return pageUserEvents(user, isPublic, PagedRequest.PAGE_FIRST, size);
+	public PageIterator<Event> pageUserEvents(String user, boolean isPublic,
+			final int size) {
+		return pageUserEvents(user, isPublic, PAGE_FIRST, size);
 	}
 
 	/**
@@ -319,8 +322,8 @@ public class EventService extends GitHubService {
 	 */
 	public PageIterator<Event> pageUserEvents(String user, boolean isPublic,
 			final int start, final int size) {
-		PagedRequest<Event> request = createUserEventRequest(user,
-				isPublic, start, size);
+		PagedRequest<Event> request = createUserEventRequest(user, isPublic,
+				start, size);
 		return createPageIterator(request);
 	}
 
@@ -332,7 +335,7 @@ public class EventService extends GitHubService {
 	 * @return events page iterator
 	 */
 	public PageIterator<Event> pageUserOrgEvents(String user, String org) {
-		return pageUserOrgEvents(user, org, PagedRequest.PAGE_SIZE);
+		return pageUserOrgEvents(user, org, PAGE_SIZE);
 	}
 
 	/**
@@ -344,8 +347,9 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	public PageIterator<Event> pageUserOrgEvents(String user, String org, final int size) {
-		return pageUserOrgEvents(user, org, PagedRequest.PAGE_FIRST, size);
+	public PageIterator<Event> pageUserOrgEvents(String user, String org,
+			final int size) {
+		return pageUserOrgEvents(user, org, PAGE_FIRST, size);
 	}
 
 	/**
@@ -361,7 +365,8 @@ public class EventService extends GitHubService {
 	 */
 	public PageIterator<Event> pageUserOrgEvents(String user, String org,
 			final int start, final int size) {
-		PagedRequest<Event> request = createUserOrgEventRequest(user, org, start, size);
+		PagedRequest<Event> request = createUserOrgEventRequest(user, org,
+				start, size);
 		return createPageIterator(request);
 	}
 
@@ -375,8 +380,8 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	protected PagedRequest<Event> createRepoEventRequest(IRepositoryIdProvider
-			repository, int start, int size) {
+	protected PagedRequest<Event> createRepoEventRequest(
+			IRepositoryIdProvider repository, int start, int size) {
 		final String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
@@ -397,8 +402,8 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	protected PagedRequest<Event> createNetworkRepoEventRequest(IRepositoryIdProvider
-			repository, int start, int size) {
+	protected PagedRequest<Event> createNetworkRepoEventRequest(
+			IRepositoryIdProvider repository, int start, int size) {
 		final String repoId = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_NETWORKS);
 		uri.append('/').append(repoId);
@@ -467,8 +472,8 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	protected PagedRequest<Event> createUserEventRequest(String user, boolean isPublic,
-			int start, int size) {
+	protected PagedRequest<Event> createUserEventRequest(String user,
+			boolean isPublic, int start, int size) {
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
 		uri.append(SEGMENT_EVENTS);
@@ -491,8 +496,8 @@ public class EventService extends GitHubService {
 	 *            size of page
 	 * @return events page iterator
 	 */
-	protected PagedRequest<Event> createUserOrgEventRequest(String user, String org,
-			int start, int size) {
+	protected PagedRequest<Event> createUserOrgEventRequest(String user,
+			String org, int start, int size) {
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
 		uri.append(SEGMENT_EVENTS).append(SEGMENT_ORGS);
