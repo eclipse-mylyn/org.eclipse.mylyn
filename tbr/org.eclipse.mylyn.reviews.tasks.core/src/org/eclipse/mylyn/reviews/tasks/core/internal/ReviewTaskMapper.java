@@ -232,7 +232,7 @@ public class ReviewTaskMapper implements IReviewMapper {
 		ReviewDslScope scope2 = new ReviewDslScope();
 
 		for (IReviewScopeItem item : scope.getItems()) {
-			scope2.getItems().add(mapScopeItem(item));
+			scope2.addItem(mapScopeItem(item));
 		}
 		return scope2;
 	}
