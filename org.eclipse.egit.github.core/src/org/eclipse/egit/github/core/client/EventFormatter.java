@@ -10,6 +10,24 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static org.eclipse.egit.github.core.event.Event.TYPE_COMMIT_COMMENT;
+import static org.eclipse.egit.github.core.event.Event.TYPE_CREATE;
+import static org.eclipse.egit.github.core.event.Event.TYPE_DELETE;
+import static org.eclipse.egit.github.core.event.Event.TYPE_DOWNLOAD;
+import static org.eclipse.egit.github.core.event.Event.TYPE_FOLLOW;
+import static org.eclipse.egit.github.core.event.Event.TYPE_FORK;
+import static org.eclipse.egit.github.core.event.Event.TYPE_FORK_APPLY;
+import static org.eclipse.egit.github.core.event.Event.TYPE_GIST;
+import static org.eclipse.egit.github.core.event.Event.TYPE_GOLLUM;
+import static org.eclipse.egit.github.core.event.Event.TYPE_ISSUES;
+import static org.eclipse.egit.github.core.event.Event.TYPE_ISSUE_COMMENT;
+import static org.eclipse.egit.github.core.event.Event.TYPE_MEMBER;
+import static org.eclipse.egit.github.core.event.Event.TYPE_PUBLIC;
+import static org.eclipse.egit.github.core.event.Event.TYPE_PULL_REQUEST;
+import static org.eclipse.egit.github.core.event.Event.TYPE_PUSH;
+import static org.eclipse.egit.github.core.event.Event.TYPE_TEAM_ADD;
+import static org.eclipse.egit.github.core.event.Event.TYPE_WATCH;
+
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -50,39 +68,39 @@ public class EventFormatter {
 				JsonDeserializationContext context) throws JsonParseException {
 			String type = event.get().getType();
 			Class<? extends EventPayload> clazz = EventPayload.class;
-			if ("CommitCommentEvent".equals(type))
+			if (TYPE_COMMIT_COMMENT.equals(type))
 				clazz = CommitCommentPayload.class;
-			else if ("CreateEvent".equals(type))
+			else if (TYPE_CREATE.equals(type))
 				clazz = CreatePayload.class;
-			else if ("DeleteEvent".equals(type))
+			else if (TYPE_DELETE.equals(type))
 				clazz = DeletePayload.class;
-			else if ("DownloadEvent".equals(type))
+			else if (TYPE_DOWNLOAD.equals(type))
 				clazz = DownloadPayload.class;
-			else if ("FollowEvent".equals(type))
+			else if (TYPE_FOLLOW.equals(type))
 				clazz = FollowPayload.class;
-			else if ("ForkEvent".equals(type))
+			else if (TYPE_FORK.equals(type))
 				clazz = ForkPayload.class;
-			else if ("ForkApplyEvent".equals(type))
+			else if (TYPE_FORK_APPLY.equals(type))
 				clazz = ForkApplyPayload.class;
-			else if ("GistEvent".equals(type))
+			else if (TYPE_GIST.equals(type))
 				clazz = GistPayload.class;
-			else if ("GollumEvent".equals(type))
+			else if (TYPE_GOLLUM.equals(type))
 				clazz = GollumPayload.class;
-			else if ("IssueCommentEvent".equals(type))
+			else if (TYPE_ISSUE_COMMENT.equals(type))
 				clazz = IssueCommentPayload.class;
-			else if ("IssuesEvent".equals(type))
+			else if (TYPE_ISSUES.equals(type))
 				clazz = IssuesPayload.class;
-			else if ("MemberEvent".equals(type))
+			else if (TYPE_MEMBER.equals(type))
 				clazz = MemberPayload.class;
-			else if ("PublicEvent".equals(type))
+			else if (TYPE_PUBLIC.equals(type))
 				clazz = PublicPayload.class;
-			else if ("PullRequestEvent".equals(type))
+			else if (TYPE_PULL_REQUEST.equals(type))
 				clazz = PullRequestPayload.class;
-			else if ("PushEvent".equals(type))
+			else if (TYPE_PUSH.equals(type))
 				clazz = PushPayload.class;
-			else if ("TeamAddEvent".equals(type))
+			else if (TYPE_TEAM_ADD.equals(type))
 				clazz = TeamAddPayload.class;
-			else if ("WatchEvent".equals(type))
+			else if (TYPE_WATCH.equals(type))
 				clazz = WatchPayload.class;
 
 			// payload not recognized
