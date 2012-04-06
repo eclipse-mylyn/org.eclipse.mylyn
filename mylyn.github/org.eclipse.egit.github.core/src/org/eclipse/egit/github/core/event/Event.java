@@ -23,6 +23,91 @@ import org.eclipse.egit.github.core.util.DateUtils;
  */
 public class Event implements Serializable {
 
+	/**
+	 * Event type denoting a {@link CommitCommentPayload}
+	 */
+	public static final String TYPE_COMMIT_COMMENT = "CommitCommentEvent";
+
+	/**
+	 * Event type denoting a {@link CreatePayload}
+	 */
+	public static final String TYPE_CREATE = "CreateEvent";
+
+	/**
+	 * Event type denoting a {@link DeletePayload}
+	 */
+	public static final String TYPE_DELETE = "DeleteEvent";
+
+	/**
+	 * Event type denoting a {@link DownloadPayload}
+	 */
+	public static final String TYPE_DOWNLOAD = "DownloadEvent";
+
+	/**
+	 * Event type dneoting a {@link FollowPayload}
+	 */
+	public static final String TYPE_FOLLOW = "FollowEvent";
+
+	/**
+	 * Event type denoting a {@link ForkPayload}
+	 */
+	public static final String TYPE_FORK = "ForkEvent";
+
+	/**
+	 * Event type denoting a {@link ForkApplyPayload}
+	 */
+	public static final String TYPE_FORK_APPLY = "ForkApplyEvent";
+
+	/**
+	 * Event type denoting a {@link GistPayload}
+	 */
+	public static final String TYPE_GIST = "GistEvent";
+
+	/**
+	 * Event type denoting a {@link GollumPayload}
+	 */
+	public static final String TYPE_GOLLUM = "GollumEvent";
+
+	/**
+	 * Event type denoting a {@link IssueCommentPayload}
+	 */
+	public static final String TYPE_ISSUE_COMMENT = "IssueCommentEvent";
+
+	/**
+	 * Event type denoting a {@link IssuesPayload}
+	 */
+	public static final String TYPE_ISSUES = "IssuesEvent";
+
+	/**
+	 * Event type denoting a {@link MemberPayload}
+	 */
+	public static final String TYPE_MEMBER = "MemberEvent";
+
+	/**
+	 * Event type denoting a {@link PublicPayload}
+	 */
+	public static final String TYPE_PUBLIC = "PublicEvent";
+
+	/**
+	 * Event type denoting a {@link PullRequestPayload}
+	 */
+	public static final String TYPE_PULL_REQUEST = "PullRequestEvent";
+
+	/**
+	 * Event type denoting a {@link PushPayload}
+	 */
+	public static final String TYPE_PUSH = "PushEvent";
+
+	/**
+	 * Event type denoting a {@link TeamAddPayload}
+	 */
+	public static final String TYPE_TEAM_ADD = "TeamAddEvent";
+
+	/**
+	 * Event type denoting a {@link WatchPayload}
+	 */
+	public static final String TYPE_WATCH = "WatchEvent";
+
 	private static final long serialVersionUID = 3633702964380402233L;
 
 	/**
