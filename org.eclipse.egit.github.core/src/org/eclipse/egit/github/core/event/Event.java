@@ -94,6 +94,11 @@ public class Event implements Serializable {
 	public static final String TYPE_PULL_REQUEST = "PullRequestEvent";
 
 	/**
+	 * Event type denoting a {@link PullRequestReviewCommentPayload}
+	 */
+	public static final String TYPE_PULL_REQUEST_REVIEW_COMMENT = "PullRequestReviewCommentEvent";
+
+	/**
 	 * Event type denoting a {@link PushPayload}
 	 */
 	public static final String TYPE_PUSH = "PushEvent";

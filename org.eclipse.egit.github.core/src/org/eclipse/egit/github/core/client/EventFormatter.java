@@ -24,6 +24,7 @@ import static org.eclipse.egit.github.core.event.Event.TYPE_ISSUE_COMMENT;
 import static org.eclipse.egit.github.core.event.Event.TYPE_MEMBER;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PUBLIC;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PULL_REQUEST;
+import static org.eclipse.egit.github.core.event.Event.TYPE_PULL_REQUEST_REVIEW_COMMENT;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PUSH;
 import static org.eclipse.egit.github.core.event.Event.TYPE_TEAM_ADD;
 import static org.eclipse.egit.github.core.event.Event.TYPE_WATCH;
@@ -52,6 +53,7 @@ import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PublicPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
+import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.event.TeamAddPayload;
 import org.eclipse.egit.github.core.event.WatchPayload;
@@ -96,6 +98,8 @@ public class EventFormatter {
 				clazz = PublicPayload.class;
 			else if (TYPE_PULL_REQUEST.equals(type))
 				clazz = PullRequestPayload.class;
+			else if (TYPE_PULL_REQUEST_REVIEW_COMMENT.equals(type))
+				clazz = PullRequestReviewCommentPayload.class;
 			else if (TYPE_PUSH.equals(type))
 				clazz = PushPayload.class;
 			else if (TYPE_TEAM_ADD.equals(type))
