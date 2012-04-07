@@ -174,6 +174,8 @@ public class BuildsUiInternal {
 
 	public static final String PREF_AUTO_REFRESH_INTERVAL = "refresh.interval"; //$NON-NLS-1$
 
+	public static final String PREF_REFRESH_ON_FOCUS = "refresh.onfocus"; //$NON-NLS-1$
+
 	public static final String PREF_SHOW_TEST_FAILURES_ONLY = "editor.testResults.failuresOnly"; //$NON-NLS-1$
 
 	public static IBuildServer createServer(String connectorKind, RepositoryLocation location) {

@@ -583,7 +583,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	@Override
 	public void setFocus() {
 		getViewer().getControl().setFocus();
-		if (BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED)) {
+		if (BuildsUiPlugin.getDefault().getPreferenceStore().getBoolean(BuildsUiInternal.PREF_REFRESH_ON_FOCUS)) {
 			RefreshOperation operation = BuildsUiInternal.getFactory().getRefreshOperation();
 			operation.addFlag(OperationFlag.BACKGROUND);
 			operation.execute();

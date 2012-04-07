@@ -29,6 +29,7 @@ public class BuildsPreferencesInitializer extends AbstractPreferenceInitializer 
 		preferencesStore.setDefault(BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED, false);
 		preferencesStore.setDefault(BuildsUiInternal.PREF_AUTO_REFRESH_INTERVAL,
 				BuildsUiInternal.DEFAULT_REFRESH_INTERVAL);
+		preferencesStore.setDefault(BuildsUiInternal.PREF_REFRESH_ON_FOCUS, true);
 	}
 
 }
