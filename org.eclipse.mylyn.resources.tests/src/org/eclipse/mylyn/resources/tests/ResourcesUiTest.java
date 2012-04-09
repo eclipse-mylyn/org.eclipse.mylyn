@@ -7,13 +7,17 @@
  *
  * Contributors:
  *     Manuel Doninger - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -21,8 +25,13 @@ import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
+import org.eclipse.mylyn.resources.ui.ResourcesUi;
 
-public class ResourceStructureBridgeTest extends AbstractResourceContextTest {
+/**
+ * @author Manuel Doninger
+ * @author Steffen Pingel
+ */
+public class ResourcesUiTest extends AbstractResourceContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
@@ -37,23 +46,31 @@ public class ResourceStructureBridgeTest extends AbstractResourceContextTest {
 				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
-	public void testGetProjectsInActiveContext() throws CoreException {
-		assertEquals(0, structureBridge.getProjectsInActiveContext().size());
+	public void testGetProjects() throws CoreException {
+		Set<IProject> projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
+		assertEquals(Collections.emptySet(), projects);
+
 		IFile testfile1 = project.getProject().getFile("testfile1");
 		testfile1.create(null, true, null);
 		IFile testfile2 = project.getProject().getFile("testfile2");
 		testfile2.create(null, true, null);
-		assertEquals(1, structureBridge.getProjectsInActiveContext().size());
+
+		projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
+		assertEquals(Collections.singleton(project.getProject()), projects);
 	}
 
-	public void testGetProjectsInActiveContextWithInvalidProject() throws CoreException, InvocationTargetException,
+	public void testGetProjectsInWithInvalidProject() throws CoreException, InvocationTargetException,
 			InterruptedException {
-		assertEquals(0, structureBridge.getProjectsInActiveContext().size());
+		Set<IProject> projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
+		assertEquals(Collections.emptySet(), projects);
+
 		IFile testfile1 = project.getProject().getFile("testfile1");
 		testfile1.create(null, true, null);
 		IFile testfile2 = project.getProject().getFile("testfile2");
 		testfile2.create(null, true, null);
-		assertEquals(1, structureBridge.getProjectsInActiveContext().size());
+		projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
+		assertEquals(Collections.singleton(project.getProject()), projects);
+
 		TestProject project2 = new TestProject(this.getClass().getName() + "Invalid");
 		IFile testfile3 = project2.getProject().getFile("testfile1");
 		testfile3.create(null, true, null);
@@ -61,6 +78,8 @@ public class ResourceStructureBridgeTest extends AbstractResourceContextTest {
 		testfile3.delete(true, null);
 		project2.getProject().delete(true, null);
 		ContextCore.getContextManager().setContextCapturePaused(false);
-		assertEquals(1, structureBridge.getProjectsInActiveContext().size());
+		projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
+		assertEquals(Collections.singleton(project.getProject()), projects);
 	}
+
 }
