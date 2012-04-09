@@ -10,45 +10,65 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.tests;
 
+import static org.eclipse.egit.github.core.event.Event.TYPE_FOLLOW;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import org.eclipse.egit.github.core.client.EventFormatter;
+import org.eclipse.egit.github.core.client.GsonUtils;
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventPayload;
+import org.eclipse.egit.github.core.event.FollowPayload;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link EventFormatter} and subclasses
+ * Unit tests of {@link EventFormatter}
  */
 public class EventFormatterTest {
 
 	/**
-	 * Create instance of EventFormatter
+	 * Follow event payload returned as {@link FollowPayload}
 	 */
 	@Test
-	public void createEventFormatterInstance() {
-		EventFormatter formatter = new EventFormatter();
-		assertNotNull(formatter.getEventCreator());
-		assertNotNull(formatter.getPayloadDeserializer());
+	public void followPayload() {
+		Event event = GsonUtils.fromJson("{\"type\":\"" + TYPE_FOLLOW
+				+ "\",\"payload\":{}}", Event.class);
+		assertNotNull(event);
+		assertNotNull(event.getPayload());
+		assertEquals(FollowPayload.class, event.getPayload().getClass());
 	}
 
 	/**
-	 * Create instance of Event
-	 */
-	@Test
-	public void createEventInstance() {
-		EventFormatter formatter = new EventFormatter();
-		assertNotNull(formatter.getEventCreator().createInstance(null));
-	}
-
-	/**
-	 * Unknown event payload returned as EventPayload
+	 * Unknown event payload returned as {@link EventPayload}
 	 */
 	@Test
 	public void unknownPayload() {
-		EventFormatter formatter = new EventFormatter();
-		formatter.getEventCreator().createInstance(null);
-		EventPayload payload = formatter.getPayloadDeserializer().deserialize(null, null, null);
-		assertTrue(payload instanceof EventPayload);
+		Event event = GsonUtils.fromJson(
+				"{\"type\":\"NotAnEventType\",\"payload\":{}}", Event.class);
+		assertNotNull(event);
+		assertNotNull(event.getPayload());
+		assertEquals(EventPayload.class, event.getPayload().getClass());
+	}
+
+	/**
+	 * Event with missing type has payload returned as {@link EventPayload}
+	 */
+	@Test
+	public void missingType() {
+		Event event = GsonUtils.fromJson("{\"payload\":{}}", Event.class);
+		assertNotNull(event);
+		assertNotNull(event.getPayload());
+		assertEquals(EventPayload.class, event.getPayload().getClass());
+	}
+
+	/**
+	 * Missing payload
+	 */
+	@Test
+	public void missingPayload() {
+		Event event = GsonUtils.fromJson("{}", Event.class);
+		assertNotNull(event);
+		assertNull(event.getPayload());
 	}
 }
