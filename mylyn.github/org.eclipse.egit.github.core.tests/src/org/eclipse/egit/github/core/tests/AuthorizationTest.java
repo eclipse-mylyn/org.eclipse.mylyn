@@ -34,6 +34,8 @@ public class AuthorizationTest {
 		assertNull(auth.getApp());
 		assertNull(auth.getCreatedAt());
 		assertEquals(0, auth.getId());
+		assertNull(auth.getNote());
+		assertNull(auth.getNoteUrl());
 		assertNull(auth.getScopes());
 		assertNull(auth.getToken());
 		assertNull(auth.getUpdatedAt());
@@ -51,6 +53,8 @@ public class AuthorizationTest {
 		assertEquals(new Date(2500), auth.setCreatedAt(new Date(2500))
 				.getCreatedAt());
 		assertEquals(123, auth.setId(123).getId());
+		assertEquals("note", auth.setNote("note").getNote());
+		assertEquals("noteUrl", auth.setNoteUrl("noteUrl").getNoteUrl());
 		assertEquals(Collections.singletonList("repo"),
 				auth.setScopes(Collections.singletonList("repo")).getScopes());
 		assertEquals("token", auth.setToken("token").getToken());
