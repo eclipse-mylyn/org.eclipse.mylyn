@@ -184,7 +184,7 @@ public class ArtifactsPart extends AbstractBuildEditorPart {
 				if (item instanceof IArtifact) {
 					IArtifact artifact = (IArtifact) item;
 					if (artifact.getUrl() != null) {
-						BrowserUtil.openUrl(artifact.getUrl());
+						BrowserUtil.openUrl(artifact.getUrl(), BrowserUtil.NO_RICH_EDITOR);
 					}
 				}
 			}
