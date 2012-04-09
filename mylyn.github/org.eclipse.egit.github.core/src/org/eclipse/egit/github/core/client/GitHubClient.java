@@ -379,7 +379,10 @@ public class GitHubClient {
 		try {
 			return gson.toJson(object);
 		} catch (JsonParseException jpe) {
-			throw new IOException(jpe.getMessage());
+			IOException ioe = new IOException(
+					"Parse exception converting object to JSON"); //$NON-NLS-1$
+			ioe.initCause(jpe);
+			throw ioe;
 		}
 	}
 
@@ -398,7 +401,10 @@ public class GitHubClient {
 		try {
 			return gson.fromJson(reader, type);
 		} catch (JsonParseException jpe) {
-			throw new IOException(jpe.getMessage());
+			IOException ioe = new IOException(
+					"Parse exception converting JSON to object"); //$NON-NLS-1$
+			ioe.initCause(jpe);
+			throw ioe;
 		} finally {
 			try {
 				reader.close();
