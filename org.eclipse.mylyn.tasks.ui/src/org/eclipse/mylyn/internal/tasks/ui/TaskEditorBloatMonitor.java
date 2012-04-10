@@ -43,7 +43,8 @@ public class TaskEditorBloatMonitor {
 		if (totalTaskEditors > MAX_EDITORS) {
 			for (IEditorReference editorReference : page.getEditorReferences()) {
 				try {
-					if (TaskEditor.ID_EDITOR.equals(editorReference.getId())) {
+					if (editorPartOpened != editorReference.getPart(false)
+							&& TaskEditor.ID_EDITOR.equals(editorReference.getId())) {
 						TaskEditorInput taskEditorInput = (TaskEditorInput) editorReference.getEditorInput();
 						TaskEditor taskEditor = (TaskEditor) editorReference.getEditor(false);
 						if (taskEditor == null) {
