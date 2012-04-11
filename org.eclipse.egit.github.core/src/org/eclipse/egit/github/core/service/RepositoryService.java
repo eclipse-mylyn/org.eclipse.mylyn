@@ -772,10 +772,9 @@ public class RepositoryService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_FORKS);
-		Map<String, String> params = null;
 		if (organization != null)
-			params = Collections.singletonMap("org", organization); //$NON-NLS-1$
-		return client.post(uri.toString(), params, Repository.class);
+			uri.append("?org=").append(organization);
+		return client.post(uri.toString(), null, Repository.class);
 	}
 
 	/**

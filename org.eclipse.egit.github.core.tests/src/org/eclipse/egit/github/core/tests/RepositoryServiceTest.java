@@ -268,8 +268,7 @@ public class RepositoryServiceTest {
 	@Test
 	public void forkRepositoryToOrg() throws IOException {
 		service.forkRepository(repo, "abc");
-		verify(client).post("/repos/o/n/forks",
-				Collections.singletonMap("org", "abc"), Repository.class);
+		verify(client).post("/repos/o/n/forks?org=abc", null, Repository.class);
 	}
 
 	/**
