@@ -560,23 +560,25 @@ public class GitHubClient {
 	protected void sendParams(HttpURLConnection request, Object params)
 			throws IOException {
 		request.setDoOutput(true);
-		request.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON
-				+ "; charset=" + CHARSET_UTF8); //$NON-NLS-1$
-		byte[] data = toJson(params).getBytes(CHARSET_UTF8);
-		request.setFixedLengthStreamingMode(data.length);
-		BufferedOutputStream output = new BufferedOutputStream(
-				request.getOutputStream(), bufferSize);
-		try {
-			output.write(data);
-		} finally {
-			output.close();
-		}
+		if (params != null) {
+			request.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON
+					+ "; charset=" + CHARSET_UTF8); //$NON-NLS-1$
+			byte[] data = toJson(params).getBytes(CHARSET_UTF8);
+			request.setFixedLengthStreamingMode(data.length);
+			BufferedOutputStream output = new BufferedOutputStream(
+					request.getOutputStream(), bufferSize);
+			try {
+				output.write(data);
+			} finally {
+				output.close();
+			}
+		} else
+			request.setFixedLengthStreamingMode(0);
 	}
 
 	private <V> V sendJson(final HttpURLConnection request,
 			final Object params, final Type type) throws IOException {
-		if (params != null)
-			sendParams(request, params);
+		sendParams(request, params);
 		final int code = request.getResponseCode();
 		if (isOk(code))
 			if (type != null)
@@ -693,8 +695,7 @@ public class GitHubClient {
 	public void delete(final String uri, final Object params)
 			throws IOException {
 		HttpURLConnection request = createDelete(uri);
-		if (params != null)
-			sendParams(request, params);
+		sendParams(request, params);
 		final int code = request.getResponseCode();
 		if (!isEmpty(code))
 			throw new RequestException(parseError(getStream(request)), code);
