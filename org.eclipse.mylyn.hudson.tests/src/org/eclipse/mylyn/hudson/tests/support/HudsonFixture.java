@@ -39,7 +39,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 			"2.2.0", Type.HUDSON, "REST");
 
 	private static final HudsonFixture HUDSON_3_0 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-3.0"),
-			"3.0.0-M1", Type.HUDSON, "REST");
+			"3.0.0-SNAPSHOT", Type.HUDSON, "REST");
 
 	private static final HudsonFixture JENKINS_1_427 = new HudsonFixture(
 			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.427", Type.JENKINS, "REST");
