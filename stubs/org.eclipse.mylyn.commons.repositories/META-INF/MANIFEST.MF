@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories;singleton:=true
-Bundle-Version: 0.9.0.v20120225-0100
+Bundle-Version: 0.9.1.v20120412-0100
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.commons.repositories;x-internal:=true,
