@@ -105,6 +105,7 @@ public class PopupNotificationSink extends NotificationSink {
 	private NotificationPopup popup;
 
 	public PopupNotificationSink() {
+		openJob.setSystem(runSystem);
 	}
 
 	private void cleanNotified() {
@@ -140,7 +141,6 @@ public class PopupNotificationSink extends NotificationSink {
 				// ignore
 			}
 		}
-		openJob.setSystem(runSystem);
 		openJob.schedule(DELAY_OPEN);
 	}
 
