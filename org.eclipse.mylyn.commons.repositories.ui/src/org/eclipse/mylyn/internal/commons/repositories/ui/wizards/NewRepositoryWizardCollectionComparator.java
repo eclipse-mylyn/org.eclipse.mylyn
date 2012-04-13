@@ -22,6 +22,7 @@ import org.eclipse.ui.internal.registry.WizardsRegistryReader;
  * considered by this sorter, so a < B < c. NOTE one exception to the above: an element with the system's reserved name
  * for base Wizards will always be sorted such that it will ultimately be placed at the beginning of the sorted result.
  */
+@SuppressWarnings("restriction")
 class NewWizardCollectionComparator extends ViewerComparator {
 	/**
 	 * Static instance of this class.

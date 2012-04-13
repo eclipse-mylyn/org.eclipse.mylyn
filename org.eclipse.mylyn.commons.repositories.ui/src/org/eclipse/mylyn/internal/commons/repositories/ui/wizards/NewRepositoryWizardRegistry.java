@@ -21,6 +21,7 @@ import org.eclipse.ui.internal.wizards.NewWizardRegistry;
  * 
  * @author Steffen Pingel
  */
+@SuppressWarnings("restriction")
 public final class NewRepositoryWizardRegistry extends AbstractExtensionWizardRegistry {
 
 	private static NewRepositoryWizardRegistry singleton;

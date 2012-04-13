@@ -65,6 +65,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 /**
  * New wizard selection tab that allows the user to select a registered 'New' wizard to be launched.
  */
+@SuppressWarnings("restriction")
 class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	// id constants

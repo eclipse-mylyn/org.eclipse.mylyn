@@ -29,6 +29,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * user to perform these tasks. Temporarily has two inner pages. The new format page is used if the system is currently
  * aware of activity categories.
  */
+@SuppressWarnings("restriction")
 class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	private final IWizardCategory wizardCategories;

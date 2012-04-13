@@ -26,6 +26,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * The new wizard is responsible for allowing the user to choose which new (nested) wizard to run. The set of available
  * new wizards comes from the new extension point.
  */
+@SuppressWarnings("restriction")
 public class NewRepositoryWizard extends Wizard {
 
 	private static final String CATEGORY_SEPARATOR = "/"; //$NON-NLS-1$
@@ -81,8 +82,7 @@ public class NewRepositoryWizard extends Wizard {
 	 */
 	private IWizardCategory getChildWithID(IWizardCategory parent, String id) {
 		IWizardCategory[] children = parent.getCategories();
-		for (int i = 0; i < children.length; ++i) {
-			IWizardCategory currentChild = children[i];
+		for (IWizardCategory currentChild : children) {
 			if (currentChild.getId().equals(id)) {
 				return currentChild;
 			}
