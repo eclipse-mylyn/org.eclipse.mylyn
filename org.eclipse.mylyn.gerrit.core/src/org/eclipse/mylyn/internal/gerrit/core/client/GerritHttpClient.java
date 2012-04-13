@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -114,6 +115,10 @@ public class GerritHttpClient {
 
 	private volatile Cookie xsrfCookie;
 
+	private volatile String xsrfKey;
+
+	private volatile boolean obtainedXsrfKey;
+
 	public GerritHttpClient(AbstractWebLocation location) {
 		Assert.isNotNull(location, "Location must be not null."); //$NON-NLS-1$
 		this.location = location;
@@ -129,7 +134,15 @@ public class GerritHttpClient {
 	}
 
 	public synchronized String getXsrfKey() {
+		if (xsrfKey != null) {
+			return xsrfKey;
+		}
 		return (xsrfCookie != null) ? xsrfCookie.getValue() : null;
+	}
+
+	public synchronized void setXsrfKey(String xsrfKey) {
+		this.xsrfKey = xsrfKey;
+		this.obtainedXsrfKey = true;
 	}
 
 	/**
@@ -158,6 +171,10 @@ public class GerritHttpClient {
 				if (openIdProvider != null || credentials != null) {
 					authenticate(openIdProvider, monitor);
 				}
+			}
+
+			if (!obtainedXsrfKey) {
+				updateXsrfKey(monitor);
 			}
 
 			HttpMethodBase method = request.createMethod();
@@ -193,6 +210,28 @@ public class GerritHttpClient {
 		}
 
 		throw new GerritLoginException();
+	}
+
+	private void updateXsrfKey(IProgressMonitor monitor) throws IOException {
+		String repositoryUrl = getUrl() + "/"; //$NON-NLS-1$
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl));
+		method.setFollowRedirects(false);
+		int code;
+		try {
+			code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			if (code == HttpStatus.SC_OK) {
+				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+				try {
+					GerritHtmlProcessor processor = new GerritHtmlProcessor();
+					processor.parse(in, method.getResponseCharSet());
+					setXsrfKey(processor.getXsrfKey());
+				} finally {
+					in.close();
+				}
+			}
+		} finally {
+			WebUtil.releaseConnection(method, monitor);
+		}
 	}
 
 	GetMethod getRequest(String serviceUri, IProgressMonitor monitor) throws IOException {
@@ -525,6 +564,9 @@ public class GerritHttpClient {
 		synchronized (this) {
 			oldCookie = this.xsrfCookie;
 			this.xsrfCookie = xsrfCookie;
+			if (xsrfCookie == null) {
+				this.obtainedXsrfKey = false;
+			}
 		}
 		if (xsrfCookie != null) {
 			if (!xsrfCookie.equals(oldCookie)) {

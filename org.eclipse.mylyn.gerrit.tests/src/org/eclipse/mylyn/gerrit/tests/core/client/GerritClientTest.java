@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -104,14 +105,12 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testInvalidXrsfKey() throws Exception {
-		if (!GerritFixture.current().canAuthenticate()) {
-			return; // skip
-		}
+		Assume.assumeTrue(GerritFixture.current().canAuthenticate());
 
 		WebLocation location = harness.location();
 		GerritAuthenticationState authState = new GerritAuthenticationState();
 		authState.setCookie(new Cookie(WebUtil.getHost(location.getUrl()), "xrsfKey", "invalid"));
-		client = new GerritClient(location, null, authState);
+		client = new GerritClient(location, null, authState, "invalid");
 		client.getAccount(null);
 	}
 

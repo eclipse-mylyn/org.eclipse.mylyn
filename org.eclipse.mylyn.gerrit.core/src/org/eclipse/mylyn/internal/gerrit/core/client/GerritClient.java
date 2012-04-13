@@ -14,35 +14,22 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.text.html.HTML.Tag;
-
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.commons.core.HtmlTag;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
@@ -182,20 +169,6 @@ public class GerritClient {
 		}
 	}
 
-	private static String getText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
-		StringBuilder sb = new StringBuilder();
-		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-			if (token.getType() == Token.TEXT) {
-				sb.append(token.toString());
-			} else if (token.getType() == Token.COMMENT) {
-				// ignore
-			} else {
-				break;
-			}
-		}
-		return StringEscapeUtils.unescapeHtml(sb.toString());
-	}
-
 	private final GerritHttpClient client;
 
 	private volatile GerritConfiguration config;
@@ -255,10 +228,15 @@ public class GerritClient {
 	private volatile boolean configRefreshed;
 
 	public GerritClient(AbstractWebLocation location) {
-		this(location, null, null);
+		this(location, null, null, null);
 	}
 
 	public GerritClient(AbstractWebLocation location, GerritConfiguration config, GerritAuthenticationState authState) {
+		this(location, config, authState, null);
+	}
+
+	public GerritClient(AbstractWebLocation location, GerritConfiguration config, GerritAuthenticationState authState,
+			String xsrfKey) {
 		this.client = new GerritHttpClient(location) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
@@ -269,6 +247,9 @@ public class GerritClient {
 		};
 		if (authState != null) {
 			client.setXsrfCookie(authState.getCookie());
+		}
+		if (xsrfKey != null) {
+			client.setXsrfKey(xsrfKey);
 		}
 		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
 		this.config = config;
@@ -591,31 +572,12 @@ public class GerritClient {
 				public GerritConfigX process(HttpMethodBase method) throws IOException {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
-						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
-								method.getResponseCharSet()));
-						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-						try {
-							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-								if (token.getType() == Token.TAG) {
-									HtmlTag tag = (HtmlTag) token.getValue();
-									if (tag.getTagType() == Tag.SCRIPT) {
-										String text = getText(tokenizer);
-										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
-										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-										GerritConfigX gerritConfig = parseConfig(text);
-										if (gerritConfig != null) {
-											return gerritConfig;
-										}
-									}
-								}
-							}
-						} catch (ParseException e) {
-							throw new IOException("Error reading url"); //$NON-NLS-1$
-						}
+						GerritHtmlProcessor processor = new GerritHtmlProcessor();
+						processor.parse(in, method.getResponseCharSet());
+						return processor.getConfig();
 					} finally {
 						in.close();
 					}
-					return null;
 				}
 			}, monitor);
 
@@ -822,32 +784,6 @@ public class GerritClient {
 
 	public boolean isAnonymous() {
 		return client.isAnonymous();
-	}
-
-	/**
-	 * Parses the configuration from <code>text</code>.
-	 */
-	private GerritConfigX parseConfig(String text) {
-		String prefix = "var gerrit_hostpagedata={\"config\":"; //$NON-NLS-1$
-		String[] tokens = text.split("};"); //$NON-NLS-1$
-		for (String token : tokens) {
-			if (token.startsWith(prefix)) {
-				token = token.substring(prefix.length());
-				return gerritConfigFromString(token);
-			}
-		}
-		return null;
-	}
-
-	private static GerritConfigX gerritConfigFromString(String token) {
-		try {
-			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritConfigX.class);
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to deserialize Gerrit configuration: '" + token + "'", e));
-			return null;
-		}
 	}
 
 	protected void configurationChanged(GerritConfiguration config) {
