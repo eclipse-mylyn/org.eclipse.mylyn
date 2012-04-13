@@ -31,6 +31,8 @@ public class HudsonHarness {
 
 	private static final String PLAN_WHITESPACE = "test-white space";
 
+	private static final String PLAN_GIT = "test-git";
+
 	private RestfulHudsonClient client;
 
 	private final HudsonFixture fixture;
@@ -82,6 +84,10 @@ public class HudsonHarness {
 
 	public String getPlanWhitespace() {
 		return PLAN_WHITESPACE;
+	}
+
+	public String getPlanGit() {
+		return PLAN_GIT;
 	}
 
 }

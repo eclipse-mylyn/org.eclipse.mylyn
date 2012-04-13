@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,13 +67,16 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		}
 
 		HttpPost request = createPostRequest(getClient().getLocation().getUrl() + "/j_acegi_security_check"); //$NON-NLS-1$
-		HudsonLoginForm form = new HudsonLoginForm();
-		form.j_username = credentials.getUserName();
-		form.j_password = credentials.getPassword();
-		form.from = ""; //$NON-NLS-1$
-		request.setEntity(form.createEntity());
-		HttpResponse response = getClient().execute(request, monitor);
+		HttpResponse response = executeAuthenticationRequest(monitor, credentials, request);
 		try {
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+				HttpUtil.release(request, response, monitor);
+
+				// re-try at new location used by Hudson 3.0
+				request = createPostRequest(getClient().getLocation().getUrl() + "/j_spring_security_check"); //$NON-NLS-1$
+				response = executeAuthenticationRequest(monitor, credentials, request);
+			}
+
 			// check for proxy authentication request
 			validate(response, monitor);
 
@@ -100,6 +104,17 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		}
 
 		updateCrumb(monitor);
+	}
+
+	public HttpResponse executeAuthenticationRequest(IOperationMonitor monitor, UserCredentials credentials,
+			HttpPost request) throws UnsupportedEncodingException, IOException {
+		HudsonLoginForm form = new HudsonLoginForm();
+		form.j_username = credentials.getUserName();
+		form.j_password = credentials.getPassword();
+		form.from = ""; //$NON-NLS-1$
+		request.setEntity(form.createEntity());
+		HttpResponse response = getClient().execute(request, monitor);
+		return response;
 	}
 
 	private void updateCrumb(IOperationMonitor monitor) throws IOException {

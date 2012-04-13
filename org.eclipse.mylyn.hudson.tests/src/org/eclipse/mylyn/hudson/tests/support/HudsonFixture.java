@@ -39,7 +39,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 			"2.2.0", Type.HUDSON, "REST");
 
 	private static final HudsonFixture HUDSON_3_0 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-3.0"),
-			"3.0.0-M0", Type.HUDSON, "REST");
+			"3.0.0-M1", Type.HUDSON, "REST");
 
 	private static final HudsonFixture JENKINS_1_427 = new HudsonFixture(
 			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.427", Type.JENKINS, "REST");
@@ -54,7 +54,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_3_0, HUDSON_2_1_SECURE };
 
-	public static final HudsonFixture DEFAULT = HUDSON_2_1;
+	public static final HudsonFixture DEFAULT = HUDSON_2_2;
 
 	public static HudsonFixture current() {
 		return current(DEFAULT);
@@ -113,7 +113,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 
 	// XXX fix server setup to support authentication
 	public boolean canAuthenticate() {
-		return this != HUDSON_3_0;
+		return true;
 	}
 
 }

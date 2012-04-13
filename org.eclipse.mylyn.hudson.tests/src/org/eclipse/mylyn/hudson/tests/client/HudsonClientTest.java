@@ -123,6 +123,16 @@ public class HudsonClientTest extends TestCase {
 		}
 	}
 
+	public void testGetJobGit() throws Exception {
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanGit()), null);
+		assertEquals(1, jobs.size());
+
+		HudsonModelJob job = jobs.get(0);
+		HudsonModelBuild build = client.getBuild(job, BuildId.LAST.getBuild(), null);
+		assertNotNull(build.getAction());
+	}
+
 	public void testRunBuildFailing() throws Exception {
 		if (!HudsonFixture.current().canAuthenticate()) {
 			// ignore
