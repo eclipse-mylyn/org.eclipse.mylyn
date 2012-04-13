@@ -13,6 +13,10 @@ package org.eclipse.mylyn.internal.commons.ui.team;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
+ */
+@Deprecated
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.ui.team.messages"; //$NON-NLS-1$
 

@@ -19,7 +19,9 @@ import org.eclipse.mylyn.commons.identity.IProfile;
 /**
  * @author Steffen Pingel
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public final class Profile implements IProfile, Serializable {
 
 	private static final long serialVersionUID = -1079729573911113939L;

@@ -21,7 +21,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class NewRepositoryHandler extends AbstractHandler implements IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {

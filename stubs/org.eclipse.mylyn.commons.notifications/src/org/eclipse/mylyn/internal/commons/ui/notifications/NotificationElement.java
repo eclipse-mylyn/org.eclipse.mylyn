@@ -21,7 +21,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationElement {
 
 	protected final IConfigurationElement element;

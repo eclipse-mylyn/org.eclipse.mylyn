@@ -25,7 +25,10 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 /**
  * The new wizard is responsible for allowing the user to choose which new (nested) wizard to run. The set of available
  * new wizards comes from the new extension point.
+ * 
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class NewRepositoryWizard extends Wizard {
 
 	private static final String CATEGORY_SEPARATOR = "/"; //$NON-NLS-1$

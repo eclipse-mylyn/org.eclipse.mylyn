@@ -20,7 +20,9 @@ import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class InMemoryCredentialsStore implements ICredentialsStore {
 
 	private final ConcurrentHashMap<String, Object> store;

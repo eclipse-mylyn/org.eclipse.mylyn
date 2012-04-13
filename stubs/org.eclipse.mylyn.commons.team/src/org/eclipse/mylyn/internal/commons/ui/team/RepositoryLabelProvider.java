@@ -19,7 +19,9 @@ import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class RepositoryLabelProvider extends LabelProvider {
 
 	@Override

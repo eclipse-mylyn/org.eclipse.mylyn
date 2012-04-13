@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class Account implements Serializable {
 
 	private static final long serialVersionUID = 3670630150657553390L;

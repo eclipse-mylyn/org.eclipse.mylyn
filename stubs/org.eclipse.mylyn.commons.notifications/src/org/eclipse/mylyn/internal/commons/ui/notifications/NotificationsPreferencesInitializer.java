@@ -16,7 +16,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationsPreferencesInitializer extends AbstractPreferenceInitializer {
 
 	public NotificationsPreferencesInitializer() {

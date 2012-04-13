@@ -34,7 +34,9 @@ import org.eclipse.core.runtime.jobs.Job;
  * Class that loads and stores gravatars.
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class GravatarStore implements Serializable, ISchedulingRule {
 
 	private boolean cacheEnabled;

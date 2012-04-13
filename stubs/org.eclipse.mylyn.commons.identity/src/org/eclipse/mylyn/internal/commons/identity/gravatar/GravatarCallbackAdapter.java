@@ -14,7 +14,9 @@ package org.eclipse.mylyn.internal.commons.identity.gravatar;
  * Base implementation of {@link IGravatarCallback}
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public abstract class GravatarCallbackAdapter implements IGravatarCallback {
 
 	/**

@@ -15,7 +15,9 @@ import org.eclipse.equinox.security.storage.StorageException;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public abstract class AuthenticationCredentials {
 
 	public abstract void save(ICredentialsStore store, String prefix) throws StorageException;

@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.PlatformObject;
  * Categories to group repositories of the same kind, e.g. Tasks, Builds or Reviews.
  * 
  * @author Robert Elves
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class RepositoryCategory extends PlatformObject {
 
 	private final String id;

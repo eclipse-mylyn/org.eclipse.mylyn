@@ -20,7 +20,9 @@ import java.util.concurrent.Future;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public interface IIdentity {
 
 	//	public static final String KIND_DEFAULT = "org.eclipse.mylyn.commons.identity.default"; //$NON-NLS-1$

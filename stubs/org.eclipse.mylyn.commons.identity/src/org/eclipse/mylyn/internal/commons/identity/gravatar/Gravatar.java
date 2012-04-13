@@ -19,7 +19,9 @@ import org.eclipse.core.runtime.Assert;
  * Gravatar class containing id and image data.
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class Gravatar implements Serializable {
 
 	/**

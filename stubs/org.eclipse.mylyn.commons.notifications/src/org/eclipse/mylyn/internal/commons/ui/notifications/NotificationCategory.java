@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationCategory extends NotificationElement {
 
 	private final List<NotificationEvent> events;

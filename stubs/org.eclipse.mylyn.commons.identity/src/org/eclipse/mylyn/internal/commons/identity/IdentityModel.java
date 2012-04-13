@@ -31,7 +31,9 @@ import org.eclipse.mylyn.internal.commons.identity.gravatar.GravatarConnector;
 /**
  * @author Steffen Pingel
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public final class IdentityModel implements Serializable {
 
 	private transient final List<IdentityConnector> connectors;

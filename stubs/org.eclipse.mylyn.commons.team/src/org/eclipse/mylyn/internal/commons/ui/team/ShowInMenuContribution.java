@@ -20,7 +20,9 @@ import org.eclipse.ui.actions.ContributionItemFactory;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class ShowInMenuContribution extends ContributionItem {
 
 	private IContributionItem item;

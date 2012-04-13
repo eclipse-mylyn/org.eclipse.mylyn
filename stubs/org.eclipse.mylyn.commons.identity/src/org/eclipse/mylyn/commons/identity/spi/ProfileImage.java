@@ -18,7 +18,9 @@ import org.eclipse.mylyn.commons.identity.IProfileImage;
 /**
  * @author Steffen Pingel
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public final class ProfileImage implements IProfileImage, Serializable {
 
 	private static final long serialVersionUID = 8211724823497362719L;

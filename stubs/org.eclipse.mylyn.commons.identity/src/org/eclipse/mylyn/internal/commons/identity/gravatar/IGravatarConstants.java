@@ -17,7 +17,9 @@ import java.util.regex.Pattern;
  * Gravatar constants.
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public interface IGravatarConstants {
 
 	/**

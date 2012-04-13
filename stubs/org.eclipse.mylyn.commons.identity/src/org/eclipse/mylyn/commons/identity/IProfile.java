@@ -16,7 +16,9 @@ package org.eclipse.mylyn.commons.identity;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public interface IProfile {
 
 	public abstract String getCity();

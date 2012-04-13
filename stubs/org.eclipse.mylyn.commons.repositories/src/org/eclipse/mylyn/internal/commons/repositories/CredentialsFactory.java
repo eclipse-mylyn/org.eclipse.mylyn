@@ -20,7 +20,9 @@ import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
  * Simple factory that creates {@link AuthenticationCredentials} objects.
  * 
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class CredentialsFactory {
 
 	public static <T extends AuthenticationCredentials> T create(Class<T> credentialsKind,

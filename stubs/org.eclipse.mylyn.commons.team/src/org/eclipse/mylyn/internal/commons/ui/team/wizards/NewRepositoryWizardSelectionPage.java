@@ -28,7 +28,10 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * a solution or projects to be retrieved from an available server. This page contains two visual tabs that allow the
  * user to perform these tasks. Temporarily has two inner pages. The new format page is used if the system is currently
  * aware of activity categories.
+ * 
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	private final IWizardCategory wizardCategories;

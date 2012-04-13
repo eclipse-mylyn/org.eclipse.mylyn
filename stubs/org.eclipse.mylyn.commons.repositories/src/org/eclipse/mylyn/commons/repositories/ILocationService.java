@@ -24,7 +24,9 @@ import org.eclipse.mylyn.commons.repositories.auth.ICredentialsStore;
  * @author Steffen Pingel
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public interface ILocationService {
 
 	// FIXME replace with 3.5 proxy API

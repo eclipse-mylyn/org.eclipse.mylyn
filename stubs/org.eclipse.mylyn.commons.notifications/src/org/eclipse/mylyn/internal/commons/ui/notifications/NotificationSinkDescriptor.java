@@ -20,7 +20,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationSinkDescriptor extends NotificationElement {
 
 	private NotificationSink sink;

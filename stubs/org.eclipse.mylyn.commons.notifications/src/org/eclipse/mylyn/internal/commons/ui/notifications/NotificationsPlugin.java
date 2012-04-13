@@ -28,7 +28,9 @@ import org.osgi.framework.BundleContext;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationsPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.notifications"; //$NON-NLS-1$

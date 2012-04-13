@@ -20,7 +20,9 @@ import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
 /**
  * @author Robert Elves
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class EmptyRepositoryCategoriesFilter extends ViewerFilter {
 
 	public EmptyRepositoryCategoriesFilter() {

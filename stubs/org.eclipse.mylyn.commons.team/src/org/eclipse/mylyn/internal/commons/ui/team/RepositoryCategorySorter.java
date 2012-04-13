@@ -17,6 +17,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
 
+/**
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
+ */
+@Deprecated
 public class RepositoryCategorySorter extends ViewerSorter {
 
 	public RepositoryCategorySorter() {

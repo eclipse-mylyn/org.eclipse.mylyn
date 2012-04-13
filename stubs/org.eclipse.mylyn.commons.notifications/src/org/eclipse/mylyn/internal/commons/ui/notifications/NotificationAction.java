@@ -19,7 +19,9 @@ import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
  * that determine how the {@link NotificationSink} executes the action.
  * 
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationAction {
 
 	private boolean selected;

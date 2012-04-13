@@ -65,7 +65,10 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
  * New wizard selection tab that allows the user to select a registered 'New' wizard to be launched.
+ * 
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	// id constants

@@ -18,7 +18,9 @@ import org.eclipse.mylyn.commons.identity.IIdentity;
 /**
  * @author Steffen Pingel
  * @since 0.8
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public abstract class IdentityConnector {
 
 	public abstract ProfileImage getImage(IIdentity identity, int preferredWidth, int preferredHeight,

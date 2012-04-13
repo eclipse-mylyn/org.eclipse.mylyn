@@ -34,7 +34,9 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.ui</code> bundle instead
  */
+@Deprecated
 public class PopupNotificationSink extends NotificationSink {
 
 	private static final long DELAY_OPEN = 1 * 1000;

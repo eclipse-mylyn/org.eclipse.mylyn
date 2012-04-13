@@ -15,7 +15,9 @@ import org.eclipse.mylyn.internal.commons.ui.notifications.NotificationsPlugin;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public final class Notifications {
 
 	private Notifications() {

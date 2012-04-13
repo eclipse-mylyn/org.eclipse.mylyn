@@ -20,7 +20,9 @@ import org.eclipse.ui.internal.wizards.NewWizardRegistry;
  * Based on {@link NewWizardRegistry}.
  * 
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public final class NewRepositoryWizardRegistry extends AbstractExtensionWizardRegistry {
 
 	private static NewRepositoryWizardRegistry singleton;

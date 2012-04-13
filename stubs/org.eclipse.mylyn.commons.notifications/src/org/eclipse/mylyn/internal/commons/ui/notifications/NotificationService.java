@@ -30,7 +30,9 @@ import org.eclipse.mylyn.commons.ui.notifications.NotificationSinkEvent;
 /**
  * @author Steffen Pingel
  * @author Torkild U. Resheim
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationService implements INotificationService {
 
 	public NotificationService() {

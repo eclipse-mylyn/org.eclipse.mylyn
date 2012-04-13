@@ -13,6 +13,10 @@ package org.eclipse.mylyn.internal.commons.ui.notifications;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
+ */
+@Deprecated
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.commons.ui.notifications.messages"; //$NON-NLS-1$
 

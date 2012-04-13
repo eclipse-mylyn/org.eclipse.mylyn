@@ -20,7 +20,9 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class RepositoriesView extends CommonNavigator {
 
 	private final RepositoryCategory rootCategory;

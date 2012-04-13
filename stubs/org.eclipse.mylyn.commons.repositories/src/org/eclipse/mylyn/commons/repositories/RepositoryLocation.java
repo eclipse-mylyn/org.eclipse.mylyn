@@ -31,7 +31,9 @@ import org.eclipse.mylyn.internal.commons.repositories.LocationService;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class RepositoryLocation extends PlatformObject {
 
 	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$

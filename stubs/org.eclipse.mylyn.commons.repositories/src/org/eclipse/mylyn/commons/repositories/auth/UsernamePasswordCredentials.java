@@ -19,7 +19,9 @@ import org.eclipse.equinox.security.storage.StorageException;
  * @author Steffen Pingel
  * @since 2.2
  * @noextend This class is not intended to be subclassed by clients.
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class UsernamePasswordCredentials extends AuthenticationCredentials {
 
 	private final String userName;

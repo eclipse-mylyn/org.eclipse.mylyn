@@ -17,7 +17,9 @@ import java.util.List;
  * @author Steffen Pingel
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public interface INotificationService {
 
 	public void notify(List<? extends AbstractNotification> notifications);

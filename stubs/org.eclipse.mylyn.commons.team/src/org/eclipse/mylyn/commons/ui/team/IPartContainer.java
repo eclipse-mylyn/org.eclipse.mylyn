@@ -17,7 +17,9 @@ import org.eclipse.jface.operation.IRunnableContext;
  * @author Steffen Pingel
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public interface IPartContainer extends IRunnableContext {
 
 	public void setMessage(String message, int messageType);

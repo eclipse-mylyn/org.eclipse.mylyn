@@ -27,7 +27,9 @@ import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class GravatarConnector extends IdentityConnector {
 
 	public static final String KIND = "org.eclipse.mylyn.commons.identity.gravatar"; //$NON-NLS-1$

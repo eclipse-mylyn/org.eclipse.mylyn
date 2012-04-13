@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
 public class RepositoryWizardPage extends WizardPage implements IPartContainer, IAdaptable {
 

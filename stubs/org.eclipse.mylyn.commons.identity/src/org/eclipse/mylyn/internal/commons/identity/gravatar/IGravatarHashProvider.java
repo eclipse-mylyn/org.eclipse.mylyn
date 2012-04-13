@@ -15,7 +15,9 @@ package org.eclipse.mylyn.internal.commons.identity.gravatar;
  * Interface for providing a gravatar hash.
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public interface IGravatarHashProvider {
 
 	/**

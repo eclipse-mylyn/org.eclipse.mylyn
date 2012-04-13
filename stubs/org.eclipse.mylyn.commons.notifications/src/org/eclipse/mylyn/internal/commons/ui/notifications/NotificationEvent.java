@@ -27,7 +27,9 @@ import org.eclipse.mylyn.commons.ui.notifications.NotificationSink;
  * 
  * @author Steffen Pingel
  * @author Torkild U. Resheim
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationEvent extends NotificationElement {
 
 	private static final String EXTENSION_POINT_ID = "org.eclipse.mylyn.commons.notifications.notifications"; //$NON-NLS-1$

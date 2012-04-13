@@ -18,7 +18,9 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public abstract class AbstractNotification implements Comparable<AbstractNotification>, IAdaptable {
 
 	private final String eventId;

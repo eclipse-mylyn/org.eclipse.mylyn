@@ -24,7 +24,9 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 
 	private RepositoryLocationPart part;

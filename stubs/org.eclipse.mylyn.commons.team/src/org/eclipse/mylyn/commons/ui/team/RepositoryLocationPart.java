@@ -62,7 +62,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
 /**
  * @author Steffen Pingel
  * @since 3.5
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class RepositoryLocationPart {
 
 	public class UrlValidator implements IValidator {

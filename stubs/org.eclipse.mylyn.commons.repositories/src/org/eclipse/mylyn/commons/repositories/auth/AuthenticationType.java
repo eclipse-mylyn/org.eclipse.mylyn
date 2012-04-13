@@ -15,6 +15,7 @@ package org.eclipse.mylyn.commons.repositories.auth;
  * An enum of supported authentication types.
  * 
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
 public enum AuthenticationType {
 	/**

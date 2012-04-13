@@ -25,7 +25,9 @@ import org.eclipse.core.runtime.IAdaptable;
  * Gravatar utililites.
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public abstract class GravatarUtils {
 
 	private static String digest(String value) {

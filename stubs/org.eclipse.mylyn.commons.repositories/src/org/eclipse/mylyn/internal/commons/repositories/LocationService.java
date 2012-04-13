@@ -28,7 +28,9 @@ import org.eclipse.mylyn.commons.repositories.auth.UsernamePasswordCredentials;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public class LocationService implements ILocationService {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repository"; //$NON-NLS-1$

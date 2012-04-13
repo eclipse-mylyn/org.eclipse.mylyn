@@ -25,7 +25,9 @@ import org.eclipse.mylyn.commons.repositories.RepositoryLocation;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
  */
+@Deprecated
 public class RepositoryLocationValueProperty extends SimpleValueProperty {
 
 	private class PrivatePropertyChangeListener extends NativePropertyListener implements PropertyChangeListener {

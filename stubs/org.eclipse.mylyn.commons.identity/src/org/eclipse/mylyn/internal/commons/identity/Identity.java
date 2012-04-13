@@ -41,7 +41,9 @@ import org.eclipse.mylyn.commons.identity.spi.ProfileImage;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class Identity implements IIdentity {
 
 	private static abstract class FutureJob<T> extends Job implements Future<T> {

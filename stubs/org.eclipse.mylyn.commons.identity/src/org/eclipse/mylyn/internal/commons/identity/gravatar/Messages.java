@@ -17,7 +17,9 @@ import org.eclipse.osgi.util.NLS;
  * NLS
  * 
  * @author Kevin Sawicki (kevin@github.com)
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.identity.ui</code> bundle instead
  */
+@Deprecated
 public class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.commons.identity.gravatar.messages"; //$NON-NLS-1$

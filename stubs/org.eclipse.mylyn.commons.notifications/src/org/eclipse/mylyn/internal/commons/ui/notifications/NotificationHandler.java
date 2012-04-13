@@ -17,7 +17,9 @@ import java.util.List;
  * Manages actions that are triggered when a {@link NotificationEvent} occurs.
  * 
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.notifications.core</code> bundle instead
  */
+@Deprecated
 public class NotificationHandler {
 
 	private final List<NotificationAction> actions;

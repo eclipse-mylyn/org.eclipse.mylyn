@@ -18,6 +18,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.repositories.RepositoryCategory;
 
+/**
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.ui</code> bundle instead
+ */
+@Deprecated
 public class RepositoryCategoryContentProvider implements ITreeContentProvider {
 
 	private static final Map<String, RepositoryCategory> repositoryCategories = new HashMap<String, RepositoryCategory>();

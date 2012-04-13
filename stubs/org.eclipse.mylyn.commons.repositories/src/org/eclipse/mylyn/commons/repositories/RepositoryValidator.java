@@ -16,7 +16,9 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use classes in the <code>org.eclipse.mylyn.commons.repositories.core</code> bundle instead
  */
+@Deprecated
 public abstract class RepositoryValidator {
 
 	private final RepositoryLocation location;
