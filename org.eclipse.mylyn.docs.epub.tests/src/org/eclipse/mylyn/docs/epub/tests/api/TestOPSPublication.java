@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.docs.epub.tests.api;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -634,7 +635,10 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIncludeReferencedResources(boolean)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIncludeReferencedResources(boolean)}.
+	 * This is determining whether or not the referenced resources has been picked up and included in the resulting
+	 * EPUB. Also handles <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=375795">bug 375795</a>: [epub][patch]
+	 * Automatic inclusion of referenced resources fail on anchor references
 	 * 
 	 * @throws Exception
 	 */
@@ -658,12 +662,17 @@ public class TestOPSPublication extends AbstractTest {
 		Assert.assertTrue(svg2.exists());
 		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.xhtml");
 		Assert.assertTrue(html.exists());
+		File html2 = new File(root.getAbsolutePath() + File.separator + "plain-page.xhtml");
+		Assert.assertTrue(html2.exists());
+		// The manifest shall only contain the items we have linked to in addition to the toc.ncx and the file that we
+		// started from -- a total of six files.
+		Assert.assertEquals(6, oebps.getOpfPackage().getManifest().getItems().size());
 
 	}
 
 	/**
-	 * Test method for bug 360701: [epub] Automatic inclusion of referenced resources don't work for WikiText generated
-	 * HTML. https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701">bug 360701</a>: [epub] Automatic
+	 * inclusion of referenced resources don't work for WikiText generated HTML.
 	 * 
 	 * @throws Exception
 	 */
@@ -688,6 +697,41 @@ public class TestOPSPublication extends AbstractTest {
 		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.html");
 		Assert.assertTrue(html.exists());
 
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373052">bug 373052</a>: [epub] Reference
+	 * scanner does not handle absolute paths
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug373052() throws Exception {
+		// We need to link to a absolute file so we create a temporary HTML file
+		// in which we have the link.
+		File htmlFile = File.createTempFile("temp", ".xhtml");
+		File svgFile = new File("testdata/drawing-100x100.svg");
+
+		FileWriter fw = new FileWriter(htmlFile);
+		fw.write("<html><body>");
+		fw.write("<img src=\"" + svgFile.getAbsolutePath() + "\"/>");
+		fw.write("</body></html>");
+		fw.close();
+
+		EPUB epub = new EPUB();
+		oebps.setIncludeReferencedResources(true);
+		oebps.addItem(htmlFile);
+		epub.add(oebps);
+		epub.pack(epubFile);
+
+		htmlFile.delete();
+
+		EPUB epub2 = new EPUB();
+		epub2.unpack(epubFile, epubFolder);
+		oebps = epub2.getOPSPublications().get(0);
+		File root = oebps.getRootFolder();
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		Assert.assertTrue(svg.exists());
 	}
 
 	/**
