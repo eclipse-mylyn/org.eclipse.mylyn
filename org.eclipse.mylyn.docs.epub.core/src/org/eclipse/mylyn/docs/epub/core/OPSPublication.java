@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -1033,15 +1033,13 @@ public abstract class OPSPublication {
 	/**
 	 * Populates the data model with the content from an unpacked EPUB.
 	 * 
-	 * @param epubFile
-	 *            the EPUB file to unpack
-	 * @param destination
-	 *            the destination folder
+	 * @param opfFile
+	 *            the (OPS) root file
 	 * @throws Exception
 	 */
-	void unpack(File rootFile) throws Exception {
-		readOPF(rootFile);
-		rootFolder = rootFile.getAbsoluteFile().getParentFile();
+	void unpack(File opfFile) throws Exception {
+		readOPF(opfFile);
+		rootFolder = opfFile.getAbsoluteFile().getParentFile();
 		String tocId = opfPackage.getSpine().getToc();
 		Item tocItem = getItemById(tocId);
 		File tocFile = new File(rootFolder.getAbsolutePath() + File.separator + tocItem.getHref());

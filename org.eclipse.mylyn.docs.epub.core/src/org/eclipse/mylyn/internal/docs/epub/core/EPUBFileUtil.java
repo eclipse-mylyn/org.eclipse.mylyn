@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -177,6 +177,11 @@ public class EPUBFileUtil {
 	 * Unpacks the given <i>epubfile</i> to the <i>destination</i> directory.
 	 * This method will also validate the first item contained in the EPUB (see
 	 * {@link #writeEPUBHeader(ZipOutputStream)}).
+	 * <p>
+	 * If the destination folder does not already exist it will be created.
+	 * Additionally the modification timestamp of this folder will be set to the
+	 * same as the originating EPUB file.
+	 * </p>
 	 * 
 	 * @param epubfile
 	 *            the EPUB file
@@ -201,6 +206,9 @@ public class EPUBFileUtil {
 			File newFile = new File(destination.getAbsolutePath() + File.separator + entryName);
 			if (entry.isDirectory()) {
 				newFile.mkdirs();
+				if (entry.getTime() > 0) {
+					newFile.setLastModified(entry.getTime());
+				}
 				continue;
 			} else {
 				newFile.getParentFile().mkdirs();
@@ -212,6 +220,10 @@ public class EPUBFileUtil {
 			}
 			fileoutputstream.close();
 			in.closeEntry();
+			// Update the file modification time
+			if (entry.getTime() > 0) {
+				newFile.setLastModified(entry.getTime());
+			}
 			if (checkFirstItem) {
 				if (!entryName.equals("mimetype")) {
 					throw new IOException("Invalid EPUB file. First item must be \"mimetype\"");
@@ -223,6 +235,7 @@ public class EPUBFileUtil {
 				checkFirstItem = false;
 			}
 		}
+		destination.setLastModified(epubfile.lastModified());
 	}
 
 	/**

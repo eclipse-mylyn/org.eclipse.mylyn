@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -65,7 +65,7 @@ public class EPUB {
 	/** Version of the OCF specification used */
 	private static final String OCF_VERSION = "2.0";
 
-	/** OEBPS (OPS+OPF) mimetype */
+	/** OEBPS (OPS+OPF) MIME type */
 	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml";
 
 	/** Suffix for OCF files */
@@ -183,22 +183,22 @@ public class EPUB {
 	 * 
 	 * @param epubFile
 	 *            the target EPUB file
-	 * @param workingFolder
-	 *            the working folder
+	 * @param rootFolder
+	 *            the root folder holding all the EPUB contents
 	 * @throws Exception
 	 * @see {@link #pack(File)}
 	 */
-	public void pack(File epubFile, File workingFolder) throws Exception {
+	public void pack(File epubFile, File rootFolder) throws Exception {
 		if (ocfContainer.getRootfiles().getRootfiles().isEmpty()) {
 			throw new IllegalArgumentException("EPUB does not contain any publications");
 		}
-		workingFolder.mkdirs();
-		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
-			writeOCF(workingFolder);
+		rootFolder.mkdirs();
+		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
+			writeOCF(rootFolder);
 			EList<RootFile> publications = ocfContainer.getRootfiles().getRootfiles();
 			for (RootFile rootFile : publications) {
 				Object publication = rootFile.getPublication();
-				File root = new File(workingFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
+				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 				if (publication instanceof OPSPublication) {
 					((OPSPublication) publication).pack(root);
 				} else {
@@ -209,9 +209,9 @@ public class EPUB {
 					}
 				}
 			}
-			EPUBFileUtil.zip(epubFile, workingFolder);
+			EPUBFileUtil.zip(epubFile, rootFolder);
 		} else {
-			throw new IOException("Could not create working folder in " + workingFolder.getAbsolutePath());
+			throw new IOException("Could not create working folder in " + rootFolder.getAbsolutePath());
 		}
 	}
 
@@ -220,16 +220,16 @@ public class EPUB {
 	 * of this EPUB. The result of this operation is placed in the
 	 * {@link #ocfContainer} instance.
 	 * 
-	 * @param workingFolder
+	 * @param rootFolder
 	 *            the folder where the EPUB was unpacked
 	 * @throws IOException
 	 * @see {@link #unpack(File)}
 	 * @see {@link #unpack(File, File)}
 	 */
-	protected void readOCF(File workingFolder) throws IOException {
+	protected void readOCF(File rootFolder) throws IOException {
 		// These file names are listed in the OCF specification and must not be
 		// changed.
-		File metaFolder = new File(workingFolder.getAbsolutePath() + File.separator + "META-INF");
+		File metaFolder = new File(rootFolder.getAbsolutePath() + File.separator + "META-INF");
 		File containerFile = new File(metaFolder.getAbsolutePath() + File.separator + "container.xml");
 		ResourceSet resourceSet = new ResourceSetImpl();
 		URI fileURI = URI.createFileURI(containerFile.getAbsolutePath());
@@ -300,24 +300,45 @@ public class EPUB {
 
 	/**
 	 * Unpacks the given EPUB file into the specified destination and populates
-	 * the data model with the content.
+	 * the data model with the content. Note that when the destination folder
+	 * already exists or is empty the file EPUB will not be unpacked or
+	 * verified, but the contents of the destination will be treated as an
+	 * already unpacked EPUB. If this behaviour is not desired one should take
+	 * steps to delete the folder prior to unpacking.
+	 * <p>
+	 * When performing the unpacking, the modification date of the destination
+	 * folder will be set to the modification date of the source EPUB.
+	 * Additionally the contents of the EPUB will retain the original
+	 * modification date if set.
+	 * </p>
+	 * <p>
+	 * Multiple OPS root files in the publication will populate the OCF
+	 * container instance with one {@link OPSPublication} for each as expected.
+	 * The contents of the data model starting with the OCF container will be
+	 * replaced.
+	 * </p>
 	 * 
 	 * @param epubFile
 	 *            the EPUB file to unpack
-	 * @param destination
+	 * @param rootFolder
 	 *            the destination folder
 	 * @throws Exception
 	 * @see {@link #unpack(File)} when destination is not interesting
+	 * @see {@link #getContainer()} to obtain the container instance
+	 * @see {@link #getOPSPublications()} to get a list of all contained OPS
+	 *      publications
 	 */
-	public void unpack(File epubFile, File destination) throws Exception {
-		EPUBFileUtil.unzip(epubFile, destination);
-		readOCF(destination);
+	public void unpack(File epubFile, File rootFolder) throws Exception {
+		if (!rootFolder.exists() || rootFolder.list().length == 0) {
+			EPUBFileUtil.unzip(epubFile, rootFolder);
+		}
+		readOCF(rootFolder);
 		EList<RootFile> rootFiles = ocfContainer.getRootfiles().getRootfiles();
 		for (RootFile rootFile : rootFiles) {
 			if (rootFile.getMediaType().equals(MIMETYPE_OEBPS)) {
 				// XXX: Handle this better when adding support for EPUB 3
 				OPSPublication ops = OPSPublication.getVersion2Instance();
-				File root = new File(destination.getAbsolutePath() + File.separator + rootFile.getFullPath());
+				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 				ops.unpack(root);
 				rootFile.setPublication(ops);
 			}
@@ -329,11 +350,11 @@ public class EPUB {
 	 * OPS specification) <b>container.xml</b> in that folder. This is part of
 	 * the packing procedure.
 	 * 
-	 * @param workingFolder
+	 * @param rootFolder
 	 *            the root folder
 	 */
-	private void writeOCF(File workingFolder) throws IOException {
-		File metaFolder = new File(workingFolder.getAbsolutePath() + File.separator + "META-INF");
+	private void writeOCF(File rootFolder) throws IOException {
+		File metaFolder = new File(rootFolder.getAbsolutePath() + File.separator + "META-INF");
 		if (metaFolder.mkdir()) {
 			File containerFile = new File(metaFolder.getAbsolutePath() + File.separator + "container.xml");
 			ResourceSet resourceSet = new ResourceSetImpl();
