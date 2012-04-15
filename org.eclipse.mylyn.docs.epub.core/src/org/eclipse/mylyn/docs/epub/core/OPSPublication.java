@@ -88,6 +88,8 @@ public abstract class OPSPublication {
 	// * Keep all data in the model, use "transient" for temporary properties
 	// * Do not actually do anything before the final assemble
 
+	private static final String EMPTY_STRING = "";
+
 	/** Default identifier for the cover page */
 	private static final String COVER_ID = "cover";
 
@@ -156,7 +158,7 @@ public abstract class OPSPublication {
 		}
 		// Add empty subject
 		if (opfPackage.getMetadata().getSubjects().isEmpty()) {
-			addSubject(null, null, "");
+			addSubject(null, null, EMPTY_STRING);
 		}
 		// Add English language
 		if (opfPackage.getMetadata().getLanguages().isEmpty()) {
@@ -424,7 +426,7 @@ public abstract class OPSPublication {
 			}
 		}
 		if (id == null) {
-			String prefix = "";
+			String prefix = EMPTY_STRING;
 			if (!type.equals(MIMETYPE_XHTML)) {
 				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0, type.indexOf('/')) + "-";
 			}
@@ -821,7 +823,13 @@ public abstract class OPSPublication {
 		for (File root : references.keySet()) {
 			List<File> files = references.get(root);
 			for (File file : files) {
+				// Determine a sub-folder to place the resource in.
 				File relativePath = new File(EPUBFileUtil.getRelativePath(root, file));
+				// If "file" is not relative to "root" it will be placed it in
+				// same folder as "root".
+				if (relativePath.isAbsolute()) {
+					relativePath = new File(EMPTY_STRING);
+				}
 				addItem(null, null, file, relativePath.getParent(), null, false, false, false);
 			}
 		}

@@ -133,7 +133,7 @@ public class EPUBFileUtil {
 	 * @see #getRelativePath(File, File)
 	 */
 	private static void getPathSegments(File root, File file, ArrayList<String> segments) {
-		if (root.equals(file)) {
+		if (root.equals(file) || file == null) {
 			return;
 		}
 		segments.add(0, file.getName());
@@ -147,12 +147,16 @@ public class EPUBFileUtil {
 	 * If the <i>file</i> argument is a folder a trailing directory separator is
 	 * added. if the <i>root</i> argument is a file, it's parent folder will be
 	 * used.
+	 * <p>
+	 * Note that if <i>file</i> is <b>not relative</b> to root, it's absolute
+	 * path will be returned.
+	 * </p>
 	 * 
 	 * @param root
 	 *            the root directory or file
 	 * @param file
 	 *            the root contained file or directory
-	 * @return the platform independent, relative path
+	 * @return the platform independent, relative path or an absolute path
 	 */
 	public static String getRelativePath(File root, File file) {
 		ArrayList<String> segments = new ArrayList<String>();

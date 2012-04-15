@@ -93,14 +93,18 @@ public class ReferenceScanner extends AbstractXHTMLScanner {
 				if (t.startsWith("http://") || t.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
-				// If the item was generated for instance by WikiText we need to
-				// use the original path. Otherwise we use the item path.
+				// If the reference is absolute it will kept as it is, otherwise
+				// me must make it absolute using the source file as a
+				// reference.
 				String source = currentItem.getSourcePath();
 				if (source == null) {
 					source = currentItem.getFile();
 				}
 				File sourceFile = new File(source);
-				File file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
+				File file = new File(ref);
+				if (!file.isAbsolute()) {
+					file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
+				}
 				files.add(file);
 			}
 		}

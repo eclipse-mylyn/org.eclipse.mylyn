@@ -25,9 +25,9 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class AbstractTest extends TestCase {
-	protected final File epubFile = new File("test" + File.separator + "test.epub");
+	protected final File epubFile = new File("test" + File.separator + "test.epub"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	protected final File epubFolder = new File("test" + File.separator + "epub");
+	protected final File epubFolder = new File("test" + File.separator + "epub"); //$NON-NLS-1$//$NON-NLS-2$
 
 	protected static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
