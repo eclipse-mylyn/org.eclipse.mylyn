@@ -5,17 +5,11 @@ Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.tests
 Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: Torkild U. Resheim
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.emf.databinding.edit,
- org.eclipse.emf.ecore.change.edit,
- org.eclipse.emf.ecore.editor,
- org.eclipse.emf.exporter,
- org.eclipse.emf.importer,
- org.eclipse.emf.mapping.ecore2ecore.editor,
- org.eclipse.emf.mapping.ecore2xml.ui,
- org.junit,
+Require-Bundle: org.junit,
  org.apache.ant;bundle-version="1.8.2",
- org.eclipse.mylyn.docs.epub.core,
- org.apache.ant.source;bundle-version="1.8.2"
+ org.apache.ant.source;bundle-version="1.8.2",
+ org.eclipse.emf.ecore;bundle-version="2.7.0",
+ org.eclipse.mylyn.docs.epub.core;bundle-version="0.8.0"
 Bundle-ClassPath: .,
  epubcheck/epubcheck-1.2.jar,
  epubcheck/lib/jing.jar,

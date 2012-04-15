@@ -30,9 +30,7 @@ public class TestAntTask extends BuildFileTest {
 	static ClassLoader classLoader;
 
 	private static final String SIMPLE_FILE_PATH = "test/ant/simple.epub";
-
-	private static final String DOC_FILE_PATH = "../org.eclipse.mylyn.docs.epub.help/Building_EPUBs.epub";
-
+	
 	public TestAntTask(String s) {
 		super(s);
 		classLoader = getClass().getClassLoader();
@@ -68,19 +66,4 @@ public class TestAntTask extends BuildFileTest {
 		assertEpub(SIMPLE_FILE_PATH);
 	}
 
-	/**
-	 * Tests the "Building EPUBs" book (generated using the Ant task) using the
-	 * epub validator. This book is assembled by building the
-	 * "org.eclipse.mylyn.docs.epub.ui" bundle. The book contents is converted
-	 * from Textile markup to HTML using WikiText.
-	 */
-	public void testDocumentationBook() {
-		File file = getFile(DOC_FILE_PATH);
-		assertTrue("Missing publication " + file, file.exists());
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		EpubCheck checker = new EpubCheck(file, pw);
-		checker.validate();
-		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.errorCount == 0);
-	}
 }
