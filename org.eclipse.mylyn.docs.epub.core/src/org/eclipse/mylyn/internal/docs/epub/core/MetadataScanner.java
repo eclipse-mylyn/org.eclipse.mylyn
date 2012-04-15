@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -22,11 +22,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type is used to scan XHTML files for information that may be used in
- * EPUB metadata. This can be the publication title, copyright and author. Some
- * of this information can be found inside Dublin Core elements.
- * 
- * XXX: Not in use yet
+ * This type is used to scan XHTML files for information that may be used in EPUB metadata. This can be the publication
+ * title, copyright and author. Some of this information can be found inside Dublin Core elements. XXX: Not in use yet
  * 
  * @author Torkild U. Resheim
  * @see http://dublincore.org/documents/dc-html/
@@ -52,8 +49,8 @@ public final class MetadataScanner extends AbstractXHTMLScanner {
 	public static void parse(InputSource file, Metadata metadata) throws ParserConfigurationException, SAXException,
 			IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
 		SAXParser parser = factory.newSAXParser();
 		MetadataScanner tocGenerator = new MetadataScanner(metadata);
 		try {

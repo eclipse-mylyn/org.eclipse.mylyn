@@ -732,6 +732,7 @@ public class TestOPSPublication extends AbstractTest {
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
 		Assert.assertTrue(svg.exists());
+
 	}
 
 	/**

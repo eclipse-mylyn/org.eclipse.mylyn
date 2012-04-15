@@ -6,7 +6,8 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
 
@@ -59,16 +60,18 @@ public class EPUBFileUtil {
 				to.write(buffer, 0, bytesRead);
 			}
 		} finally {
-			if (from != null)
+			if (from != null) {
 				try {
 					from.close();
 				} catch (IOException e) {
 				}
-			if (to != null)
+			}
+			if (to != null) {
 				try {
 					to.close();
 				} catch (IOException e) {
 				}
+			}
 		}
 	}
 
@@ -82,20 +85,20 @@ public class EPUBFileUtil {
 	public static String getMimeType(File file) {
 		String name = file.getName().toLowerCase();
 		// These are not (correctly) detected by mechanism below
-		if (name.endsWith("xhtml")) {
-			return "application/xhtml+xml";
+		if (name.endsWith("xhtml")) { //$NON-NLS-1$
+			return "application/xhtml+xml"; //$NON-NLS-1$
 		}
-		if (name.endsWith(".otf")) {
-			return "font/opentype";
+		if (name.endsWith(".otf")) { //$NON-NLS-1$
+			return "font/opentype"; //$NON-NLS-1$
 		}
-		if (name.endsWith(".ttf")) {
-			return "font/truetype";
+		if (name.endsWith(".ttf")) { //$NON-NLS-1$
+			return "font/truetype"; //$NON-NLS-1$
 		}
-		if (name.endsWith(".svg")) {
-			return "image/svg+xml";
+		if (name.endsWith(".svg")) { //$NON-NLS-1$
+			return "image/svg+xml"; //$NON-NLS-1$
 		}
-		if (name.endsWith(".css")) {
-			return "text/css";
+		if (name.endsWith(".css")) { //$NON-NLS-1$
+			return "text/css"; //$NON-NLS-1$
 		}
 		try {
 			// Use URLConnection or content type detection
@@ -107,8 +110,8 @@ public class EPUBFileUtil {
 			// plain HTML, but the contents say XML. Hence we are probably
 			// looking at XHTML (see bug 360701).
 			if (mimeType_name != null && mimeType_content != null) {
-				if (mimeType_name.equals("text/html") && mimeType_content.equals("application/xml")) {
-					return "application/xhtml+xml";
+				if (mimeType_name.equals("text/html") && mimeType_content.equals("application/xml")) { //$NON-NLS-1$ //$NON-NLS-2$
+					return "application/xhtml+xml"; //$NON-NLS-1$
 				}
 			}
 			// We trust name over content
@@ -141,15 +144,12 @@ public class EPUBFileUtil {
 	}
 
 	/**
-	 * Determines the <i>root</i> relative path of <i>file</i> in a platform
-	 * independent manner. The returned string is a path starting from but
-	 * excluding <i>root</i> using the '/' character as a directory separator.
-	 * If the <i>file</i> argument is a folder a trailing directory separator is
-	 * added. if the <i>root</i> argument is a file, it's parent folder will be
-	 * used.
+	 * Determines the <i>root</i> relative path of <i>file</i> in a platform independent manner. The returned string is
+	 * a path starting from but excluding <i>root</i> using the '/' character as a directory separator. If the
+	 * <i>file</i> argument is a folder a trailing directory separator is added. if the <i>root</i> argument is a file,
+	 * it's parent folder will be used.
 	 * <p>
-	 * Note that if <i>file</i> is <b>not relative</b> to root, it's absolute
-	 * path will be returned.
+	 * Note that if <i>file</i> is <b>not relative</b> to root, it's absolute path will be returned.
 	 * </p>
 	 * 
 	 * @param root
@@ -178,27 +178,26 @@ public class EPUBFileUtil {
 	}
 
 	/**
-	 * Unpacks the given <i>epubfile</i> to the <i>destination</i> directory.
-	 * This method will also validate the first item contained in the EPUB (see
-	 * {@link #writeEPUBHeader(ZipOutputStream)}).
+	 * Unpacks the given <i>epubfile</i> to the <i>destination</i> directory. This method will also validate the first
+	 * item contained in the EPUB (see {@link #writeEPUBHeader(ZipOutputStream)}).
 	 * <p>
-	 * If the destination folder does not already exist it will be created.
-	 * Additionally the modification timestamp of this folder will be set to the
-	 * same as the originating EPUB file.
+	 * If the destination folder does not already exist it will be created. Additionally the modification timestamp of
+	 * this folder will be set to the same as the originating EPUB file.
 	 * </p>
 	 * 
 	 * @param epubfile
 	 *            the EPUB file
 	 * @param destination
 	 *            the destination folder
-	 * @throws FileNotFoundException when EPUB file does not exist
+	 * @throws FileNotFoundException
+	 *             when EPUB file does not exist
 	 * @throws IOException
 	 *             if the operation was unsuccessful
 	 */
 	public static void unzip(File epubfile, File destination) throws IOException {
 		if (!destination.exists()) {
 			if (!destination.mkdirs()) {
-				throw new IOException("Could not create directory for EPUB contents");
+				throw new IOException("Could not create directory for EPUB contents"); //$NON-NLS-1$
 			}
 		}
 		ZipInputStream in = new ZipInputStream(new FileInputStream(epubfile));
@@ -230,12 +229,12 @@ public class EPUBFileUtil {
 				newFile.setLastModified(entry.getTime());
 			}
 			if (checkFirstItem) {
-				if (!entryName.equals("mimetype")) {
-					throw new IOException("Invalid EPUB file. First item must be \"mimetype\"");
+				if (!entryName.equals("mimetype")) { //$NON-NLS-1$
+					throw new IOException("Invalid EPUB file. First item must be \"mimetype\""); //$NON-NLS-1$
 				}
 				String type = new String(buf);
 				if (!type.trim().equals(OPSPublication.MIMETYPE_EPUB)) {
-					throw new IOException("Invalid EPUB file. Expected \"" + OPSPublication.MIMETYPE_EPUB + "\"");
+					throw new IOException("Invalid EPUB file. Expected \"" + OPSPublication.MIMETYPE_EPUB + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				checkFirstItem = false;
 			}
@@ -245,18 +244,17 @@ public class EPUBFileUtil {
 	}
 
 	/**
-	 * A correctly formatted EPUB file must contain an uncompressed entry named
-	 * <b>mimetype</b> that is placed at the beginning. The contents of this
-	 * file must be the ASCII-encoded string <b>application/epub+zip</b>. This
-	 * method will create this file.
+	 * A correctly formatted EPUB file must contain an uncompressed entry named <b>mimetype</b> that is placed at the
+	 * beginning. The contents of this file must be the ASCII-encoded string <b>application/epub+zip</b>. This method
+	 * will create this file.
 	 * 
 	 * @param zos
 	 *            the zip output stream to write to.
 	 * @throws IOException
 	 */
 	public static void writeEPUBHeader(ZipOutputStream zos) throws IOException {
-		byte[] bytes = OPSPublication.MIMETYPE_EPUB.getBytes("ASCII");
-		ZipEntry mimetype = new ZipEntry("mimetype");
+		byte[] bytes = OPSPublication.MIMETYPE_EPUB.getBytes("ASCII"); //$NON-NLS-1$
+		ZipEntry mimetype = new ZipEntry("mimetype"); //$NON-NLS-1$
 		mimetype.setMethod(ZipOutputStream.STORED);
 		mimetype.setSize(bytes.length);
 		mimetype.setCompressedSize(bytes.length);
@@ -269,8 +267,8 @@ public class EPUBFileUtil {
 	}
 
 	/**
-	 * Recursively compresses contents of the given folder into a zip-file. If a
-	 * file already exists in the given location an exception will be thrown.
+	 * Recursively compresses contents of the given folder into a zip-file. If a file already exists in the given
+	 * location an exception will be thrown.
 	 * 
 	 * @param destination
 	 *            the destination file
@@ -283,7 +281,7 @@ public class EPUBFileUtil {
 	 */
 	public static void zip(File destination, File folder) throws ZipException, IOException {
 		if (destination.exists()) {
-			throw new IOException("A file already exists at " + destination.getAbsolutePath());
+			throw new IOException("A file already exists at " + destination.getAbsolutePath()); //$NON-NLS-1$
 		}
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(destination));
 		writeEPUBHeader(out);
@@ -310,9 +308,9 @@ public class EPUBFileUtil {
 		});
 		byte[] tmpBuf = new byte[BUFFERSIZE];
 
-		for (int i = 0; i < files.length; i++) {
-			FileInputStream in = new FileInputStream(files[i].getAbsolutePath());
-			ZipEntry zipEntry = new ZipEntry(getRelativePath(root, files[i]));
+		for (File file : files) {
+			FileInputStream in = new FileInputStream(file.getAbsolutePath());
+			ZipEntry zipEntry = new ZipEntry(getRelativePath(root, file));
 			out.putNextEntry(zipEntry);
 			int len;
 			while ((len = in.read(tmpBuf)) > 0) {
@@ -326,9 +324,9 @@ public class EPUBFileUtil {
 				return pathname.isDirectory();
 			}
 		});
-		for (int i = 0; i < dirs.length; i++) {
-			out.putNextEntry(new ZipEntry(getRelativePath(root, dirs[i])));
-			zip(root, dirs[i], out);
+		for (File dir : dirs) {
+			out.putNextEntry(new ZipEntry(getRelativePath(root, dir)));
+			zip(root, dir, out);
 		}
 	}
 

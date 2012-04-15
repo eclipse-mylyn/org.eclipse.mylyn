@@ -42,11 +42,14 @@ public class EpubTask extends Task {
 
 	private File epubFile;
 
+	private AntLogger logger;
+
 	public EpubTask() {
 		super();
 		try {
-		ops = new OPS2Publication();
-		filesets = new ArrayList<FileSetType>();
+			logger = new AntLogger(this);
+			ops = new OPS2Publication(logger);
+			filesets = new ArrayList<FileSetType>();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -56,7 +59,8 @@ public class EpubTask extends Task {
 		if (item.role == null) {
 			ops.addContributor(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			ops.addContributor(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
+			ops.addContributor(item.id, item.lang, item.name,
+					Role.get(item.role), item.fileAs);
 		}
 	}
 
@@ -72,7 +76,8 @@ public class EpubTask extends Task {
 		if (item.role == null) {
 			ops.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			ops.addCreator(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
+			ops.addCreator(item.id, item.lang, item.name, Role.get(item.role),
+					item.fileAs);
 		}
 	}
 
@@ -106,7 +111,8 @@ public class EpubTask extends Task {
 	 * @ant.required
 	 */
 	public void addConfiguredItem(ItemType item) {
-		ops.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.linear, item.noToc);
+		ops.addItem(item.id, item.lang, item.file, item.dest, item.type,
+				item.spine, item.linear, item.noToc);
 	}
 
 	/**
@@ -157,12 +163,14 @@ public class EpubTask extends Task {
 
 	public void addConfiguredToc(TocType toc) {
 		if (this.toc != null) {
-			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
+			throw new BuildException(
+					"Only one table of contents (toc) declaration is allowed.");
 		}
 		this.toc = toc;
 	}
 
-	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.core.TypeType type) {
+	public void addConfiguredType(
+			org.eclipse.mylyn.docs.epub.ant.core.TypeType type) {
 		ops.addType(type.id, type.text);
 	}
 
@@ -170,7 +178,8 @@ public class EpubTask extends Task {
 		for (FileSetType fs : filesets) {
 			final File fsDir = fs.getDir(getProject());
 			if (fsDir == null) {
-				throw new BuildException("File or Resource without directory or file specified");
+				throw new BuildException(
+						"File or Resource without directory or file specified");
 			} else if (!fsDir.isDirectory()) {
 				throw new BuildException("Directory does not exist:" + fsDir);
 			}
@@ -181,7 +190,8 @@ public class EpubTask extends Task {
 				filename = filename.substring(filename.lastIndexOf("/") + 1);
 				File base = ds.getBasedir();
 				File found = new File(base, includedFiles[i]);
-				ops.addItem(null, fs.lang, found, fs.dest, null, false, true, false);
+				ops.addItem(null, fs.lang, found, fs.dest, null, false, true,
+						false);
 			}
 
 		}
@@ -190,7 +200,6 @@ public class EpubTask extends Task {
 
 	@Override
 	public void execute() throws BuildException {
-
 		// When running from within Eclipse, the project may not have been set
 		if (getProject() == null) {
 			Project project = new Project();
@@ -207,7 +216,7 @@ public class EpubTask extends Task {
 			}
 		}
 		try {
-			EPUB epub = new EPUB();
+			EPUB epub = new EPUB(logger);
 			epub.add(ops);
 			if (workingFolder == null) {
 				epub.pack(epubFile);
@@ -246,5 +255,6 @@ public class EpubTask extends Task {
 
 	private void validate() {
 	}
+
 
 }

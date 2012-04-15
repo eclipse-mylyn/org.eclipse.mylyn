@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.core;
 
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.mylyn.docs.epub.core.ILogger.Severity;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
 import org.eclipse.mylyn.docs.epub.ncx.Meta;
@@ -53,12 +56,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type represents one EPUB revision 2.0.1 formatted publication. It
- * maintains a data structure representing the entire publication and API for
- * building it.
+ * This type represents one EPUB revision 2.0.1 formatted publication. It maintains a data structure representing the
+ * entire publication and API for building it.
  * <p>
- * <b>Please note that this API is provisional and should not yet be used to
- * build applications.</b>
+ * <b>Please note that this API is provisional and should not yet be used to build applications.</b>
  * </p>
  * 
  * @author Torkild U. Resheim
@@ -67,15 +68,15 @@ import org.xml.sax.SAXException;
 public class OPS2Publication extends OPSPublication {
 
 	/** MIME type for NCX documents */
-	private static final String MIMETYPE_NCX = "application/x-dtbncx+xml";
+	private static final String MIMETYPE_NCX = "application/x-dtbncx+xml"; //$NON-NLS-1$
 
-	private static final String NCX_FILE_SUFFIX = "ncx";
+	private static final String NCX_FILE_SUFFIX = "ncx"; //$NON-NLS-1$
 
 	/** Identifier of the table of contents file */
-	private static final String TABLE_OF_CONTENTS_ID = "ncx";
+	private static final String TABLE_OF_CONTENTS_ID = "ncx"; //$NON-NLS-1$
 
 	/** Default name for the table of contents */
-	private static final String TOCFILE_NAME = "toc.ncx";
+	private static final String TOCFILE_NAME = "toc.ncx"; //$NON-NLS-1$
 
 	/** The table of contents */
 	private Ncx ncxTOC;
@@ -85,28 +86,20 @@ public class OPS2Publication extends OPSPublication {
 	 */
 	public OPS2Publication() {
 		super();
-		opfPackage.setVersion("2.0");
-		ncxTOC = NCXFactory.eINSTANCE.createNcx();
-		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
-		opfPackage.setMetadata(opfMetadata);
-		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
-		opfPackage.setGuide(opfGuide);
-		Manifest opfManifest = OPFFactory.eINSTANCE.createManifest();
-		opfPackage.setManifest(opfManifest);
-		// Create the spine and set a reference to the table of contents
-		// item which will be added to the manifest on a later stage.
-		Spine opfSpine = OPFFactory.eINSTANCE.createSpine();
-		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
-		opfPackage.setSpine(opfSpine);
-
-		registerNCXResourceFactory();
-		opfPackage.setGenerateTableOfContents(true);
+		setup();
 	}
 
 	/**
-	 * This mechanism will traverse the spine of the publication (which is
-	 * representing the reading order) and parse each file for information that
-	 * can be used to assemble a table of contents.
+	 * Creates a new EPUB logging all event to the specified logger.
+	 */
+	public OPS2Publication(ILogger logger) {
+		super(logger);
+		setup();
+	}
+
+	/**
+	 * This mechanism will traverse the spine of the publication (which is representing the reading order) and parse
+	 * each file for information that can be used to assemble a table of contents.
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
@@ -114,19 +107,20 @@ public class OPS2Publication extends OPSPublication {
 	 */
 	@Override
 	protected void generateTableOfContents() throws Exception {
+		log("Generating table of contents for OPS", Severity.INFO, indent++);
 		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
 		ncxTOC.setNavMap(navMap);
-		ncxTOC.setVersion("2005-1");
+		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
 		// Create the required head element
 		Head head = NCXFactory.eINSTANCE.createHead();
 		ncxTOC.setHead(head);
 		Meta meta = NCXFactory.eINSTANCE.createMeta();
-		meta.setName("dtb:uid");
+		meta.setName("dtb:uid"); //$NON-NLS-1$
 		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
 		head.getMetas().add(meta);
 		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
 		Text text = NCXFactory.eINSTANCE.createText();
-		FeatureMapUtil.addText(text.getMixed(), "Table of contents");
+		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
 		docTitle.setText(text);
 		ncxTOC.setDocTitle(docTitle);
 		int playOrder = 0;
@@ -146,14 +140,21 @@ public class OPS2Publication extends OPSPublication {
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
 				FileInputStream fis = new FileInputStream(file);
+				log(MessageFormat.format("Parsing {0}", referencedItem.getHref()), Severity.VERBOSE, indent);
 				playOrder = TOCGenerator.parse(new InputSource(fis), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
+		indent--;
 	}
 
 	@Override
 	public Object getTableOfContents() {
 		return ncxTOC;
+	}
+
+	@Override
+	protected String getVersion() {
+		return "2.0"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -166,13 +167,11 @@ public class OPS2Publication extends OPSPublication {
 	}
 
 	/**
-	 * Registers a new resource factory for NCX data structures. This is
-	 * normally done through Eclipse extension points but we also need to be
-	 * able to create this factory without the Eclipse runtime.
+	 * Registers a new resource factory for NCX data structures. This is normally done through Eclipse extension points
+	 * but we also need to be able to create this factory without the Eclipse runtime.
 	 */
 	private void registerNCXResourceFactory() {
-		// Register package so that it is available even without the Eclipse
-		// runtime
+		// Register package so that it is available even without the Eclipse runtime
 		@SuppressWarnings("unused")
 		NCXPackage packageInstance = NCXPackage.eINSTANCE;
 
@@ -202,8 +201,8 @@ public class OPS2Publication extends OPSPublication {
 						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 						// Do not download any external DTDs.
 						Map<String, Object> parserFeatures = new HashMap<String, Object>();
-						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE);
-						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE); //$NON-NLS-1$
+						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd", //$NON-NLS-1$
 								Boolean.FALSE);
 						loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
 						return xmiResource;
@@ -219,12 +218,31 @@ public class OPS2Publication extends OPSPublication {
 		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
 		// The table of contents file must be first.
 		opfPackage.getManifest().getItems().move(0, item);
+		log(MessageFormat.format("Using table of contents file {0} for OPS", new Object[] { ncxFile.getName() }), //$NON-NLS-1$
+				Severity.VERBOSE, indent);
+	}
 
+	private void setup() {
+		opfPackage.setVersion(getVersion());
+		ncxTOC = NCXFactory.eINSTANCE.createNcx();
+		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
+		opfPackage.setMetadata(opfMetadata);
+		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
+		opfPackage.setGuide(opfGuide);
+		Manifest opfManifest = OPFFactory.eINSTANCE.createManifest();
+		opfPackage.setManifest(opfManifest);
+		// Create the spine and set a reference to the table of contents
+		// item which will be added to the manifest on a later stage.
+		Spine opfSpine = OPFFactory.eINSTANCE.createSpine();
+		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
+		opfPackage.setSpine(opfSpine);
+
+		registerNCXResourceFactory();
+		opfPackage.setGenerateTableOfContents(true);
 	}
 
 	/**
-	 * This method will only validate items that are in the spine, or in reading
-	 * order.
+	 * This method will only validate items that are in the spine, or in reading order.
 	 */
 	@Override
 	protected List<ValidationMessage> validateContents() throws Exception {
@@ -251,11 +269,10 @@ public class OPS2Publication extends OPSPublication {
 	}
 
 	/**
-	 * Writes the table of contents file in the specified folder using the NCX
-	 * format. If a table of contents file has not been specified an empty one
-	 * will be created (since it is required to have one). If in addition it has
-	 * been specified that the table of contents should be created, the content
-	 * files will be parsed and a TOC will be generated.
+	 * Writes the table of contents file in the specified folder using the NCX format. If a table of contents file has
+	 * not been specified an empty one will be created (since it is required to have one). If in addition it has been
+	 * specified that the table of contents should be created, the content files will be parsed and a TOC will be
+	 * generated.
 	 * 
 	 * @param oepbsFolder
 	 *            the folder to create the NCX file in

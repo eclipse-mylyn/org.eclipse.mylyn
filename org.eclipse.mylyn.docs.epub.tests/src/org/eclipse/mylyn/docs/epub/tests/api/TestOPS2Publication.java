@@ -35,6 +35,7 @@ import org.junit.Test;
 /**
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class TestOPS2Publication extends AbstractTest {
 
 	private static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
@@ -233,7 +234,7 @@ public class TestOPS2Publication extends AbstractTest {
 		Assert.assertEquals(1, oebps_out.getValidationMessages().size());
 		ValidationMessage msg = oebps_out.getValidationMessages().get(0);
 		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals("Element bad is not in OPS Preferred Vocabularies.", msg.getMessage());
+		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
 	}
 
 	private class EPUB_NCX_Test extends OPS2Publication {

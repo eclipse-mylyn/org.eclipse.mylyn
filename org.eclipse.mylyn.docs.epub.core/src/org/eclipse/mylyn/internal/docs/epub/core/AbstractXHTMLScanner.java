@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
 
@@ -15,8 +16,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
 /**
- * This abstract type should be used to form the basis for all types that are
- * used to scan EPUB XHTML content files.
+ * This abstract type should be used to form the basis for all types that are used to scan EPUB XHTML content files.
  * 
  * @author Torkild U. Resheim
  */
@@ -31,8 +31,7 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 	protected String currentHref = null;
 
 	/**
-	 * <code>true</code> indicates that the parser is within a &lt;head&gt; HTML
-	 * element
+	 * <code>true</code> indicates that the parser is within a &lt;head&gt; HTML element
 	 */
 	protected boolean insideHead;
 
@@ -42,16 +41,15 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 	}
 
 	/**
-	 * Determines whether or not the given element name represents a HTML
-	 * header.
+	 * Determines whether or not the given element name represents a HTML header.
 	 * 
 	 * @param qName
 	 *            the element name
 	 * @return <code>true</code> if the element is a header
 	 */
 	protected int isHeader(String qName) {
-		if (qName.startsWith("h") || qName.startsWith("H")) {
-			if (qName.length() == 2 && !qName.equalsIgnoreCase("hr")) {
+		if (qName.startsWith("h") || qName.startsWith("H")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (qName.length() == 2 && !qName.equalsIgnoreCase("hr")) { //$NON-NLS-1$
 				String n = qName.substring(1);
 				try {
 					int i = Integer.parseInt(n);
@@ -60,7 +58,7 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 						return i;
 					}
 				} catch (NumberFormatException e) {
-					System.err.println("Bad header in " + currentHref);
+					System.err.println("Bad header in " + currentHref); //$NON-NLS-1$
 				}
 			}
 		}
@@ -69,14 +67,14 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if (qName.equalsIgnoreCase("head")) {
+		if (qName.equalsIgnoreCase("head")) { //$NON-NLS-1$
 			insideHead = true;
 		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (qName.equalsIgnoreCase("head")) {
+		if (qName.equalsIgnoreCase("head")) { //$NON-NLS-1$
 			insideHead = false;
 		}
 	}
@@ -86,7 +84,7 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 		// Some titles actually contain newlines – so we need to remove them.
 		if (recording) {
 			String s = new String(ch, start, length);
-			buffer.append(s.replace("\n", ""));
+			buffer.append(s.replace("\n", "")); //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 

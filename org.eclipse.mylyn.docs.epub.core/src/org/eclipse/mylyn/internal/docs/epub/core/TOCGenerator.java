@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
 
@@ -28,9 +29,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type is a SAX parser that will read a XHTML file, locate headers and
- * create NCX items for the EPUB table of contents. Each header must have an
- * "id" attribute or it will not be possible to link to the header.
+ * This type is a SAX parser that will read a XHTML file, locate headers and create NCX items for the EPUB table of
+ * contents. Each header must have an "id" attribute or it will not be possible to link to the header.
  * 
  * @author Torkild U. Resheim
  */
@@ -56,7 +56,6 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 		this.ncx = ncx;
 		this.playOrder = playOrder;
 	}
-
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -89,13 +88,13 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 		NavPoint np = NCXFactory.eINSTANCE.createNavPoint();
 		NavLabel nl = NCXFactory.eINSTANCE.createNavLabel();
 		Content c = NCXFactory.eINSTANCE.createContent();
-		c.setSrc(currentId == null ? currentHref : currentHref + "#" + currentId);
+		c.setSrc(currentId == null ? currentHref : currentHref + "#" + currentId); //$NON-NLS-1$
 		Text text = NCXFactory.eINSTANCE.createText();
 		FeatureMapUtil.addText(text.getMixed(), title);
 		nl.setText(text);
 		np.getNavLabels().add(nl);
 		np.setPlayOrder(++playOrder);
-		np.setId("navpoint" + playOrder);
+		np.setId("navpoint" + playOrder); //$NON-NLS-1$
 		np.setContent(c);
 		return np;
 	}
@@ -104,8 +103,8 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (isHeader(qName) > 0) {
 			recording = true;
-			if (attributes.getValue("id") != null) {
-				currentId = attributes.getValue("id");
+			if (attributes.getValue("id") != null) { //$NON-NLS-1$
+				currentId = attributes.getValue("id"); //$NON-NLS-1$
 			} else {
 				currentId = null;
 			}
@@ -113,7 +112,6 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 	}
 
 	/**
-	 * 
 	 * @param file
 	 * @param href
 	 * @param ncx
@@ -128,14 +126,14 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 	public static int parse(InputSource file, String href, Ncx ncx, int playOrder) throws ParserConfigurationException,
 			SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
 		SAXParser parser = factory.newSAXParser();
 		TOCGenerator tocGenerator = new TOCGenerator(href, ncx, playOrder);
 		try {
 			parser.parse(file, tocGenerator);
 		} catch (SAXException e) {
-			System.err.println("Could not parse " + href);
+			System.err.println("Could not parse " + href); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		return tocGenerator.getPlayOrder();

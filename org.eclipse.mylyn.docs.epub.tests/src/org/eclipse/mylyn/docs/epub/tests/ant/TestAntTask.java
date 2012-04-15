@@ -26,12 +26,13 @@ import com.adobe.epubcheck.api.EpubCheck;
  * 
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class TestAntTask extends BuildFileTest {
 
 	static ClassLoader classLoader;
 
 	private static final String SIMPLE_FILE_PATH = "test/ant/simple.epub";
-	
+
 	public TestAntTask(String s) {
 		super(s);
 		classLoader = getClass().getClassLoader();

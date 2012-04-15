@@ -16,10 +16,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This type is a SAX parser that will read a XHTML file and produce a new
- * version where elements and attributes not in the EPUB 2.0.1 <b>preferred</b>
- * vocabulary are stripped. Alternatively warnings can be issued when such
- * elements and attributes are found.
+ * This type is a SAX parser that will read a XHTML file and produce a new version where elements and attributes not in
+ * the EPUB 2.0.1 <b>preferred</b> vocabulary are stripped. Alternatively warnings can be issued when such elements and
+ * attributes are found.
  * 
  * @author Torkild U. Resheim
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
@@ -45,19 +44,18 @@ public class OPS2Validator extends DefaultHandler {
 		return messages;
 	}
 
-	public static List<ValidationMessage> validate(InputSource file, String href)
-			throws ParserConfigurationException,
+	public static List<ValidationMessage> validate(InputSource file, String href) throws ParserConfigurationException,
 			SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
 		SAXParser parser = factory.newSAXParser();
 		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.WARN);
 		try {
 			parser.parse(file, tocGenerator);
 			return tocGenerator.getMessages();
 		} catch (SAXException e) {
-			System.err.println("Could not parse " + href);
+			System.err.println("Could not parse " + href); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		return null;
@@ -66,21 +64,23 @@ public class OPS2Validator extends DefaultHandler {
 	public static String clean(InputSource file, String href) throws ParserConfigurationException, SAXException,
 			IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
 		SAXParser parser = factory.newSAXParser();
 		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.REMOVE);
 		try {
 			parser.parse(file, tocGenerator);
 			return tocGenerator.getContents().toString();
 		} catch (SAXException e) {
-			System.err.println("Could not parse " + href);
+			System.err.println("Could not parse " + href); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	private StringBuilder buffer = null;
 
+	@SuppressWarnings("nls")
 	private final String[] legalAttributes = new String[] { "accesskey", "charset", "class", "coords", "dir", "href",
 			"hreflang", "id", "rel", "rev", "shape", "style", "tabindex", "target", "title", "type", "xml:lang",
 			/* Are these OK? */
@@ -92,6 +92,7 @@ public class OPS2Validator extends DefaultHandler {
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.4
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section2.2
 	 */
+	@SuppressWarnings("nls")
 	private final String[] legalElements = new String[] { "body", "head", "html", "title", "abbr", "acronym",
 			"address", "blockquote", "br", "cite", "code", "dfn", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6",
 			"kbd", "p", "pre", "q", "samp", "span", "strong", "var", "a", "dl", "dt", "dd", "ol", "ul", "li", "object",
@@ -104,6 +105,7 @@ public class OPS2Validator extends DefaultHandler {
 	/**
 	 * A list of elements that should be let through regardless of contents.
 	 */
+	@SuppressWarnings("nls")
 	private final String[] passthroughElements = new String[] { "meta" };
 
 	private boolean recording = false;
@@ -127,7 +129,7 @@ public class OPS2Validator extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (isLegalElement(qName)) {
 			contents.append(buffer);
-			contents.append("</" + qName + ">");
+			contents.append("</" + qName + ">"); //$NON-NLS-1$ //$NON-NLS-2$
 			buffer.setLength(0);
 		}
 		recording = false;
@@ -176,9 +178,9 @@ public class OPS2Validator extends DefaultHandler {
 				String name = attributes.getQName(i);
 				contents.append(' ');
 				contents.append(name);
-				contents.append("=\"");
+				contents.append("=\""); //$NON-NLS-1$
 				contents.append(attributes.getValue(i));
-				contents.append("\"");
+				contents.append("\""); //$NON-NLS-1$
 			}
 			contents.append('>');
 			recording = true;
@@ -192,20 +194,20 @@ public class OPS2Validator extends DefaultHandler {
 				if (mode.equals(Mode.WARN) || isLegalAttribute(name)) {
 					contents.append(' ');
 					contents.append(name);
-					contents.append("=\"");
+					contents.append("=\""); //$NON-NLS-1$
 					contents.append(attributes.getValue(i));
-					contents.append("\"");
+					contents.append("\""); //$NON-NLS-1$
 					if (!isLegalAttribute(name)) {
-						messages.add(new ValidationMessage(Severity.WARNING, "Attribute " + name
-								+ " is not in OPS Preferred Vocabularies."));
+						messages.add(new ValidationMessage(Severity.WARNING, "Attribute \"" + name //$NON-NLS-1$
+								+ "\" is not in OPS Preferred Vocabularies.")); //$NON-NLS-1$
 					}
 				}
 			}
 			contents.append('>');
 			recording = true;
 			if (!isLegalElement(qName)) {
-				messages.add(new ValidationMessage(Severity.WARNING, "Element " + qName
-						+ " is not in OPS Preferred Vocabularies."));
+				messages.add(new ValidationMessage(Severity.WARNING, "Element \"" + qName //$NON-NLS-1$
+						+ "\" is not in OPS Preferred Vocabularies.")); //$NON-NLS-1$
 
 			}
 		}

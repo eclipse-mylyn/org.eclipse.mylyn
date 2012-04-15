@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.core.wikitext;
 
@@ -27,8 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * This type can be used to populate an OPS publication directly from WikiText
- * markup.
+ * This type can be used to populate an OPS publication directly from WikiText markup.
  * 
  * @author Torkild U. Resheim
  * @since 1.0
@@ -44,7 +44,6 @@ public class MarkupToOPS {
 	 *            the OPS publication the content will be added to
 	 * @param markupFile
 	 *            the WikiText markup file
-	 * 
 	 * @return the temporary folder used for generating the HTML from markup
 	 */
 	public File parse(OPSPublication ops, File markupFile) throws IOException, FileNotFoundException {
@@ -52,9 +51,9 @@ public class MarkupToOPS {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
 		// Create a temporary working folder
-		File workingFolder = File.createTempFile("wikitext_", null);
+		File workingFolder = File.createTempFile("wikitext_", null); //$NON-NLS-1$
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			File htmlFile = new File(workingFolder.getAbsolutePath() + File.separator + "markup.html");
+			File htmlFile = new File(workingFolder.getAbsolutePath() + File.separator + "markup.html"); //$NON-NLS-1$
 			FileWriter out = new FileWriter(htmlFile);
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out) {
 				@Override
@@ -71,7 +70,7 @@ public class MarkupToOPS {
 			}
 			// Make sure we get the correct XHTML header
 			builder.setEmitDtd(true);
-			builder.setHtmlDtd("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
+			builder.setHtmlDtd("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"); //$NON-NLS-1$
 			builder.setXhtmlStrict(true);
 
 			MarkupParser markupParser = new MarkupParser();
