@@ -406,7 +406,10 @@ public abstract class OPSPublication {
 	 */
 	public Item addItem(String id, Locale lang, File file, String dest, String type, boolean spine, boolean linear,
 			boolean noToc) {
-		if (file == null || !file.exists()) {
+		if (file == null) {
+			throw new IllegalArgumentException("\"file\" must be specified");
+		}
+		if (!file.exists()) {
 			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must exist.");
 		}
 		if (file.isDirectory()) {

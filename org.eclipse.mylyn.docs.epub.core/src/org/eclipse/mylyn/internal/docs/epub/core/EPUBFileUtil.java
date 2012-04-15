@@ -187,6 +187,7 @@ public class EPUBFileUtil {
 	 *            the EPUB file
 	 * @param destination
 	 *            the destination folder
+	 * @throws FileNotFoundException when EPUB file does not exist
 	 * @throws IOException
 	 *             if the operation was unsuccessful
 	 */
@@ -234,7 +235,8 @@ public class EPUBFileUtil {
 				}
 				checkFirstItem = false;
 			}
-		}
+		} // iterate over contents
+		in.close();
 		destination.setLastModified(epubfile.lastModified());
 	}
 
