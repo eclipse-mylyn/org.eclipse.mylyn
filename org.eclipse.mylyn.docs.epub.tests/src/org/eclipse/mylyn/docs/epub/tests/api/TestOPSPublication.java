@@ -1,6 +1,14 @@
-/**
+/*******************************************************************************
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
- */
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
 import java.io.File;
@@ -32,7 +40,6 @@ import com.adobe.epubcheck.api.EpubCheck;
 
 /**
  * @author Torkild U. Resheim
- * 
  */
 public class TestOPSPublication extends AbstractTest {
 
@@ -167,8 +174,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addFormat(java.lang.String, java.lang.String)}
-	 * .
+	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addFormat(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddFormat() {
@@ -220,9 +226,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addItem(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addItem(java.io.File)} .
 	 */
 	@Test
 	public final void testAddItemFile() {
@@ -241,8 +245,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addLanguage(java.lang.String, java.lang.String)}
-	 * .
+	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addLanguage(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddLanguage() {
@@ -259,8 +262,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addMeta(java.lang.String, java.lang.String)}
-	 * .
+	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addMeta(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddMeta() {
@@ -453,8 +455,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addType(java.lang.String, java.lang.String)}
-	 * .
+	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addType(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddType() {
@@ -473,9 +474,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#generateTableOfContents()}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#generateTableOfContents()} .
 	 */
 	@Test
 	public final void testGenerateTableOfContents() {
@@ -483,8 +482,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getIdentifier()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getIdentifier()}.
 	 */
 	@Test
 	public final void testGetIdentifier() {
@@ -492,9 +490,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemById(java.lang.String)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemById(java.lang.String)} .
 	 */
 	@Test
 	public final void testGetItemById() {
@@ -502,9 +498,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemsByMIMEType(java.lang.String)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemsByMIMEType(java.lang.String)} .
 	 */
 	@Test
 	public final void testGetItemsByMIMEType() {
@@ -519,8 +513,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getOpfPackage()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getOpfPackage()}.
 	 */
 	@Test
 	public final void testGetOpfPackage() {
@@ -528,8 +521,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getRootFolder()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getRootFolder()}.
 	 */
 	@Test
 	public final void testGetRootFolder() {
@@ -537,8 +529,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getSpine()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getSpine()}.
 	 */
 	@Test
 	public final void testGetSpine() {
@@ -546,9 +537,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getTableOfContents()}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getTableOfContents()} .
 	 */
 	@Test
 	public final void testGetTableOfContents() {
@@ -556,9 +545,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getValidationMessages()}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getValidationMessages()} .
 	 */
 	@Test
 	public final void testGetValidationMessages() {
@@ -566,12 +553,9 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)} .
 	 * <ul>
-	 * <li>An EPUB where only a single page has been added shall be packed
-	 * without issues</li>
+	 * <li>An EPUB where only a single page has been added shall be packed without issues</li>
 	 * <li>An EPUB with no content shall fail when packed</li>
 	 * </ul>
 	 * 
@@ -598,9 +582,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#readTableOfContents(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#readTableOfContents(java.io.File)} .
 	 */
 	@Test
 	public final void testReadTableOfContents() {
@@ -608,8 +590,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setCover(java.io.File, java.lang.String)}
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setCover(java.io.File, java.lang.String)}
 	 * .
 	 * <ul>
 	 * <li>Cover page SVG shall exist in the unpacked folder</li>
@@ -637,9 +618,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setGenerateToc(boolean)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setGenerateToc(boolean)} .
 	 */
 	@Test
 	public final void testSetGenerateToc() {
@@ -647,9 +626,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIdentifierId(java.lang.String)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIdentifierId(java.lang.String)} .
 	 */
 	@Test
 	public final void testSetIdentifierId() {
@@ -657,9 +634,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIncludeReferencedResources(boolean)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIncludeReferencedResources(boolean)} .
 	 * 
 	 * @throws Exception
 	 */
@@ -687,9 +662,8 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for bug 360701: [epub] Automatic inclusion of referenced
-	 * resources don't work for WikiText generated HTML.
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701
+	 * Test method for bug 360701: [epub] Automatic inclusion of referenced resources don't work for WikiText generated
+	 * HTML. https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701
 	 * 
 	 * @throws Exception
 	 */
@@ -717,9 +691,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setTableOfContents(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setTableOfContents(java.io.File)} .
 	 * 
 	 * @see TestOPS2Publication#testSetTableOfContents()
 	 */
@@ -729,9 +701,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#unpack(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#unpack(java.io.File)} .
 	 */
 	@Test
 	public final void testUnpack() {
@@ -739,9 +709,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateContents()}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateContents()} .
 	 */
 	@Test
 	public final void testValidateContents() {
@@ -749,9 +717,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateMetadata()}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateMetadata()} .
 	 */
 	@Test
 	public final void testValidateMetadata() {
@@ -759,9 +725,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#writeTableOfContents(java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#writeTableOfContents(java.io.File)} .
 	 */
 	@Test
 	public final void testWriteTableOfContents() {
@@ -787,15 +751,11 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * This case was discovered when testing an EPUB file generated by DocBook
-	 * Reading the OPF fails with a java.net.SocketException: Unexpected end of
-	 * file from server. On closer inspection we can see that the file is
-	 * declared as XHTML (which it of course is not). This is probably due to an
-	 * issue in DocBook XSL 1.76.1
+	 * This case was discovered when testing an EPUB file generated by DocBook Reading the OPF fails with a
+	 * java.net.SocketException: Unexpected end of file from server. On closer inspection we can see that the file is
+	 * declared as XHTML (which it of course is not). This is probably due to an issue in DocBook XSL 1.76.1
 	 * 
-	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537
-	 *      &group_id=21935&atid=373747.
-	 * 
+	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537 &group_id=21935&atid=373747.
 	 * @throws Exception
 	 */
 	@Test

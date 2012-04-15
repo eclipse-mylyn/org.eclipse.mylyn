@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.ant;
 
@@ -42,8 +43,8 @@ public class TestAntTask extends BuildFileTest {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		EpubCheck checker = new EpubCheck(f, pw);
-		checker.validate();
-		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.errorCount == 0);
+		//checker.validate();
+		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.validate());
 	}
 
 	private File getFile(String file) {
@@ -57,8 +58,7 @@ public class TestAntTask extends BuildFileTest {
 	}
 
 	/**
-	 * Creates a simple book using the Ant task and tests it using the epub
-	 * validator.
+	 * Creates a simple book using the Ant task and tests it using the epub validator.
 	 */
 	public void testSimplePublication() {
 		executeTarget("init");

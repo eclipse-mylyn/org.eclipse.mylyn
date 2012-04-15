@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
@@ -28,7 +29,6 @@ import org.junit.Test;
 
 /**
  * @author Torkild U. Resheim
- * 
  */
 public class TestEPUB extends AbstractTest {
 
@@ -54,8 +54,8 @@ public class TestEPUB extends AbstractTest {
 	private boolean deleteFolder(File folder) {
 		if (folder.isDirectory()) {
 			String[] children = folder.list();
-			for (int i = 0; i < children.length; i++) {
-				boolean ok = deleteFolder(new File(folder, children[i]));
+			for (String element : children) {
+				boolean ok = deleteFolder(new File(folder, element));
 				if (!ok) {
 					return false;
 				}
@@ -92,9 +92,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(java.io.File, java.lang.String)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(java.io.File, java.lang.String)} .
 	 * <ul>
 	 * <li>Publication MIME-type shall be correct</li>
 	 * <li>Rootfile path shall be correct</li>
@@ -117,8 +115,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)}.
 	 * <ul>
 	 * <li>Shall throw exception when unknown publication type is added.</li>
 	 * </ul>
@@ -143,8 +140,7 @@ public class TestEPUB extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.OPSPublication)}
-	 * .
+	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.OPSPublication)} .
 	 * <ul>
 	 * <li>Container shall hold more than one OPS publication</li>
 	 * <li>OPS structures shall follow naming conventions.</li>
@@ -173,11 +169,9 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#getOPSPublications()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#getOPSPublications()}.
 	 * <p>
-	 * One OPS-publication and one SVG drawing are added. Only the
-	 * OPS-publication shall be returned.
+	 * One OPS-publication and one SVG drawing are added. Only the OPS-publication shall be returned.
 	 * </p>
 	 * 
 	 * @throws Exception
@@ -193,8 +187,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)}.
 	 * <ul>
 	 * <li>Temporary folder shall not exist when job is done.</li>
 	 * </ul>
@@ -214,9 +207,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File, java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File, java.io.File)} .
 	 * <ul>
 	 * <li>Work folder shall exist when job is done.</li>
 	 * <li>Work folder shall contain EPUB artifacts.</li>
@@ -246,9 +237,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File, java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File, java.io.File)} .
 	 * <ul>
 	 * <li>Exception shall be thrown if working folder already exist.</li>
 	 * </ul>
@@ -269,8 +258,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)} .
 	 * <ul>
 	 * <li>Exception shall be thrown if the EPUB is empty.</li>
 	 * </ul>
@@ -288,8 +276,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#unpack(java.io.File)}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#unpack(java.io.File)}.
 	 * <ul>
 	 * <li>Unpacked EPUB shall have the same contents as the packed one.</li>
 	 * </ul>
@@ -312,9 +299,7 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#unpack(java.io.File, java.io.File)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#unpack(java.io.File, java.io.File)} .
 	 * 
 	 * @throws Exception
 	 */
@@ -364,15 +349,11 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * This case was discovered when testing an EPUB file generated by DocBook
-	 * Reading the OCF fails with a java.net.SocketException: Unexpected end of
-	 * file from server. On closer inspection we can see that the file is
-	 * declared as XHTML (which it of course is not). This is probably due to an
-	 * issue in DocBook XSL 1.76.1
+	 * This case was discovered when testing an EPUB file generated by DocBook Reading the OCF fails with a
+	 * java.net.SocketException: Unexpected end of file from server. On closer inspection we can see that the file is
+	 * declared as XHTML (which it of course is not). This is probably due to an issue in DocBook XSL 1.76.1
 	 * 
-	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537
-	 *      &group_id=21935&atid=373747.
-	 * 
+	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537 &group_id=21935&atid=373747.
 	 * @throws Exception
 	 */
 	@Test

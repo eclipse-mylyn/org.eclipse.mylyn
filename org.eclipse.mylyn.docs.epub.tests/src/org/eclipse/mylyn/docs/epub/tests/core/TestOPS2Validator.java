@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.core;
 
@@ -29,7 +30,7 @@ import org.xml.sax.SAXException;
  * @author Torkild U. Resheim
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "nls" })
 public class TestOPS2Validator extends TestCase {
 
 	private final String[] illegalAttributes = new String[] { "anything", "goes", "in", "here" };

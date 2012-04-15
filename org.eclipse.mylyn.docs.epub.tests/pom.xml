@@ -28,19 +28,18 @@
 	</repositories>
 
 	<build>
-		<plugins>
+		<plugins>		
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.1</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
-						<phase>initialize</phase>
+					  <id>epubcheck</id>
+						<phase>generate-sources</phase>
 						<configuration>
 							<tasks>
-							  <mkdir dir="${basedir}/epubcheck/" />
-							  <get src="http://epubcheck.googlecode.com/files/epubcheck-1.2.zip" dest="${basedir}/epubcheck/epubcheck-1.2.zip"/>
-							  <unzip src="${basedir}/epubcheck/epubcheck-1.2.zip" dest="${basedir}/epubcheck/" />
-							  <delete file="${basedir}/epubcheck/epubcheck-1.2.zip" />
+                <ant antfile="epubcheck.xml" inheritAll="true"/>
 							</tasks>
 						</configuration>
 						<goals>
