@@ -21,7 +21,10 @@
 	
 	<target name="download" unless="epubcheck-present">
 		<get src="http://epubcheck.googlecode.com/files/${epubcheck-zip}"
-			dest="${epubcheck-zip}" />
+			dest="${epubcheck-zip}" 
+			skipexisting="true"
+			verbose="true"
+			retries="5"/>
 		<unzip src="${epubcheck-zip}" dest="${epubcheck-dir}" />
 		<delete file="${epubcheck-zip}" />
 	</target>
