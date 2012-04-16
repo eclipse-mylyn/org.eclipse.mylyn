@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011,2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse  License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.ui;
 
@@ -37,13 +38,12 @@ import org.eclipse.mylyn.docs.epub.opf.Item;
  * Simplified representation of an EPUB revision 2.0 instance.
  * 
  * @author Torkild U. Resheim
- * 
  */
 class EPUB2Bean {
 
-	private static final String STYLING_ID = "styling";
+	private static final String STYLING_ID = "styling"; //$NON-NLS-1$
 
-	private static final String EMPTY_STRING = "";
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	private static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
@@ -84,7 +84,7 @@ class EPUB2Bean {
 		String id = epub.getOpfPackage().getUniqueIdentifier();
 		if (id == null || id.trim().length() == 0) {
 			epub.getOpfPackage().setUniqueIdentifier(ID);
-			epub.addIdentifier(ID, "UUID", UUID.randomUUID().toString());
+			epub.addIdentifier(ID, "UUID", UUID.randomUUID().toString()); //$NON-NLS-1$
 		}
 		// Clear everything except the metadata
 		epub.getOpfPackage().getManifest().getItems().clear();
@@ -158,7 +158,7 @@ class EPUB2Bean {
 		}
 		return EMPTY_STRING;
 	}
-	
+
 	public void setLanguage(String language) {
 		epub.getOpfPackage().getMetadata().getLanguages().clear();
 		epub.addLanguage(null, sorted_locales.get(language));
@@ -219,7 +219,7 @@ class EPUB2Bean {
 	}
 
 	public void setCover(String cover) {
-		epub.setCover(new File(cover), "Cover page");
+		epub.setCover(new File(cover), Messages.EPUB2Bean_0);
 	}
 
 	public void setCreator(String creator) {
@@ -227,7 +227,7 @@ class EPUB2Bean {
 		epub.addCreator(null, null, creator, null, null);
 	}
 
-	private final static String ID = "epub-id";
+	private final static String ID = "epub-id"; //$NON-NLS-1$
 
 	public void setIdentifier(String identifier) {
 		String scheme = getScheme();
@@ -268,9 +268,9 @@ class EPUB2Bean {
 		epub.addTitle(null, null, title);
 	}
 
-	public void setPublicationDate(String date){
+	public void setPublicationDate(String date) {
 		epub.getOpfPackage().getMetadata().getDates().clear();
-		epub.addDate(null, date, "publication");
+		epub.addDate(null, date, "publication"); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -278,14 +278,14 @@ class EPUB2Bean {
 		EList<Date> dates = epub.getOpfPackage().getMetadata().getDates();
 		if (dates.size() > 0) {
 			for (Date date : dates) {
-				if (date.getEvent().equals("publication")) {
+				if (date.getEvent().equals("publication")) { //$NON-NLS-1$
 					FeatureMap fm = date.getMixed();
-				Object o = fm.get(TEXT, false);
-				if (o instanceof FeatureEList) {
-					if (((FeatureEList) o).size() > 0) {
-						return ((FeatureEList) o).get(0).toString();
+					Object o = fm.get(TEXT, false);
+					if (o instanceof FeatureEList) {
+						if (((FeatureEList) o).size() > 0) {
+							return ((FeatureEList) o).get(0).toString();
+						}
 					}
-				}
 				}
 			}
 		}

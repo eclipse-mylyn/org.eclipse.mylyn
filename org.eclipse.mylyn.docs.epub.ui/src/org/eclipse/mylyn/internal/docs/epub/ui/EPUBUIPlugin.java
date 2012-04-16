@@ -15,8 +15,8 @@ import org.osgi.framework.BundleContext;
 public class EPUBUIPlugin extends AbstractUIPlugin {
 
 	private static EPUBUIPlugin plugin;
-	
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.docs.epub.ui";
+
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.docs.epub.ui"; //$NON-NLS-1$
 
 	@Override
 	public void start(BundleContext context) throws Exception {

@@ -30,6 +30,7 @@ import org.junit.Test;
 /**
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class TestEPUB extends AbstractTest {
 
 	private final File epubFile = new File("test" + File.separator + "test.epub");

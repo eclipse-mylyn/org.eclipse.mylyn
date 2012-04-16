@@ -121,7 +121,7 @@ public class EPUB {
 		rootFile.setMediaType(MIMETYPE_OEBPS);
 		rootFile.setPublication(oebps);
 		rootFiles.getRootfiles().add(rootFile);
-		log(MessageFormat.format("Adding root file \"{0}\" of type \"{1}\" to EPUB", rootFile.getFullPath(),
+		log(MessageFormat.format(Messages.getString("EPUB.0"), rootFile.getFullPath(), //$NON-NLS-1$
 				rootFile.getMediaType()), Severity.VERBOSE);
 	}
 
@@ -146,7 +146,7 @@ public class EPUB {
 		rootFile.setMediaType(type);
 		rootFile.setPublication(file);
 		rootFiles.getRootfiles().add(rootFile);
-		log(MessageFormat.format("Adding root file \"{0}\" of type \"{1}\" to EPUB", rootFile.getFullPath(),
+		log(MessageFormat.format(Messages.getString("EPUB.1"), rootFile.getFullPath(), //$NON-NLS-1$
 				rootFile.getMediaType()), Severity.VERBOSE);
 	}
 
@@ -209,7 +209,7 @@ public class EPUB {
 		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
 			writeOCF(rootFolder);
 			EList<RootFile> publications = ocfContainer.getRootfiles().getRootfiles();
-			log(MessageFormat.format("Assembling EPUB file to \"{0}\"", epubFile.getAbsolutePath()), Severity.INFO);
+			log(MessageFormat.format(Messages.getString("EPUB.2"), epubFile.getAbsolutePath()), Severity.INFO); //$NON-NLS-1$
 			for (RootFile rootFile : publications) {
 				Object publication = rootFile.getPublication();
 				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
@@ -226,7 +226,7 @@ public class EPUB {
 			}
 			EPUBFileUtil.zip(epubFile, rootFolder);
 			log(MessageFormat.format(
-					"Successfully created EPUB containing {0,choice,0#no publications|1#one publication|1<{0,number,integer} publications}",
+					Messages.getString("EPUB.3"), //$NON-NLS-1$
 					publications.size()), Severity.INFO);
 		} else {
 			throw new IOException("Could not create working folder in " + rootFolder.getAbsolutePath()); //$NON-NLS-1$

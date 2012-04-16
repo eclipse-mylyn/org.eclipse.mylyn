@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn EPUB Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.tests
 Bundle-Version: 0.8.0.qualifier
-Bundle-Vendor: Torkild U. Resheim
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.junit,
  org.apache.ant;bundle-version="1.8.2",

@@ -42,6 +42,7 @@ import com.adobe.epubcheck.api.EpubCheck;
 /**
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class TestOPSPublication extends AbstractTest {
 
 	OPSPublication oebps;

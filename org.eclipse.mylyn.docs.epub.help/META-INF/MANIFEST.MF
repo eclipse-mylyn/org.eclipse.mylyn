@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EPUB Help and User Guide
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.help;singleton:=true
 Bundle-Version: 0.8.0.qualifier
-Bundle-Vendor: Torkild U. Resheim
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

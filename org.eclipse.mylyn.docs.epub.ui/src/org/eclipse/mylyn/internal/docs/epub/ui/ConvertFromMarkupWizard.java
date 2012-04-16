@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors:
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.ui;
 
@@ -30,8 +31,6 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 public class ConvertFromMarkupWizard extends Wizard {
 
-	private static final String PLUGIN_ID = "org.eclipse.mylyn.docs.epub.ui";
-
 	private EPUB2Bean bean;
 
 	OPSPublication epub;
@@ -49,22 +48,14 @@ public class ConvertFromMarkupWizard extends Wizard {
 	private MainPage page;
 
 	public ConvertFromMarkupWizard() {
-		setWindowTitle("Generate EPUB");
+		setWindowTitle(Messages.ConvertFromMarkupWizard_0);
 		setNeedsProgressMonitor(true);
 	}
 
 	@Override
 	public void addPages() {
 		epub = OPSPublication.getVersion2Instance();
-		// XXX: Read back epub
 		File workingFolder = null;
-		// if (epubFile.exists()) {
-		// try {
-		// workingFolder = epub.unpack(epubFile.getLocation().toFile());
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		// }
 		bean = new EPUB2Bean(epub, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
 		page = new MainPage(bean);
 		addPage(page);
@@ -83,8 +74,8 @@ public class ConvertFromMarkupWizard extends Wizard {
 		}
 		if (folder.isDirectory() && folder.exists()) {
 			String[] children = folder.list();
-			for (int i = 0; i < children.length; i++) {
-				deleteFolder(new File(folder, children[i]));
+			for (String element : children) {
+				deleteFolder(new File(folder, element));
 			}
 		}
 		if (folder.exists()) {
@@ -102,11 +93,11 @@ public class ConvertFromMarkupWizard extends Wizard {
 	public boolean performFinish() {
 		final MarkupToOPS markupToEPUB = new MarkupToOPS();
 		markupToEPUB.setMarkupLanguage(markupLanguage);
-		final MultiStatus ms = new MultiStatus(PLUGIN_ID, 0, "Could not generate EPUB", null);
+		final MultiStatus ms = new MultiStatus(EPUBUIPlugin.PLUGIN_ID, 0, Messages.ConvertFromMarkupWizard_1, null);
 		try {
 			getContainer().run(false, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) {
-					monitor.beginTask("Generate EPUB", 3);
+					monitor.beginTask(Messages.ConvertFromMarkupWizard_2, 3);
 					try {
 						if (epubFile.exists()) {
 							// Delete the old one
@@ -119,7 +110,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 						if (problems.size() > 0) {
 							for (Diagnostic diagnostic : problems) {
-								ms.add(new Status(IStatus.ERROR, PLUGIN_ID, diagnostic.getMessage()));
+								ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, diagnostic.getMessage()));
 							}
 							monitor.setCanceled(true);
 							StatusManager.getManager().handle(ms, StatusManager.BLOCK);
@@ -132,7 +123,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 						epubFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 						monitor.worked(1);
 					} catch (Exception e) {
-						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, "An exception occured", e));
+						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_3, e));
 						monitor.setCanceled(true);
 						StatusManager.getManager().handle(ms);
 						StatusManager.getManager().handle(ms, StatusManager.BLOCK);
@@ -145,7 +136,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 				}
 			});
 		} catch (Throwable e) {
-			ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, "Could not convert to EPUB", e));
+			ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_4, e));
 			return false;
 		}
 		return ms.isOK();

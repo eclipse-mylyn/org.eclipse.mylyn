@@ -146,7 +146,7 @@ public abstract class OPSPublication {
 	protected OPSPublication(ILogger logger) {
 		this();
 		this.logger = logger;
-		log(MessageFormat.format("Composing a version {0} OPS", getVersion()), Severity.INFO, indent++);
+		log(MessageFormat.format(Messages.getString("OPSPublication.0"), getVersion()), Severity.INFO, indent++); //$NON-NLS-1$
 	}
 
 	/**
@@ -162,7 +162,7 @@ public abstract class OPSPublication {
 	 * </ul>
 	 */
 	protected void addCompulsoryData() {
-		log(MessageFormat.format("Adding compulsory data", getVersion()), Severity.VERBOSE, indent++);
+		log(Messages.getString("OPSPublication.1"), Severity.VERBOSE, indent++); //$NON-NLS-1$
 		// Creation date is always when we build
 		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
 		// Make it clear where the tooling comes from
@@ -207,8 +207,8 @@ public abstract class OPSPublication {
 	 * @return the new creator
 	 */
 	public Contributor addContributor(String id, Locale lang, String name, Role role, String fileAs) {
-		log(MessageFormat.format("Adding contributor \"{0}\" in role \"{1}\" for the {2} locale", name, role,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.2"), name, role, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Contributor dc = DCFactory.eINSTANCE.createContributor();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -258,8 +258,8 @@ public abstract class OPSPublication {
 	 * @return the new creator
 	 */
 	public Creator addCreator(String id, Locale lang, String name, Role role, String fileAs) {
-		log(MessageFormat.format("Adding creator \"{0}\" in role \"{1}\" for the {2} locale", name, role, lang == null
-				? "default"
+		log(MessageFormat.format(Messages.getString("OPSPublication.4"), name, role, lang == null //$NON-NLS-1$
+				? Messages.getString("OPSPublication.3") //$NON-NLS-1$
 				: lang.getDisplayName()), Severity.VERBOSE, indent);
 		Creator dc = DCFactory.eINSTANCE.createCreator();
 		setDcLocalized(dc, id, lang, name);
@@ -340,7 +340,7 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding description \"{0}\" for {1} locale", value, lang == null ? "default" : lang),
+		log(MessageFormat.format(Messages.getString("OPSPublication.6"), value, lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$ //$NON-NLS-2$
 				Severity.VERBOSE, indent);
 		Description dc = DCFactory.eINSTANCE.createDescription();
 		setDcLocalized(dc, id, lang, value);
@@ -458,7 +458,7 @@ public abstract class OPSPublication {
 		item.setNoToc(noToc);
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
-		log(MessageFormat.format("Adding file \"{0}\" of type \"{1}\"", item.getHref(), item.getMedia_type()),
+		log(MessageFormat.format(Messages.getString("OPSPublication.8"), item.getHref(), item.getMedia_type()), //$NON-NLS-1$
 				Severity.VERBOSE, indent);
 		opfPackage.getManifest().getItems().add(item);
 		if (spine) {
@@ -531,8 +531,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding publisher \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.9"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Publisher dc = DCFactory.eINSTANCE.createPublisher();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getPublishers().add(dc);
@@ -563,7 +563,7 @@ public abstract class OPSPublication {
 		if (title == null) {
 			throw new IllegalArgumentException("A title must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding {0} reference \"{1}\" to \"{2}\"", value, title, href), Severity.VERBOSE,
+		log(MessageFormat.format(Messages.getString("OPSPublication.11"), value, title, href), Severity.VERBOSE, //$NON-NLS-1$
 				indent);
 		Reference reference = OPFFactory.eINSTANCE.createReference();
 		reference.setHref(href);
@@ -588,8 +588,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding relation \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.12"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Relation dc = DCFactory.eINSTANCE.createRelation();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRelations().add(dc);
@@ -611,8 +611,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding rights \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.14"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Rights dc = DCFactory.eINSTANCE.createRights();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRights().add(dc);
@@ -634,8 +634,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding source \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.16"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Source dc = DCFactory.eINSTANCE.createSource();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSources().add(dc);
@@ -656,8 +656,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding subject \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.18"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Subject dc = DCFactory.eINSTANCE.createSubject();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSubjects().add(dc);
@@ -679,8 +679,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format("Adding title \"{0}\" for the {1} locale", value,
-				lang == null ? "default" : lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.20"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
 		Title dc = DCFactory.eINSTANCE.createTitle();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getTitles().add(dc);
@@ -714,7 +714,7 @@ public abstract class OPSPublication {
 	 * @throws IOException
 	 */
 	private void copyContent(File rootFolder) throws IOException {
-		log("Copying OPS content to EPUB", Severity.INFO, indent);
+		log(Messages.getString("OPSPublication.22"), Severity.INFO, indent); //$NON-NLS-1$
 		EList<Item> items = opfPackage.getManifest().getItems();
 		for (Item item : items) {
 			if (!item.isGenerated()) {
@@ -838,7 +838,7 @@ public abstract class OPSPublication {
 	 * @throws IOException
 	 */
 	private void includeReferencedResources() throws ParserConfigurationException, SAXException, IOException {
-		log("Including referenced resources", Severity.INFO, indent++);
+		log(Messages.getString("OPSPublication.23"), Severity.INFO, indent++); //$NON-NLS-1$
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		// Compose a list of file references
 		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
@@ -847,15 +847,15 @@ public abstract class OPSPublication {
 			if (item.getMedia_type().equals(MIMETYPE_XHTML) && !item.isGenerated()) {
 				if (item.getSourcePath() != null) {
 					File source = new File(item.getSourcePath());
-					log(MessageFormat.format("Parsing {0} for referenced content", source), Severity.VERBOSE, indent);
+					log(MessageFormat.format(Messages.getString("OPSPublication.24"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
 					references.put(source, ReferenceScanner.parse(item));
 				} else {
 					File source = new File(item.getFile());
-					log(MessageFormat.format("Parsing {0} for referenced content", source), Severity.VERBOSE, indent);
+					log(MessageFormat.format(Messages.getString("OPSPublication.25"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
 					references.put(source, ReferenceScanner.parse(item));
 				}
 			} else {
-				log(MessageFormat.format("Ignoring {0} (not XHTML)", item.getFile()), Severity.DEBUG, indent);
+				log(MessageFormat.format(Messages.getString("OPSPublication.26"), item.getFile()), Severity.DEBUG, indent); //$NON-NLS-1$
 			}
 		}
 		indent--;
@@ -882,7 +882,7 @@ public abstract class OPSPublication {
 			} else {
 				StringBuilder sb = new StringBuilder(message);
 				for (int i = 0; i < indent; i++) {
-					sb.insert(0, "  ");
+					sb.insert(0, "  "); //$NON-NLS-1$
 				}
 				logger.log(sb.toString(), severity);
 			}
@@ -1153,7 +1153,7 @@ public abstract class OPSPublication {
 		File coverFile = new File(rootFolder.getAbsolutePath() + File.separator + "cover-page.xhtml"); //$NON-NLS-1$
 		if (!coverFile.exists()) {
 			try {
-				log(MessageFormat.format("Generating cover page for \"{0}\"", coverImage.getHref()), Severity.INFO,
+				log(MessageFormat.format(Messages.getString("OPSPublication.28"), coverImage.getHref()), Severity.INFO, //$NON-NLS-1$
 						indent);
 				FileWriter fw = new FileWriter(coverFile);
 				fw.append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"); //$NON-NLS-1$

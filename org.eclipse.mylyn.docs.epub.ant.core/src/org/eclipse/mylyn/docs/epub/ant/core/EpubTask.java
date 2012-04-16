@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors:
+ *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant.core;
 
@@ -25,7 +26,6 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
 
 /**
  * Assemble a new EPUB.
- * 
  * 
  * @author Torkild U. Resheim
  * @ant.task name="epub" category="epub"
@@ -59,8 +59,7 @@ public class EpubTask extends Task {
 		if (item.role == null) {
 			ops.addContributor(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			ops.addContributor(item.id, item.lang, item.name,
-					Role.get(item.role), item.fileAs);
+			ops.addContributor(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
 
@@ -76,8 +75,7 @@ public class EpubTask extends Task {
 		if (item.role == null) {
 			ops.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			ops.addCreator(item.id, item.lang, item.name, Role.get(item.role),
-					item.fileAs);
+			ops.addCreator(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
 
@@ -86,8 +84,8 @@ public class EpubTask extends Task {
 	}
 
 	/**
-	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
-	 * of the main text. This can be graphical items and styling (CSS).
+	 * The FileSet sub-element is used to add EPUB artifacts that are not a part of the main text. This can be graphical
+	 * items and styling (CSS).
 	 * 
 	 * @param fs
 	 *            the fileset to add
@@ -111,8 +109,7 @@ public class EpubTask extends Task {
 	 * @ant.required
 	 */
 	public void addConfiguredItem(ItemType item) {
-		ops.addItem(item.id, item.lang, item.file, item.dest, item.type,
-				item.spine, item.linear, item.noToc);
+		ops.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.linear, item.noToc);
 	}
 
 	/**
@@ -133,7 +130,7 @@ public class EpubTask extends Task {
 	public void addConfiguredReference(ReferenceType reference) {
 		Type type = Type.get(reference.type);
 		if (type == null) {
-			throw new BuildException("Unknown reference type " + reference.type);
+			throw new BuildException("Unknown reference type " + reference.type); //$NON-NLS-1$
 		}
 		ops.addReference(reference.href, reference.title, type);
 	}
@@ -163,14 +160,12 @@ public class EpubTask extends Task {
 
 	public void addConfiguredToc(TocType toc) {
 		if (this.toc != null) {
-			throw new BuildException(
-					"Only one table of contents (toc) declaration is allowed.");
+			throw new BuildException("Only one table of contents (toc) declaration is allowed."); //$NON-NLS-1$
 		}
 		this.toc = toc;
 	}
 
-	public void addConfiguredType(
-			org.eclipse.mylyn.docs.epub.ant.core.TypeType type) {
+	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.core.TypeType type) {
 		ops.addType(type.id, type.text);
 	}
 
@@ -178,20 +173,18 @@ public class EpubTask extends Task {
 		for (FileSetType fs : filesets) {
 			final File fsDir = fs.getDir(getProject());
 			if (fsDir == null) {
-				throw new BuildException(
-						"File or Resource without directory or file specified");
+				throw new BuildException("File or Resource without directory or file specified"); //$NON-NLS-1$
 			} else if (!fsDir.isDirectory()) {
-				throw new BuildException("Directory does not exist:" + fsDir);
+				throw new BuildException("Directory does not exist:" + fsDir); //$NON-NLS-1$
 			}
 			DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 			String[] includedFiles = ds.getIncludedFiles();
-			for (int i = 0; i < includedFiles.length; i++) {
-				String filename = includedFiles[i].replace('\\', '/');
-				filename = filename.substring(filename.lastIndexOf("/") + 1);
+			for (String includedFile : includedFiles) {
+				String filename = includedFile.replace('\\', '/');
+				filename = filename.substring(filename.lastIndexOf('/') + 1);
 				File base = ds.getBasedir();
-				File found = new File(base, includedFiles[i]);
-				ops.addItem(null, fs.lang, found, fs.dest, null, false, true,
-						false);
+				File found = new File(base, includedFile);
+				ops.addItem(null, fs.lang, found, fs.dest, null, false, true, false);
 			}
 
 		}
@@ -236,8 +229,6 @@ public class EpubTask extends Task {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @param file
 	 *            path to the generated EPUB file.
 	 */
@@ -255,6 +246,5 @@ public class EpubTask extends Task {
 
 	private void validate() {
 	}
-
 
 }

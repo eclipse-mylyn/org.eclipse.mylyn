@@ -107,7 +107,7 @@ public class OPS2Publication extends OPSPublication {
 	 */
 	@Override
 	protected void generateTableOfContents() throws Exception {
-		log("Generating table of contents for OPS", Severity.INFO, indent++);
+		log(Messages.getString("OPS2Publication.0"), Severity.INFO, indent++); //$NON-NLS-1$
 		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
 		ncxTOC.setNavMap(navMap);
 		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
@@ -140,7 +140,7 @@ public class OPS2Publication extends OPSPublication {
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
 				FileInputStream fis = new FileInputStream(file);
-				log(MessageFormat.format("Parsing {0}", referencedItem.getHref()), Severity.VERBOSE, indent);
+				log(MessageFormat.format(Messages.getString("OPS2Publication.1"), referencedItem.getHref()), Severity.VERBOSE, indent); //$NON-NLS-1$
 				playOrder = TOCGenerator.parse(new InputSource(fis), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
