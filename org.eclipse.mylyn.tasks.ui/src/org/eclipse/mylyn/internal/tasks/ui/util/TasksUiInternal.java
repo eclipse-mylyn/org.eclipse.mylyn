@@ -555,6 +555,9 @@ public class TasksUiInternal {
 					((RepositoryStatus) status).getHtmlMessage());
 		} else {
 			String message = status.getMessage();
+			if (message == null || message.trim().length() == 0) {
+				message = Messages.TasksUiInternal_An_unknown_error_occurred;
+			}
 			if (showLinkToErrorLog) {
 				message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
 			}

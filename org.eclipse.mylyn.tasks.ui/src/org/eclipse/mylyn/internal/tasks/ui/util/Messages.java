@@ -97,6 +97,8 @@ public class Messages extends NLS {
 
 	public static String TasksUiInternal_Activate_Task;
 
+	public static String TasksUiInternal_An_unknown_error_occurred;
+
 	public static String TasksUiInternal_Failed_to_open_task;
 
 	public static String TasksUiInternal_No_repository_found;
