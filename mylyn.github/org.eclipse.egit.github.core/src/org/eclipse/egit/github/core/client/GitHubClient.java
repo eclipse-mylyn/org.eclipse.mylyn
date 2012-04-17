@@ -569,8 +569,13 @@ public class GitHubClient {
 					request.getOutputStream(), bufferSize);
 			try {
 				output.write(data);
+				output.flush();
 			} finally {
-				output.close();
+				try {
+					output.close();
+				} catch (IOException ignored) {
+					// Ignored
+				}
 			}
 		} else
 			request.setFixedLengthStreamingMode(0);
