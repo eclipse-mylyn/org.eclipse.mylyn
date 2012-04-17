@@ -571,6 +571,7 @@ public class TestOPSPublication extends AbstractTest {
 		epub.pack(epubFile);
 		oebps.validateMetadata();
 		EpubCheck checker = new EpubCheck(epubFile);
+		System.out.println("Using version " + EpubCheck.VERSION + " of EpubCheck.");
 		Assert.assertTrue(checker.validate());
 
 		EPUB epub2 = new EPUB();
