@@ -937,6 +937,14 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<img border=\"0\" src=\"Foo.gif\"/>"));
 	}
 
+	public void testHeadingWithHtmlTags() {
+		String html = parser.parseToHtml("= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<h1 id=\"Heading_Text\"><span style=\"font-family:monospace\">Heading Text</span></h1>"));
+	}
+
 	private String readFully(String resource) throws IOException {
 		Reader reader = new InputStreamReader(MediaWikiLanguageTest.class.getResourceAsStream(resource));
 		StringWriter writer = new StringWriter();

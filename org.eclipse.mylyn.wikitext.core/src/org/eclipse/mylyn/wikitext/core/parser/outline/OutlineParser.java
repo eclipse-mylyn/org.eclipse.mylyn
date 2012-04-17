@@ -167,15 +167,15 @@ public class OutlineParser {
 		@Override
 		public void characters(String text) {
 			if (buf != null) {
+				// bug 374019: strip HTML tags from text used to generate ID
+				text = text.replaceAll("</?[a-zA-Z0-9]+.*?>", ""); //$NON-NLS-1$//$NON-NLS-2$
+
 				buf.append(text);
 			}
 		}
 
 		@Override
 		public void charactersUnescaped(String literal) {
-			if (buf != null) {
-				buf.append(literal);
-			}
 		}
 
 		@Override

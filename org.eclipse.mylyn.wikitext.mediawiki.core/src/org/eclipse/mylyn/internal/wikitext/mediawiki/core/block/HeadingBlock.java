@@ -52,7 +52,10 @@ public class HeadingBlock extends Block {
 
 		final Attributes attributes = new Attributes();
 		if (attributes.getId() == null) {
-			attributes.setId(state.getIdGenerator().newId("h" + level, text)); //$NON-NLS-1$
+			// bug 374019: strip HTML tags from text used to generate ID
+			String textForId = text.replaceAll("</?[a-zA-Z0-9]+.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
+			attributes.setId(state.getIdGenerator().newId("h" + level, textForId)); //$NON-NLS-1$
 		}
 		builder.beginHeading(level, attributes);
 

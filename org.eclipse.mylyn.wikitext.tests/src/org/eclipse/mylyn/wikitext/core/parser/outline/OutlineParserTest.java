@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.outline;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -97,5 +98,19 @@ public class OutlineParserTest extends TestCase {
 		assertSame(outline, outline.getChildren().get(2).getParent());
 		assertSame(outline, outline.getChildren().get(3).getParent());
 
+	}
+
+	public void testHeadersWithHtmlTags() {
+		// bug 374019
+		outlineParser = new OutlineParser(new MediaWikiLanguage());
+
+		OutlineItem outline = outlineParser.parse("= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
+
+		assertEquals(1, outline.getChildren().size());
+
+		OutlineItem headingItem = outline.getChildren().get(0);
+
+		assertEquals("Heading_Text", headingItem.getId());
+		assertEquals("Heading Text", headingItem.getLabel());
 	}
 }
