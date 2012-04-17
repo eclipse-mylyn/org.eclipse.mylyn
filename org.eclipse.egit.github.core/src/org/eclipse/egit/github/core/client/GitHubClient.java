@@ -147,6 +147,10 @@ public class GitHubClient {
 
 	private int bufferSize = 8192;
 
+	private int requestLimit = -1;
+
+	private int remainingRequests = -1;
+
 	/**
 	 * Create default client
 	 */
@@ -585,6 +589,7 @@ public class GitHubClient {
 			final Object params, final Type type) throws IOException {
 		sendParams(request, params);
 		final int code = request.getResponseCode();
+		updateRateLimits(request);
 		if (isOk(code))
 			if (type != null)
 				return parseJson(getStream(request), type);
@@ -648,6 +653,7 @@ public class GitHubClient {
 		if (accept != null)
 			httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
 		final int code = httpRequest.getResponseCode();
+		updateRateLimits(httpRequest);
 		if (isOk(code))
 			return new GitHubResponse(httpRequest, getBody(request,
 					getStream(httpRequest)));
@@ -702,7 +708,63 @@ public class GitHubClient {
 		HttpURLConnection request = createDelete(uri);
 		sendParams(request, params);
 		final int code = request.getResponseCode();
+		updateRateLimits(request);
 		if (!isEmpty(code))
 			throw new RequestException(parseError(getStream(request)), code);
+	}
+
+	/**
+	 * Update rate limits present in response headers
+	 *
+	 * @param request
+	 * @return this client
+	 */
+	protected GitHubClient updateRateLimits(HttpURLConnection request) {
+		String limit = request.getHeaderField("X-RateLimit-Limit");
+		if (limit != null && limit.length() > 0)
+			try {
+				requestLimit = Integer.parseInt(limit);
+			} catch (NumberFormatException nfe) {
+				requestLimit = -1;
+			}
+		else
+			requestLimit = -1;
+
+		String remaining = request.getHeaderField("X-RateLimit-Remaining");
+		if (remaining != null && remaining.length() > 0)
+			try {
+				remainingRequests = Integer.parseInt(remaining);
+			} catch (NumberFormatException nfe) {
+				remainingRequests = -1;
+			}
+		else
+			remainingRequests = -1;
+
+		return this;
+	}
+
+	/**
+	 * Get number of requests remaining before rate limiting occurs
+	 * <p>
+	 * This will be the value of the 'X-RateLimit-Remaining' header from the
+	 * last request made
+	 *
+	 * @return remainingRequests or -1 if not present in the response
+	 */
+	public int getRemainingRequests() {
+		return remainingRequests;
+	}
+
+	/**
+	 * Get number of requests that {@link #getRemainingRequests()} counts down
+	 * from as each request is made
+	 * <p>
+	 * This will be the value of the 'X-RateLimit-Limit' header from the last
+	 * request made
+	 *
+	 * @return requestLimit or -1 if not present in the response
+	 */
+	public int getRequestLimit() {
+		return requestLimit;
 	}
 }
