@@ -31,6 +31,7 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -174,7 +175,7 @@ public class IssueService extends GitHubService {
 	 * @return non-null but possibly empty list of issues
 	 * @throws IOException
 	 */
-	public List<Issue> getIssues() throws IOException {
+	public List<RepositoryIssue> getIssues() throws IOException {
 		return getIssues(null);
 	}
 
@@ -185,7 +186,7 @@ public class IssueService extends GitHubService {
 	 * @return non-null but possibly empty list of issues
 	 * @throws IOException
 	 */
-	public List<Issue> getIssues(Map<String, String> filterData)
+	public List<RepositoryIssue> getIssues(Map<String, String> filterData)
 			throws IOException {
 		return getAll(pageIssues(filterData));
 	}
@@ -195,7 +196,7 @@ public class IssueService extends GitHubService {
 	 *
 	 * @return iterator over pages of issues
 	 */
-	public PageIterator<Issue> pageIssues() {
+	public PageIterator<RepositoryIssue> pageIssues() {
 		return pageIssues((Map<String, String>) null);
 	}
 
@@ -205,7 +206,8 @@ public class IssueService extends GitHubService {
 	 * @param filterData
 	 * @return iterator over pages of issues
 	 */
-	public PageIterator<Issue> pageIssues(Map<String, String> filterData) {
+	public PageIterator<RepositoryIssue> pageIssues(
+			Map<String, String> filterData) {
 		return pageIssues(filterData, PAGE_SIZE);
 	}
 
@@ -216,8 +218,8 @@ public class IssueService extends GitHubService {
 	 * @param size
 	 * @return iterator over pages of issues
 	 */
-	public PageIterator<Issue> pageIssues(Map<String, String> filterData,
-			int size) {
+	public PageIterator<RepositoryIssue> pageIssues(
+			Map<String, String> filterData, int size) {
 		return pageIssues(filterData, PAGE_FIRST, size);
 	}
 
@@ -229,12 +231,12 @@ public class IssueService extends GitHubService {
 	 * @param size
 	 * @return iterator over pages of issues
 	 */
-	public PageIterator<Issue> pageIssues(Map<String, String> filterData,
-			int start, int size) {
-		PagedRequest<Issue> request = createPagedRequest(start, size);
+	public PageIterator<RepositoryIssue> pageIssues(
+			Map<String, String> filterData, int start, int size) {
+		PagedRequest<RepositoryIssue> request = createPagedRequest(start, size);
 		request.setParams(filterData);
 		request.setUri(SEGMENT_ISSUES);
-		request.setType(new TypeToken<List<Issue>>() {
+		request.setType(new TypeToken<List<RepositoryIssue>>() {
 		}.getType());
 		return createPageIterator(request);
 	}

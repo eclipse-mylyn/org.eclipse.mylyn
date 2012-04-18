@@ -26,6 +26,7 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -691,7 +692,7 @@ public class IssueServiceTest {
 	 */
 	@Test
 	public void pageIssues() throws IOException {
-		PageIterator<Issue> iterator = issueService.pageIssues();
+		PageIterator<RepositoryIssue> iterator = issueService.pageIssues();
 		assertNotNull(iterator);
 		assertTrue(iterator.hasNext());
 		assertEquals(Utils.page("/issues"), iterator.getRequest().generateUri());
@@ -733,7 +734,7 @@ public class IssueServiceTest {
 	 */
 	@Test
 	public void getCurrentUserIssues() throws IOException {
-		List<Issue> issues = issueService.getIssues();
+		List<RepositoryIssue> issues = issueService.getIssues();
 		assertNotNull(issues);
 		assertTrue(issues.isEmpty());
 	}
