@@ -80,6 +80,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		RepositoryHookResponseTest.class, //
 		RepositoryHookTest.class, //
 		RepositoryIdTest.class, //
+		RepositoryIssueTest.class, //
 		RepositoryServiceTest.class, //
 		RepositoryTagTest.class, //
 		RepositoryTest.class, //
