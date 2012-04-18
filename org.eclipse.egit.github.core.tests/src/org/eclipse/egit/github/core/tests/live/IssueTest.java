@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
+import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.junit.Test;
@@ -179,7 +180,7 @@ public class IssueTest extends LiveTest {
 	public void pageCurrentUsersIssues() throws Exception {
 		checkUser();
 		IssueService service = new IssueService(client);
-		Collection<Issue> issues = service.pageIssues(null, 1).next();
+		Collection<RepositoryIssue> issues = service.pageIssues(null, 1).next();
 		assertNotNull(issues);
 		assertEquals(1, issues.size());
 		assertNotNull(issues.toArray()[0]);
