@@ -406,7 +406,7 @@
       </properties>
     </profile>
     <profile>
-      <id>hudson.eclipse.org</id>
+      <id>hudson.eclipse.org-shared</id>
       <activation>
         <property>
           <name>user.name</name>
@@ -417,6 +417,17 @@
         <mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
         <mylyn-keystore>/shared/mylyn/spingel/.keystore</mylyn-keystore>
         <test.keyring.password>/shared/mylyn/spingel/.secret</test.keyring.password>
+      </properties>
+    </profile>
+    <profile>
+      <id>hudson.eclipse.org</id>
+      <activation>
+        <property>
+          <name>user.name</name>
+          <value>hudsonbuild</value>
+        </property>
+      </activation>
+      <properties>
         <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -DhttpnonProxyHosts=wiki.eclipse.org -Djavax.net.ssl.keyStore=${mylyn-keystore} -Djavax.net.ssl.keyStorePassword=mylyntest  ${test.uservmargs}</test.vmargs>
         <!--
             <mylyn-test-append>@e${target-version}</mylyn-test-append>
