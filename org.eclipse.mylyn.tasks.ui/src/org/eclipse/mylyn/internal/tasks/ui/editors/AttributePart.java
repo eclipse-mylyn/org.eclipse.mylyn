@@ -115,7 +115,10 @@ public class AttributePart extends AbstractLocalEditorPart {
 		urlLayout.verticalSpacing = 0;
 		urlLayout.marginWidth = 1;
 		urlComposite.setLayout(urlLayout);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlComposite);
+		GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
+				.applyTo(urlComposite);
 
 		urlEditor = new RichTextEditor(getRepository(), SWT.FLAT | SWT.SINGLE, null, null, getTask()) {
 			@Override
