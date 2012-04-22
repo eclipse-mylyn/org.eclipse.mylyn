@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.hudson.core;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -88,11 +85,9 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonTasksJunitTestResult;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultAction;
 import org.eclipse.mylyn.internal.hudson.model.HudsonTasksTestAggregatedTestResultActionChildReport;
 import org.eclipse.osgi.util.NLS;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * @author Markus Knittig
@@ -599,13 +594,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				Element child = (Element) children.item(i);
 				String tagName = child.getTagName();
 				if ("parameterDefinition".equals(tagName)) { //$NON-NLS-1$
-					IParameterDefinition parameterDefinition;
 					try {
-						parameterDefinition = parseParameter(child);
+						IParameterDefinition parameterDefinition = parseParameter(child);
 						parameterDefinitions.add(parameterDefinition);
 					} catch (HudsonException e) {
-						e.printStackTrace();
-						// ignore
+						// unknown parameter type, ignore 
 					}
 				}
 			}
@@ -680,22 +673,22 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				getElementContent(element, "type", false)));
 	}
 
-	private void parseParametersFromJobConfig(Document document, List<IParameterDefinition> definitions)
-			throws ParserConfigurationException, SAXException, IOException, HudsonException {
-		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
-		for (int i = 0; i < containers.getLength(); i++) {
-			Element container = (Element) containers.item(i);
-			NodeList elements = container.getChildNodes();
-			for (int j = 0; j < elements.getLength(); j++) {
-				Node node = elements.item(j);
-				if (node instanceof Element) {
-					Element element = (Element) elements.item(j);
-					IParameterDefinition definition = parseParameter(element);
-					definitions.add(definition);
-				}
-			}
-		}
-	}
+//	private void parseParametersFromJobConfig(Document document, List<IParameterDefinition> definitions)
+//			throws ParserConfigurationException, SAXException, IOException, HudsonException {
+//		NodeList containers = document.getElementsByTagName("parameterDefinitions"); //$NON-NLS-1$
+//		for (int i = 0; i < containers.getLength(); i++) {
+//			Element container = (Element) containers.item(i);
+//			NodeList elements = container.getChildNodes();
+//			for (int j = 0; j < elements.getLength(); j++) {
+//				Node node = elements.item(j);
+//				if (node instanceof Element) {
+//					Element element = (Element) elements.item(j);
+//					IParameterDefinition definition = parseParameter(element);
+//					definitions.add(definition);
+//				}
+//			}
+//		}
+//	}
 
 	private BuildStatus parseResult(Node node) {
 		if (node != null) {
