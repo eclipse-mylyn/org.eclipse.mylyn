@@ -16,9 +16,6 @@ import java.util.Set;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -43,14 +40,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.internal.WorkbenchWindow;
-import org.eclipse.ui.internal.layout.IWindowTrim;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
@@ -111,22 +103,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 	};
 
-	private final IPropertyChangeListener preferencesListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			if (property.equals(ITasksUiPreferenceConstants.SHOW_TRIM)) {
-				Object newValue = event.getNewValue();
-				Boolean isVisible = false;
-				if (newValue instanceof Boolean) {
-					isVisible = (Boolean) newValue;
-				} else if (newValue instanceof String) {
-					isVisible = Boolean.parseBoolean((String) newValue);
-				}
-				setTrimVisible(isVisible);
-			}
-		}
-	};
-
 	private SelectionProviderAdapter activeTaskSelectionProvider;
 
 	private RepositoryElementActionGroup actionGroup;
@@ -134,19 +110,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	public TaskTrimWidget() {
 		TasksUi.getTaskActivityManager().addActivationListener(taskActivationListener);
 		TasksUiPlugin.getTaskList().addChangeListener(taskListListener);
-		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
 		hookContextMenu();
-	}
-
-	private void setTrimVisible(boolean visible) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window instanceof WorkbenchWindow) {
-			IWindowTrim trim = ((WorkbenchWindow) window).getTrimManager().getTrim(ID_CONTAINER);
-			if (trim != null) {
-				((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
-				((WorkbenchWindow) window).getTrimManager().forceLayout();
-			}
-		}
 	}
 
 	@Override
@@ -171,7 +135,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		TasksUi.getTaskActivityManager().removeActivationListener(taskActivationListener);
 		TasksUiPlugin.getTaskList().removeChangeListener(taskListListener);
-		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferencesListener);
 	}
 
 	@Override
@@ -190,25 +153,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		createStatusComposite(composite);
 
-		if (!shouldShowTrim()) {
-			if (parent instanceof ToolBar) {
-				// bug 201589: it's not possible to hide the contribution on startup, as a work-around the tool bar is hidden which avoids flickering of the layout
-				parent.setVisible(false);
-			}
-			// needs to be invoked asynchronously since the trim contribution is just getting constructed when createControl() is invoked
-			parent.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					setTrimVisible(shouldShowTrim());
-				}
-			});
-		}
-
 		return composite;
-	}
-
-	private boolean shouldShowTrim() {
-		IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
-		return uiPreferenceStore.getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM);
 	}
 
 	private Composite createStatusComposite(final Composite container) {

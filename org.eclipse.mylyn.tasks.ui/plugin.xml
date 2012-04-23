@@ -1942,6 +1942,13 @@
             properties="connectorKind,userManaged"
             type="org.eclipse.mylyn.tasks.core.TaskRepository">
       </propertyTester>
+      <propertyTester
+            class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPreferenceTester"
+            id="org.eclipse.mylyn.tasks.ui.propertyTester.Preferences"
+            namespace="org.eclipse.mylyn.tasks.ui.preferences"
+            properties="showTrim"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
     <extension
           point="org.eclipse.mylyn.tasks.ui.taskRepositoryPageContribution">
@@ -2101,18 +2108,26 @@
 	            label="Previous Task"
 	            icon="icons/etool16/navigate-previous.gif"
 	            style="pulldown">
+		        <visibleWhen checkEnabled="false">
+		             <test
+		                   forcePluginActivation="true"
+		                   property="org.eclipse.mylyn.tasks.ui.preferences.showTrim"
+		                   value="true">
+		             </test>
+		        </visibleWhen>
 	        </command>
 	
 	        <control
 	           class="org.eclipse.mylyn.internal.tasks.ui.TaskTrimWidget"
-	           id="org.eclipse.mylyn.tasks.ui.trim.control"/>
-		        <!-- Bug 201589: this does not have any effect
+	           id="org.eclipse.mylyn.tasks.ui.trim.control">
 		        <visibleWhen checkEnabled="false">
-		           <test forcePluginActivation="true"
-		                 property="org.eclipse.mylyn.tasks.ui.trimEnabled"/>
+		             <test
+		                   forcePluginActivation="true"
+		                   property="org.eclipse.mylyn.tasks.ui.preferences.showTrim"
+		                   value="true">
+		             </test>
 		        </visibleWhen>
-		        <visibleWhen><not><systemTest property="os.name" value="Windows XP"/></not></visibleWhen>
-		        -->
+		     </control>
 	      </toolbar>
 	    </menuContribution>
 	</extension>
