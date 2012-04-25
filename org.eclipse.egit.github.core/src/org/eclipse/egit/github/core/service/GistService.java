@@ -17,6 +17,8 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_PUBLI
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_STAR;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_STARRED;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -90,17 +92,50 @@ public class GistService extends GitHubService {
 	}
 
 	/**
+	 * Create page iterator for the current user's starred gists
+	 *
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageStarredGists() {
+		return pageStarredGists(PAGE_SIZE);
+	}
+
+	/**
+	 * Create page iterator for the current user's starred gists
+	 *
+	 * @param size
+	 *            size of page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageStarredGists(final int size) {
+		return pageStarredGists(PAGE_FIRST, size);
+	}
+
+	/**
+	 * Create page iterator for the current user's starred gists
+	 *
+	 * @param size
+	 *            size of page
+	 * @param start
+	 *            starting page
+	 * @return gist page iterator
+	 */
+	public PageIterator<Gist> pageStarredGists(final int start, final int size) {
+		PagedRequest<Gist> request = createPagedRequest(start, size);
+		request.setUri(SEGMENT_GISTS + SEGMENT_STARRED);
+		request.setType(new TypeToken<List<Gist>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
+
+	/**
 	 * Get starred gists for currently authenticated user
 	 *
 	 * @return list of gists
 	 * @throws IOException
 	 */
 	public List<Gist> getStarredGists() throws IOException {
-		PagedRequest<Gist> request = createPagedRequest();
-		request.setUri(SEGMENT_GISTS + SEGMENT_STARRED);
-		request.setType(new TypeToken<List<Gist>>() {
-		}.getType());
-		return getAll(request);
+		return getAll(pageStarredGists());
 	}
 
 	/**
@@ -135,8 +170,8 @@ public class GistService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Gist> getGists(String user) throws IOException {
-		PagedRequest<Gist> request = createUserGistRequest(user,
-				PagedRequest.PAGE_FIRST, PagedRequest.PAGE_SIZE);
+		PagedRequest<Gist> request = createUserGistRequest(user, PAGE_FIRST,
+				PAGE_SIZE);
 		return getAll(request);
 	}
 
@@ -147,7 +182,7 @@ public class GistService extends GitHubService {
 	 * @return gist page iterator
 	 */
 	public PageIterator<Gist> pageGists(final String user) {
-		return pageGists(user, PagedRequest.PAGE_SIZE);
+		return pageGists(user, PAGE_SIZE);
 	}
 
 	/**
@@ -159,7 +194,7 @@ public class GistService extends GitHubService {
 	 * @return gist page iterator
 	 */
 	public PageIterator<Gist> pageGists(final String user, final int size) {
-		return pageGists(user, PagedRequest.PAGE_FIRST, size);
+		return pageGists(user, PAGE_FIRST, size);
 	}
 
 	/**
@@ -184,7 +219,7 @@ public class GistService extends GitHubService {
 	 * @return gist page iterator
 	 */
 	public PageIterator<Gist> pagePublicGists() {
-		return pagePublicGists(PagedRequest.PAGE_SIZE);
+		return pagePublicGists(PAGE_SIZE);
 	}
 
 	/**
@@ -195,7 +230,7 @@ public class GistService extends GitHubService {
 	 * @return gist page iterator
 	 */
 	public PageIterator<Gist> pagePublicGists(final int size) {
-		return pagePublicGists(PagedRequest.PAGE_FIRST, size);
+		return pagePublicGists(PAGE_FIRST, size);
 	}
 
 	/**
