@@ -170,9 +170,7 @@ public class GistService extends GitHubService {
 	 * @throws IOException
 	 */
 	public List<Gist> getGists(String user) throws IOException {
-		PagedRequest<Gist> request = createUserGistRequest(user, PAGE_FIRST,
-				PAGE_SIZE);
-		return getAll(request);
+		return getAll(pageGists(user));
 	}
 
 	/**

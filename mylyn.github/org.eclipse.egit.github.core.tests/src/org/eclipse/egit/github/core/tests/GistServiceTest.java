@@ -518,6 +518,8 @@ public class GistServiceTest {
 		PageIterator<Gist> iterator = gistService.pageGists("user");
 		assertNotNull(iterator);
 		assertTrue(iterator.hasNext());
+		assertEquals(Utils.page("/users/user/gists"), iterator.getRequest()
+				.generateUri());
 	}
 
 	/**
