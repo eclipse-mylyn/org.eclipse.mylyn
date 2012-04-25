@@ -710,7 +710,7 @@ public class TestOPSPublication extends AbstractTest {
 	@Test
 	public final void test_Bug373052() throws Exception {
 		// We need to link to a absolute file so we create a temporary HTML file
-		// in which we have the link.
+		// in which we have the link.m
 		File htmlFile = File.createTempFile("temp", ".xhtml");
 		File svgFile = new File("testdata/drawing-100x100.svg");
 
@@ -735,6 +735,28 @@ public class TestOPSPublication extends AbstractTest {
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
 		Assert.assertTrue(svg.exists());
 
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=376312">bug 376312</a>: [epub] Automatic
+	 * inclusion of detected resources may add the same resource twice or more
+	 * <p>
+	 * File A references file C as do file B. File C references file A. Before the fix there would be two instances of
+	 * file C.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	public final void test_Bug376312() throws Exception {
+		EPUB epub = new EPUB();
+		oebps.setIncludeReferencedResources(true);
+		oebps.addItem(new File("testdata/circular/file-a.xhtml"));
+		oebps.addItem(new File("testdata/circular/file-b.xhtml"));
+		epub.add(oebps);
+		epub.pack(epubFile);
+		EList<Item> items = oebps.getOpfPackage().getManifest().getItems();
+		// File A, B, C and the NCX
+		assertEquals(4, items.size());
 	}
 
 	/**

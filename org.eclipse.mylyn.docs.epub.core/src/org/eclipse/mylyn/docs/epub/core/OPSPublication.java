@@ -340,7 +340,8 @@ public abstract class OPSPublication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.6"), value, lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$ //$NON-NLS-2$
+		log(MessageFormat.format(
+				Messages.getString("OPSPublication.6"), value, lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$ //$NON-NLS-2$
 				Severity.VERBOSE, indent);
 		Description dc = DCFactory.eINSTANCE.createDescription();
 		setDcLocalized(dc, id, lang, value);
@@ -830,8 +831,9 @@ public abstract class OPSPublication {
 	protected abstract String getVersion();
 
 	/**
-	 * Iterates over all files in the manifest attempting to determine referenced resources such as image files and adds
-	 * these to the manifest.
+	 * Iterates over all XHTML (non-generated) files in the manifest attempting to determine referenced resources such
+	 * as image files and adds these to the manifest. This method is not recursive, so items added through this
+	 * mechanism will not be searched for more content to add.
 	 * 
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
@@ -845,20 +847,22 @@ public abstract class OPSPublication {
 		for (Item item : manifestItems) {
 			// Only parse XHTML-files and files that are not generated
 			if (item.getMedia_type().equals(MIMETYPE_XHTML) && !item.isGenerated()) {
+				File source = null;
 				if (item.getSourcePath() != null) {
-					File source = new File(item.getSourcePath());
+					source = new File(item.getSourcePath());
 					log(MessageFormat.format(Messages.getString("OPSPublication.24"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
 					references.put(source, ReferenceScanner.parse(item));
 				} else {
-					File source = new File(item.getFile());
+					source = new File(item.getFile());
 					log(MessageFormat.format(Messages.getString("OPSPublication.25"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
-					references.put(source, ReferenceScanner.parse(item));
 				}
+				references.put(source, ReferenceScanner.parse(item));
 			} else {
 				log(MessageFormat.format(Messages.getString("OPSPublication.26"), item.getFile()), Severity.DEBUG, indent); //$NON-NLS-1$
 			}
 		}
 		indent--;
+		// Add all referenced items to the manifest
 		for (File root : references.keySet()) {
 			List<File> files = references.get(root);
 			for (File file : files) {
@@ -869,7 +873,17 @@ public abstract class OPSPublication {
 				if (relativePath.isAbsolute()) {
 					relativePath = new File(EMPTY_STRING);
 				}
-				addItem(null, null, file, relativePath.getParent(), null, false, false, false);
+				// Add those files that does not already exist in the manifest
+				boolean add = true;
+				EList<Item> items = getOpfPackage().getManifest().getItems();
+				for (Item item : items) {
+					if (item.getFile().equals(file.getAbsolutePath())) {
+						add = false;
+					}
+				}
+				if (add) {
+					addItem(null, null, file, relativePath.getParent(), null, false, false, false);
+				}
 			}
 		}
 		indent--;
