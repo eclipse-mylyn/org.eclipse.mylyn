@@ -327,6 +327,20 @@ public class GistServiceTest {
 	}
 
 	/**
+	 * Get iterator for starred gists
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageStarredGists() throws IOException {
+		PageIterator<Gist> iterator = gistService.pageStarredGists();
+		assertNotNull(iterator);
+		assertTrue(iterator.hasNext());
+		assertEquals(Utils.page("/gists/starred"), iterator.getRequest()
+				.generateUri());
+	}
+
+	/**
 	 * Get gists for null login name
 	 *
 	 * @throws IOException
