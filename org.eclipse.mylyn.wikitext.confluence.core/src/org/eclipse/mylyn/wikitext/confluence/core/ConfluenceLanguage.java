@@ -134,7 +134,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
-		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break //$NON-NLS-1$
+		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\ ?)")); // line break //$NON-NLS-1$
 		tokenSyntax.add(new EscapedCharacterReplacementToken()); // ORDER DEPENDENCY must come after line break
 		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -161,4 +161,5 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	public DocumentBuilder createDocumentBuilder(Writer out) {
 		return new ConfluenceDocumentBuilder(out);
 	}
+
 }

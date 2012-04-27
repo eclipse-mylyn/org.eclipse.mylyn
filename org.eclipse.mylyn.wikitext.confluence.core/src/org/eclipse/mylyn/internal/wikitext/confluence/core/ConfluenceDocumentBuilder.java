@@ -55,7 +55,40 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		entityToLiteral.put("#37", "%"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
-	private class ContentBlock extends Block {
+	private interface ConfluenceBlock {
+
+		void writeLineBreak() throws IOException;
+
+	}
+
+	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
+			ConfluenceBlock {
+
+		private int consecutiveLineBreakCount = 0;
+
+		@Override
+		public void write(int c) throws IOException {
+			consecutiveLineBreakCount = 0;
+			super.write(c);
+		}
+
+		@Override
+		public void write(String s) throws IOException {
+			consecutiveLineBreakCount = 0;
+			super.write(s);
+		}
+
+		public void writeLineBreak() throws IOException {
+			++consecutiveLineBreakCount;
+			if (consecutiveLineBreakCount == 1) {
+				ConfluenceDocumentBuilder.this.emitContent('\n');
+			} else {
+				ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private class ContentBlock extends Block implements ConfluenceBlock {
 
 		private final String prefix;
 
@@ -64,6 +97,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final boolean requireAdjacentSeparator;
 
 		private final boolean emitWhenEmpty;
+
+		private int consecutiveLineBreakCount = 0;
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty) {
@@ -80,6 +115,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		public void write(int c) throws IOException {
+			consecutiveLineBreakCount = 0;
 			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
 				c = normalizeWhitespace(c);
 			}
@@ -88,10 +124,21 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		public void write(String s) throws IOException {
+			consecutiveLineBreakCount = 0;
 			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
 				s = normalizeWhitespace(s);
 			}
 			ConfluenceDocumentBuilder.this.emitContent(s);
+		}
+
+		public void writeLineBreak() throws IOException {
+			++consecutiveLineBreakCount;
+			if (consecutiveLineBreakCount == 1
+					|| (getBlockType() == BlockType.CODE || getBlockType() == BlockType.PREFORMATTED)) {
+				ConfluenceDocumentBuilder.this.emitContent('\n');
+			} else {
+				ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
+			}
 		}
 
 		@Override
@@ -124,6 +171,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			}
 
 			super.close();
+			consecutiveLineBreakCount = 0;
 		}
 
 		protected void emitContent(final String content, final boolean extended) throws IOException {
@@ -187,6 +235,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	public ConfluenceDocumentBuilder(Writer out) {
 		super(out);
+		currentBlock = new ImplicitParagraphBlock();
 	}
 
 	@Override
@@ -222,8 +271,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 			return new ContentBlock(type, attributesMarkup, "\n\n", false, false); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type,
-					"{noformat}" + computeAttributes(attributes) + ". ", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "{noformat}", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case QUOTE:
 			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case TABLE:
@@ -417,7 +465,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	public void lineBreak() {
 		assertOpenBlock();
 		try {
-			currentBlock.write('\n');
+			if (currentBlock instanceof ConfluenceBlock) {
+				((ConfluenceBlock) currentBlock).writeLineBreak();
+			} else {
+				currentBlock.write('\n');
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -432,4 +484,10 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
+	@Override
+	protected void assertOpenBlock() {
+		if (currentBlock == null) {
+			currentBlock = new ImplicitParagraphBlock();
+		}
+	}
 }

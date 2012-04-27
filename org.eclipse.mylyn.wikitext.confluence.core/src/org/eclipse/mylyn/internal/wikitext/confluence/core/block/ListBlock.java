@@ -40,6 +40,7 @@ public class ListBlock extends Block {
 
 	@Override
 	public int processLineContent(String line, int offset) {
+		boolean continuation = false;
 		if (blockLineCount == 0) {
 			listState = new Stack<ListState>();
 			Attributes attributes = new Attributes();
@@ -61,25 +62,39 @@ public class ListBlock extends Block {
 		} else {
 			Matcher matcher = startPattern.matcher(line);
 			if (!matcher.matches()) {
-				setClosed(true);
-				return 0;
+				boolean empty = offset == 0 && markupLanguage.isEmptyLine(line);
+				boolean breaking = ParagraphBlock.paragraphBreakingBlockMatches(getMarkupLanguage(), line, offset);
+				if (empty || breaking) {
+					setClosed(true);
+					return 0;
+				} else {
+					continuation = true;
+				}
+			} else {
+				String listSpec = matcher.group(1);
+				int level = calculateLevel(listSpec);
+				BlockType type = calculateType(listSpec);
+
+				offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
+
+				adjustLevel(listSpec, level, type);
 			}
-			String listSpec = matcher.group(1);
-			int level = calculateLevel(listSpec);
-			BlockType type = calculateType(listSpec);
-
-			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
-
-			adjustLevel(listSpec, level, type);
 		}
 		++blockLineCount;
 
 		ListState listState = this.listState.peek();
 		if (listState.openItem) {
-			builder.endBlock();
+			if (continuation) {
+				builder.lineBreak();
+			} else {
+				builder.endBlock();
+				listState.openItem = false;
+			}
 		}
-		listState.openItem = true;
-		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		if (!listState.openItem) {
+			listState.openItem = true;
+			builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		}
 
 		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 

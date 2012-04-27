@@ -17,6 +17,7 @@ import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * Matches any textile text, including lines starting with <code>p. </code>.
@@ -52,11 +53,9 @@ public class ParagraphBlock extends Block {
 		// NOTE: in Confluence paragraphs can have nested lists and other things, however
 		//       the resulting XHTML is invalid -- so here we allow for similar constructs
 		//       however we cause them to end the paragraph rather than being nested.
-		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {
-			if (block.canStart(line, offset)) {
-				setClosed(true);
-				return 0;
-			}
+		if (paragraphBreakingBlockMatches(markupLanguage, line, offset)) {
+			setClosed(true);
+			return 0;
 		}
 
 		Matcher blockStartMatcher = confluenceBlockStart.matcher(line);
@@ -93,4 +92,13 @@ public class ParagraphBlock extends Block {
 		super.setClosed(closed);
 	}
 
+	static boolean paragraphBreakingBlockMatches(MarkupLanguage language, String line, int offset) {
+		ConfluenceLanguage markupLanguage = (ConfluenceLanguage) language;
+		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {
+			if (block.canStart(line, offset)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

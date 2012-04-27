@@ -481,4 +481,110 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		Assert.assertEquals("first second\n\n", markup);
 	}
+
+	public void testParagraphWithSingleNewline() {
+		builder.beginDocument();
+
+		builder.characters("first");
+		builder.lineBreak();
+		builder.characters("second");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("first\nsecond\n\n", markup);
+	}
+
+	public void testParagraphWithMultipleNewlines() {
+		builder.beginDocument();
+
+		builder.characters("first");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("second");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("first\n\\\\\\\\second\n\n", markup);
+	}
+
+	public void testListItemWithSingleNewline() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("first");
+		builder.lineBreak();
+		builder.characters("second");
+		builder.endBlock(); // list item
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("another");
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("* first\nsecond\n* another\n\n", markup);
+	}
+
+	public void testListItemWithMultipleNewlines() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("first");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("second");
+		builder.endBlock(); // list item
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("another");
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("* first\n\\\\second\n* another\n\n", markup);
+	}
+
+	public void testPreformattedWithMultipleNewlines() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("first");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("second");
+		builder.endBlock(); // pre
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("{noformat}first\n\nsecond{noformat}\n\n\n", markup);
+	}
 }

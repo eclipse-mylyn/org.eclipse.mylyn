@@ -138,7 +138,7 @@ public class ConfluenceLanguageTest extends TestCase {
 	}
 
 	public void testBlockQuoteWithBulletedList() {
-		String html = parser.parseToHtml("{quote}\ntext\n* a list\n* second item\nmore text\n{quote}\nanother para");
+		String html = parser.parseToHtml("{quote}\ntext\n* a list\n* second item\n\nmore text\n{quote}\nanother para");
 		TestUtil.println("HTML:" + html);
 		assertTrue(html.contains("<body><blockquote><p>text</p><ul><li>a list</li><li>second item</li></ul><p>more text</p></blockquote><p>another para</p></body>"));
 	}
@@ -179,6 +179,12 @@ public class ConfluenceLanguageTest extends TestCase {
 				Pattern.MULTILINE)
 				.matcher(html)
 				.find());
+	}
+
+	public void testLineBreakWithSpace() {
+		String html = parser.parseToHtml("a paragraph with an arbitrary\\\\ \\\\line break");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a paragraph with an arbitrary<br/><br/>line break</p></body>"));
 	}
 
 	public void testEndash() {
@@ -907,5 +913,35 @@ public class ConfluenceLanguageTest extends TestCase {
 			reader.close();
 		}
 		// if we reach here we didn't hang.
+	}
+
+	public void testParagraphWithSingleNewline() {
+		String html = parser.parseToHtml("one\ntwo\n\nthree");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>one<br/>two</p><p>three</p></body>"));
+	}
+
+	public void testParagraphWithMultipleNewlines() {
+		String html = parser.parseToHtml("one\n\\\\\\\\two\n\nthree");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>one<br/><br/><br/>two</p><p>three</p></body>"));
+	}
+
+	public void testParagraphWithMultipleNewlines2() {
+		String html = parser.parseToHtml("one\\\\\\\\\\\\two\n\nthree");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>one<br/><br/><br/>two</p><p>three</p></body>"));
+	}
+
+	public void testListItemWithNewline() {
+		String html = parser.parseToHtml("* one\ntwo\n* three");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><ul><li>one<br/>two</li><li>three</li></ul></body>"));
+	}
+
+	public void testListItemWithTwoNewlines() {
+		String html = parser.parseToHtml("* one\n\ntwo\n* three");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><ul><li>one</li></ul><p>two</p><ul><li>three</li></ul></body>"));
 	}
 }
