@@ -40,6 +40,7 @@ public class TaskAttributeMetaData {
 		setKind(null);
 		setReadOnly(true);
 		setType(TaskAttribute.TYPE_SHORT_TEXT);
+		setRequired(false);
 		// only for test
 		// putValue(TaskAttribute.META_DESCRIPTION, "Tooltip Defaul Text"); //$NON-NLS-1$
 		return this;
@@ -96,6 +97,14 @@ public class TaskAttributeMetaData {
 
 	public boolean isReadOnly() {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_READ_ONLY));
+	}
+
+	/**
+	 * @since 3.11
+	 * @see TaskAttribute#META_REQUIRED
+	 */
+	public boolean isRequired() {
+		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_REQUIRED));
 	}
 
 	public TaskAttributeMetaData putValue(String key, String value) {
@@ -170,6 +179,16 @@ public class TaskAttributeMetaData {
 	 */
 	public TaskAttributeMetaData setDisabled(boolean value) {
 		taskAttribute.putMetaDatum(TaskAttribute.META_DISABLED, Boolean.toString(value));
+		return this;
+	}
+
+	/**
+	 * @since 3.11
+	 * @see TaskAttribute#META_REQUIRED
+	 * @return this
+	 */
+	public TaskAttributeMetaData setRequired(boolean value) {
+		taskAttribute.putMetaDatum(TaskAttribute.META_REQUIRED, Boolean.toString(value));
 		return this;
 	}
 

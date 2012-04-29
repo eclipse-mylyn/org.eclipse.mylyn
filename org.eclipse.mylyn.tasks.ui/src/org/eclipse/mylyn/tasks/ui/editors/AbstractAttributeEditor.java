@@ -11,16 +11,22 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.LegacyActionTools;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -66,10 +72,13 @@ public abstract class AbstractAttributeEditor {
 	private final TaskDataModelListener modelListener = new TaskDataModelListener() {
 		@Override
 		public void attributeChanged(TaskDataModelEvent event) {
-			if (shouldAutoRefresh() && getTaskAttribute().equals(event.getTaskAttribute())) {
+			if (getTaskAttribute().equals(event.getTaskAttribute())) {
 				try {
-					refreshInProgress = true;
-					refresh();
+					if (shouldAutoRefresh()) {
+						refreshInProgress = true;
+						refresh();
+					}
+					updateRequiredDecoration();
 				} catch (UnsupportedOperationException e) {
 				} finally {
 					refreshInProgress = false;
@@ -83,6 +92,8 @@ public abstract class AbstractAttributeEditor {
 			getModel().removeModelListener(modelListener);
 		}
 	};
+
+	private ControlDecoration decoration;
 
 	/**
 	 * @since 3.0
@@ -233,7 +244,44 @@ public abstract class AbstractAttributeEditor {
 			if (manager.hasOutgoingChanges(getTaskAttribute())) {
 				decorateOutgoing(color);
 			}
+			updateRequiredDecoration();
 		}
+	}
+
+	private void updateRequiredDecoration() {
+		if (getLabelControl() != null && isRequired()) {
+			decorateRequired();
+		} else if (decoration != null) {
+			decoration.hide();
+			decoration.dispose();
+		}
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	protected void decorateRequired() {
+		decoration = new ControlDecoration(getLabelControl(), SWT.TOP | SWT.RIGHT);
+		decoration.setDescriptionText(Messages.AbstractAttributeEditor_AttributeIsRequired);
+		decoration.setMarginWidth(0);
+		Image image = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR)
+				.getImage();
+		decoration.setImage(image);
+		getLabelControl().addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				decoration.dispose();
+			}
+		});
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	protected boolean isRequired() {
+		boolean isRequired = getTaskAttribute().getMetaData().isRequired();
+		boolean hasValue = !StringUtils.isEmpty(getTaskAttribute().getValue());
+		return isRequired && !hasValue;
 	}
 
 	/**

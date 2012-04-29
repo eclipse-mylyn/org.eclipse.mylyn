@@ -25,6 +25,8 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String AbstractAttributeEditor_AttributeIsRequired;
+
 	public static String AbstractReplyToCommentAction_Reply;
 
 	public static String AttachmentSizeFormatter_0_bytes;
