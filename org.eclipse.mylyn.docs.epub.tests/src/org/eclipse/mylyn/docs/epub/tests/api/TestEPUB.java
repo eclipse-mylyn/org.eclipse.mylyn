@@ -363,4 +363,31 @@ public class TestEPUB extends AbstractTest {
 		EPUB_OCF_Test epub = new EPUB_OCF_Test();
 		epub.testReadOCF(workingFolder);
 	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377705">bug 377705</a>: [epub] Fail
+	 * gracefully when opening an unsupported file or format (version)
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug377705() throws Exception {
+		EPUB epub = new EPUB();
+		File drawing = new File("testdata/drawing-100x100.svg");
+		File epub_2 = new File("testdata/epub/basic_2.epub");
+		assertEquals(false, epub.isEPUB(drawing));
+		assertEquals(true, epub.isEPUB(epub_2));
+		try {
+			epub.unpack(drawing);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			epub.unpack(epub_2);
+		} catch (Exception e) {
+			fail();
+		}
+	}
 }

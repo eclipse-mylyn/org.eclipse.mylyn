@@ -100,8 +100,6 @@ public abstract class OPSPublication {
 
 	public final static String MIMETYPE_CSS = "text/css"; //$NON-NLS-1$
 
-	public static final String MIMETYPE_EPUB = "application/epub+zip"; //$NON-NLS-1$
-
 	public static final String MIMETYPE_XHTML = "application/xhtml+xml"; //$NON-NLS-1$
 
 	private static final String OPF_FILE_SUFFIX = "opf"; //$NON-NLS-1$
@@ -186,7 +184,7 @@ public abstract class OPSPublication {
 		}
 		// Set the publication format
 		if (opfPackage.getMetadata().getFormats().isEmpty()) {
-			addFormat(null, MIMETYPE_EPUB);
+			addFormat(null, EPUB.MIMETYPE_EPUB);
 		}
 		indent--;
 	}

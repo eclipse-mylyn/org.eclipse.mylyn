@@ -68,6 +68,9 @@ public class EPUB {
 	/** OEBPS (OPS+OPF) MIME type */
 	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml"; //$NON-NLS-1$
 
+	/** EPUB MIME type */
+	public static final String MIMETYPE_EPUB = "application/epub+zip"; //$NON-NLS-1$
+
 	/** Suffix for OCF files */
 	private static final String OCF_FILE_SUFFIX = "xml"; //$NON-NLS-1$
 
@@ -183,6 +186,21 @@ public class EPUB {
 		return workingFolder;
 	}
 
+	/**
+	 * Use to check whether or not the specified file is in a supported format and can be opened as an EPUB. If it's not
+	 * an EPUB <code>false</code> will be returned. Note that this methods does not test the contents of the EPUB which
+	 * may or may not contain unsupported root files.
+	 * 
+	 * @param epubFile
+	 *            the target EPUB file
+	 * @return <code>true</code> if the file can be opened
+	 * @throws IOException
+	 */
+	public boolean isEPUB(File epubFile) throws IOException {
+		String mimeType = EPUBFileUtil.getMimeType(epubFile);
+		return mimeType.equals(MIMETYPE_EPUB);
+	}
+
 	private void log(String message, Severity severity) {
 		if (logger != null) {
 			logger.log(message, severity);
@@ -225,8 +243,7 @@ public class EPUB {
 				}
 			}
 			EPUBFileUtil.zip(epubFile, rootFolder);
-			log(MessageFormat.format(
-					Messages.getString("EPUB.3"), //$NON-NLS-1$
+			log(MessageFormat.format(Messages.getString("EPUB.3"), //$NON-NLS-1$
 					publications.size()), Severity.INFO);
 		} else {
 			throw new IOException("Could not create working folder in " + rootFolder.getAbsolutePath()); //$NON-NLS-1$
@@ -306,7 +323,7 @@ public class EPUB {
 	 */
 	public File unpack(File epubFile) throws Exception {
 		File workingFolder = File.createTempFile("epub_", null); //$NON-NLS-1$
-		workingFolder.deleteOnExit();
+		workingFolder.deleteOnExit(); // XXX: Avoid using deleteOnExit()
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			unpack(epubFile, workingFolder);
 		}
@@ -338,6 +355,9 @@ public class EPUB {
 	 * @see {@link #getOPSPublications()} to get a list of all contained OPS publications
 	 */
 	public void unpack(File epubFile, File rootFolder) throws Exception {
+		if (!isEPUB(epubFile)) {
+			throw new IllegalArgumentException(MessageFormat.format("{0} is not an EPUB file", epubFile)); //$NON-NLS-1$
+		}
 		if (!rootFolder.exists() || rootFolder.list().length == 0) {
 			EPUBFileUtil.unzip(epubFile, rootFolder);
 		}
