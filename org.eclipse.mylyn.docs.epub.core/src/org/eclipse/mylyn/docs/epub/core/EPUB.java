@@ -97,7 +97,7 @@ public class EPUB {
 	private static final String OCF_FILE_SUFFIX = "xml"; //$NON-NLS-1$
 
 	/** Version of the OCF specification used */
-	private static final String OCF_VERSION = "2.0"; //$NON-NLS-1$
+	private static final String OCF_VERSION = "1.0"; //$NON-NLS-1$
 
 	private ILogger logger;
 
