@@ -555,25 +555,32 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)} .
-	 * <ul>
-	 * <li>An EPUB where only a single page has been added shall be packed without issues</li>
-	 * <li>An EPUB with no content shall fail when packed</li>
-	 * </ul>
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)}. An EPUB where only a
+	 * single page has been added shall be packed without issues
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void testPack() throws Exception {
+	public final void testPack_EPUB2() throws Exception {
 		EPUB epub = new EPUB();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile);
 		oebps.validateMetadata();
 		EpubCheck checker = new EpubCheck(epubFile);
+		System.out.println("Validating plain EPUB 2.0.1 file");
 		System.out.println("Using version " + EpubCheck.VERSION + " of EpubCheck.");
 		Assert.assertTrue(checker.validate());
+	}
 
+	/**
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)}. An EPUB with no
+	 * content shall fail when packed.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testPack_Empty() throws Exception {
 		EPUB epub2 = new EPUB();
 		epub2.add(new OPS2Publication());
 		try {

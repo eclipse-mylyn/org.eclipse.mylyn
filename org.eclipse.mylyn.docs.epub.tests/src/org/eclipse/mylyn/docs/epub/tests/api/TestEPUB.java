@@ -366,8 +366,10 @@ public class TestEPUB extends AbstractTest {
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377705">bug 377705</a>: [epub] Fail
-	 * gracefully when opening an unsupported file or format (version)
+	 * gracefully when opening an unsupported file
 	 * <p>
+	 * When attempting to open a file that is not an EPUB the tooling shall reply by throwing an
+	 * {@link IllegalArgumentException}.
 	 * </p>
 	 * 
 	 * @throws Exception
@@ -389,5 +391,24 @@ public class TestEPUB extends AbstractTest {
 		} catch (Exception e) {
 			fail();
 		}
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=378214">bug 378214</a>: [epub] Problem
+	 * when opening an EPUB3 file
+	 * <p>
+	 * There must be no OPS publications in the EPUB as there are none that are supported when reading an EPUB 3 file.
+	 * Also there must be no exceptions thrown.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug378214() throws Exception {
+		EPUB epub = new EPUB();
+		File epub_3 = new File("testdata/epub/basic_3.epub");
+		assertEquals(true, epub.isEPUB(epub_3));
+		epub.unpack(epub_3);
+		assertEquals(0, epub.getOPSPublications().size());
 	}
 }

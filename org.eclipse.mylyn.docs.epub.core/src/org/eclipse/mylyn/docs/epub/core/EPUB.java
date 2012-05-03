@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -34,6 +38,9 @@ import org.eclipse.mylyn.docs.epub.ocf.RootFile;
 import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
 import org.eclipse.mylyn.docs.epub.ocf.util.OCFResourceImpl;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.DefaultHandler2;
 
 /**
  * Represents one EPUB file. Currently <b>only</b> version 2.0.1 of the EPUB specification is supported. One or more
@@ -62,25 +69,40 @@ import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
  */
 public class EPUB {
 
-	/** Version of the OCF specification used */
-	private static final String OCF_VERSION = "2.0"; //$NON-NLS-1$
+	/**
+	 * SAX parser for detecting the version of an OEBPS contained within an EPUB.
+	 */
+	private class VersionDetector extends DefaultHandler2 {
 
-	/** OEBPS (OPS+OPF) MIME type */
-	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml"; //$NON-NLS-1$
+		private String versionString;
+
+		@Override
+		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+			if (qName.equals("opf:package") || qName.equals("package")) {//$NON-NLS-1$ //$NON-NLS-2$
+				versionString = attributes.getValue("version"); //$NON-NLS-1$
+			}
+		}
+	}
 
 	/** EPUB MIME type */
 	public static final String MIMETYPE_EPUB = "application/epub+zip"; //$NON-NLS-1$
 
-	/** Suffix for OCF files */
-	private static final String OCF_FILE_SUFFIX = "xml"; //$NON-NLS-1$
+	/** OEBPS (OPS+OPF) MIME type */
+	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml"; //$NON-NLS-1$
 
 	/** The encoding to use for the OCF */
 	private static final String OCF_FILE_ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	/** The container holding all the publications */
-	private Container ocfContainer;
+	/** Suffix for OCF files */
+	private static final String OCF_FILE_SUFFIX = "xml"; //$NON-NLS-1$
+
+	/** Version of the OCF specification used */
+	private static final String OCF_VERSION = "2.0"; //$NON-NLS-1$
 
 	private ILogger logger;
+
+	/** The container holding all the publications */
+	private Container ocfContainer;
 
 	/**
 	 * Creates a new <b>empty</b> instance of an EPUB. Use {@link #add(OPSPublication)} and {@link #pack(File)} to add
@@ -97,35 +119,6 @@ public class EPUB {
 	public EPUB(ILogger logger) {
 		this();
 		this.logger = logger;
-	}
-
-	/**
-	 * Returns the container instance of the EPUB.
-	 * 
-	 * @return the container instance
-	 */
-	public Container getContainer() {
-		return ocfContainer;
-	}
-
-	/**
-	 * Adds a new OEBPS publication to the EPUB. Use {@link #add(File, String)} to add other types of content.
-	 * 
-	 * @param oebps
-	 *            the publication to add.
-	 */
-	public void add(OPSPublication oebps) {
-		RootFiles rootFiles = ocfContainer.getRootfiles();
-		int count = rootFiles.getRootfiles().size();
-		String rootFileName = count > 0 ? "OEBPS_" + count : "OEBPS"; //$NON-NLS-1$ //$NON-NLS-2$
-		rootFileName += "/content.opf"; //$NON-NLS-1$
-		RootFile rootFile = OCFFactory.eINSTANCE.createRootFile();
-		rootFile.setFullPath(rootFileName);
-		rootFile.setMediaType(MIMETYPE_OEBPS);
-		rootFile.setPublication(oebps);
-		rootFiles.getRootfiles().add(rootFile);
-		log(MessageFormat.format(Messages.getString("EPUB.0"), rootFile.getFullPath(), //$NON-NLS-1$
-				rootFile.getMediaType()), Severity.VERBOSE);
 	}
 
 	/**
@@ -154,36 +147,70 @@ public class EPUB {
 	}
 
 	/**
-	 * Returns a list of all <i>OPS publications</i> contained within the EPUB.
+	 * Adds a new OEBPS publication to the EPUB. Use {@link #add(File, String)} to add other types of content.
+	 * 
+	 * @param oebps
+	 *            the publication to add.
+	 */
+	public void add(OPSPublication oebps) {
+		RootFiles rootFiles = ocfContainer.getRootfiles();
+		int count = rootFiles.getRootfiles().size();
+		String rootFileName = count > 0 ? "OEBPS_" + count : "OEBPS"; //$NON-NLS-1$ //$NON-NLS-2$
+		rootFileName += "/content.opf"; //$NON-NLS-1$
+		RootFile rootFile = OCFFactory.eINSTANCE.createRootFile();
+		rootFile.setFullPath(rootFileName);
+		rootFile.setMediaType(MIMETYPE_OEBPS);
+		rootFile.setPublication(oebps);
+		rootFiles.getRootfiles().add(rootFile);
+		log(MessageFormat.format(Messages.getString("EPUB.0"), rootFile.getFullPath(), //$NON-NLS-1$
+				rootFile.getMediaType()), Severity.VERBOSE);
+	}
+
+	/**
+	 * Utility method for deleting a folder recursively.
+	 * 
+	 * @param folder
+	 *            the folder to delete
+	 */
+	private void deleteFolder(File folder) {
+		if (folder.isDirectory()) {
+			String[] children = folder.list();
+			for (String element : children) {
+				deleteFolder(new File(folder, element));
+			}
+		}
+		folder.delete();
+	}
+
+	/**
+	 * Returns the container instance of the EPUB.
+	 * 
+	 * @return the container instance
+	 */
+	public Container getContainer() {
+		return ocfContainer;
+	}
+
+	/**
+	 * Returns a list of all <i>OPS publications</i> contained within the EPUB. Publications in unsupported versions
+	 * will not be returned. However their existence can still be determined by looking at the
+	 * {@link Container#getRootfiles()} result.
 	 * 
 	 * @return a list of all OPS publications
+	 * @see {@link #getContainer()} for obtaining the root file container
 	 */
 	public List<OPSPublication> getOPSPublications() {
 		ArrayList<OPSPublication> publications = new ArrayList<OPSPublication>();
 		EList<RootFile> rootFiles = ocfContainer.getRootfiles().getRootfiles();
 		for (RootFile rootFile : rootFiles) {
 			if (rootFile.getMediaType().equals(MIMETYPE_OEBPS)) {
-				publications.add((OPSPublication) rootFile.getPublication());
+				// May be null if the publications is in an unsupported format.
+				if (rootFile.getPublication() != null) {
+					publications.add((OPSPublication) rootFile.getPublication());
+				}
 			}
 		}
 		return publications;
-	}
-
-	/**
-	 * Assembles the EPUB file using a temporary working folder. The folder will be deleted as soon as the assembly has
-	 * completed.
-	 * 
-	 * @param epubFile
-	 *            the target EPUB file
-	 * @throws Exception
-	 */
-	public File pack(File epubFile) throws Exception {
-		File workingFolder = File.createTempFile("epub_", null); //$NON-NLS-1$
-		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			pack(epubFile, workingFolder);
-		}
-		deleteFolder(workingFolder);
-		return workingFolder;
 	}
 
 	/**
@@ -201,10 +228,57 @@ public class EPUB {
 		return mimeType.equals(MIMETYPE_EPUB);
 	}
 
+	/**
+	 * Tests whether or not the OEBPS is in a version that is supported by this tooling.
+	 * 
+	 * @param rootFile
+	 * @return
+	 */
+	private boolean isSupportedOEBPS(File rootFile) {
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			VersionDetector vd = new VersionDetector();
+			SAXParser parser = factory.newSAXParser();
+			parser.parse(rootFile, vd);
+			if (vd.versionString == null) {
+				return false;
+			}
+			String[] segments = vd.versionString.split("\\."); //$NON-NLS-1$
+			if (segments[0].equals("2")) { //$NON-NLS-1$
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ParserConfigurationException e) {
+			return false;
+		} catch (SAXException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
 	private void log(String message, Severity severity) {
 		if (logger != null) {
 			logger.log(message, severity);
 		}
+	}
+
+	/**
+	 * Assembles the EPUB file using a temporary working folder. The folder will be deleted as soon as the assembly has
+	 * completed.
+	 * 
+	 * @param epubFile
+	 *            the target EPUB file
+	 * @throws Exception
+	 */
+	public File pack(File epubFile) throws Exception {
+		File workingFolder = File.createTempFile("epub_", null); //$NON-NLS-1$
+		if (workingFolder.delete() && workingFolder.mkdirs()) {
+			pack(epubFile, workingFolder);
+		}
+		deleteFolder(workingFolder);
+		return workingFolder;
 	}
 
 	/**
@@ -342,7 +416,7 @@ public class EPUB {
 	 * <p>
 	 * Multiple OPS root files in the publication will populate the OCF container instance with one
 	 * {@link OPSPublication} for each as expected. The contents of the data model starting with the OCF container will
-	 * be replaced.
+	 * be replaced. If the publication is in an unsupported version it will not be added to the data model.
 	 * </p>
 	 * 
 	 * @param epubFile
@@ -365,11 +439,15 @@ public class EPUB {
 		EList<RootFile> rootFiles = ocfContainer.getRootfiles().getRootfiles();
 		for (RootFile rootFile : rootFiles) {
 			if (rootFile.getMediaType().equals(MIMETYPE_OEBPS)) {
-				// XXX: Handle this better when adding support for EPUB 3
-				OPSPublication ops = OPSPublication.getVersion2Instance();
 				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
-				ops.unpack(root);
-				rootFile.setPublication(ops);
+				if (isSupportedOEBPS(root)) {
+					OPSPublication ops = OPSPublication.getVersion2Instance();
+					ops.unpack(root);
+					rootFile.setPublication(ops);
+				} else {
+					log(MessageFormat.format("Unsupported OEBPS version in root file {0}", rootFile.getFullPath()), //$NON-NLS-1$
+							Severity.WARNING);
+				}
 			}
 		}
 	}
@@ -392,21 +470,5 @@ public class EPUB {
 			resource.getContents().add(ocfContainer);
 			resource.save(null);
 		}
-	}
-
-	/**
-	 * Utility method for deleting a folder recursively.
-	 * 
-	 * @param folder
-	 *            the folder to delete
-	 */
-	private void deleteFolder(File folder) {
-		if (folder.isDirectory()) {
-			String[] children = folder.list();
-			for (String element : children) {
-				deleteFolder(new File(folder, element));
-			}
-		}
-		folder.delete();
 	}
 }
