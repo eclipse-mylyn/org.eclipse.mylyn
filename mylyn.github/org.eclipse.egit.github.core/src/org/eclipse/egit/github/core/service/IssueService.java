@@ -951,10 +951,8 @@ public class IssueService extends GitHubService {
 	 * @param user
 	 * @param repository
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
-	public PageIterator<IssueEvent> pageEvents(String user, String repository)
-			throws IOException {
+	public PageIterator<IssueEvent> pageEvents(String user, String repository) {
 		return pageEvents(user, repository, PAGE_SIZE);
 	}
 
@@ -965,10 +963,9 @@ public class IssueService extends GitHubService {
 	 * @param repository
 	 * @param size
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
 	public PageIterator<IssueEvent> pageEvents(String user, String repository,
-			int size) throws IOException {
+			int size) {
 		return pageEvents(user, repository, PAGE_FIRST, size);
 	}
 
@@ -980,10 +977,9 @@ public class IssueService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
 	public PageIterator<IssueEvent> pageEvents(String user, String repository,
-			int start, int size) throws IOException {
+			int start, int size) {
 		verifyRepository(user, repository);
 
 		PagedRequest<IssueEvent> request = createPagedRequest(start, size);
@@ -1004,10 +1000,9 @@ public class IssueService extends GitHubService {
 	 * @param repository
 	 * @param issueId
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
 	public PageIterator<IssueEvent> pageIssueEvents(String user,
-			String repository, int issueId) throws IOException {
+			String repository, int issueId) {
 		return pageIssueEvents(user, repository, issueId, PAGE_SIZE);
 	}
 
@@ -1019,10 +1014,9 @@ public class IssueService extends GitHubService {
 	 * @param issueId
 	 * @param size
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
 	public PageIterator<IssueEvent> pageIssueEvents(String user,
-			String repository, int issueId, int size) throws IOException {
+			String repository, int issueId, int size) {
 		return pageIssueEvents(user, repository, issueId, PAGE_FIRST, size);
 	}
 
@@ -1035,11 +1029,9 @@ public class IssueService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return iterator over issue event pages
-	 * @throws IOException
 	 */
 	public PageIterator<IssueEvent> pageIssueEvents(String user,
-			String repository, int issueId, int start, int size)
-			throws IOException {
+			String repository, int issueId, int start, int size) {
 		verifyRepository(user, repository);
 
 		PagedRequest<IssueEvent> request = createPagedRequest(start, size);
