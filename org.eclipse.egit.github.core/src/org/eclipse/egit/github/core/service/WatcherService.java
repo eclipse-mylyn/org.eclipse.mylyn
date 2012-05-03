@@ -94,10 +94,8 @@ public class WatcherService extends GitHubService {
 	 *
 	 * @param repository
 	 * @return page iterator
-	 * @throws IOException
 	 */
-	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository)
-			throws IOException {
+	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository) {
 		return pageWatchers(repository, PAGE_SIZE);
 	}
 
@@ -107,10 +105,9 @@ public class WatcherService extends GitHubService {
 	 * @param repository
 	 * @param size
 	 * @return page iterator
-	 * @throws IOException
 	 */
 	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository,
-			int size) throws IOException {
+			int size) {
 		return pageWatchers(repository, PAGE_FIRST, size);
 	}
 
@@ -121,10 +118,9 @@ public class WatcherService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return page iterator
-	 * @throws IOException
 	 */
 	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository,
-			int start, int size) throws IOException {
+			int start, int size) {
 		PagedRequest<User> request = createWatcherRequest(repository, start,
 				size);
 		return createPageIterator(request);

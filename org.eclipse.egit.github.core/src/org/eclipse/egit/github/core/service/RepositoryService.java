@@ -164,9 +164,8 @@ public class RepositoryService extends GitHubService {
 	 * Page repositories for currently authenticated user
 	 *
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageRepositories() throws IOException {
+	public PageIterator<Repository> pageRepositories() {
 		return pageRepositories(PAGE_SIZE);
 	}
 
@@ -175,10 +174,8 @@ public class RepositoryService extends GitHubService {
 	 *
 	 * @param size
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageRepositories(int size)
-			throws IOException {
+	public PageIterator<Repository> pageRepositories(int size) {
 		return pageRepositories(PAGE_FIRST, size);
 	}
 
@@ -188,10 +185,8 @@ public class RepositoryService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageRepositories(int start, int size)
-			throws IOException {
+	public PageIterator<Repository> pageRepositories(int start, int size) {
 		return pageRepositories((Map<String, String>) null, start, size);
 	}
 
@@ -200,10 +195,9 @@ public class RepositoryService extends GitHubService {
 	 *
 	 * @param filterData
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
 	public PageIterator<Repository> pageRepositories(
-			Map<String, String> filterData) throws IOException {
+			Map<String, String> filterData) {
 		return pageRepositories(filterData, PAGE_SIZE);
 	}
 
@@ -213,10 +207,9 @@ public class RepositoryService extends GitHubService {
 	 * @param filterData
 	 * @param size
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
 	public PageIterator<Repository> pageRepositories(
-			Map<String, String> filterData, int size) throws IOException {
+			Map<String, String> filterData, int size) {
 		return pageRepositories(filterData, PAGE_FIRST, size);
 	}
 
@@ -227,11 +220,9 @@ public class RepositoryService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
 	public PageIterator<Repository> pageRepositories(
-			Map<String, String> filterData, int start, int size)
-			throws IOException {
+			Map<String, String> filterData, int start, int size) {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setParams(filterData);
@@ -256,10 +247,8 @@ public class RepositoryService extends GitHubService {
 	 *
 	 * @param user
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageRepositories(String user)
-			throws IOException {
+	public PageIterator<Repository> pageRepositories(String user) {
 		return pageRepositories(user, PAGE_SIZE);
 	}
 
@@ -269,10 +258,8 @@ public class RepositoryService extends GitHubService {
 	 * @param user
 	 * @param size
 	 * @return iterator over pages of repositories
-	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageRepositories(String user, int size)
-			throws IOException {
+	public PageIterator<Repository> pageRepositories(String user, int size) {
 		return pageRepositories(user, PAGE_FIRST, size);
 	}
 
@@ -283,10 +270,9 @@ public class RepositoryService extends GitHubService {
 	 * @param start
 	 * @param size
 	 * @return iterator over repository page
-	 * @throws IOException
 	 */
 	public PageIterator<Repository> pageRepositories(String user, int start,
-			int size) throws IOException {
+			int size) {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
 		if (user.length() == 0)
