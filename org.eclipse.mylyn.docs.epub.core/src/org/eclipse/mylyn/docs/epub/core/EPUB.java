@@ -12,12 +12,16 @@
 package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -65,7 +69,6 @@ import org.xml.sax.ext.DefaultHandler2;
  * 
  * @author Torkild U. Resheim
  * @see http://www.idpf.org/doc_library/epub/OPS_2.0.1_draft.htm
- * @see http://www.idpf.org/doc_library/epub/OPF_2.0.1_draft.htm
  */
 public class EPUB {
 
@@ -225,14 +228,55 @@ public class EPUB {
 	 */
 	public boolean isEPUB(File epubFile) throws IOException {
 		String mimeType = EPUBFileUtil.getMimeType(epubFile);
-		return mimeType.equals(MIMETYPE_EPUB);
+		if (mimeType.equals(MIMETYPE_EPUB)) {
+			return isEPUB(new FileInputStream(epubFile));
+		}
+		return false;
+	}
+
+	private static final int BUFFERSIZE = 2048;
+
+	/**
+	 * Used to verify that the given {@link InputStream} contents is an EPUB. As per specification the first entry in
+	 * the file must be named "mimetype" and contain the string <i>application/epub+zip</i>. Further verification is not
+	 * done at this stage.
+	 * 
+	 * @param inputStream
+	 *            the EPUB input stream
+	 * @return <code>true</code> if the file is an EPUB file
+	 * @throws IOException
+	 */
+	public static boolean isEPUB(InputStream inputStream) throws IOException {
+		ZipInputStream in = new ZipInputStream(inputStream);
+		try {
+			byte[] buf = new byte[BUFFERSIZE];
+			ZipEntry entry = null;
+			if ((entry = in.getNextEntry()) != null) {
+				String entryName = entry.getName();
+				if (entryName.equals("mimetype")) { //$NON-NLS-1$
+					String type = new String();
+					while ((in.read(buf, 0, BUFFERSIZE)) > 0) {
+						type = type + new String(buf);
+					}
+					if (type.trim().equals(EPUB.MIMETYPE_EPUB)) {
+						return true;
+					}
+				}
+			}
+		} catch (IOException e) {
+			return false;
+		} finally {
+			in.close();
+		}
+		return false;
 	}
 
 	/**
 	 * Tests whether or not the OEBPS is in a version that is supported by this tooling.
 	 * 
 	 * @param rootFile
-	 * @return
+	 *            the root file
+	 * @return <code>true</code> if the OEBPS can be read
 	 */
 	private boolean isSupportedOEBPS(File rootFile) {
 		try {
@@ -244,7 +288,7 @@ public class EPUB {
 				return false;
 			}
 			String[] segments = vd.versionString.split("\\."); //$NON-NLS-1$
-			if (segments[0].equals("2")) { //$NON-NLS-1$
+			if (segments[0].equals("2") && segments[1].equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			} else {
 				return false;
@@ -312,7 +356,7 @@ public class EPUB {
 					if (rootFile.getPublication() instanceof File) {
 						EPUBFileUtil.copy((File) rootFile.getPublication(), root);
 					} else {
-						throw new IllegalArgumentException("Unknown publication type"); //$NON-NLS-1$
+						throw new IllegalArgumentException("Unknown publication type in root file"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -333,6 +377,8 @@ public class EPUB {
 	 * @throws IOException
 	 * @see {@link #unpack(File)}
 	 * @see {@link #unpack(File, File)}
+	 * @see <a href="http://idpf.org/epub/30/spec/epub30-ocf.html">EPUB3 OCF specification</a>
+	 * @see <a href="http://idpf.org/epub/20/spec/OCF_2.0.1_draft.doc">EPUB2 OCF specification</a>
 	 */
 	protected void readOCF(File rootFolder) throws IOException {
 		// These file names are listed in the OCF specification and must not be
@@ -458,6 +504,8 @@ public class EPUB {
 	 * 
 	 * @param rootFolder
 	 *            the root folder
+	 * @see <a href="http://idpf.org/epub/30/spec/epub30-ocf.html">EPUB3 OCF specification</a>
+	 * @see <a href="http://idpf.org/epub/20/spec/OCF_2.0.1_draft.doc">EPUB2 OCF specification</a>
 	 */
 	private void writeOCF(File rootFolder) throws IOException {
 		File metaFolder = new File(rootFolder.getAbsolutePath() + File.separator + "META-INF"); //$NON-NLS-1$

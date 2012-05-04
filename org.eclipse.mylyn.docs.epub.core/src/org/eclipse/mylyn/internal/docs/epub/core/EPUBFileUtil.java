@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -206,7 +206,6 @@ public class EPUBFileUtil {
 		ZipInputStream in = new ZipInputStream(new FileInputStream(epubfile));
 		byte[] buf = new byte[BUFFERSIZE];
 		ZipEntry entry = null;
-		boolean checkFirstItem = true;
 		while ((entry = in.getNextEntry()) != null) {
 			// for each entry to be extracted
 			String entryName = entry.getName();
@@ -230,16 +229,6 @@ public class EPUBFileUtil {
 			// Update the file modification time
 			if (entry.getTime() > 0) {
 				newFile.setLastModified(entry.getTime());
-			}
-			if (checkFirstItem) {
-				if (!entryName.equals("mimetype")) { //$NON-NLS-1$
-					throw new IOException("Invalid EPUB file. First item must be \"mimetype\""); //$NON-NLS-1$
-				}
-				String type = new String(buf);
-				if (!type.trim().equals(EPUB.MIMETYPE_EPUB)) {
-					throw new IOException("Invalid EPUB file. Expected \"" + EPUB.MIMETYPE_EPUB + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				checkFirstItem = false;
 			}
 		} // iterate over contents
 		in.close();
