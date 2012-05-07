@@ -4,16 +4,8 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui;singleton:=true
 Bundle-Version: 3.8.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.expressions,
- org.eclipse.swt,
- org.eclipse.jface,
- org.eclipse.jface.text,
  org.eclipse.ui,
- org.eclipse.ui.browser,
- org.eclipse.ui.editors,
  org.eclipse.ui.forms,
- org.eclipse.ui.workbench,
- org.eclipse.ui.workbench.texteditor,
  org.eclipse.mylyn.commons.core;bundle-version="3.7.0",
  org.eclipse.mylyn.commons.screenshots;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy

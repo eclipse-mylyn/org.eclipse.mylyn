@@ -8,12 +8,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
  org.eclipse.jface.text,
  org.eclipse.ui,
- org.eclipse.ui.browser,
- org.eclipse.ui.editors,
+ org.eclipse.ui.browser;resolution:=optional,
+ org.eclipse.ui.editors;resolution:=optional,
  org.eclipse.ui.forms,
  org.eclipse.ui.workbench,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylyn.commons.core;bundle-version="3.7.0", 
+ org.eclipse.mylyn.commons.core;bundle-version="3.7.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.7.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
