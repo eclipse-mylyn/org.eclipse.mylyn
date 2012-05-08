@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +34,40 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
- * TODO: fix class loading problems caused by serialization and make API
- * 
  * @author Steffen Pingel
  */
-abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
+public abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
+
+	private class OSGiAwareObjectInputStream extends ObjectInputStream {
+
+		public OSGiAwareObjectInputStream(InputStream in) throws IOException {
+			super(in);
+		}
+
+		@Override
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+			try {
+				ClassLoader connectorClassloader = getConfigClassloader();
+				return connectorClassloader.loadClass(desc.getName());
+			} catch (Exception e) {
+				return super.resolveClass(desc);
+			}
+		}
+
+		private ClassLoader getConfigClassloader() {
+			Class<?> configClazz = getConfigClass();
+			ClassLoader connectorClassloader = configClazz.getClassLoader();
+			return connectorClassloader;
+		}
+
+		private Class<?> getConfigClass() {
+			Class<?> managerClazz = RepositoryClientManager.this.getClass();
+			ParameterizedType type = (ParameterizedType) managerClazz.getGenericSuperclass();
+			Type[] fieldArgTypes = type.getActualTypeArguments();
+			Class<?> configClazz = (Class<?>) fieldArgTypes[1];
+			return configClazz;
+		}
+	}
 
 	private final Map<String, T> clientByUrl = new HashMap<String, T>();
 
@@ -103,7 +136,7 @@ abstract class RepositoryClientManager<T, C extends Serializable> implements IRe
 
 		ObjectInputStream in = null;
 		try {
-			in = new ObjectInputStream(new FileInputStream(cacheFile));
+			in = new OSGiAwareObjectInputStream(new FileInputStream(cacheFile));
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				String url = (String) in.readObject();
@@ -113,8 +146,7 @@ abstract class RepositoryClientManager<T, C extends Serializable> implements IRe
 				}
 			}
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"The respository configuration cache could not be read", e)); //$NON-NLS-1$
+			handleError("The respository configuration cache could not be read", e); //$NON-NLS-1$
 		} finally {
 			if (in != null) {
 				try {
@@ -125,6 +157,10 @@ abstract class RepositoryClientManager<T, C extends Serializable> implements IRe
 			}
 		}
 
+	}
+
+	protected void handleError(String message, Throwable e) {
+		StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, message, e));
 	}
 
 	public void writeCache() {
@@ -141,8 +177,7 @@ abstract class RepositoryClientManager<T, C extends Serializable> implements IRe
 				out.writeObject(clientDataByUrl.get(url));
 			}
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"The respository configuration cache could not be written", e)); //$NON-NLS-1$
+			handleError("The respository configuration cache could not be written", e); //$NON-NLS-1$
 		} finally {
 			if (out != null) {
 				try {
