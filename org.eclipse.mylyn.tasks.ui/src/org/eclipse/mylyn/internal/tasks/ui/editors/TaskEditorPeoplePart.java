@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Robert Munteanu - fix for bug #377081
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -41,7 +42,14 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 					.applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
-			GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
+
+			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP);
+
+			if (editor instanceof MultiSelectionAttributeEditor) {
+				gridDataFactory.hint(SWT.DEFAULT, 95);
+			}
+
+			gridDataFactory.applyTo(editor.getControl());
 		}
 	}
 
