@@ -215,6 +215,19 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 	}
 
+	public void testValidUrl() throws Exception {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
+		assertFalse(page.isValidUrl(""));
+		assertFalse(page.isValidUrl("http:/google.com"));
+		assertFalse(page.isValidUrl("http:/google.com/"));
+
+		assertTrue(page.isValidUrl("http://google.com"));
+		assertTrue(page.isValidUrl("https://google.com"));
+		assertTrue(page.isValidUrl("http://mylyn.org/bugzilla34"));
+		assertTrue(page.isValidUrl("http://www.mylyn.org/bugzilla34"));
+	}
+
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		public MockRepositorySettingsPage(TaskRepository taskRepository) {
@@ -227,9 +240,8 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		@Override
-		protected boolean isValidUrl(String name) {
-			// ignore
-			return false;
+		protected boolean isValidUrl(String url) {
+			return super.isValidUrl(url);
 		}
 
 		@Override

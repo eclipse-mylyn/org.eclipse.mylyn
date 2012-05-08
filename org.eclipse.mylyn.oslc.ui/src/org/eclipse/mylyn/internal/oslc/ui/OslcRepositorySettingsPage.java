@@ -104,18 +104,6 @@ public abstract class OslcRepositorySettingsPage extends AbstractRepositorySetti
 	}
 
 	@Override
-	protected boolean isValidUrl(String url) {
-		if (url.startsWith(URL_PREFIX_HTTPS) || url.startsWith(URL_PREFIX_HTTP)) {
-			try {
-				new URL(url);
-				return true;
-			} catch (MalformedURLException e) {
-			}
-		}
-		return false;
-	}
-
-	@Override
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IOslcCoreConstants.OSLC_BASEURL, baseText.getText());
 		super.applyTo(repository);

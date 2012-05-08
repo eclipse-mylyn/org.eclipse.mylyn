@@ -47,6 +47,11 @@ public class TracRepositorySettingsPageTest extends TestCase {
 			super.applyValidatorResult(validator);
 		}
 
+		@Override
+		protected boolean isValidUrl(String name) {
+			return super.isValidUrl(name);
+		}
+
 	}
 
 	private MyTracRepositorySettingsPage page;
@@ -171,5 +176,18 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		page.applyValidatorResult(validator);
 		assertNull(page.getTracVersion());
 		assertEquals(IMessageProvider.ERROR, page.getMessageType());
+	}
+
+	public void testValidUrl() throws Exception {
+		assertFalse(page.isValidUrl(""));
+		assertFalse(page.isValidUrl("http:/google.com"));
+		assertFalse(page.isValidUrl("http:/google.com/"));
+		assertFalse(page.isValidUrl("http://google.com/"));
+		assertFalse(page.isValidUrl("http://google.com/foo /space"));
+
+		assertTrue(page.isValidUrl("http://google.com"));
+		assertTrue(page.isValidUrl("https://google.com"));
+		assertTrue(page.isValidUrl("http://mylyn.org/trac30"));
+		assertTrue(page.isValidUrl("http://www.mylyn.org/trac30"));
 	}
 }

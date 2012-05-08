@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -124,15 +123,9 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	@Override
-	protected boolean isValidUrl(String name) {
-		if ((name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) && !name.endsWith("/")) { //$NON-NLS-1$
-			try {
-				new URL(name);
-				return true;
-			} catch (MalformedURLException e) {
-			}
-		}
-		return false;
+	protected boolean isValidUrl(String url) {
+		boolean isValid = super.isValidUrl(url);
+		return isValid && !url.endsWith("/"); //$NON-NLS-1$
 	}
 
 	public Version getTracVersion() {

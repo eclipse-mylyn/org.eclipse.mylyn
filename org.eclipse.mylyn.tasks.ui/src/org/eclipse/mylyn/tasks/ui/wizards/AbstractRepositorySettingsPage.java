@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.httpclient.URI;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1317,7 +1318,17 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 2.0
 	 */
-	protected abstract boolean isValidUrl(String url);
+	protected boolean isValidUrl(String url) {
+		if (url.startsWith(URL_PREFIX_HTTPS) || url.startsWith(URL_PREFIX_HTTP)) {
+			try {
+				new URI(url, true, "UTF-8"); //$NON-NLS-1$
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	private void updateHyperlinks() {
 		if (getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {

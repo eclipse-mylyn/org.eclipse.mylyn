@@ -610,11 +610,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	@Override
-	protected boolean isValidUrl(String url) {
-		return BugzillaClient.isValidUrl(url);
-	}
-
-	@Override
 	protected Validator getValidator(TaskRepository repository) {
 		return new BugzillaValidator(repository);
 	}
