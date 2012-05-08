@@ -43,7 +43,7 @@
     <tycho-version>0.13.0</tycho-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit-updatesite/target/site</egit-site>
     <platform-version-name>indigo</platform-version-name>
-    <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
+    <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120119162704/repository</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
@@ -77,9 +77,9 @@
       <url>${orbit-site}</url>
     </repository>
     <repository>
-      <id>wikitext</id>
+      <id>mylyn</id>
       <layout>p2</layout>
-      <url>${wikitext-site}</url>
+      <url>${mylyn-site}</url>
     </repository>
   </repositories>
 

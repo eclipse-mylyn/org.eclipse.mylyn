@@ -24,7 +24,6 @@ import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.github.core.GitHub;
-import org.eclipse.mylyn.internal.github.core.issue.IssueAttribute;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;

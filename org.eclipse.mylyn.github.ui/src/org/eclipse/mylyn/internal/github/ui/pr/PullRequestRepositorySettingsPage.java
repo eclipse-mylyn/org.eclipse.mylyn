@@ -10,7 +10,6 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.pr;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
@@ -20,11 +19,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.NoSuchPageException;
-import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;

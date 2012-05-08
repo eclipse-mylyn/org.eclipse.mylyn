@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.internal.github.ui.gist;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.TableSorter;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.ui.TableSorter;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 
 /**
@@ -29,11 +29,11 @@ public class GistAttachmentSorter extends TableSorter {
 		ITaskAttachment attachment2 = (ITaskAttachment) e2;
 		switch (columnIndex) {
 		case 0:
-			return compare(attachment1.getFileName(), attachment2.getFileName());
+			return CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
 		case 1:
-			return compare(attachment1.getLength(), attachment2.getLength());
+			return CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
 		case 2:
-			return compare(attachment1.getAuthor().toString(), attachment2
+			return CoreUtil.compare(attachment1.getAuthor().toString(), attachment2
 					.getAuthor().toString());
 		default:
 			return super.compare(viewer, e1, e2, columnIndex);

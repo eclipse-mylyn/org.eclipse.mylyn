@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 import java.text.MessageFormat;
 
 import org.eclipse.egit.github.core.Gist;
+import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.github.ui.GitHubImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
