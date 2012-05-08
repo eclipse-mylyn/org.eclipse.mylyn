@@ -706,7 +706,8 @@ public class GitHubClient {
 	public void delete(final String uri, final Object params)
 			throws IOException {
 		HttpURLConnection request = createDelete(uri);
-		sendParams(request, params);
+		if (params != null)
+			sendParams(request, params);
 		final int code = request.getResponseCode();
 		updateRateLimits(request);
 		if (!isEmpty(code))
