@@ -41,11 +41,11 @@
 <unit id="org.jdom" version="1.1.1.v201101151400"/>
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.1.2.v201202091730"/>
-<unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201202091730"/>
+<unit id="org.apache.httpcomponents.httpclient" version="4.1.2.v201203221030"/>
+<unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201203221030"/>
 <unit id="org.jsoup" version="1.6.1.v201201201356"/>
 <unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120308061416/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20120428190502/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="7.0.2.201102110609"/>
