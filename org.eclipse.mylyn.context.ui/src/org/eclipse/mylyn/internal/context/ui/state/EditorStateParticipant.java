@@ -11,18 +11,25 @@
 
 package org.eclipse.mylyn.internal.context.ui.state;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -38,12 +45,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.XMLMemento;
+import org.eclipse.ui.internal.EditorReference;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
@@ -225,8 +234,13 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			try {
 				saveEditors_e_3_x((WorkbenchPage) window.getActivePage(), memento);
 			} catch (Exception e) {
-				saveEditors_e_4((WorkbenchPage) window.getActivePage(), memento);
-				failed = true;
+				try {
+					saveEditors_e_4((WorkbenchPage) window.getActivePage(), memento);
+				} catch (Exception e2) {
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+							"Saving of editor state failed", e)); //$NON-NLS-1$
+					failed = true;
+				}
 			}
 		}
 
@@ -242,16 +256,47 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		savedMemento = null;
 	}
 
-	private void saveEditors_e_4(WorkbenchPage activePage, IMemento memento) {
-		// ignore
+	@SuppressWarnings("unchecked")
+	private void saveEditors_e_4(final WorkbenchPage page, IMemento memento) throws Exception {
+		Method getInternalEditorReferences = WorkbenchPage.class.getDeclaredMethod("getInternalEditorReferences"); //$NON-NLS-1$
+		final List<EditorReference> editorReferences = (List<EditorReference>) getInternalEditorReferences.invoke(page);
+		SafeRunner.run(new SafeRunnable() {
+			public void run() {
+				for (EditorReference reference : editorReferences) {
+					// realize editor
+					IEditorPart editor = reference.getEditor(true);
+					if (editor != null) {
+						Method method;
+						try {
+							method = EditorReference.class.getDeclaredMethod("persist"); //$NON-NLS-1$
+							method.setAccessible(true);
+							method.invoke(reference);
+						} catch (Exception e) {
+							// ignore
+						}
+					}
+				}
+			}
+		});
 
+		E4EditorReflector reflector = new E4EditorReflector();
+		List<?> editors = reflector.findElements(page);
+		for (Object editor : editors) {
+			Map<String, String> persistedState = reflector.getPersistedState(editor);
+			String state = persistedState.get("memento"); //$NON-NLS-1$
+			if (state != null) {
+				XMLMemento editorMemento = XMLMemento.createReadRoot(new StringReader(state));
+				IMemento childMemento = memento.createChild("editor"); //$NON-NLS-1$
+				childMemento.putMemento(editorMemento);
+			}
+		}
 	}
 
 	private void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
-		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager");
+		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager"); //$NON-NLS-1$
 		Object editorManager = getEditorManagerMethod.invoke(page);
 
-		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("saveState", IMemento.class);
+		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("saveState", IMemento.class); //$NON-NLS-1$
 		getEditorsMethod.invoke(editorManager, memento);
 	}
 
@@ -316,24 +361,51 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not restore editors", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+					"Restoring of editor state failed", e)); //$NON-NLS-1$
 		}
 	}
 
 	private void restoreEditors_e_4(WorkbenchPage page, ArrayList<?> visibleEditors, IEditorReference[] activeEditor,
-			MultiStatus result, Set<IMemento> editorMementoSet) {
-
-		// ignore
-
+			MultiStatus result, Set<IMemento> mementos) throws Exception {
+		E4EditorReflector reflector = new E4EditorReflector();
+		for (IMemento memento : mementos) {
+			StringWriter writer = new StringWriter();
+			boolean found = false;
+			IMemento inputMememnto = memento.getChild("input"); //$NON-NLS-1$
+			if (inputMememnto != null) {
+				String pathString = inputMememnto.getString("path"); //$NON-NLS-1$
+				if (pathString != null) {
+					IPath path = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(pathString)).getLocation();
+					for (IEditorReference existingReference : page.getEditorReferences()) {
+						if (existingReference.getEditorInput() instanceof IPathEditorInput
+								&& (path.equals(((IPathEditorInput) existingReference.getEditorInput()).getPath()))) {
+							// there is already an editor showing the same file
+							found = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!found) {
+				// create part
+				Object editor = reflector.createPart(page.getWorkbenchWindow());
+				// inject persisted editor state
+				((XMLMemento) memento).save(writer);
+				reflector.getPersistedState(editor).put("memento", writer.toString()); //$NON-NLS-1$
+				// create legacy editor control
+				reflector.showPart(page, editor);
+			}
+		}
 	}
 
 	private void restoreEditors_e_3_x(WorkbenchPage page, final ArrayList<?> visibleEditors,
 			final IEditorReference[] activeEditor, final MultiStatus result, Set<IMemento> editorMementoSet)
 			throws Exception {
-		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager");
+		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager"); //$NON-NLS-1$
 		Object editorManager = getEditorManagerMethod.invoke(page);
 
-		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("getEditors");
+		Method getEditorsMethod = editorManager.getClass().getDeclaredMethod("getEditors"); //$NON-NLS-1$
 
 		List<IEditorReference> alreadyVisibleEditors = Arrays.asList((IEditorReference[]) getEditorsMethod.invoke(editorManager));
 		Set<String> restoredPartNames = new HashSet<String>();
@@ -341,7 +413,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			restoredPartNames.add(editorReference.getPartName());
 		}
 
-		Method restoreEditorStateMethod = editorManager.getClass().getDeclaredMethod("restoreEditorState",
+		Method restoreEditorStateMethod = editorManager.getClass().getDeclaredMethod("restoreEditorState", //$NON-NLS-1$
 				IMemento.class, ArrayList.class, IEditorReference[].class, MultiStatus.class);
 
 		for (IMemento editorMemento : editorMementoSet) {
@@ -353,7 +425,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 		}
 
-		Method setVisibleEditorMethod = editorManager.getClass().getDeclaredMethod("setVisibleEditor",
+		Method setVisibleEditorMethod = editorManager.getClass().getDeclaredMethod("setVisibleEditor", //$NON-NLS-1$
 				IEditorReference.class, boolean.class);
 		for (int i = 0; i < visibleEditors.size(); i++) {
 			setVisibleEditorMethod.invoke(editorManager, visibleEditors.get(i), false);
