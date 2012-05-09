@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.java.tasks;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,6 +32,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -36,6 +40,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * @author Rob Elves
  */
 public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyperlink {
+
+	private static final String ID_PLUGIN = "org.eclipse.mylyn.java.tasks"; //$NON-NLS-1$
+
+	protected static boolean reflectionErrorLogged;
 
 	private final IRegion region;
 
@@ -98,10 +106,34 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					// search for the type in the workspace
-					Object result = OpenTypeAction.findTypeInWorkspace(typeName);
+					Object result;
+					try {
+						// TODO e3.8 remove reflection
+						try {
+							// e3.7 and earlier: OpenTypeAction.findTypeInWorkspace(typeName);
+							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace",
+									String.class);
+							result = findTypeInWorspace.invoke(null, typeName);
+						} catch (NoSuchMethodException e) {
+							// e3.8: OpenTypeAction.findTypeInWorkspace(typeName, false);
+							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace",
+									String.class, boolean.class);
+							result = findTypeInWorspace.invoke(null, typeName, false);
+						}
+					} catch (InvocationTargetException e) {
+						if (e.getCause() instanceof CoreException) {
+							searchCompleted(null, typeName, lineNumber, ((CoreException) e.getCause()).getStatus());
+						}
+						throw e;
+					}
 					searchCompleted(result, typeName, lineNumber, null);
-				} catch (CoreException e) {
-					searchCompleted(null, typeName, lineNumber, e.getStatus());
+				} catch (Exception e) {
+					if (!reflectionErrorLogged) {
+						reflectionErrorLogged = true;
+						StatusManager.getManager().handle(
+								new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", e),
+								StatusManager.LOG);
+					}
 				}
 				return Status.OK_STATUS;
 			}
