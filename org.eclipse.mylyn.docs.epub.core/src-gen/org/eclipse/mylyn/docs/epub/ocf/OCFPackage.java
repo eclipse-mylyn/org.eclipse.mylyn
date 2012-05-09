@@ -49,7 +49,7 @@ public interface OCFPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "ocf";
+	String eNS_PREFIX = "";
 
 	/**
 	 * The singleton instance of the package.

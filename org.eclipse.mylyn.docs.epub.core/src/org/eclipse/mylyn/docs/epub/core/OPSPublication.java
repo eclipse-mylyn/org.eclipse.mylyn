@@ -76,7 +76,8 @@ import org.xml.sax.SAXException;
 
 /**
  * This type represents one <i>OPS publication</i>. This includes the <i>OPF package document</i> and <i>OPS content
- * documents</i>. It maintains a data structure representing the entire publication and API for building it.
+ * documents</i>, commonly known as <i>Open eBook Publication Structure</i> or OEBPS. It maintains a data structure
+ * representing the entire publication and API for building it.
  * <p>
  * Please note that this API is provisional and should not yet be used to build applications.
  * </p>
@@ -1222,8 +1223,8 @@ public abstract class OPSPublication {
 	/**
 	 * Writes the <b>content.opf</b> file.
 	 * 
-	 * @param rootFolder
-	 *            the folder where to write the file.
+	 * @param opfFile
+	 *            the location of the OPF file
 	 * @throws IOException
 	 */
 	private void writeOPF(File opfFile) throws IOException {
