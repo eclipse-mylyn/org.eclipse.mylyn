@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
  * @author Torkild U. Resheim
  */
 class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.docs.epub.ui.commands.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.docs.epub.ui.commands.messages"; //$NON-NLS-1$
 
 	public static String ConvertMarkupToEPUB_fileExistsOverwrite;
 
