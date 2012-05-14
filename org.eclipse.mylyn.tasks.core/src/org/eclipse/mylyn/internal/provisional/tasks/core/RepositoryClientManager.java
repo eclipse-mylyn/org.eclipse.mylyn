@@ -19,8 +19,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,74 +33,70 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
 
-	private class OSGiAwareObjectInputStream extends ObjectInputStream {
+	/**
+	 * Delegates to <code>repositoryConfigurationClass</code>'s class loader for accessing classes.
+	 */
+	private class OsgiAwareObjectInputStream extends ObjectInputStream {
 
-		public OSGiAwareObjectInputStream(InputStream in) throws IOException {
+		public OsgiAwareObjectInputStream(InputStream in) throws IOException {
 			super(in);
 		}
 
 		@Override
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
 			try {
-				ClassLoader connectorClassloader = getConfigClassloader();
-				return connectorClassloader.loadClass(desc.getName());
+				return repositoryConfigurationClass.getClassLoader().loadClass(desc.getName());
 			} catch (Exception e) {
 				return super.resolveClass(desc);
 			}
 		}
 
-		private ClassLoader getConfigClassloader() {
-			Class<?> configClazz = getConfigClass();
-			ClassLoader connectorClassloader = configClazz.getClassLoader();
-			return connectorClassloader;
-		}
-
-		private Class<?> getConfigClass() {
-			Class<?> managerClazz = RepositoryClientManager.this.getClass();
-			ParameterizedType type = (ParameterizedType) managerClazz.getGenericSuperclass();
-			Type[] fieldArgTypes = type.getActualTypeArguments();
-			Class<?> configClazz = (Class<?>) fieldArgTypes[1];
-			return configClazz;
-		}
 	}
 
 	private final Map<String, T> clientByUrl = new HashMap<String, T>();
 
-	private final Map<String, C> clientDataByUrl = new HashMap<String, C>();
+	private final Map<String, C> respoitoryConfigurationByUrl = new HashMap<String, C>();
 
 	private final File cacheFile;
 
-	private TaskRepositoryLocationFactory taskRepositoryLocationFactory;
+	private TaskRepositoryLocationFactory locationFactory;
 
-	public RepositoryClientManager(File cacheFile) {
+	private final Class<C> repositoryConfigurationClass;
+
+	public RepositoryClientManager(File cacheFile, Class<C> repositoryConfigurationClass) {
 		Assert.isNotNull(cacheFile);
 		this.cacheFile = cacheFile;
+		this.repositoryConfigurationClass = repositoryConfigurationClass;
 		readCache();
 	}
 
-	public synchronized T getClient(TaskRepository taskRepository) {
-		Assert.isNotNull(taskRepository);
-		T client = clientByUrl.get(taskRepository.getRepositoryUrl());
+	public synchronized T getClient(TaskRepository repository) {
+		Assert.isNotNull(repository);
+		T client = clientByUrl.get(repository.getRepositoryUrl());
 		if (client == null) {
-			C data = clientDataByUrl.get(taskRepository.getRepositoryUrl());
+			C data = respoitoryConfigurationByUrl.get(repository.getRepositoryUrl());
 			if (data == null) {
-				data = createRepositoryConfiguration();
-				clientDataByUrl.put(taskRepository.getRepositoryUrl(), data);
+				data = createRepositoryConfiguration(repository);
+				respoitoryConfigurationByUrl.put(repository.getRepositoryUrl(), data);
 			}
 
-			client = createClient(taskRepository, data);
-			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
+			client = createClient(repository, data);
+			clientByUrl.put(repository.getRepositoryUrl(), client);
 		}
 		return client;
 	}
 
-	/**
-	 * FIXME: Add TaskRepository as parameter
-	 */
-	protected abstract C createRepositoryConfiguration();
+	protected C createRepositoryConfiguration(TaskRepository repository) {
+		try {
+			return repositoryConfigurationClass.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	protected abstract T createClient(TaskRepository taskRepository, C data);
 
@@ -112,7 +106,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		removeClient(repository);
-		clientDataByUrl.remove(repository.getRepositoryUrl());
+		respoitoryConfigurationByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	private void removeClient(TaskRepository repository) {
@@ -121,7 +115,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 
 	public synchronized void repositoryRemoved(TaskRepository repository) {
 		removeClient(repository);
-		clientDataByUrl.remove(repository.getRepositoryUrl());
+		respoitoryConfigurationByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
@@ -136,13 +130,13 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 
 		ObjectInputStream in = null;
 		try {
-			in = new OSGiAwareObjectInputStream(new FileInputStream(cacheFile));
+			in = new OsgiAwareObjectInputStream(new FileInputStream(cacheFile));
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				String url = (String) in.readObject();
 				C data = (C) in.readObject();
 				if (url != null && data != null) {
-					clientDataByUrl.put(url, data);
+					respoitoryConfigurationByUrl.put(url, data);
 				}
 			}
 		} catch (Throwable e) {
@@ -171,10 +165,10 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		ObjectOutputStream out = null;
 		try {
 			out = new ObjectOutputStream(new FileOutputStream(cacheFile));
-			out.writeInt(clientDataByUrl.size());
-			for (String url : clientDataByUrl.keySet()) {
+			out.writeInt(respoitoryConfigurationByUrl.size());
+			for (String url : respoitoryConfigurationByUrl.keySet()) {
 				out.writeObject(url);
-				out.writeObject(clientDataByUrl.get(url));
+				out.writeObject(respoitoryConfigurationByUrl.get(url));
 			}
 		} catch (IOException e) {
 			handleError("The respository configuration cache could not be written", e); //$NON-NLS-1$
@@ -189,12 +183,12 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		}
 	}
 
-	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
-		return taskRepositoryLocationFactory;
+	public TaskRepositoryLocationFactory getLocationFactory() {
+		return locationFactory;
 	}
 
-	public void setTaskRepositoryLocationFactory(TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
-		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
+	public void setLocationFactory(TaskRepositoryLocationFactory locationFactory) {
+		this.locationFactory = locationFactory;
 	}
 
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {

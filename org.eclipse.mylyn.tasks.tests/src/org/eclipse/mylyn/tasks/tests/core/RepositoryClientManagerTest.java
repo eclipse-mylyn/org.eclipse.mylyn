@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class RepositoryClientManagerTest extends TestCase {
 
-	private static class MyConfig implements Serializable {
+	public static class MyConfig implements Serializable {
 
 		private static final long serialVersionUID = 5105526708474366441L;
 
@@ -39,12 +39,7 @@ public class RepositoryClientManagerTest extends TestCase {
 		private Throwable throwable;
 
 		public MockRepositoryClientManager(File cacheFile) {
-			super(cacheFile);
-		}
-
-		@Override
-		protected MyConfig createRepositoryConfiguration() {
-			return new MyConfig();
+			super(cacheFile, MyConfig.class);
 		}
 
 		@Override
