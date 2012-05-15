@@ -70,14 +70,14 @@ To convert Textile wiki markup to HTML:
 
 bc. 
 MarkupParser markupParser = new MarkupParser();
-markupParser.setMarkupLanaguage(new TextileLanguage());
+markupParser.setMarkupLanguage(new TextileLanguage());
 String htmlContent = markupParser.parseToHtml(markupContent);
 
 To convert MediaWiki wiki markup to HTML:
 
 bc. 
 MarkupParser markupParser = new MarkupParser();
-markupParser.setMarkupLanaguage(new MediaWikiLanguage());
+markupParser.setMarkupLanguage(new MediaWikiLanguage());
 String htmlContent = markupParser.parseToHtml(markupContent);
 
 h3. ServiceLocator
@@ -152,7 +152,7 @@ bc..
 Browser browser = new Browser(parent, SWT.NONE);
 
 MarkupParser markupParser = new MarkupParser();
-markupParser.setMarkupLanaguage(new TextileLanguage());
+markupParser.setMarkupLanguage(new TextileLanguage());
 String htmlContent = markupParser.parseToHtml(markupContent);
 		
 browser.setText(htmlContent);
@@ -255,5 +255,5 @@ h2(#IssueTracking). Issue Tracking
 Issues are tracked in "Eclipse Bugzilla":https://bugs.eclipse.org/bugs/ under the *Mylyn Docs* project, *Wikitext* component.  Please feel free to submit bugs, enhancement requests and patches.
 
 
-p{font-style: italic;}. Copyright (c) 2008, 2009 David Green and others.
+p{font-style: italic;}. Copyright (c) 2008, 2012 David Green and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at "http://www.eclipse.org/legal/epl-v10.html":http://www.eclipse.org/legal/epl-v10.html

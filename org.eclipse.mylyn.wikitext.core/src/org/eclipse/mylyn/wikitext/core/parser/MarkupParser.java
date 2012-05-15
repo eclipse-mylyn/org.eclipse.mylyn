@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,13 +32,13 @@ public class MarkupParser {
 	public MarkupParser() {
 	}
 
-	public MarkupParser(MarkupLanguage markupLanaguage, DocumentBuilder builder) {
-		this.markupLanguage = markupLanaguage;
+	public MarkupParser(MarkupLanguage markupLanguage, DocumentBuilder builder) {
+		this.markupLanguage = markupLanguage;
 		this.builder = builder;
 	}
 
-	public MarkupParser(MarkupLanguage markupLanaguage) {
-		this.markupLanguage = markupLanaguage;
+	public MarkupParser(MarkupLanguage markupLanguage) {
+		this.markupLanguage = markupLanguage;
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class MarkupParser {
 	/**
 	 * set the markup language of the markup to process
 	 */
-	public void setMarkupLanguage(MarkupLanguage markupLanaguage) {
-		this.markupLanguage = markupLanaguage;
+	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
+		this.markupLanguage = markupLanguage;
 	}
 
 	/**

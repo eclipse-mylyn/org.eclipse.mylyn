@@ -38,7 +38,7 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
-	private MediaWikiLanguage markupLanaguage;
+	private MediaWikiLanguage markupLanguage;
 
 	private Locale locale;
 
@@ -47,8 +47,8 @@ public class MediaWikiLanguageTest extends TestCase {
 		locale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 
-		markupLanaguage = new MediaWikiLanguage();
-		parser = new MarkupParser(markupLanaguage);
+		markupLanguage = new MediaWikiLanguage();
+		parser = new MarkupParser(markupLanguage);
 	}
 
 	@Override
@@ -428,7 +428,7 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testHyperlinkQualifiedInternal() {
-		markupLanaguage.setInternalLinkPattern("http://wiki.eclipse.org/Mylyn/{0}");
+		markupLanguage.setInternalLinkPattern("http://wiki.eclipse.org/Mylyn/{0}");
 		String html = parser.parseToHtml("Also see the [[Mylyn/FAQ#Installation_Troubleshooting | Installation FAQ]].");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/FAQ#Installation_Troubleshooting\" title=\"Mylyn/FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
@@ -441,7 +441,7 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testHyperlinkInternalWithSpaces() {
-		markupLanaguage.setInternalLinkPattern("http://wiki.eclipse.org/{0}");
+		markupLanguage.setInternalLinkPattern("http://wiki.eclipse.org/{0}");
 		String html = parser.parseToHtml("Also see the [[Mylyn/User Guide]].");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/User_Guide\" title=\"Mylyn/User Guide\">Mylyn/User Guide</a>.</p>"));
@@ -824,15 +824,15 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testCloneTemplateExcludes() {
-		markupLanaguage.setTemplateExcludes("*foo");
-		MediaWikiLanguage copy = (MediaWikiLanguage) markupLanaguage.clone();
-		assertEquals(markupLanaguage.getTemplateExcludes(), copy.getTemplateExcludes());
+		markupLanguage.setTemplateExcludes("*foo");
+		MediaWikiLanguage copy = (MediaWikiLanguage) markupLanguage.clone();
+		assertEquals(markupLanguage.getTemplateExcludes(), copy.getTemplateExcludes());
 	}
 
 	public void testTemplateExcludes() {
 		// bug 367525
-		markupLanaguage.setTemplateExcludes("one, two, four_five");
-		markupLanaguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"), new Template(
+		markupLanguage.setTemplateExcludes("one, two, four_five");
+		markupLanguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"), new Template(
 				"three", "3"), new Template("four_five", "45")));
 		String html = parser.parseToHtml("a{{one}} and {{two}} and {{three}} and {{four_five}}");
 
@@ -930,7 +930,7 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		Set<String> imageNames = new HashSet<String>();
 		imageNames.add("Foo.gif");
-		markupLanaguage.setImageNames(imageNames);
+		markupLanguage.setImageNames(imageNames);
 
 		html = parser.parseToHtml("[[Image:foo.gif]]");
 		TestUtil.println("HTML: \n" + html);

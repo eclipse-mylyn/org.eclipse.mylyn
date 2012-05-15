@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,12 +27,12 @@ public class TracWikiLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
-	private TracWikiLanguage markupLanaguage;
+	private TracWikiLanguage markupLanguage;
 
 	@Override
 	public void setUp() {
-		markupLanaguage = new TracWikiLanguage();
-		parser = new MarkupParser(markupLanaguage);
+		markupLanguage = new TracWikiLanguage();
+		parser = new MarkupParser(markupLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {
@@ -458,7 +458,7 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testWikiWord() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("A WikiWord points somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a> points somewhere</p></body>"));
@@ -467,15 +467,15 @@ public class TracWikiLanguageTest extends TestCase {
 	public void testWikiWordDisabled() {
 		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
 		configuration.setWikiWordLinking(false);
-		markupLanaguage.configure(configuration);
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.configure(configuration);
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("A WikiWord points somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A WikiWord points somewhere</p></body>"));
 	}
 
 	public void testWikiColon() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("A wiki:word points somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"https://foo.bar/wiki/word\">word</a> points somewhere</p></body>"));
@@ -498,21 +498,21 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	private void testWikiWordNegativeMatch(String expected, String toTest) {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml(toTest);
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>" + expected + "</p></body>"));
 	}
 
 	public void testWikiWordAtLineStart() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("WikiWord points somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p><a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a> points somewhere</p></body>"));
 	}
 
 	public void testWikiWordAtLineEnd() {
-		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
+		markupLanguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("a WikiWord");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>a <a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a></p></body>"));
@@ -527,7 +527,7 @@ public class TracWikiLanguageTest extends TestCase {
 //	}
 
 	public void testWikiWordNoAutolink() {
-		markupLanaguage.setAutoLinking(false);
+		markupLanguage.setAutoLinking(false);
 		String html = parser.parseToHtml("A WikiWord points somewhere but not this one!");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A WikiWord points somewhere but not this one!</p></body>"));
@@ -540,112 +540,112 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testTicketLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A ticket #1 or ticket:1 to somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A ticket <a href=\"http://trac.edgewall.org/ticket/1\">#1</a> or <a href=\"http://trac.edgewall.org/ticket/1\">ticket:1</a> to somewhere</p></body>"));
 	}
 
 	public void testTicketLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A ticket a#1 or aticket:1 to somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A ticket a#1 or aticket:1 to somewhere</p></body>"));
 	}
 
 	public void testTicketLinkWithComment() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A ticket comment:1:ticket:2 to somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A ticket <a href=\"http://trac.edgewall.org/ticket/2#comment:1\">comment:1:ticket:2</a> to somewhere</p></body>"));
 	}
 
 	public void testTicketLinkWithCommentNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A ticket acomment:1:ticket:2 to somewhere");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A ticket acomment:1:<a href=\"http://trac.edgewall.org/ticket/2\">ticket:2</a> to somewhere</p></body>"));
 	}
 
 	public void testReportLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A report:1 about something");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/report/1\">report:1</a> about something</p></body>"));
 	}
 
 	public void testReportLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A areport:1 about something");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A areport:1 about something</p></body>"));
 	}
 
 	public void testChangesetLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A changeset r1 or [1] or [1/trunk] or changeset:1 or changeset:1/trunk more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A changeset <a href=\"http://trac.edgewall.org/changeset/1\">r1</a> or <a href=\"http://trac.edgewall.org/changeset/1\">[1]</a> or <a href=\"http://trac.edgewall.org/changeset/1/trunk\">[1/trunk]</a> or <a href=\"http://trac.edgewall.org/changeset/1\">changeset:1</a> or <a href=\"http://trac.edgewall.org/changeset/1/trunk\">changeset:1/trunk</a> more text</p></body>"));
 	}
 
 	public void testChangesetLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A changeset ar1 or a[1] or a[1/trunk] or achangeset:1 or achangeset:1/trunk more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A changeset ar1 or a[1] or a[1/trunk] or achangeset:1 or achangeset:1/trunk more text</p></body>"));
 	}
 
 	public void testRevisionLogLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A revision log r1:3, [1:3] or log:@1:3, log:trunk@1:3, [2:5/trunk] more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A revision log <a href=\"http://trac.edgewall.org/log/?revs=1-3\">r1:3</a>, <a href=\"http://trac.edgewall.org/log/?revs=1-3\">[1:3]</a> or <a href=\"http://trac.edgewall.org/log/?revs=1-3\">log:@1:3</a>, <a href=\"http://trac.edgewall.org/log/trunk?revs=1-3\">log:trunk@1:3</a>, <a href=\"http://trac.edgewall.org/log/trunk?revs=2-5\">[2:5/trunk]</a> more text</p></body>"));
 	}
 
 	public void testRevisionLogLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A revision log ar1:3, a[1:3] or alog:@1:3, alog:trunk@1:3, a[2:5/trunk] more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A revision log ar1:3, a[1:3] or alog:@1:3, alog:trunk@1:3, a[2:5/trunk] more text</p></body>"));
 	}
 
 	public void testMilestoneLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A milestone:1.0 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/milestone/1.0\">milestone:1.0</a> more text</p></body>"));
 	}
 
 	public void testMilestoneLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A amilestone:1.0 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A amilestone:1.0 more text</p></body>"));
 	}
 
 	public void testTicketAttachmentLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A attachment:foobar.txt:ticket:12345 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/ticket/12345/foobar.txt\">attachment:foobar.txt:ticket:12345</a> more text</p></body>"));
 	}
 
 	public void testTicketAttachmentLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A Aattachment:foobar.txt:ticket:12345 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A Aattachment:foobar.txt:<a href=\"http://trac.edgewall.org/ticket/12345\">ticket:12345</a> more text</p></body>"));
 	}
 
 	public void testSourceLink() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A source:/trunk/COPYING or source:/trunk/COPYING@200 or source:/trunk/COPYING@200#L26 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A <a href=\"http://trac.edgewall.org/browser/trunk/COPYING\">source:/trunk/COPYING</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200\">source:/trunk/COPYING@200</a> or <a href=\"http://trac.edgewall.org/browser/trunk/COPYING?rev=200#L26\">source:/trunk/COPYING@200#L26</a> more text</p></body>"));
 	}
 
 	public void testSourceLinkNegativeMatch() {
-		markupLanaguage.setServerUrl("http://trac.edgewall.org");
+		markupLanguage.setServerUrl("http://trac.edgewall.org");
 		String html = parser.parseToHtml("A Asource:/trunk/COPYING or Asource:/trunk/COPYING@200 or Asource:/trunk/COPYING@200#L26 more text");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><p>A Asource:/trunk/COPYING or Asource:/trunk/COPYING@200 or Asource:/trunk/COPYING@200#L26 more text</p></body>"));

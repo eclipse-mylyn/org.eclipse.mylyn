@@ -41,7 +41,7 @@ public class TextileLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
-	private TextileLanguage markupLanaguage;
+	private TextileLanguage markupLanguage;
 
 	@Override
 	public void setUp() throws Exception {
@@ -51,12 +51,12 @@ public class TextileLanguageTest extends TestCase {
 
 	private void initParser() throws IOException {
 		parser = new MarkupParser();
-		markupLanaguage = new TextileLanguage();
-		parser.setMarkupLanguage(markupLanaguage);
+		markupLanguage = new TextileLanguage();
+		parser.setMarkupLanguage(markupLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {
-		assertFalse(markupLanaguage.isDetectingRawHyperlinks());
+		assertFalse(markupLanguage.isDetectingRawHyperlinks());
 	}
 
 	public void testSimpleHeaders() {
@@ -454,7 +454,7 @@ public class TextileLanguageTest extends TestCase {
 	}
 
 	public void testFootnoteRefNoFootnote() throws IOException {
-		markupLanaguage.setPreprocessFootnotes(true);
+		markupLanguage.setPreprocessFootnotes(true);
 		String html = parser.parseToHtml("See foo[1].\n\nNo such footnote!");
 
 		TestUtil.println("HTML: \n" + html);

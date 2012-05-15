@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 David Green and others.
+ * Copyright (c) 2009, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,7 @@ public class TextileLanguageTasksTest extends TestCase {
 
 	private MarkupParser parser;
 
-	private TextileLanguage markupLanaguage;
+	private TextileLanguage markupLanguage;
 
 	@Override
 	public void setUp() throws Exception {
@@ -45,12 +45,12 @@ public class TextileLanguageTasksTest extends TestCase {
 
 	private void initParser() throws IOException {
 		parser = new MarkupParser();
-		markupLanaguage = new TextileLanguage();
+		markupLanguage = new TextileLanguage();
 
 		MarkupLanguageConfiguration configuration = Util.create("bugzilla");
-		markupLanaguage.configure(configuration);
+		markupLanguage.configure(configuration);
 
-		parser.setMarkupLanguage(markupLanaguage);
+		parser.setMarkupLanguage(markupLanguage);
 	}
 
 	public void testSubversiveBugReport() throws IOException {
