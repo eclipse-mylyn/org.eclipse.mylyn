@@ -29,6 +29,7 @@ import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategory.Id;
 import com.google.gerrit.reviewdb.AuthType;
 import com.google.gerrit.reviewdb.PatchSetApproval;
+import com.google.gerrit.reviewdb.Project;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -110,6 +111,10 @@ public class JSonSupport {
 				}
 				if (f.getDeclaredClass() == Map.class && f.getName().equals("given")) { //$NON-NLS-1$
 					//return true;
+				}
+				// GSon 2.1 fails to deserialize the SubmitType enum
+				if (f.getDeclaringClass() == Project.class && f.getName().equals("submitType")) { //$NON-NLS-1$
+					return true;
 				}
 				return false;
 			}
