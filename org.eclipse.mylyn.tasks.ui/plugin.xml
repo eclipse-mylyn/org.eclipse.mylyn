@@ -2101,7 +2101,9 @@
 	    </menuContribution>
 	
 	    <menuContribution locationURI="toolbar:org.eclipse.ui.trim.command2">
-	      <toolbar id="org.eclipse.mylyn.tasks.ui.trim.container">
+	      <toolbar
+             id="org.eclipse.mylyn.tasks.ui.trim.container"
+             label="Active Tasks">
 	        <command
 	            id="org.eclipse.mylyn.tasks.ui.trim"
 	            commandId="org.eclipse.mylyn.tasks.ui.command.previousTask"
