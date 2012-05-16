@@ -37,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorWithTaskDataHandler;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -64,7 +65,7 @@ public class MockTestContext {
 
 	private final AtomicInteger idSeed = new AtomicInteger(1003);
 
-	private final FullMockRepositoryConnector mockRepositoryConnector;
+	private final MockRepositoryConnectorWithTaskDataHandler mockRepositoryConnector;
 
 	private final File dataDir;
 
@@ -72,7 +73,7 @@ public class MockTestContext {
 		taskList = new TaskList();
 		repositoryManager = new TaskRepositoryManager();
 
-		mockRepositoryConnector = new FullMockRepositoryConnector();
+		mockRepositoryConnector = new MockRepositoryConnectorWithTaskDataHandler();
 		repositoryManager.addRepositoryConnector(mockRepositoryConnector);
 		mockRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
@@ -163,7 +164,7 @@ public class MockTestContext {
 		return mockRepository;
 	}
 
-	public FullMockRepositoryConnector getMockRepositoryConnector() {
+	public MockRepositoryConnectorWithTaskDataHandler getMockRepositoryConnector() {
 		return mockRepositoryConnector;
 	}
 

@@ -104,7 +104,7 @@ public class AttributeTaskMapper implements ITaskContribution, ISupportResponse 
 		attributes.put(name, value);
 	}
 
-	void setTaskData(TaskData taskData) {
+	public void setTaskData(TaskData taskData) {
 		this.taskData = taskData;
 	}
 

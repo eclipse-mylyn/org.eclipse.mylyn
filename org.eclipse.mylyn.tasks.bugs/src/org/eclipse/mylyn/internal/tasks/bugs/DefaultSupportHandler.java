@@ -38,6 +38,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
+ * @author Frank Becker
  */
 public class DefaultSupportHandler extends AbstractSupportHandler {
 
@@ -65,14 +66,18 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 		IStatus contribution = response.getStatus();
 		TaskData taskData = response.getTaskData();
 		if (contribution instanceof ProductStatus) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
-			ITaskMapping mapping = connector.getTaskMapping(taskData);
-			mapping.merge(new TaskMapping() {
-				@Override
-				public String getSeverity() {
-					return "enhancement"; //$NON-NLS-1$
+			if (response instanceof AttributeTaskMapper) {
+				if (((AttributeTaskMapper) response).getAttribute("severity") == null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+					ITaskMapping mapping = connector.getTaskMapping(taskData);
+					mapping.merge(new TaskMapping() {
+						@Override
+						public String getSeverity() {
+							return "enhancement"; //$NON-NLS-1$
+						}
+					});
 				}
-			});
+			}
 		}
 		if (response.getProduct() != null) {
 			IBundleGroup bundleGroup = ((SupportProduct) response.getProduct()).getBundleGroup();

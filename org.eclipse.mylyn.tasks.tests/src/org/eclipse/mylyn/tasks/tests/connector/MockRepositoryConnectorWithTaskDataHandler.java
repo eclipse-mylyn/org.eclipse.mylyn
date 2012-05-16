@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2012 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.index.tests.util;
+package org.eclipse.mylyn.tasks.tests.connector;
 
 import java.util.Date;
 import java.util.Set;
@@ -27,14 +27,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
 /**
- * @author David Green
+ * @author Frank Becker
  */
-public class FullMockRepositoryConnector extends MockRepositoryConnector {
+public class MockRepositoryConnectorWithTaskDataHandler extends MockRepositoryConnector {
 
-	private final AtomicInteger idSeed = new AtomicInteger(9000);
+	protected final AtomicInteger idSeed = new AtomicInteger(9000);
 
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
@@ -86,7 +85,7 @@ public class FullMockRepositoryConnector extends MockRepositoryConnector {
 				mapper.setReporter("");
 				mapper.setStatus("NEW");
 				mapper.setSummary("");
-				return false;
+				return true;
 			}
 
 			@Override
@@ -95,4 +94,5 @@ public class FullMockRepositoryConnector extends MockRepositoryConnector {
 			}
 		};
 	}
+
 }

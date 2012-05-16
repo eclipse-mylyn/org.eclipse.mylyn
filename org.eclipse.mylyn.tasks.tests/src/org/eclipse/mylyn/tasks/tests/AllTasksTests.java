@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.PriorityLevelTest;
@@ -92,6 +93,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDiffUtilTest.class);
 		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
 		suite.addTestSuite(StackTraceDuplicateDetectorTest.class);
+		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
 		// XXX fix and reenable
 		//suite.addTestSuite(MarkTaskHandlerTest.class);
 		suite.addTestSuite(RepositoryTemplateManagerTest.class);
@@ -123,6 +125,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RegionComparatorTest.class);
 		suite.addTestSuite(PriorityLevelTest.class);
 		suite.addTestSuite(TaskAttributeMapperTest.class);
+		suite.addTestSuite(SupportHandlerManagerTest.class);
 		return suite;
 	}
 
