@@ -78,6 +78,11 @@ public class OPS2Publication extends OPSPublication {
 	/** Default name for the table of contents */
 	private static final String TOCFILE_NAME = "toc.ncx"; //$NON-NLS-1$
 
+	/** List of core media types as specified in http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7 */
+	private static final String[] CORE_MEDIA_TYPES = new String[] { "image/gif", "image/jpeg", "image/png", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"image/svg+xml", "application/xhtml+xml", "application/x-dtbook+xml", "text/css", "application/xml", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"text/x-oeb1-document", "text/x-oeb1-css", "application/x-dtbncx+xml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 	/** The table of contents */
 	private Ncx ncxTOC;
 
@@ -99,7 +104,8 @@ public class OPS2Publication extends OPSPublication {
 
 	/**
 	 * This mechanism will traverse the spine of the publication (which is representing the reading order) and parse
-	 * each file for information that can be used to assemble a table of contents.
+	 * each file for information that can be used to assemble a table of contents. Only XHTML type of files will be
+	 * taken into consideration.
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
@@ -137,7 +143,8 @@ public class OPS2Publication extends OPSPublication {
 					break;
 				}
 			}
-			if (referencedItem != null && !referencedItem.isNoToc()) {
+			if (referencedItem != null && !referencedItem.isNoToc()
+					&& referencedItem.getMedia_type().equals(MIMETYPE_XHTML)) {
 				File file = new File(referencedItem.getFile());
 				FileInputStream fis = new FileInputStream(file);
 				log(MessageFormat.format(Messages.getString("OPS2Publication.1"), referencedItem.getHref()), Severity.VERBOSE, indent); //$NON-NLS-1$
@@ -249,6 +256,23 @@ public class OPS2Publication extends OPSPublication {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 		for (Item item : manifestItems) {
+			if (!isLegalType(item)) {
+				Item fallback = getItemById(item.getFallback());
+				if (fallback == null) {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.ERROR, MessageFormat.format(
+							Messages.getString("OPS2Publication.13"), //$NON-NLS-1$
+							item.getHref())));
+				} else if (!isLegalType(fallback)) {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.ERROR, MessageFormat.format(
+							Messages.getString("OPS2Publication.14"), //$NON-NLS-1$
+							item.getHref())));
+				} else {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
+							Messages.getString("OPS2Publication.15"), //$NON-NLS-1$
+							item.getHref())));
+				}
+			}
+			// Validate the XHTML items to see if they contain illegal attributes and elements
 			if (item.getMedia_type().equals(MIMETYPE_XHTML)) {
 				File file = new File(item.getFile());
 				FileReader fr = new FileReader(file);
@@ -256,6 +280,16 @@ public class OPS2Publication extends OPSPublication {
 			}
 		}
 		return messages;
+	}
+
+	private boolean isLegalType(Item item) {
+		boolean legal = false;
+		for (String type : CORE_MEDIA_TYPES) {
+			if (item.getMedia_type().equals(type)) {
+				legal = true;
+			}
+		}
+		return legal;
 	}
 
 	/**

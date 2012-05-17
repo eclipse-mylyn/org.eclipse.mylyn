@@ -28,6 +28,7 @@ import org.eclipse.mylyn.docs.epub.core.ValidationMessage.Severity;
 import org.eclipse.mylyn.docs.epub.ncx.Meta;
 import org.eclipse.mylyn.docs.epub.ncx.NavPoint;
 import org.eclipse.mylyn.docs.epub.ncx.Ncx;
+import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -245,19 +246,105 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug379052() throws Exception {
-		EPUB epub_out = new EPUB();
-		OPSPublication oebps_out = new OPS2Publication();
-		oebps_out.setIncludeReferencedResources(true);
-		epub_out.add(oebps_out);
-		oebps_out.addItem(new File("testdata/OPF-Tests/Bug_379052/link_warnings.xhtml"));
-		epub_out.pack(epubFile);
+		EPUB epub = new EPUB();
+		OPSPublication oebps = new OPS2Publication();
+		oebps.setIncludeReferencedResources(true);
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/link_warnings.xhtml"));
+		epub.pack(epubFile);
 		// Two XHTML files, one with a warning. One HTML file and the NCX.
-		Assert.assertEquals(4, oebps_out.getOpfPackage().getManifest().getItems().size());
-		// Should be exactly one warning.
-		Assert.assertEquals(1, oebps_out.getValidationMessages().size());
-		ValidationMessage msg = oebps_out.getValidationMessages().get(0);
+		Assert.assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
+		// Should be exactly one warning and one error. The error is caused by inclusion of a non core-media type.
+		Assert.assertEquals(2, oebps.getValidationMessages().size());
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
 		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
+	 * fallback items
+	 * <p>
+	 * This method tests for the error that shall be raised when an illegal item has been added.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug358671_Illegal_Item() throws Exception {
+		EPUB epub = new EPUB();
+		OPSPublication oebps = new OPS2Publication();
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
+		epub.pack(epubFile);
+		Assert.assertEquals(2, oebps.getOpfPackage().getManifest().getItems().size());
+		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.ERROR, msg.getSeverity());
+		Assert.assertEquals(
+				true,
+				msg.getMessage().equals(
+						"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
+		epubFile.delete();
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
+	 * fallback items
+	 * <p>
+	 * This method tests for the errors that shall be raised when an illegal item has been added with an illegal
+	 * fallback item.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug358671_Illegal_Fallback() throws Exception {
+		EPUB epub = new EPUB();
+		OPSPublication oebps = new OPS2Publication();
+		epub.add(oebps);
+		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
+		item.setFallback("fallback");
+		oebps.addItem("fallback", null, new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"), null, null, true,
+				true, false);
+		epub.pack(epubFile);
+		Assert.assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
+		Assert.assertEquals(2, oebps.getValidationMessages().size());
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.ERROR, msg.getSeverity());
+		Assert.assertEquals(
+				true,
+				msg.getMessage()
+						.equals("Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
+	}
+
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
+	 * fallback items
+	 * <p>
+	 * This method tests for the warning that shall be raised when an illegal item has been added with a legal fallback
+	 * item.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug358671_Legal_Fallback() throws Exception {
+		EPUB epub = new EPUB();
+		OPSPublication oebps = new OPS2Publication();
+		epub.add(oebps);
+		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
+		item.setFallback("fallback");
+		oebps.addItem("fallback", null, new File("testdata/plain-page.xhtml"), null, null, true, true, false);
+		epub.pack(epubFile);
+		Assert.assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
+		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
+		Assert.assertEquals(
+				true,
+				msg.getMessage()
+						.equals("Item \"illegal-type.html\" is not a core media type but a legal fallback item has been specified."));
 	}
 
 	private class EPUB_NCX_Test extends OPS2Publication {
