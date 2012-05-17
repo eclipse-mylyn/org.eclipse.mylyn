@@ -237,6 +237,29 @@ public class TestOPS2Publication extends AbstractTest {
 		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
 	}
 
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379052">bug 379052</a>: OPS validator
+	 * should handle all XHTML in the manifest
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug379052() throws Exception {
+		EPUB epub_out = new EPUB();
+		OPSPublication oebps_out = new OPS2Publication();
+		oebps_out.setIncludeReferencedResources(true);
+		epub_out.add(oebps_out);
+		oebps_out.addItem(new File("testdata/OPF-Tests/Bug_379052/link_warnings.xhtml"));
+		epub_out.pack(epubFile);
+		// Two XHTML files, one with a warning. One HTML file and the NCX.
+		Assert.assertEquals(4, oebps_out.getOpfPackage().getManifest().getItems().size());
+		// Should be exactly one warning.
+		Assert.assertEquals(1, oebps_out.getValidationMessages().size());
+		ValidationMessage msg = oebps_out.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
+		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
+	}
+
 	private class EPUB_NCX_Test extends OPS2Publication {
 		public void testReadOCF(File tocFile) throws IOException {
 			readTableOfContents(tocFile);

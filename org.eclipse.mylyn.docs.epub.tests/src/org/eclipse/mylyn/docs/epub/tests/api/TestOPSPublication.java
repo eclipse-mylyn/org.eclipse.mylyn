@@ -689,6 +689,7 @@ public class TestOPSPublication extends AbstractTest {
 	public final void test_Bug360701() throws Exception {
 		EPUB epub = new EPUB();
 		oebps.setIncludeReferencedResources(true);
+		// This page is similar to what WikiText would generate
 		oebps.addItem(new File("testdata/plain-page_link.html"));
 		epub.add(oebps);
 		// Included resources will only be added when we pack

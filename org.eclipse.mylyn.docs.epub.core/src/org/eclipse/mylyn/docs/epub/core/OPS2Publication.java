@@ -242,27 +242,17 @@ public class OPS2Publication extends OPSPublication {
 	}
 
 	/**
-	 * This method will only validate items that are in the spine, or in reading order.
+	 * Validates all XHTML items in the manifest.
 	 */
 	@Override
 	protected List<ValidationMessage> validateContents() throws Exception {
-		EList<Itemref> spineItems = getSpine().getSpineItems();
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-		for (Itemref itemref : spineItems) {
-			Item referencedItem = null;
-			String id = itemref.getIdref();
-			// Find the manifest item that is referenced
-			for (Item item : manifestItems) {
-				if (item.getId().equals(id)) {
-					referencedItem = item;
-					break;
-				}
-			}
-			if (referencedItem != null && !referencedItem.isNoToc()) {
-				File file = new File(referencedItem.getFile());
+		for (Item item : manifestItems) {
+			if (item.getMedia_type().equals(MIMETYPE_XHTML)) {
+				File file = new File(item.getFile());
 				FileReader fr = new FileReader(file);
-				messages.addAll(OPS2Validator.validate(new InputSource(fr), referencedItem.getHref()));
+				messages.addAll(OPS2Validator.validate(new InputSource(fr), item.getHref()));
 			}
 		}
 		return messages;
