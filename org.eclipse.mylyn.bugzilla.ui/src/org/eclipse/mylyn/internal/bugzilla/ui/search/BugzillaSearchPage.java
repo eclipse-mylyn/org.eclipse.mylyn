@@ -31,6 +31,9 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -351,6 +354,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	private SectionComposite scrolledComposite;
 
 	private final ArrayList<Chart> charts = new ArrayList<Chart>(1);
+
+	private final ArrayList<ControlDecoration> errorDecorations = new ArrayList<ControlDecoration>();
 
 	private class ChartControls {
 		private final Combo field;
@@ -1183,6 +1188,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 	@Override
 	public boolean isPageComplete() {
 		setMessage(""); //$NON-NLS-1$
+		if (errorDecorations.size() > 0) {
+			for (ControlDecoration decoration : errorDecorations) {
+				decoration.hide();
+				decoration.dispose();
+			}
+			errorDecorations.clear();
+		}
 		if (daysText != null) {
 			String days = daysText.getText();
 			if (days.length() > 0) {
@@ -1219,6 +1231,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					}
 				}
 				if (!selectionMade) {
+					FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+					FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+					final ControlDecoration decoration = new ControlDecoration(emailPattern, SWT.LEFT | SWT.DOWN);
+					decoration.setImage(fieldDecoration.getImage());
+					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
+							Messages.BugzillaSearchPage_Email.replace('&', ' '), Messages.BugzillaSearchPage_owner,
+							Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
+							Messages.BugzillaSearchPage_commenter, Messages.BugzillaSearchPage_qacontact }));
+					errorDecorations.add(decoration);
 					if (getContainer() != null) {
 						setMessage(
 								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
@@ -1226,18 +1247,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
 										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
 										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
-					} else {
-						ErrorDialog.openError(
-								getShell(),
-								Messages.BugzillaSearchPage_ValidationTitle,
-								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage1,
-										Messages.BugzillaSearchPage_Email.replace('&', ' '), email),
-								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
-										Messages.BugzillaSearchPage_ValidationReason, new String[] {
-												Messages.BugzillaSearchPage_owner,
-												Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
-												Messages.BugzillaSearchPage_commenter,
-												Messages.BugzillaSearchPage_qacontact })));
 					}
 					return false;
 				}
@@ -1254,6 +1263,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 					}
 				}
 				if (!selectionMade) {
+					FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+					FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+					final ControlDecoration decoration = new ControlDecoration(emailPattern, SWT.LEFT | SWT.DOWN);
+					decoration.setImage(fieldDecoration.getImage());
+					decoration.setDescriptionText(NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
+							Messages.BugzillaSearchPage_Email_2.replace('&', ' '), Messages.BugzillaSearchPage_owner,
+							Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
+							Messages.BugzillaSearchPage_commenter, Messages.BugzillaSearchPage_qacontact }));
+					errorDecorations.add(decoration);
 					if (getContainer() != null) {
 						setMessage(
 								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage, new String[] {
@@ -1261,18 +1279,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 										Messages.BugzillaSearchPage_owner, Messages.BugzillaSearchPage_reporter,
 										Messages.BugzillaSearchPage_cc, Messages.BugzillaSearchPage_commenter,
 										Messages.BugzillaSearchPage_qacontact }), IMessageProvider.ERROR);
-					} else {
-						ErrorDialog.openError(
-								getShell(),
-								Messages.BugzillaSearchPage_ValidationTitle,
-								NLS.bind(Messages.BugzillaSearchPage_ValidationMessage1,
-										Messages.BugzillaSearchPage_Email_2.replace('&', ' '), email2),
-								new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, NLS.bind(
-										Messages.BugzillaSearchPage_ValidationReason, new String[] {
-												Messages.BugzillaSearchPage_owner,
-												Messages.BugzillaSearchPage_reporter, Messages.BugzillaSearchPage_cc,
-												Messages.BugzillaSearchPage_commenter,
-												Messages.BugzillaSearchPage_qacontact })));
 					}
 					return false;
 				}

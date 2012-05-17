@@ -169,8 +169,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_ValidationMessage;
 
-	public static String BugzillaSearchPage_ValidationMessage1;
-
 	public static String BugzillaSearchPage_ValidationReason;
 
 	public static String BugzillaSearchPage_ValidationTitle;
