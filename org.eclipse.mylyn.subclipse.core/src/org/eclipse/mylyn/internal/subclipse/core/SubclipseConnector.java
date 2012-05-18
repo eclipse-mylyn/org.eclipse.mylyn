@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *   Ericsson AB - Initial API and Implementation
+ *   Alvaro Sanchez-Leon (Ericsson AB) - Initial API and Implementation
+ *   Sebastien Dubois (Ericsson AB) - Improved getArtifact method to resolve remote resources versions
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.subclipse.core;
@@ -33,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.versions.core.Change;
@@ -49,6 +51,8 @@ import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
+import org.tigris.subversion.subclipse.core.commands.GetLogsCommand;
+import org.tigris.subversion.subclipse.core.history.ILogEntry;
 import org.tigris.subversion.subclipse.core.resources.SVNWorkspaceRoot;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.ISVNLogMessage;
@@ -77,34 +81,56 @@ public class SubclipseConnector extends ScmConnector {
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource, String revision) {
-		ISVNRemoteResource svnResource = null;
-
+		ISVNRemoteResource localResource = null;
 		SubclipseRepository repo = null;
+		ISVNRemoteResource resolvedResource = null;
+
 		try {
-			svnResource = SVNWorkspaceRoot.getBaseResourceFor(resource);
-			if (svnResource == null) {
-				//not in version control
+			//First get local resource handle
+			localResource = SVNWorkspaceRoot.getBaseResourceFor(resource);
+
+			if (null == revision) {
+				//We are looking for the local resource in the workspace
+				resolvedResource = localResource;
+			} else {
+				//We are looking for a previous version.  Get it from the SVN remote repo using SVN logs.
+				SVNRevision svnRevision = new SVNRevision.Number(Long.parseLong(revision));
+				GetLogsCommand logCmd = new GetLogsCommand(localResource, null, svnRevision, svnRevision, false, 1L,
+						null, true);
+				try {
+					logCmd.run(new NullProgressMonitor());
+				} catch (SVNException e) {
+					// TODO: implement a plug-in logger besides the one in the work space
+					return null;
+				}
+
+				final ILogEntry[] entries = logCmd.getLogEntries();
+				if (entries.length < 1) {
+					//No version found
+					return null;
+				}
+				resolvedResource = entries[entries.length - 1].getRemoteResource();
+			}
+			if (null == resolvedResource) {
+				//No valid resource version found
 				return null;
 			}
 			repo = (SubclipseRepository) getRepository(resource, null);
 		} catch (SVNException e) {
 			// TODO: implement a plug-in logger besides the one in the work space
-			// e.printStackTrace();
 			return null;
 		} catch (CoreException e) {
 			// TODO implement a plug-in logger besides the one in the work space
-			// e.printStackTrace();
 			return null;
 		}
 
-		SVNRevision SubCRevision = svnResource.getRevision();
-		String id = String.valueOf(SubCRevision.getKind());
-		SubclipseArtifact artifact = new SubclipseArtifact(id, svnResource.getRepositoryRelativePath(), repo);
+		String id = Long.toString(resolvedResource.getLastChangedRevision().getNumber());
+		SubclipseArtifact artifact = new SubclipseArtifact(id, resolvedResource.getRepositoryRelativePath(), repo);
 
 		//Assign the resource information
 		artifact.setProjectName(resource.getProject().getName());
 		artifact.setProjectRelativePath(resource.getProjectRelativePath().toPortableString());
-		artifact.setRemoteResource(svnResource);
+		artifact.setRemoteResource(resolvedResource);
 
 		return artifact;
 	}
