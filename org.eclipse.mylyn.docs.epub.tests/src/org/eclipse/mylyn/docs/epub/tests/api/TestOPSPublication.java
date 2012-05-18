@@ -20,7 +20,6 @@ import java.util.Locale;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
-import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
@@ -32,9 +31,7 @@ import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.opf.Item;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.adobe.epubcheck.api.EpubCheck;
@@ -44,28 +41,6 @@ import com.adobe.epubcheck.api.EpubCheck;
  */
 @SuppressWarnings("nls")
 public class TestOPSPublication extends AbstractTest {
-
-	OPSPublication oebps;
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-		oebps = new OPS2Publication();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@After
-	public void tearDown() throws Exception {
-		super.tearDown();
-		oebps = null;
-	}
 
 	/**
 	 * Test method for
@@ -562,7 +537,6 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testPack_EPUB2() throws Exception {
-		EPUB epub = new EPUB();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile);
@@ -581,11 +555,10 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testPack_Empty() throws Exception {
-		EPUB epub2 = new EPUB();
-		epub2.add(new OPS2Publication());
+		epub.add(new OPS2Publication());
 		try {
 			epubFile.delete();
-			epub2.pack(epubFile);
+			epub.pack(epubFile);
 			fail();
 		} catch (IllegalArgumentException e) {
 		}
@@ -613,7 +586,6 @@ public class TestOPSPublication extends AbstractTest {
 	public final void testSetCover() throws Exception {
 		oebps.setCover(new File("testdata" + File.separator + "drawing-100x100.svg"), "Title");
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
-		EPUB epub = new EPUB();
 		epub.add(oebps);
 		epub.pack(epubFile);
 
@@ -653,7 +625,6 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testSetIncludeReferencedResources() throws Exception {
-		EPUB epub = new EPUB();
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/plain-page_link.xhtml"));
 		epub.add(oebps);
@@ -687,7 +658,6 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug360701() throws Exception {
-		EPUB epub = new EPUB();
 		oebps.setIncludeReferencedResources(true);
 		// This page is similar to what WikiText would generate
 		oebps.addItem(new File("testdata/plain-page_link.html"));
@@ -728,7 +698,6 @@ public class TestOPSPublication extends AbstractTest {
 		fw.write("</body></html>");
 		fw.close();
 
-		EPUB epub = new EPUB();
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(htmlFile);
 		epub.add(oebps);
@@ -756,7 +725,6 @@ public class TestOPSPublication extends AbstractTest {
 	 * @throws Exception
 	 */
 	public final void test_Bug376312() throws Exception {
-		EPUB epub = new EPUB();
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/circular/file-a.xhtml"));
 		oebps.addItem(new File("testdata/circular/file-b.xhtml"));

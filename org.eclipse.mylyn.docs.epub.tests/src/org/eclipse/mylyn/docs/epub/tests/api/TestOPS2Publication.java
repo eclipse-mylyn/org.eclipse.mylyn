@@ -29,8 +29,6 @@ import org.eclipse.mylyn.docs.epub.ncx.Meta;
 import org.eclipse.mylyn.docs.epub.ncx.NavPoint;
 import org.eclipse.mylyn.docs.epub.ncx.Ncx;
 import org.eclipse.mylyn.docs.epub.opf.Item;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -42,23 +40,6 @@ public class TestOPS2Publication extends AbstractTest {
 	private static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
 	private final static String TOCFILE_ID = "3063f615-672e-4083-911a-65c5ff245e75";
-
-	private final File epubFile = new File("test" + File.separator + "test.epub");
-
-	private final File epubFolder = new File("test" + File.separator + "epub");
-
-	private boolean deleteFolder(File folder) {
-		if (folder.isDirectory()) {
-			String[] children = folder.list();
-			for (String element : children) {
-				boolean ok = deleteFolder(new File(folder, element));
-				if (!ok) {
-					return false;
-				}
-			}
-		}
-		return folder.delete();
-	}
 
 	@SuppressWarnings("rawtypes")
 	public String getText(Object element) {
@@ -79,69 +60,43 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		if (epubFile.exists()) {
-			epubFile.delete();
-		}
-		if (epubFolder.exists()) {
-			deleteFolder(epubFolder);
-		}
-		epubFolder.mkdirs();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@After
-	public void tearDown() throws Exception {
-		if (epubFolder.exists()) {
-			deleteFolder(epubFolder);
-		}
-		if (epubFile.exists()) {
-			epubFile.delete();
-		}
-	}
-
-	/**
 	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#generateTableOfContents()} .
 	 * <ul>
 	 * <li>Table of contents shall be generated from content per default.</li>
-	 * <li>Table of contents shall exist but be empty if not otherwise specified.</li>
 	 * </ul>
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public final void testGenerateTableOfContents() throws Exception {
-		EPUB epub1 = new EPUB();
-		OPSPublication oebps1 = new OPS2Publication();
-		epub1.add(oebps1);
-		oebps1.addItem(new File("testdata/plain-page.xhtml"));
-		epub1.pack(epubFile);
-		Assert.assertTrue(oebps1.getTableOfContents() != null);
-		Assert.assertTrue(oebps1.getTableOfContents() instanceof Ncx);
-		Ncx ncx = (Ncx) oebps1.getTableOfContents();
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
+		epub.pack(epubFile);
+		Assert.assertTrue(oebps.getTableOfContents() != null);
+		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
+		Ncx ncx = (Ncx) oebps.getTableOfContents();
 		NavPoint h1_1 = ncx.getNavMap().getNavPoints().get(0);
 		NavPoint h1_2 = ncx.getNavMap().getNavPoints().get(1);
 		Assert.assertEquals("First item", getText(h1_1));
 		Assert.assertEquals("Second item", getText(h1_2));
 		epubFile.delete();
+	}
 
-		EPUB epub2 = new EPUB();
-		OPSPublication oebps2 = new OPS2Publication();
-		epub2.add(oebps2);
-		oebps2.addItem(new File("testdata/plain-page.xhtml"));
-		oebps2.setGenerateToc(false);
-		epub2.pack(epubFile);
-		Assert.assertTrue(oebps2.getTableOfContents() != null);
-		Assert.assertTrue(oebps2.getTableOfContents() instanceof Ncx);
-		Ncx ncx2 = (Ncx) oebps2.getTableOfContents();
-		Assert.assertEquals(null, ncx2.getNavMap());
+	/**
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#generateTableOfContents()} .
+	 * <ul>
+	 * <li>Table of contents shall exist but be empty if not otherwise specified.</li>
+	 * </ul>
+	 * 
+	 * @throws Exception
+	 */
+	public final void testGenerateEmptyTableOfContents() throws Exception {
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
+		oebps.setGenerateToc(false);
+		epub.pack(epubFile);
+		Assert.assertTrue(oebps.getTableOfContents() != null);
+		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
 	}
 
 	/**
@@ -154,8 +109,6 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void testGetTableOfContents() throws Exception {
-		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
 		epub.add(oebps);
 		Assert.assertTrue(oebps.getTableOfContents() != null);
 		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
@@ -168,11 +121,9 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void testReadTableOfContents() throws Exception {
-		EPUB epub_out = new EPUB();
-		OPSPublication oebps_out = new OPS2Publication();
-		epub_out.add(oebps_out);
-		oebps_out.addItem(new File("testdata/plain-page.xhtml"));
-		epub_out.pack(epubFile);
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
+		epub.pack(epubFile);
 
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
@@ -193,12 +144,10 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void testSetTableOfContents() throws Exception {
-		EPUB epub_out = new EPUB();
-		OPSPublication oebps_out = new OPS2Publication();
-		oebps_out.setTableOfContents(new File("testdata/toc.ncx"));
-		epub_out.add(oebps_out);
-		oebps_out.addItem(new File("testdata/plain-page.xhtml"));
-		epub_out.pack(epubFile);
+		oebps.setTableOfContents(new File("testdata/toc.ncx"));
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
+		epub.pack(epubFile);
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
 		OPSPublication oebps_in = epub_in.getOPSPublications().get(0);
@@ -227,72 +176,64 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void testValidateContents() throws Exception {
-		EPUB epub_out = new EPUB();
-		OPSPublication oebps_out = new OPS2Publication();
-		epub_out.add(oebps_out);
-		oebps_out.addItem(new File("testdata/plain-page_warnings.xhtml"));
-		epub_out.pack(epubFile);
-		Assert.assertEquals(1, oebps_out.getValidationMessages().size());
-		ValidationMessage msg = oebps_out.getValidationMessages().get(0);
+		epub.add(oebps);
+		oebps.addItem(new File("testdata/plain-page_warnings.xhtml"));
+		epub.pack(epubFile);
+		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
+		Assert.assertTrue(msg.getMessage().startsWith("Element \"bad\""));
 	}
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379052">bug 379052</a>: OPS validator
 	 * should handle all XHTML in the manifest
+	 * <p>
+	 * The test will add one XHTML file that links to another XHTML file that should be validated and one
+	 * </p>
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public final void test_Bug379052() throws Exception {
-		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
 		oebps.setIncludeReferencedResources(true);
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/link_warnings.xhtml"));
 		epub.pack(epubFile);
-		// Two XHTML files, one with a warning. One HTML file and the NCX.
+		// Two XHTML files, one with a warning. One CSS file and the NCX.
 		Assert.assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
-		// Should be exactly one warning and one error. The error is caused by inclusion of a non core-media type.
+		// Should be exactly two warning.
 		Assert.assertEquals(2, oebps.getValidationMessages().size());
-		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals("Element \"bad\" is not in OPS Preferred Vocabularies.", msg.getMessage());
 	}
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
 	 * fallback items
 	 * <p>
-	 * This method tests for the error that shall be raised when an illegal item has been added.
+	 * This method tests for the exception that shall be raised when an illegal item has been added.
 	 * </p>
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public final void test_Bug358671_Illegal_Item() throws Exception {
-		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
-		epub.pack(epubFile);
-		Assert.assertEquals(2, oebps.getOpfPackage().getManifest().getItems().size());
-		Assert.assertEquals(1, oebps.getValidationMessages().size());
-		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.ERROR, msg.getSeverity());
-		Assert.assertEquals(
-				true,
-				msg.getMessage().equals(
-						"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
-		epubFile.delete();
+		try {
+			epub.pack(epubFile);
+			fail("Exception should be thrown");
+		} catch (Exception e) {
+			Assert.assertEquals(
+					"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item.",
+					e.getMessage());
+		}
 	}
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
 	 * fallback items
 	 * <p>
-	 * This method tests for the errors that shall be raised when an illegal item has been added with an illegal
+	 * This method tests for the exception that shall be raised when an illegal item has been added with an illegal
 	 * fallback item.
 	 * </p>
 	 * 
@@ -300,29 +241,26 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug358671_Illegal_Fallback() throws Exception {
-		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
 		epub.add(oebps);
 		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"), null, null, true,
 				true, false);
-		epub.pack(epubFile);
-		Assert.assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
-		Assert.assertEquals(2, oebps.getValidationMessages().size());
-		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.ERROR, msg.getSeverity());
-		Assert.assertEquals(
-				true,
-				msg.getMessage()
-						.equals("Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
+		try {
+			epub.pack(epubFile);
+			fail("Exception should be thrown");
+		} catch (Exception e) {
+			Assert.assertEquals(
+					"Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item.",
+					e.getMessage());
+		}
 	}
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=358671">bug 358671</a>: Add support for
 	 * fallback items
 	 * <p>
-	 * This method tests for the warning that shall be raised when an illegal item has been added with a legal fallback
+	 * This method tests for the warning that shall be issued when an illegal item has been added with a legal fallback
 	 * item.
 	 * </p>
 	 * 
@@ -330,8 +268,6 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug358671_Legal_Fallback() throws Exception {
-		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
 		epub.add(oebps);
 		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		item.setFallback("fallback");

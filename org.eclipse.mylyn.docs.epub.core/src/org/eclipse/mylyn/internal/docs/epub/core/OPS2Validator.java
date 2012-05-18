@@ -1,6 +1,7 @@
 package org.eclipse.mylyn.internal.docs.epub.core;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,8 +111,11 @@ public class OPS2Validator extends DefaultHandler {
 
 	private boolean recording = false;
 
+	private final String href;
+
 	public OPS2Validator(String href, Mode mode) {
 		super();
+		this.href = href;
 		buffer = new StringBuilder();
 		contents = new StringBuilder();
 		messages = new ArrayList<ValidationMessage>();
@@ -198,19 +202,18 @@ public class OPS2Validator extends DefaultHandler {
 					contents.append(attributes.getValue(i));
 					contents.append("\""); //$NON-NLS-1$
 					if (!isLegalAttribute(name)) {
-						messages.add(new ValidationMessage(Severity.WARNING, "Attribute \"" + name //$NON-NLS-1$
-								+ "\" is not in OPS Preferred Vocabularies.")); //$NON-NLS-1$
+						messages.add(new ValidationMessage(Severity.WARNING, MessageFormat.format(
+								"Attribute \"{0}\" in {1} is not in OPS Preferred Vocabularies", name, href))); //$NON-NLS-1$
 					}
 				}
 			}
 			contents.append('>');
 			recording = true;
 			if (!isLegalElement(qName)) {
-				messages.add(new ValidationMessage(Severity.WARNING, "Element \"" + qName //$NON-NLS-1$
-						+ "\" is not in OPS Preferred Vocabularies.")); //$NON-NLS-1$
+				messages.add(new ValidationMessage(Severity.WARNING, MessageFormat.format(
+						"Element \"{0}\" in {1} is not in OPS Preferred Vocabularies", qName, href))); //$NON-NLS-1$
 
 			}
 		}
 	}
-
 }

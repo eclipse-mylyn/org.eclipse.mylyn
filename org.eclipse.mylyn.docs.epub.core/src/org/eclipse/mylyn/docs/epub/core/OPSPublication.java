@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -110,9 +111,6 @@ public abstract class OPSPublication {
 	/** The encoding to use in XML files */
 	protected static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	/** Indentation level used when logging */
-	protected int indent = 0;
-
 	/**
 	 * Returns an EPUB version 2.0.1 instance.
 	 * 
@@ -125,6 +123,9 @@ public abstract class OPSPublication {
 	public static OPSPublication getVersion2Instance(ILogger logger) {
 		return new OPS2Publication(logger);
 	}
+
+	/** Indentation level used when logging */
+	protected int indent = 0;
 
 	protected ILogger logger;
 
@@ -160,7 +161,7 @@ public abstract class OPSPublication {
 	 * <li>The publication format if none has been specified.</li>
 	 * </ul>
 	 */
-	protected void addCompulsoryData() {
+	private void addCompulsoryData() {
 		log(Messages.getString("OPSPublication.1"), Severity.VERBOSE, indent++); //$NON-NLS-1$
 		// Creation date is always when we build
 		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
@@ -707,25 +708,6 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Copies all items part of the publication into the OEPBS folder unless the item in question will be generated.
-	 * 
-	 * @param rootFolder
-	 *            the folder to copy into.
-	 * @throws IOException
-	 */
-	private void copyContent(File rootFolder) throws IOException {
-		log(Messages.getString("OPSPublication.22"), Severity.INFO, indent); //$NON-NLS-1$
-		EList<Item> items = opfPackage.getManifest().getItems();
-		for (Item item : items) {
-			if (!item.isGenerated()) {
-				File source = new File(item.getFile());
-				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
-				EPUBFileUtil.copy(source, destination);
-			}
-		}
-	}
-
-	/**
 	 * Implement to handle generation of table of contents from the items added to the <i>spine</i>.
 	 * 
 	 * @throws Exception
@@ -907,31 +889,37 @@ public abstract class OPSPublication {
 	 * 
 	 * @param rootFile
 	 *            the root file
-	 * @throws Exception
+	 * @throws ValidationException
+	 *             when the EPUB contains errors
+	 * @throws SAXException
+	 *             when content cannot be read
+	 * @throws ParserConfigurationException
+	 *             when the SAX parser cannot configured
 	 */
-	void pack(File rootFile) throws Exception {
+	void pack(File rootFile) throws IOException, ValidationException, ParserConfigurationException, SAXException {
 		if (opfPackage.getSpine().getSpineItems().isEmpty()) {
 			throw new IllegalArgumentException("Spine does not contain any items"); //$NON-NLS-1$
 		}
+		// Include items that have been referenced
+		if (opfPackage.isIncludeReferencedResources()) {
+			includeReferencedResources();
+		}
+		// Make sure all data is in place in the OPF
+		addCompulsoryData();
 		// Note that order is important here. Some of the steps for assembling
 		// the EPUB may insert data into the EPUB structure. Hence the OPF must
 		// be written last.
 		this.rootFolder = rootFile.getAbsoluteFile().getParentFile();
 		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
-			if (opfPackage.isGenerateCoverHTML()) {
-				writeCoverHTML(rootFolder);
-			}
-			if (opfPackage.isIncludeReferencedResources()) {
-				includeReferencedResources();
-			}
-			copyContent(rootFolder);
+			// Validate contents.
 			messages = validateContents();
 			if (logger != null) {
+				log(Messages.getString("OPSPublication.5"), Severity.INFO, indent); //$NON-NLS-1$
+				indent++;
 				for (ValidationMessage validation : messages) {
 					switch (validation.getSeverity()) {
 					case ERROR:
-						log(validation.getMessage(), Severity.ERROR, indent);
-						break;
+						throw new ValidationException(validation.getMessage());
 					case WARNING:
 						log(validation.getMessage(), Severity.WARNING, indent);
 						break;
@@ -939,13 +927,25 @@ public abstract class OPSPublication {
 						break;
 					}
 				}
+				indent--;
 			}
+			// Validate metadata.
+			List<Diagnostic> problems = validateMetadata();
+			if (problems.size() > 0) {
+				for (Diagnostic diagnostic : problems) {
+					throw new ValidationException(diagnostic.getMessage());
+				}
+			}
+			// Validation OK -- Write content.
+			if (opfPackage.isGenerateCoverHTML()) {
+				writeCoverHTML(rootFolder);
+			}
+			writeContent(rootFolder);
 			writeTableOfContents(rootFolder);
 			writeOPF(rootFile);
 		} else {
 			throw new IOException("Could not create OEBPS folder in " + rootFolder.getAbsolutePath()); //$NON-NLS-1$
 		}
-		validateMetadata();
 	}
 
 	/**
@@ -1135,9 +1135,13 @@ public abstract class OPSPublication {
 	/**
 	 * Implement to validate contents.
 	 * 
-	 * @throws Exception
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
-	protected abstract List<ValidationMessage> validateContents() throws Exception;
+	protected abstract List<ValidationMessage> validateContents() throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException;
 
 	/**
 	 * Validates the data model contents.
@@ -1152,6 +1156,25 @@ public abstract class OPSPublication {
 			Diagnostician.INSTANCE.validate(eo, diagnostics, context);
 		}
 		return diagnostics.getChildren();
+	}
+
+	/**
+	 * Copies all items part of the publication into the OEPBS folder unless the item in question will be generated.
+	 * 
+	 * @param rootFolder
+	 *            the folder to copy into.
+	 * @throws IOException
+	 */
+	private void writeContent(File rootFolder) throws IOException {
+		log(Messages.getString("OPSPublication.22"), Severity.INFO, indent); //$NON-NLS-1$
+		EList<Item> items = opfPackage.getManifest().getItems();
+		for (Item item : items) {
+			if (!item.isGenerated()) {
+				File source = new File(item.getFile());
+				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
+				EPUBFileUtil.copy(source, destination);
+			}
+		}
 	}
 
 	/**
@@ -1244,5 +1267,6 @@ public abstract class OPSPublication {
 	 *            the folder to write in
 	 * @throws Exception
 	 */
-	protected abstract void writeTableOfContents(File rootFolder) throws Exception;
+	protected abstract void writeTableOfContents(File rootFolder) throws IOException, ParserConfigurationException,
+			SAXException;
 }

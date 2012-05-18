@@ -19,6 +19,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
+import org.eclipse.mylyn.docs.epub.core.EPUB;
+import org.eclipse.mylyn.docs.epub.core.ILogger;
+import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.junit.After;
@@ -26,11 +30,65 @@ import org.junit.Before;
 
 @SuppressWarnings("nls")
 public abstract class AbstractTest extends TestCase {
+
+	private static final boolean DEBUGGING = false;;
+
+	private class StdOutLogger implements ILogger {
+
+		public void log(String message) {
+			log(message, Severity.INFO);
+		}
+
+		public void log(String message, Severity severity) {
+			if (DEBUGGING) {
+				switch (severity) {
+				case ERROR:
+					System.out.print("[ERROR] ");
+					break;
+				case DEBUG:
+					System.out.print("[DEBUG] ");
+					break;
+				case INFO:
+					System.out.print("[INFO ] ");
+					break;
+				case VERBOSE:
+					System.out.print("[VERBO] ");
+					break;
+				case WARNING:
+					System.out.print("[WARN ] ");
+					break;
+				default:
+					break;
+				}
+				System.out.println(message);
+			}
+		}
+	}
+
+	protected static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
+
+	protected EPUB epub;
+
 	protected final File epubFile = new File("test" + File.separator + "test.epub");
 
 	protected final File epubFolder = new File("test" + File.separator + "epub");
 
-	protected static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
+	protected final StdOutLogger logger = new StdOutLogger();
+
+	protected OPSPublication oebps;
+
+	protected boolean deleteFolder(File folder) {
+		if (folder.isDirectory()) {
+			String[] children = folder.list();
+			for (String element : children) {
+				boolean ok = deleteFolder(new File(folder, element));
+				if (!ok) {
+					return false;
+				}
+			}
+		}
+		return folder.delete();
+	}
 
 	@SuppressWarnings("rawtypes")
 	public String getText(DCType identifier) {
@@ -69,19 +127,8 @@ public abstract class AbstractTest extends TestCase {
 			deleteFolder(epubFolder);
 		}
 		epubFolder.mkdirs();
-	}
-
-	private boolean deleteFolder(File folder) {
-		if (folder.isDirectory()) {
-			String[] children = folder.list();
-			for (String element : children) {
-				boolean ok = deleteFolder(new File(folder, element));
-				if (!ok) {
-					return false;
-				}
-			}
-		}
-		return folder.delete();
+		epub = new EPUB(logger);
+		oebps = new OPS2Publication(logger);
 	}
 
 	/**
@@ -94,6 +141,8 @@ public abstract class AbstractTest extends TestCase {
 			deleteFolder(epubFolder);
 		}
 		if (epubFile.exists()) {
+//			EpubCheck check = new EpubCheck(epubFile);
+//			Assert.assertEquals(true, check.validate());
 			epubFile.delete();
 		}
 	}

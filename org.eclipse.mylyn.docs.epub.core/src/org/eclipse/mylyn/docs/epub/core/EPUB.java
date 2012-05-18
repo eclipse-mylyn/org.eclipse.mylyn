@@ -350,7 +350,6 @@ public class EPUB {
 				Object publication = rootFile.getPublication();
 				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 				if (publication instanceof OPSPublication) {
-					((OPSPublication) publication).addCompulsoryData();
 					((OPSPublication) publication).pack(root);
 				} else {
 					if (rootFile.getPublication() instanceof File) {

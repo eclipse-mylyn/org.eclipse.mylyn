@@ -112,7 +112,7 @@ public class OPS2Publication extends OPSPublication {
 	 * @throws ParserConfigurationException
 	 */
 	@Override
-	protected void generateTableOfContents() throws Exception {
+	protected void generateTableOfContents() throws ParserConfigurationException, SAXException, IOException {
 		log(Messages.getString("OPS2Publication.0"), Severity.INFO, indent++); //$NON-NLS-1$
 		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
 		ncxTOC.setNavMap(navMap);
@@ -249,10 +249,19 @@ public class OPS2Publication extends OPSPublication {
 	}
 
 	/**
-	 * Validates all XHTML items in the manifest.
+	 * Validates all XHTML items in the manifest. The following rules are observed:
+	 * <ul>
+	 * <li>The item must be a core media type. If not it must have a fallback item which must exist and be of a core
+	 * media type. Otherwise an error is added to the list of messages</li>
+	 * <li>XHTML file content must be in the preferred vocabulary. Warnings are added when this is not the case.</li>
+	 * </ul>
+	 * 
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
 	@Override
-	protected List<ValidationMessage> validateContents() throws Exception {
+	protected List<ValidationMessage> validateContents() throws ParserConfigurationException, SAXException, IOException {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 		for (Item item : manifestItems) {
@@ -306,7 +315,8 @@ public class OPS2Publication extends OPSPublication {
 	 * @see {@link #setTableOfContents(File)}
 	 */
 	@Override
-	protected void writeTableOfContents(File oepbsFolder) throws Exception {
+	protected void writeTableOfContents(File oepbsFolder) throws IOException, ParserConfigurationException,
+			SAXException {
 		// If a table of contents file has not been specified we must create
 		// one. If it has been specified it will be copied.
 		if (getItemById(opfPackage.getSpine().getToc()) == null) {

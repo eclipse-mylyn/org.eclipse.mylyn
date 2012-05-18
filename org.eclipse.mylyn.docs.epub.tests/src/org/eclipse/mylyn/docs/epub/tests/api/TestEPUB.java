@@ -25,8 +25,6 @@ import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.ocf.Container;
 import org.eclipse.mylyn.docs.epub.ocf.RootFile;
 import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -34,52 +32,6 @@ import org.junit.Test;
  */
 @SuppressWarnings("nls")
 public class TestEPUB extends AbstractTest {
-
-	private final File epubFile = new File("test" + File.separator + "test.epub");
-
-	private final File epubFolder = new File("test" + File.separator + "epub");
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		if (epubFile.exists()) {
-			epubFile.delete();
-		}
-		if (epubFolder.exists()) {
-			deleteFolder(epubFolder);
-		}
-		epubFolder.mkdirs();
-	}
-
-	private boolean deleteFolder(File folder) {
-		if (folder.isDirectory()) {
-			String[] children = folder.list();
-			for (String element : children) {
-				boolean ok = deleteFolder(new File(folder, element));
-				if (!ok) {
-					return false;
-				}
-			}
-		}
-		return folder.delete();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Override
-	@After
-	public void tearDown() throws Exception {
-		if (epubFolder.exists()) {
-			deleteFolder(epubFolder);
-		}
-		if (epubFile.exists()) {
-			epubFile.delete();
-		}
-	}
 
 	/**
 	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#EPUB()}.
@@ -270,7 +222,6 @@ public class TestEPUB extends AbstractTest {
 	 */
 	@Test
 	public final void testPackMissingPublication() throws Exception {
-		EPUB epub = new EPUB();
 		try {
 			epub.pack(epubFile);
 			fail();
@@ -289,16 +240,13 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testUnpackFile() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps1 = new OPS2Publication();
-		OPSPublication oebps2 = new OPS2Publication();
-		oebps1.addItem(new File("testdata/plain-page.xhtml"));
-		oebps2.addItem(new File("testdata/plain-page.xhtml"));
-		epub.add(oebps1);
-		epub.add(oebps2);
+		OPSPublication oebps = new OPS2Publication();
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
+		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
 		EPUB epub2 = new EPUB();
 		epub2.unpack(epubFile);
-		Assert.assertEquals(2, epub2.getOPSPublications().size());
+		Assert.assertEquals(1, epub2.getOPSPublications().size());
 	}
 
 	/**
