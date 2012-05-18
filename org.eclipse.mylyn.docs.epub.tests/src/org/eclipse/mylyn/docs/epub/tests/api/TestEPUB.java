@@ -59,12 +59,12 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testAddFileString() throws Exception {
 		EPUB epub = new EPUB();
-		File drawing = new File("testdata/drawing-100x100.svg");
+		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
 		Container container = epub.getContainer();
 		RootFiles rootfiles = container.getRootfiles();
 		EList<RootFile> files = rootfiles.getRootfiles();
-		Assert.assertEquals(true, files.get(0).getFullPath().equals("SVG+XML/drawing-100x100.svg"));
+		Assert.assertEquals(true, files.get(0).getFullPath().equals("SVG+XML/drawing.svg"));
 		Assert.assertEquals(true, files.get(0).getMediaType().equals("image/svg+xml"));
 		Assert.assertEquals(true, files.get(0).getPublication() == drawing);
 	}
@@ -80,7 +80,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testPackFail() throws Exception {
 		EPUB epub = new EPUB();
-		File drawing = new File("testdata/drawing-100x100.svg");
+		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
 		Container container = epub.getContainer();
 		RootFiles rootfiles = container.getRootfiles();
@@ -136,7 +136,7 @@ public class TestEPUB extends AbstractTest {
 		EPUB epub = new EPUB();
 		OPSPublication oebps = new OPS2Publication();
 		epub.add(oebps);
-		File drawing = new File("testdata/drawing-100x100.svg");
+		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
 		Assert.assertEquals(1, epub.getOPSPublications().size());
 	}
@@ -155,7 +155,7 @@ public class TestEPUB extends AbstractTest {
 		OPSPublication oebps = new OPS2Publication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
-		File drawing = new File("testdata/drawing-100x100.svg");
+		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
 		File tempFolder = epub.pack(epubFile);
 		Assert.assertEquals(false, tempFolder.exists());
@@ -332,7 +332,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void test_Bug377705() throws Exception {
 		EPUB epub = new EPUB();
-		File drawing = new File("testdata/drawing-100x100.svg");
+		File drawing = new File("testdata/drawing.svg");
 		File epub_2 = new File("testdata/epub/basic_2.epub");
 		assertEquals(false, epub.isEPUB(drawing));
 		assertEquals(true, epub.isEPUB(epub_2));

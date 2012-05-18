@@ -479,7 +479,7 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testGetItemsByMIMEType() {
-		Item i_in_1 = oebps.addItem(new File("testdata/drawing-100x100.svg"));
+		Item i_in_1 = oebps.addItem(new File("testdata/images/subfolder-drawing.svg"));
 		Item i_in_2 = oebps.addItem(new File("testdata/plain-page.xhtml"));
 		List<Item> i_out_1 = oebps.getItemsByMIMEType("image/svg+xml");
 		assertEquals(1, i_out_1.size());
@@ -584,7 +584,7 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testSetCover() throws Exception {
-		oebps.setCover(new File("testdata" + File.separator + "drawing-100x100.svg"), "Title");
+		oebps.setCover(new File("testdata/drawing.svg"), "Title");
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile);
@@ -593,7 +593,7 @@ public class TestOPSPublication extends AbstractTest {
 		epub2.unpack(epubFile, epubFolder);
 		oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
-		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
 		Assert.assertTrue(svg.exists());
 		File html = new File(root.getAbsolutePath() + File.separator + "cover-page.xhtml");
 		Assert.assertTrue(html.exists());
@@ -635,10 +635,10 @@ public class TestOPSPublication extends AbstractTest {
 		epub2.unpack(epubFile, epubFolder);
 		oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
-		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
 		Assert.assertTrue(svg.exists());
 		File svg2 = new File(root.getAbsolutePath() + File.separator + "images" + File.separator
-				+ "drawing-2-100x100.svg");
+				+ "subfolder-drawing.svg");
 		Assert.assertTrue(svg2.exists());
 		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.xhtml");
 		Assert.assertTrue(html.exists());
@@ -669,10 +669,10 @@ public class TestOPSPublication extends AbstractTest {
 		epub2.unpack(epubFile, epubFolder);
 		oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
-		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
 		Assert.assertTrue(svg.exists());
 		File svg2 = new File(root.getAbsolutePath() + File.separator + "images" + File.separator
-				+ "drawing-2-100x100.svg");
+				+ "subfolder-drawing.svg");
 		Assert.assertTrue(svg2.exists());
 		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.html");
 		Assert.assertTrue(html.exists());
@@ -690,7 +690,7 @@ public class TestOPSPublication extends AbstractTest {
 		// We need to link to a absolute file so we create a temporary HTML file
 		// in which we have the link.m
 		File htmlFile = File.createTempFile("temp", ".xhtml");
-		File svgFile = new File("testdata/drawing-100x100.svg");
+		File svgFile = new File("testdata/drawing.svg");
 
 		FileWriter fw = new FileWriter(htmlFile);
 		fw.write("<html><body>");
@@ -709,7 +709,7 @@ public class TestOPSPublication extends AbstractTest {
 		epub2.unpack(epubFile, epubFolder);
 		oebps = epub2.getOPSPublications().get(0);
 		File root = oebps.getRootFolder();
-		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing.svg");
 		Assert.assertTrue(svg.exists());
 
 	}
