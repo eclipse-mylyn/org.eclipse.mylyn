@@ -113,26 +113,38 @@ public class ReferenceScanner extends AbstractXHTMLScanner {
 		if (qName.equalsIgnoreCase("a")) { //$NON-NLS-1$
 			String ref = getAttribute(attributes, "href"); //$NON-NLS-1$
 			if (ref != null) {
-				String t = ref.toLowerCase();
-				if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-					return;
-				}
-				// Handle links to anchors within resources (bug 375795). 
-				if (ref.indexOf('#') > -1) {
-					ref = ref.substring(0, ref.indexOf('#'));
-				}
-				// If the item was generated for instance by WikiText we need to
-				// use the original path. Otherwise we use the item path.
-				String source = currentItem.getSourcePath();
-				if (source == null) {
-					source = currentItem.getFile();
-				}
-				File sourceFile = new File(source);
-				File file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
-				if (!file.isDirectory()) {
-					files.add(file);
-				}
+				includeRef(ref);
 			}
+		}
+		// Also handle links to CSS style sheets
+		if (qName.equalsIgnoreCase("link")) { //$NON-NLS-1$
+			String ref = getAttribute(attributes, "href"); //$NON-NLS-1$
+			String rel = getAttribute(attributes, "rel"); //$NON-NLS-1$
+			if (ref != null && rel != null && rel.equals("stylesheet")) { //$NON-NLS-1$
+				includeRef(ref);
+			}
+		}
+	}
+
+	private void includeRef(String ref) {
+		String t = ref.toLowerCase();
+		if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+			return;
+		}
+		// Handle links to anchors within resources (bug 375795). 
+		if (ref.indexOf('#') > -1) {
+			ref = ref.substring(0, ref.indexOf('#'));
+		}
+		// If the item was generated for instance by WikiText we need to
+		// use the original path. Otherwise we use the item path.
+		String source = currentItem.getSourcePath();
+		if (source == null) {
+			source = currentItem.getFile();
+		}
+		File sourceFile = new File(source);
+		File file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
+		if (!file.isDirectory()) {
+			files.add(file);
 		}
 	}
 }

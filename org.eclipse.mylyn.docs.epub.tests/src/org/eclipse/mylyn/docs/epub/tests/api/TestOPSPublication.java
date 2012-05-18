@@ -651,6 +651,26 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=380016">bug 380016</a>: Reference scanner
+	 * should also include referenced CSS style sheets
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug380016() throws Exception {
+		oebps.setIncludeReferencedResources(true);
+		oebps.addItem(new File("testdata/OPF-Tests/Bug_380016/chapter.xhtml"));
+		epub.add(oebps);
+		epub.pack(epubFile);
+		EPUB epub2 = new EPUB();
+		epub2.unpack(epubFile, epubFolder);
+		oebps = epub2.getOPSPublications().get(0);
+		File root = oebps.getRootFolder();
+		File svg = new File(root.getAbsolutePath() + File.separator + "style.css");
+		Assert.assertTrue(svg.exists());
+	}
+
+	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701">bug 360701</a>: [epub] Automatic
 	 * inclusion of referenced resources don't work for WikiText generated HTML.
 	 * 

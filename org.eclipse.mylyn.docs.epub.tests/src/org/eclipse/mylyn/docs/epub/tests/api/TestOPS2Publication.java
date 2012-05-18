@@ -189,7 +189,8 @@ public class TestOPS2Publication extends AbstractTest {
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379052">bug 379052</a>: OPS validator
 	 * should handle all XHTML in the manifest
 	 * <p>
-	 * The test will add one XHTML file that links to another XHTML file that should be validated and one
+	 * The test will add one XHTML file that links to another XHTML file that should be validated and one that should
+	 * not
 	 * </p>
 	 * 
 	 * @throws Exception
@@ -198,12 +199,13 @@ public class TestOPS2Publication extends AbstractTest {
 	public final void test_Bug379052() throws Exception {
 		oebps.setIncludeReferencedResources(true);
 		epub.add(oebps);
-		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/link_warnings.xhtml"));
+		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/chapter-1.xhtml"));
 		epub.pack(epubFile);
 		// Two XHTML files, one with a warning. One CSS file and the NCX.
 		Assert.assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
 		// Should be exactly two warning.
-		Assert.assertEquals(2, oebps.getValidationMessages().size());
+		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		epubFile.delete();
 	}
 
 	/**
