@@ -18,7 +18,7 @@ package org.eclipse.mylyn.commons.net;
  * @since 2.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class AuthenticationCredentials {
+public class AuthenticationCredentials implements Comparable<AuthenticationCredentials> {
 
 	private final String userName;
 
@@ -86,6 +86,40 @@ public class AuthenticationCredentials {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @since 3.8
+	 */
+	public int compareTo(AuthenticationCredentials obj) {
+		if (this == obj) {
+			return 0;
+		}
+		if (obj == null) {
+			return -1;
+		}
+		final AuthenticationCredentials other = obj;
+		if (password == null) {
+			if (other.password != null) {
+				return 1;
+			}
+		} else {
+			int temp = password.compareTo(other.password);
+			if (temp != 0) {
+				return temp;
+			}
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return 1;
+			}
+		} else {
+			int temp = userName.compareTo(other.userName);
+			if (temp != 0) {
+				return temp;
+			}
+		}
+		return 0;
 	}
 
 }
