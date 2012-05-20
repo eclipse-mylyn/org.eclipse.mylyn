@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
+import org.eclipse.mylyn.docs.epub.core.ValidationException;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
@@ -560,7 +561,7 @@ public class TestOPSPublication extends AbstractTest {
 			epubFile.delete();
 			epub.pack(epubFile);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (ValidationException e) {
 		}
 	}
 

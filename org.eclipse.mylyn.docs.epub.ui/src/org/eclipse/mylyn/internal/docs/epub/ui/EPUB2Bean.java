@@ -219,7 +219,9 @@ class EPUB2Bean {
 	}
 
 	public void setCover(String cover) {
-		epub.setCover(new File(cover), Messages.EPUB2Bean_0);
+		if (cover.length() > 0) {
+			epub.setCover(new File(cover), Messages.EPUB2Bean_0);
+		}
 	}
 
 	public void setCreator(String creator) {
@@ -254,8 +256,10 @@ class EPUB2Bean {
 	}
 
 	public void setStyleSheet(String css) {
-		epub.getOpfPackage().getManifest().getItems().remove(epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS));
-		epub.addItem(STYLING_ID, null, new File(css), null, null, false, false, true);
+		if (css.length() > 0) {
+			epub.getOpfPackage().getManifest().getItems().remove(epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS));
+			epub.addItem(STYLING_ID, null, new File(css), null, null, false, false, true);
+		}
 	}
 
 	public void setSubject(String subject) {

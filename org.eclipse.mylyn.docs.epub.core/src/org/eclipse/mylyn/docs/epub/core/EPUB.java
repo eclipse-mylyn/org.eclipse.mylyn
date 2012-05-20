@@ -339,7 +339,7 @@ public class EPUB {
 	 */
 	public void pack(File epubFile, File rootFolder) throws Exception {
 		if (ocfContainer.getRootfiles().getRootfiles().isEmpty()) {
-			throw new IllegalArgumentException("EPUB does not contain any publications"); //$NON-NLS-1$
+			throw new ValidationException("EPUB does not contain any publications"); //$NON-NLS-1$
 		}
 		rootFolder.mkdirs();
 		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {

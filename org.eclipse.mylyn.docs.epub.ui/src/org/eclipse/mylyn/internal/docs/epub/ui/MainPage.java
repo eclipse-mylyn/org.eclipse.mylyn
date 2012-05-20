@@ -1,21 +1,31 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Torkild U. Resheim - initial API and implementation
+ * Contributors: 
+ *     Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.ui;
 
+import java.io.File;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -35,7 +46,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class MainPage extends WizardPage {
 
-	@SuppressWarnings("unused")
 	private DataBindingContext m_bindingContext;
 
 	private Text titleText;
@@ -201,54 +211,153 @@ public class MainPage extends WizardPage {
 			}
 		});
 		m_bindingContext = initDataBindings();
+		WizardPageSupport.create(this, m_bindingContext);
+		setMessage(Messages.MainPage_0);
+	}
+
+	private final class StringValidator implements IValidator {
+		private final String errorText;
+
+		private final ControlDecoration controlDecoration;
+
+		public StringValidator(String errorText, Control control) {
+			this.errorText = errorText;
+			controlDecoration = new ControlDecoration(control, SWT.LEFT | SWT.TOP);
+			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
+					FieldDecorationRegistry.DEC_REQUIRED);
+			controlDecoration.setImage(fieldDecoration.getImage());
+		}
+
+		public IStatus validate(Object value) {
+			if (value instanceof String) {
+				String text = (String) value;
+				if (text.trim().length() == 0) {
+					controlDecoration.show();
+					return ValidationStatus.cancel(errorText);
+				}
+			}
+			controlDecoration.hide();
+			return ValidationStatus.ok();
+		}
+	}
+
+	private final class FileValidator implements IValidator {
+
+		private final String errorText;
+
+		private final String[] fileSuffixes;
+
+		private final ControlDecoration controlDecoration;
+
+		public FileValidator(String errorText, Control control, String[] fileSuffixes) {
+			this.errorText = errorText;
+			this.fileSuffixes = fileSuffixes;
+			controlDecoration = new ControlDecoration(control, SWT.LEFT | SWT.TOP);
+			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
+					FieldDecorationRegistry.DEC_ERROR);
+			controlDecoration.setImage(fieldDecoration.getImage());
+			controlDecoration.hide();
+		}
+
+		public IStatus validate(Object value) {
+			if (value instanceof String && ((String) value).length() > 0) {
+				File file = new File((String) value);
+				if (!file.exists()) {
+					controlDecoration.show();
+					return ValidationStatus.error("The specified file must exist.");
+				}
+				boolean suffixOK = false;
+				String name = file.getName();
+				for (String suffix : fileSuffixes) {
+					if (name.endsWith(suffix)) {
+						suffixOK = true;
+					}
+				}
+				if (!suffixOK) {
+					controlDecoration.show();
+					return ValidationStatus.error(errorText);
+				}
+			}
+			controlDecoration.hide();
+			return ValidationStatus.ok();
+		}
 	}
 
 	protected DataBindingContext initDataBindings() {
+
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue beanCoverObserveValue = PojoObservables.observeValue(bean, "cover"); //$NON-NLS-1$
-		IObservableValue coverTextTextObserveValue = PojoObservables.observeValue(coverText, "text"); //$NON-NLS-1$
-		bindingContext.bindValue(beanCoverObserveValue, coverTextTextObserveValue, null, null);
-		//
 		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(titleText, SWT.Modify);
-		IObservableValue beanTitleObserveValue = PojoObservables.observeValue(bean, "title"); //$NON-NLS-1$
-		bindingContext.bindValue(textObserveTextObserveWidget, beanTitleObserveValue, null, null);
-		//
-		IObservableValue subjectTextObserveTextObserveWidget = SWTObservables.observeText(subjectText, SWT.Modify);
-		IObservableValue beanSubjectObserveValue = PojoObservables.observeValue(bean, "subject"); //$NON-NLS-1$
-		bindingContext.bindValue(subjectTextObserveTextObserveWidget, beanSubjectObserveValue, null, null);
-		//
-		IObservableValue text_4ObserveTextObserveWidget = SWTObservables.observeText(identifierText, SWT.Modify);
-		IObservableValue beanIdentifierObserveValue = PojoObservables.observeValue(bean, "identifier"); //$NON-NLS-1$
-		bindingContext.bindValue(text_4ObserveTextObserveWidget, beanIdentifierObserveValue, null, null);
-		//
-		IObservableValue text_1ObserveTextObserveWidget = SWTObservables.observeText(copyrightText, SWT.Modify);
-		IObservableValue beanRightsObserveValue = PojoObservables.observeValue(bean, "rights"); //$NON-NLS-1$
-		bindingContext.bindValue(text_1ObserveTextObserveWidget, beanRightsObserveValue, null, null);
+		final IObservableValue beanTitleObserveValue = PojoObservables.observeValue(bean, "title"); //$NON-NLS-1$
+		UpdateValueStrategy titleStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		titleStrategy.setBeforeSetValidator(new StringValidator("A title must be specified", titleText));
+		bindingContext.bindValue(textObserveTextObserveWidget, beanTitleObserveValue, titleStrategy, null);
 		//
 		IObservableValue text_3ObserveTextObserveWidget = SWTObservables.observeText(authorText, SWT.Modify);
-		IObservableValue beanCreatorObserveValue = PojoObservables.observeValue(bean, "creator"); //$NON-NLS-1$
-		bindingContext.bindValue(text_3ObserveTextObserveWidget, beanCreatorObserveValue, null, null);
+		final IObservableValue beanCreatorObserveValue = PojoObservables.observeValue(bean, "creator"); //$NON-NLS-1$
+		UpdateValueStrategy authorStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		authorStrategy.setBeforeSetValidator(new StringValidator("An author must be specified", authorText));
+		bindingContext.bindValue(text_3ObserveTextObserveWidget, beanCreatorObserveValue, authorStrategy, null);
+		//
+		IObservableValue dateTimeObserveSelectionObserveWidget = SWTObservables.observeSelection(dateTime);
+		final IObservableValue beanPublicationDateObserveValue = PojoObservables.observeValue(bean, "publicationDate"); //$NON-NLS-1$
+		bindingContext.bindValue(dateTimeObserveSelectionObserveWidget, beanPublicationDateObserveValue, null, null);
+		//
+		IObservableValue text_4ObserveTextObserveWidget = SWTObservables.observeText(identifierText, SWT.Modify);
+		final IObservableValue beanIdentifierObserveValue = PojoObservables.observeValue(bean, "identifier"); //$NON-NLS-1$
+		UpdateValueStrategy identifierStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		identifierStrategy.setBeforeSetValidator(new StringValidator("An identifier must be specified", identifierText));
+		bindingContext.bindValue(text_4ObserveTextObserveWidget, beanIdentifierObserveValue, identifierStrategy, null);
 		//
 		IObservableValue schemeTextObserveTextObserveWidget = SWTObservables.observeText(schemeText);
-		IObservableValue beanIdSchemeObserveValue = PojoObservables.observeValue(bean, "scheme"); //$NON-NLS-1$
-		bindingContext.bindValue(schemeTextObserveTextObserveWidget, beanIdSchemeObserveValue, null, null);
+		final IObservableValue beanIdSchemeObserveValue = PojoObservables.observeValue(bean, "scheme"); //$NON-NLS-1$
+		UpdateValueStrategy schemeStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		schemeStrategy.setBeforeSetValidator(new StringValidator("An identifier scheme must be specified", schemeText));
+		bindingContext.bindValue(schemeTextObserveTextObserveWidget, beanIdSchemeObserveValue, schemeStrategy, null);
+		//
+		IObservableValue text_1ObserveTextObserveWidget = SWTObservables.observeText(copyrightText, SWT.Modify);
+		final IObservableValue beanRightsObserveValue = PojoObservables.observeValue(bean, "rights"); //$NON-NLS-1$
+		UpdateValueStrategy rightsStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		rightsStrategy.setBeforeSetValidator(new StringValidator("Rights must be specified", copyrightText));
+		bindingContext.bindValue(text_1ObserveTextObserveWidget, beanRightsObserveValue, rightsStrategy, null);
 		//
 		IObservableValue comboObserveTextObserveWidget = SWTObservables.observeText(combo);
-		IObservableValue beanLanguageObserveValue = PojoObservables.observeValue(bean, "language"); //$NON-NLS-1$
-		bindingContext.bindValue(comboObserveTextObserveWidget, beanLanguageObserveValue, null, null);
+		final IObservableValue beanLanguageObserveValue = PojoObservables.observeValue(bean, "language"); //$NON-NLS-1$
+		UpdateValueStrategy languageStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		languageStrategy.setBeforeSetValidator(new StringValidator("An language must be specified", combo));
+		bindingContext.bindValue(comboObserveTextObserveWidget, beanLanguageObserveValue, languageStrategy, null);
 		//
-		IObservableValue coverTextObserveTextObserveWidget = SWTObservables.observeText(coverText, SWT.Modify);
-		bindingContext.bindValue(coverTextObserveTextObserveWidget, beanCoverObserveValue, null, null);
+		IObservableValue subjectTextObserveTextObserveWidget = SWTObservables.observeText(subjectText, SWT.Modify);
+		final IObservableValue beanSubjectObserveValue = PojoObservables.observeValue(bean, "subject"); //$NON-NLS-1$
+		UpdateValueStrategy subjectStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		subjectStrategy.setBeforeSetValidator(new StringValidator("A subject must be specified", subjectText));
+		bindingContext.bindValue(subjectTextObserveTextObserveWidget, beanSubjectObserveValue, subjectStrategy, null);
+		//
+		IObservableValue coverObserveTextObserveWidget = SWTObservables.observeText(coverText, SWT.Modify);
+		IObservableValue beanCoverObserveValue = PojoObservables.observeValue(bean, "cover"); //$NON-NLS-1$
+		UpdateValueStrategy coverStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		coverStrategy.setBeforeSetValidator(new FileValidator(
+				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] {
+						".png", ".svg", ".jpeg", ".jpg" }));
+		bindingContext.bindValue(coverObserveTextObserveWidget, beanCoverObserveValue, coverStrategy, null);
 		//
 		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText, SWT.Modify);
 		IObservableValue beanStyleSheetObserveValue = PojoObservables.observeValue(bean, "styleSheet"); //$NON-NLS-1$
-		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue, null, null);
-		//
-		IObservableValue dateTimeObserveSelectionObserveWidget = SWTObservables.observeSelection(dateTime);
-		IObservableValue beanPublicationDateObserveValue = PojoObservables.observeValue(bean, "publicationDate"); //$NON-NLS-1$
-		bindingContext.bindValue(dateTimeObserveSelectionObserveWidget, beanPublicationDateObserveValue, null, null);
+		UpdateValueStrategy styleSheetStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+		styleSheetStrategy.setBeforeSetValidator(new FileValidator("The style sheet must be a valid CSS file.",
+				styleSheetText, new String[] { ".css" }));
+		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue,
+				styleSheetStrategy, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		boolean ok = super.isPageComplete();
+		if (ok) {
+			setMessage("Press finish to generate an EPUB from the Wiki markup.");
+		}
+		return ok;
 	}
 }

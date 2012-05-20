@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.ValidationMessage;
 import org.eclipse.mylyn.docs.epub.core.wikitext.MarkupToOPS;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -33,7 +33,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	private EPUB2Bean bean;
 
-	OPSPublication epub;
+	OPSPublication oebps;
 
 	private IFile epubFile;
 
@@ -54,9 +54,9 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		epub = OPSPublication.getVersion2Instance();
+		oebps = OPSPublication.getVersion2Instance();
 		File workingFolder = null;
-		bean = new EPUB2Bean(epub, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
+		bean = new EPUB2Bean(oebps, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
 		page = new MainPage(bean);
 		addPage(page);
 	}
@@ -104,30 +104,22 @@ public class ConvertFromMarkupWizard extends Wizard {
 							epubFile.delete(true, monitor);
 						}
 						// Parse the wiki markup and populate the EPUB
-						markupFolder = markupToEPUB.parse(epub, markupFile.getLocation().toFile());
+						markupFolder = markupToEPUB.parse(oebps, markupFile.getLocation().toFile());
 						monitor.worked(1);
-						List<Diagnostic> problems = epub.validateMetadata();
-
-						if (problems.size() > 0) {
-							for (Diagnostic diagnostic : problems) {
-								ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, diagnostic.getMessage()));
-							}
-							monitor.setCanceled(true);
-							StatusManager.getManager().handle(ms, StatusManager.BLOCK);
-							return;
-						}
 						EPUB publication = new EPUB();
-						publication.add(epub);
+						publication.add(oebps);
 						epubFolder = publication.pack(epubFile.getLocation().toFile());
 						monitor.worked(1);
 						epubFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 						monitor.worked(1);
+
+						List<ValidationMessage> messages = oebps.getMessages();
+						for (ValidationMessage validationMessage : messages) {
+							ms.add(new Status(IStatus.WARNING, EPUBUIPlugin.PLUGIN_ID, validationMessage.getMessage()));
+						}
 					} catch (Exception e) {
+						e.printStackTrace();
 						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_3, e));
-						monitor.setCanceled(true);
-						StatusManager.getManager().handle(ms);
-						StatusManager.getManager().handle(ms, StatusManager.BLOCK);
-						return;
 					} finally {
 						deleteFolder(epubFolder);
 						deleteFolder(markupFolder);
@@ -138,6 +130,9 @@ public class ConvertFromMarkupWizard extends Wizard {
 		} catch (Throwable e) {
 			ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_4, e));
 			return false;
+		}
+		if (!ms.isOK()) {
+			StatusManager.getManager().handle(ms, StatusManager.BLOCK);
 		}
 		return ms.isOK();
 	}

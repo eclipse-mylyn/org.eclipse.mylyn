@@ -130,7 +130,7 @@ public abstract class OPSPublication {
 	protected ILogger logger;
 
 	/** List of validation messages */
-	public List<ValidationMessage> messages;
+	protected List<ValidationMessage> messages;
 
 	/** The root model element */
 	protected Package opfPackage;
@@ -764,6 +764,15 @@ public abstract class OPSPublication {
 		return stylesheets;
 	}
 
+	/**
+	 * Returns the list of validation messages.
+	 * 
+	 * @return the list of validation message
+	 */
+	public List<ValidationMessage> getMessages() {
+		return messages;
+	}
+
 	public Package getOpfPackage() {
 		return opfPackage;
 	}
@@ -885,7 +894,9 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Assembles the OPS publication in a location relative to the root file.
+	 * Assembles the OPS publication in a location relative to the root file. Two levels of validation is performed.
+	 * First the contents are validated. This may result in warning or error class of messages. An error will result in
+	 * a {@link ValidationException} being thrown.
 	 * 
 	 * @param rootFile
 	 *            the root file
@@ -898,7 +909,7 @@ public abstract class OPSPublication {
 	 */
 	void pack(File rootFile) throws IOException, ValidationException, ParserConfigurationException, SAXException {
 		if (opfPackage.getSpine().getSpineItems().isEmpty()) {
-			throw new IllegalArgumentException("Spine does not contain any items"); //$NON-NLS-1$
+			throw new ValidationException("Spine does not contain any items"); //$NON-NLS-1$
 		}
 		// Include items that have been referenced
 		if (opfPackage.isIncludeReferencedResources()) {
@@ -913,23 +924,21 @@ public abstract class OPSPublication {
 		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
 			// Validate contents.
 			messages = validateContents();
-			if (logger != null) {
-				log(Messages.getString("OPSPublication.5"), Severity.INFO, indent); //$NON-NLS-1$
-				indent++;
-				for (ValidationMessage validation : messages) {
-					switch (validation.getSeverity()) {
-					case ERROR:
-						throw new ValidationException(validation.getMessage());
-					case WARNING:
-						log(validation.getMessage(), Severity.WARNING, indent);
-						break;
-					default:
-						break;
-					}
+			log(Messages.getString("OPSPublication.5"), Severity.INFO, indent); //$NON-NLS-1$
+			indent++;
+			for (ValidationMessage validation : messages) {
+				switch (validation.getSeverity()) {
+				case ERROR:
+					throw new ValidationException(validation.getMessage());
+				case WARNING:
+					log(validation.getMessage(), Severity.WARNING, indent);
+					break;
+				default:
+					break;
 				}
-				indent--;
 			}
-			// Validate metadata.
+			indent--;
+			// Validate metadata. These are "hard" requirements, so any problem here is an exception
 			List<Diagnostic> problems = validateMetadata();
 			if (problems.size() > 0) {
 				for (Diagnostic diagnostic : problems) {
