@@ -24,8 +24,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.context.core.AbstractContextContributor;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IContextContributor;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -314,7 +314,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	public void testAddContextContributor() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		ContextCorePlugin contextCorePlugin = ContextCorePlugin.getDefault();
-		IContextContributor contributor = mock(IContextContributor.class);
+		AbstractContextContributor contributor = mock(AbstractContextContributor.class);
 		when(contributor.getDataAsStream(context)).thenReturn(null);
 
 		contextCorePlugin.addContextContributor(contributor);
@@ -330,7 +330,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testWriteAdditionalContextData() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
-		IContextContributor contributor = mock(IContextContributor.class);
+		AbstractContextContributor contributor = mock(AbstractContextContributor.class);
 		InteractionEvent event = mockNavigation("InteractionEvent");
 		context.parseEvent(event);
 

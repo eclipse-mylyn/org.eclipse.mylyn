@@ -31,7 +31,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextContributor;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IContextContributor;
@@ -52,7 +54,7 @@ public class ContextCorePlugin extends Plugin {
 
 	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<String, Set<String>>();
 
-	private final List<IContextContributor> contextContributor = new CopyOnWriteArrayList<IContextContributor>();
+	private List<IContextContributor> contextContributor = new CopyOnWriteArrayList<IContextContributor>();
 
 	// specifies that one content type should shadow another
 	// the <value> content type shadows the <key> content typee
@@ -69,6 +71,8 @@ public class ContextCorePlugin extends Plugin {
 	private final Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
 
 	private final InteractionContextScaling commonContextScaling = new InteractionContextScaling();
+
+	private boolean contextContributorInitialized = false;
 
 	private static final AbstractContextStructureBridge DEFAULT_BRIDGE = new AbstractContextStructureBridge() {
 
@@ -132,6 +136,10 @@ public class ContextCorePlugin extends Plugin {
 			return Collections.emptyList();
 		}
 	};
+
+	private static final String EXTENSION_ELEMENT_CONTRIBUTOR = "contextContributor"; //$NON-NLS-1$
+
+	private static final String EXTENSION_ID_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 
 	public ContextCorePlugin() {
 		INSTANCE = this;
@@ -215,15 +223,26 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	public List<IContextContributor> getContextContributor() {
+		initContextContributor();
 		return contextContributor;
 	}
 
-	// TODO: add extension point to register context provider
-	public void addContextContributor(IContextContributor contributor) {
+	private void initContextContributor() {
+		if (!contextContributorInitialized) {
+			ExtensionPointReader<IContextContributor> extensionPointReader = new ExtensionPointReader<IContextContributor>(
+					ContextCorePlugin.ID_PLUGIN, ContextCorePlugin.EXTENSION_ID_CONTRIBUTOR,
+					ContextCorePlugin.EXTENSION_ELEMENT_CONTRIBUTOR, IContextContributor.class);
+			extensionPointReader.read();
+			contextContributor = extensionPointReader.getItems();
+			contextContributorInitialized = true;
+		}
+	}
+
+	public void addContextContributor(AbstractContextContributor contributor) {
 		contextContributor.add(contributor);
 	}
 
-	public void removeContextContributor(IContextContributor contributor) {
+	public void removeContextContributor(AbstractContextContributor contributor) {
 		contextContributor.remove(contributor);
 	}
 

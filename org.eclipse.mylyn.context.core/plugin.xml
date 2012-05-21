@@ -8,9 +8,11 @@
    
     Contributors:
          Tasktop Technologies - initial API and implementation
+         Sebastian Schmidt - added contributor extension point
  -->
 
 <plugin>
+   <extension-point id="contributor" name="contributor" schema="schema/contributor.exsd"/>
    <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
    <extension-point id="internalBridges" name="Internal Bridges" schema="schema/internalBridges.exsd"/>
    <extension-point id="relationProviders" name="relationProviders" schema="schema/relationProviders.exsd"/>

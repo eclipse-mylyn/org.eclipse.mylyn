@@ -59,6 +59,9 @@ public final class ContextCore {
 	}
 
 	/**
+	 * Returns a list of all {@link IContextContributor} registered with Mylyn context. Please refer to the
+	 * org.eclipse.mylyn.context.core.contributor extension point.
+	 * 
 	 * @since 3.9
 	 */
 	public static List<IContextContributor> getContextContributor() {
