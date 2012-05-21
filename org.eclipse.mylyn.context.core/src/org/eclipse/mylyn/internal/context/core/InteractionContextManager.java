@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,12 +41,12 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
+import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.context.core.ContextChangeEvent.ContextChangeKind;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
@@ -418,6 +420,17 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (context != null && contextStore != null) {
 			contextStore.saveContext(context);
 		}
+	}
+
+	public InputStream getAdditionalContextData(IInteractionContext context, String contributorIdentifier) {
+		try {
+			return contextStore.getAdditionalContextInformation(context, contributorIdentifier);
+		} catch (IOException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+					"Searching for additional context data failed" //$NON-NLS-1$
+					, e));
+		}
+		return null;
 	}
 
 	public void deactivateContext(String handleIdentifier) {

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.core;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
 
@@ -72,4 +73,9 @@ public interface IInteractionContextManager {
 	 * NOTE: If pausing ensure to restore to original state.
 	 */
 	public void setContextCapturePaused(boolean paused);
+
+	/**
+	 * @since 3.9
+	 */
+	public InputStream getAdditionalContextData(IInteractionContext context, String identifier);
 }

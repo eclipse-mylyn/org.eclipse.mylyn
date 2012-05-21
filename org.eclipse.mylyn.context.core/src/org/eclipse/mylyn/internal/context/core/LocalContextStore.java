@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -80,6 +81,12 @@ public class LocalContextStore implements IContextStore {
 	 */
 	public IInteractionContext loadContext(String handleIdentifier) {
 		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), commonContextScaling);
+	}
+
+	public InputStream getAdditionalContextInformation(IInteractionContext context, String identifier)
+			throws IOException {
+		File fileForContext = getFileForContext(context.getHandleIdentifier());
+		return externalizer.getAdditionalInformation(fileForContext, identifier);
 	}
 
 	public IInteractionContext importContext(String handleIdentifier, File fromFile) throws CoreException {

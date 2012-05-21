@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -33,6 +34,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IContextContributor;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.osgi.framework.BundleContext;
 
@@ -49,6 +51,8 @@ public class ContextCorePlugin extends Plugin {
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
 	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<String, Set<String>>();
+
+	private final List<IContextContributor> contextContributor = new CopyOnWriteArrayList<IContextContributor>();
 
 	// specifies that one content type should shadow another
 	// the <value> content type shadows the <key> content typee
@@ -208,6 +212,19 @@ public class ContextCorePlugin extends Plugin {
 	public Map<String, AbstractContextStructureBridge> getStructureBridges() {
 		BridgesExtensionPointReader.initExtensions();
 		return bridges;
+	}
+
+	public List<IContextContributor> getContextContributor() {
+		return contextContributor;
+	}
+
+	// TODO: add extension point to register context provider
+	public void addContextContributor(IContextContributor contributor) {
+		contextContributor.add(contributor);
+	}
+
+	public void removeContextContributor(IContextContributor contributor) {
+		contextContributor.remove(contributor);
 	}
 
 	/**

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.context.core;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -57,4 +58,10 @@ public final class ContextCore {
 		return ContextCorePlugin.getContextStore();
 	}
 
+	/**
+	 * @since 3.9
+	 */
+	public static List<IContextContributor> getContextContributor() {
+		return ContextCorePlugin.getDefault().getContextContributor();
+	}
 }

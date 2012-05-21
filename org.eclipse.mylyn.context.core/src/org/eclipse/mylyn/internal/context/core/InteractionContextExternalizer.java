@@ -14,17 +14,24 @@ package org.eclipse.mylyn.internal.context.core;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.IContextContributor;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 
@@ -144,6 +151,62 @@ public class InteractionContextExternalizer {
 		writer.writeContextToStream(context);
 		outputStream.flush();
 		outputStream.closeEntry();
+
+		addAdditionalInformation(context, outputStream);
+	}
+
+	private void addAdditionalInformation(final IInteractionContext context, final ZipOutputStream outputStream)
+			throws IOException {
+		for (final IContextContributor contributor : getContextContributor()) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+							"Context contribution failed: " //$NON-NLS-1$
+									+ contributor.getClass(), e));
+				}
+
+				public void run() throws Exception {
+					InputStream additionalContextInformation = contributor.getDataAsStream(context);
+					if (additionalContextInformation != null) {
+						String encoded = URLEncoder.encode(contributor.getIdentifier(),
+								InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+						ZipEntry zipEntry = new ZipEntry(encoded);
+						outputStream.putNextEntry(zipEntry);
+						IOUtils.copy(additionalContextInformation, outputStream);
+						outputStream.flush();
+						outputStream.closeEntry();
+					}
+				}
+			});
+		}
+	}
+
+	public InputStream getAdditionalInformation(File file, String contributorIdentifier) throws IOException {
+		if (!file.exists()) {
+			return null;
+		}
+		ZipFile zipFile = new ZipFile(file);
+		ZipEntry entry = findFileInZip(zipFile, contributorIdentifier);
+		if (entry == null) {
+			return null;
+		}
+
+		return zipFile.getInputStream(entry);
+	}
+
+	private ZipEntry findFileInZip(ZipFile zipFile, String identifier) throws UnsupportedEncodingException {
+		String encoded = URLEncoder.encode(identifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+		for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
+			ZipEntry entry = (ZipEntry) e.nextElement();
+			if (entry.getName().equals(encoded)) {
+				return entry;
+			}
+		}
+		return null;
+	}
+
+	private List<IContextContributor> getContextContributor() {
+		return ContextCorePlugin.getDefault().getContextContributor();
 	}
 
 	public IInteractionContext readContextFromXml(String handleIdentifier, File fromFile,
