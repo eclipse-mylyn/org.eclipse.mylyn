@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.diff.Edit;
-import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.reviewdb.ApprovalCategory;
@@ -149,7 +148,8 @@ public class JSonSupport {
 							try {
 								return AuthType.valueOf(jsonString);
 							} catch (IllegalArgumentException e) {
-								GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
+								// ignore the error since the connector does not make use of AuthType
+								//GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
 							}
 						}
 						return null;
