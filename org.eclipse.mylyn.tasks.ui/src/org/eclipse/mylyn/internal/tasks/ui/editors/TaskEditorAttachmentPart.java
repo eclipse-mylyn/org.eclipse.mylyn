@@ -361,6 +361,16 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachFileAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach_);
 		attachFileAction.setImageDescriptor(TasksUiImages.FILE_NEW_SMALL);
 		toolBarManager.add(attachFileAction);
+
+		Action attachScreenshotAction = new Action() {
+			@Override
+			public void run() {
+				EditorUtil.openNewAttachmentWizard(getTaskEditorPage(), Mode.SCREENSHOT, null);
+			}
+		};
+		attachScreenshotAction.setToolTipText(Messages.TaskEditorAttachmentPart_Attach__Screenshot);
+		attachScreenshotAction.setImageDescriptor(TasksUiImages.IMAGE_CAPTURE_SMALL);
+		toolBarManager.add(attachScreenshotAction);
 	}
 
 	private void updateSectionTitle() {
