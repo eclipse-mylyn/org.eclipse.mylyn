@@ -20,11 +20,11 @@ import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
+import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
-import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.DefaultTaskSchemaTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
@@ -53,6 +53,7 @@ public class AllHeadlessStandaloneTest {
 		TestSuite suite = new ManagedTestSuite(AllHeadlessStandaloneTest.class.getName());
 
 		// commons
+		suite.addTestSuite(CoreUtilTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(FeedReaderTest.class);
@@ -71,7 +72,6 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(DefaultTaskSchemaTest.class);
 		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(TaskListUnmatchedContainerTest.class);
-		suite.addTestSuite(TasksUtilTest.class);
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
 		suite.addTestSuite(TaskDataExternalizerTest.class);
