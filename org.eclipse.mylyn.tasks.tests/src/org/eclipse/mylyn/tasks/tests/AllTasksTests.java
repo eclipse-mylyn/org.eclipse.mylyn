@@ -26,7 +26,6 @@ import org.eclipse.mylyn.tasks.tests.data.TaskAttributeMapperTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
-import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskListSynchronizationSchedulerTest;
@@ -105,7 +104,8 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
 		suite.addTestSuite(CommentGroupStrategyTest.class);
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
-		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
+		// FIXME re-enable: bug 380390
+		//suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(EditorUtilTest.class);
 		suite.addTestSuite(FileTaskAttachmentSourceTest.class);
 		suite.addTestSuite(TaskListSynchronizationSchedulerTest.class);

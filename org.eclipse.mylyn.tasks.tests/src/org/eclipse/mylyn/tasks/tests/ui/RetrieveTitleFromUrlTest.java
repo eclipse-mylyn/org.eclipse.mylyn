@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.tests.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
@@ -24,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RetrieveTitleFromUrlTest extends TestCase {
 
-	private String retrievedTitle;
+	private final AtomicReference<String> retrievedTitle = new AtomicReference<String>();
 
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
 		final String url = "http://eclipse.org/mylyn";
@@ -32,16 +33,17 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 		AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(url) {
 			@Override
 			public void titleRetrieved(String title) {
-				retrievedTitle = title;
+				retrievedTitle.set(title);
 			}
 		};
 		job.schedule();
 		job.join();
 		assertEquals(knownTitle, job.getPageTitle());
+
 		// process pending events
 		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
 		}
-		assertEquals(knownTitle, retrievedTitle);
+		assertEquals(knownTitle, retrievedTitle.get());
 	}
 
 }
