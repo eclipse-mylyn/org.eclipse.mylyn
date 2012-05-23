@@ -11,11 +11,19 @@
 
 package org.eclipse.mylyn.internal.provisional.tasks.core;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
+
 /**
  * @author Steffen Pingel
+ * @deprecated
  */
+@Deprecated
 public class TasksUtil {
 
+	/**
+	 * @deprecated use {@link CoreUtil#decode(String)} instead
+	 */
+	@Deprecated
 	public static String decode(String text) {
 		boolean escaped = false;
 		StringBuffer sb = new StringBuffer(text.length());
@@ -51,6 +59,10 @@ public class TasksUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * @deprecated use {@link CoreUtil#encode(String)} instead
+	 */
+	@Deprecated
 	public static String encode(String text) {
 		StringBuffer sb = new StringBuffer(text.length());
 		char[] chars = text.toCharArray();
