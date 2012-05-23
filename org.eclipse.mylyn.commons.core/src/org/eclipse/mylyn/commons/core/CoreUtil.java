@@ -237,4 +237,68 @@ public class CoreUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * Returns the decoded form of <code>text</code>.
+	 * 
+	 * @since 3.8
+	 * @see #encode(String)
+	 * @throws IllegalArgumentException
+	 *             if text is not in a valid form, i.e. it was not encoded using {@link CoreUtil#encode(String)}
+	 */
+	public static String decode(String text) {
+		boolean escaped = false;
+		StringBuffer sb = new StringBuffer(text.length());
+		StringBuffer escapedText = new StringBuffer(4);
+		char[] chars = text.toCharArray();
+		for (char c : chars) {
+			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
+				if (escaped) {
+					escapedText.append(c);
+				} else {
+					sb.append(c);
+				}
+			} else if (c == '%') {
+				if (escaped) {
+					throw new IllegalArgumentException("Unexpected '%' sign in '" + text + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				escaped = !escaped;
+			} else if (c == '_') {
+				if (!escaped) {
+					throw new IllegalArgumentException("Unexpected '_' sign in '" + text + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				try {
+					sb.append((char) Integer.parseInt(escapedText.toString(), 16));
+					escapedText.setLength(0);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Invalid escape code in '" + text + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				escaped = !escaped;
+			} else {
+				throw new IllegalArgumentException("Unexpected character '" + c + "' in '" + text + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * An encoded form of <code>text</code> that is suitable as a filename.
+	 * 
+	 * @param text
+	 *            the string to encode
+	 * @see #decode(String)
+	 * @since 3.8
+	 */
+	public static String encode(String text) {
+		StringBuffer sb = new StringBuffer(text.length());
+		char[] chars = text.toCharArray();
+		for (char c : chars) {
+			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
+				sb.append(c);
+			} else {
+				sb.append("%" + Integer.toHexString(c).toUpperCase() + "_"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
+		return sb.toString();
+	}
+
 }

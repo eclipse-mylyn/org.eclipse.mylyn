@@ -200,4 +200,31 @@ public class CoreUtilTest extends TestCase {
 		assertEquals("%2525abc", CoreUtil.asFileName("%25abc"));
 	}
 
+	public void testDecode() {
+		assertEquals("abc", CoreUtil.encode("abc"));
+		assertEquals("%2D_", CoreUtil.encode("-"));
+		assertEquals("abc%2D_123", CoreUtil.encode("abc-123"));
+		assertEquals("", CoreUtil.encode(""));
+	}
+
+	public void testDecodeInvalid() {
+		try {
+			String s = CoreUtil.decode("abc-123");
+			fail("Expected IllegalArgumentException, got '" + s + "'");
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			String s = CoreUtil.decode("%Z_");
+			fail("Expected IllegalArgumentException, got '" + s + "'");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	public void testEncode() {
+		assertEquals("abc", CoreUtil.decode("abc"));
+		assertEquals("-", CoreUtil.decode("%2D_"));
+		assertEquals("abc-123", CoreUtil.decode("abc%2D_123"));
+		assertEquals("abc-123", CoreUtil.decode(CoreUtil.decode(CoreUtil.encode(CoreUtil.encode("abc-123")))));
+	}
+
 }
