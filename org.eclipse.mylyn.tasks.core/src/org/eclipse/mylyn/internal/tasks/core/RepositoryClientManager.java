@@ -8,7 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.provisional.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 /**
  * @author Steffen Pingel
  * @author Benjamin Muskalla
+ * @since 3.8
  */
 public abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
 
