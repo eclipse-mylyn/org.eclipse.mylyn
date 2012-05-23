@@ -588,8 +588,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskRepository taskRepository = taskData.getAttributeMapper().getTaskRepository();
-		String useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository, IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE)) {
 			optionValues = repositoryConfiguration.getTargetMilestones(productAttribute.getValue());
 			if (optionValues.size() > 0) {
 				TaskAttribute attributeTargetMilestone = createAttribute(taskData, BugzillaAttribute.TARGET_MILESTONE);
@@ -651,8 +650,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue(""); //$NON-NLS-1$
 
-		useParam = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
-		if (useParam != null && useParam.equals("true")) { //$NON-NLS-1$
+		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository, IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT)) {
 			TaskAttribute attributeQAContact = createAttribute(taskData, BugzillaAttribute.QA_CONTACT);
 			attributeQAContact.setValue(""); //$NON-NLS-1$
 		}

@@ -14,8 +14,11 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
@@ -24,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * @author Frank Becker
@@ -36,9 +38,12 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	private BugzillaRepositoryConnector connector;
 
+	private BugzillaClient client;
+
 	@Override
 	public void setUp() throws Exception {
 		repository = BugzillaFixture.current().repository();
+		client = BugzillaFixture.current().client();
 		connector = BugzillaFixture.current().connector();
 	}
 
@@ -95,4 +100,30 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
 	}
 
+	public void testPropertyTargetMilestoneUndefined() throws Exception {
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
+		assertNotNull(taskData.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()));
+	}
+
+	public void testPropertyTargetMilestoneTrue() throws Exception {
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, Boolean.TRUE.toString());
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
+		assertNotNull(taskData.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()));
+	}
+
+	public void testPropertyTargetMilestoneFalse() throws Exception {
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, Boolean.FALSE.toString());
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
+		assertNull(taskData.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()));
+	}
 }

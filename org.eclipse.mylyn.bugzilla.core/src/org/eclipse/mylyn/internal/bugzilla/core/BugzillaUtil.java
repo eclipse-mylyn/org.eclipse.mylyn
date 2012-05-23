@@ -53,4 +53,16 @@ public class BugzillaUtil {
 			}
 		}
 	}
+
+	/**
+	 * Call this method if you did not know if an property exists
+	 * 
+	 * @param taskRepository
+	 * @param property
+	 * @return true if the property is undefined or if the property is true
+	 */
+	public static boolean getTaskPropertyWithDefaultTrue(TaskRepository taskRepository, String property) {
+		String useParam = taskRepository.getProperty(property);
+		return (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
+	}
 }
