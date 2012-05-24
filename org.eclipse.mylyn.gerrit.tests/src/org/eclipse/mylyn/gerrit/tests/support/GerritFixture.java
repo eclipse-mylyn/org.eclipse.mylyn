@@ -21,13 +21,15 @@ public class GerritFixture extends TestFixture {
 
 	public static GerritFixture GERRIT_2_1_5 = new GerritFixture("http://localhost:8080/", "2.1.5", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture GERRIT_2_2_1 = new GerritFixture("http://review.mylyn.org/", "2.2.1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static GerritFixture GERRIT_2_2_1 = new GerritFixture("http://localhost:8080/", "2.2.1", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static GerritFixture GERRIT_2_2_2 = new GerritFixture("http://mylyn.org/gerrit-2.2.2", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static GerritFixture GERRIT_2_3 = new GerritFixture("http://mylyn.org/gerrit-2.3.0", "2.3.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture[] ALL = new GerritFixture[] { GERRIT_2_2_1, GERRIT_2_2_2, GERRIT_2_3 };
+	public static GerritFixture[] ALL = new GerritFixture[] { GERRIT_2_2_2, GERRIT_2_3 };
 
 	public static GerritFixture DEFAULT = GERRIT_2_3;
 
@@ -62,6 +64,6 @@ public class GerritFixture extends TestFixture {
 	}
 
 	public boolean canAuthenticate() {
-		return this != GERRIT_2_2_1;
+		return true;
 	}
 }
