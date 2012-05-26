@@ -36,6 +36,9 @@ import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -109,44 +112,7 @@ public class GitConnector extends ScmConnector {
 		try {
 			RevCommit commit;
 			commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
-			TreeWalk treeWalk = new TreeWalk(repository2);
-			for (RevCommit p : commit.getParents()) {
-				walk.parseHeaders(p);
-				walk.parseBody(p);
-				treeWalk.addTree(p.getTree());
-				//we can compare with one parent only
-				break;
-			}
-
-			if (treeWalk.getTreeCount() == 0) {
-				//No parents found e.g. initial commit
-				//comparing against the same commit will flag all file entries as additions
-				treeWalk.addTree(commit.getTree());
-			}
-
-			treeWalk.addTree(commit.getTree());
-			treeWalk.setRecursive(true);
-
-			List<DiffEntry> entries = DiffEntry.scan(treeWalk);
-			List<Change> changes = new ArrayList<Change>();
-			File repoDir = repository2.getWorkTree().getAbsoluteFile();
-
-			//define working area repo URI
-			IPath repoWorkAreaPath = new Path(repoDir.getAbsolutePath()).addTrailingSeparator();
-
-			for (DiffEntry d : entries) {
-				// FIXME - could not work for renaming
-				if (!d.getChangeType().equals(org.eclipse.jgit.diff.DiffEntry.ChangeType.RENAME)
-						&& d.getOldId().equals(d.getNewId())) {
-					continue;
-				}
-
-				//Create old and new artifacts with IResource information if available from the current workspace
-				ScmArtifact newArtifact = getArtifact(repository, d, false, repoWorkAreaPath);
-				ScmArtifact oldArtifact = getArtifact(repository, d, true, repoWorkAreaPath);
-
-				changes.add(new Change(oldArtifact, newArtifact, mapChangeType(d.getChangeType())));
-			}
+			List<Change> changes = diffCommit(repository, repository2, walk, commit);
 
 			return changeSet(commit, repository, changes);
 
@@ -155,6 +121,49 @@ public class GitConnector extends ScmConnector {
 			throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
 		}
 
+	}
+
+	List<Change> diffCommit(ScmRepository repository, Repository repository2, RevWalk walk, RevCommit commit)
+			throws MissingObjectException, IOException, IncorrectObjectTypeException, CorruptObjectException {
+
+		TreeWalk treeWalk = new TreeWalk(repository2);
+		for (RevCommit p : commit.getParents()) {
+			walk.parseHeaders(p);
+			walk.parseBody(p);
+			treeWalk.addTree(p.getTree());
+			//we can compare with one parent only
+			break;
+		}
+		if (treeWalk.getTreeCount() == 0) {
+			//No parents found e.g. initial commit
+			//comparing against the same commit will flag all file entries as additions
+			treeWalk.addTree(commit.getTree());
+		}
+
+		treeWalk.addTree(commit.getTree());
+		treeWalk.setRecursive(true);
+
+		List<Change> changes = new ArrayList<Change>();
+		List<DiffEntry> entries = DiffEntry.scan(treeWalk);
+		File repoDir = repository2.getWorkTree().getAbsoluteFile();
+
+		//define working area repo URI
+		IPath repoWorkAreaPath = new Path(repoDir.getAbsolutePath()).addTrailingSeparator();
+
+		for (DiffEntry d : entries) {
+			// FIXME - could not work for renaming
+			if (!d.getChangeType().equals(org.eclipse.jgit.diff.DiffEntry.ChangeType.RENAME)
+					&& d.getOldId().equals(d.getNewId())) {
+				continue;
+			}
+
+			//Create old and new artifacts with IResource information if available from the current workspace
+			ScmArtifact newArtifact = getArtifact(repository, d, false, repoWorkAreaPath);
+			ScmArtifact oldArtifact = getArtifact(repository, d, true, repoWorkAreaPath);
+
+			changes.add(new Change(oldArtifact, newArtifact, mapChangeType(d.getChangeType())));
+		}
+		return changes;
 	}
 
 	/**
@@ -219,10 +228,15 @@ public class GitConnector extends ScmConnector {
 		List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
 
 		try {
-			Git git = new Git(((GitRepository) repository).getRepository());
+			Repository gitRepo = ((GitRepository) repository).getRepository();
+			Git git = new Git(gitRepo);
 			Iterable<RevCommit> revs = git.log().call();
+			RevTree lastTree = null;
 			for (RevCommit r : revs) {
-				changeSets.add(changeSet(r, repository, new ArrayList<Change>()));
+				changeSets.add(changeSet(r, repository, new LazyChangesList(this, (GitRepository) repository, gitRepo,
+						r)));
+				lastTree = r.getTree();
+
 			}
 		} catch (Exception e) {
 		}
