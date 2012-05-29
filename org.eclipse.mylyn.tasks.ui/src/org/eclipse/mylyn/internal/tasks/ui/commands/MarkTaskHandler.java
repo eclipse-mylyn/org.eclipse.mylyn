@@ -33,6 +33,11 @@ import org.eclipse.mylyn.tasks.core.ITask;
 public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 	public static class ClearOutgoingHandler extends AbstractTaskHandler {
+
+		public ClearOutgoingHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			ClearOutgoingAction action = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
@@ -43,6 +48,10 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class ClearActiveTimeHandler extends AbstractTaskHandler {
+		public ClearActiveTimeHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			if (MessageDialog.openConfirm(WorkbenchUtil.getShell(),
@@ -58,6 +67,10 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 		public static final String ID_COMMAND = "org.eclipse.mylyn.tasks.ui.command.markTaskComplete"; //$NON-NLS-1$
 
+		public MarkTaskCompleteHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			if (TasksUiInternal.hasLocalCompletionState(task)) {
@@ -68,6 +81,11 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskIncompleteHandler extends AbstractTaskHandler {
+
+		public MarkTaskIncompleteHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			if (TasksUiInternal.hasLocalCompletionState(task)) {
@@ -78,6 +96,12 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskReadHandler extends AbstractTaskHandler {
+		public static final String ID_COMMAND = "org.eclipse.mylyn.tasks.ui.command.markTaskRead"; //$NON-NLS-1$
+
+		public MarkTaskReadHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
@@ -85,6 +109,11 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskUnreadHandler extends AbstractTaskHandler {
+
+		public MarkTaskUnreadHandler() {
+			setFilterBasedOnActiveTaskList(true);
+		}
+
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			TasksUiPlugin.getTaskDataManager().setTaskRead(task, false);

@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
+import java.util.Set;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -19,6 +21,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -34,6 +38,8 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	protected boolean recurse;
 
 	protected boolean singleTask;
+
+	private boolean filterBasedOnActiveTaskList;
 
 	public AbstractTaskHandler() {
 	}
@@ -89,11 +95,35 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 
 	protected void execute(ExecutionEvent event, ITaskContainer item) throws ExecutionException {
 		for (ITask task : item.getChildren()) {
-			process(event, task, true);
+			if (!filterBasedOnActiveTaskList || isVisibleInTaskList(item, task)) {
+				process(event, task, true);
+			}
 		}
 	}
 
+	public static boolean isVisibleInTaskList(ITaskContainer item, ITask task) {
+		TaskListView taskListView = TaskListView.getFromActivePerspective();
+		if (taskListView == null) {
+			return false;
+		}
+		Set<AbstractTaskListFilter> filters = taskListView.getFilters();
+		for (AbstractTaskListFilter filter : filters) {
+			if (!filter.select(item, task)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+	}
+
+	public boolean getFilterBasedOnActiveTaskList() {
+		return filterBasedOnActiveTaskList;
+	}
+
+	protected void setFilterBasedOnActiveTaskList(boolean filterBasedOnActiveTaskList) {
+		this.filterBasedOnActiveTaskList = filterBasedOnActiveTaskList;
 	}
 
 }
