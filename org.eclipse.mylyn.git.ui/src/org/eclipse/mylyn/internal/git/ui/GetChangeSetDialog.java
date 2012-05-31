@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.git.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -246,7 +247,9 @@ public class GetChangeSetDialog extends FormDialog {
 			commitList.setTextLimit(DIALOG_COMBO_MAX_CHARACTERS);
 			commitList.setVisibleItemCount(NUM_COMMIT_SHOWN);
 			commitList.select(0);
-			selectedChangeSet = filteredChangeSets.get(0);
+			if (filteredChangeSets.size() > 0) {
+				selectedChangeSet = filteredChangeSets.get(0);
+			}
 			final GridData textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 			textGridData.horizontalSpan = 3;
 			commitList.setLayoutData(textGridData);
@@ -257,10 +260,12 @@ public class GetChangeSetDialog extends FormDialog {
 					if (commitList.getItem(selectedIndex).equals(MORE_ITEMS_LABEL)) {
 						populateNextChangeSets();
 						commitList.select(selectedIndex);
-						selectedChangeSet = filteredChangeSets.get(selectedIndex);
-					} else {
+					}
+
+					if (filteredChangeSets.size() > 0) {
 						selectedChangeSet = filteredChangeSets.get(selectedIndex);
 					}
+
 					refresh();
 				}
 			});
@@ -355,7 +360,8 @@ public class GetChangeSetDialog extends FormDialog {
 		// Message
 		final Label titleLabel = aToolkit.createLabel(basicSectionClient, "Title: ", SWT.WRAP);
 		titleLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
-		messageText = aToolkit.createLabel(basicSectionClient, selectedChangeSet.getMessage(), SWT.NONE);
+		messageText = aToolkit.createLabel(basicSectionClient,
+				selectedChangeSet == null ? "" : selectedChangeSet.getMessage(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		messageText.setLayoutData(textGridData);
@@ -363,7 +369,8 @@ public class GetChangeSetDialog extends FormDialog {
 		// Id
 		final Label idLabel = aToolkit.createLabel(basicSectionClient, "ID: ", SWT.WRAP);
 		idLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		idText = aToolkit.createLabel(basicSectionClient, selectedChangeSet.getId(), SWT.NONE);
+		idText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null ? "" : selectedChangeSet.getId(),
+				SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		idText.setLayoutData(textGridData);
@@ -371,7 +378,9 @@ public class GetChangeSetDialog extends FormDialog {
 		// Author Name
 		final Label authorNameLabel = aToolkit.createLabel(basicSectionClient, "Author Name: ", SWT.WRAP);
 		authorNameLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		authorNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet.getAuthor().getName(), SWT.NONE);
+		authorNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
+				? ""
+				: selectedChangeSet.getAuthor().getName(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		authorNameText.setLayoutData(textGridData);
@@ -379,7 +388,9 @@ public class GetChangeSetDialog extends FormDialog {
 		// Author Email
 		final Label authorEmailLabel = aToolkit.createLabel(basicSectionClient, "Author Email: ", SWT.WRAP);
 		authorEmailLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		authorEmailText = aToolkit.createLabel(basicSectionClient, selectedChangeSet.getAuthor().getEmail(), SWT.NONE);
+		authorEmailText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
+				? ""
+				: selectedChangeSet.getAuthor().getEmail(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		authorEmailText.setLayoutData(textGridData);
@@ -387,7 +398,7 @@ public class GetChangeSetDialog extends FormDialog {
 		// Date
 		final Label dateLabel = aToolkit.createLabel(basicSectionClient, "Date: ", SWT.WRAP);
 		dateLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		final String dateStr = dateFormat.format(selectedChangeSet.getDate());
+		final String dateStr = dateFormat.format(selectedChangeSet == null ? new Date() : selectedChangeSet.getDate());
 		dateText = aToolkit.createLabel(basicSectionClient, dateStr, SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
@@ -396,8 +407,9 @@ public class GetChangeSetDialog extends FormDialog {
 		// Repository Name
 		final Label messageLabel = aToolkit.createLabel(basicSectionClient, "Repository: ", SWT.WRAP);
 		messageLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
-		repositoryNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet.getRepository().getName(),
-				SWT.NONE);
+		repositoryNameText = aToolkit.createLabel(basicSectionClient, selectedChangeSet == null
+				? ""
+				: selectedChangeSet.getRepository().getName(), SWT.NONE);
 		textGridData = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textGridData.horizontalSpan = 3;
 		repositoryNameText.setLayoutData(textGridData);
@@ -438,9 +450,12 @@ public class GetChangeSetDialog extends FormDialog {
 
 		// Components List
 		changeList = new org.eclipse.swt.widgets.List(extraSectionClient, SWT.V_SCROLL | SWT.H_SCROLL);
-		for (Change change : selectedChangeSet.getChanges()) {
-			changeList.add(getAdjustedPath(change));
+		if (selectedChangeSet != null) {
+			for (Change change : selectedChangeSet.getChanges()) {
+				changeList.add(getAdjustedPath(change));
+			}
 		}
+
 		final GridData data = new GridData(GridData.FILL, GridData.FILL, true, true);
 		changeList.setLayoutData(data);
 	}
@@ -502,15 +517,17 @@ public class GetChangeSetDialog extends FormDialog {
 	 * Refreshes the Form.
 	 */
 	void refresh() {
-		messageText.setText(selectedChangeSet.getMessage());
-		idText.setText(selectedChangeSet.getId());
-		dateText.setText(dateFormat.format(selectedChangeSet.getDate())); // BUG!
-		authorNameText.setText(selectedChangeSet.getAuthor().getName());
-		authorEmailText.setText(selectedChangeSet.getAuthor().getEmail());
-		repositoryNameText.setText(selectedChangeSet.getRepository().getUrl());
-		changeList.removeAll();
-		for (Change change : selectedChangeSet.getChanges()) {
-			changeList.add(getAdjustedPath(change));
+		if (selectedChangeSet != null) {
+			messageText.setText(selectedChangeSet.getMessage());
+			idText.setText(selectedChangeSet.getId());
+			dateText.setText(dateFormat.format(selectedChangeSet.getDate())); // BUG!
+			authorNameText.setText(selectedChangeSet.getAuthor().getName());
+			authorEmailText.setText(selectedChangeSet.getAuthor().getEmail());
+			repositoryNameText.setText(selectedChangeSet.getRepository().getUrl());
+			changeList.removeAll();
+			for (Change change : selectedChangeSet.getChanges()) {
+				changeList.add(getAdjustedPath(change));
+			}
 		}
 	}
 
