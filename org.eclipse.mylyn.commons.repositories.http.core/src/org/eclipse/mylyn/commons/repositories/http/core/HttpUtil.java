@@ -133,7 +133,7 @@ public class HttpUtil {
 		Assert.isNotNull(location);
 		Assert.isNotNull(credentials);
 		String url = location.getUrl();
-		Assert.isNotNull("The location url must not be null", url); //$NON-NLS-1$
+		Assert.isNotNull(url, "The location url must not be null"); //$NON-NLS-1$
 
 		String host = NetUtil.getHost(url);
 		int port = NetUtil.getPort(url);
@@ -223,7 +223,7 @@ public class HttpUtil {
 		Assert.isNotNull(client);
 		Assert.isNotNull(location);
 		String url = location.getUrl();
-		Assert.isNotNull("The location url must not be null", url); //$NON-NLS-1$
+		Assert.isNotNull(url, "The location url must not be null"); //$NON-NLS-1$
 
 		String host = NetUtil.getHost(url);
 		Proxy proxy;

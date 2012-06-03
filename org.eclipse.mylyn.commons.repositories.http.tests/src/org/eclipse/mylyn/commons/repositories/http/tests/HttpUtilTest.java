@@ -20,6 +20,9 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.eclipse.core.runtime.AssertionFailedException;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestProxy;
 import org.junit.After;
@@ -69,6 +72,41 @@ public class HttpUtilTest {
 		HttpResponse response = HttpUtil.execute(client, null, request, null);
 		assertEquals(HttpStatus.SC_SERVICE_UNAVAILABLE, response.getStatusLine().getStatusCode());
 		assertEquals(1, connectionManager.getConnectionsInPool());
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConfigureAuthenticationNullUrl() {
+		HttpUtil.configureAuthentication(client, new RepositoryLocation((String) null), new UserCredentials("", ""));
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConfigureAuthenticationNullClient() {
+		HttpUtil.configureAuthentication(null, new RepositoryLocation("url"), new UserCredentials("", ""));
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConfigureAuthenticationNullCredentials() {
+		HttpUtil.configureAuthentication(client, new RepositoryLocation("url"), null);
+	}
+
+	@Test
+	public void testConfigureAuthentication() {
+		HttpUtil.configureAuthentication(client, new RepositoryLocation("url"), new UserCredentials("", ""));
+	}
+
+	@Test
+	public void testConfigureProxy() {
+		HttpUtil.configureProxy(client, new RepositoryLocation("url"));
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConfigureProxyNullClient() {
+		HttpUtil.configureProxy(null, new RepositoryLocation("url"));
+	}
+
+	@Test(expected = AssertionFailedException.class)
+	public void testConfigureProxyNullLocation() {
+		HttpUtil.configureProxy(client, null);
 	}
 
 }
