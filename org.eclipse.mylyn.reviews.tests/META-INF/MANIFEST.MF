@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Reviews Framework (Incubation)
+Bundle-Name: Mylyn Reviews Framework
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn

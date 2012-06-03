@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Gerrit Connector (Incubation)
+Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin
