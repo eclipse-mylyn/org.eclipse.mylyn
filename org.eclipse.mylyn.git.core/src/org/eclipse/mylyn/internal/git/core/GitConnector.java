@@ -34,7 +34,6 @@ import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.lib.Constants;
@@ -218,7 +217,7 @@ public class GitConnector extends ScmConnector {
 			for (RevCommit r : revs) {
 				changeSets.add(changeSet(r, repository, new ArrayList<Change>()));
 			}
-		} catch (NoHeadException e) {
+		} catch (Exception e) {
 		}
 
 		return changeSets;
