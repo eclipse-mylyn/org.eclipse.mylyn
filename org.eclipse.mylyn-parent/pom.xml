@@ -15,7 +15,7 @@
 
   <properties>
     <mylyn-version>3.8.0-SNAPSHOT</mylyn-version>
-    <tycho-version>0.14.1</tycho-version>
+    <tycho-version>0.15.0</tycho-version>
 
     <mylyn-test-append></mylyn-test-append>
 
