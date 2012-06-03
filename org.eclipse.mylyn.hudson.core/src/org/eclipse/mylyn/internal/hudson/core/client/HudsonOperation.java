@@ -84,7 +84,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
 				getClient().setAuthenticated(false);
-				throw new IOException(NLS.bind("Unexpected response from Hudson server while logging in: {0}",
+				System.err.println(EntityUtils.toString(response.getEntity()));
+				throw new IOException(NLS.bind("Unexpected response from server while logging in: {0}",
 						HttpUtil.getStatusText(statusCode)));
 			}
 
