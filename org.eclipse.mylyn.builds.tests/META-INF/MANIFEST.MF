@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Build Framework (Incubation)
+Bundle-Name: Mylyn Build Framework
 Bundle-SymbolicName: org.eclipse.mylyn.builds.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.junit,
