@@ -16,7 +16,7 @@ import java.io.Serializable;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.RepositoryClientManager;
+import org.eclipse.mylyn.tasks.core.RepositoryClientManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
