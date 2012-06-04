@@ -117,6 +117,13 @@ public class GitConnector extends ScmConnector {
 				//we can compare with one parent only
 				break;
 			}
+
+			if (treeWalk.getTreeCount() == 0) {
+				//No parents found e.g. initial commit
+				//comparing against the same commit will flag all file entries as additions
+				treeWalk.addTree(commit.getTree());
+			}
+
 			treeWalk.addTree(commit.getTree());
 			treeWalk.setRecursive(true);
 
