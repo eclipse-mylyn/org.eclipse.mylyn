@@ -268,11 +268,11 @@ public class OPS2Publication extends OPSPublication {
 			if (!isLegalType(item)) {
 				Item fallback = getItemById(item.getFallback());
 				if (fallback == null) {
-					messages.add(new ValidationMessage(ValidationMessage.Severity.ERROR, MessageFormat.format(
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
 							Messages.getString("OPS2Publication.13"), //$NON-NLS-1$
 							item.getHref())));
 				} else if (!isLegalType(fallback)) {
-					messages.add(new ValidationMessage(ValidationMessage.Severity.ERROR, MessageFormat.format(
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
 							Messages.getString("OPS2Publication.14"), //$NON-NLS-1$
 							item.getHref())));
 				} else {
