@@ -221,14 +221,13 @@ public class TestOPS2Publication extends AbstractTest {
 	public final void test_Bug358671_Illegal_Item() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
-		try {
 			epub.pack(epubFile);
-			fail("Exception should be thrown");
-		} catch (Exception e) {
+			ValidationMessage msg = oebps.getValidationMessages().get(0);
+			Assert.assertEquals(Severity.WARNING, msg.getSeverity());
 			Assert.assertEquals(
-					"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item.",
-					e.getMessage());
-		}
+					true,
+					msg.getMessage()
+							.equals("Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
 	}
 
 	/**
@@ -248,14 +247,13 @@ public class TestOPS2Publication extends AbstractTest {
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"), null, null, true,
 				true, false);
-		try {
-			epub.pack(epubFile);
-			fail("Exception should be thrown");
-		} catch (Exception e) {
-			Assert.assertEquals(
-					"Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item.",
-					e.getMessage());
-		}
+		epub.pack(epubFile);
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
+		Assert.assertEquals(
+				true,
+				msg.getMessage()
+						.equals("Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
 	}
 
 	/**
