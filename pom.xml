@@ -68,15 +68,6 @@
           <url>${mylyn-context-repository-url}</url>
         </repository>
       </repositories>
-      <modules>
-        <module>org.eclipse.mylyn.docs.epub.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ant.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ui</module>
-        <module>org.eclipse.mylyn.docs.epub.help</module>
-        <module>org.eclipse.mylyn.docs.epub.tests</module>
-        <module>org.eclipse.mylyn.docs.epub-feature</module>
-        <module>org.eclipse.mylyn.docs-site</module>
-      </modules>
     </profile>
   </profiles>
   <modules>
@@ -108,5 +99,13 @@
     <module>org.eclipse.mylyn.wikitext.tests</module>
     <module>org.eclipse.mylyn.wikitext.creole.tests</module>
     <module>org.eclipse.mylyn.wikitext-standalone</module>
+
+    <module>org.eclipse.mylyn.docs.epub.core</module>
+    <module>org.eclipse.mylyn.docs.epub.ant.core</module>
+    <module>org.eclipse.mylyn.docs.epub.ui</module>
+    <module>org.eclipse.mylyn.docs.epub.help</module>
+    <module>org.eclipse.mylyn.docs.epub.tests</module>
+    <module>org.eclipse.mylyn.docs.epub-feature</module>
+    <module>org.eclipse.mylyn.docs-site</module>
   </modules>
 </project>
