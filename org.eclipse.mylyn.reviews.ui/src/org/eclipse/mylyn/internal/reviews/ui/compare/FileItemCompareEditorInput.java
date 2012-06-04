@@ -52,8 +52,10 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 	@Override
 	public Viewer findContentViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
 		Viewer contentViewer = super.findContentViewer(oldViewer, input, parent);
-		ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
-		support.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
+		if (input instanceof FileItemNode) {
+			ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
+			support.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
+		}
 		return contentViewer;
 	}
 
