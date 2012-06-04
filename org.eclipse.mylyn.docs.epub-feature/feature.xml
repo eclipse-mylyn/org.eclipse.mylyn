@@ -19,20 +19,7 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.emf.ecore" version="2.7.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.common" version="2.7.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore.xmi" version="2.7.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.wikitext.core" version="1.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.docs.epub.core" version="0.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.wikitext.ui" version="1.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.databinding" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.databinding.beans" version="1.2.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface.databinding" version="1.5.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.ant" version="1.8.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ant.core" version="3.2.300" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.5.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.wikitext_feature" version="1.7.0" match="compatible"/>
    </requires>
 
    <plugin
