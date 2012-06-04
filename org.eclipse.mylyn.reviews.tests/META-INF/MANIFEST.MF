@@ -16,7 +16,7 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.eclipse.mylyn.reviews.core,
  org.eclipse.mylyn.reviews.ui,
  org.eclipse.mylyn.tests.util,
- org.eclipse.mylyn.tasks.core;bundle-version="3.7.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.7.0"
+ org.eclipse.mylyn.tasks.core;bundle-version="3.8.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0"
 Export-Package: org.eclipse.mylyn.reviews.tests;x-internal:=true,
  org.eclipse.mylyn.reviews.tests.ui;x-internal:=true
