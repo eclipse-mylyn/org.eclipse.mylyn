@@ -23,6 +23,9 @@
    <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub" version="0.0.0">
+      <category name="Features"/>
+   </feature>
    
    <feature url="features/org.eclipse.cdt.mylyn_0.0.0.jar" id="org.eclipse.cdt.mylyn" version="0.0.0">
       <category name="Integration"/>
