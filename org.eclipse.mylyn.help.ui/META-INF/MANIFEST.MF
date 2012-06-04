@@ -8,9 +8,9 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;resolution:=optional,
  org.eclipse.ui.forms;resolution:=optional,
- org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)";resolution:=optional,
- org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)";resolution:=optional,
- org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)";resolution:=optional,
+ org.eclipse.mylyn.tasks.core;bundle-version="[3.8.0,4.0.0)";resolution:=optional,
+ org.eclipse.mylyn.tasks.ui;bundle-version="[3.8.0,4.0.0)";resolution:=optional,
+ org.eclipse.mylyn.commons.ui;bundle-version="[3.8.0,4.0.0)";resolution:=optional,
  org.apache.ant;bundle-version="1.7.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin

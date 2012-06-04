@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.eclipse.mylyn.oslc.core;singleton:=true
 Bundle-Version: 3.8.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.commons.net;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.core;bundle-version="[3.8.0,4.0.0)",
+ org.eclipse.mylyn.commons.core;bundle-version="[3.8.0,4.0.0)",
+ org.eclipse.mylyn.commons.net;bundle-version="[3.8.0,4.0.0)",
  org.jdom;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.internal.oslc.core;x-friends:="org.eclipse.mylyn.oslc.ui",
