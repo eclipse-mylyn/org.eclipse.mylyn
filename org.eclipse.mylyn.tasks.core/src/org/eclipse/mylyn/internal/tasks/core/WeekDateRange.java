@@ -115,7 +115,7 @@ public class WeekDateRange extends DateRange {
 		return this.includes(cal);
 	}
 
-	private boolean isWeekAfterNext() {
+	boolean isWeekAfterNext() {
 		return TaskActivityUtil.getNextWeek().next().compareTo(this) == 0;
 	}
 

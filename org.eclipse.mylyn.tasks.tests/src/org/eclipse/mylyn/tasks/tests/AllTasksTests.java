@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.AbstractRepositoryConnectorUiTest;
 import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
+import org.eclipse.mylyn.tasks.tests.ui.ScheduledTaskContainerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskListSynchronizationSchedulerTest;
@@ -137,6 +138,7 @@ public class AllTasksTests {
 		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
 		suite.addTestSuite(SynchronizeTasksJobTest.class);
 		suite.addTestSuite(TaskAttributeTest.class);
+		suite.addTestSuite(ScheduledTaskContainerTest.class);
 		return suite;
 	}
 

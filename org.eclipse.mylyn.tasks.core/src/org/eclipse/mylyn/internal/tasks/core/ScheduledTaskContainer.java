@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -135,15 +136,45 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public Collection<ITask> getChildren() {
-
 		// TODO: Cache this information until the next modification to pertinent data
-
-		Set<ITask> children = new HashSet<ITask>();
-
-		Calendar cal = TaskActivityUtil.getCalendar();
-
+		Calendar now = Calendar.getInstance();
+		// extend range to include tasks scheduled for this container in different time zones
+		// timezones range from UTC-12 to UTC+14, but we will ignore UTC+12 to +14 since we can't distinguish them from UTC-12 to -10
+		// use minutes to allow for partial hour timezone offsets
+		int offsetInMinutes = range.getStartDate().getTimeZone().getOffset(now.getTimeInMillis()) / 1000 / 60;
+		if (offsetInMinutes > 11 * 60) {
+			// when in UTC+12 to +14, show tasks scheduled in those time zones in the correct bin. This causes tasks scheduled in other time
+			// zones to show a day late; tasks scheduled in other time zones for WeekDateRanges may not show at all
+			offsetInMinutes = -(24 * 60 - offsetInMinutes);
+		}
+		int minutesForwardToDateline = 11 * 60 - offsetInMinutes;
+		int minutesBackwardToDateline = 23 * 60 - minutesForwardToDateline;
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(range.getStartDate().getTimeInMillis());
+		start.add(Calendar.MINUTE, -minutesForwardToDateline);
+		Calendar end = Calendar.getInstance();
+		end.setTimeInMillis(range.getEndDate().getTimeInMillis());
+		end.add(Calendar.MINUTE, minutesBackwardToDateline);
 		// All tasks scheduled for this date range
-		for (ITask task : activityManager.getScheduledTasks(range)) {
+		Set<ITask> tasks = activityManager.getScheduledTasks(start, end);
+		if (range instanceof WeekDateRange) {
+			// remove tasks not scheduled for the week container itself, except for 2 weeks, in which case only remove 
+			// if they will show under future
+			for (Iterator<ITask> iterator = tasks.iterator(); iterator.hasNext();) {
+				ITask task = iterator.next();
+				if (task instanceof AbstractTask) {
+					DateRange scheduledDate = ((AbstractTask) task).getScheduledForDate();
+					if (!(scheduledDate instanceof WeekDateRange)
+							&& (TaskActivityUtil.getNextWeek().next().compareTo(range) != 0 || scheduledDate.getEndDate()
+									.after(end))) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+		Set<ITask> children = new HashSet<ITask>();
+		Calendar cal = TaskActivityUtil.getCalendar();
+		for (ITask task : tasks) {
 			if (!task.isCompleted() || isCompletedToday(task)) {
 
 				if (isDueBeforeScheduled(task) && activityManager.isOwnedByUser(task)) {
@@ -168,7 +199,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// Add due tasks if not the This Week container, and not scheduled for earlier date
 		if (!TaskActivityUtil.getCurrentWeek().equals(range) && !TaskActivityUtil.getNextWeek().equals(range)) {
-			for (ITask task : getTasksDueThisWeek()) {
+			// tasks are due at the start of a day, so only search in the range of times that correspond to 
+			// the start of the day in some time zone
+			Calendar endDueSearch = Calendar.getInstance();
+			endDueSearch.setTimeInMillis(range.getStartDate().getTimeInMillis());
+			endDueSearch.add(Calendar.MINUTE, minutesBackwardToDateline);
+			for (ITask task : activityManager.getDueTasks(start, endDueSearch)) {
 				if (isScheduledBeforeDue(task)) {
 					continue;
 				}
@@ -185,11 +221,19 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 					addChild(children, task);
 				}
 			}
+			// add tasks whose scheduled date starts before today and ends today
+			Calendar searchFrom = Calendar.getInstance();
+			searchFrom.setTimeInMillis(start.getTimeInMillis());
+			searchFrom.add(Calendar.DAY_OF_MONTH, -1);
+			for (ITask task : activityManager.getScheduledTasks(searchFrom, end)) {
+				if (isScheduledForADay(task)) {
+					addChild(children, task);
+				}
+			}
 			for (ITask task : activityManager.getOverDueTasks()) {
 				addChild(children, task);
 			}
 
-			// if not scheduled or due in future, and is active, place in today bin
 			ITask activeTask = activityManager.getActiveTask();
 			if (activeTask != null && !children.contains(activeTask)) {
 				addChild(children, activeTask);
@@ -214,10 +258,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	private boolean isThisWeekBin() {
 
 		return range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek();
-	}
-
-	private Set<ITask> getTasksDueThisWeek() {
-		return activityManager.getDueTasks(range.getStartDate(), range.getEndDate());
 	}
 
 	private boolean isScheduledForAWeek(ITask task) {

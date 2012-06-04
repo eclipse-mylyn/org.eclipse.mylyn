@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -404,11 +405,12 @@ public class TaskActivityManager implements ITaskActivityManager {
 			DateRange endRange = new DateRange(endExclusive);
 
 			SortedMap<DateRange, Set<ITask>> result = scheduledTasks.subMap(startRange, endRange);
-			for (DateRange range : result.keySet()) {
+			for (Entry<DateRange, Set<ITask>> entry : result.entrySet()) {
+				DateRange range = entry.getKey();
 				if (start.compareTo(range.getStartDate()) > 0 || end.compareTo(range.getEndDate()) < 0) {
 					continue;
 				}
-				resultingTasks.addAll(result.get(range));
+				resultingTasks.addAll(entry.getValue());
 			}
 		}
 		return resultingTasks;
