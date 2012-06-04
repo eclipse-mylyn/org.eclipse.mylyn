@@ -94,6 +94,9 @@
    <feature url="features/org.eclipse.mylyn.context.sdk_0.0.0.jar" id="org.eclipse.mylyn.context.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.docs.epub.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.epub.sdk" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
