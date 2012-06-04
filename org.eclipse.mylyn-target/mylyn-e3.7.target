@@ -65,5 +65,10 @@
 <unit id="org.eclipse.jgit.feature.group" version="1.3.0.201202151440-r"/>
 <repository location="http://download.eclipse.org/egit/updates-1.3"/>
 </location>
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.10"/>
+<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
+<repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
+</location>
 </locations>
 </target>
