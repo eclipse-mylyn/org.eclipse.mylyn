@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
@@ -41,32 +41,26 @@
     </repository>
   </repositories>
   <profiles>
-	<profile>
-	  <id>implicit-target</id>
+    <profile>
+      <id>implicit-target</id>
       <activation>
-		<property>
-		  <name>!explicit-target</name>
-		</property>
+        <property>
+          <name>!explicit-target</name>
+        </property>
       </activation>
-	  <repositories>
-		<repository>
-		  <id>eclipse-mylyn-commons</id>
-		  <layout>p2</layout>
-		  <url>${mylyn-commons-repository-url}</url>
-		</repository>
-		<repository>
-		  <id>subclipse</id>
-		  <layout>p2</layout>
-		  <url>http://subclipse.tigris.org/update_1.6.x/</url>
-		</repository>
-	  </repositories>
-	  <modules>
-		<module>org.eclipse.mylyn.subclipse-feature</module>
-		<module>org.eclipse.mylyn.subclipse.core</module>
-		<module>org.eclipse.mylyn.subclipse.ui</module>
-		<module>org.eclipse.mylyn.versions-site</module>
-	  </modules>
-	</profile>
+      <repositories>
+        <repository>
+          <id>eclipse-mylyn-commons</id>
+          <layout>p2</layout>
+          <url>${mylyn-commons-repository-url}</url>
+        </repository>
+        <repository>
+          <id>subclipse</id>
+          <layout>p2</layout>
+          <url>http://subclipse.tigris.org/update_1.8.x/</url>
+        </repository>
+      </repositories>
+    </profile>
   </profiles>
   <modules>
     <module>org.eclipse.mylyn.cvs-feature</module>
@@ -74,6 +68,10 @@
     <module>org.eclipse.mylyn.git-feature</module>
     <module>org.eclipse.mylyn.git.core</module>
     <module>org.eclipse.mylyn.git.ui</module>
+    <module>org.eclipse.mylyn.subclipse-feature</module>
+    <module>org.eclipse.mylyn.subclipse.core</module>
+    <module>org.eclipse.mylyn.subclipse.ui</module>
+    <module>org.eclipse.mylyn.versions-site</module>
     <module>org.eclipse.mylyn.versions-feature</module>
     <module>org.eclipse.mylyn.versions.core</module>
     <module>org.eclipse.mylyn.versions.sdk-feature</module>
