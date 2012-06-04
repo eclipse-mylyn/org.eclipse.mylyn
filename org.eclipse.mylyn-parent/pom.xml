@@ -361,7 +361,7 @@
       <activation>
         <property>
           <name>target-profile</name>
-          <value>e4.2</value>
+          <value>juno</value>
         </property>
       </activation>
       <properties>
