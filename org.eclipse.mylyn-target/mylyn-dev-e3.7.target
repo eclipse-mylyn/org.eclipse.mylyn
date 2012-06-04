@@ -49,7 +49,6 @@
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
