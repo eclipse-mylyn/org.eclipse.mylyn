@@ -165,4 +165,12 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 			return element;
 		}
 	}
+
+	/**
+	 * For testing only.
+	 */
+	public void resetLastSelectedElement() {
+		lastSelectedElement = null;
+	}
+
 }

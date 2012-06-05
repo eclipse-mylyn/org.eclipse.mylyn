@@ -95,6 +95,11 @@ public class EditorStateParticipantTest extends TestCase {
 	}
 
 	public void testRestoreState() throws Exception {
+		if (CommonTestUtil.isEclipse4()) {
+			System.err.println("Skipping Eclipse 3.x specific EditorStateParticipant.testRestoreState()");
+			return;
+		}
+
 		createFiles();
 
 		XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(CommonTestUtil.getResource(this,
@@ -110,6 +115,11 @@ public class EditorStateParticipantTest extends TestCase {
 	}
 
 	public void testRestoreStateRetainState() throws Exception {
+		if (CommonTestUtil.isEclipse4()) {
+			System.err.println("Skipping Eclipse 3.x specific EditorStateParticipant.testRestoreStateRetainState()");
+			return;
+		}
+
 		createFiles();
 
 		XMLMemento memento = XMLMemento.createReadRoot(

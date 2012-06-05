@@ -20,6 +20,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
@@ -115,6 +116,8 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 				.indexOf("callee()"), "callee".length());
 		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
 
+		// clear last selected element on e4
+		monitor.resetLastSelectedElement();
 		// reset in case opening the editor caused selection events
 		editingCount = 0;
 		selectingCount = 0;
@@ -133,6 +136,10 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	}
 
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
+		if (CommonTestUtil.isEclipse4()) {
+			return;
+		}
+
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 		// select callee
@@ -167,4 +174,45 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		assertEquals(1, editingCount);
 		assertEquals(2, selectingCount);
 	}
+
+	public void testHandleElementSelection_e_4() throws PartInitException, JavaModelException, InterruptedException {
+		if (!CommonTestUtil.isEclipse4()) {
+			return;
+		}
+
+		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
+		Document document = new Document(typeFoo.getCompilationUnit().getSource());
+
+		// clear last selected element on e4
+		monitor.resetLastSelectedElement();
+		// reset in case opening the editor caused selection events
+		editingCount = 0;
+		selectingCount = 0;
+
+		// select callee once
+		TextSelection calleeSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("callee()"), "callee".length());
+		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
+
+		assertEquals(0, editingCount);
+		assertEquals(1, selectingCount);
+
+		// select a different element
+		TextSelection callerSelection = new TextSelection(document, typeFoo.getCompilationUnit()
+				.getSource()
+				.indexOf("caller()"), "caller".length());
+		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
+
+		// on e4 the selectionCount is 3 due to handling of a navigation which propagated as a selection event		
+		assertEquals(0, editingCount);
+		assertEquals(3, selectingCount);
+
+		// select element again
+		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
+
+		assertEquals(1, editingCount);
+		assertEquals(3, selectingCount);
+	}
+
 }
