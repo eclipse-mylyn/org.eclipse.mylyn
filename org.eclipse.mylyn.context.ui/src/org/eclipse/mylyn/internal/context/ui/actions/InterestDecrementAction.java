@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 /**
  * @author Mik Kersten
  */
-// TODO 3.5 rename to RemoveFromContextAction?
+// TODO 3.9 rename to RemoveFromContextAction?
 public class InterestDecrementAction extends AbstractInterestManipulationAction {
 
 	@Override

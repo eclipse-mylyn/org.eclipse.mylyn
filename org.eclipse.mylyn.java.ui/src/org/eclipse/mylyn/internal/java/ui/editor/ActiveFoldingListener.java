@@ -86,8 +86,9 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		JavaUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
 	}
 
+	@Deprecated
 	public static void resetProjection(JavaEditor javaEditor) {
-		// TODO 3.5 remove
+		// TODO 3.9 remove
 	}
 
 	public void updateFolding() {
