@@ -64,6 +64,9 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		UiTestUtil.openView("org.eclipse.ui.views.ContentOutline");
 		JavaUI.openInEditor(m1);
 
+		// opening an editor on e4 causes selection events
+		context.reset();
+
 		// FocusOutlineAction.getDefault().update(true);
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();

@@ -149,6 +149,8 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
 		ContextUiPlugin.getEditorStateParticipant().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
+
+		// create and open types
 		AbstractContextUiBridge bridge = ContextUi.getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(m1));
@@ -160,16 +162,26 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		IInteractionElement elementA = ContextCore.getContextManager().getElement(typeA.getHandleIdentifier());
 		bridge.open(elementA);
 
+		// opening editors can cause selection events on e4
+		context.reset();
+
 		assertEquals(2, page.getEditors().length);
+		// process a number of events to trigger decay
 		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
 			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
+
+		element = ContextCore.getContextManager().getElement(type1.getHandleIdentifier());
+		elementA = ContextCore.getContextManager().getElement(typeA.getHandleIdentifier());
 		assertFalse(element.getInterest().isInteresting());
 		assertFalse(elementA.getInterest().isInteresting());
+
+		// create new type
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
 		IInteractionElement elementB = ContextCore.getContextManager().getElement(typeB.getHandleIdentifier());
 		bridge.open(elementB);
+		// make type interesting
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
 		assertEquals(1, page.getEditors().length);
 	}

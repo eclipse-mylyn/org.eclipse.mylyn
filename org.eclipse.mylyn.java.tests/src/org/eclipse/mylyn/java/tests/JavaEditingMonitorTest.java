@@ -86,9 +86,6 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 			}
 		};
 		MonitorUi.addInteractionListener(listener);
-		// make sure the counts are zero'd
-		editingCount = 0;
-		selectingCount = 0;
 	}
 
 	@Override
@@ -118,6 +115,10 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 				.indexOf("callee()"), "callee".length());
 		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
 
+		// reset in case opening the editor caused selection events
+		editingCount = 0;
+		selectingCount = 0;
+
 		// select it once
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
 
@@ -132,10 +133,6 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	}
 
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
-
-		assertEquals(0, editingCount);
-		assertEquals(0, selectingCount);
-
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 		Document document = new Document(typeFoo.getCompilationUnit().getSource());
 		// select callee
@@ -143,6 +140,10 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 				.getSource()
 				.indexOf("callee()"), "callee".length());
 		editorPart.setHighlightRange(calleeSelection.getOffset(), calleeSelection.getLength(), true);
+
+		// reset in case opening the editor caused selection events
+		editingCount = 0;
+		selectingCount = 0;
 
 		// select it once
 		monitor.handleWorkbenchPartSelection(editorPart, calleeSelection, false);
