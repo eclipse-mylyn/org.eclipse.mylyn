@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 
@@ -42,6 +43,7 @@ public class AllGerritTests {
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(GerritUrlHandlerTest.class);
+			suite.addTestSuite(OpenIdAuthenticationTest.class);
 			if (configuration.isDefaultOnly()) {
 				addTests(suite, GerritFixture.DEFAULT);
 			} else {

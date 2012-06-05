@@ -261,22 +261,15 @@ public class GerritHttpClient {
 	private void authenticate(String openIdProvider, IProgressMonitor monitor) throws GerritException, IOException {
 		while (true) {
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (openIdProvider == null && credentials == null) {
-				throw new GerritLoginException();
-			}
 
-			// try form based authentication first
 			int code;
 			if (openIdProvider != null) {
 				code = authenticateOpenIdService(openIdProvider, credentials, monitor);
 				if (code == -1) {
 					continue;
 				}
-			} else {
-				code = HttpStatus.SC_NOT_FOUND;
-			}
-
-			if (code == HttpStatus.SC_NOT_FOUND) {
+			} else if (credentials != null) {
+				// try form based authentication first
 				code = authenticateForm(credentials, monitor);
 				if (code == -1) {
 					continue;
@@ -291,6 +284,8 @@ public class GerritHttpClient {
 						}
 					}
 				}
+			} else {
+				throw new GerritLoginException();
 			}
 
 			// Location: http://egit.eclipse.org/r/#SignInFailure,SIGN_IN,Session cookie not available
