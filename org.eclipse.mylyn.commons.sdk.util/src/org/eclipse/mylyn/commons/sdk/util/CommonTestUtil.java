@@ -514,4 +514,8 @@ public class CommonTestUtil {
 		out.println();
 	}
 
+	public static boolean isEclipse4() {
+		return Platform.getBundle("org.eclipse.e4.core.commands") != null;
+	}
+
 }
