@@ -239,7 +239,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
 		sourceViewer.setAnnotationHover(new CommentAnnotationHover(null));
 
-		// FIXME: hack for e3.5
+		// hack for Eclipse 3.5
 		try {
 			Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator");
 			hoverControlCreator.setAccessible(true);
@@ -248,7 +248,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			// ignore as it may not exist in other versions
 		}
 
-		// FIXME: hack for e3.5
+		// hack for Eclipse 3.5
 		try {
 			Method ensureMethod = sourceViewerClazz.getDeclaredMethod("ensureAnnotationHoverManagerInstalled");
 			ensureMethod.setAccessible(true);

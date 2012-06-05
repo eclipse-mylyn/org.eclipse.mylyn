@@ -86,7 +86,7 @@ public class CompareUtil {
 
 	static void configureSourceViewers(Viewer contentViewer, TextMergeViewer textMergeViewer,
 			final MergeSourceViewer fLeft, final MergeSourceViewer fRight) {
-		// FIXME: hack for e3.5
+		// hack for Eclipse 3.5
 		try {
 			Method getCompareConfiguration = ContentMergeViewer.class.getDeclaredMethod("getCompareConfiguration");
 			getCompareConfiguration.setAccessible(true);
