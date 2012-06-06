@@ -70,6 +70,10 @@ public class UiTestUtil {
 		}
 	}
 
+	public static IViewPart openResourceNavigator() throws PartInitException {
+		return openView("org.eclipse.ui.views.ResourceNavigator");
+	}
+
 	public static IViewPart openView(String id) throws PartInitException {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
