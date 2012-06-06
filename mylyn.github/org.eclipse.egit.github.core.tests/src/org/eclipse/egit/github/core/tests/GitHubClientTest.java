@@ -33,18 +33,6 @@ public class GitHubClientTest {
 	}
 
 	/**
-	 * Verify prefix with API v2 host
-	 */
-	@Test
-	public void prefixHostApiV2() {
-		PrefixClient client = new PrefixClient(IGitHubConstants.HOST_API_V2);
-		assertEquals("/api/v3/repos/o/n", client.uri("/api/v3/repos/o/n"));
-		assertEquals("/repos/o/n", client.uri("/repos/o/n"));
-		assertEquals("/api/v2/json/repos/search/test",
-				client.uri("/api/v2/json/repos/search/test"));
-	}
-
-	/**
 	 * Verify prefix with API v3 host
 	 */
 	@Test
@@ -64,7 +52,5 @@ public class GitHubClientTest {
 		PrefixClient client = new PrefixClient("localhost");
 		assertEquals("/api/v3/repos/o/n", client.uri("/repos/o/n"));
 		assertEquals("/api/v3/repos/o/n", client.uri("/api/v3/repos/o/n"));
-		assertEquals("/api/v2/json/repos/search/test",
-				client.uri("/api/v2/json/repos/search/test"));
 	}
 }

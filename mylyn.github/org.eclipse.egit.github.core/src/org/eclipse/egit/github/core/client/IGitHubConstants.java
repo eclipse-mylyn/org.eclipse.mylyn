@@ -42,8 +42,6 @@ public interface IGitHubConstants {
 	/** */
 	String HOST_API = "api.github.com"; //$NON-NLS-1$
 	/** */
-	String HOST_API_V2 = "github.com"; //$NON-NLS-1$
-	/** */
 	String HOST_DEFAULT = "github.com"; //$NON-NLS-1$
 	/** */
 	String HOST_GISTS = "gist.github.com"; //$NON-NLS-1$
@@ -121,6 +119,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_LABELS = "/labels"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_LEGACY = "/legacy"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_LANGUAGES = "/languages"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_MEMBERS = "/members"; //$NON-NLS-1$
@@ -173,8 +173,6 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_WATCHERS = "/watchers"; //$NON-NLS-1$
 	/** */
-	String SEGMENT_V2_API = "/api/v2/json"; //$NON-NLS-1$
-	/** */
 	String SEGMENT_V3_API = "/api/v3"; //$NON-NLS-1$
 
 	/** */
@@ -185,6 +183,4 @@ public interface IGitHubConstants {
 
 	/** */
 	String URL_API = PROTOCOL_HTTPS + "://" + HOST_API; //$NON-NLS-1$
-	/** */
-	String URL_API_V2 = PROTOCOL_HTTPS + "://" + HOST_API_V2; //$NON-NLS-1$
 }

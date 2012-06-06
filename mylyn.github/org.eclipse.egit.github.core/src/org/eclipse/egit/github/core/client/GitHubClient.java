@@ -26,11 +26,9 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CONTENT_TYPE_JSON;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_API_V2;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_DEFAULT;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_GISTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PROTOCOL_HTTPS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V3_API;
 
 import com.google.gson.Gson;
@@ -184,7 +182,7 @@ public class GitHubClient {
 		baseUri = uri.toString();
 
 		// Use URI prefix on non-standard host names
-		if (HOST_API.equals(hostname) || HOST_API_V2.equals(hostname))
+		if (HOST_API.equals(hostname))
 			prefix = null;
 		else
 			prefix = SEGMENT_V3_API;
@@ -239,10 +237,10 @@ public class GitHubClient {
 	 * @return configured URI
 	 */
 	protected String configureUri(final String uri) {
-		if (prefix == null || uri.startsWith(SEGMENT_V2_API)
-				|| uri.startsWith(prefix))
+		if (prefix == null || uri.startsWith(prefix))
 			return uri;
-		return prefix + uri;
+		else
+			return prefix + uri;
 	}
 
 	/**
