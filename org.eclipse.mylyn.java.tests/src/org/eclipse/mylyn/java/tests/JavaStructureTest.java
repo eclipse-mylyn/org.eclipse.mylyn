@@ -21,6 +21,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
@@ -31,7 +32,6 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -42,10 +42,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private final JavaEditingMonitor monitor = new JavaEditingMonitor();
 
-	private final IWorkbenchPart part = PlatformUI.getWorkbench()
-			.getActiveWorkbenchWindow()
-			.getActivePage()
-			.getActivePart();
+	private IWorkbenchPart part;
 
 	private TestJavaProject project;
 
@@ -71,6 +68,8 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 		taskscape = new InteractionContext("12312", scaling);
 		manager.internalActivateContext(taskscape);
+
+		part = UiTestUtil.openResourceNavigator();
 	}
 
 	@Override

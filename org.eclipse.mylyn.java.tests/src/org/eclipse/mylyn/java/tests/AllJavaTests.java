@@ -14,6 +14,7 @@ package org.eclipse.mylyn.java.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
@@ -30,6 +31,7 @@ public class AllJavaTests {
 
 	public static Test suite() {
 		ContextTestUtil.triggerContextUiLazyStart();
+		UiTestUtil.closeWelcomeView();
 
 		TestSuite suite = new TestSuite(AllJavaTests.class.getName());
 		suite.addTestSuite(ContentSpecificContextTest.class);

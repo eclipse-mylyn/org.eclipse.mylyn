@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
@@ -26,6 +27,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  */
 public class ResourceStructureMappingTest extends AbstractJavaContextTest {
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		// make sure some part is active
+		UiTestUtil.openResourceNavigator();
+	}
 
 	public void testParentResourceMapping() throws CoreException {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();

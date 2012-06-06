@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
@@ -52,10 +53,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private IPackageFragment javaPackage;
 
-	private final IWorkbenchPart part = PlatformUI.getWorkbench()
-			.getActiveWorkbenchWindow()
-			.getActivePage()
-			.getActivePart();
+	private IWorkbenchPart part;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -64,6 +62,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		javaType = (IType) javaMethod.getParent();
 		javaCu = (ICompilationUnit) javaType.getParent();
 		javaPackage = (IPackageFragment) javaCu.getParent();
+		part = UiTestUtil.openResourceNavigator();
 	}
 
 	@Override
