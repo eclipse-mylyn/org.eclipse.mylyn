@@ -830,4 +830,88 @@ public class IssueServiceTest {
 		verify(gitHubClient).post("/repos/user/repo/issues/comments/44",
 				comment, Comment.class);
 	}
+
+	/**
+	 * Search issues with null repository
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void searchIssuesNullRepository() throws IOException {
+		issueService.searchIssues(null, "open", "test");
+	}
+
+	/**
+	 * Search issues with null query
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void searchIssueNullQuery() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, "open", null);
+	}
+
+	/**
+	 * Search issues with empty query
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void searchIssueEmptyQuery() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, "open", "");
+	}
+
+	/**
+	 * Search issues with null state
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void searchIssueNullState() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, null, "test");
+	}
+
+	/**
+	 * Search issues with empty state
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void searchIssueEmptyState() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, "", "test");
+	}
+
+	/**
+	 * Search issues
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void searchIssues() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, "closed", "test");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils
+				.page("/legacy/issues/search/user/repo/closed/test"));
+		verify(gitHubClient).get(request);
+	}
+
+	/**
+	 * Search issues with query that needs escaping
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void searchEscaped() throws IOException {
+		RepositoryId id = new RepositoryId("user", "repo");
+		issueService.searchIssues(id, "open", "a and a.");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils
+				.page("/legacy/issues/search/user/repo/open/a%20and%20a%2E"));
+		verify(gitHubClient).get(request);
+	}
 }

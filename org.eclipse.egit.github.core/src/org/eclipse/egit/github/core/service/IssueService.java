@@ -10,16 +10,20 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_EVENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ISSUES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +31,13 @@ import java.util.Map;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.RepositoryIssue;
+import org.eclipse.egit.github.core.SearchIssue;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -151,6 +157,19 @@ public class IssueService extends GitHubService {
 	 * Sort by commented on at
 	 */
 	public static final String SORT_COMMENTS = "comments"; //$NON-NLS-1$
+
+	private static class IssueContainer implements
+			IResourceProvider<SearchIssue> {
+
+		private List<SearchIssue> issues;
+
+		/**
+		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
+		 */
+		public List<SearchIssue> getResources() {
+			return issues;
+		}
+	}
 
 	/**
 	 * Create issue service
@@ -1068,5 +1087,42 @@ public class IssueService extends GitHubService {
 		request.setUri(uri);
 		request.setType(IssueEvent.class);
 		return (IssueEvent) client.get(request).getBody();
+	}
+
+	/**
+	 * Search issues in the given repository using the given query
+	 *
+	 * @param repository
+	 * @param state
+	 *            {@link #STATE_OPEN} or {@link #STATE_CLOSED}
+	 * @param query
+	 * @return issues matching query
+	 * @throws IOException
+	 */
+	public List<SearchIssue> searchIssues(IRepositoryIdProvider repository,
+			String state, String query) throws IOException {
+		String id = getId(repository);
+		if (state == null)
+			throw new IllegalArgumentException("State cannot be null"); //$NON-NLS-1$
+		if (state.length() == 0)
+			throw new IllegalArgumentException("State cannot be empty"); //$NON-NLS-1$
+		if (query == null)
+			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
+		if (query.length() == 0)
+			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_ISSUES
+				+ SEGMENT_SEARCH);
+		uri.append('/').append(id);
+		uri.append('/').append(state);
+		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
+				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
+		uri.append('/').append(encodedQuery);
+
+		PagedRequest<SearchIssue> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(IssueContainer.class);
+		return getAll(request);
 	}
 }
