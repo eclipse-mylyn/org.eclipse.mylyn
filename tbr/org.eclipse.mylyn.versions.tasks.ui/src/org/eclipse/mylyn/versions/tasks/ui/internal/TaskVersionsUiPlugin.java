@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Research Group for Industrial Software (INSO), Vienna University of Technology.
+ * Copyright (c) 2012 Research Group for Industrial Software (INSO), Vienna University of Technology.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,30 +8,26 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.mapper.generic;
+package org.eclipse.mylyn.versions.tasks.ui.internal;
 
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.versions.core.ChangeSet;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * 
  * @author Kilian Matt
  *
  */
-public class TaskChangeSet {
-	private ChangeSet changeset;
-	private ITask task;
-
-	public TaskChangeSet(ITask task, ChangeSet cs) {
-		this.task = task;
-		this.changeset = cs;
+public class TaskVersionsUiPlugin extends AbstractUIPlugin {
+	private static TaskVersionsUiPlugin instance;
+	public static final String PLUGIN_ID="org.eclipse.mylyn.versions.tasks.ui";
+	
+	public TaskVersionsUiPlugin() {
+		instance = this;
 	}
 
-	public ChangeSet getChangeset() {
-		return changeset;
+	public static TaskVersionsUiPlugin getDefault() {
+		return instance;
 	}
-
-	public ITask getTask() {
-		return task;
-	}
+	
 }
