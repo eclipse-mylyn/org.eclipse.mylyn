@@ -40,7 +40,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.13.0</tycho-version>
+    <tycho-version>0.15.0</tycho-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
     <platform-version-name>indigo</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
