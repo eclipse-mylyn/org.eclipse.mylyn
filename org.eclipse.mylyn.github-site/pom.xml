@@ -24,7 +24,7 @@
   <name>Eclipse EGit Mylyn GitHub Repository</name>
 
   <properties>
-    <p2repo-zip-path>${project.build.directory}/github-updatesite.zip-${project.version}.zip</p2repo-zip-path>
+    <p2repo-zip-path>${project.build.directory}/github-updatesite-${project.version}.zip</p2repo-zip-path>
     <signer-input-directory>/home/data/httpd/download-staging.priv/egit-github</signer-input-directory>
   </properties>
 
