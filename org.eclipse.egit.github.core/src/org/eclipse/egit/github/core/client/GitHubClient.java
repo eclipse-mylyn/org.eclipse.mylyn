@@ -115,7 +115,7 @@ public class GitHubClient {
 	/**
 	 * Default user agent request header value
 	 */
-	protected static final String USER_AGENT = "GitHubJava/2.0.0"; //$NON-NLS-1$
+	protected static final String USER_AGENT = "GitHubJava/2.1.0"; //$NON-NLS-1$
 
 	/**
 	 * 422 status code for unprocessable entity
