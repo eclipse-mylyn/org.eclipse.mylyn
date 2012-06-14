@@ -379,7 +379,7 @@ public class RepositoryServiceTest {
 	public void searchRepositories() throws IOException {
 		service.searchRepositories("test");
 		GitHubRequest request = new GitHubRequest();
-		request.setUri(Utils.page("/api/v2/json/repos/search/test"));
+		request.setUri(Utils.page("/legacy/repos/search/test"));
 		verify(client).get(request);
 	}
 
@@ -392,8 +392,7 @@ public class RepositoryServiceTest {
 	public void searchRepositoriesMatchingLanguage() throws IOException {
 		service.searchRepositories("buffers", "c");
 		GitHubRequest request = new GitHubRequest();
-		request.setUri(Utils
-				.page("/api/v2/json/repos/search/buffers?language=c"));
+		request.setUri(Utils.page("/legacy/repos/search/buffers?language=c"));
 		verify(client).get(request);
 	}
 
@@ -406,8 +405,7 @@ public class RepositoryServiceTest {
 	public void searchRepositoriesStartingAtPage() throws IOException {
 		service.searchRepositories("buffers", 50);
 		GitHubRequest request = new GitHubRequest();
-		request.setUri(Utils
-				.page("/api/v2/json/repos/search/buffers?start_page=50"));
+		request.setUri(Utils.page("/legacy/repos/search/buffers?start_page=50"));
 		verify(client).get(request);
 	}
 
@@ -420,7 +418,7 @@ public class RepositoryServiceTest {
 	public void searchEscaped() throws IOException {
 		service.searchRepositories("a and a.");
 		GitHubRequest request = new GitHubRequest();
-		request.setUri(Utils.page("/api/v2/json/repos/search/a%20and%20a%2E"));
+		request.setUri(Utils.page("/legacy/repos/search/a%20and%20a%2E"));
 		verify(client).get(request);
 	}
 

@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Language;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.SearchRepository;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.util.UrlUtils;
 import org.eclipse.egit.ui.UIIcons;
@@ -62,15 +60,12 @@ import org.eclipse.ui.PlatformUI;
  * Search for GitHub repositories wizard page.
  */
 @SuppressWarnings("restriction")
-public class RepositorySearchWizardPage extends WizardPage implements IRepositorySearchResult {
+public class RepositorySearchWizardPage extends WizardPage implements
+		IRepositorySearchResult {
 
 	private SearchRepository[] repositories = null;
 
-	private final GitHubClient client = new GitHubClient(
-			IGitHubConstants.HOST_API_V2, -1, IGitHubConstants.PROTOCOL_HTTPS);
-
-	private final RepositoryService repositoryService = new RepositoryService(
-			client);
+	private final RepositoryService repositoryService;
 
 	private Text searchText;
 
@@ -81,11 +76,14 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		super("repoSearchPage", Messages.RepositorySearchWizardPage_Title, null); //$NON-NLS-1$
 		setDescription(Messages.RepositorySearchWizardPage_Description);
 		setPageComplete(false);
+
+		repositoryService = new RepositoryService();
+		GitHub.configureClient(repositoryService.getClient());
 	}
 
 	/**
 	 * Get selected repositories
-	 * 
+	 *
 	 * @return repositories
 	 */
 	protected SearchRepository[] getRepositories() {
@@ -93,7 +91,7 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void createControl(Composite parent) {
 		final Composite root = new Composite(parent, SWT.NONE);
@@ -292,13 +290,12 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		}
 	}
 
-	public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
-		GitHubClient client = GitHub
-				.configureClient(new GitHubClient());
-		RepositoryService service = new RepositoryService(client);
+	public GitRepositoryInfo getGitRepositoryInfo()
+			throws NoRepositoryInfoException {
 		String cloneUrl = null;
 		try {
-			Repository fullRepo = service.getRepository(repositories[0]);
+			Repository fullRepo = repositoryService
+					.getRepository(repositories[0]);
 			cloneUrl = fullRepo.getCloneUrl();
 		} catch (IOException e) {
 			throw new NoRepositoryInfoException(e.getMessage(), e);

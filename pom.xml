@@ -40,12 +40,12 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.13.0</tycho-version>
-    <egit-site>file:/${basedir}/../../egit/org.eclipse.egit-updatesite/target/site</egit-site>
+    <tycho-version>0.15.0</tycho-version>
+    <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
     <platform-version-name>indigo</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120119162704/repository</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
   </properties>
 
@@ -131,7 +131,39 @@
                     <version>${tycho-version}</version>
                     <configuration>
                         <resolver>p2</resolver>
-                        <pomDependencies>consider</pomDependencies>
+                    	<pomDependencies>consider</pomDependencies>
+						<environments>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>macosx</os>
+								<ws>cocoa</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>macosx</os>
+								<ws>cocoa</ws>
+								<arch>x86_64</arch>
+							</environment>
+						</environments>
                     </configuration>
                 </plugin>
 				<plugin>

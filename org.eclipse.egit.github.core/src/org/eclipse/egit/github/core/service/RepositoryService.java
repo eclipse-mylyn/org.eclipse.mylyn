@@ -18,6 +18,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTR
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HOOKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
@@ -25,7 +26,6 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEST;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V2_API;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
@@ -402,9 +402,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching query.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @return list of repositories
@@ -417,9 +414,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching query.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @param startPage
@@ -433,9 +427,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching language and query.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @param language
@@ -449,9 +440,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching language and query.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param query
 	 * @param language
@@ -466,9 +454,8 @@ public class RepositoryService extends GitHubService {
 		if (query.length() == 0)
 			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder uri = new StringBuilder(SEGMENT_V2_API);
-		uri.append(SEGMENT_REPOS);
-		uri.append(SEGMENT_SEARCH);
+		StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_REPOS
+				+ SEGMENT_SEARCH);
 		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
 				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
 				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -491,9 +478,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching search parameters.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param params
 	 * @return list of repositories
@@ -506,9 +490,6 @@ public class RepositoryService extends GitHubService {
 
 	/**
 	 * Search for repositories matching search parameters.
-	 * <p>
-	 * This method requires an API v2 configured {@link GitHubClient} as it is
-	 * not yet supported in API v3 clients.
 	 *
 	 * @param queryParams
 	 * @param startPage

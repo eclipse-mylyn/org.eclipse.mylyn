@@ -86,6 +86,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		RepositoryTest.class, //
 		RequestErrorTest.class, //
 		RequestExceptionTest.class, //
+		SearchIssueTest.class, //
 		SearchRepositoryTest.class, //
 		ShaResourceTest.class, //
 		TagTest.class, //

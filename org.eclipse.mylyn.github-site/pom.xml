@@ -23,10 +23,15 @@
 
   <name>Eclipse EGit Mylyn GitHub Repository</name>
 
+  <properties>
+    <p2repo-zip-path>${project.build.directory}/github-updatesite-${project.version}.zip</p2repo-zip-path>
+    <signer-input-directory>/home/data/httpd/download-staging.priv/egit-github</signer-input-directory>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
+        <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-publisher-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
@@ -47,7 +52,7 @@
              <execution>
                <id>pack</id>
                <configuration>
-                 <inputFile>${project.build.directory}/github-updatesite.zip</inputFile>
+                 <inputFile>${p2repo-zip-path}</inputFile>
                </configuration>
                <phase>package</phase>
                <goals>
@@ -57,8 +62,8 @@
              <execution>
                <id>sign</id>
                <configuration>
-                 <inputFile>${project.build.directory}/github-updatesite.zip</inputFile>
-                 <signerInputDirectory>/home/data/httpd/download-staging.priv/egit-github</signerInputDirectory>
+                 <inputFile>${p2repo-zip-path}</inputFile>
+                 <signerInputDirectory>${signer-input-directory}</signerInputDirectory>
                </configuration>
                <phase>package</phase>
                <goals>
