@@ -123,8 +123,14 @@ public class EventFormatter implements JsonDeserializer<Event> {
 		else
 			return event;
 
-		EventPayload typedPayload = context.deserialize(rawPayload,
-				payloadClass);
-		return event.setPayload(typedPayload);
+		try {
+			EventPayload typedPayload = context.deserialize(rawPayload,
+					payloadClass);
+			return event.setPayload(typedPayload);
+		} catch (JsonParseException jpe) {
+			// Parse exception here denotes legacy payloads with differing
+			// fields than built-in payload classes provide
+			return event;
+		}
 	}
 }
