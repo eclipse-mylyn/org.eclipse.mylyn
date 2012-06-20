@@ -11,7 +11,9 @@
 package org.eclipse.mylyn.versions.tasks.mapper.generic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -72,7 +74,7 @@ public class GenericTaskChangesetMapper extends
 	private List<ScmRepository> getRepositoriesFor(ITask task)
 			throws CoreException {
 
-		List<ScmRepository> repos = new ArrayList<ScmRepository>();
+		Set<ScmRepository> repos = new HashSet<ScmRepository>();
 
 		List<IProject> projects = configuration.getProjectsForTaskRepository(
 				task.getConnectorKind(), task.getRepositoryUrl());
@@ -80,7 +82,7 @@ public class GenericTaskChangesetMapper extends
 			ScmRepository repository = getRepositoryForProject(p);
 			repos.add(repository);
 		}
-		return repos;
+		return new ArrayList<ScmRepository>(repos);
 	}
 
 	private ScmRepository getRepositoryForProject(IProject p)

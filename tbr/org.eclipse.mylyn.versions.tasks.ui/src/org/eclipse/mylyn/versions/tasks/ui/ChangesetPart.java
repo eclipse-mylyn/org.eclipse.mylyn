@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -33,6 +32,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -43,6 +43,41 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 @SuppressWarnings("restriction")
 public class ChangesetPart extends AbstractTaskEditorPart {
+	private static final class TaskChangesetLabelProvider implements
+			ITableLabelProvider {
+		public void addListener(ILabelProviderListener listener) {
+		}
+
+		public void dispose() {
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+		}
+
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			TaskChangeSet cs = ((TaskChangeSet) element);
+			switch (columnIndex) {
+			case 0:
+				return cs.getChangeset().getId();
+			case 1:
+				return cs.getChangeset().getMessage();
+			case 2:
+				return cs.getChangeset().getAuthor().getEmail();
+			case 3:
+				return cs.getChangeset().getDate().toString();
+			}
+			return element.toString() + " " + columnIndex;
+		}
+	}
+
 	public ChangesetPart() {
 		setPartName("Changeset");
 		setExpandVertically(true);
@@ -50,6 +85,21 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		Section createSection = createSection(parent, toolkit);
+		Composite composite = createContentComposite(toolkit, createSection);
+		
+		createTable(composite);
+	}
+
+	private Composite createContentComposite(FormToolkit toolkit,
+			Section createSection) {
+		Composite composite = toolkit.createComposite(createSection);
+		createSection.setClient(composite);
+		composite.setLayout(new FillLayout());
+		return composite;
+	}
+
+	private Section createSection(Composite parent, FormToolkit toolkit) {
 		Section createSection = createSection(parent, toolkit, true);
 		createSection.setText("Changesets");
 		setSection(toolkit, createSection);
@@ -59,71 +109,33 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		gd.horizontalSpan = 4;
 		createSection.setLayout(gl);
 		createSection.setLayoutData(gd);
-		Composite composite = toolkit.createComposite(createSection);
-		createSection.setClient(composite);
-		composite.setLayout(new FillLayout());
+		return createSection;
+	}
 
+	private void createTable(Composite composite) {
 		TableViewer table = new TableViewer(composite);
 		table.getTable().setLinesVisible(true);
 		table.getTable().setHeaderVisible(true);
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(table,
-				SWT.LEFT);
-		tableViewerColumn.getColumn().setText("Id");
-		tableViewerColumn.getColumn().setWidth(100);
-		tableViewerColumn = new TableViewerColumn(table, SWT.LEFT);
-		tableViewerColumn.getColumn().setText("Message");
-		tableViewerColumn.getColumn().setWidth(100);
-		tableViewerColumn = new TableViewerColumn(table, SWT.LEFT);
-		tableViewerColumn.getColumn().setText("Author");
-		tableViewerColumn.getColumn().setWidth(100);
-		tableViewerColumn = new TableViewerColumn(table, SWT.LEFT);
-		tableViewerColumn.getColumn().setText("Date");
-		tableViewerColumn.getColumn().setWidth(100);
+		addColumn(table, "Id");
+		addColumn(table, "Message");
+		addColumn(table, "Author");
+		addColumn(table, "Date");
 		table.setContentProvider(ArrayContentProvider.getInstance());
-		table.setLabelProvider(new ITableLabelProvider() {
-
-			public void addListener(ILabelProviderListener listener) {
-			}
-
-			public void dispose() {
-			}
-
-			public boolean isLabelProperty(Object element, String property) {
-				return false;
-			}
-
-			public void removeListener(ILabelProviderListener listener) {
-			}
-
-			public Image getColumnImage(Object element, int columnIndex) {
-				return null;
-			}
-
-			public String getColumnText(Object element, int columnIndex) {
-				TaskChangeSet cs = ((TaskChangeSet) element);
-				switch (columnIndex) {
-				case 0:
-					return cs.getChangeset().getId();
-				case 1:
-					return cs.getChangeset().getMessage();
-				case 2:
-					return cs.getChangeset().getAuthor().getEmail();
-				case 3:
-					return cs.getChangeset().getDate().toString();
-				}
-				return element.toString() + " " + columnIndex;
-			}
-		});
+		table.setLabelProvider(new TaskChangesetLabelProvider());
 		table.setInput(getInput());
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		getTaskEditorPage().getEditorSite().registerContextMenu(
-				"org.eclipse.mylyn.versions.changesets", menuManager, table,
-				true);
-		org.eclipse.swt.widgets.Menu menu = menuManager.createContextMenu(table
-				.getControl());
+				"org.eclipse.mylyn.versions.changesets", menuManager, table, true);
+		Menu menu = menuManager.createContextMenu(table.getControl());
 		table.getTable().setMenu(menu);
+	}
 
+	private void addColumn(TableViewer table, String name) {
+		TableViewerColumn tableViewerColumn = new TableViewerColumn(table,
+				SWT.LEFT);
+		tableViewerColumn.getColumn().setText(name);
+		tableViewerColumn.getColumn().setWidth(100);
 	}
 
 	private List<TaskChangeSet> getInput() {

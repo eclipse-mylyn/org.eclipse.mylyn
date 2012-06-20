@@ -32,7 +32,8 @@ public class EclipsePluginConfiguration implements IConfiguration {
 				.getProjects()) {
 			TaskRepository repo = TasksUiPlugin.getDefault()
 					.getRepositoryForResource(project);
-			if (connectorKind.equals(repo.getConnectorKind())
+			
+			if (repo!=null && connectorKind.equals(repo.getConnectorKind())
 					&& repositoryUrl.equals(repo.getRepositoryUrl())) {
 				projects.add(project);
 			}
