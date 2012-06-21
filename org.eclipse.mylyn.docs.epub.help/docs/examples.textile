@@ -1,9 +1,5 @@
 h1. Practical examples
 
-h2. Building the example book
-
-The example below shows the how the example book is assembled. If you want to play around with it, you will find the examples project in the "org.eclipse.mylyn.docs":http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git/ Git repository.
-
 h2. Adding a cover
 
 p. Correctly adding a cover to a publication can be a bit awkward as different reading systems expect different input. So there is a shortcut:
