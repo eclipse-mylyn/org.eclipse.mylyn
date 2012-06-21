@@ -257,12 +257,11 @@ bc..
 h3. Cover
           
 bc.. 
-<!ELEMENT cover EMPTY>
+<!ELEMENT cover (#PCDATA)>
 <!ATTLIST cover
-          image CDATA #IMPLIED
-          title CDATA #IMPLIED>
+          image CDATA #IMPLIED>
 
-p. Adds a cover page using the supplied image file. Use a PNG, SVG or JPEG formatted file. When supplying raster images a dimension of 760x1000 pixels is typical.
+p. Adds a cover page using the supplied image file. Use a PNG, SVG or JPEG formatted file. When supplying raster images a dimension of 738x985 pixels is typical for a full screen iPad image. A title can also be specified.
 
 h2. Adding content
 
