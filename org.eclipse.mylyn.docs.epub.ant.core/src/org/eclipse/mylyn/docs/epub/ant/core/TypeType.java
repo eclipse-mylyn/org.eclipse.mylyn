@@ -16,9 +16,9 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  */
 public class TypeType {
 
-	String id;
+	public String id;
 
-	String text;
+	public String text;
 
 	/**
 	 * @ant.required

@@ -13,21 +13,20 @@ package org.eclipse.mylyn.docs.epub.ant.core;
 import java.util.Locale;
 
 /**
- * 
  * @author Torkild U. Resheim
  * @ant.type name="creator" category="epub"
  */
 public class CreatorType {
 
-	String fileAs;
+	public String fileAs;
 
-	String id;
+	public String id;
 
-	Locale lang;
+	public Locale lang;
 
-	String name;
+	public String name;
 
-	String role;
+	public String role;
 
 	/**
 	 * @ant.not-required

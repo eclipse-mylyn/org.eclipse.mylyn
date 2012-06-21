@@ -18,11 +18,11 @@ import java.util.Locale;
  */
 public class TitleType {
 
-	String text;
+	public String text;
 
-	Locale lang;
+	public Locale lang;
 
-	String id;
+	public String id;
 
 	public void setId(String id) {
 		this.id = id;

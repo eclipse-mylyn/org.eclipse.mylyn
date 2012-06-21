@@ -16,9 +16,9 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  */
 public class MetaType {
 
-	String name;
+	public String name;
 
-	String content;
+	public String content;
 
 	/**
 	 * @ant.required

@@ -18,11 +18,11 @@ import java.util.Locale;
  */
 public class RightsType {
 
-	String id;
+	public String id;
 
-	Locale lang;
+	public Locale lang;
 
-	String text;
+	public String text;
 
 	/**
 	 * @ant.required

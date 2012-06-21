@@ -15,9 +15,10 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  * @ant.type name="language" category="epub"
  */
 public class LanguageType {
-	String code;
 
-	String id;
+	public String code;
+
+	public String id;
 
 	public void setId(String id) {
 		this.id = id;

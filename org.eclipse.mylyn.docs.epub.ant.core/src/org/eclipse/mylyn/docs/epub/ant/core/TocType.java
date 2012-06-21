@@ -13,17 +13,17 @@ package org.eclipse.mylyn.docs.epub.ant.core;
 import java.io.File;
 
 /**
- * Represents a table of contents element in the {@link EpubTask}. One should
- * specify either a path to a NCX file or whether or not to generate the NCX.
+ * Represents a table of contents element in the {@link EpubTask}. One should specify either a path to a NCX file or
+ * whether or not to generate the NCX.
  * 
  * @author Torkild U. Resheim
  * @ant.type name="toc" category="epub"
  */
 public class TocType {
 
-	File file;
+	public File file;
 
-	boolean generate;
+	public boolean generate;
 
 	/**
 	 * @ant.not-required

@@ -11,15 +11,14 @@
 package org.eclipse.mylyn.docs.epub.ant.core;
 
 /**
- * 
  * @author Torkild U. Resheim
  * @ant.type name="cover" category="epub"
  */
 public class CoverType {
 
-	String image;
+	public String image;
 
-	String value;
+	public String value;
 
 	/**
 	 * @ant.required

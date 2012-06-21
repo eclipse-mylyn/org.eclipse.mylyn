@@ -18,9 +18,9 @@ import java.util.Locale;
  */
 public class FileSetType extends org.apache.tools.ant.types.FileSet {
 
-	String dest;
+	public String dest;
 
-	Locale lang;
+	public Locale lang;
 
 	public FileSetType() {
 

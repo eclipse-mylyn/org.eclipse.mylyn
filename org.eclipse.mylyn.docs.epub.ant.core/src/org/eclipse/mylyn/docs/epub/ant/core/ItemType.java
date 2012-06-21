@@ -19,25 +19,25 @@ import java.util.Locale;
  */
 public class ItemType {
 
-	String dest;
+	public String dest;
 
-	File file;
+	public File file;
 
-	String id;
+	public String id;
 
-	Locale lang;
+	public Locale lang;
 
 	/** Default is that items are in reading order */
 	public boolean linear = true;
 
-	boolean noToc = false;
+	public boolean noToc = false;
 
-	String page;
+	public String page;
 
 	/** Default is to add the item to the spine */
-	boolean spine = true;
+	public boolean spine = true;
 
-	String type;
+	public String type;
 
 	/**
 	 * @ant.not-required

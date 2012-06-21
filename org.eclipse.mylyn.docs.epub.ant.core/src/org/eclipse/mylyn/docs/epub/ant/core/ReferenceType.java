@@ -16,11 +16,11 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  */
 public class ReferenceType {
 
-	String href;
+	public String href;
 
-	String title;
+	public String title;
 
-	String type;
+	public String type;
 
 	/**
 	 * @ant.required

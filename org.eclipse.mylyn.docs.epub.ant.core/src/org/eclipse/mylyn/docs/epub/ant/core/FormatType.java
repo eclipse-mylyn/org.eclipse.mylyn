@@ -16,9 +16,9 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  */
 public class FormatType {
 
-	String id;
+	public String id;
 
-	String text;
+	public String text;
 
 	/**
 	 * @ant.required

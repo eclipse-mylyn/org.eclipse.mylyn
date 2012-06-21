@@ -17,11 +17,11 @@ package org.eclipse.mylyn.docs.epub.ant.core;
  */
 public class IdentifierType {
 
-	String id;
+	public String id;
 
-	String scheme;
+	public String scheme;
 
-	String value;
+	public String value;
 
 	/**
 	 * @ant.required

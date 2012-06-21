@@ -11,17 +11,16 @@
 package org.eclipse.mylyn.docs.epub.ant.core;
 
 /**
- * 
  * @author Torkild U. Resheim
  * @ant.type name="date" category="epub"
  */
 public class DateType {
 
-	String date;
+	public String date;
 
-	String event;
+	public String event;
 
-	String id;
+	public String id;
 
 	/**
 	 * @ant.required
