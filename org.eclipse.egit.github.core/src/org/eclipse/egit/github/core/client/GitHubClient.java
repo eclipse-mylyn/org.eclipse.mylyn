@@ -141,7 +141,7 @@ public class GitHubClient {
 
 	private String credentials;
 
-	private String userAgent;
+	private String userAgent = USER_AGENT;
 
 	private int bufferSize = 8192;
 
