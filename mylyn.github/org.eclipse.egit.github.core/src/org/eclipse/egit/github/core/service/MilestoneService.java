@@ -293,4 +293,26 @@ public class MilestoneService extends GitHubService {
 		uri.append('/').append(milestone);
 		client.delete(uri.toString());
 	}
+
+	/**
+	 * Edit the given milestone in the given repository
+	 *
+	 * @param repository
+	 * @param milestone
+	 * @return edited milestone
+	 * @throws IOException
+	 */
+	public Milestone editMilestone(IRepositoryIdProvider repository,
+			Milestone milestone) throws IOException {
+		String repoId = getId(repository);
+		if (milestone == null)
+			throw new IllegalArgumentException("Milestone cannot be null"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_MILESTONES);
+		uri.append('/').append(milestone.getNumber());
+
+		return client.post(uri.toString(), milestone, Milestone.class);
+	}
 }

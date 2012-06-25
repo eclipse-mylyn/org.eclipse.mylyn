@@ -396,4 +396,30 @@ public class MilestoneServiceTest {
 		request.setUri("/repos/user/repo/milestones/15");
 		verify(gitHubClient).get(request);
 	}
+
+	/**
+	 * Edit milestone with null milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editMilestoneNullUser() throws IOException {
+		milestoneService.editMilestone(RepositoryId.create("a", "b"), null);
+	}
+
+	/**
+	 * Edit milestone
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editMilestone() throws IOException {
+		Milestone milestone = new Milestone();
+		milestone.setNumber(1234);
+		milestone.setTitle("a milestone");
+		milestoneService
+				.editMilestone(RepositoryId.create("a", "b"), milestone);
+		verify(gitHubClient).post("/repos/a/b/milestones/1234", milestone,
+				Milestone.class);
+	}
 }
