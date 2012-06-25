@@ -269,4 +269,31 @@ public class LabelService extends GitHubService {
 		uri.append('/').append(label);
 		client.delete(uri.toString());
 	}
+
+	/**
+	 * Edit the given label in the given repository
+	 *
+	 * @param repository
+	 * @param label
+	 * @return edited label
+	 * @throws IOException
+	 */
+	public Label editLabel(IRepositoryIdProvider repository, Label label)
+			throws IOException {
+		String repoId = getId(repository);
+		if (label == null)
+			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
+		String name = label.getName();
+		if (name == null)
+			throw new IllegalArgumentException("Label name cannot be null"); //$NON-NLS-1$
+		if (name.length() == 0)
+			throw new IllegalArgumentException("Label name cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(repoId);
+		uri.append(SEGMENT_LABELS);
+		uri.append('/').append(name);
+
+		return client.post(uri.toString(), label, Label.class);
+	}
 }
