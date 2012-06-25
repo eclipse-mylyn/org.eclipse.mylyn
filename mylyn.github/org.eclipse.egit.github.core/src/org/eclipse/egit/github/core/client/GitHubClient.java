@@ -579,8 +579,10 @@ public class GitHubClient {
 					// Ignored
 				}
 			}
-		} else
+		} else {
 			request.setFixedLengthStreamingMode(0);
+			request.setRequestProperty("Content-Length", "0");
+		}
 	}
 
 	private <V> V sendJson(final HttpURLConnection request,
