@@ -439,4 +439,49 @@ public class LabelServiceTest {
 		request.setUri("/repos/user/repo/labels/bugs");
 		verify(gitHubClient).get(request);
 	}
+
+	/**
+	 * Edit label with null label
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editLabelNullLabel() throws IOException {
+		labelService.editLabel(RepositoryId.create("a", "b"), null);
+	}
+
+	/**
+	 * Edit label with null label
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editLabelNullLabelName() throws IOException {
+		labelService.editLabel(RepositoryId.create("a", "b"), new Label());
+	}
+
+	/**
+	 * Edit label with null label
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void editLabelEmptyLabelName() throws IOException {
+		labelService.editLabel(RepositoryId.create("a", "b"),
+				new Label().setName(""));
+	}
+
+	/**
+	 * Edit label
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void editLabel() throws IOException {
+		Label label = new Label();
+		label.setName("l1");
+		label.setColor("#FF");
+		labelService.editLabel(RepositoryId.create("a", "b"), label);
+		verify(gitHubClient).post("/repos/a/b/labels/l1", label, Label.class);
+	}
 }
