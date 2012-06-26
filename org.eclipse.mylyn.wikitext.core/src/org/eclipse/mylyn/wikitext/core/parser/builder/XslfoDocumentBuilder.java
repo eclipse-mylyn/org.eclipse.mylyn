@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Torkild U. Resheim - Support image sizes in percent, bug 337405 
- *     Torkild U. Resheim - Allow for basic page styling, bug 336683
+ *     Torkild U. Resheim - bugs 337405, 336592, 336683, 336813 
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
@@ -29,6 +28,8 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
@@ -40,16 +41,24 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
  * @author David Green
- * @author Torkild U. Resheim, MARINTEK (bug 337405, bug 336592, bug 336683)
+ * @author Torkild U. Resheim
  * @since 1.1
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
+
+	private static final String CSS_RULE_BORDER_STYLE = "border-style"; //$NON-NLS-1$
+
+	private static final String CSS_RULE_BORDER_WIDTH = "border-width";; //$NON-NLS-1$
+
+	private static final String CSS_RULE_BORDER_COLOR = "border-color";; //$NON-NLS-1$
 
 	private static final String CSS_RULE_BACKGROUND_COLOR = "background-color"; //$NON-NLS-1$
 
 	private static final String CSS_RULE_COLOR = "color"; //$NON-NLS-1$
 
 	private static final String CSS_RULE_VERTICAL_ALIGN = "vertical-align"; //$NON-NLS-1$
+
+	private static final String CSS_RULE_TEXT_ALIGN = "text-align"; //$NON-NLS-1$
 
 	private static final String CSS_RULE_TEXT_DECORATION = "text-decoration"; //$NON-NLS-1$
 
@@ -362,6 +371,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case TABLE_CELL_HEADER:
 		case TABLE_CELL_NORMAL:
 			writer.writeStartElement(foNamespaceUri, "table-cell"); //$NON-NLS-1$
+			applyTableCellAttributes(attributes);
 			writer.writeAttribute("padding-left", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("padding-right", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("padding-top", "2pt"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -374,6 +384,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			break;
 		case TABLE_ROW:
 			writer.writeStartElement(foNamespaceUri, "table-row"); //$NON-NLS-1$
+			applyTableRowAttributes(attributes);
 			break;
 		default:
 			throw new IllegalStateException(type.name());
@@ -466,6 +477,62 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("width", "auto"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		writer.writeAttribute("border-collapse", "collapse"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private void applyTableCellAttributes(Attributes attributes) {
+		if (attributes instanceof TableCellAttributes) {
+			TableCellAttributes cellAttributes = (TableCellAttributes) attributes;
+			if (cellAttributes.getBgcolor() != null) {
+				writer.writeAttribute(CSS_RULE_BACKGROUND_COLOR, cellAttributes.getBgcolor());
+			}
+			if (cellAttributes.getColspan() != null) {
+				writer.writeAttribute("number-columns-spanned", cellAttributes.getColspan()); //$NON-NLS-1$
+			}
+			if (cellAttributes.getRowspan() != null) {
+				writer.writeAttribute("number-rows-spanned", cellAttributes.getRowspan()); //$NON-NLS-1$
+			}
+			// Expecting values left, right, center, justify or inherit
+			if (cellAttributes.getAlign() != null) {
+				writer.writeAttribute("text-align", cellAttributes.getAlign()); //$NON-NLS-1$				
+			}
+			// Vertical align may be top, middle and bottom
+			if (cellAttributes.getValign() != null) {
+				String value = cellAttributes.getAlign();
+				if (cellAttributes.getValign().equals("top")) { //$NON-NLS-1$
+					value = "before"; //$NON-NLS-1$
+				} else if (cellAttributes.getValign().equals("middle")) { //$NON-NLS-1$
+					value = "center"; //$NON-NLS-1$
+				} else if (cellAttributes.getValign().equals("bottom")) { //$NON-NLS-1$
+					value = "after"; //$NON-NLS-1$
+				}
+				if (value != null) {
+					writer.writeAttribute("display-align", value); //$NON-NLS-1$									
+				}
+			}
+		}
+	}
+
+	private void applyTableRowAttributes(Attributes attributes) {
+		if (attributes instanceof TableRowAttributes) {
+			TableRowAttributes rowAttributes = (TableRowAttributes) attributes;
+			if (rowAttributes.getBgcolor() != null) {
+				writer.writeAttribute(CSS_RULE_BACKGROUND_COLOR, rowAttributes.getBgcolor());
+			}
+			// Vertical align may be top, middle and bottom
+			if (rowAttributes.getValign() != null) {
+				String value = rowAttributes.getAlign();
+				if (rowAttributes.getValign().equals("top")) { //$NON-NLS-1$
+					value = "before"; //$NON-NLS-1$
+				} else if (rowAttributes.getValign().equals("middle")) { //$NON-NLS-1$
+					value = "center"; //$NON-NLS-1$
+				} else if (rowAttributes.getValign().equals("bottom")) { //$NON-NLS-1$
+					value = "after"; //$NON-NLS-1$
+				}
+				if (value != null) {
+					writer.writeAttribute("display-align", value); //$NON-NLS-1$									
+				}
+			}
+		}
 	}
 
 	private BlockInfo getListBlockInfo() {
@@ -763,12 +830,19 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		Map<String, String> mapping = new HashMap<String, String>();
 		for (CssRule rule : rules) {
 			if (CSS_RULE_VERTICAL_ALIGN.equals(rule.name)) {
-				if ("super".equals(rule.value)) { //$NON-NLS-1$
+				String cssValue = rule.value;
+				if (cssValue.equals("super")) { //$NON-NLS-1$
 					mapping.put("font-size", "75%"); //$NON-NLS-1$ //$NON-NLS-2$
 					mapping.put("baseline-shift", "super"); //$NON-NLS-1$ //$NON-NLS-2$
-				} else if ("sub".equals(rule.value)) { //$NON-NLS-1$
+				} else if (cssValue.equals("sub")) { //$NON-NLS-1$
 					mapping.put("font-size", "75%"); //$NON-NLS-1$ //$NON-NLS-2$
 					mapping.put("baseline-shift", "sub"); //$NON-NLS-1$ //$NON-NLS-2$
+				} else if (cssValue.equals("top")) { //$NON-NLS-1$
+					mapping.put("display-align", "before"); //$NON-NLS-1$ //$NON-NLS-2$									
+				} else if (cssValue.equals("middle")) { //$NON-NLS-1$
+					mapping.put("display-align", "center"); //$NON-NLS-1$ //$NON-NLS-2$									
+				} else if (cssValue.equals("bottom")) { //$NON-NLS-1$
+					mapping.put("display-align", "after"); //$NON-NLS-1$ //$NON-NLS-2$									
 				}
 			} else if (CSS_RULE_TEXT_DECORATION.equals(rule.name) || // 
 					CSS_RULE_FONT_FAMILY.equals(rule.name) || // 
@@ -777,6 +851,14 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 					CSS_RULE_FONT_STYLE.equals(rule.name) || //
 					CSS_RULE_BACKGROUND_COLOR.equals(rule.name) || // 
 					CSS_RULE_COLOR.equals(rule.name)) {
+				mapping.put(rule.name, rule.value);
+			} else if (CSS_RULE_BORDER_STYLE.equals(rule.name)) {
+				mapping.put(rule.name, rule.value);
+			} else if (CSS_RULE_BORDER_WIDTH.equals(rule.name)) {
+				mapping.put(rule.name, rule.value);
+			} else if (CSS_RULE_BORDER_COLOR.equals(rule.name)) {
+				mapping.put(rule.name, rule.value);
+			} else if (CSS_RULE_TEXT_ALIGN.equals(rule.name)) {
 				mapping.put(rule.name, rule.value);
 			}
 		}
@@ -1247,8 +1329,8 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			if (fontSizeMultipliers.length != 7) {
 				throw new IllegalArgumentException();
 			}
-			for (int x = 0; x < fontSizeMultipliers.length; ++x) {
-				if (fontSizeMultipliers[x] < 0.2) {
+			for (float fontSizeMultiplier : fontSizeMultipliers) {
+				if (fontSizeMultiplier < 0.2) {
 					throw new IllegalArgumentException();
 				}
 			}
