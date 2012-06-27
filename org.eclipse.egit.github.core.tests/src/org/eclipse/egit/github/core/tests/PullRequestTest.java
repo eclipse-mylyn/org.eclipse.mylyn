@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
+import org.eclipse.egit.github.core.Milestone;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.User;
@@ -62,6 +63,8 @@ public class PullRequestTest {
 		assertNull(request.getUser());
 		assertNotNull(request.toString());
 		assertEquals(0, request.getId());
+		assertNull(request.getMilestone());
+		assertNull(request.getAssignee());
 	}
 
 	/**
@@ -107,6 +110,11 @@ public class PullRequestTest {
 		User user = new User().setLogin("cuser");
 		assertEquals(user, request.setUser(user).getUser());
 		assertEquals(70, request.setId(70).getId());
+
+		User assignee = new User().setLogin("assignee");
+		assertEquals(assignee, request.setAssignee(assignee).getAssignee());
+		Milestone milestone = new Milestone().setNumber(456);
+		assertEquals(milestone, request.setMilestone(milestone).getMilestone());
 	}
 
 	/**
