@@ -49,6 +49,8 @@ public class PullRequest implements Serializable {
 
 	private int number;
 
+	private Milestone milestone;
+
 	private PullRequestMarker base;
 
 	private PullRequestMarker head;
@@ -72,6 +74,8 @@ public class PullRequest implements Serializable {
 	private String title;
 
 	private String url;
+
+	private User assignee;
 
 	private User mergedBy;
 
@@ -506,6 +510,38 @@ public class PullRequest implements Serializable {
 	 */
 	public PullRequest setId(long id) {
 		this.id = id;
+		return this;
+	}
+
+	/**
+	 * @return milestone
+	 */
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	/**
+	 * @param milestone
+	 * @return this pull request
+	 */
+	public PullRequest setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+		return this;
+	}
+
+	/**
+	 * @return assignee
+	 */
+	public User getAssignee() {
+		return assignee;
+	}
+
+	/**
+	 * @param assignee
+	 * @return this pull request
+	 */
+	public PullRequest setAssignee(User assignee) {
+		this.assignee = assignee;
 		return this;
 	}
 
