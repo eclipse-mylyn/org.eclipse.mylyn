@@ -601,8 +601,8 @@ public class WebUtilTest extends TestCase {
 	}
 
 	public void testGetTitleFromUrl() throws Exception {
-		assertEquals("Eclipse - The Eclipse Foundation open source community website.",
-				WebUtil.getTitleFromUrl(new WebLocation("http://eclipse.org"), null));
+		assertEquals("Eclipse Mylyn Open Source Project",
+				WebUtil.getTitleFromUrl(new WebLocation("http://eclipse.org/mylyn"), null));
 		// disabled: fails in environments where the DNS resolver redirects for unknown hosts  
 		//		try {
 //			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
