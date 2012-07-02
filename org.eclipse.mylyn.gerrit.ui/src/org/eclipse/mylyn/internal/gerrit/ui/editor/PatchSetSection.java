@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Sascha Scholz (SAP) - improvements
+ *     Sam Davis - improvements for bug 383592
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
@@ -61,6 +62,7 @@ import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -534,7 +536,7 @@ public class PatchSetSection extends AbstractGerritSection {
 			private EContentAdapter modelAdapter;
 
 			public void dispose() {
-				// ignore					
+				// ignore
 			}
 
 			public Object[] getElements(Object inputElement) {
@@ -591,6 +593,7 @@ public class PatchSetSection extends AbstractGerritSection {
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 
 		subSectionExpanded(changeDetail, patchSetDetail, subSection, viewer);
+		EditorUtil.addScrollListener(viewer.getTable());
 
 		getTaskEditorPage().reflow();
 	}
