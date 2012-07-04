@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2012 Tasktop Technologies and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+         Tasktop Technologies - initial API and implementation
+ -->
+<plugin>
+  <extension point="org.eclipse.ui.viewActions"> 
+	<viewContribution
+         id="org.eclipse.mylyn.java.ui.markers.breakpoints.contribution"
+         targetID="org.eclipse.debug.ui.BreakpointView">
+      <action
+            class="org.eclipse.mylyn.internal.debug.ui.FocusBreakpointsViewAction"
+            disabledIcon="icons/elcl16/focus-disabled.gif"
+            enablesFor="*"
+            icon="icons/elcl16/focus.gif"
+            id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
+            label="%FocusBreakpointsViewAction.label"
+            menubarPath="mylyn"
+            style="toggle"
+            toolbarPath="mylyn"
+            tooltip="%FocusBreakpointsViewAction.tooltip">
+      </action>
+   	</viewContribution> 
+ 	<viewContribution 
+		id="org.eclipse.mylyn.ui.debug.view.contribution" 
+   		targetID="org.eclipse.debug.ui.DebugView">
+    	<action
+           class="org.eclipse.mylyn.internal.debug.ui.FocusDebugViewAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
+           enablesFor="*"
+           icon="icons/elcl16/focus.gif"
+           id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
+           label="%FocusDebugViewAction.label"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="%FocusDebugViewAction.tooltip">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement> 
+  		</action> 
+    </viewContribution> 
+  </extension>
+</plugin>

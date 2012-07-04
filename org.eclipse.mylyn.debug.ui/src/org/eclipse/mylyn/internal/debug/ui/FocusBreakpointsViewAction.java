@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.ui.actions;
+package org.eclipse.mylyn.internal.debug.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +17,27 @@ import java.util.List;
 import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
-import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.ide.ui.AbstractFocusMarkerViewAction;
 import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
  */
-public class FocusDebugViewAction extends AbstractFocusViewAction {
+public class FocusBreakpointsViewAction extends AbstractFocusMarkerViewAction {
 
-	public FocusDebugViewAction() {
-		super(new InterestFilter(), true, true, false);
+	public FocusBreakpointsViewAction() {
+		super(new BreakpointsInterestFilter(), true, true, false);
 	}
 
 	@Override
-	public List<StructuredViewer> getViewers() {
+	public final List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IViewPart viewPart = super.getPartForAction();
 		if (viewPart instanceof IDebugView) {
 			IDebugView view = (IDebugView) viewPart;
 			Viewer viewer = view.getViewer();
 			if (viewer instanceof StructuredViewer) {
+				updateMarkerViewLabelProvider((StructuredViewer) viewer);
 				viewers.add((StructuredViewer) viewer);
 			}
 		}

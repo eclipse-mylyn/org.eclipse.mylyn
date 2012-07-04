@@ -308,47 +308,7 @@
  	  <viewContribution
        id="org.eclipse.mylyn.ui.views.active.search.contribution"
        targetID="org.eclipse.mylyn.ui.views.active.search">
- 		</viewContribution>
- 	
-	 <viewContribution
-         id="org.eclipse.mylyn.java.ui.markers.breakpoints.contribution"
-         targetID="org.eclipse.debug.ui.BreakpointView">
-      <action
-            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBreakpointsViewAction"
-            disabledIcon="icons/elcl16/focus-disabled.gif"
-            enablesFor="*"
-            icon="icons/elcl16/focus.gif"
-            id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
-            label="%FocusBreakpointsViewAction.label"
-            menubarPath="mylyn"
-            style="toggle"
-            toolbarPath="mylyn"
-            tooltip="%FocusBreakpointsViewAction.tooltip">
-      </action>
-   	</viewContribution> 
- 	
- 	<viewContribution 
-		id="org.eclipse.mylyn.ui.debug.view.contribution" 
-   		targetID="org.eclipse.debug.ui.DebugView">
-    	<action
-           class="org.eclipse.mylyn.internal.java.ui.actions.FocusDebugViewAction"
-           disabledIcon="icons/elcl16/focus-disabled.gif"
-           enablesFor="*"
-           icon="icons/elcl16/focus.gif"
-           id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
-           label="%FocusDebugViewAction.label"
-           menubarPath="mylyn"
-           style="toggle"
-           toolbarPath="mylyn"
-           tooltip="%FocusDebugViewAction.tooltip">
-        <enablement>
-           <systemProperty
-                 name="org.eclipse.mylyn.context.core.context.active"
-                 value="true">
-           </systemProperty>
-        </enablement> 
-  		</action> 
-      </viewContribution> 
+ 		</viewContribution> 	
 	</extension>
 
 	

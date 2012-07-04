@@ -77,6 +77,8 @@
     <module>org.eclipse.mylyn.context.tasks.ui</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>
+    <module>org.eclipse.mylyn.debug.ui</module>
+    <module>org.eclipse.mylyn.debug.tests</module>
     <module>org.eclipse.mylyn.ide-feature</module>
     <module>org.eclipse.mylyn.ide.ant</module>
     <module>org.eclipse.mylyn.ide.tests</module>
