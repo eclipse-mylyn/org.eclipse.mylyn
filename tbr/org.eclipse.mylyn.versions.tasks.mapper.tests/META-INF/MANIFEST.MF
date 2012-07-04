@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Task Mapper Tests
 Bundle-SymbolicName: org.eclipse.mylyn.versions.tasks.mapper.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.versions.tasks.mapper.generic;bundle-version="0.1.0",
