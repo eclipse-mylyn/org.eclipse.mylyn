@@ -17,7 +17,7 @@ import java.io.InputStream;
  * A ContextContributor may be used to put additional data to Mylyn context. As the ContextContributor is in charge of
  * serialization and deserialization of provided data, the data type is not limited.
  * 
- * @since 3.8
+ * @since 3.9
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
  */
