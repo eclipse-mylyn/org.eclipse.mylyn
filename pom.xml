@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.commons</groupId>
   <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
-  <version>3.8.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
 	<sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.compatibility,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.commons.stubs-parent,org.eclipse.mylyn.commons.identity,org.eclipse.mylyn.commons.notifications,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.team</sonar.skippedModules>

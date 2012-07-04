@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.eclipse.mylyn.commons</groupId>
     <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.commons.stubs-parent</artifactId>
   <packaging>pom</packaging>
