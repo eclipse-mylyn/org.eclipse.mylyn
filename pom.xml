@@ -5,23 +5,25 @@
  <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn-aggregator</artifactId>
-  <version>3.8.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <profiles>
     <profile>
       <id>standalone</id>
       <modules>
-		<module>org.eclipse.mylyn.tests.standalone</module>
+        <module>org.eclipse.mylyn.tests.standalone</module>
       </modules>
     </profile>
   </profiles>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>
-	<module>org.eclipse.mylyn.tests</module>
-	<module>org.eclipse.mylyn-site</module>
+    <module>org.eclipse.mylyn.tests</module>
+    <module>org.eclipse.mylyn-parent</module>
+    <module>org.eclipse.mylyn-site</module>
+    <module>org.eclipse.mylyn-target</module>
   </modules>
 </project>
