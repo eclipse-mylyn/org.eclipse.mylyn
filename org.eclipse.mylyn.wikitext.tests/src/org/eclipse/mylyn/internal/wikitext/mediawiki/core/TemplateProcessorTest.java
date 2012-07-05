@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2010, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 379783
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
@@ -200,6 +201,62 @@ public class TemplateProcessorTest extends TestCase {
 			assertContains(templateNames, name);
 			assertEquals(1, templateNames.size());
 		}
+	}
+
+	public void testBasicTemplatesNoParametersRec() {
+		//Bug 379783
+		Template templateFoo = new Template();
+		templateFoo.setName("foo");
+		templateFoo.setTemplateMarkup("_{{bar}}expanded_");
+		markupLanguage.getTemplates().add(templateFoo);
+
+		Template templateBar = new Template();
+		templateBar.setName("bar");
+		templateBar.setTemplateMarkup("+exp+");
+		markupLanguage.getTemplates().add(templateBar);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{foo}} two");
+		assertEquals("one _+exp+expanded_ two", markup);
+	}
+
+	public void testBasicTemplateNoParametersRecLoopDetection() {
+		//Bug 379783
+		Template templateMer = new Template();
+		templateMer.setName("mer");
+		templateMer.setTemplateMarkup("¤test{{mer}}test¤");
+		markupLanguage.getTemplates().add(templateMer);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("{{mer}}");
+		assertEquals("¤test<span class=\"error\">Template loop detected:mer</span>test¤", markup);
+	}
+
+	public void testBasicTemplatesNoParametersRecLoopDetection() {
+		//Bug 379783
+		Template template1 = new Template();
+		template1.setName("rec_a");
+		template1.setTemplateMarkup("+ rec_a {{rec_b}} rec_a +");
+		markupLanguage.getTemplates().add(template1);
+
+		Template template2 = new Template();
+		template2.setName("rec_b");
+		template2.setTemplateMarkup("+ rec_b {{rec_c}} rec_b +");
+		markupLanguage.getTemplates().add(template2);
+
+		Template template3 = new Template();
+		template3.setName("rec_c");
+		template3.setTemplateMarkup("+ rec_c {{rec_a}} rec_c +");
+		markupLanguage.getTemplates().add(template3);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("{{rec_a}}");
+		assertEquals(
+				"+ rec_a + rec_b + rec_c <span class=\"error\">Template loop detected:rec_a</span> rec_c + rec_b + rec_a +",
+				markup);
 	}
 
 	private void assertContains(Set<String> strings, String string) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 David Green and others.
+ * Copyright (c) 2010, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,19 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 379783
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +62,10 @@ public class TemplateProcessor {
 	}
 
 	public String processTemplates(String markupContent) {
+		return processTemplates(markupContent, Collections.<String> emptySet());
+	}
 
+	private String processTemplates(String markupContent, Set<String> usedTemplates) {
 		StringBuilder processedMarkup = new StringBuilder();
 
 		int lastIndex = 0;
@@ -70,8 +78,23 @@ public class TemplateProcessor {
 			String templateName = matcher.group(2);
 			Template template = resolveTemplate(templateName);
 			if (template != null) {
-				String parameters = matcher.group(3);
-				String replacementText = processTemplate(template, parameters);
+				String replacementText;
+				if (usedTemplates.contains(templateName)) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("<span class=\"error\">"); //$NON-NLS-1$
+					sb.append(MessageFormat.format(
+							Messages.getString("TemplateProcessor_loopDetected"), template.getName())); //$NON-NLS-1$
+					sb.append("</span>"); //$NON-NLS-1$
+					replacementText = sb.toString();
+				} else {
+					String parameters = matcher.group(3);
+					replacementText = processTemplate(template, parameters);
+					//The replacementText might contain other templates. Add the current template to the set of used template and call recursively this function again:
+					Set<String> templates = new HashSet<String>(usedTemplates);
+					templates.add(templateName);
+					replacementText = processTemplates(replacementText, templates);
+				}
+				replacementText = processTemplates(replacementText);
 				processedMarkup.append(replacementText);
 			}
 			lastIndex = matcher.end();
