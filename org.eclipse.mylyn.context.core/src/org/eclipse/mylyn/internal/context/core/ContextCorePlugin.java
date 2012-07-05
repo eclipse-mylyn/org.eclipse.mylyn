@@ -227,23 +227,28 @@ public class ContextCorePlugin extends Plugin {
 		return contextContributor;
 	}
 
-	private void initContextContributor() {
+	void initContextContributor() {
 		if (!contextContributorInitialized) {
 			ExtensionPointReader<IContextContributor> extensionPointReader = new ExtensionPointReader<IContextContributor>(
 					ContextCorePlugin.ID_PLUGIN, ContextCorePlugin.EXTENSION_ID_CONTRIBUTOR,
 					ContextCorePlugin.EXTENSION_ELEMENT_CONTRIBUTOR, IContextContributor.class);
 			extensionPointReader.read();
 			contextContributor = extensionPointReader.getItems();
+			for (IContextContributor contributor : contextContributor) {
+				ContextCorePlugin.getContextManager().addListener(contributor);
+			}
 			contextContributorInitialized = true;
 		}
 	}
 
 	public void addContextContributor(AbstractContextContributor contributor) {
 		contextContributor.add(contributor);
+		ContextCorePlugin.getContextManager().addListener(contributor);
 	}
 
 	public void removeContextContributor(AbstractContextContributor contributor) {
 		contextContributor.remove(contributor);
+		ContextCorePlugin.getContextManager().removeListener(contributor);
 	}
 
 	/**

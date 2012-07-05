@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
  * @author Shawn Minto
  * @since 3.0
  */
-public abstract class AbstractContextListener {
+public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * Invoked before the context is activated.

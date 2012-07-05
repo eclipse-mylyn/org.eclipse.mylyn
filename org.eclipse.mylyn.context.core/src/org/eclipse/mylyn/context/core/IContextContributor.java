@@ -21,7 +21,7 @@ import java.io.InputStream;
  * @noextend This interface is not intended to be extended by clients.
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IContextContributor {
+public interface IContextContributor extends IContextListener {
 
 	/**
 	 * Provides data which should be added to the given context.
