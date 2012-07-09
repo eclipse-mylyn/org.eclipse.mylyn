@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 381506
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
@@ -82,9 +83,7 @@ public class PreformattedBlock extends Block {
 					int contentEnd = closeMatcher.start(1);
 					int newContentStart = closeMatcher.end(1);
 					if (contentEnd > 0) {
-						String content = line.substring(offset, contentEnd);
-						builder.characters(content);
-						builder.characters("\n"); //$NON-NLS-1$
+						addContent(line.substring(0, contentEnd), offset);
 					}
 					setClosed(true);
 					if (newContentStart < line.length()) {
@@ -100,10 +99,18 @@ public class PreformattedBlock extends Block {
 			}
 		}
 		if (line.length() >= lineStart) {
-			builder.characters(line.substring(lineStart));
-			builder.characters("\n"); //$NON-NLS-1$
+			addContent(line, lineStart);
 		}
 		return -1;
+	}
+
+	private void addContent(String line, int offset) {
+		if (usesTag) {
+			builder.characters(line.substring(offset));
+		} else {
+			getMarkupLanguage().emitMarkupLine(parser, state, line, offset);
+		}
+		builder.characters("\n"); //$NON-NLS-1$
 	}
 
 	private void processHtmlAttributes(Attributes attributes, String htmlAttributes) {

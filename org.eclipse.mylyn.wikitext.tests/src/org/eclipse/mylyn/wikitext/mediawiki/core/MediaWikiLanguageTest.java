@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 381506
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -339,6 +340,7 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testPreformattedWithTagStartEndOnSameLine2() {
+		//see also BUG 381506 for the usage of tags:
 		String html = parser.parseToHtml("example:\n\n<pre><a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?<span class=\"summary\">(.+?)</span></pre>\n\nIf");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
@@ -354,6 +356,38 @@ public class MediaWikiLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
 				"<p>normal para</p><pre class=\"source-javascript\">preformatted\\s+more pre\\s+</pre><p>normal para</p>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testPreformattedWithTagAndMarkup() {
+		//BUG 381506:
+		String html = parser.parseToHtml("example:\n\n<pre>a block\nWith '''Bold text''' or ''Italic text'' style\nIs not converted</pre>\n\nIf");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<body><p>example:</p><pre>"
+						+ "a block\\s+With '''Bold text''' or ''Italic text'' style\\s+Is not converted"
+						+ "\\s+</pre><p>If</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testPreformattedWithMarkup() {
+		//BUG 381506:
+		String html = parser.parseToHtml("normal para\n preformatted\n with '''Bold text''' or ''Italic text'' style\n more pre\nnormal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<body><p>normal para</p><pre>preformatted\\s+with <b>Bold text</b> or <i>Italic text</i> style\\s+more pre\\s+</pre><p>normal para</p></body>")
+				.matcher(html)
+				.find());
+	}
+
+	public void testPreformattedWithFont() {
+		//BUG 381506:
+		String html = parser.parseToHtml("normal para\n preformatted\n with <font color=\"red\">some red color</font>\n more pre\nnormal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<body><p>normal para</p><pre>preformatted\\s+with <font color=\"red\">some red color</font>\\s+more pre\\s+</pre><p>normal para</p></body>")
 				.matcher(html)
 				.find());
 	}
