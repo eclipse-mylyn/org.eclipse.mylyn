@@ -221,17 +221,29 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _+exp+expanded_ two", markup);
 	}
 
+	public void testTemplateRepeated() {
+		Template template = new Template();
+		template.setName("test");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{test}} two {{test}}");
+		assertEquals("one _expanded_ two _expanded_", markup);
+	}
+
 	public void testBasicTemplateNoParametersRecLoopDetection() {
 		//Bug 379783
 		Template templateMer = new Template();
 		templateMer.setName("mer");
-		templateMer.setTemplateMarkup("¤test{{mer}}test¤");
+		templateMer.setTemplateMarkup("ï¿½test{{mer}}testï¿½");
 		markupLanguage.getTemplates().add(templateMer);
 
 		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
 
 		String markup = templateProcessor.processTemplates("{{mer}}");
-		assertEquals("¤test<span class=\"error\">Template loop detected:mer</span>test¤", markup);
+		assertEquals("ï¿½test<span class=\"error\">Template loop detected:mer</span>testï¿½", markup);
 	}
 
 	public void testBasicTemplatesNoParametersRecLoopDetection() {
