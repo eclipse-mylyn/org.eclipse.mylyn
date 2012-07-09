@@ -271,6 +271,45 @@ public class TemplateProcessorTest extends TestCase {
 				markup);
 	}
 
+	public void testBasicTemplateDidgitInTheName() {
+		//Bug 380052
+		Template template = new Template();
+		template.setName("1stTest");
+		template.setTemplateMarkup("first test");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("This is a {{1stTest}}.");
+		assertEquals("This is a first test.", markup);
+	}
+
+	public void testBasicTemplateDidgitInTheName2() {
+		//Bug 380052
+		Template template = new Template();
+		template.setName("Item2");
+		template.setTemplateMarkup("second item");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("This is the {{Item2}}.");
+		assertEquals("This is the second item.", markup);
+	}
+
+	public void testBasicTemplateDidgitInTheName3() {
+		//Bug 380052
+		Template template = new Template();
+		template.setName("foo999bar");
+		template.setTemplateMarkup("foo-bar");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("foo{{foo999bar}}bar");
+		assertEquals("foofoo-barbar", markup);
+	}
+
 	private void assertContains(Set<String> strings, String string) {
 		assertTrue(String.format("Expected %s but got %s", string, strings), strings.contains(string));
 	}
