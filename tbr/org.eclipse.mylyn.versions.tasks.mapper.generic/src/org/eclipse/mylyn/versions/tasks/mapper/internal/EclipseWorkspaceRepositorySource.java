@@ -24,10 +24,11 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexer;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetSource;
+
 /**
+ * ChangeSet Source, which provides the changesets of all (shared) projects in the Eclipse workspace.
  * 
  * @author Kilian Matt
- *
  */
 public class EclipseWorkspaceRepositorySource implements IChangeSetSource {
 	public void fetchAllChangesets(IProgressMonitor monitor,

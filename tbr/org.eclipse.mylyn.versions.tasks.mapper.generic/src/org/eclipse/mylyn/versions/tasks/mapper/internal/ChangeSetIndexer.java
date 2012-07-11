@@ -53,7 +53,6 @@ import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetSource;
 /**
  * 
  * @author Kilian Matt
- *
  */
 public class ChangeSetIndexer implements IChangeSetIndexSearcher {
 

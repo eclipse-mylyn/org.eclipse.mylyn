@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexSearcher;
+
 /**
  * 
  * @author Kilian Matt
@@ -22,12 +23,19 @@ import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexSearcher;
  */
 public class RepositoryIndexer {
 
+	private static final int STARTUP_DELAY_MILLIS = 10000;
 	private IndexRepositoryJob repoSyncJob;
 
 	public RepositoryIndexer() {
-
 		repoSyncJob = new IndexRepositoryJob();
-		repoSyncJob.schedule(10000);
+	}
+
+	public void start() {
+		repoSyncJob.schedule(STARTUP_DELAY_MILLIS);
+	}
+
+	public void stop() {
+		repoSyncJob.cancel();
 	}
 
 	private static class IndexRepositoryJob extends Job {

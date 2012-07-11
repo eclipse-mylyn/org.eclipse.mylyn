@@ -16,39 +16,52 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexSearcher;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+
+
 /**
  * 
  * @author Kilian Matt
- *
+ * 
  */
-public class RepositoryIndexerPlugin  implements BundleActivator {
+public class RepositoryIndexerPlugin implements BundleActivator {
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.versions.tasks.mapper";
 	private static RepositoryIndexerPlugin instance;
-	public static final String PLUGIN_ID="org.eclipse.mylyn.versions.tasks.mapper";
-	
+
 	private RepositoryIndexer synchronizer;
 	private IChangeSetIndexSearcher indexSearch;
-	
+
 	public RepositoryIndexerPlugin() {
-		instance = this;
 	}
 
 	public static RepositoryIndexerPlugin getDefault() {
 		return instance;
 	}
-	
+
 	public void start(BundleContext context) throws Exception {
-		synchronizer= new RepositoryIndexer();
-		
-		File file = new File(TasksUiPlugin.getDefault().getDataDirectory(),".changeSetIndex");
-		indexSearch=new ChangeSetIndexer(file,new EclipseWorkspaceRepositorySource());
-	}
-	public IChangeSetIndexSearcher getIndexer(){
-		return indexSearch;	
+		RepositoryIndexerPlugin.instance = this;
+		synchronizer = new RepositoryIndexer();
+		synchronizer.start();
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		this.instance=null;
-		
+		RepositoryIndexerPlugin.instance = null;
+		synchronizer.stop();
 	}
+
+	public IChangeSetIndexSearcher getIndexer() {
+		if (indexSearch == null) {
+			initIndexer();
+		}
+		return indexSearch;
+	}
+
+	protected synchronized void initIndexer() {
+		if (indexSearch == null) {
+			File file = new EclipseIndexLocationProvider().getIndexLocation();
+			indexSearch = new ChangeSetIndexer(file,
+					new EclipseWorkspaceRepositorySource());
+		}
+	}
+
 
 }

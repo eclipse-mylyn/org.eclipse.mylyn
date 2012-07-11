@@ -11,8 +11,9 @@
 package org.eclipse.mylyn.versions.tasks.mapper.generic;
 
 import org.eclipse.core.runtime.CoreException;
+
 /**
- * 
+ * Collects the changes of a search. 
  * @author Kilian Matt
  *
  */
