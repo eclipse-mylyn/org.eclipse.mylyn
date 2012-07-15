@@ -29,14 +29,19 @@ public class ActivityStream implements IActivityStream {
 
 	private final ActivityScope scope;
 
-	private final IActivityManager manager;
+	private final ActivityManager manager;
 
-	public ActivityStream(IActivityManager manager, ActivityScope scope) {
+	public ActivityStream(ActivityManager manager, ActivityScope scope) {
 		Assert.isNotNull(manager);
 		Assert.isNotNull(scope);
 		this.manager = manager;
 		this.scope = scope;
 		this.events = new CopyOnWriteArrayList<ActivityEvent>();
+		initialize();
+	}
+
+	private void initialize() {
+		events.addAll(manager.getEvents(scope));
 	}
 
 	public void addEvent(ActivityEvent event) {

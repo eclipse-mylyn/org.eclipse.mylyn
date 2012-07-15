@@ -9,4 +9,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="3.8.0"
 Bundle-Localization: plugin
 Export-Package: org.eclipse.mylyn.internal.tasks.activity.core;x-internal:=true,
- org.eclipse.mylyn.tasks.activity.core;x-internal:=true
+ org.eclipse.mylyn.tasks.activity.core;x-internal:=true,
+ org.eclipse.mylyn.tasks.activity.core.spi
