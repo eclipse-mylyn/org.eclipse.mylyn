@@ -27,6 +27,8 @@ public class TaskRepositoryPropertyTester extends PropertyTester {
 
 	private static final String PROPERTY_USER_MANAGED = "userManaged"; //$NON-NLS-1$
 
+	private static final String PROPERTY_DISCONNECTED = "disconnected"; //$NON-NLS-1$
+
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);
 	}
@@ -40,6 +42,8 @@ public class TaskRepositoryPropertyTester extends PropertyTester {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						repository.getConnectorKind());
 				return equals(connector != null && connector.isUserManaged(), expectedValue);
+			} else if (PROPERTY_DISCONNECTED.equals(property)) {
+				return equals(!repository.isOffline(), expectedValue);
 			}
 		}
 
