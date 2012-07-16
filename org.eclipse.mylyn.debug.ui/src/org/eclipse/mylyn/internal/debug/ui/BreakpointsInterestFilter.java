@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,32 +7,38 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastian Schmidt - bug 155333
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.debug.ui;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.ide.ui.AbstractMarkerInterestFilter;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.InterestFilter;
 
 /**
  * @author Mik Kersten
+ * @author Sebastian Schmidt
  */
-public class BreakpointsInterestFilter extends AbstractMarkerInterestFilter {
+public class BreakpointsInterestFilter extends InterestFilter {
+
+	private final AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(DebugUiPlugin.CONTENT_TYPE);
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IBreakpoint) {
 			IBreakpoint breakpoint = (IBreakpoint) element;
-			// TODO: could consider use breakpoint.isEnabled() to make enabled breakpoints implicitly interesting	
-			return isInteresting(breakpoint.getMarker(), viewer, parent);
+			IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
+					structureBridge.getHandleIdentifier(breakpoint));
+			if (interactionElement == null) {
+				return true;
+			}
+			return !interactionElement.getInterest().isInteresting();
 		}
-		return false;
-	}
 
-	@Override
-	protected boolean isImplicitlyInteresting(IMarker marker) {
-		return false;
+		return true;
 	}
 }

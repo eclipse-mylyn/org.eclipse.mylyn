@@ -11,11 +11,15 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.context.core;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.mylyn.context.ui;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.mylyn.ide.ui;bundle-version="[3.8.0,4.0.0)",
+ org.eclipse.mylyn.monitor.ui;bundle-version="[3.8.0,4.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.ui,
  org.eclipse.debug.core,
- org.eclipse.debug.ui
+ org.eclipse.debug.ui,
+ org.eclipse.ui.navigator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.internal.debug.ui;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.debug.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.debug.ui.cnf;x-internal:=true

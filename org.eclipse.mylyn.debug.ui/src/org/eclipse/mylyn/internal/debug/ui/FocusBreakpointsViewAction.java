@@ -8,7 +8,6 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.debug.ui;
 
 import java.util.ArrayList;
