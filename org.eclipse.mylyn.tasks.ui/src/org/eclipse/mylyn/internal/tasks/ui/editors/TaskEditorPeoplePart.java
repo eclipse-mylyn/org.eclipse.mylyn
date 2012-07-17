@@ -33,7 +33,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		setPartName(Messages.TaskEditorPeoplePart_People);
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
+	protected void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
@@ -62,14 +62,18 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		layout.numColumns = 2;
 		peopleComposite.setLayout(layout);
 
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
+		createAttributeEditors(toolkit, peopleComposite);
 
 		toolkit.paintBordersFor(peopleComposite);
 		section.setClient(peopleComposite);
 		setSection(toolkit, section);
+	}
+
+	protected void createAttributeEditors(FormToolkit toolkit, Composite peopleComposite) {
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
 	}
 
 }
