@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -214,14 +215,23 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Override to return a textual reference to a comment, e.g. for Bugzilla this method returns <code>#12</code> for
-	 * comment 12. This reference is used when generating replies to comments
+	 * Override to return a specific textual reference to a comment, e.g. by default this method returns
+	 * <code>In reply to comment #12</code> for a reply to comment 12. This text is used when generating replies to
+	 * comments.
 	 * 
-	 * @return a reference to <code>comment</code>; null, if no reference is available
+	 * @return the reply text with a reference to <code>taskComment</code>; null, if no reference is available
 	 * @since 3.0
 	 */
 	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
-		return null;
+		if (taskComment == null) {
+			return Messages.AbstractRepositoryConnectorUi_InReplyToDescription;
+		} else if (includeTask) {
+			return MessageFormat.format(Messages.AbstractRepositoryConnectorUi_InReplyToTaskAndComment,
+					task.getTaskKey(), taskComment.getNumber());
+		} else {
+			return MessageFormat.format(Messages.AbstractRepositoryConnectorUi_InReplyToComment,
+					taskComment.getNumber());
+		}
 	}
 
 	/**

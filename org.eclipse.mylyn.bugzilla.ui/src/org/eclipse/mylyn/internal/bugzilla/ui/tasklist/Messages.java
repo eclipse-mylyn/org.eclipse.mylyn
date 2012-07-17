@@ -25,12 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String BugzillaConnectorUi__In_reply_to_comment_X_;
-
-	public static String BugzillaConnectorUi__In_reply_to_X_comment_X_;
-
-	public static String BugzillaConnectorUi__In_reply_to_comment_0_;
-
 	public static String BugzillaCustomQueryDialog_Bugzilla_Query_Category_Name;
 
 	public static String BugzillaCustomQueryDialog_Max_Hits_Returned__1_means_all_;

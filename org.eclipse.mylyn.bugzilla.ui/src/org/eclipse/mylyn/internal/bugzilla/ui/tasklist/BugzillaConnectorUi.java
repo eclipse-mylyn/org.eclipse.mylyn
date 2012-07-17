@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,7 +35,6 @@ import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
@@ -86,18 +84,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
 		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + task.getTaskId();
-	}
-
-	@Override
-	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
-		if (taskComment == null) {
-			return Messages.BugzillaConnectorUi__In_reply_to_comment_0_;
-		} else if (includeTask) {
-			return MessageFormat.format(Messages.BugzillaConnectorUi__In_reply_to_X_comment_X_, task.getTaskKey(),
-					taskComment.getNumber());
-		} else {
-			return MessageFormat.format(Messages.BugzillaConnectorUi__In_reply_to_comment_X_, taskComment.getNumber());
-		}
 	}
 
 	@Override

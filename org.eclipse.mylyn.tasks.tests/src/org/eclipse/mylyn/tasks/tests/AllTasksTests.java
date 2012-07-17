@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskAttributeMapperTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
+import org.eclipse.mylyn.tasks.tests.ui.AbstractRepositoryConnectorUiTest;
 import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
@@ -128,6 +129,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskAttributeMapperTest.class);
 		suite.addTestSuite(SupportHandlerManagerTest.class);
 		suite.addTestSuite(RepositoryClientManagerTest.class);
+		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
 		return suite;
 	}
 

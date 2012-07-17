@@ -135,6 +135,12 @@ public class Messages extends NLS {
 
 	public static String TaskTrimWidget__no_task_active_;
 
+	public static String AbstractRepositoryConnectorUi_InReplyToComment;
+
+	public static String AbstractRepositoryConnectorUi_InReplyToDescription;
+
+	public static String AbstractRepositoryConnectorUi_InReplyToTaskAndComment;
+
 	public static String AbstractRepositoryConnectorUi_Task;
 
 	public static String TaskElementLabelProvider__no_summary_available_;
