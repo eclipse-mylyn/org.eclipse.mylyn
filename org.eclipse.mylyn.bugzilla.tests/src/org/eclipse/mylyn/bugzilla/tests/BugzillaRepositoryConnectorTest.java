@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -57,7 +58,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * @author Rob Elves
@@ -518,7 +518,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 			@Override
 			public String getProduct() {
-				return "Scratch";
+				return "Product with Spaces";
 			}
 		};
 		final TaskMapping taskMappingSelect = new TaskMapping() {
@@ -529,7 +529,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 			@Override
 			public String getSummary() {
-				return "test the std workflow for Scratch";
+				return "test the std workflow for Product with Spaces";
 			}
 
 			@Override

@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
@@ -67,7 +68,6 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater
@@ -983,7 +983,7 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 
 		bugzillaClient.updateProductInfo(new NullProgressMonitor(), repositoryConfiguration);
 		for (String product : repositoryConfiguration.getProducts()) {
-			if (product.equals("ManualTest") || product.equals("Scratch") || product.equals("TestProduct")) {
+			if (product.equals("ManualTest") || product.equals("Product with Spaces") || product.equals("TestProduct")) {
 				assertEquals("---", repositoryConfiguration.getDefaultMilestones(product));
 			} else {
 				fail("never reach this");

@@ -24,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -40,7 +41,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.tests.util.UrlBuilder;
 
 /**
@@ -104,9 +104,9 @@ public class BugzillaClientTest extends TestCase {
 		assertEquals(2, config.getComponents("TestProduct").size());
 		assertEquals(4, config.getVersions("TestProduct").size());
 		assertEquals(4, config.getTargetMilestones("TestProduct").size());
-		assertEquals(2, config.getComponents("Scratch").size());
-		assertEquals(4, config.getVersions("Scratch").size());
-		assertEquals(4, config.getTargetMilestones("Scratch").size());
+		assertEquals(2, config.getComponents("Product with Spaces").size());
+		assertEquals(4, config.getVersions("Product with Spaces").size());
+		assertEquals(4, config.getTargetMilestones("Product with Spaces").size());
 	}
 
 	public void testValidate() throws Exception {

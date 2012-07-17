@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -1311,7 +1312,9 @@ public class BugzillaClient {
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) > 0) {
 				TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
 				token = getTokenInternal(
-						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI + productAttribute.getValue(), monitor);
+						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI
+								+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
+						monitor);
 			}
 			formData = getPairsForNew(taskData, token);
 		} else {
