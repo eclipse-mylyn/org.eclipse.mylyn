@@ -1034,6 +1034,7 @@
                    type="org.eclipse.core.resources.IProject">
              </adapt>
           </enabledWhen>
+          <filter name="open" value="true"/>
        </page>
     </extension>
     <extension
