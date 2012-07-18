@@ -24,6 +24,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -268,7 +269,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		initialize();
 
 		section = createSection(parent, toolkit, hasIncoming);
-		section.setText(getPartName() + " (" + attachmentAttributes.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		updateSectionTitle();
 		if (hasIncoming) {
 			expandSection(toolkit, section);
 		} else {
@@ -376,10 +377,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private void updateSectionTitle() {
 		if (tableFilter.isFilterDeprecatedEnabled()) {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y, new Object[] {
-					getPartName(), nonDeprecatedCount, attachmentAttributes.size() }));
+					LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount, attachmentAttributes.size() }));
 		} else {
-			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X, getPartName(),
-					attachmentAttributes.size()));
+			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X,
+					LegacyActionTools.escapeMnemonics(getPartName()), attachmentAttributes.size()));
 		}
 	}
 

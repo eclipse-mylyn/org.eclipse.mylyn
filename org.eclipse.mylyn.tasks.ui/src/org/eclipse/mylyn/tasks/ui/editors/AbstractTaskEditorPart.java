@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
@@ -79,7 +80,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
 		Section section = toolkit.createSection(parent, style);
-		section.setText(getPartName());
+		section.setText(LegacyActionTools.escapeMnemonics(getPartName()));
 		return section;
 	}
 
