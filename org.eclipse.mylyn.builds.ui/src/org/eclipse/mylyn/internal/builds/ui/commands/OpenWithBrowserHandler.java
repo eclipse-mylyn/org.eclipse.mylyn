@@ -31,7 +31,7 @@ public class OpenWithBrowserHandler extends AbstractHandler {
 			Object item = elements.get(0);
 			if (item instanceof IBuildElement) {
 				IBuildElement element = (IBuildElement) item;
-				BrowserUtil.openUrl(element.getUrl());
+				BrowserUtil.openUrl(element.getUrl(), BrowserUtil.NO_RICH_EDITOR);
 			}
 		}
 		return null;
