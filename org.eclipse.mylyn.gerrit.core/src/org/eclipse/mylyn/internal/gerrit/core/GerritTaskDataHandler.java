@@ -169,6 +169,10 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				IRepositoryPerson person = repository.createPerson(userName);
 				person.setName(author.getFullName());
 				mapper.setAuthor(person);
+			} else {
+				// messages without an author are from Gerrit itself
+				IRepositoryPerson person = repository.createPerson("Gerrit Code Review");
+				mapper.setAuthor(person);
 			}
 			mapper.setText(message.getMessage());
 			mapper.setCreationDate(message.getWrittenOn());
