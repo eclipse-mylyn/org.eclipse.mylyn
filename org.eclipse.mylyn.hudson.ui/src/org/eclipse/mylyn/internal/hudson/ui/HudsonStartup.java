@@ -51,7 +51,11 @@ public class HudsonStartup extends BuildsUiStartup {
 
 	public void stop() {
 		if (discovery != null) {
-			discovery.stop();
+			try {
+				discovery.stop();
+			} catch (NullPointerException e) {
+				// ignore, see bug 383316
+			}
 			discovery = null;
 		}
 	}
