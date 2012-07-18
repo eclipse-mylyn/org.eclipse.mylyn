@@ -106,7 +106,9 @@ public class ActivityContextManager implements IActivityContextManager {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (window != null) {
 					IWorkbenchPage page = window.getActivePage();
-					workingSets = page.getWorkingSets();
+					if (page != null) {
+						workingSets = page.getWorkingSets();
+					}
 				}
 			}
 		});
