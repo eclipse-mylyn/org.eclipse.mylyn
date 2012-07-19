@@ -45,7 +45,7 @@ public class ChangeSet implements ScmInfoAttributes {
 	private ScmRepository repository;
 
 	public ChangeSet(ScmUser author, Date date, String id, String fullMessage, ScmRepository repository,
-			List<? extends Change> changes) {
+			List<Change> changes) {
 		this.author = author;
 		this.date = date;
 		this.id = id;

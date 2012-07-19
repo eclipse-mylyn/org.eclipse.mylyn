@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.filesystem.URIUtil;
@@ -34,6 +34,7 @@ import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CorruptObjectException;
@@ -41,7 +42,6 @@ import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
@@ -53,11 +53,14 @@ import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ChangeType;
 import org.eclipse.mylyn.versions.core.ScmArtifact;
 import org.eclipse.mylyn.versions.core.ScmRepository;
-import org.eclipse.mylyn.versions.core.ScmUser;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.core.spi.ScmResourceArtifact;
 import org.eclipse.mylyn.versions.core.spi.ScmResourceUtils;
 import org.eclipse.team.core.history.IFileRevision;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 /**
  * Git Connector implementation
@@ -107,14 +110,15 @@ public class GitConnector extends ScmConnector {
 	@Override
 	public ChangeSet getChangeSet(ScmRepository repository, IFileRevision revision, IProgressMonitor monitor)
 			throws CoreException {
-		Repository repository2 = ((GitRepository) repository).getRepository();
+		GitRepository gitRepository = (GitRepository) repository;
+		Repository repository2 = gitRepository.getRepository();
 		RevWalk walk = new RevWalk(repository2);
 		try {
 			RevCommit commit;
 			commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
 			List<Change> changes = diffCommit(repository, repository2, walk, commit);
 
-			return changeSet(commit, repository, changes);
+			return changeSet(commit, gitRepository);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,35 +228,35 @@ public class GitConnector extends ScmConnector {
 	}
 
 	@Override
-	public List<ChangeSet> getChangeSets(ScmRepository repository, IProgressMonitor monitor) throws CoreException {
-		List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
+	public List<ChangeSet> getChangeSets(final ScmRepository repository, final IProgressMonitor monitor)
+			throws CoreException {
+		return Lists.newArrayList(getChangeSetsIterator(repository, monitor));
+	}
 
+	@Override
+	public Iterator<ChangeSet> getChangeSetsIterator(ScmRepository repository, IProgressMonitor monitor) {
+
+		final GitRepository gitRepository = (GitRepository) repository;
+		final Repository gitRepo = gitRepository.getRepository();
+		Git git = new Git(gitRepo);
+		Iterable<RevCommit> revs;
 		try {
-			Repository gitRepo = ((GitRepository) repository).getRepository();
-			Git git = new Git(gitRepo);
-			Iterable<RevCommit> revs = git.log().call();
-			RevTree lastTree = null;
-			for (RevCommit r : revs) {
-				changeSets.add(changeSet(r, repository, new LazyChangesList(this, (GitRepository) repository, gitRepo,
-						r)));
-				lastTree = r.getTree();
-
-			}
-		} catch (Exception e) {
+			revs = git.log().call();
+		} catch (NoHeadException e) {
+			throw new RuntimeException(e);
 		}
 
-		return changeSets;
+		return Iterators.transform(revs.iterator(), new Function<RevCommit, ChangeSet>() {
+			public ChangeSet apply(RevCommit input) {
+				return changeSet(input, gitRepository);
+			}
+		});
 	}
 
-	private ChangeSet changeSet(RevCommit r, ScmRepository repository, List<Change> changes) {
-		long adjTime = (long) r.getCommitTime() * 1000;
-		ChangeSet changeSet = new ChangeSet(getScmUser(r.getCommitterIdent()), new Date(adjTime), r.name(),
-				r.getFullMessage(), repository, changes);
+	private ChangeSet changeSet(RevCommit r, GitRepository repository) {
+
+		ChangeSet changeSet = new LazyChangeSet(r, repository);
 		return changeSet;
-	}
-
-	private ScmUser getScmUser(PersonIdent person) {
-		return new ScmUser(person.getEmailAddress(), person.getName(), person.getEmailAddress());
 	}
 
 	@Override
