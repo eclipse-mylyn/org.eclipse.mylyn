@@ -28,6 +28,7 @@ public class GitRepository extends ScmRepository {
 	public GitRepository(GitConnector connector, RepositoryMapping mapping) {
 		this.mapping = mapping;
 		setConnector(connector);
+		determineUrl();
 	}
 
 	public Repository getRepository() {
@@ -36,18 +37,6 @@ public class GitRepository extends ScmRepository {
 
 	public RepositoryMapping getMapping() {
 		return mapping;
-	}
-
-	@Override
-	public String getUrl() {
-		// FIXME - use a better approach and handle multiple remotes better
-		String originUrl = getRepository().getConfig().getString("remote", "origin", "url"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-		if (originUrl != null) {
-			return originUrl;
-		}
-
-		return super.getUrl();
 	}
 
 	public String getWorkspaceRevision(IResource resource) {
@@ -59,4 +48,12 @@ public class GitRepository extends ScmRepository {
 		return mapping.getRepoRelativePath(resource);
 	}
 
+	private void determineUrl() {
+		// FIXME - use a better approach and handle multiple remotes better
+		String originUrl = getRepository().getConfig().getString("remote", "origin", "url"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+		if (originUrl != null) {
+			this.setUrl(originUrl);
+		}
+	}
 }
