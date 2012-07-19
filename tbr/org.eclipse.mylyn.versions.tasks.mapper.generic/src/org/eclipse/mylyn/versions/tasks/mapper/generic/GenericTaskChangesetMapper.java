@@ -72,7 +72,9 @@ public class GenericTaskChangesetMapper extends AbstractChangesetMappingProvider
 				task.getConnectorKind(), task.getRepositoryUrl());
 		for (IProject p : projects) {
 			ScmRepository repository = getRepositoryForProject(p);
-			repos.add(repository);
+			if(repository!=null) {
+				repos.add(repository);
+			}
 		}
 		return new ArrayList<ScmRepository>(repos);
 	}
@@ -80,6 +82,9 @@ public class GenericTaskChangesetMapper extends AbstractChangesetMappingProvider
 	private ScmRepository getRepositoryForProject(IProject p)
 			throws CoreException {
 		ScmConnector connector = ScmCore.getConnector(p);
+		if(connector==null) {
+			return null;
+		}
 		ScmRepository repository = connector.getRepository(p,
 				new NullProgressMonitor());
 		return repository;

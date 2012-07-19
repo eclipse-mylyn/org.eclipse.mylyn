@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.versions.tasks.mapper.internal;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -39,16 +40,18 @@ public class EclipseWorkspaceRepositorySource implements IChangeSetSource {
 				.getProjects()) {
 			ScmConnector connector = ScmCore.getConnector(project);
 			if(connector!=null) {
-				repositories.add(connector.getRepository(project, monitor));
+				ScmRepository repository = connector.getRepository(project, monitor);
+				repositories.add(repository);
 			}
 		}
 
 		for (ScmRepository repo : repositories) {
-			List<ChangeSet> changesets;
-			changesets = repo.getConnector().getChangeSets(repo, monitor);
-			for (ChangeSet cs : changesets) {
+			Iterator<ChangeSet> changesets = repo.getConnector().getChangeSetsIterator(repo, monitor);
+			while (changesets.hasNext()) {
+				ChangeSet cs =changesets.next();
 				indexer.index(cs);
 			}
+			
 		}
 
 	}
