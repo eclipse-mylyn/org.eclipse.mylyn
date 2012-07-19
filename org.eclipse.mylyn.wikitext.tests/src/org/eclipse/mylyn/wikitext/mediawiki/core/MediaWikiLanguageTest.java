@@ -569,6 +569,30 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<img border=\"0\" src=\"SomeImage.png\"/>"));
 	}
 
+	public void testImageFile() {
+		String html = parser.parseToHtml("a [[File:foo.png]] image");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
+	public void testImageFile_Negative() {
+		String html = parser.parseToHtml("a [[FilImage:foo.png]] image");
+		TestUtil.println("HTML: \n" + html);
+		assertFalse(html.contains("<img"));
+	}
+
+	public void testImage_Lower() {
+		String html = parser.parseToHtml("a [[image:foo.png]] image");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
+	public void testImageFile_Lower() {
+		String html = parser.parseToHtml("a [[file:foo.png]] image");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+	}
+
 	public void testTable() {
 		String html = parser.parseToHtml("{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n" + "|Pie\n" + "|-\n"
 				+ "|Butter\n" + "|Ice cream \n" + "|}");

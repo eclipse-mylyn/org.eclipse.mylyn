@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
- * match [[Image:someImage.png]]
+ * match [[Image:someImage.png]] or [[File:someImage.png]]
  * 
+ * @see <a href="http://en.wikipedia.org/wiki/Wikipedia:Images">Images</a>
  * @see <a href="http://en.wikipedia.org/wiki/Wikipedia:Extended_image_syntax">Extended image syntax</a>
  * @author David Green
  */
@@ -36,7 +37,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[\\[Image:\\s*([^\\]\\|]+)(?:\\|(([^\\[\\]]|(\\[\\[[^\\[\\]]+\\]\\]))*))?\\]\\])"; //$NON-NLS-1$
+		return "(?:\\[\\[(?:[Ii]mage|[Ff]ile):\\s*([^\\]\\|]+)(?:\\|(([^\\[\\]]|(\\[\\[[^\\[\\]]+\\]\\]))*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
