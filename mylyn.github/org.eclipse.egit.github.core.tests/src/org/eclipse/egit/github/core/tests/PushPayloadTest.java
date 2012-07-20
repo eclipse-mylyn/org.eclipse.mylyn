@@ -35,6 +35,7 @@ public class PushPayloadTest {
 		assertNull(payload.getRef());
 		assertEquals(0, payload.getSize());
 		assertNull(payload.getCommits());
+		assertNull(payload.getBefore());
 	}
 
 	/**
@@ -49,5 +50,6 @@ public class PushPayloadTest {
 		assertEquals("ref", payload.setRef("ref").getRef());
 		assertEquals(9000, payload.setSize(9000).getSize());
 		assertEquals(commits, payload.setCommits(commits).getCommits());
+		assertEquals("a1b2", payload.setBefore("a1b2").getBefore());
 	}
 }

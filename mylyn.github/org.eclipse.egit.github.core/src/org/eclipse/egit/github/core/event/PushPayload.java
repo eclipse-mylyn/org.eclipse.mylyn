@@ -22,6 +22,8 @@ public class PushPayload extends EventPayload implements Serializable {
 
 	private static final long serialVersionUID = -1542484898531583478L;
 
+	private String before;
+
 	private String head;
 
 	private String ref;
@@ -29,6 +31,22 @@ public class PushPayload extends EventPayload implements Serializable {
 	private int size;
 
 	private List<Commit> commits;
+
+	/**
+	 * @return before
+	 */
+	public String getBefore() {
+		return before;
+	}
+
+	/**
+	 * @param before
+	 * @return this payload
+	 */
+	public PushPayload setBefore(String before) {
+		this.before = before;
+		return this;
+	}
 
 	/**
 	 * @return head
