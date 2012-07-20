@@ -31,6 +31,12 @@ public class GerritUrlHandlerTest {
 	}
 
 	@Test
+	public void testGetTaskIdTrailingSlashAfterId() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
+		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/123/foo/bar"));
+	}
+
+	@Test
 	public void testGetTaskIdInvalidId() {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://mylyn.org/reviews");
 		assertEquals(null, handler.getTaskId(repository, "http://mylyn.org/reviews/ab123"));
@@ -52,6 +58,42 @@ public class GerritUrlHandlerTest {
 	public void testGetTaskIdTrailingSlash() {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/123"));
+	}
+
+	@Test
+	public void testGetTaskIdAbsolute() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/#/c/123"));
+	}
+
+	@Test
+	public void testGetTaskIdLetters() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
+		assertEquals(null, handler.getTaskId(repository, "http://review.mylyn.org/#/c/abc/"));
+	}
+
+	@Test
+	public void testGetTaskIdEmpty() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
+		assertEquals(null, handler.getTaskId(repository, "http://review.mylyn.org/#/c//"));
+	}
+
+	@Test
+	public void testGetTaskIdAbsoluteTrailingSlash() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/#/c/123/"));
+	}
+
+	@Test
+	public void testGetTaskIdPatchSet() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		assertEquals("4698", handler.getTaskId(repository, "http://review.mylyn.org/#/c/4698/5"));
+	}
+
+	@Test
+	public void testGetTaskIdFile() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		assertEquals("4698", handler.getTaskId(repository, "http://review.mylyn.org/#/c/4698/5/foo/bar"));
 	}
 
 }

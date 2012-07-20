@@ -27,6 +27,9 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class GerritUrlHandler extends AbstractUrlHandler {
 
+	// http://git.eclipse.org/r/123 or https://git.eclipse.org/r/#/c/123/
+	private static final Pattern URL_PATTERN = Pattern.compile("/?(#/c)?/(\\d+)");
+
 	public GerritUrlHandler() {
 		// ignore
 	}
@@ -45,10 +48,9 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 	public String getTaskId(TaskRepository repository, String url) {
 		if (url.startsWith(repository.getRepositoryUrl())) {
 			String path = "/" + url.substring(repository.getRepositoryUrl().length());
-			Pattern p = Pattern.compile(".*/(\\d+)");
-			Matcher matcher = p.matcher(path);
+			Matcher matcher = URL_PATTERN.matcher(path);
 			if (matcher.find()) {
-				return matcher.group(1);
+				return matcher.group(2);
 			}
 		}
 		return null;
