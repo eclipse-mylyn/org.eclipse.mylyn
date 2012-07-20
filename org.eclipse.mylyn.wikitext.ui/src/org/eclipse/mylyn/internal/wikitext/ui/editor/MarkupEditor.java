@@ -348,7 +348,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (preferencesListener == null) {
 			preferencesListener = new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
-					if (viewer.getTextWidget().isDisposed()) {
+					if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
 						return;
 					}
 					if (isFontPreferenceChange(event)) {
@@ -664,7 +664,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (IContentOutlinePage.class == adapter) {
-			if (outlinePage == null || outlinePage.getControl() == null || outlinePage.getControl().isDisposed()) {
+			if (!isOutlinePageValid()) {
 				outlinePage = new MarkupEditorOutline(this);
 			}
 			return outlinePage;
@@ -744,7 +744,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (!outlineDirty) {
 			return;
 		}
-		if (getSourceViewer().getTextWidget().isDisposed()) {
+		if (!isSourceViewerValid()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -769,7 +769,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (!outlineDirty) {
 			return;
 		}
-		if (getSourceViewer().getTextWidget().isDisposed()) {
+		if (!isSourceViewerValid()) {
 			return;
 		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
@@ -823,7 +823,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void updateOutline(int contentGeneration, OutlineItem rootItem) {
-		if (getSourceViewer().getTextWidget().isDisposed()) {
+		if (!isSourceViewerValid()) {
 			return;
 		}
 		synchronized (this) {
@@ -839,19 +839,27 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		IFile file = getFile();
 		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
 
-		if (outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed()) {
+		if (isOutlinePageValid()) {
 			outlinePage.refresh();
 
 			outlinePage.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (outlinePage != null && outlinePage.getControl() != null
-							&& !outlinePage.getControl().isDisposed()) {
+					if (isOutlinePageValid()) {
 						updateOutlineSelection();
 					}
 				}
 			});
 		}
 		updateProjectionAnnotations();
+	}
+
+	private boolean isOutlinePageValid() {
+		return outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed();
+	}
+
+	private boolean isSourceViewerValid() {
+		return getSourceViewer() != null && getSourceViewer().getTextWidget() != null
+				&& !getSourceViewer().getTextWidget().isDisposed();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1230,8 +1238,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				if (element instanceof OutlineItem) {
 					OutlineItem item = (OutlineItem) element;
 					selectAndReveal(item);
-					if (outlinePage != null && outlinePage.getControl() != null
-							&& !outlinePage.getControl().isDisposed()) {
+					if (isOutlinePageValid()) {
 						outlinePage.setSelection(selection);
 					}
 					return true;
