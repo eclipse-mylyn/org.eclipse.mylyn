@@ -30,7 +30,7 @@ public class TemplateProcessor {
 
 	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z0-9_ :]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
 
-	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)\\}\\}\\}"); //$NON-NLS-1$
+	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)(?:\\|([^\\}]*))?\\}\\}\\}"); //$NON-NLS-1$
 
 	private static final Pattern parameterSpec = Pattern.compile("\\|\\s*([^\\|=]+)(?:\\s*=\\s*(([^|]*)))?"); //$NON-NLS-1$
 
@@ -125,7 +125,7 @@ public class TemplateProcessor {
 				processedMarkup.append(macro.substring(lastIndex, start));
 			}
 			String parameterName = matcher.group(1);
-			String parameterValue = null;
+			String parameterValue = matcher.group(2);
 			try {
 				int parameterIndex = Integer.parseInt(parameterName);
 				if (parameterIndex <= parameters.size() && parameterIndex > 0) {

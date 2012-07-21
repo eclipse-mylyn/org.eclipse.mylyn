@@ -310,6 +310,42 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("foofoo-barbar", markup);
 	}
 
+	public void testBasicTemplateNamedParameter_DefaultValue() {
+		Template template = new Template();
+		template.setName("test");
+		template.setTemplateMarkup("_expanded{{{message|default value}}}_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{test}} two");
+		assertEquals("one _expandeddefault value_ two", markup);
+	}
+
+	public void testBasicTemplateNamedParameter_EmptyDefaultValue() {
+		Template template = new Template();
+		template.setName("test");
+		template.setTemplateMarkup("_expanded{{{message|}}}_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{test}} two");
+		assertEquals("one _expanded_ two", markup);
+	}
+
+	public void testBasicTemplatePositionalParameter_DefaultValue() {
+		Template template = new Template();
+		template.setName("test");
+		template.setTemplateMarkup("_expanded{{{1|first}}}and{{{2|second}}}_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{test}} two");
+		assertEquals("one _expandedfirstandsecond_ two", markup);
+	}
+
 	private void assertContains(Set<String> strings, String string) {
 		assertTrue(String.format("Expected %s but got %s", string, strings), strings.contains(string));
 	}
