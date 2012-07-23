@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 David Green and others.
+ * Copyright (c) 2010, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,6 +58,14 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 		} else if (pageId.startsWith("#")) { //$NON-NLS-1$
 			// internal anchor
 			return pageId;
+		}
+		if (internalLinkPattern.contains("index.php?")) { //$NON-NLS-1$
+			try {
+				pageId = URLEncoder.encode(pageId, "UTF-8"); //$NON-NLS-1$
+			} catch (UnsupportedEncodingException e) {
+				throw new IllegalStateException(MessageFormat.format(
+						Messages.getString("AbstractMediaWikiLanguage_cannotComputeUrl"), pageId), e); //$NON-NLS-1$
+			}
 		}
 		if (QUALIFIED_INTERNAL_LINK.matcher(pageId).matches()) {
 			Matcher matcher = STANDARD_EXTERNAL_LINK_FORMAT.matcher(internalLinkPattern);

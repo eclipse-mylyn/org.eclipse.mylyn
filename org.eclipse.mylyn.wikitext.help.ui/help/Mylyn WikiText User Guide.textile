@@ -434,6 +434,7 @@ The following describes the Ant task and its configurable options:
 | @tocFile@ | The filename to use for the generated unified table of contents.  Defaults to @toc.xml@ in the @dest@ folder. |
 | @useInlineCssStyles@ | Indicate if built-in styles should be generated inline or in the document head.  Defaults to true, resulting in inline styles. |
 | @xhtmlStrict@ | Indicate if the generated output should attempt to conform to XHTML strict.  Defaults to false. |
+| @titleParameter@ | indicates if the page title should be provided as an HTTP parameter, for example @index.php?title=Main@.  Defaults to false. |
 
 One or more @<path>@ tags must be nested, with attributes as follows:
 

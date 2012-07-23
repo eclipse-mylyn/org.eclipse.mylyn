@@ -132,6 +132,8 @@ public class WikiToDocTask extends MarkupTask {
 
 	private String templateExcludes;
 
+	private boolean titleParameter;
+
 	public WikiToDocTask() {
 	}
 
@@ -438,7 +440,12 @@ public class WikiToDocTask extends MarkupTask {
 		if (!internalLinkPattern.endsWith("/")) { //$NON-NLS-1$
 			internalLinkPattern += "/"; //$NON-NLS-1$
 		}
-		internalLinkPattern += "{0}"; //$NON-NLS-1$
+		if (titleParameter) {
+			// parameter encoding is handled in AbstractMediaWikiLanguage
+			internalLinkPattern += "index.php?title={0}"; //$NON-NLS-1$ 
+		} else {
+			internalLinkPattern += "{0}"; //$NON-NLS-1$
+		}
 		return internalLinkPattern;
 	}
 
@@ -626,6 +633,7 @@ public class WikiToDocTask extends MarkupTask {
 			if (!qualifiedUrl.endsWith("/")) { //$NON-NLS-1$
 				qualifiedUrl += "/"; //$NON-NLS-1$
 			}
+			// ignore titleParameter here, we always reference index.php when getting the raw page content
 			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8") + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
@@ -640,7 +648,17 @@ public class WikiToDocTask extends MarkupTask {
 		if (!qualifiedUrl.endsWith("/")) { //$NON-NLS-1$
 			qualifiedUrl += "/"; //$NON-NLS-1$
 		}
-		qualifiedUrl += path;
+		if (titleParameter) {
+			try {
+				qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (IOException e) {
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("WikiToDocTask_cannot_compute_url"), path, e.getMessage()), //$NON-NLS-1$
+						e);
+			}
+		} else {
+			qualifiedUrl += path;
+		}
 		return qualifiedUrl;
 	}
 
@@ -1056,4 +1074,26 @@ public class WikiToDocTask extends MarkupTask {
 	public void setTemplateExcludes(String templateExcludes) {
 		this.templateExcludes = templateExcludes;
 	}
+
+	/**
+	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
+	 * 
+	 * @return true if index.php and HTTP parameters should be used in the URL, otherwise false. Defaults to false.
+	 * @since 1.8
+	 */
+	public boolean isTitleParameter() {
+		return titleParameter;
+	}
+
+	/**
+	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
+	 * 
+	 * @param titleParameter
+	 *            true if index.php and HTTP parameters should be used in the URL, otherwise false.
+	 * @since 1.8
+	 */
+	public void setTitleParameter(boolean titleParameter) {
+		this.titleParameter = titleParameter;
+	}
+
 }
