@@ -27,6 +27,11 @@
             <configuration>
               <artifacts>
                 <artifact>
+                  <file>mylyn-e3.5.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e3.5</classifier>
+                </artifact>
+                <artifact>
                   <file>mylyn-e3.6.target</file>
                   <type>target</type>
                   <classifier>mylyn-e3.6</classifier>
