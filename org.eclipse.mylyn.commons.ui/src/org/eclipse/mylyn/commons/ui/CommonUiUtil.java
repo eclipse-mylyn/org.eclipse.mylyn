@@ -165,9 +165,9 @@ public class CommonUiUtil {
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
 	 * 
-	 * @see LegacyActionTools#extractMnemonic(String)
+	 * @see LegacyActionTools#escapeMnemonics(String)
 	 */
-	// TODO e3.6 deprecate and replace with LegacyActionTools#extractMnemonic(String)
+	// TODO e3.6 deprecate and replace with LegacyActionTools#escapeMnemonics(String)
 	public static String toLabel(String text) {
 		return (text != null) ? text.replaceAll("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
