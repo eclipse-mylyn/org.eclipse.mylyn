@@ -15,13 +15,14 @@
     <profile>
       <id>standalone</id>
       <modules>
-		<module>org.eclipse.mylyn.tests.standalone</module>
+        <module>org.eclipse.mylyn.tests.standalone</module>
       </modules>
     </profile>
   </profiles>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>
-	<module>org.eclipse.mylyn.tests</module>
-	<module>org.eclipse.mylyn-site</module>
+    <module>org.eclipse.mylyn.tests</module>
+    <module>org.eclipse.mylyn-site</module>
+    <module>org.eclipse.mylyn-target</module>
   </modules>
 </project>
