@@ -67,7 +67,7 @@
         <executions>
           <execution>
             <id>pack-and-sign</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <configuration>
               <target>
                 <ant antfile="pack-and-sign/build.xml">
