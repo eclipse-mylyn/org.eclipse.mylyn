@@ -9,4 +9,8 @@
   </parent>
   <artifactId>org.eclipse.mylyn.commons.compatibility</artifactId>
   <packaging>eclipse-feature</packaging>
+  <!-- needs to use a 3.8 based target due to compatibility feature -->
+  <properties>
+    <target-platform>mylyn-e3.8</target-platform>
+  </properties>
 </project>
