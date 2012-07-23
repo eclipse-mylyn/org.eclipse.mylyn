@@ -17,6 +17,8 @@
     <qualifier>${project.unqualifiedVersion}</qualifier>
     <sign-dir>tools/mylyn/hudson/signing/mylyn</sign-dir>
     <mirrors-url>http://www.eclipse.org/downloads/download.php?file=/mylyn/drops/${unqualifiedVersion}/${buildQualifier}/site.xml&amp;amp;protocol=http&amp;amp;format=xml</mirrors-url>
+    <!-- needs to use a 3.8 based target due to compatibility feature -->
+    <target-platform>mylyn-e3.8</target-platform>
   </properties>
   <profiles>
     <profile>
