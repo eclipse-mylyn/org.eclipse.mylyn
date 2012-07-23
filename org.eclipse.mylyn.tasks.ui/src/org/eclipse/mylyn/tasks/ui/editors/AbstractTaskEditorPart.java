@@ -12,11 +12,11 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
@@ -80,7 +80,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
 		Section section = toolkit.createSection(parent, style);
-		section.setText(LegacyActionTools.escapeMnemonics(getPartName()));
+		section.setText(CommonUiUtil.toLabel(getPartName()));
 		return section;
 	}
 

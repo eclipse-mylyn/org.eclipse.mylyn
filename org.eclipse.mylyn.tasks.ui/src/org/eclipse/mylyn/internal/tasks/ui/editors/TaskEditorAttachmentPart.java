@@ -24,7 +24,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -39,6 +38,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.ui.TableSorter;
 import org.eclipse.mylyn.commons.ui.TableViewerSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
@@ -377,10 +377,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private void updateSectionTitle() {
 		if (tableFilter.isFilterDeprecatedEnabled()) {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y, new Object[] {
-					LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount, attachmentAttributes.size() }));
+					CommonUiUtil.toLabel(getPartName()), nonDeprecatedCount, attachmentAttributes.size() }));
 		} else {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X,
-					LegacyActionTools.escapeMnemonics(getPartName()), attachmentAttributes.size()));
+					CommonUiUtil.toLabel(getPartName()), attachmentAttributes.size()));
 		}
 	}
 
