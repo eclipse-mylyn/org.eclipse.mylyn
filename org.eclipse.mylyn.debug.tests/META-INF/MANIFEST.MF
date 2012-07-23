@@ -4,7 +4,7 @@ Bundle-Name: Mylyn Context Tests
 Bundle-SymbolicName: org.eclipse.mylyn.debug.tests;singleton:=true
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Require-Bundle: org.junit,
+Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
