@@ -12,19 +12,12 @@
 package org.eclipse.mylyn.tasks.tests.connector;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
@@ -61,38 +54,7 @@ public class MockRepositoryConnectorWithTaskDataHandler extends MockRepositoryCo
 
 	@Override
 	public AbstractTaskDataHandler getTaskDataHandler() {
-		return new AbstractTaskDataHandler() {
-
-			@Override
-			public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
-					Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
-				if (taskData.getTaskId() == null || taskData.getTaskId().length() == 0) {
-					return new RepositoryResponse(ResponseKind.TASK_UPDATED, String.valueOf(idSeed.incrementAndGet()));
-				} else {
-					return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
-				}
-			}
-
-			@Override
-			public boolean initializeTaskData(TaskRepository repository, TaskData data,
-					ITaskMapping initializationData, IProgressMonitor monitor) throws CoreException {
-				TaskMapper mapper = getTaskMapping(data);
-				mapper.setCreationDate(new Date());
-				mapper.setDescription("");
-				mapper.setModificationDate(mapper.getCreationDate());
-				mapper.setOwner("");
-				mapper.setProduct("Product1");
-				mapper.setReporter("");
-				mapper.setStatus("NEW");
-				mapper.setSummary("");
-				return true;
-			}
-
-			@Override
-			public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
-				return new TaskAttributeMapper(repository);
-			}
-		};
+		return new MockTaskDataHandler(this);
 	}
 
 }
