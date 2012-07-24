@@ -23,13 +23,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.internal.runtime.InternalPlatform;
+import org.eclipse.core.internal.runtime.PlatformActivator;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
@@ -37,6 +42,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.SynchronizationManger;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
@@ -517,6 +523,152 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertTrue(requestedTaskIds.get().contains("1"));
 	}
 
+	public void testGetSingleTaskDataWithRelationsAndRemoveRelation() throws Exception {
+		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
+		requestedTaskIds.set(new ArrayList<String>());
+		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
+			@Override
+			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+					throws CoreException {
+				requestedTaskIds.get().add(taskId);
+				return createTaskData(taskId);
+			}
+
+			@Override
+			public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
+				if (!taskData.getTaskId().equals("1")) {
+					return null;
+				}
+				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
+				relations.add(TaskRelation.subtask("1.sub"));
+				relations.add(TaskRelation.subtask("1.sub5"));
+				return relations;
+			}
+		};
+		final ITask task = new MockTask("1");
+		final ITask subtaskToBeGone = new MockTask("1.sub2");
+		final ITask subtaskToStay = new MockTask("1.sub5");
+		taskList.addTask(task);
+		taskList.addTask(subtaskToBeGone, ((AbstractTaskContainer) task));
+		taskList.addTask(subtaskToStay, ((AbstractTaskContainer) task));
+		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
+		job.run(new NullProgressMonitor());
+		assertEquals(2, requestedTaskIds.get().size());
+		assertTrue(requestedTaskIds.get().contains("1"));
+		assertTrue(requestedTaskIds.get().contains("1.sub"));
+
+		ITask sub1 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub");
+		ITask sub2 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub2");
+		ITask sub5 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub5");
+		assertNotNull(sub1);
+		assertNotNull(sub2);
+		assertNotNull(sub5);
+
+		Collection<ITask> children = ((AbstractTaskContainer) task).getChildren();
+		assertEquals(2, children.size());
+		assertTrue(children.contains(sub1));
+		assertTrue(children.contains(sub5));
+	}
+
+	public void testErrorOnRelationRetrieval() throws Exception {
+		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
+		requestedTaskIds.set(new ArrayList<String>());
+		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
+			@Override
+			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+					throws CoreException {
+				requestedTaskIds.get().add(taskId);
+				if (taskId.equals("1.sub")) {
+					throw new CoreException(new Status(IStatus.ERROR, "bundle", "log me"));
+				}
+				return createTaskData(taskId);
+			}
+
+			@Override
+			public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
+				if (!taskData.getTaskId().equals("1")) {
+					return null;
+				}
+				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
+				relations.add(TaskRelation.subtask("1.sub"));
+				return relations;
+			}
+		};
+		ILog log = InternalPlatform.getDefault().getLog(PlatformActivator.getContext().getBundle());
+		final AtomicReference<IStatus> loggedStatus = new AtomicReference<IStatus>();
+		ILogListener listener = new ILogListener() {
+			public void logging(IStatus status, String plugin) {
+				loggedStatus.set(status);
+			}
+		};
+		log.addLogListener(listener);
+
+		final ITask task = new MockTask("1");
+		taskList.addTask(task);
+		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
+		job.run(new NullProgressMonitor());
+		assertEquals("Synchronization of task 1.sub [http://mockrepository.test] failed", loggedStatus.get()
+				.getMessage());
+		log.removeLogListener(listener);
+	}
+
+	public void testTasksForSeveralRepositories() throws Exception {
+		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
+		requestedTaskIds.set(new ArrayList<String>());
+		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
+			@Override
+			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+					throws CoreException {
+				requestedTaskIds.get().add(taskId + " on " + taskRepository.getRepositoryUrl());
+				return createTaskData(taskId);
+			}
+
+		};
+		final ITask task = new MockTask("1");
+		taskList.addTask(task);
+
+		final ITask anotherTask = new MockTask("5");
+		String secondRepositoryUrl = MockRepositoryConnector.REPOSITORY_URL + "2";
+		((AbstractTask) anotherTask).setRepositoryUrl(secondRepositoryUrl);
+		taskList.addTask(anotherTask);
+
+		TaskRepository firstRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
+				MockRepositoryConnector.REPOSITORY_URL);
+		TasksUi.getRepositoryManager().addRepository(firstRepository);
+		TaskRepository secondRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
+				secondRepositoryUrl);
+		TasksUi.getRepositoryManager().addRepository(secondRepository);
+
+		Set<ITask> tasks = new HashSet<ITask>();
+		tasks.add(task);
+		tasks.add(anotherTask);
+		SynchronizeTasksJob job = createSyncJobWithoutRepository(connector, tasks);
+		final StringBuilder progressLog = new StringBuilder();
+		job.run(new NullProgressMonitor() {
+			@Override
+			public void beginTask(String name, int totalWork) {
+				progressLog.append("beginTask|");
+			}
+
+			@Override
+			public void done() {
+				progressLog.append("done");
+			}
+
+			@Override
+			public void subTask(String name) {
+				progressLog.append("subTask|");
+			}
+		});
+		assertEquals("beginTask|subTask|subTask|subTask|subTask|done", progressLog.toString());
+
+		assertTrue(requestedTaskIds.get().contains("1 on " + MockRepositoryConnector.REPOSITORY_URL));
+		assertTrue(requestedTaskIds.get().contains("5 on " + MockRepositoryConnector.REPOSITORY_URL + "2"));
+
+		((TaskRepositoryManager) TasksUi.getRepositoryManager()).removeRepository(secondRepository);
+		((TaskRepositoryManager) TasksUi.getRepositoryManager()).removeRepository(firstRepository);
+	}
+
 	private SynchronizeTasksJob createSyncJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
 		return new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector, repository, tasks);
 	}
@@ -524,6 +676,11 @@ public class SynchronizeTasksJobTest extends TestCase {
 	private SynchronizeTasksJob createSyncJobWithManager(AbstractRepositoryConnector connector, Set<ITask> tasks,
 			TaskDataManager customTaskDataManager) {
 		return new SynchronizeTasksJob(taskList, customTaskDataManager, tasksModel, connector, repository, tasks);
+	}
+
+	private SynchronizeTasksJob createSyncJobWithoutRepository(AbstractRepositoryConnector connector, Set<ITask> tasks) {
+		return new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
+				TasksUi.getRepositoryManager(), tasks);
 	}
 
 	private TaskData createTaskData(String taskId) {
