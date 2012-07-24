@@ -107,15 +107,16 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 			if (index != -1 && (index < matcher.start() || index > matcher.end())) {
 				continue;
 			}
+			String key = matcher.group(1);
+			if (task != null && task.getTaskKey() != null && key.startsWith(task.getTaskKey())) {
+				continue;
+			}
 			if (links == null) {
 				links = new ArrayList<IHyperlink>();
 			}
-			String key = matcher.group(1);
-			if (task == null || !key.startsWith(task.getTaskKey())) {
-				int start = matcher.start(1);
-				Region region = new Region(textOffset + start, matcher.end(1) - start);
-				links.add(new TaskHyperlink(region, repository, key));
-			}
+			int start = matcher.start(1);
+			Region region = new Region(textOffset + start, matcher.end(1) - start);
+			links.add(new TaskHyperlink(region, repository, key));
 		}
 		GerritConfiguration configuration = connector.getConfiguration(repository);
 		if (configuration != null) {

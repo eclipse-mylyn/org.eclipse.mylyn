@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -132,6 +134,25 @@ public class ChangeIdHyperlinkTest {
 		assertEquals(1, links.length);
 		checkLink(links[0]);
 		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$		
+	}
+
+	@Test
+	public void shortHyperlinkLocalTask() {
+		String changeId = "  I12345678 Iabc A01234567"; //$NON-NLS-1$
+		IHyperlink[] links = connector.findHyperlinks(repository, new LocalTask("1", ""), changeId, -1, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		checkLink(links[0]);
+		assertEquals("I12345678", getHyperlinkedText(changeId, links[0])); //$NON-NLS-1$		
+	}
+
+	@Test
+	public void shortHyperlinkLocalTaskMatchingKey() {
+		String changeId = "  I12345678 Iabc A01234567"; //$NON-NLS-1$
+		TaskTask task = new TaskTask("1", "http://repository", "");
+		task.setTaskKey("I12345678");
+		IHyperlink[] links = connector.findHyperlinks(repository, task, changeId, -1, 0);
+		assertNull(links);
 	}
 
 }
