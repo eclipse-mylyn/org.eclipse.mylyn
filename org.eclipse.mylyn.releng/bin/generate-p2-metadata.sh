@@ -16,7 +16,7 @@ else
  ROOT=$1
 fi
 if [ $# -lt 2 ]; then
- NAME="Mylyn for Eclipse 3.5, 3.6 and 3.7"
+ NAME="Mylyn for Eclipse 3.7, 3.8 and 4.2"
 else
  NAME="$2"
 fi
