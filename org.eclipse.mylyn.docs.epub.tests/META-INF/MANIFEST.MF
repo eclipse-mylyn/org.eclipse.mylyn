@@ -23,3 +23,4 @@ Export-Package: org.eclipse.mylyn.docs.epub.tests;x-internal:=true,
  org.eclipse.mylyn.docs.epub.tests.ant;x-internal:=true,
  org.eclipse.mylyn.docs.epub.tests.api;x-internal:=true,
  org.eclipse.mylyn.docs.epub.tests.core;x-internal:=true
+Bundle-Localization: OSGI-INF/l10n/bundle

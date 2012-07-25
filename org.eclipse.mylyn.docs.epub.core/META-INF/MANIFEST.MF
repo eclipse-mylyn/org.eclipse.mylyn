@@ -73,3 +73,5 @@ Export-Package: org.eclipse.mylyn.docs.epub.core;uses:="org.eclipse.mylyn.docs.e
    org.eclipse.emf.common.notify.impl",
  org.eclipse.mylyn.internal.docs.epub.core;x-internal:=true
 Bundle-ClassPath: .
+Bundle-Localization: OSGI-INF/l10n/bundle
+
