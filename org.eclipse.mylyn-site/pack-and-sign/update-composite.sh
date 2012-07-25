@@ -1,21 +1,34 @@
 #!/bin/bash -e
 
-BASE=$(dirname $0)
+update() {
 source composite.index
 
-if [ "$DIRS" == "" ]; then
-  echo "missing DIRS"
-  exit 1
-fi
+#if [ "$DIRS" == "" ]; then
+#  echo "missing DIRS in $PWD/composite.index"
+#  exit 1
+#fi
 
 if [ "$NAME" == "" ]; then
-  echo "missing NAME"
+  echo "missing NAME in $PWD/composite.index"
   exit 1
 fi
 
-TIMESTAMP=$(date +%s)000
+FILE=compositeArtifacts.xml
+TAG=compositeArtifactRepository
+TYPE=org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository
+
+compose
+
+FILE=compositeContent.xml
+TAG=compositeMetadataRepository
+TYPE=org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository
+
+compose
+}
 
 compose() {
+echo "Updating $PWD/$FILE"
+
 cat > $FILE <<EOF
 <?xml version='1.0' encoding='UTF-8'?>
 <?TAG version='1.0.0'?>
@@ -33,6 +46,8 @@ COUNT=0
 for i in $DIRS; do
   echo "    <child location='$i'/>" >> $FILE
   COUNT=$((COUNT+1))
+ 
+  echo " added $i"
 done
 sed -i -e "s/CHILD_COUNT/$COUNT/" $FILE
 
@@ -40,18 +55,19 @@ cat >> $FILE <<EOF
   </children>
 </repository>
 EOF
-
-echo "Wrote $COUNT entries to $FILE"
 }
 
-FILE=compositeArtifacts.xml
-TAG=compositeArtifactRepository
-TYPE=org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository
 
-compose
+TIMESTAMP=$(date +%s)000
 
-FILE=compositeContent.xml
-TAG=compositeMetadataRepository
-TYPE=org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository
-
-compose
+if [ "$1" == "-r" ]; then
+ for i in $(find -name composite.index); do
+  (cd $(dirname $i); update)
+  setfacl -m u:55011:rwx $(dirname $i)/*.xml || true
+ done
+elif [ -e composite.index ]; then
+ update
+else
+ echo "composite.index not found"
+ exit 1
+fi

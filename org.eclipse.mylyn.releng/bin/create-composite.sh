@@ -3,13 +3,13 @@
 update() {
 source composite.index
 
-if [ "$DIRS" == "" ]; then
-  echo "missing DIRS in $PWD/comosite.index"
-  exit 1
-fi
+#if [ "$DIRS" == "" ]; then
+#  echo "missing DIRS in $PWD/composite.index"
+#  exit 1
+#fi
 
 if [ "$NAME" == "" ]; then
-  echo "missing NAME in $PWD/comosite.index"
+  echo "missing NAME in $PWD/composite.index"
   exit 1
 fi
 
