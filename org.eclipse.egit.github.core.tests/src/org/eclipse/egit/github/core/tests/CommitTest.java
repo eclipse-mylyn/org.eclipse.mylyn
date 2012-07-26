@@ -38,6 +38,7 @@ public class CommitTest {
 		assertNull(commit.getSha());
 		assertNull(commit.getTree());
 		assertNull(commit.getUrl());
+		assertEquals(0, commit.getCommentCount());
 	}
 
 	/**
@@ -59,5 +60,6 @@ public class CommitTest {
 		tree.setSha("12345");
 		assertEquals(tree, commit.setTree(tree).getTree());
 		assertEquals("url", commit.setUrl("url").getUrl());
+		assertEquals(32, commit.setCommentCount(32).getCommentCount());
 	}
 }
