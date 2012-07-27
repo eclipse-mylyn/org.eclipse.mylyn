@@ -5,7 +5,10 @@ Bundle-SymbolicName: org.eclipse.mylyn.tasks.activity.ui;singleton:=true
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="3.8.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0"
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
+ org.eclipse.mylyn.tasks.activity.core;bundle-version="3.9.0"
 Bundle-Localization: plugin
