@@ -11,6 +11,9 @@
   <artifactId>org.eclipse.mylyn-aggregator</artifactId>
   <version>3.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <properties>
+    <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.myly-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
+  </properties>
   <profiles>
     <profile>
       <id>standalone</id>
