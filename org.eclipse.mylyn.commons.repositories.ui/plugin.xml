@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="newWizards" name="newWizards" schema="schema/newWizards.exsd"/>
+   <extension-point id="categories" name="category" schema="schema/categories.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
@@ -167,6 +168,34 @@
             class="org.eclipse.mylyn.internal.commons.repositories.ui.UiLocationService"
             id="org.eclipse.mylyn.commons.repositories.ui.LocationService">
       </service>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.repositories.ui.categories">
+      <category
+            id="org.eclipse.mylyn.category.tasks"
+            label="Tasks"
+            rank="0">
+      </category>
+      <category
+            id="org.eclipse.mylyn.category.bugs"
+            label="Bugs"
+            rank="100">
+      </category>
+      <category
+            id="org.eclipse.mylyn.category.build"
+            label="Builds"
+            rank="200">
+      </category>
+      <category
+            id="org.eclipse.mylyn.category.review"
+            label="Reviews"
+            rank="300">
+      </category>
+      <category
+            id="org.eclipse.mylyn.category.other"
+            label="Other"
+            rank="400">
+      </category>
    </extension>
 
 </plugin>

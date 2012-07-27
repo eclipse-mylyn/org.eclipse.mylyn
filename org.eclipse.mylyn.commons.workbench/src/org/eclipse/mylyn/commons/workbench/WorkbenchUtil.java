@@ -87,6 +87,33 @@ public class WorkbenchUtil {
 //		return null;
 //	}
 
+	/**
+	 * @since 3.9
+	 */
+	public static IViewPart findViewInActiveWindow(String viewId) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				return page.findView(viewId);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @since 3.9
+	 */
+	public static void closeViewInActiveWindow(String viewId) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				page.hideView(page.findView(viewId));
+			}
+		}
+	}
+
 	public static IViewPart showViewInActiveWindow(String viewId) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
