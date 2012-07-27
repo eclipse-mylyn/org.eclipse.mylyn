@@ -13,6 +13,7 @@ package org.eclipse.mylyn.java.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.eclipse.core.internal.resources.Workspace;
@@ -38,6 +39,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
+import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -571,6 +573,33 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		} finally {
 			// clean up
+			manager.removeListener(listener);
+		}
+	}
+
+	public void testDeleteElementsFromContext() {
+		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
+		try {
+			manager.addListener(listener);
+			IJavaProject project = type1.getJavaProject();
+			InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					new JavaStructureBridge().getContentType(), project.getHandleIdentifier(), "source");
+			IInteractionElement element = ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
+
+			assertEquals(0, listener.explicitDeletionEventCount);
+			assertEquals(0, listener.elementCount);
+			IInteractionElement originalElement = ContextCorePlugin.getContextManager().getElement(
+					element.getHandleIdentifier());
+			assertEquals(element, originalElement);
+			assertTrue(originalElement instanceof CompositeContextElement);
+			assertEquals(1, ((CompositeContextElement) originalElement).getNodes().size());
+
+			ContextCorePlugin.getContextManager().deleteElements(Arrays.asList(new IInteractionElement[] { element }));
+			IInteractionElement deletedElement = ContextCorePlugin.getContextManager().getElement(
+					element.getHandleIdentifier());
+			assertTrue(deletedElement instanceof CompositeContextElement);
+			assertEquals(0, ((CompositeContextElement) deletedElement).getNodes().size());
+		} finally {
 			manager.removeListener(listener);
 		}
 	}

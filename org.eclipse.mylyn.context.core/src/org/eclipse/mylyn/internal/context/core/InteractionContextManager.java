@@ -479,32 +479,35 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
+	@Deprecated
 	public void deleteElement(IInteractionElement element) {
-		delete(element, getActiveContext());
-		notifyElementsDeleted(getActiveContext(), Arrays.asList(new IInteractionElement[] { element }), false);
+		deleteElements(Arrays.asList(new IInteractionElement[] { element }), getActiveContext(), false, true);
 	}
 
 	public void deleteElements(Collection<IInteractionElement> elements) {
-		deleteElements(elements, false);
+		deleteElements(elements, getActiveContext(), false, true);
+	}
+
+	public void deleteElements(Collection<IInteractionElement> elements, IInteractionContext context) {
+		deleteElements(elements, context, false, true);
 	}
 
 	public void deleteElements(Collection<IInteractionElement> elements, boolean isExplicitManipulation) {
+		deleteElements(elements, getActiveContext(), isExplicitManipulation, true);
+	}
+
+	public void deleteElements(Collection<IInteractionElement> elements, IInteractionContext context,
+			boolean isExplicitManipulation, boolean notify) {
 		Assert.isNotNull(elements);
-		IInteractionContext context = getActiveContext();
 		if (elements.size() == 0 || context == null) {
 			return;
 		}
 
 		context.delete(elements);
 
-		notifyElementsDeleted(getActiveContext(), new ArrayList<IInteractionElement>(elements), isExplicitManipulation);
-	}
-
-	private void delete(IInteractionElement element, IInteractionContext context) {
-		if (element == null || context == null) {
-			return;
+		if (notify) {
+			notifyElementsDeleted(context, new ArrayList<IInteractionElement>(elements), isExplicitManipulation);
 		}
-		context.delete(element);
 	}
 
 	public void deleteContext(final String handleIdentifier) {
@@ -1058,7 +1061,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 //			notifyInterestDelta(interestDelta);
 		} else { //if (changeValue < context.getScaling().getInteresting()) {
 			changedElements.add(element);
-			delete(element, context);
+			deleteElements(Arrays.asList(new IInteractionElement[] { element }), context, false, false);
 		}
 		return true;
 	}

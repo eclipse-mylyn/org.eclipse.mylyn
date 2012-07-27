@@ -57,12 +57,21 @@ public interface IInteractionContextManager {
 
 	public abstract void updateHandle(IInteractionElement element, String newHandle);
 
+	/**
+	 * @deprecated use {@link #deleteElements(Collection)}
+	 */
+	@Deprecated
 	public abstract void deleteElement(IInteractionElement element);
 
 	/**
 	 * @since 3.2
 	 */
 	public abstract void deleteElements(Collection<IInteractionElement> elements);
+
+	/**
+	 * @since 3.9
+	 */
+	public abstract void deleteElements(Collection<IInteractionElement> elements, IInteractionContext context);
 
 	public IInteractionElement getActiveElement();
 
