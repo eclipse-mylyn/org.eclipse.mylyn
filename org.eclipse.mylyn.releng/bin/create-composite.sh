@@ -9,7 +9,7 @@ source composite.index
 #fi
 
 if [ "$NAME" == "" ]; then
-  echo "missing NAME in $PWD/comosite.index"
+  echo "missing NAME in $PWD/composite.index"
   exit 1
 fi
 
