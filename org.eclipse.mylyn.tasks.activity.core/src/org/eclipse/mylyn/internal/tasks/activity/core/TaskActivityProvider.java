@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskActivityProvider extends ActivityProvider {
 
-	private static final String ID_PROVIDER = "org.eclipse.mylyn.tasks.activity.core.providers.TaskActivityProvider"; //$NON-NLS-1$
+	public static final String ID_PROVIDER = "org.eclipse.mylyn.tasks.activity.core.providers.TaskActivityProvider"; //$NON-NLS-1$
 
 	private IActivitySession session;
 

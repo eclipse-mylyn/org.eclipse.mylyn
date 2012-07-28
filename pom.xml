@@ -71,12 +71,15 @@
     <module>org.eclipse.mylyn.oslc.tests</module>
     <module>org.eclipse.mylyn.oslc.ui</module>
     <module>org.eclipse.mylyn.tasks-site</module>
+    <module>org.eclipse.mylyn.tasks.activity.core</module>
+    <module>org.eclipse.mylyn.tasks.activity.tests</module>
+    <module>org.eclipse.mylyn.tasks.activity.ui</module>
     <module>org.eclipse.mylyn.tasks.bugs</module>
     <module>org.eclipse.mylyn.tasks.core</module>
     <module>org.eclipse.mylyn.tasks.ide-feature</module>
     <module>org.eclipse.mylyn.tasks.index.core</module>
-    <module>org.eclipse.mylyn.tasks.index.ui</module>
     <module>org.eclipse.mylyn.tasks.index.tests</module>
+    <module>org.eclipse.mylyn.tasks.index.ui</module>
     <module>org.eclipse.mylyn.tasks.index-feature</module>
     <module>org.eclipse.mylyn.tasks.search</module>
     <module>org.eclipse.mylyn.tasks.tests</module>
