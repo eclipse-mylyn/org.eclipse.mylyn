@@ -359,11 +359,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		GridDataFactory.fillDefaults()
-				.hint(300, SWT.DEFAULT)
-				.grab(true, false)
-				.span(2, SWT.DEFAULT)
-				.applyTo(serverUrlCombo);
+		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).span(2, SWT.DEFAULT).applyTo(
+				serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -716,11 +713,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		section.setClient(certAuthComp);
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(certAuthButton);
+		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
+				certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -811,11 +805,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		section.setClient(httpAuthComp);
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(httpAuthButton);
+		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
+				httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 

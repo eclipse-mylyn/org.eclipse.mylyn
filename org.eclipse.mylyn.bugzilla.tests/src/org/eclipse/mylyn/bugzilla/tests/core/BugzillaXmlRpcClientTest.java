@@ -722,12 +722,20 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 			Object[] productDetails = bugzillaClient.getProducts(monitor, new Integer[] { 1, 3 });
 			assertNotNull(productDetails);
 			assertEquals(2, productDetails.length);
-			assertEquals(((Integer) 1), ((HashMap<String, Integer>) productDetails[0]).get("id"));
+			assertTrue(((HashMap<String, Integer>) productDetails[0]).get("id") == 1
+					|| ((HashMap<String, Integer>) productDetails[1]).get("id") == 1);
+			assertTrue(((HashMap<String, Integer>) productDetails[0]).get("id") == 3
+					|| ((HashMap<String, Integer>) productDetails[1]).get("id") == 3);
+			int idx = ((HashMap<String, Integer>) productDetails[0]).get("id") == 1 ? 0 : 1;
+
+			assertEquals(((Integer) 1), ((HashMap<String, Integer>) productDetails[idx]).get("id"));
 			assertEquals(
 					"This is a test product. This ought to be blown away and replaced with real stuff in a finished installation of bugzilla.",
-					((HashMap<String, String>) productDetails[0]).get("description"));
-			assertEquals(((Integer) 3), ((HashMap<String, Integer>) productDetails[1]).get("id"));
-			assertEquals("Product for manual testing", ((HashMap<String, String>) productDetails[1]).get("description"));
+					((HashMap<String, String>) productDetails[idx]).get("description"));
+			idx = (idx + 1) % 2;
+			assertEquals(((Integer) 3), ((HashMap<String, Integer>) productDetails[idx]).get("id"));
+			assertEquals("Product for manual testing",
+					((HashMap<String, String>) productDetails[idx]).get("description"));
 
 		}
 	}
