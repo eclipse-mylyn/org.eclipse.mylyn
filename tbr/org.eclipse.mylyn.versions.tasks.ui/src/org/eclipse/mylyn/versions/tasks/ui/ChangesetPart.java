@@ -14,25 +14,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.eclipse.mylyn.versions.tasks.core.TaskChangeSet;
+import org.eclipse.mylyn.versions.tasks.ui.internal.IChangesetModel;
+import org.eclipse.mylyn.versions.tasks.ui.internal.IncludeSubTasksAction;
+import org.eclipse.mylyn.versions.tasks.ui.internal.TaskChangesetLabelProvider;
+import org.eclipse.mylyn.versions.tasks.ui.internal.TaskVersionsUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -43,40 +55,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 @SuppressWarnings("restriction")
 public class ChangesetPart extends AbstractTaskEditorPart {
-	private static final class TaskChangesetLabelProvider implements
-			ITableLabelProvider {
-		public void addListener(ILabelProviderListener listener) {
-		}
-
-		public void dispose() {
-		}
-
-		public boolean isLabelProperty(Object element, String property) {
-			return false;
-		}
-
-		public void removeListener(ILabelProviderListener listener) {
-		}
-
-		public Image getColumnImage(Object element, int columnIndex) {
-			return null;
-		}
-
-		public String getColumnText(Object element, int columnIndex) {
-			TaskChangeSet cs = ((TaskChangeSet) element);
-			switch (columnIndex) {
-			case 0:
-				return cs.getChangeset().getId();
-			case 1:
-				return cs.getChangeset().getMessage();
-			case 2:
-				return cs.getChangeset().getAuthor().getEmail();
-			case 3:
-				return cs.getChangeset().getDate().toString();
-			}
-			return element.toString() + " " + columnIndex;
-		}
-	}
+	private TableViewer table;
+	private ChangesetModel model = new ChangesetModel();
 
 	public ChangesetPart() {
 		setPartName("Changeset");
@@ -87,7 +67,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Section createSection = createSection(parent, toolkit);
 		Composite composite = createContentComposite(toolkit, createSection);
-		
+
 		createTable(composite);
 	}
 
@@ -113,7 +93,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	}
 
 	private void createTable(Composite composite) {
-		TableViewer table = new TableViewer(composite);
+		table = new TableViewer(composite);
 		table.getTable().setLinesVisible(true);
 		table.getTable().setHeaderVisible(true);
 		addColumn(table, "Id");
@@ -122,11 +102,22 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		addColumn(table, "Date");
 		table.setContentProvider(ArrayContentProvider.getInstance());
 		table.setLabelProvider(new TaskChangesetLabelProvider());
-		table.setInput(getInput());
+		refreshInput();
+		registerContextMenu(table);
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager toolBarManager) {
+		super.fillToolBar(toolBarManager);
+		toolBarManager.add(new IncludeSubTasksAction(model));
+	}
+
+	private void registerContextMenu(TableViewer table) {
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		getTaskEditorPage().getEditorSite().registerContextMenu(
-				"org.eclipse.mylyn.versions.changesets", menuManager, table, true);
+				"org.eclipse.mylyn.versions.changesets", menuManager, table,
+				true);
 		Menu menu = menuManager.createContextMenu(table.getControl());
 		table.getTable().setMenu(menu);
 	}
@@ -138,40 +129,88 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		tableViewerColumn.getColumn().setWidth(100);
 	}
 
-	private List<TaskChangeSet> getInput() {
-		int score = Integer.MIN_VALUE;
+	private AbstractChangesetMappingProvider determineBestProvider(
+			final ITask task) {
 		AbstractChangesetMappingProvider bestProvider = null;
-		final ITask task = getModel().getTask();
-
+		int score = Integer.MIN_VALUE;
 		for (AbstractChangesetMappingProvider mappingProvider : TaskChangesetUtil
 				.getMappingProviders()) {
-			if (score < mappingProvider.getScoreFor(task))
-				;
-			{
+			if (score < mappingProvider.getScoreFor(task)) {
 				bestProvider = mappingProvider;
 			}
 		}
-		final List<TaskChangeSet> changesets = new ArrayList<TaskChangeSet>();
-		try {
-
-			IChangeSetMapping changesetsMapping = new IChangeSetMapping() {
-
-				public ITask getTask() {
-					return task;
-				}
-
-				public void addChangeSet(ChangeSet changeset) {
-					changesets.add(new TaskChangeSet(task, changeset));
-				}
-			};
-			// FIXME progress monitor
-			bestProvider.getChangesetsForTask(changesetsMapping,
-					new NullProgressMonitor());
-		} catch (CoreException e) {
-			// FIXME Auto-generated catch block
-			e.printStackTrace();
-		}
-		return changesets;
+		return bestProvider;
 	}
 
+	private IChangeSetMapping createChangeSetMapping(final ITask task,
+			final List<TaskChangeSet> changesets) {
+		return new IChangeSetMapping() {
+
+			public ITask getTask() {
+				return task;
+			}
+
+			public void addChangeSet(ChangeSet changeset) {
+				changesets.add(new TaskChangeSet(task, changeset));
+			}
+		};
+	}
+
+	private void refreshInput() {
+		table.setInput(model.getInput());
+	}
+
+	private class ChangesetModel implements IChangesetModel {
+
+		private boolean includeSubTasks;
+
+		public boolean isIncludeSubTasks() {
+			return includeSubTasks;
+		}
+
+		public void setIncludeSubTasks(boolean includeSubTasks) {
+			boolean isChanged = this.includeSubTasks ^ includeSubTasks;
+			this.includeSubTasks = includeSubTasks;
+			if (isChanged) {
+				refreshInput();
+			}
+		}
+
+		public List<TaskChangeSet> getInput() {
+			final ITask task = getModel().getTask();
+
+			AbstractChangesetMappingProvider bestProvider = determineBestProvider(task);
+			final List<TaskChangeSet> changesets = new ArrayList<TaskChangeSet>();
+
+			final List<IChangeSetMapping> changesetsMapping = new ArrayList<IChangeSetMapping>();
+			changesetsMapping.add(createChangeSetMapping(task, changesets));
+			;
+			if (includeSubTasks) {
+				if (task instanceof ITaskContainer) {
+					ITaskContainer taskContainer = (ITaskContainer) task;
+					for (ITask subTask : taskContainer.getChildren()) {
+						changesetsMapping.add(createChangeSetMapping(subTask,
+								changesets));
+					}
+				}
+			}
+			final AbstractChangesetMappingProvider provider = bestProvider;
+			BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+				public void run() {
+					try {
+						for (IChangeSetMapping csm : changesetsMapping) {
+							provider.getChangesetsForTask(csm,
+									new NullProgressMonitor());
+						}
+					} catch (CoreException e) {
+						getTaskEditorPage().getTaskEditor().setMessage("An exception occurred " + e.getMessage(), IMessageProvider.ERROR);
+					}
+				}
+
+			});
+
+			return changesets;
+		}
+	}
 }
