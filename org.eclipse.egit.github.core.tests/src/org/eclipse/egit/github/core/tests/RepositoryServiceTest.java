@@ -573,7 +573,7 @@ public class RepositoryServiceTest {
 		RepositoryHook hook = new RepositoryHook();
 		hook.setId(5006);
 		service.editHook(repo, hook);
-		verify(client).put("/repos/o/n/hooks/5006", hook, RepositoryHook.class);
+		verify(client).post("/repos/o/n/hooks/5006", hook, RepositoryHook.class);
 	}
 
 	/**

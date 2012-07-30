@@ -904,7 +904,7 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_HOOKS);
 		uri.append('/').append(hook.getId());
-		return client.put(uri.toString(), hook, RepositoryHook.class);
+		return client.post(uri.toString(), hook, RepositoryHook.class);
 	}
 
 	/**
