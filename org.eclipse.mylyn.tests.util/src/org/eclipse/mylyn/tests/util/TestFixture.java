@@ -173,8 +173,12 @@ public abstract class TestFixture {
 	}
 
 	public AbstractWebLocation location(PrivilegeLevel level, Proxy proxy) throws Exception {
-		UserCredentials credentials = CommonTestUtil.getCredentials(level);
+		UserCredentials credentials = getCredentials(level);
 		return location(credentials.getUserName(), credentials.getPassword(), proxy);
+	}
+
+	protected UserCredentials getCredentials(PrivilegeLevel level) {
+		return CommonTestUtil.getCredentials(level);
 	}
 
 	public AbstractWebLocation location(String username, String password) throws Exception {
@@ -191,7 +195,7 @@ public abstract class TestFixture {
 
 	public TaskRepository repository() {
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
-		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		UserCredentials credentials = getCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY,
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
 		return repository;
@@ -219,7 +223,7 @@ public abstract class TestFixture {
 		resetRepositories();
 
 		TaskRepository repository = new TaskRepository(connectorKind, repositoryUrl);
-		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+		UserCredentials credentials = getCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY,
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), true);
 		configureRepository(repository);
