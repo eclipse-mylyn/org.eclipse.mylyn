@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.PriorityLevelTest;
 import org.eclipse.mylyn.tasks.tests.core.RepositoryClientManagerTest;
+import org.eclipse.mylyn.tasks.tests.core.SynchronizeTasksJobTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryTest;
@@ -130,6 +131,7 @@ public class AllTasksTests {
 		suite.addTestSuite(SupportHandlerManagerTest.class);
 		suite.addTestSuite(RepositoryClientManagerTest.class);
 		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
+		suite.addTestSuite(SynchronizeTasksJobTest.class);
 		return suite;
 	}
 
