@@ -32,6 +32,8 @@ import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.junit.Test;
 
 /**
+ * Tests features and regressions specific to the OPS 2.0.1 supporting implementation {@link OPS2Publication}.
+ * 
  * @author Torkild U. Resheim
  */
 @SuppressWarnings("nls")
@@ -221,13 +223,13 @@ public class TestOPS2Publication extends AbstractTest {
 	public final void test_Bug358671_Illegal_Item() throws Exception {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
-			epub.pack(epubFile);
-			ValidationMessage msg = oebps.getValidationMessages().get(0);
-			Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-			Assert.assertEquals(
-					true,
-					msg.getMessage()
-							.equals("Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
+		epub.pack(epubFile);
+		ValidationMessage msg = oebps.getValidationMessages().get(0);
+		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
+		Assert.assertEquals(
+				true,
+				msg.getMessage().equals(
+						"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
 	}
 
 	/**
@@ -235,7 +237,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 * fallback items
 	 * <p>
 	 * This method tests for the exception that shall be raised when an illegal item has been added with an illegal
-	 * fallback item.
+	 * fallback item. Which fallback items that are allowed is specified by the OPS version.
 	 * </p>
 	 * 
 	 * @throws Exception

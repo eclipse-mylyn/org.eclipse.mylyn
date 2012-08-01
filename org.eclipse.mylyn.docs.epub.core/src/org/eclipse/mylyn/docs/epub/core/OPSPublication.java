@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.emf.ecore.util.EcoreValidator;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -70,6 +69,7 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
+import org.eclipse.mylyn.docs.epub.opf.util.OPFValidator;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
 import org.eclipse.mylyn.internal.docs.epub.core.ReferenceScanner;
@@ -554,7 +554,7 @@ public abstract class OPSPublication {
 	 *            type of the reference
 	 * @return the reference
 	 */
-	public Reference addReference(String href, String title, Type value) {
+	public Reference addReference(String href, String title, String value) {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
@@ -1158,7 +1158,7 @@ public abstract class OPSPublication {
 	 * @return a list of EMF diagnostics
 	 */
 	public List<Diagnostic> validateMetadata() {
-		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
+		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new OPFValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		for (EObject eo : opfPackage.eContents()) {
 			Map<Object, Object> context = new HashMap<Object, Object>();
@@ -1238,7 +1238,7 @@ public abstract class OPSPublication {
 		// Add the cover page item
 		Item coverPage = addItem(COVER_ID, null, coverFile, null, MIMETYPE_XHTML, true, false, false);
 		coverPage.setGenerated(true);
-		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER);
+		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER.getLiteral());
 		// Move the cover page first in the spine.
 		EList<Itemref> spine = opfPackage.getSpine().getSpineItems();
 		Itemref cover = null;

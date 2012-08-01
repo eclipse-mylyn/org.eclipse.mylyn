@@ -23,13 +23,12 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getReference()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='validType'"
  * @generated
  */
 public interface Reference extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.mylyn.docs.epub.opf.Type}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
@@ -37,28 +36,26 @@ public interface Reference extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see org.eclipse.mylyn.docs.epub.opf.Type
 	 * @see #isSetType()
 	 * @see #unsetType()
-	 * @see #setType(Type)
+	 * @see #setType(String)
 	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getReference_Type()
 	 * @model unsettable="true" required="true"
 	 * @generated
 	 */
-	Type getType();
+	String getType();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Reference#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.
-	 * @see org.eclipse.mylyn.docs.epub.opf.Type
 	 * @see #isSetType()
 	 * @see #unsetType()
 	 * @see #getType()
 	 * @generated
 	 */
-	void setType(Type value);
+	void setType(String value);
 
 	/**
 	 * Unsets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Reference#getType <em>Type</em>}' attribute.
@@ -66,7 +63,7 @@ public interface Reference extends EObject {
 	 * <!-- end-user-doc -->
 	 * @see #isSetType()
 	 * @see #getType()
-	 * @see #setType(Type)
+	 * @see #setType(String)
 	 * @generated
 	 */
 	void unsetType();
@@ -78,7 +75,7 @@ public interface Reference extends EObject {
 	 * @return whether the value of the '<em>Type</em>' attribute is set.
 	 * @see #unsetType()
 	 * @see #getType()
-	 * @see #setType(Type)
+	 * @see #setType(String)
 	 * @generated
 	 */
 	boolean isSetType();

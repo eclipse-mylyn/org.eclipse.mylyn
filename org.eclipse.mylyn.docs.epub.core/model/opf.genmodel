@@ -234,13 +234,6 @@
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Wood_engraver"/>
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Role/Witness"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="opf.ecore#//Scheme">
-      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/ISBN"/>
-      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/URI"/>
-      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/URL"/>
-      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/UUID"/>
-      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/URN"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="opf.ecore#//Type">
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Cover"/>
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Title"/>

@@ -22,7 +22,6 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
-import org.eclipse.mylyn.docs.epub.opf.Type;
 
 /**
  * Assemble a new EPUB.
@@ -130,11 +129,7 @@ public class EpubTask extends Task {
 	}
 
 	public void addConfiguredReference(ReferenceType reference) {
-		Type type = Type.get(reference.type);
-		if (type == null) {
-			throw new BuildException("Unknown reference type " + reference.type); //$NON-NLS-1$
-		}
-		oebps.addReference(reference.href, reference.title, type);
+		oebps.addReference(reference.href, reference.title, reference.type);
 	}
 
 	public void addConfiguredRelation(RelationType relation) {

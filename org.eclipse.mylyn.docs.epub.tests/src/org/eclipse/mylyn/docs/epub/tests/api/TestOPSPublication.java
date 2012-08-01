@@ -17,9 +17,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.core.ValidationException;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Date;
@@ -38,6 +40,8 @@ import org.junit.Test;
 import com.adobe.epubcheck.api.EpubCheck;
 
 /**
+ * Tests features and regressions for all versions of the OPS supporting implementation {@link OPSPublication}.
+ * 
  * @author Torkild U. Resheim
  */
 @SuppressWarnings("nls")
@@ -827,8 +831,38 @@ public class TestOPSPublication extends AbstractTest {
 	@Test
 	public final void testReadOCF_SocketException() throws Exception {
 		File rootFile = new File("testdata/OPF-Tests/SocketException/content.opf");
-		EPUB_OPF_Test epub = new EPUB_OPF_Test();
-		epub.testReadOPF(rootFile);
+		EPUB_OPF_Test oebps = new EPUB_OPF_Test();
+		oebps.testReadOPF(rootFile);
 	}
 
+	/**
+	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=380729">bug 380729</a>: Allow reference
+	 * elements to have "other." types
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug380729() throws Exception {
+		// Validation is normally not performed when loading content. However 
+		// the previous implementation of the reference type was an 
+		// enumeration so it would fail when attempting to set it and there 
+		// was no matching item. Hence this code should now pass as the OPF
+		// contains previously invalid values.
+		File rootFile = new File("testdata/OPF-Tests/Bug_380729/content.opf");
+		EPUB_OPF_Test oebps = new EPUB_OPF_Test();
+		oebps.testReadOPF(rootFile);
+
+		// This is required for validation
+		oebps.addSubject(null, null, "Required subject");
+
+		// Validate that "cover" and "other.ms-coverpage" already read from
+		// the OPF file is OK.
+		List<Diagnostic> problems = oebps.validateMetadata();
+		assertEquals(problems.size(), 0);
+
+		// Add illegal reference type and see that we get an error
+		oebps.addReference("cover-page.xhtml", "cover", "invalid");
+		problems = oebps.validateMetadata();
+		assertEquals(problems.size(), 1);
+	}
 }

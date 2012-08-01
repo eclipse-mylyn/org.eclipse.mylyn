@@ -257,7 +257,7 @@ public class OPFFactoryImpl extends EFactoryImpl implements OPFFactory {
 	 * @generated
 	 */
 	public String convertRoleToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
+		return convertRole((Role)instanceValue);
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class OPFFactoryImpl extends EFactoryImpl implements OPFFactory {
 	 * @generated
 	 */
 	public String convertTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
+		return convertType((Type)instanceValue);
 	}
 
 	/**

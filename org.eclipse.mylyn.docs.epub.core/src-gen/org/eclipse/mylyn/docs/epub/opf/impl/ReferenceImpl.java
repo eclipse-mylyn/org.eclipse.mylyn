@@ -41,7 +41,7 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Type TYPE_EDEFAULT = Type.COVER;
+	protected static final String TYPE_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
@@ -51,7 +51,7 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	 * @generated
 	 * @ordered
 	 */
-	protected Type type = TYPE_EDEFAULT;
+	protected String type = TYPE_EDEFAULT;
 
 	/**
 	 * This is true if the Type attribute has been set.
@@ -126,7 +126,7 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Type getType() {
+	public String getType() {
 		return type;
 	}
 
@@ -135,9 +135,9 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setType(Type newType) {
-		Type oldType = type;
-		type = newType == null ? TYPE_EDEFAULT : newType;
+	public void setType(String newType) {
+		String oldType = type;
+		type = newType;
 		boolean oldTypeESet = typeESet;
 		typeESet = true;
 		if (eNotificationRequired())
@@ -150,7 +150,7 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	 * @generated
 	 */
 	public void unsetType() {
-		Type oldType = type;
+		String oldType = type;
 		boolean oldTypeESet = typeESet;
 		type = TYPE_EDEFAULT;
 		typeESet = false;
@@ -236,7 +236,7 @@ public class ReferenceImpl extends EObjectImpl implements Reference {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case OPFPackage.REFERENCE__TYPE:
-				setType((Type)newValue);
+				setType((String)newValue);
 				return;
 			case OPFPackage.REFERENCE__TITLE:
 				setTitle((String)newValue);

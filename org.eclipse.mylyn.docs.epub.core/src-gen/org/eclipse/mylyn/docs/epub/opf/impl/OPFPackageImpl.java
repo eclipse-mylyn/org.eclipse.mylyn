@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.mylyn.docs.epub.dc.DCPackage;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.Tours;
 import org.eclipse.mylyn.docs.epub.opf.Type;
+import org.eclipse.mylyn.docs.epub.opf.util.OPFValidator;
 
 /**
  * <!-- begin-user-doc -->
@@ -179,6 +181,15 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		// Initialize created meta-data
 		theOPFPackage.initializePackageContents();
 		theDCPackage.initializePackageContents();
+
+		// Register package validator
+		EValidator.Registry.INSTANCE.put
+			(theOPFPackage, 
+			 new EValidator.Descriptor() {
+				 public EValidator getEValidator() {
+					 return OPFValidator.INSTANCE;
+				 }
+			 });
 
 		// Mark meta-data to indicate it can't be changed
 		theOPFPackage.freeze();
@@ -928,7 +939,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		initEReference(getGuide_GuideItems(), this.getReference(), null, "guideItems", null, 0, -1, Guide.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getReference_Type(), this.getType(), "type", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getReference_Type(), ecorePackage.getEString(), "type", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getReference_Title(), ecorePackage.getEString(), "title", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getReference_Href(), ecorePackage.getEString(), "href", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
@@ -1193,6 +1204,8 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		// Create annotations
 		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
 		createExtendedMetaDataAnnotations();
+		// http://www.eclipse.org/emf/2002/Ecore
+		createEcoreAnnotations();
 	}
 
 	/**
@@ -1402,13 +1415,29 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		   new String[] {
 			 "name", "reference", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });			
 		addAnnotation
 		  (roleEEnum, 
 		   source, 
 		   new String[] {
 			 "namespace", "##targetNamespace" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/Ecore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createEcoreAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/Ecore"; //$NON-NLS-1$																																
+		addAnnotation
+		  (referenceEClass, 
+		   source, 
+		   new String[] {
+			 "constraints", "validType" //$NON-NLS-1$ //$NON-NLS-2$
+		   });	
 	}
 
 } //OPFPackageImpl
