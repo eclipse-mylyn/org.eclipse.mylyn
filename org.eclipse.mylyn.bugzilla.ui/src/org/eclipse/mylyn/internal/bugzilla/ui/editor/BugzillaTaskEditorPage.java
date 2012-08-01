@@ -630,23 +630,25 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		BugzillaUserMatchResponse response = bugzillaStatus.getUserMatchResponse();
 		FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
 		FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+		FieldDecoration fieldDecorationWarning = registry.getFieldDecoration(FieldDecorationRegistry.DEC_WARNING);
 		StringBuilder fields = new StringBuilder();
 		StringBuilder detail = new StringBuilder();
 
 		count += decorateControlsAndUpdateMessages(response.getAssignedToMsg(), response.getAssignedToProposals(),
 				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()), fields,
-				detail, fieldDecoration);
+				detail, fieldDecoration, fieldDecorationWarning);
 		count += decorateControlsAndUpdateMessages(response.getQaContactMsg(), response.getQaContactProposals(),
 				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.QA_CONTACT.getKey()), fields, detail,
-				fieldDecoration);
+				fieldDecoration, fieldDecorationWarning);
 		count += decorateControlsAndUpdateMessages(response.getNewCCMsg(), response.getNewCCProposals(),
 				getModel().getTaskData().getRoot().getAttribute(BugzillaAttribute.NEWCC.getKey()), fields, detail,
-				fieldDecoration);
+				fieldDecoration, fieldDecorationWarning);
 		updateTaskEditorPageMessageWithError(bugzillaStatus, detail.toString(), count == 1, fields.toString());
 	}
 
 	private int decorateControlsAndUpdateMessages(String message, List<String> proposals, TaskAttribute attribute,
-			StringBuilder fields, StringBuilder detail, FieldDecoration fieldDecoration) {
+			StringBuilder fields, StringBuilder detail, FieldDecoration fieldDecoration,
+			FieldDecoration fieldDecorationWarning) {
 		if (attribute == null || (message == null && proposals.size() == 0)) {
 			return 0;
 		}
@@ -669,7 +671,41 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		}
 		AbstractAttributeEditor editor = getEditorForAttribute(attribute);
 		if (editor != null) {
-			decorateEditorWithError(fieldDecoration, message, newPersonProposalMap, editor);
+			decorateEditorWithError(fieldDecoration, fieldDecorationWarning, message, newPersonProposalMap, editor);
+		}
+		return 1;
+	}
+
+	private int decorateControlsAndUpdateMessages(String message, Map<String, List<String>> proposals,
+			TaskAttribute attribute, StringBuilder fields, StringBuilder detail, FieldDecoration fieldDecoration,
+			FieldDecoration fieldDecorationWarning) {
+		if (attribute == null || (message == null && proposals.size() == 0)) {
+			return 0;
+		}
+		Map<String, String> newPersonProposalMap = new HashMap<String, String>();
+		if (fields.length() > 0) {
+			fields.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_Error_Label_N, attribute.getMetaData()
+					.getLabel()));
+		} else {
+			fields.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_Error_Label_1, attribute.getMetaData()
+					.getLabel()));
+		}
+		detail.append(attribute.getMetaData().getLabel() + "\n"); //$NON-NLS-1$
+		if (message != null && !message.equals("")) { //$NON-NLS-1$
+			detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, message));
+		} else {
+			for (String key : proposals.keySet()) {
+				detail.append(MessageFormat.format("\t{0}\n", key));
+
+				for (String proposalValue : proposals.get(key)) {
+					detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, proposalValue));
+					newPersonProposalMap.put(proposalValue, proposalValue);
+				}
+			}
+		}
+		AbstractAttributeEditor editor = getEditorForAttribute(attribute);
+		if (editor != null) {
+			decorateEditorWithError(fieldDecoration, fieldDecorationWarning, message, newPersonProposalMap, editor);
 		}
 		return 1;
 	}
@@ -726,12 +762,14 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	 * @param newPersonProposalMap
 	 * @param editor
 	 */
-	private void decorateEditorWithError(FieldDecoration fieldDecoration, String message,
-			Map<String, String> newPersonProposalMap, AbstractAttributeEditor editor) {
+	private void decorateEditorWithError(FieldDecoration fieldDecoration, FieldDecoration fieldDecorationWarning,
+			String message, Map<String, String> newPersonProposalMap, AbstractAttributeEditor editor) {
 		final Control control = editor.getControl();
 
 		final ControlDecoration decoration = new ControlDecoration(control, SWT.LEFT | SWT.DOWN);
-		decoration.setImage(fieldDecoration.getImage());
+		decoration.setImage(newPersonProposalMap.size() == 1
+				? fieldDecorationWarning.getImage()
+				: fieldDecoration.getImage());
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		if (message != null && !message.equals("")) { //$NON-NLS-1$
 			decoration.setDescriptionText(message);
@@ -742,7 +780,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
 			errorDecorations.add(decoration);
 
-			PersonAttributeEditor personEditor = ((PersonAttributeEditor) editor);
+			final PersonAttributeEditor personEditor = ((PersonAttributeEditor) editor);
 			final PersonProposalProvider personProposalProvider = (PersonProposalProvider) personEditor.getContentAssistCommandAdapter()
 					.getContentProposalProvider();
 			personProposalProvider.setErrorProposals(newPersonProposalMap);

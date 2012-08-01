@@ -69,13 +69,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.core.HtmlTag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -1311,6 +1311,7 @@ public class BugzillaClient {
 			}
 			if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) > 0) {
 				TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
+
 				token = getTokenInternal(
 						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI
 								+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
@@ -2037,15 +2038,8 @@ public class BugzillaClient {
 							found = found || title.indexOf(value) != -1;
 						}
 						if (found) {
-							BugzillaVersion bugzillaVersion = null;
-							if (repositoryConfiguration != null) {
-								bugzillaVersion = repositoryConfiguration.getInstallVersion();
-							} else {
-								bugzillaVersion = BugzillaVersion.MIN_VERSION;
-							}
 							BugzillaUserMatchResponse matchResponse = new BugzillaUserMatchResponse();
-							matchResponse.parseResultConfirmMatch(tokenizer, repositoryUrl.toString(), body,
-									bugzillaVersion.isSmaller(BugzillaVersion.BUGZILLA_4_0));
+							matchResponse.parseResultConfirmMatch(tokenizer, repositoryUrl.toString(), body);
 						}
 
 						found = false;
