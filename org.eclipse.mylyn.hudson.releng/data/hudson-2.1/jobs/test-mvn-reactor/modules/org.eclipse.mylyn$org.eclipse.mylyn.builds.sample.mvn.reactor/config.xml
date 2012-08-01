@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<maven2-module-set>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers class="vector"/>
+  <concurrentBuild>false</concurrentBuild>
+  <reporters/>
+  <displayName>Unnamed - org.eclipse.mylyn:org.eclipse.mylyn.builds.sample.mvn.reactor:pom:0.0.1-SNAPSHOT</displayName>
+  <version>0.0.1-SNAPSHOT</version>
+  <relativePath></relativePath>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>2.4.2</version>
+    </dependency>
+  </dependencies>
+  <children>
+    <hudson.maven.ModuleName>
+      <groupId>org.eclipse.mylyn</groupId>
+      <artifactId>org.eclipse.mylyn.builds.sample.mvn.reactor.module1</artifactId>
+    </hudson.maven.ModuleName>
+    <hudson.maven.ModuleName>
+      <groupId>org.eclipse.mylyn</groupId>
+      <artifactId>org.eclipse.mylyn.builds.sample.mvn.reactor.module2</artifactId>
+    </hudson.maven.ModuleName>
+  </children>
+</maven2-module-set>

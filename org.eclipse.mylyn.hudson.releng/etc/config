@@ -1,0 +1,50 @@
+# Format: directory,version,data directory,port
+
+HUDSON_URL="http://hudson-ci.org/downloads/war"
+HUDSON_VERSIONS="\
+hudson-2.1,2.1.0,hudson-2.1,9010 \
+hudson-2.2,2.2.1,hudson-2.1,9020 \
+"
+
+HUDSON_ECLIPSE_URL="http://www.eclipse.org/downloads/download.php?r=1&file=/hudson/war"
+HUDSON_ECLIPSE_VERSIONS="\
+hudson-3.0,3.0.0-M4,hudson-2.1,9030 \
+"
+
+JENKINS_STABLE_URL="http://mirrors.jenkins-ci.org/war-stable"
+JENKINS_STABLE_VERSIONS="\
+jenkins-1.466,1.466.1,hudson-2.1,9101 \
+"
+
+JENKINS_URL="http://mirrors.jenkins-ci.org/war"
+JENKINS_VERSIONS="\
+jenkins-latest,1.475,hudson-2.1,9100 \
+"
+
+for_each() {
+FUNCTION=$1
+
+for i in $HUDSON_VERSIONS
+do
+ IFS=","; set $i; IFS=" "
+ $FUNCTION hudson "$HUDSON_URL" $1 $2 $3 $4
+done
+
+for i in $HUDSON_ECLIPSE_VERSIONS
+do
+ IFS=","; set $i; IFS=" "
+ $FUNCTION hudson "$HUDSON_ECLIPSE_URL" $1 $2 $3 $4
+done
+
+for i in $JENKINS_VERSIONS
+do
+ IFS=","; set $i; IFS=" "
+ $FUNCTION jenkins "$JENKINS_URL" $1 $2 $3 $4
+done
+
+for i in $JENKINS_STABLE_VERSIONS
+do
+ IFS=","; set $i; IFS=" "
+ $FUNCTION jenkins "$JENKINS_STABLE_URL" $1 $2 $3 $4
+done
+}
