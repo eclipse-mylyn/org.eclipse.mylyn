@@ -166,7 +166,10 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaClient client(AbstractWebLocation location, String encoding) throws CoreException {
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
-		String filepath = "testdata/descriptor/" + getInfo().replaceAll(" ", "_") + "Transition.txt";
+		String repositoryURL = taskRepository.getUrl();
+		String filepath = "testdata/repository"
+				+ repositoryURL.substring(repositoryURL.indexOf(TestConfiguration.getServerName())
+						+ TestConfiguration.getServerName().length()) + "/DesciptorFile.txt";
 		try {
 			File file = BugzillaFixture.getFile(filepath);
 			if (file != null) {
