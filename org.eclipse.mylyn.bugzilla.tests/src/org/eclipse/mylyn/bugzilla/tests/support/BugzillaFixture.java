@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -167,9 +168,7 @@ public class BugzillaFixture extends TestFixture {
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
 		String repositoryURL = taskRepository.getUrl();
-		String filepath = "testdata/repository"
-				+ repositoryURL.substring(repositoryURL.indexOf(TestConfiguration.getServerName())
-						+ TestConfiguration.getServerName().length()) + "/DesciptorFile.txt";
+		String filepath = "testdata/repository/" + getRepositoryName(location.getUrl()) + "/DesciptorFile.txt";
 		try {
 			File file = BugzillaFixture.getFile(filepath);
 			if (file != null) {
@@ -195,6 +194,14 @@ public class BugzillaFixture extends TestFixture {
 		connector.getRepositoryConfiguration(taskRepository, false, new NullProgressMonitor());
 		connector.writeRepositoryConfigFile();
 		return client;
+	}
+
+	private String getRepositoryName(String url) {
+		int i = url.lastIndexOf("/");
+		if (i == -1) {
+			throw new IllegalArgumentException(NLS.bind("Unable to determine repository name for {0}", url));
+		}
+		return url.substring(i);
 	}
 
 	public BugzillaClient client(PrivilegeLevel level) throws Exception {
