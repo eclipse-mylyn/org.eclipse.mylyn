@@ -9,6 +9,7 @@
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
+<unit id="com.google.guava" version="10.0.1.v201203051515"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
