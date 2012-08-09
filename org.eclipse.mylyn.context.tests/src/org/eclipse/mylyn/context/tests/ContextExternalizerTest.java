@@ -53,6 +53,8 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	private File contextFile;
 
+	private AbstractContextContributor contributor;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -67,6 +69,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 			contextFile.delete();
 		}
 
+		if (contributor != null) {
+			ContextCorePlugin.getDefault().removeContextContributor(contributor);
+		}
 		super.tearDown();
 	}
 
@@ -314,23 +319,24 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	public void testAddContextContributor() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		ContextCorePlugin contextCorePlugin = ContextCorePlugin.getDefault();
-		AbstractContextContributor contributor = mock(AbstractContextContributor.class);
+		contributor = mock(AbstractContextContributor.class);
 		when(contributor.getDataAsStream(context)).thenReturn(null);
+		int initialContributor = contextCorePlugin.getContextContributor().size();
 
 		contextCorePlugin.addContextContributor(contributor);
-		assertEquals(1, contextCorePlugin.getContextContributor().size());
-		assertEquals(contributor, contextCorePlugin.getContextContributor().get(0));
+		assertEquals(initialContributor + 1, contextCorePlugin.getContextContributor().size());
+		assertEquals(contributor, contextCorePlugin.getContextContributor().get(initialContributor));
 
 		externalizer.writeContext(context, mock(ZipOutputStream.class));
 		verify(contributor).getDataAsStream(context);
 
 		contextCorePlugin.removeContextContributor(contributor);
-		assertEquals(0, contextCorePlugin.getContextContributor().size());
+		assertEquals(initialContributor, contextCorePlugin.getContextContributor().size());
 	}
 
 	public void testWriteAdditionalContextData() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
-		AbstractContextContributor contributor = mock(AbstractContextContributor.class);
+		contributor = mock(AbstractContextContributor.class);
 		InteractionEvent event = mockNavigation("InteractionEvent");
 		context.parseEvent(event);
 
