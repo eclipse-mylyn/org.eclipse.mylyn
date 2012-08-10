@@ -34,7 +34,6 @@ import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CorruptObjectException;
@@ -242,7 +241,7 @@ public class GitConnector extends ScmConnector {
 		Iterable<RevCommit> revs;
 		try {
 			revs = git.log().call();
-		} catch (NoHeadException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
