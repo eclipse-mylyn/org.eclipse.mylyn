@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Steffen Pingel and others.
+ * Copyright (c) 2006, 2012 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Steffen Pingel - initial API and implementation
+ *     Benjamin Muskalla - bug 386920
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core;
@@ -54,6 +55,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
@@ -467,6 +469,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
 			IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
 			ITracClient client = connector.getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, false);

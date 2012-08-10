@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 Steffen Pingel and others.
+ * Copyright (c) 2006, 2012 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Steffen Pingel - initial API and implementation
+ *     Benjamin Muskalla - bug 386920
  *******************************************************************************/
 
 package org.eclipse.mylyn.trac.tests.core;
@@ -45,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
@@ -56,6 +58,7 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
@@ -359,6 +362,13 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertEquals("major", mapper.getPriority());
 		// empty attributes should not exist
 		assertNull(taskData.getRoot().getAttribute(TracAttribute.SEVERITY.getTracKey()));
+	}
+
+	public void testInitializeTaskDataNoMonitor() throws Exception {
+		connector.getClientManager().repositoryRemoved(repository);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(repository), TracCorePlugin.CONNECTOR_KIND, "", "");
+		boolean initialized = taskDataHandler.initializeTaskData(repository, taskData, new TaskMapping(), null);
+		assertTrue(initialized);
 	}
 
 	public void testOperations() throws Exception {
