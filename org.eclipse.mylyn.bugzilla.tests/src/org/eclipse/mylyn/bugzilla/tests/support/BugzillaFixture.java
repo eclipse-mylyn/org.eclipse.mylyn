@@ -201,7 +201,7 @@ public class BugzillaFixture extends TestFixture {
 		if (i == -1) {
 			throw new IllegalArgumentException(NLS.bind("Unable to determine repository name for {0}", url));
 		}
-		return url.substring(i);
+		return url.substring(i + 1);
 	}
 
 	public BugzillaClient client(PrivilegeLevel level) throws Exception {
