@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2009, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastian Schmidt - bug 155333
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.core;
@@ -94,6 +95,14 @@ public interface IInteractionContextManager {
 	public void setContextCapturePaused(boolean paused);
 
 	/**
+	 * Returns additional context data stored among the given context using the given identifier. Use
+	 * {@link IContextContributor} to store additional data.
+	 * 
+	 * @param context
+	 *            Context to query for additional data
+	 * @param identifier
+	 *            Identifier used to store the requested data
+	 * @return InputStream content of the requested file or null if not existent
 	 * @since 3.9
 	 */
 	public InputStream getAdditionalContextData(IInteractionContext context, String identifier);
