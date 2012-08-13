@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastian Schmidt - bug 387156
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
@@ -15,6 +16,8 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.ui.ContextAwareEditorInput;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
@@ -22,6 +25,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
  * Adapts the active task to the active context.
  * 
  * @author Steffen Pingel
+ * @author Sebastian Schmidt
  */
 public class ContextTasksAdapterFactory implements IAdapterFactory {
 
@@ -32,6 +36,10 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 		if (adapterType == IInteractionContext.class) {
 			if (adaptableObject == TasksUi.getTaskActivityManager().getActiveTask()) {
 				return ContextCore.getContextManager().getActiveContext();
+			} else if (adaptableObject instanceof TaskEditorInput) {
+				TaskEditorInput editorInput = (TaskEditorInput) adaptableObject;
+				ITask task = editorInput.getTask();
+				return ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());
 			}
 		} else if (adapterType == ContextAwareEditorInput.class) {
 			if (adaptableObject instanceof TaskEditorInput) {
