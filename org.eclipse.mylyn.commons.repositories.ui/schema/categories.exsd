@@ -14,6 +14,7 @@ The default implementation defines the follwoing categories:
 &lt;li&gt;Bugs&lt;/li&gt;
 &lt;li&gt;Builds&lt;/li&gt;
 &lt;li&gt;Reviews&lt;/li&gt;
+&lt;li&gt;Requirements&lt;/li&gt;
 &lt;li&gt;Others&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/p&gt;
@@ -126,9 +127,14 @@ The default implementation defines the follwoing categories:
             rank=&quot;300&quot;&gt;
       &lt;/category&gt;
       &lt;category
+            id=&quot;org.eclipse.mylyn.category.requirements&quot;
+            label=&quot;Requirements&quot;
+            rank=&quot;400&quot;&gt;
+      &lt;/category&gt;
+      &lt;category
             id=&quot;org.eclipse.mylyn.category.other&quot;
             label=&quot;Other&quot;
-            rank=&quot;400&quot;&gt;
+            rank=&quot;500&quot;&gt;
       &lt;/category&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;

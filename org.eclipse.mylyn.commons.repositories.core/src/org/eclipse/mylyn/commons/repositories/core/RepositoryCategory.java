@@ -40,6 +40,11 @@ public class RepositoryCategory extends PlatformObject {
 
 	public static final String ID_CATEGORY_ROOT = "org.eclipse.mylyn.category.root"; //$NON-NLS-1$
 
+	/**
+	 * @since 3.9
+	 */
+	public static final String ID_CATEGORY_REQUIREMENTS = "org.eclipse.mylyn.category.requirements"; //$NON-NLS-1$
+
 	public RepositoryCategory(String id, String label, int rank) {
 		this.id = id;
 		this.label = label;

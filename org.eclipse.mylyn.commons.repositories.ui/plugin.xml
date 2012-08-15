@@ -192,9 +192,14 @@
             rank="300">
       </category>
       <category
+            id="org.eclipse.mylyn.category.requirements"
+            label="Requirements"
+            rank="400">
+      </category>
+      <category
             id="org.eclipse.mylyn.category.other"
             label="Other"
-            rank="400">
+            rank="500">
       </category>
    </extension>
 

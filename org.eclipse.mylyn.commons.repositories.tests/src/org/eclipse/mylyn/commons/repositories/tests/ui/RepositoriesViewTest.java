@@ -56,12 +56,13 @@ public class RepositoriesViewTest {
 		assertNotNull(tree);
 		TreeItem[] treeItems = tree.getItems();
 		assertNotNull(treeItems);
-		assertEquals(5, treeItems.length);
+		assertEquals(6, treeItems.length);
 		assertEquals("Tasks", treeItems[0].getText());
 		assertEquals("Bugs", treeItems[1].getText());
 		assertEquals("Builds", treeItems[2].getText());
 		assertEquals("Reviews", treeItems[3].getText());
-		assertEquals("Other", treeItems[4].getText());
+		assertEquals("Requirements", treeItems[4].getText());
+		assertEquals("Other", treeItems[5].getText());
 	}
 
 }
