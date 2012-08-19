@@ -168,7 +168,8 @@ public class ContextEditorFormPage extends FormPage {
 			case INTEREST_CHANGED:
 			case LANDMARKS_ADDED:
 			case LANDMARKS_REMOVED:
-				if (isActiveTask()) {
+				if (context.isForSameTaskAs(event.getContext())) {
+					context.setWrappedContext(event.getContext());
 					refresh(event.getElements());
 				}
 				break;
@@ -194,6 +195,7 @@ public class ContextEditorFormPage extends FormPage {
 			context = new ContextWrapper(ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier()),
 					task);
 		}
+
 		//form.setImage(TaskListImages.getImage(TaskListImages.TASK_ACTIVE_CENTERED));
 		//form.setText(LABEL);
 		//toolkit.decorateFormHeading(form.getForm());
@@ -511,13 +513,6 @@ public class ContextEditorFormPage extends FormPage {
 
 	protected void fillContextMenu(IMenuManager manager) {
 		//manager.add(removeFromContextAction);
-		if (!isActiveTask()) {
-			manager.remove("org.eclipse.mylyn.java.ui.interest.remove.element"); //$NON-NLS-1$
-			// the following ID is used for both make less interesting and mark as landmark so remove it twice 
-			manager.remove("org.eclipse.mylyn.java.ui.interest.increase.element"); //$NON-NLS-1$
-			manager.remove("org.eclipse.mylyn.java.ui.interest.increase.element");//$NON-NLS-1$
-			manager.remove("org.eclipse.mylyn.resources.ui.ui.interest.remove.element"); //$NON-NLS-1$
-		}
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
