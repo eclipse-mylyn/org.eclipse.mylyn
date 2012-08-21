@@ -17,6 +17,13 @@ package org.eclipse.mylyn.tasks.core;
  */
 public class TaskActivationAdapter implements ITaskActivationListener {
 
+	/**
+	 * @since 3.16
+	 */
+	public boolean canDeactivateTask(ITask task) {
+		return true;
+	}
+
 	public void preTaskActivated(ITask task) {
 	}
 

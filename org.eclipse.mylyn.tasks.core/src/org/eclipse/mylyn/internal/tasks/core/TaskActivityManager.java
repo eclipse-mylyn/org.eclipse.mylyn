@@ -41,11 +41,12 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager2;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.osgi.util.NLS;
 
 /**
  * Manages task elapsed time, scheduling, due dates, and the date ranges
- * 
+ *
  * @since 2.1
  * @author Rob Elves
  */
@@ -68,7 +69,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	// Map of Calendar (hour) to Tasks active during that hour
 	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active 
+	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active
 	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
 	private final Map<String, SortedMap<Calendar, Long>> workingSetElapsedTimeMap = new ConcurrentHashMap<String, SortedMap<Calendar, Long>>();
@@ -149,7 +150,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	/**
 	 * Get the user specified first day of the week (Calendar.SUNDAY | Calendar.MONDAY)
-	 * 
+	 *
 	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
 	 */
 	public int getWeekStartDay() {
@@ -158,7 +159,7 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	/**
 	 * Set the first day of the week (Calendar.SUNDAY | Calendar.MONDAY)
-	 * 
+	 *
 	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
 	 * @param startDay
 	 *            (Calendar.SUNDAY | Calendar.MONDAY)
@@ -457,7 +458,12 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public void activateTask(ITask task) {
-		deactivateActiveTask();
+		if (activeTask != null) {
+			if (!shouldDeactivateTask(activeTask)) {
+				return;
+			}
+			deactivateTaskInternal(activeTask);
+		}
 
 		taskList.addTaskIfAbsent(task);
 
@@ -493,10 +499,13 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 	}
 
 	public void deactivateTask(ITask task) {
-		if (task == null) {
+		if (task == null || (task.isActive() && !shouldDeactivateTask(task))) {
 			return;
 		}
+		deactivateTaskInternal(task);
+	}
 
+	protected void deactivateTaskInternal(ITask task) {
 		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated
 			initTaskListeners();
@@ -524,6 +533,22 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		} else {
 			((AbstractTask) task).setActive(false);
 		}
+	}
+
+	protected boolean shouldDeactivateTask(ITask task) {
+		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
+			try {
+				if (listener instanceof TaskActivationAdapter) {
+					if (!((TaskActivationAdapter) listener).canDeactivateTask(task)) {
+						return false;
+					}
+				}
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task activity listener failed: " + listener, t)); //$NON-NLS-1$
+			}
+		}
+		return true;
 	}
 
 	/**

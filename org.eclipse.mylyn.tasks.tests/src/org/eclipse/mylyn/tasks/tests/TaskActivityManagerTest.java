@@ -100,6 +100,18 @@ public class TaskActivityManagerTest extends TestCase {
 
 		private boolean hasPreDeactivated = false;
 
+		private int timesCalledCanDeactivate;
+
+		private final boolean canDeactivate;
+
+		public MockTaskActivationListener() {
+			this(true);
+		}
+
+		public MockTaskActivationListener(boolean canDeactivate) {
+			this.canDeactivate = canDeactivate;
+		}
+
 		public void reset() {
 			hasActivated = false;
 			hasPreActivated = false;
@@ -107,6 +119,7 @@ public class TaskActivityManagerTest extends TestCase {
 			hasDeactivated = false;
 			hasPreDeactivated = false;
 
+			timesCalledCanDeactivate = 0;
 		}
 
 		@Override
@@ -133,6 +146,16 @@ public class TaskActivityManagerTest extends TestCase {
 			hasDeactivated = true;
 		}
 
+		@Override
+		public boolean canDeactivateTask(ITask task) {
+			timesCalledCanDeactivate++;
+			return canDeactivate;
+		}
+
+		public void verifyCalledCanDeactivate(int times) {
+			assertEquals(times, timesCalledCanDeactivate);
+		}
+
 	}
 
 	private TaskActivityManager taskActivityManager;
@@ -140,6 +163,10 @@ public class TaskActivityManagerTest extends TestCase {
 	private TaskList taskList;
 
 	private TaskRepository repository;
+
+	private AbstractTask task1;
+
+	private AbstractTask task2;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -298,16 +325,79 @@ public class TaskActivityManagerTest extends TestCase {
 	}
 
 	public void testAllTasksDeactivation() {
-		AbstractTask task1 = new LocalTask("task1", "description1");
-		AbstractTask task2 = new LocalTask("task2", "description2");
-		taskList.addTask(task1);
-		taskList.addTask(task2);
-		assertNull(taskActivityManager.getActiveTask());
-
+		initializeTasks();
 		taskActivityManager.activateTask(task2);
 		assertEquals(task2, taskActivityManager.getActiveTask());
 
 		taskActivityManager.deactivateActiveTask();
+		assertNull(taskActivityManager.getActiveTask());
+	}
+
+	public void testActivateNonActiveTaskCanDeactivate() {
+		initializeTasks();
+		assertActivateNonActiveTaskCanDeactivate(true, task2);
+	}
+
+	public void testActivateNonActiveTaskCannotDeactivate() {
+		initializeTasks();
+		assertActivateNonActiveTaskCanDeactivate(false, task1);
+	}
+
+	private void assertActivateNonActiveTaskCanDeactivate(final boolean canDeactivate, ITask expectedActiveTask) {
+		MockTaskActivationListener listener = new MockTaskActivationListener(canDeactivate);
+
+		try {
+			taskActivityManager.addActivationListener(listener);
+
+			taskActivityManager.activateTask(task1);
+			assertEquals(task1, taskActivityManager.getActiveTask());
+
+			taskActivityManager.activateTask(task2);
+			assertEquals(expectedActiveTask, taskActivityManager.getActiveTask());
+			listener.verifyCalledCanDeactivate(1);
+		} finally {
+			taskActivityManager.removeActivationListener(listener);
+		}
+	}
+
+	public void testDeactivateTaskCanDeactivate() {
+		initializeTasks();
+		assertDeactivateTaskCanDeactivate(true, null);
+	}
+
+	public void testDeactivateTaskCannotDeactivate() {
+		initializeTasks();
+		assertDeactivateTaskCanDeactivate(false, task1);
+	}
+
+	private void assertDeactivateTaskCanDeactivate(final boolean canDeactivate, ITask expectedActiveTask) {
+		MockTaskActivationListener listener = new MockTaskActivationListener(canDeactivate);
+
+		try {
+			taskActivityManager.addActivationListener(listener);
+
+			taskActivityManager.activateTask(task1);
+			assertEquals(task1, taskActivityManager.getActiveTask());
+
+			taskActivityManager.deactivateTask(task1);
+			assertEquals(expectedActiveTask, taskActivityManager.getActiveTask());
+			listener.verifyCalledCanDeactivate(1);
+		} finally {
+			taskActivityManager.removeActivationListener(listener);
+		}
+	}
+
+	public void testDeactivateTaskOnInactiveTask() {
+		initializeTasks();
+		taskActivityManager.deactivateTask(task1);
+		assertNull(taskActivityManager.getActiveTask());
+	}
+
+	private void initializeTasks() {
+		task1 = new LocalTask("task1", "description1");
+		task2 = new LocalTask("task2", "description2");
+		taskList.addTask(task1);
+		taskList.addTask(task2);
 		assertNull(taskActivityManager.getActiveTask());
 	}
 
