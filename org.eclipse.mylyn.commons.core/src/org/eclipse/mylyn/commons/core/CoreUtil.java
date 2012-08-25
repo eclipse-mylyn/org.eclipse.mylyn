@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.osgi.framework.Version;
 /**
  * @since 3.0
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class CoreUtil {
@@ -247,8 +248,8 @@ public class CoreUtil {
 	 */
 	public static String decode(String text) {
 		boolean escaped = false;
-		StringBuffer sb = new StringBuffer(text.length());
-		StringBuffer escapedText = new StringBuffer(4);
+		StringBuilder sb = new StringBuilder(text.length());
+		StringBuilder escapedText = new StringBuilder(4);
 		char[] chars = text.toCharArray();
 		for (char c : chars) {
 			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
@@ -289,13 +290,15 @@ public class CoreUtil {
 	 * @since 3.8
 	 */
 	public static String encode(String text) {
-		StringBuffer sb = new StringBuffer(text.length());
+		StringBuilder sb = new StringBuilder(text.length());
 		char[] chars = text.toCharArray();
 		for (char c : chars) {
 			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
 				sb.append(c);
 			} else {
-				sb.append("%" + Integer.toHexString(c).toUpperCase() + "_"); //$NON-NLS-1$ //$NON-NLS-2$
+				sb.append("%"); //$NON-NLS-1$
+				sb.append(Integer.toHexString(c).toUpperCase());
+				sb.append("_"); //$NON-NLS-1$
 			}
 		}
 		return sb.toString();
