@@ -30,6 +30,7 @@ public class ScmRepository {
 	public ScmRepository(ScmConnector connector, String name, String url) {
 		this.name = name;
 		this.url = url;
+		this.connector = connector;
 	}
 
 	public String getName() {

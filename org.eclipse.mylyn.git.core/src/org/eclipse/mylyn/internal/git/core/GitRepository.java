@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.git.core;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.lib.Repository;
@@ -25,10 +26,13 @@ public class GitRepository extends ScmRepository {
 
 	private final RepositoryMapping mapping;
 
-	public GitRepository(GitConnector connector, RepositoryMapping mapping) {
+	private final IProject fMainWSProject;
+
+	public GitRepository(GitConnector connector, RepositoryMapping mapping, IProject mainProject) {
 		this.mapping = mapping;
 		setConnector(connector);
 		determineUrl();
+		fMainWSProject = mainProject;
 	}
 
 	public Repository getRepository() {
@@ -56,4 +60,14 @@ public class GitRepository extends ScmRepository {
 			this.setUrl(originUrl);
 		}
 	}
+
+	/**
+	 * Returns the main work space project (if any) associated to this repository
+	 * 
+	 * @return
+	 */
+	public IProject getMainWsProject() {
+		return fMainWSProject;
+	}
+
 }

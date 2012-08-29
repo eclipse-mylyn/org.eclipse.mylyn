@@ -190,7 +190,8 @@ public class GitConnector extends ScmConnector {
 			path = d.getNewPath();
 		}
 
-		artifact = new GitArtifact(id, path, (GitRepository) repository);
+		GitRepository gitRepository = (GitRepository) repository;
+		artifact = new GitArtifact(id, path, gitRepository);
 
 		//Resolve path to workspace IFile
 		IFile ifile = null;
@@ -200,8 +201,31 @@ public class GitConnector extends ScmConnector {
 		URI absURI = URIUtil.toURI(absPath);
 		IFile[] files = ScmResourceUtils.getWorkSpaceFiles(absURI);
 		if (files != null && files.length > 0) {
-			//if more than one project referring to the same file, pick the first one
 			ifile = files[0];
+			if (files.length > 1) {
+				//if more than one project is referring to the same file, pick the one selected / associated to the main project 
+				//i.e. the one related to the creation of the GitRepository instance.
+				IProject mainProject = gitRepository.getMainWsProject();
+				if (mainProject != null) {
+					for (IFile dfile : files) {
+						String fileProjectName = dfile.getProject().getName();
+						if (mainProject.getName().equals(fileProjectName)) {
+							ifile = dfile;
+							break;
+						}
+					}
+				} else {
+					//There is no valid main project associated. Select one where the project folder is the root of the file (if any)
+					for (IFile file : files) {
+						IPath projPath = file.getProject().getLocation();
+						if (projPath.isPrefixOf(absPath)) {
+							//This is the root project for the file i.e. not linked
+							ifile = file;
+							break;
+						}
+					}
+				}
+			}
 
 			//Fill in the artifact with corresponding IResource information
 			artifact.setProjectName(ifile.getProject().getName());
@@ -280,7 +304,8 @@ public class GitConnector extends ScmConnector {
 		if (mapping == null) {
 			return null;
 		}
-		return new GitRepository(this, mapping);
+
+		return new GitRepository(this, mapping, resource.getProject());
 	}
 
 	protected RepositoryCache getRepositoryCache() {

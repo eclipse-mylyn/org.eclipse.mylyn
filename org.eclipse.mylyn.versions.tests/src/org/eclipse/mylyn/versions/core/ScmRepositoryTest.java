@@ -34,9 +34,7 @@ public class ScmRepositoryTest {
 	@Test
 	public void differentConnectorAreNotEqual() {
 		ScmRepository scmRepository = new ScmRepository(connector, REPO_NAME, REPO_URL);
-		scmRepository.setConnector(connector);
 		ScmRepository other = new ScmRepository(new MockScmConnector(), REPO_NAME, REPO_URL);
-		other.setConnector(new MockScmConnector());
 		assertFalse(scmRepository.equals(other));
 	}
 
