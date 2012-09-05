@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381506
+ *     Jeremie Bresson - Bug 381506, 381912
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -716,6 +716,95 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("{|class=\"foo\"\n|Some text\n|}");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<table class=\"foo\"><tr><td>Some text</td></tr></table>"));
+	}
+
+	public void testTableWithParagraphs() {
+		//BUG 381912:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{|border=\"1\"\n");
+		sb.append("|\n");
+		sb.append("A paragraph with '''Bold text''' in a cell.\n");
+		sb.append("|\n");
+		sb.append("A cell ''containing'' more...\n");
+		sb.append("\n");
+		sb.append("Than one paragraph.\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*<p>\\s*A paragraph with \\s*<b>\\s*Bold text\\s*</b>\\s* in a cell.\\s*</p>\\s*</td>\\s*<td>\\s*<p>\\s*A cell \\s*<i>\\s*containing\\s*</i>\\s* more...\\s*</p>\\s*<p>\\s*Than one paragraph.\\s*</p>\\s*</td>\\s*</tr>\\s*</table>");
+		assertContainsPattern(html, pattern);
+	}
+
+	public void testTableWithLongerText() {
+		//BUG 381912:
+		//See: http://www.mediawiki.org/wiki/Help:Tables "longer text and more complex wiki syntax inside table cells".
+		StringBuilder sb = new StringBuilder();
+		sb.append("{|border=\"1\"\n");
+		sb.append("|Sxto mesto kusoks ti sam, \n");
+		sb.append("Da skandalis studentis bezopasostif tut, \n");
+		sb.append("dost takai vcxera na mne\n");
+		sb.append("Mai na zxen problem zembulbas, \n");
+		sb.append("dost vozduh dusxijm kai te. \n");
+		sb.append("\n");
+		sb.append("Oliv slozxju informacias bi bez\n");
+		sb.append("om gde detes komnat,\n");
+		sb.append("To divaj neskolk pridijt ili\n");
+		sb.append("Ktor zapalka bezopasostif es tot. \n");
+		sb.append("|\n");
+		sb.append("* Sxto mesto kusoks ti sam\n");
+		sb.append("* Vi edat zaspatit zapomnitlubovijm sol\n");
+		sb.append("* dost takai vcxera na mne\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*Sxto mesto kusoks ti sam,\\s*<p>\\s*Da skandalis studentis bezopasostif tut,\\s+dost takai vcxera na mne\\s+Mai na zxen problem zembulbas,\\s+dost vozduh dusxijm kai te.\\s*</p>\\s*<p>\\s*Oliv slozxju informacias bi bez\\s*om gde detes komnat,\\s*To divaj neskolk pridijt ili\\s*Ktor zapalka bezopasostif es tot.\\s*</p>\\s*</td>\\s*<td>\\s*<ul>\\s*<li>\\s*Sxto mesto kusoks ti sam\\s*</li>\\s*<li>\\s*Vi edat zaspatit zapomnitlubovijm sol\\s*</li>\\s*<li>\\s*dost takai vcxera na mne\\s*</li>\\s*</ul>\\s*</td>\\s*</tr>\\s*</table>");
+		assertContainsPattern(html, pattern);
+	}
+
+	public void testTableWithCodeInCellAndOptions() {
+		//BUG 381912:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{|border=\"1\"\n");
+		sb.append("|\n");
+		sb.append("  some\n");
+		sb.append("|\n");
+		sb.append("  code\n");
+		sb.append("  multiline\n");
+		sb.append("|style=\"background-color:#FFFF00;\"|\n");
+		sb.append("  this is code in an highlighted cell\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*<pre>\\s*some\n</pre>\\s*</td>\\s*<td>\\s*<pre>\\s*code\n multiline\n</pre>\\s*</td>\\s*<td style=\"background-color:#FFFF00;\">\\s*<pre>\\s*this is code in an highlighted cell\n</pre>\\s*</td>\\s*</tr>\\s*</table>");
+		assertContainsPattern(html, pattern);
+	}
+
+	public void testTableWithExplicitFirstRowAndRowSpan() {
+		//BUG 381912:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{|border=\"1\"\n");
+		sb.append("|-\n");
+		sb.append("!colspan=\"6\"|XYZ uv\n");
+		sb.append("|-\n");
+		sb.append("|rowspan=\"2\"|X1 & X2\n");
+		sb.append("|y1\n");
+		sb.append("|y2\n");
+		sb.append("|y3\n");
+		sb.append("|colspan=\"2\"|Z9\n");
+		sb.append("|-\n");
+		sb.append("|z8\n");
+		sb.append("|colspan=\"2\"|T6\n");
+		sb.append("|u4\n");
+		sb.append("|U6\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<th colspan=\"6\">\\s*XYZ uv\\s*</th>\\s*</tr>\\s*<tr>\\s*<td rowspan=\"2\">\\s*X1 &amp; X2\\s*</td>\\s*<td>\\s*y1\\s*</td>\\s*<td>\\s*y2\\s*</td>\\s*<td>\\s*y3\\s*</td>\\s*<td colspan=\"2\">\\s*Z9\\s*</td>\\s*</tr>\\s*<tr>\\s*<td>\\s*z8\\s*</td>\\s*<td colspan=\"2\">\\s*T6\\s*</td>\\s*<td>\\s*u4\\s*</td>\\s*<td>\\s*U6\\s*</td>\\s*</tr>\\s*</table>");
+		assertContainsPattern(html, pattern);
 	}
 
 	public void testEntityReference() {

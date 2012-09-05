@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 381912
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
@@ -95,16 +96,17 @@ public abstract class Block extends Processor implements Cloneable {
 	}
 
 	/**
-	 * Indicate if the block can continue on the given line at the given offset. blocks that implement a nesting
-	 * protocol should implement this method.
+	 * Indicates if the block can resume with the given markup line at the provided offset. Resuming a block, means that
+	 * the nested children blocks are closed. Blocks that implement a nesting protocol should implement this method.
 	 * 
 	 * @param line
 	 *            the line of content
 	 * @param lineOffset
 	 *            the 0-based offset into the line
-	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
+	 * @return <code>true</code> if the block can resume <code>false</code> if nested block needs to handle the content
+	 *         further.
 	 * @see #beginNesting()
-	 * @see #canResume(String, int)
+	 * @see #findCloseOffset(String, int)
 	 * @since 1.6
 	 */
 	public boolean canResume(String line, int lineOffset) {

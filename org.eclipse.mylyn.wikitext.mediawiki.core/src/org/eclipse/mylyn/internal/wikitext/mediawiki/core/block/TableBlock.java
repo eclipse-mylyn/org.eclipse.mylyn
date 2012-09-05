@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,13 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 381912
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
@@ -48,6 +48,8 @@ public class TableBlock extends Block {
 	private Matcher matcher;
 
 	private boolean openRow;
+
+	private boolean openCell;
 
 	@Override
 	public int processLineContent(String line, int offset) {
@@ -130,22 +132,22 @@ public class TableBlock extends Block {
 					Matcher cellMatcher = cellPattern.matcher(line);
 					if (cellMatcher.matches()) {
 						String kind = cellMatcher.group(1);
-						String contents = cellMatcher.group(2);
-						if (contents == null) {
-							// likely an incomplete line
-							return -1;
-						}
-						int contentsStart = cellMatcher.start(2);
 						BlockType type = ("!".equals(kind)) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL; //$NON-NLS-1$
 
-						if (!openRow) {
-							openRow(cellMatcher.start(), new Attributes());
+						String contents = cellMatcher.group(2);
+						if (contents == null) {
+							//cell was just opened, no cell options.
+							openCell(cellMatcher.start(), type, new TableCellAttributes());
+							return -1;
 						}
+
+						int contentsStart = cellMatcher.start(2);
 						emitCells(contentsStart, type, contents);
 
 						return -1;
 					} else {
 						// ignore, bad formatting or unsupported syntax (caption)
+						// in case of cells this will be handled with NestedBlocks
 						return -1;
 					}
 				}
@@ -188,13 +190,6 @@ public class TableBlock extends Block {
 			throw new IllegalStateException();
 		}
 		String cellOptions = cellSplitterMatcher.group(1);
-		String cellContents = cellSplitterMatcher.group(2);
-		if (cellContents == null) {
-			// probably invalid syntax
-			return;
-		}
-
-		int contentsStart = cellSplitterMatcher.start(2);
 
 		TableCellAttributes attributes = new TableCellAttributes();
 
@@ -224,15 +219,19 @@ public class TableBlock extends Block {
 				}
 			}
 		}
-		state.setLineCharacterOffset(lineCharacterOffset);
 
-		builder.beginBlock(type, attributes);
-
-		markupLanguage.emitMarkupLine(parser, state, lineCharacterOffset + contentsStart, cellContents, 0);
-		builder.endBlock();
+		String cellContents = cellSplitterMatcher.group(2);
+		if (cellContents == null) {
+			//cell was opened, no content on this line
+			openCell(lineCharacterOffset + cellSplitterMatcher.end(), type, attributes);
+		} else {
+			int contentsStart = cellSplitterMatcher.start(2);
+			openCell(lineCharacterOffset, type, attributes);
+			markupLanguage.emitMarkupLine(parser, state, lineCharacterOffset + contentsStart, cellContents, 0);
+		}
 	}
 
-	private void openRow(int lineOffset, Attributes attributes) {
+	private void openRow(int lineOffset, TableRowAttributes attributes) {
 		closeRow();
 		state.setLineCharacterOffset(lineOffset);
 		builder.beginBlock(BlockType.TABLE_ROW, attributes);
@@ -240,9 +239,40 @@ public class TableBlock extends Block {
 	}
 
 	private void closeRow() {
+		closeCell();
 		if (openRow) {
 			builder.endBlock();
 			openRow = false;
+		}
+	}
+
+	/**
+	 * Open a cell block.
+	 * 
+	 * @param lineOffset
+	 *            line offset
+	 * @param type
+	 *            type of cell (expecting {@link BlockType#TABLE_CELL_HEADER} or {@link BlockType#TABLE_CELL_NORMAL}).
+	 * @param attributes
+	 *            attributes of the cell
+	 */
+	private void openCell(int lineOffset, BlockType type, TableCellAttributes attributes) {
+		closeCell();
+		if (!openRow) {
+			openRow(lineOffset, new TableRowAttributes());
+		}
+		state.setLineCharacterOffset(lineOffset);
+		builder.beginBlock(type, attributes);
+		openCell = true;
+	}
+
+	/**
+	 * Close a cell block if it was opened.
+	 */
+	private void closeCell() {
+		if (openCell) {
+			builder.endBlock();
+			openCell = false;
 		}
 	}
 
@@ -262,10 +292,41 @@ public class TableBlock extends Block {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
+			closeCell();
 			closeRow();
 			builder.endBlock();
 		}
 		super.setClosed(closed);
 	}
 
+	@Override
+	public boolean beginNesting() {
+		return openCell;
+	}
+
+	@Override
+	public int findCloseOffset(String line, int lineOffset) {
+		if (openCell) {
+			if (!checkAtNewTableRow(line, lineOffset)) {
+				return -1;
+			}
+		}
+		return lineOffset; //Close here.
+	}
+
+	private boolean checkAtNewTableRow(String line, int lineOffset) {
+		if (lineOffset < line.length()) {
+			char startChar = line.charAt(lineOffset);
+			if (startChar == '|' || startChar == '!') {
+				//new line, a new cell or a new header cell
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canResume(String line, int lineOffset) {
+		return checkAtNewTableRow(line, lineOffset);
+	}
 }
