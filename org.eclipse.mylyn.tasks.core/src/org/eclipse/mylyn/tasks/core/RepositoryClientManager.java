@@ -47,7 +47,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 		@Override
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
 			try {
-				return repositoryConfigurationClass.getClassLoader().loadClass(desc.getName());
+				return Class.forName(desc.getName(), true, repositoryConfigurationClass.getClassLoader());
 			} catch (Exception e) {
 				return super.resolveClass(desc);
 			}

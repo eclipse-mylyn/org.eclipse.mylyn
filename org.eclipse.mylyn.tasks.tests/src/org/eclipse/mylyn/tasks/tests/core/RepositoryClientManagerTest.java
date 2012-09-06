@@ -30,8 +30,13 @@ public class RepositoryClientManagerTest extends TestCase {
 
 		public String someString = "mylyn";
 
-		public TaskRepository repository = null;
+		public ConfigSubObject[] anArray = new ConfigSubObject[] { new ConfigSubObject() };
 
+		public TaskRepository repository = null;
+	}
+
+	public static class ConfigSubObject implements Serializable {
+		private static final long serialVersionUID = -8730054324154087433L;
 	}
 
 	private class MockRepositoryClientManager extends RepositoryClientManager<Object, MyConfig> {
