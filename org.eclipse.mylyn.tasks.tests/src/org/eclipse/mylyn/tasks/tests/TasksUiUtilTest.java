@@ -21,10 +21,13 @@ import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -33,6 +36,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class TasksUiUtilTest extends TestCase {
 
@@ -182,6 +186,29 @@ public class TasksUiUtilTest extends TestCase {
 		f.setAccessible(true);
 		style = (Integer) f.get(input);
 		assertTrue((style & BrowserUtil.NO_RICH_EDITOR) == 0);
+	}
+
+	public void testOpenLocalTask() {
+		ITask localTask = TasksUiInternal.createNewLocalTask("summary");
+		TasksUiUtil.openTask(localTask);
+		assertEquals(1, activePage.getEditorReferences().length);
+		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
+		assertEquals(TaskEditor.class, editor.getClass());
+	}
+
+	public void testOpenLocalTaskWebBrowserDefault() {
+		ITask localTask = TasksUiInternal.createNewLocalTask("summary");
+		try {
+			TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, false);
+			TasksUiUtil.openTask(localTask);
+			assertEquals(1, activePage.getEditorReferences().length);
+			IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
+			assertEquals(TaskEditor.class, editor.getClass());
+		} finally {
+			TasksUiPlugin.getDefault().getPreferenceStore().setToDefault(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+		}
 	}
 
 }

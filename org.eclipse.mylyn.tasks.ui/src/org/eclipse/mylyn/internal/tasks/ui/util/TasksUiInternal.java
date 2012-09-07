@@ -906,7 +906,7 @@ public class TasksUiInternal {
 			boolean openWithBrowser = !TasksUiPlugin.getDefault()
 					.getPreferenceStore()
 					.getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
-			if (openWithBrowser) {
+			if (openWithBrowser && !(task instanceof LocalTask)) {
 				TasksUiUtil.openWithBrowser(taskRepository, task);
 				return new TaskOpenEvent(taskRepository, task, taskId, null, true);
 			} else {
