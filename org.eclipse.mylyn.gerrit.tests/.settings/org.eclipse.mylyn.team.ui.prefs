@@ -1,3 +1,2 @@
-#Tue Sep 06 15:54:36 CEST 2011
-commit.comment.template=${task.description} \n\nBug\: ${task.key}
+commit.comment.template=${task.key}\: ${task.description}\n\nTask-Url\: ${task.url}
 eclipse.preferences.version=1
