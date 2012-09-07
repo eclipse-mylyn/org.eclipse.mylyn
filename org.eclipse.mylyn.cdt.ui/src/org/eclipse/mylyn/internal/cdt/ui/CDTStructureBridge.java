@@ -200,7 +200,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 				for (IAdaptable adaptable : elements) {
 					IInteractionElement element = ContextCore.getContextManager().getElement(
 							getHandleIdentifier(adaptable));
-					if (element.getInterest().isInteresting()) {
+					if (element != null && element.getInterest().isInteresting()) {
 						return false;
 					}
 				}
