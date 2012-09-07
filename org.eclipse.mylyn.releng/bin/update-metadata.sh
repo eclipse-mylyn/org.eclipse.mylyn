@@ -15,7 +15,7 @@ for i in $(find -name site.xml); do
    exit 1
  fi
  echo Version: $DIR 
- $BASE/generate-p2-metadata.sh 
+ #$BASE/generate-p2-metadata.sh 
  $BASE/add-mirrors.sh $DIR
  echo 
  )
