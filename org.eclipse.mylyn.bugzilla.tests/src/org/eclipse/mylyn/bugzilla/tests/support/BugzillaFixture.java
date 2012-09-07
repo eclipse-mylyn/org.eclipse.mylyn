@@ -80,22 +80,22 @@ public class BugzillaFixture extends TestFixture {
 			"3.4.14", "");
 
 	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
-			"3.6.11", "");
+			"3.6", "");
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-custom-wf", "3.6.11", CUSTOM_WF);
+			+ "-custom-wf", "3.6", CUSTOM_WF);
 
 	public static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
-			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6.11", CUSTOM_WF_AND_STATUS);
+			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6", CUSTOM_WF_AND_STATUS);
 
 	public static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
-			+ "-xml-rpc-disabled", "3.6.11", XML_RPC_DISABLED);
+			+ "-xml-rpc-disabled", "3.6", XML_RPC_DISABLED);
 
 	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
-			"4.0.8", "");
+			"4.0", "");
 
 	public static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
-			"4.2.3", "");
+			"4.2", "");
 
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.5", "");
@@ -103,7 +103,7 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture DEFAULT = BUGS_4_2;
 
 	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_4, BUGS_3_6, BUGS_3_6_XML_RPC_DISABLED,
-			BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS, BUGS_4_0, BUGS_4_2 /*, BUGS_HEAD*/};
+			BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS, BUGS_4_0, BUGS_4_2, BUGS_HEAD };
 
 	private final String version;
 
@@ -167,7 +167,6 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaClient client(AbstractWebLocation location, String encoding) throws CoreException {
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
-		String repositoryURL = taskRepository.getUrl();
 		String filepath = "testdata/repository/" + getRepositoryName(location.getUrl()) + "/DesciptorFile.txt";
 		try {
 			File file = BugzillaFixture.getFile(filepath);

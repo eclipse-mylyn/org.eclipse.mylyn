@@ -647,7 +647,10 @@ public class BugzillaXmlRpcClientTest extends TestCase {
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			String version = bugzillaClient.getVersion(monitor);
-			assertEquals(BugzillaFixture.current().getVersion().toUpperCase(), version.toUpperCase());
+			assertEquals(
+					0,
+					new BugzillaVersion(BugzillaFixture.current().getVersion()).compareMajorMinorOnly(new BugzillaVersion(
+							version)));
 		}
 	}
 
