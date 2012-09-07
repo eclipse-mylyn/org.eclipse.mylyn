@@ -23,12 +23,12 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
@@ -132,7 +132,7 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+		toolkit = new FormToolkit(CommonFormUtil.getSharedColors());
 		Control control = super.createDialogArea(parent);
 		if (needsConfig()) {
 			GerritConfig config = getOperationFactory().getClient(getTask()).getGerritConfig();

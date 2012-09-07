@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -47,9 +47,16 @@ public class AddReviewersDialog extends GerritOperationDialog {
 		return GerritUiPlugin.getDefault().getOperationFactory().createAddReviewersOperation(task, request);
 	}
 
-	private List<String> getReviewers() {
-		String[] reviewers = messageEditor.getText().split(",");
-		return Arrays.asList(reviewers);
+	List<String> getReviewers() {
+		String[] reviewers = messageEditor.getText().split(","); //$NON-NLS-1$
+		List<String> result = new ArrayList<String>(reviewers.length);
+		for (int i = 0; i < reviewers.length; i++) {
+			reviewers[i] = reviewers[i].trim();
+			if (reviewers[i].length() > 0) {
+				result.add(reviewers[i]);
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -78,6 +85,17 @@ public class AddReviewersDialog extends GerritOperationDialog {
 			}
 		}
 		return super.processOperationResult(operation);
+	}
+
+	/**
+	 * Sets the text of the message control. Intended for testing.
+	 * 
+	 * @param text
+	 *            the text to set
+	 * @see #getReviewers()
+	 */
+	void setText(String text) {
+		messageEditor.setText(text);
 	}
 
 }
