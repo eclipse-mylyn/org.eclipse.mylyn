@@ -21,18 +21,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.ObjectSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeRepositoriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
+import org.eclipse.mylyn.internal.tasks.core.sync.UpdateRepositoryConfigurationJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
@@ -159,36 +160,10 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
 			final TaskRepository taskRepository, final ITask task) {
-		TaskJob updateJob = new TaskJob(Messages.TaskJobFactory_Refreshing_repository_configuration) {
-			private IStatus error;
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				monitor = SubMonitor.convert(monitor);
-				monitor.beginTask(Messages.TaskJobFactory_Receiving_configuration, IProgressMonitor.UNKNOWN);
-				try {
-					try {
-						connector.updateRepositoryConfiguration(taskRepository, task, monitor);
-					} catch (CoreException e) {
-						error = e.getStatus();
-					}
-				} finally {
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-
-			@Override
-			public boolean belongsTo(Object family) {
-				return family == taskRepository;
-			}
-
-			@Override
-			public IStatus getStatus() {
-				return error;
-			}
-		};
+		UpdateRepositoryConfigurationJob updateJob = new UpdateRepositoryConfigurationJob(
+				Messages.TaskJobFactory_Refreshing_repository_configuration, taskRepository, connector);
 		updateJob.setPriority(Job.INTERACTIVE);
+		updateJob.setRule(new ObjectSchedulingRule(taskRepository));
 		return updateJob;
 	}
 

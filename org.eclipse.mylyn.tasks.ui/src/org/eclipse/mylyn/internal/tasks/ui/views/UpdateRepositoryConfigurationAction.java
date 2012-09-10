@@ -11,25 +11,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryAction {
 
@@ -47,45 +40,10 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			final TaskRepository repository = getTaskRepository(iter.next());
 			if (repository != null) {
-				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
-				if (connector != null) {
-					final String jobName = MessageFormat.format(
-							Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X,
-							repository.getRepositoryUrl());
-					Job updateJob = new Job(jobName) {
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
-							try {
-								performUpdate(repository, connector, monitor);
-							} finally {
-								monitor.done();
-							}
-							return Status.OK_STATUS;
-						}
-					};
-					// show the progress in the system task bar if this is a user job (i.e. forced)
-					updateJob.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
-					updateJob.setUser(true);
-					updateJob.schedule();
-				}
+				TaskJob job = TasksUiInternal.updateRepositoryConfiguration(repository);
+				// show the progress in the system task bar if this is a user job (i.e. forced)
+				job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 			}
-		}
-	}
-
-	public void performUpdate(final TaskRepository repository, final AbstractRepositoryConnector connector,
-			IProgressMonitor monitor) {
-		try {
-			connector.updateRepositoryConfiguration(repository, monitor);
-		} catch (final CoreException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					TasksUiInternal.displayStatus(
-							Messages.UpdateRepositoryConfigurationAction_Error_updating_repository_configuration,
-							e.getStatus());
-				}
-			});
 		}
 	}
 
