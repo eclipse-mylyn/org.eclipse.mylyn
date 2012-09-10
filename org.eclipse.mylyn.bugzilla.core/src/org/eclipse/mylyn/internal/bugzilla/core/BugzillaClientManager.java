@@ -19,29 +19,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryChangeEvent;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta.Type;
-import org.eclipse.mylyn.internal.tasks.core.sync.UpdateRepositoryConfigurationJob;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
 /**
  * @author Steffen Pingel
  * @author Robert Elves (adaption for Bugzilla)
  */
-public class BugzillaClientManager implements IRepositoryListener, IRepositoryChangeListener {
+public class BugzillaClientManager implements IRepositoryListener {
 
 	private final Map<String, BugzillaClient> clientByUrl = new HashMap<String, BugzillaClient>();
 
 	private final BugzillaRepositoryConnector connector;
-
-	private JobChangeAdapter repositoryConfigurationUpdateJobChangeAdapter;
 
 	public BugzillaClientManager(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
@@ -95,36 +84,6 @@ public class BugzillaClientManager implements IRepositoryListener, IRepositoryCh
 
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
 		// ignore
-	}
-
-	@SuppressWarnings("restriction")
-	public void repositoryChanged(TaskRepositoryChangeEvent event) {
-		Type type = event.getDelta().getType();
-		if (type == TaskRepositoryDelta.Type.PROPERTY) {
-			Object key = event.getDelta().getKey();
-			if (IBugzillaConstants.BUGZILLA_USE_XMLRPC.equals(key)
-					|| IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE.equals(key)) {
-				final TaskRepository repository = event.getRepository();
-				TaskJob updateJob = new UpdateRepositoryConfigurationJob(
-						Messages.BugzillaClientManager_Refreshing_repository_configuration, repository, connector);
-				updateJob.setPriority(Job.INTERACTIVE);
-				updateJob.addJobChangeListener(repositoryConfigurationUpdateJobChangeAdapter);
-				updateJob.addJobChangeListener(new JobChangeAdapter() {
-					@Override
-					public void done(IJobChangeEvent event) {
-						synchronized (repository) {
-							repository.setUpdating(false);
-						}
-					}
-				});
-				updateJob.schedule();
-			}
-		}
-	}
-
-	public void setRepositoryConfigurationUpdateJobChangeAdapter(
-			JobChangeAdapter repositoryConfigurationUpdateJobChangeAdapter) {
-		this.repositoryConfigurationUpdateJobChangeAdapter = repositoryConfigurationUpdateJobChangeAdapter;
 	}
 
 }

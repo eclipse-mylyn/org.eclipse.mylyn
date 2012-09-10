@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
@@ -23,8 +21,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -96,15 +92,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 		BugzillaClientManager clientManager = bugzillaConnector.getClientManager();
-		clientManager.setRepositoryConfigurationUpdateJobChangeAdapter(new JobChangeAdapter() {
-			@Override
-			public void done(IJobChangeEvent event) {
-				TaskJob taskJob = ((TaskJob) (event.getJob()));
-				if (taskJob.getStatus() != null) {
-					TasksUiInternal.asyncLogAndDisplayStatus(Messages.BugzillaUiPlugin_Configuration_Refresh_Failed, taskJob.getStatus());
-				}
-			}
-		});
 		TasksUi.getRepositoryManager().addListener(clientManager);
 
 		// NOTE: initializing extensions in start(..) has caused race
