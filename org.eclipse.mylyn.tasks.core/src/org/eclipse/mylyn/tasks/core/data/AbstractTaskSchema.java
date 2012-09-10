@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -25,6 +27,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Steffen Pingel
  * @author David Green
+ * @author Miles Parker
  * @since 3.5
  */
 public abstract class AbstractTaskSchema {
@@ -248,14 +251,31 @@ public abstract class AbstractTaskSchema {
 
 	private final Map<String, Field> fieldByKey = new LinkedHashMap<String, Field>();
 
+	/**
+	 * Returns the specified field for the given key.
+	 */
 	public Field getFieldByKey(String taskKey) {
 		return fieldByKey.get(taskKey);
 	}
 
+	/**
+	 * Creates no-value attributes with default options for the supplied task for each schema field.
+	 */
 	public void initialize(TaskData taskData) {
 		for (Field field : fieldByKey.values()) {
 			field.createAttribute(taskData.getRoot());
 		}
+	}
+
+	/**
+	 * Provides an iterator for all fields within the schema. Subsequent modifications to the returned collection are
+	 * not reflected to schema.
+	 * 
+	 * @since 3.9
+	 * @return all fields within the schema
+	 */
+	public Collection<Field> getFields() {
+		return new ArrayList<Field>(fieldByKey.values());
 	}
 
 	protected Field createField(String key, String label, String type) {
