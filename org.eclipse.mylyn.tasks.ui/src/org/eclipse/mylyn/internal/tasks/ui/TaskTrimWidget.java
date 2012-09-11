@@ -238,7 +238,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	public void indicateActiveTask() {
-		if (activeTaskLabel != null && activeTaskLabel.isDisposed()) {
+		if (activeTaskLabel == null || activeTaskLabel.isDisposed()) {
 			return;
 		}
 
@@ -250,7 +250,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	public void indicateNoActiveTask() {
-		if (activeTaskLabel != null && activeTaskLabel.isDisposed()) {
+		if (activeTaskLabel == null || activeTaskLabel.isDisposed()) {
 			return;
 		}
 
