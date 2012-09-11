@@ -30,6 +30,8 @@ public class TracTestConstants {
 
 	public static final String TEST_TRAC_012_URL = TestConfiguration.getRepositoryUrl("trac012");
 
+	public static final String TEST_TRAC_10_URL = TestConfiguration.getRepositoryUrl("trac10");
+
 	public static final String TEST_TRAC_TRUNK_URL = TestConfiguration.getRepositoryUrl("tractrunk");
 
 	public static final String TEST_TRAC_INVALID_URL = TestConfiguration.getRepositoryUrl("doesnotexist");
