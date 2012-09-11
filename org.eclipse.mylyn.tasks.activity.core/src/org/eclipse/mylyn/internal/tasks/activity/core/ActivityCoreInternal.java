@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.activity.core;
 
-
 /**
  * @author Steffen Pingel
  */

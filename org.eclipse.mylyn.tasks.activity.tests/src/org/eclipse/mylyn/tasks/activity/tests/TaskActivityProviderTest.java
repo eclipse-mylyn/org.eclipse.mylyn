@@ -19,35 +19,65 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.tasks.activity.core.TaskActivityProvider;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
+import org.eclipse.mylyn.internal.tasks.index.ui.IndexReference;
 import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
 import org.eclipse.mylyn.tasks.activity.core.IActivityManager;
 import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.spi.IActivitySession;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Steffen Pingel
+ * @author Timur Achmetow
  */
+@SuppressWarnings("restriction")
 public class TaskActivityProviderTest {
-
 	protected List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+
+	private IndexReference reference;
+
+	private TaskTask task1;
+
+	@Before
+	public void setUp() throws Exception {
+		task1 = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL, "2");
+		task1.setSummary("1: hit");
+		task1.setTaskKey("2");
+		task1.setCreationDate(new Date());
+
+		TaskTask task2 = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL,
+				"3");
+		task2.setSummary("2: miss");
+		task2.setTaskKey("3");
+		task2.setCreationDate(new Date());
+
+		reference = new IndexReference();
+		TaskListIndex taskListIndex = reference.index();
+		taskListIndex.getTaskList().addTask(task1);
+		taskListIndex.getTaskList().addTask(task2);
+		taskListIndex.waitUntilIdle();
+	}
+
+	@After
+	public void tearDown() {
+		((TaskList) reference.index().getTaskList()).reset();
+		reference.dispose();
+	}
 
 	@Test
 	public void testActivityStream() throws Exception {
-		IRepositoryManager repositoryManager = new TaskRepositoryManager();
-		TaskList taskList = new TaskList();
-		LocalTask searchTask = new LocalTask("1", "summary");
-		LocalTask task1 = new LocalTask("2", "1: hit");
-		task1.setCreationDate(new Date());
-		LocalTask task2 = new LocalTask("3", "2: miss");
-		task2.setCreationDate(new Date());
-		taskList.addTask(task1);
-		taskList.addTask(task2);
-		TaskActivityProvider provider = new TaskActivityProvider(repositoryManager, taskList);
+		TaskTask searchTask = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND,
+				LocalRepositoryConnector.REPOSITORY_URL, "1");
+		searchTask.setSummary("summary");
+		searchTask.setTaskKey("1");
+
+		TaskActivityProvider provider = new TaskActivityProvider();
 		IActivitySession session = new IActivitySession() {
 			public IActivityManager getManger() {
 				return null;
@@ -60,9 +90,9 @@ public class TaskActivityProviderTest {
 		provider.open(session);
 		provider.query(new TaskActivityScope(searchTask), null);
 
-		ActivityEvent expected = new ActivityEvent(task1.getHandleIdentifier(), TaskActivityProvider.ID_PROVIDER,
+		ActivityEvent expected = new ActivityEvent(task1.getHandleIdentifier(), task1.getConnectorKind(),
 				task1.getSummary(), task1.getCreationDate(), null);
+
 		assertEquals(Collections.singletonList(expected), events);
 	}
-
 }

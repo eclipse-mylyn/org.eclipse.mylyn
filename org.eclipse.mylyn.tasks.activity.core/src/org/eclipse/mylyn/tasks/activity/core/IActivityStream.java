@@ -1,7 +1,3 @@
-package org.eclipse.mylyn.tasks.activity.core;
-
-import java.util.List;
-
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
@@ -13,15 +9,24 @@ import java.util.List;
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
+package org.eclipse.mylyn.tasks.activity.core;
+
+import java.util.Set;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 /**
  * Defines a stream of {@link ActivityEvent}s that
  * 
- * @author spingel
+ * @author Steffen Pingel
+ * @author Timur Achmetow
  */
 public interface IActivityStream {
 
-	List<ActivityEvent> getEvents();
+	Set<ActivityEvent> getEvents();
 
 	ActivityScope getScope();
 
+	void query(IProgressMonitor monitor) throws CoreException;
 }

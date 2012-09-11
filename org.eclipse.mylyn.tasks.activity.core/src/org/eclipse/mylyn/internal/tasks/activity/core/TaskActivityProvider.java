@@ -11,37 +11,31 @@
 
 package org.eclipse.mylyn.internal.tasks.activity.core;
 
-import org.eclipse.core.runtime.Assert;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
+import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
+import org.eclipse.mylyn.internal.tasks.index.ui.IndexReference;
 import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
 import org.eclipse.mylyn.tasks.activity.core.ActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.spi.ActivityProvider;
 import org.eclipse.mylyn.tasks.activity.core.spi.IActivitySession;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
+ * @author Timur Achmetow
  */
+@SuppressWarnings("restriction")
 public class TaskActivityProvider extends ActivityProvider {
 
-	public static final String ID_PROVIDER = "org.eclipse.mylyn.tasks.activity.core.providers.TaskActivityProvider"; //$NON-NLS-1$
+	private static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
 
 	private IActivitySession session;
-
-	private final IRepositoryManager repositoryManager;
-
-	private final TaskList taskList;
-
-	public TaskActivityProvider(IRepositoryManager repositoryManager, TaskList taskList) {
-		Assert.isNotNull(repositoryManager);
-		Assert.isNotNull(taskList);
-		this.repositoryManager = repositoryManager;
-		this.taskList = taskList;
-	}
 
 	@Override
 	public void open(IActivitySession session) {
@@ -52,12 +46,14 @@ public class TaskActivityProvider extends ActivityProvider {
 	public void query(ActivityScope scope, IProgressMonitor monitor) throws CoreException {
 		if (scope instanceof TaskActivityScope) {
 			ITask scopeTask = ((TaskActivityScope) scope).getTask();
-			for (ITask task : taskList.getAllTasks()) {
-				if (task.getSummary().contains(scopeTask.getTaskId())) {
-					ActivityEvent event = new ActivityEvent(task.getHandleIdentifier(), ID_PROVIDER, task.getSummary(),
-							task.getCreationDate(), null);
-					session.fireActivityEvent(event);
-				}
+
+			GetAssociatedTasks collector = new GetAssociatedTasks(session);
+			IndexReference reference = new IndexReference();
+			try {
+				TaskListIndex taskListIndex = reference.index();
+				taskListIndex.find(scopeTask.getTaskKey(), collector, 50);
+			} finally {
+				reference.dispose();
 			}
 		}
 	}
@@ -66,4 +62,36 @@ public class TaskActivityProvider extends ActivityProvider {
 	public void close() {
 	}
 
+	private static class GetAssociatedTasks extends TaskCollector {
+		private final IActivitySession session;
+
+		public GetAssociatedTasks(IActivitySession session) {
+			this.session = session;
+		}
+
+		@Override
+		public void collect(ITask task) {
+
+			Map<String, String> attrMap = new HashMap<String, String>();
+			attrMap.put("author", getAuthor(task)); //$NON-NLS-1$
+			attrMap.put("taskId", getTaskId(task)); //$NON-NLS-1$			
+			ActivityEvent activityEvent = new ActivityEvent(task.getHandleIdentifier(), task.getConnectorKind(),
+					task.getSummary(), task.getCreationDate(), attrMap);
+			session.fireActivityEvent(activityEvent);
+		}
+
+		private String getTaskId(ITask task) {
+			if (task.getTaskId() == null) {
+				return UNKNOWN;
+			}
+			return task.getTaskId();
+		}
+
+		private String getAuthor(ITask task) {
+			if (task.getOwner() == null) {
+				return UNKNOWN;
+			}
+			return task.getOwner();
+		}
+	}
 }

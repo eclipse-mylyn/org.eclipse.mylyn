@@ -12,8 +12,11 @@
 package org.eclipse.mylyn.internal.tasks.activity.ui;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.activity.core.ActivityManager;
+import org.eclipse.mylyn.internal.tasks.activity.ui.provider.ActivityRecordContentProvider;
+import org.eclipse.mylyn.internal.tasks.activity.ui.provider.ActivityRecordLabelProvider;
 import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
 import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -52,11 +55,10 @@ public class ActivityPart extends AbstractTaskEditorPart {
 
 	private void createTreeViewer(FormToolkit toolkit, Composite activityComposite) {
 		TreeViewer viewer = new TreeViewer(toolkit.createTree(activityComposite, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
+				| SWT.V_SCROLL | SWT.FULL_SELECTION));
 		GridDataFactory.fillDefaults().hint(500, 100).grab(true, true).applyTo(viewer.getControl());
-		viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		viewer.setContentProvider(new ActivityRecordContentProvider());
-//		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ActivityRecordLabelProvider(), null, null));
+		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ActivityRecordLabelProvider(), null, null));
 		IActivityStream stream = new ActivityManager().getStream(new TaskActivityScope(getModel().getTask()));
 		viewer.setInput(stream);
 	}

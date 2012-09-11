@@ -12,8 +12,9 @@
 package org.eclipse.mylyn.internal.tasks.activity.core;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
 import org.eclipse.mylyn.tasks.activity.core.ActivityScope;
@@ -26,14 +27,14 @@ import org.eclipse.mylyn.tasks.activity.core.spi.IActivitySession;
  */
 public class ActivityManager implements IActivityManager, IActivitySession {
 
-	private final Map<String, ActivityEvent> events;
+	private final Set<ActivityEvent> events;
 
 	public ActivityManager() {
-		this.events = new ConcurrentHashMap<String, ActivityEvent>();
+		this.events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
 	}
 
 	public Collection<ActivityEvent> getEvents(ActivityScope scope) {
-		return events.values();
+		return events;
 	}
 
 	public IActivityStream getStream(ActivityScope scope) {
@@ -45,7 +46,6 @@ public class ActivityManager implements IActivityManager, IActivitySession {
 	}
 
 	public void fireActivityEvent(ActivityEvent event) {
-		events.put(event.getHandle(), event);
+		events.add(event);
 	}
-
 }

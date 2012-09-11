@@ -15,11 +15,13 @@ import java.util.Date;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 
 /**
  * @author Steffen Pingel
+ * @author Timur Achmetow
  */
-public class ActivityEvent {
+public class ActivityEvent implements Comparable<ActivityEvent> {
 
 	private final String handle;
 
@@ -32,10 +34,9 @@ public class ActivityEvent {
 	private final Map<String, String> attributes;
 
 	public ActivityEvent(String handle, String kind, String summary, Date date, Map<String, String> attributes) {
-		Assert.isNotNull(handle);
-		Assert.isNotNull(kind);
-		Assert.isNotNull(summary);
-		Assert.isNotNull(date);
+		Assert.isNotNull("Handle must not be null", handle); //$NON-NLS-1$
+		Assert.isNotNull("Task kind must not be null", kind); //$NON-NLS-1$
+		Assert.isNotNull("Task summary must not be null", summary); //$NON-NLS-1$
 		this.handle = handle;
 		this.kind = kind;
 		this.summary = summary;
@@ -93,4 +94,7 @@ public class ActivityEvent {
 		return true;
 	}
 
+	public int compareTo(ActivityEvent object) {
+		return CoreUtil.compare(date, object.getDate());
+	}
 }

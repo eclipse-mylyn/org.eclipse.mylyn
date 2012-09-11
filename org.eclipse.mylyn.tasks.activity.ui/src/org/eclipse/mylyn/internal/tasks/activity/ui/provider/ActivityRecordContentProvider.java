@@ -9,13 +9,14 @@
  *     Timur Achmetow - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.activity.ui;
+package org.eclipse.mylyn.internal.tasks.activity.ui.provider;
 
-import java.util.List;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
 
 /**
@@ -23,28 +24,29 @@ import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
  */
 @SuppressWarnings("restriction")
 public class ActivityRecordContentProvider implements ITreeContentProvider {
+	private static final String PLUGIN_ID = "org.eclipse.mylyn.tasks.activity.ui"; //$NON-NLS-1$
+
 	private static final Object[] NO_ELEMENTS = new Object[0];
 
-	private List<ActivityEvent> eventList;
+	private IActivityStream activityStream;
 
 	public void dispose() {
-		eventList = null;
+		activityStream = null;
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof IActivityStream) {
-			eventList = ((IActivityStream) newInput).getEvents();
+			IActivityStream activityStream = (IActivityStream) newInput;
+			querryProvider(activityStream);
+			this.activityStream = activityStream;
 		}
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return eventList.toArray();
+		return activityStream.getEvents().toArray();
 	}
 
 	public Object[] getChildren(Object parentElement) {
-//		if (parentElement instanceof ActivityCommitEvent) {
-//			return ((ActivityCommitEvent) parentElement).getChanges().toArray();
-//		}
 		return NO_ELEMENTS;
 	}
 
@@ -53,9 +55,15 @@ public class ActivityRecordContentProvider implements ITreeContentProvider {
 	}
 
 	public boolean hasChildren(Object element) {
-//		if (element instanceof ActivityCommitEvent) {
-//			return true;
-//		}
 		return false;
+	}
+
+	private void querryProvider(IActivityStream activityStream) {
+		try {
+			activityStream.query(null);
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, PLUGIN_ID,
+					"Problem occured when querry the TaskActivityProvider.", e)); //$NON-NLS-1$
+		}
 	}
 }

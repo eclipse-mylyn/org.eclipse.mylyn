@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.internal.tasks.activity.core;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
 import org.eclipse.mylyn.tasks.activity.core.ActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.IActivityManager;
@@ -22,10 +25,11 @@ import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
 
 /**
  * @author Steffen Pingel
+ * @author Timur Achmetow
  */
 public class ActivityStream implements IActivityStream {
 
-	private final List<ActivityEvent> events;
+	private final Set<ActivityEvent> events;
 
 	private final ActivityScope scope;
 
@@ -36,7 +40,7 @@ public class ActivityStream implements IActivityStream {
 		Assert.isNotNull(scope);
 		this.manager = manager;
 		this.scope = scope;
-		this.events = new CopyOnWriteArrayList<ActivityEvent>();
+		this.events = Collections.synchronizedSet(new TreeSet<ActivityEvent>());
 		initialize();
 	}
 
@@ -44,11 +48,19 @@ public class ActivityStream implements IActivityStream {
 		events.addAll(manager.getEvents(scope));
 	}
 
+	public void query(IProgressMonitor monitor) throws CoreException {
+		TaskActivityProvider reviewTaskProvider = new TaskActivityProvider();
+		reviewTaskProvider.open(manager);
+		reviewTaskProvider.query(scope, monitor);
+
+		initialize();
+	}
+
 	public void addEvent(ActivityEvent event) {
 		events.add(event);
 	}
 
-	public List<ActivityEvent> getEvents() {
+	public Set<ActivityEvent> getEvents() {
 		return events;
 	}
 
@@ -63,5 +75,4 @@ public class ActivityStream implements IActivityStream {
 	public void removeEvent(ActivityEvent event) {
 		events.remove(event);
 	}
-
 }
