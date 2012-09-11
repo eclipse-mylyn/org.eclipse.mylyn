@@ -1,0 +1,50 @@
+#ScriptAlias /<%= envid %> <%= base %>/bin/trac-<%= version %>.cgi
+ScriptAlias /<%= envid %> <%= envbase %>/trac-<%= version %>.fcgi
+Alias /<%= envid %>-htdocs <%= prefix %>/htdocs/
+
+<Location /<%= envid %>>
+  SetEnv PYTHON_EGG_CACHE /tmp/eggs
+  SetEnv TRAC_ENV <%= env %>
+  Order allow,deny
+  Allow from all
+
+<% if @allbasicauth %>
+  AuthType Basic
+  AuthName "Trac Test Project"
+  AuthUserFile <%= envbase %>/htpasswd
+  Require valid-user
+<% end %>  
+</Location>
+
+<% if @allbasicauth == false %>
+<% if @accountmanagerplugin == "" %>
+<Location /<%= envid %>/login>
+<% if @certauth %>
+  SSLOptions +FakeBasicAuth
+  SSLVerifyClient require
+  SSLVerifyDepth  1
+<% end %>
+
+<% if @digestauth %>
+  AuthType Digest
+  AuthName "Trac Test Project"
+  AuthUserFile <%= envbase %>/htpasswd.digest
+  Require valid-user
+<% end %>
+
+<% if @digestauth == false %>
+  AuthType Basic
+  AuthName "Trac Test Project"
+  AuthUserFile <%= envbase %>/htpasswd
+  Require valid-user
+<% end %>
+</Location>
+<% end %>
+<% end %>
+
+<Directory <%= prefix %>/htdocs/>
+  Options Indexes MultiViews +FollowSymLinks
+  AllowOverride None
+  Order allow,deny
+  Allow from all
+</Directory>

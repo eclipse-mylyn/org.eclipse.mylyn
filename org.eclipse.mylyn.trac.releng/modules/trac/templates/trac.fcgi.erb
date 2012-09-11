@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+import glob, os, sys
+for i in glob.glob( os.path.join('<%= prefix %>/lib', '*.egg') ):
+    sys.path = [i] + sys.path
+sys.path = ['<%= prefix %>/lib'] + sys.path
+
+import os
+os.environ['TRAC_ENV'] = "<%= env %>"
+
+try:
+    from trac.web import fcgi_frontend
+    fcgi_frontend.run()
+except SystemExit:
+    raise
+except Exception, e:
+    print 'Content-Type: text/plain\r\n\r\n',
+    print 'Oops...'
+    print
+    print 'Trac detected an internal error:'
+    print
+    print e
+    print
+    import traceback
+    import StringIO
+    tb = StringIO.StringIO()
+    traceback.print_exc(file=tb)
+    print tb.getvalue()
