@@ -582,7 +582,9 @@ public class PatchSetSection extends AbstractGerritSection {
 			public void open(OpenEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				IFileItem item = (IFileItem) selection.getFirstElement();
-				doOpen((IReviewItemSet) viewer.getInput(), item);
+				if (item != null) {
+					doOpen((IReviewItemSet) viewer.getInput(), item);
+				}
 			}
 		});
 
