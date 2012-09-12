@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
+import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
@@ -58,6 +59,7 @@ public class AllGerritTests {
 		fixture.createSuite(suite);
 		fixture.add(GerritClientTest.class);
 		fixture.add(GerritConnectorTest.class);
+		fixture.add(GerritSynchronizationTest.class);
 		fixture.done();
 	}
 

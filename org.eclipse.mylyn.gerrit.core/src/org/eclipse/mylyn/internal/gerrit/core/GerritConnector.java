@@ -256,12 +256,19 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		Date oldModificationDate = task.getModificationDate();
+
 		TaskMapper mapper = (TaskMapper) getTaskMapping(taskData);
 		mapper.applyTo(task);
 		String key = task.getTaskKey();
 		if (key != null) {
 			task.setSummary(NLS.bind("{0} [{1}]", mapper.getSummary(), key));
 			task.setTaskKey(task.getTaskId());
+		}
+
+		// retain modification date to force an update when full task data is received
+		if (taskData.isPartial()) {
+			task.setModificationDate(oldModificationDate);
 		}
 	}
 
