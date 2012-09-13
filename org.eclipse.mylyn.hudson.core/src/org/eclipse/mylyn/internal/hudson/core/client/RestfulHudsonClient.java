@@ -403,7 +403,8 @@ public class RestfulHudsonClient {
 		info = new HudsonOperation<HudsonServerInfo>(client) {
 			@Override
 			public HudsonServerInfo execute() throws IOException, HudsonException, JAXBException {
-				HttpRequestBase request = createHeadRequest(client.getLocation().getUrl());
+				// XXX should use createHeadRequest() which is broken on Jenkins 1.459, see bug 376468
+				HttpRequestBase request = createGetRequest(client.getLocation().getUrl());
 				CommonHttpResponse response = execute(request, monitor);
 				return processAndRelease(response, monitor);
 			}

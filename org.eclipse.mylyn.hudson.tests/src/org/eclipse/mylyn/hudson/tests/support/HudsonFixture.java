@@ -45,7 +45,7 @@ public class HudsonFixture extends RepositoryTestFixture {
 			TestConfiguration.getRepositoryUrl("jenkins-1.447"), "1.447.1", Type.JENKINS, "REST");
 
 	private static final HudsonFixture JENKINS_1_466 = new HudsonFixture(
-			TestConfiguration.getRepositoryUrl("jenkins-latest"), "1.466", Type.JENKINS, "REST");
+			TestConfiguration.getRepositoryUrl("jenkins-1.466"), "1.466.1", Type.JENKINS, "REST");
 
 	public static final HudsonFixture HUDSON_2_1_SECURE = new HudsonFixture(TestConfiguration.getRepositoryUrl(
 			"hudson-2.1", true), "2.1.0", Type.HUDSON, "REST/Certificate Authentication");
@@ -53,7 +53,8 @@ public class HudsonFixture extends RepositoryTestFixture {
 	/**
 	 * Standard configurations for running all test against.
 	 */
-	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, HUDSON_2_2, JENKINS_1_447 };
+	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, HUDSON_2_2, JENKINS_1_447,
+			JENKINS_1_466 };
 
 	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_3_0, HUDSON_2_1_SECURE };
 
