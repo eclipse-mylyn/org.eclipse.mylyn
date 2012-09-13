@@ -404,8 +404,8 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
 							// TODO handle custom fields
-						} else if (tag.getTagType() == Tag.H2
-								&& ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						} else if ((tag.getTagType() == Tag.H2 && ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class"))))
+								|| tag.getTagType() == Tag.SPAN && ("summary".equals(tag.getAttribute("class")))) { //$NON-NLS-1$ //$NON-NLS-2$ 
 							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
 						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) { //$NON-NLS-1$ //$NON-NLS-2$
 							String text = getStrongText(tokenizer);
@@ -436,7 +436,19 @@ public class TracWebClient extends AbstractTracClient {
 										ticket.putBuiltinValue(Key.RESOLUTION, t.nextToken());
 									}
 								}
+							} else if ("trac-status".equals(clazz)) { //$NON-NLS-1$
+								ticket.putBuiltinValue(Key.STATUS, getText(tokenizer));
+							} else if ("trac-type".equals(clazz)) { //$NON-NLS-1$
+								ticket.putBuiltinValue(Key.TYPE, getText(tokenizer));
+							} else if ("trac-resolution".equals(clazz)) { //$NON-NLS-1$
+								String text = getText(tokenizer);
+								if (text.startsWith("(") && text.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
+									ticket.putBuiltinValue(Key.RESOLUTION, text.substring(1, text.length() - 1).trim());
+								} else {
+									ticket.putBuiltinValue(Key.RESOLUTION, text);
+								}
 							}
+
 						}
 						// TODO parse description
 					}
@@ -483,7 +495,9 @@ public class TracWebClient extends AbstractTracClient {
 				if (line == null) {
 					throw new InvalidTicketException();
 				}
-				StringTokenizer t = new StringTokenizer(line, "\t"); //$NON-NLS-1$
+				// the utf-8 output in Trac 1.0 starts with a byte-order mark which
+				// is passed to the tokenizer since it would otherwise end up in the first token
+				StringTokenizer t = new StringTokenizer(line, "\ufeff\t"); //$NON-NLS-1$
 				Key[] fields = new Key[t.countTokens()];
 				for (int i = 0; i < fields.length; i++) {
 					fields[i] = Key.fromKey(t.nextToken());
@@ -583,10 +597,11 @@ public class TracWebClient extends AbstractTracClient {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.SCRIPT) {
 							String text = getText(tokenizer).trim();
-							if (text.startsWith("var properties=")) { //$NON-NLS-1$
-								if (!parseAttributesJSon(text)) {
+							int i = text.indexOf("var properties=");
+							if (i != -1) {
+								if (!parseAttributesJSon(text.substring(i))) {
 									// fall back
-									parseAttributesTokenizer(text);
+									parseAttributesTokenizer(text.substring(i));
 								}
 							}
 						}
