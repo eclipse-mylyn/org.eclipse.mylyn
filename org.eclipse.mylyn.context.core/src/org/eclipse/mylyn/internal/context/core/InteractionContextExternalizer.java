@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -168,13 +169,17 @@ public class InteractionContextExternalizer {
 				public void run() throws Exception {
 					InputStream additionalContextInformation = contributor.getDataAsStream(context);
 					if (additionalContextInformation != null) {
-						String encoded = URLEncoder.encode(contributor.getIdentifier(),
-								InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-						ZipEntry zipEntry = new ZipEntry(encoded);
-						outputStream.putNextEntry(zipEntry);
-						IOUtils.copy(additionalContextInformation, outputStream);
-						outputStream.flush();
-						outputStream.closeEntry();
+						try {
+							String encoded = URLEncoder.encode(contributor.getIdentifier(),
+									InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+							ZipEntry zipEntry = new ZipEntry(encoded);
+							outputStream.putNextEntry(zipEntry);
+							IOUtils.copy(additionalContextInformation, outputStream);
+							outputStream.flush();
+							outputStream.closeEntry();
+						} finally {
+							additionalContextInformation.close();
+						}
 					}
 				}
 			});
@@ -185,13 +190,19 @@ public class InteractionContextExternalizer {
 		if (!file.exists()) {
 			return null;
 		}
-		ZipFile zipFile = new ZipFile(file);
+		final ZipFile zipFile = new ZipFile(file);
 		ZipEntry entry = findFileInZip(zipFile, contributorIdentifier);
 		if (entry == null) {
 			return null;
 		}
 
-		return zipFile.getInputStream(entry);
+		return new FilterInputStream(zipFile.getInputStream(entry)) {
+			@Override
+			public void close() throws IOException {
+				super.close();
+				zipFile.close();
+			}
+		};
 	}
 
 	private ZipEntry findFileInZip(ZipFile zipFile, String identifier) throws UnsupportedEncodingException {
