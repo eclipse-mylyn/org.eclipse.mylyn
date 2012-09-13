@@ -40,6 +40,7 @@
           <skip>${test.integration.skip}</skip>
           <testSuite>${project.artifactId}</testSuite>
           <testClass>${test.integration.suite}</testClass>
+          <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
           <explodedBundles>
             <explodedBundle>org.eclipse.mylyn.bugzilla.tests</explodedBundle>
           </explodedBundles>
