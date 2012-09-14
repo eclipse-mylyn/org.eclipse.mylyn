@@ -21,9 +21,9 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
  * 
  * @author David Green
  */
-public class DateTimeTemlate extends Template {
+public class DateTimeTemplate extends Template {
 
-	public DateTimeTemlate() {
+	public DateTimeTemplate() {
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class DateTimeTemlate extends Template {
 	 * @param templateMarkup
 	 *            the format to use with {@link SimpleDateFormat}.
 	 */
-	public DateTimeTemlate(String name, String templateMarkup) {
+	public DateTimeTemplate(String name, String templateMarkup) {
 		super(name, templateMarkup);
 	}
 

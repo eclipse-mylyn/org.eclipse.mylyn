@@ -26,19 +26,19 @@ public class BuiltInTemplateResolver extends TemplateResolver {
 		registerTemplate(new Template("ndash", "&nbsp;&ndash; ")); //$NON-NLS-1$//$NON-NLS-2$
 		registerTemplate(new Template("emdash", "&nbsp;&mdash; ")); //$NON-NLS-1$//$NON-NLS-2$
 		registerTemplate(new Template("endash", "&nbsp;&ndash; ")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTYEAR", "yyyy")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTMONTH", "MM")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTMONTHNAME", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTMONTHNAMEGEN", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTMONTHABBREV", "MMM")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTDAY", "dd")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTDAY2", "dd")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTDOW", "F")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTDAYNAME", "EEEEEEEE")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTTIME", "HH:mm")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTHOUR", "HH")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTWEEK", "ww")); //$NON-NLS-1$//$NON-NLS-2$
-		registerTemplate(new DateTimeTemlate("CURRENTTIMESTAMP", "yyyyMMddHHmmss")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTYEAR", "yyyy")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTMONTH", "MM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTMONTHNAME", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTMONTHNAMEGEN", "MMMMMMMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTMONTHABBREV", "MMM")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTDAY", "dd")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTDAY2", "dd")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTDOW", "F")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTDAYNAME", "EEEEEEEE")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTTIME", "HH:mm")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTHOUR", "HH")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTWEEK", "ww")); //$NON-NLS-1$//$NON-NLS-2$
+		registerTemplate(new DateTimeTemplate("CURRENTTIMESTAMP", "yyyyMMddHHmmss")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	@Override
