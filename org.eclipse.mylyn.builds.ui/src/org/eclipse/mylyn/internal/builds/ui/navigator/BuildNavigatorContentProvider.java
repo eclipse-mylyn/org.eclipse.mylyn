@@ -13,9 +13,13 @@ package org.eclipse.mylyn.internal.builds.ui.navigator;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.builds.core.IBuildModel;
+import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildModel;
+import org.eclipse.mylyn.builds.internal.core.BuildPackage;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildModelContentAdapter;
@@ -34,9 +38,29 @@ public class BuildNavigatorContentProvider implements ITreeContentProvider {
 	private final Adapter modelListener = new BuildModelContentAdapter() {
 		@Override
 		public void doNotifyChanged(Notification msg) {
+			if (msg.getNotifier() instanceof IBuildModel) {
+				int featureId = msg.getFeatureID(IBuildModel.class);
+				if (featureId != BuildPackage.BUILD_MODEL__SERVERS) {
+					// ignore changes that are not related to servers
+					return;
+				}
+			}
+			if (msg.getNotifier() instanceof IBuildServer) {
+				int featureId = msg.getFeatureID(IBuildServer.class);
+				if (featureId == BuildPackage.BUILD_SERVER__OPERATIONS
+						|| featureId == BuildPackage.BUILD_SERVER__REFRESH_DATE) {
+					// ignore changes that are caused by operations but not visualized
+					return;
+				}
+			}
+
 			if (viewer != null && !viewer.getControl().isDisposed()) {
 				viewer.refresh();
 			}
+		}
+
+		protected boolean observing(Notifier notifier) {
+			return notifier instanceof IBuildServer || notifier instanceof IBuildModel;
 		}
 	};
 

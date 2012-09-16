@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.IBuildModel;
@@ -56,6 +57,13 @@ public class BuildContentProvider implements ITreeContentProvider {
 		protected void doNotifyChanged(Notification msg) {
 			refresh();
 		}
+
+		protected boolean observing(Notifier notifier) {
+			// reduce the number of refreshes by limiting the number of monitored objects: refresh jobs trigger notifications 
+			// on the server and model objects which is sufficient to monitor plan updates
+			return notifier instanceof IBuildServer || notifier instanceof IBuildModel;
+		}
+
 	};
 
 	private boolean nestPlansEnabled;
