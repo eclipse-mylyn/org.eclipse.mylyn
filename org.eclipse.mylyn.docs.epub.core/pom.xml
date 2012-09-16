@@ -10,6 +10,10 @@
   <artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  <properties>
+    <target-version>${alt-target-version}</target-version>
+    <platform-repository-url>${alt-platform-repository-url}</platform-repository-url>
+  </properties>
   <build>
     <plugins>
       <plugin>
