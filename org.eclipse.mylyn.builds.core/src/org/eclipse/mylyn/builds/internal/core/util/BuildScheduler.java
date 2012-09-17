@@ -18,8 +18,11 @@ import org.eclipse.mylyn.builds.internal.core.operations.BuildJob;
 
 /**
  * @author Steffen Pingel
+ * @author Lucas Panjer
  */
 public class BuildScheduler {
+
+	private static final long MAX_QUEUED_REFRESH_JOBS = 2;
 
 	public BuildScheduler() {
 	}
@@ -29,7 +32,10 @@ public class BuildScheduler {
 	}
 
 	public void schedule(Job job, long interval) {
-		job.schedule(interval);
+		Job[] existingJobs = Job.getJobManager().find(job);
+		if (existingJobs.length < MAX_QUEUED_REFRESH_JOBS) {
+			job.schedule(interval);
+		}
 	}
 
 	public void schedule(List<BuildJob> jobs) {

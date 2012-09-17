@@ -35,6 +35,7 @@ import org.eclipse.osgi.util.NLS;
  * The refresh operation refreshes elements of the model with the latest state from the server.
  * 
  * @author Steffen Pingel
+ * @author Lucas Panjer
  */
 public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
@@ -79,6 +80,18 @@ public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 				return Status.CANCEL_STATUS;
 			}
 			return Status.OK_STATUS;
+		}
+
+		@Override
+		public boolean belongsTo(Object family) {
+			if (family instanceof RefreshJob) {
+				RefreshJob refreshJob = (RefreshJob) family;
+				if (getElement().equals(refreshJob.getElement())) {
+					return true;
+				}
+				return false;
+			}
+			return super.belongsTo(family);
 		}
 
 		@Override
