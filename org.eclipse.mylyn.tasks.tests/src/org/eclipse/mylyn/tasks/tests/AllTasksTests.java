@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskAttributeMapperTest;
+import org.eclipse.mylyn.tasks.tests.data.TaskAttributeTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.AbstractRepositoryConnectorUiTest;
@@ -46,6 +47,7 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
  * @author Mik Kersten
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public class AllTasksTests {
 
@@ -132,6 +134,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RepositoryClientManagerTest.class);
 		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
 		suite.addTestSuite(SynchronizeTasksJobTest.class);
+		suite.addTestSuite(TaskAttributeTest.class);
 		return suite;
 	}
 

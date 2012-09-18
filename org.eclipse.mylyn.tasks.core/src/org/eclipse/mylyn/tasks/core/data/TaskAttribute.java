@@ -573,6 +573,8 @@ public final class TaskAttribute {
 	}
 
 	public void setValues(List<String> values) {
+		Assert.isNotNull(values);
+		Assert.isTrue(!values.contains(null));
 		this.values.clear();
 		this.values.addAll(values);
 	}
