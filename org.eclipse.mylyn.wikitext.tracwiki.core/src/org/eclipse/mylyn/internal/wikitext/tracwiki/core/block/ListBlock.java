@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - bug 389812
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tracwiki.core.block;
 
@@ -15,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
@@ -28,7 +29,7 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 4;
 
-	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*|-)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("(?:(\\s*)(?:(\\*|-)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -109,9 +110,6 @@ public class ListBlock extends Block {
 
 	private int calculateLevel(String spaces) {
 		int length = spaces.length();
-		if (length == 0) {
-			throw new IllegalStateException();
-		}
 		int level = 1;
 		for (int x = 1; x < listState.size(); ++x) {
 			ListState state = listState.get(x);

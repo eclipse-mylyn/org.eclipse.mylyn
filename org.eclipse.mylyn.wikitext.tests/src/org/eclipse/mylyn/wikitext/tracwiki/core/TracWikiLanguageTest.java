@@ -8,6 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Holger Voormann - tests for bug 279029
+ *     Jeremie Bresson - bug 389812
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
@@ -280,6 +281,22 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><ul><li>a list</li><li>with two lines</li></ul></body>"));
 	}
 
+	public void testListUnorderedWithoutSpacePrefix() throws Exception {
+		//bug 389812
+		String html = parser.parseToHtml("* a list\n* with two lines");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><ul><li>a list</li><li>with two lines</li></ul></body>"));
+	}
+
+	public void testListUnorderedBigSpacePrefix() throws Exception {
+		//bug 389812
+		String html = parser.parseToHtml("   * a list\n   * with two lines");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><ul><li>a list</li><li>with two lines</li></ul></body>"));
+	}
+
 	public void testListUnorderedWithHyphens() throws IOException {
 		String html = parser.parseToHtml(" - a list\n - with two lines");
 
@@ -295,6 +312,14 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<li>a list</li>"));
 		assertTrue(html.contains("<li>with two lines</li>"));
 		assertTrue(html.contains("</ol>"));
+	}
+
+	public void testListOrderedWithoutSpacePrefix() throws Exception {
+		//bug 389812
+		String html = parser.parseToHtml("1. a list\n1. with two lines");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><ol><li>a list</li><li>with two lines</li></ol></body>"));
 	}
 
 	public void testListOrderedStartAt2() throws IOException {
@@ -319,6 +344,14 @@ public class TracWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<li>a list"));
 		assertTrue(html.contains("<li>nested"));
 		assertTrue(html.contains("</ol>"));
+	}
+
+	public void testListNestedUnordered() throws Exception {
+		//bug 389812
+		String html = parser.parseToHtml("* Apples\n  * Sauce\n  * Juice\n* Oranges\n* Grapes");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<ul><li>Apples<ul><li>Sauce</li><li>Juice</li></ul></li><li>Oranges</li><li>Grapes</li></ul>"));
 	}
 
 	public void testListNestedMixed() throws IOException {
