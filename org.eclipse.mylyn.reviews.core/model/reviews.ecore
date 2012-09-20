@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="reviews"
-    nsURI="http://eclipse.org/mylyn/reviews/core/1.0" nsPrefix="reviews">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="reviews" nsURI="http://eclipse.org/mylyn/reviews/core/1.0" nsPrefix="reviews">
   <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="#//ReviewComponent">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topics" upperBound="-1"
         eType="#//Topic" transient="true" derived="true"/>
@@ -39,6 +37,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Location" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="User">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TaskReference" eSuperTypes="#//ReviewComponent">
