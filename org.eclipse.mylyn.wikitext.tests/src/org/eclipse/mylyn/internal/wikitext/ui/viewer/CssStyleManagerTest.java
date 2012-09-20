@@ -61,8 +61,7 @@ public class CssStyleManagerTest extends TestCase {
 		FontState state = new FontState();
 		processCssStyles(state, defaultState,
 				"font-size: 14px;color: rgb(3,3,3);font-style: italic bold;text-decoration: underline; background-color: blue;");
-
-		assertEquals("1.273", String.format("%1.3f", state.sizeFactor));
+		assertEquals(1.273f, state.sizeFactor, 0.001f); // 1.2727273
 		assertEquals(new RGB(0, 0, 255), state.background);
 		assertEquals(new RGB(3, 3, 3), state.foreground);
 		assertTrue(state.isBold());
