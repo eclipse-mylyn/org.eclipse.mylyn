@@ -18,8 +18,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.CommitComment;
+import org.eclipse.egit.github.core.CommitStatus;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -311,5 +314,122 @@ public class CommitServiceTest {
 		GitHubRequest request = new GitHubRequest();
 		request.setUri("/repos/o/n/compare/v1...HEAD");
 		verify(client).get(request);
+	}
+
+	/**
+	 * Get statuses
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getStatusesNullRepository() throws IOException {
+		service.getStatuses(null, "123");
+	}
+
+	/**
+	 * Get statuses
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getStatusesNullSha() throws IOException {
+		service.getStatuses(new RepositoryId("o", "n"), null);
+	}
+
+	/**
+	 * Get statuses
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getStatusesEmptySha() throws IOException {
+		service.getStatuses(new RepositoryId("o", "n"), "");
+	}
+
+	/**
+	 * Get statuses
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getStatuses() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getStatuses(repo, "123");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/statuses/123"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void createStatus() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		CommitStatus status = new CommitStatus();
+		status.setDescription("description");
+		status.setTargetUrl("http://target/url");
+		status.setState("success");
+		service.createStatus(repo, "123", status);
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("description", status.getDescription());
+		params.put("target_url", status.getTargetUrl());
+		params.put("state", status.getState());
+		verify(client).post("/repos/o/n/statuses/123", params,
+				CommitStatus.class);
+	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createStatusNullRepository() throws IOException {
+		CommitStatus status = new CommitStatus();
+		status.setDescription("description");
+		status.setTargetUrl("http://target/url");
+		status.setState("success");
+		service.createStatus(null, "123", status);
+	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createStatusNullSha() throws IOException {
+		CommitStatus status = new CommitStatus();
+		status.setDescription("description");
+		status.setTargetUrl("http://target/url");
+		status.setState("success");
+		service.createStatus(new RepositoryId("o", "n"), null, status);
+	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createStatusEmptySha() throws IOException {
+		CommitStatus status = new CommitStatus();
+		status.setDescription("description");
+		status.setTargetUrl("http://target/url");
+		status.setState("success");
+		service.createStatus(new RepositoryId("o", "n"), "", status);
+	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createStatusNullStatus() throws IOException {
+		service.createStatus(new RepositoryId("o", "n"), "123", null);
 	}
 }
