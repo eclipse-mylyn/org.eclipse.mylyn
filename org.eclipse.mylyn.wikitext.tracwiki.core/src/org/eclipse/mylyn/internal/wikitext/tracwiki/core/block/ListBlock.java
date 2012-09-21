@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - bug 389812
+ *     Jeremie Bresson - bug 389812, 390081
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tracwiki.core.block;
 
@@ -21,7 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * List block, matches blocks that follow trac list rules (whitespace, then '*' or 1.)
+ * List block, matches blocks that follow trac list rules (optional whitespace, then '*' or '1.'. Possibility to add
+ * content on the next line if the indentation is compatible)
  * 
  * @author David Green
  */
@@ -30,6 +31,8 @@ public class ListBlock extends Block {
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 4;
 
 	static final Pattern startPattern = Pattern.compile("(?:(\\s*)(?:(\\*|-)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
+
+	static final Pattern nextLinePattern = Pattern.compile("(\\s+)(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -58,12 +61,24 @@ public class ListBlock extends Block {
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
-			listState.push(new ListState(level, spaces.length(), type));
+			listState.push(new ListState(level, spaces.length(), offset, type));
 			builder.beginBlock(type, attributes);
 		} else {
 			ListAttributes attributes = new ListAttributes();
 			Matcher matcher = startPattern.matcher(line);
 			if (!matcher.matches()) {
+				Matcher nextLineMatcher = nextLinePattern.matcher(line);
+				ListState listState = this.listState.peek();
+				if (listState.openItem && nextLineMatcher.matches()) {
+					String spaces = nextLineMatcher.group(1);
+					if (spaces.length() > 0 && spaces.length() >= listState.numSpaces
+							&& spaces.length() <= listState.lineRemainderStart) {
+						++blockLineCount;
+						offset = nextLineMatcher.start(2) - 1;
+						markupLanguage.emitMarkupLine(getParser(), state, line, offset);
+						return -1;
+					}
+				}
 				setClosed(true);
 				return 0;
 			}
@@ -85,11 +100,11 @@ public class ListBlock extends Block {
 				if (listState.level > level || (listState.level == level && listState.type != type)) {
 					closeOne();
 					if (this.listState.isEmpty()) {
-						this.listState.push(new ListState(1, spaces.length(), type));
+						this.listState.push(new ListState(1, spaces.length(), offset, type));
 						builder.beginBlock(type, attributes);
 					}
 				} else {
-					this.listState.push(new ListState(level, spaces.length(), type));
+					this.listState.push(new ListState(level, spaces.length(), offset, type));
 					builder.beginBlock(type, attributes);
 				}
 			}
@@ -163,16 +178,18 @@ public class ListBlock extends Block {
 
 		int numSpaces;
 
+		int lineRemainderStart;
+
 		BlockType type;
 
 		boolean openItem;
 
-		private ListState(int level, int numSpaces, BlockType type) {
+		private ListState(int level, int numSpaces, int lineRemainderStart, BlockType type) {
 			super();
 			this.level = level;
 			this.numSpaces = numSpaces;
+			this.lineRemainderStart = lineRemainderStart;
 			this.type = type;
 		}
-
 	}
 }

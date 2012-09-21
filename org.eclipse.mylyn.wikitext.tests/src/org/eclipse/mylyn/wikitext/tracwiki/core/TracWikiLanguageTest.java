@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Holger Voormann - tests for bug 279029
- *     Jeremie Bresson - bug 389812
+ *     Jeremie Bresson - bug 389812, 390081
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
@@ -365,6 +365,38 @@ public class TracWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("   1. one\n   * two");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><ol><li>one</li></ol><ul><li>two</li></ul></body>"));
+	}
+
+	public void testListMultipleLines() throws Exception {
+		//390081
+		String html = parser.parseToHtml(" * an item\n   with 2 lines\n * other\n second line\n * ok?\nAnd a new paragraph");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><ul><li>an item with 2 lines</li><li>other second line</li><li>ok?</li></ul><p>And a new paragraph</p></body>"));
+	}
+
+	public void testListMultipleLinesWithoutSpacePrefix() throws Exception {
+		//390081
+		String html = parser.parseToHtml("- an item\ncreate paragraph\n- try\n this\n again\n- it\n  is working\n- ok?");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><ul><li>an item</li></ul><p>create paragraph</p><ul><li>try this again</li><li>it is working</li><li>ok?</li></ul></body>"));
+	}
+
+	public void testListMultipleLinesBigSpacePrefix() throws Exception {
+		//390081
+		String html = parser.parseToHtml("    1. item1\n       more\n       lines\n    1. item2");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><ol><li>item1 more lines</li><li>item2</li></ol></body>"));
+	}
+
+	public void testListMultipleLinesQuote() throws Exception {
+		//390081
+		String html = parser.parseToHtml("1. item1\n    wrong: create a quote\n1. item2");
+		TestUtil.println(html);
+		assertTrue(Pattern.compile(
+				"<body><ol><li>item1</li></ol><blockquote><p>\\s*wrong: create a quote</p></blockquote><ol><li>item2</li></ol></body>",
+				Pattern.MULTILINE)
+				.matcher(html)
+				.find());
 	}
 
 	public void testPreformatted() throws IOException {
