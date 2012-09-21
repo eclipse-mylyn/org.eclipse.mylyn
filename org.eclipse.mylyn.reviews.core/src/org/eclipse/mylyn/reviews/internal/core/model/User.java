@@ -27,6 +27,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.User#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.User#getEmail <em>Email</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.User#getDisplayName <em>Display Name</em>}</li>
  * </ul>
  * </p>
@@ -53,6 +54,26 @@ public class User extends EObjectImpl implements IUser {
 	 * @ordered
 	 */
 	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEmail()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String EMAIL_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEmail()
+	 * @generated
+	 * @ordered
+	 */
+	protected String email = EMAIL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute.
@@ -119,6 +140,27 @@ public class User extends EObjectImpl implements IUser {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEmail(String newEmail) {
+		String oldEmail = email;
+		email = newEmail;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER__EMAIL, oldEmail, email));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -146,6 +188,8 @@ public class User extends EObjectImpl implements IUser {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			return getId();
+		case ReviewsPackage.USER__EMAIL:
+			return getEmail();
 		case ReviewsPackage.USER__DISPLAY_NAME:
 			return getDisplayName();
 		}
@@ -162,6 +206,9 @@ public class User extends EObjectImpl implements IUser {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			setId((String) newValue);
+			return;
+		case ReviewsPackage.USER__EMAIL:
+			setEmail((String) newValue);
 			return;
 		case ReviewsPackage.USER__DISPLAY_NAME:
 			setDisplayName((String) newValue);
@@ -181,6 +228,9 @@ public class User extends EObjectImpl implements IUser {
 		case ReviewsPackage.USER__ID:
 			setId(ID_EDEFAULT);
 			return;
+		case ReviewsPackage.USER__EMAIL:
+			setEmail(EMAIL_EDEFAULT);
+			return;
 		case ReviewsPackage.USER__DISPLAY_NAME:
 			setDisplayName(DISPLAY_NAME_EDEFAULT);
 			return;
@@ -198,6 +248,8 @@ public class User extends EObjectImpl implements IUser {
 		switch (featureID) {
 		case ReviewsPackage.USER__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+		case ReviewsPackage.USER__EMAIL:
+			return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
 		case ReviewsPackage.USER__DISPLAY_NAME:
 			return DISPLAY_NAME_EDEFAULT == null ? displayName != null : !DISPLAY_NAME_EDEFAULT.equals(displayName);
 		}
@@ -217,6 +269,8 @@ public class User extends EObjectImpl implements IUser {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
+		result.append(", email: "); //$NON-NLS-1$
+		result.append(email);
 		result.append(", displayName: "); //$NON-NLS-1$
 		result.append(displayName);
 		result.append(')');

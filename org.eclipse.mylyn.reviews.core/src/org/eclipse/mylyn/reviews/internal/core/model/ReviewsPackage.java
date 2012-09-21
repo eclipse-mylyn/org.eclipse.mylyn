@@ -388,13 +388,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int USER__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int USER__EMAIL = 1;
+
+	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int USER__DISPLAY_NAME = 1;
+	public static final int USER__DISPLAY_NAME = 2;
 
 	/**
 	 * The number of structural features of the '<em>User</em>' class.
@@ -403,7 +412,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int USER_FEATURE_COUNT = 2;
+	public static final int USER_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.TaskReference <em>Task Reference</em>}' class.
@@ -1515,6 +1524,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IUser#getEmail <em>Email</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Email</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IUser#getEmail()
+	 * @see #getUser()
+	 * @generated
+	 */
+	public EAttribute getUser_Email() {
+		return (EAttribute) userEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IUser#getDisplayName <em>Display Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1524,7 +1546,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getUser_DisplayName() {
-		return (EAttribute) userEClass.getEStructuralFeatures().get(1);
+		return (EAttribute) userEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2003,6 +2025,7 @@ public class ReviewsPackage extends EPackageImpl {
 
 		userEClass = createEClass(USER);
 		createEAttribute(userEClass, USER__ID);
+		createEAttribute(userEClass, USER__EMAIL);
 		createEAttribute(userEClass, USER__DISPLAY_NAME);
 
 		taskReferenceEClass = createEClass(TASK_REFERENCE);
@@ -2184,6 +2207,10 @@ public class ReviewsPackage extends EPackageImpl {
 				getUser_Id(),
 				ecorePackage.getEString(),
 				"id", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getUser_Email(),
+				ecorePackage.getEString(),
+				"email", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getUser_DisplayName(),
 				ecorePackage.getEString(),
@@ -2548,6 +2575,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute USER__ID = eINSTANCE.getUser_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Email</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute USER__EMAIL = eINSTANCE.getUser_Email();
 
 		/**
 		 * The meta object literal for the '<em><b>Display Name</b></em>' attribute feature.
