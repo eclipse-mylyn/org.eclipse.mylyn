@@ -157,6 +157,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_STARRED = "/starred"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_STATUSES = "/statuses"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_TAGS = "/tags"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_TEAMS = "/teams"; //$NON-NLS-1$
