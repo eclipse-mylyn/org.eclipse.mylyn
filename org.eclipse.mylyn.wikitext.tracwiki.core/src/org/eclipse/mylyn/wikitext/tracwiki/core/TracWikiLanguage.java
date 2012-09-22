@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.tracwiki.core;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.DefinitionListBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.block.ParagraphBlock;
@@ -241,6 +242,9 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 		ListBlock listBlock = new ListBlock();
 		blocks.add(listBlock);
 		paragraphBreakingBlocks.add(listBlock);
+		DefinitionListBlock definitionListBlock = new DefinitionListBlock();
+		blocks.add(definitionListBlock);
+		paragraphBreakingBlocks.add(definitionListBlock);
 		HeadingBlock headingBlock = new HeadingBlock();
 		blocks.add(headingBlock);
 		paragraphBreakingBlocks.add(headingBlock);

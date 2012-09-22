@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Holger Voormann - tests for bug 279029
- *     Jeremie Bresson - bug 389812, 390081
+ *     Jeremie Bresson - bug 389812, 390081, 249344
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
@@ -397,6 +397,50 @@ public class TracWikiLanguageTest extends TestCase {
 				Pattern.MULTILINE)
 				.matcher(html)
 				.find());
+	}
+
+	public void testDefinitionList() throws Exception {
+		// bug 249344
+		String html = parser.parseToHtml(" item1:: foo.\n item2:: bar.\n");
+		TestUtil.println(html);
+
+		assertTrue(html.contains("<body><dl><dt>item1</dt><dd>foo.</dd><dt>item2</dt><dd>bar.</dd></dl></body>"));
+	}
+
+	public void testDefinitionListMultiline() throws Exception {
+		// bug 249344
+		String html = parser.parseToHtml(" first important term:: this\n                        is important\n second term::\n is not important.");
+		TestUtil.println(html);
+
+		assertTrue(html.contains("<body><dl><dt>first important term</dt><dd>this is important</dd><dt>second term</dt><dd>is not important.</dd></dl></body>"));
+	}
+
+	public void testDefinitionListWithoutSpacePrefix() throws Exception {
+		// bug 249344
+		String html = parser.parseToHtml("this:: is\nnot a list\nspace::\nis required.");
+		TestUtil.println(html);
+
+		assertFalse(html.contains("<dl>"));
+		assertFalse(html.contains("<dt>"));
+		assertFalse(html.contains("<dd>"));
+	}
+
+	public void testDefinitionListWithBigSpace() throws Exception {
+		// bug 249344
+		String html = parser.parseToHtml("    lorem:: ipsum\n           dolore\n and enough indentation\n    remlo::      relodo");
+		TestUtil.println(html);
+
+		assertTrue(html.contains("<body><dl><dt>lorem</dt><dd>ipsum dolore and enough indentation</dd><dt>remlo</dt><dd>relodo</dd></dl></body>"));
+	}
+
+	public void testDefinitionListAndParagraph() throws Exception {
+		// bug 249344
+		String html = parser.parseToHtml(" a:: 1\n 2\nparagraph\n\n b::\n 3\n \n 4\n\n x");
+		TestUtil.println(html);
+
+		assertTrue(html.contains("<dl><dt>a</dt><dd>1 2</dd></dl>"));
+		assertTrue(html.contains("<p>paragraph</p>"));
+		assertTrue(Pattern.compile("<dl><dt>b</dt><dd>3\\s+4</dd></dl>", Pattern.MULTILINE).matcher(html).find());
 	}
 
 	public void testPreformatted() throws IOException {
