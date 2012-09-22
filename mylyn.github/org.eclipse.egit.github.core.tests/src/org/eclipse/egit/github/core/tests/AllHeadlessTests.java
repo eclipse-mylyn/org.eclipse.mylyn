@@ -63,6 +63,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		LabelServiceTest.class, //
 		LabelTest.class, //
 		LanguageTest.class, //
+		MarkdownServiceTest.class, //
 		MergeStatusTest.class, //
 		MilestoneComparatorTest.class, //
 		MilestoneServiceTest.class, //

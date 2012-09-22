@@ -512,7 +512,12 @@ public class GitHubClient {
 			}
 			if (error != null)
 				return new RequestException(error, code);
-		}
+		} else
+			try {
+				response.close();
+			} catch (IOException ignored) {
+				// Ignored
+			}
 		String message;
 		if (status != null && status.length() > 0)
 			message = status + " (" + code + ')'; //$NON-NLS-1$
@@ -612,15 +617,50 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Get response stream from URI. It is the responsibility of the calling
-	 * method to close the returned stream.
+	 * Get response stream from GET to URI. It is the responsibility of the
+	 * calling method to close the returned stream.
 	 *
 	 * @param request
 	 * @return stream
 	 * @throws IOException
 	 */
-	public InputStream getStream(GitHubRequest request) throws IOException {
-		return getStream(createGet(request.generateUri()));
+	public InputStream getStream(final GitHubRequest request)
+			throws IOException {
+		return getResponseStream(createGet(request.generateUri()));
+	}
+
+	/**
+	 * Get response stream from POST to URI. It is the responsibility of the
+	 * calling method to close the returned stream.
+	 *
+	 * @param uri
+	 * @param params
+	 * @return stream
+	 * @throws IOException
+	 */
+	public InputStream postStream(final String uri, final Object params)
+			throws IOException {
+		HttpURLConnection connection = createPost(uri);
+		sendParams(connection, params);
+		updateRateLimits(connection);
+		return getResponseStream(connection);
+	}
+
+	/**
+	 * Get response stream for request
+	 *
+	 * @param request
+	 * @return stream
+	 * @throws IOException
+	 */
+	protected InputStream getResponseStream(final HttpURLConnection request)
+			throws IOException {
+		InputStream stream = getStream(request);
+		int code = request.getResponseCode();
+		if (isOk(code))
+			return stream;
+		else
+			throw createException(stream, code, request.getResponseMessage());
 	}
 
 	/**
