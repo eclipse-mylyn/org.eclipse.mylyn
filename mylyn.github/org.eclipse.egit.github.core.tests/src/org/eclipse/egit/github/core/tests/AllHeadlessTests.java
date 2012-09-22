@@ -29,6 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CommitFileTest.class, //
 		CommitServiceTest.class, //
 		CommitStatsTest.class, //
+		CommitStatusTest.class, //
 		CommitTest.class, //
 		CommitUserTest.class, //
 		ContributorTest.class, //
