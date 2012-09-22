@@ -515,9 +515,9 @@ public class GitHubClient {
 		}
 		String message;
 		if (status != null && status.length() > 0)
-			message = status + " (" + code + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			message = status + " (" + code + ')'; //$NON-NLS-1$
 		else
-			message = "Unknown error occurred (" + code + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			message = "Unknown error occurred (" + code + ')'; //$NON-NLS-1$
 		return new IOException(message);
 	}
 
