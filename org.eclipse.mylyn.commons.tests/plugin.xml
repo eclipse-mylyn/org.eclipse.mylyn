@@ -29,16 +29,19 @@
       <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P5ExtensionPointReaderExtensionImplementation"
             priority="5"
+            customPriority="-5"
             testFilterAttribute="value1">
       </extensionElementWithPriority>
       <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$PNegative5ExtensionPointReaderExtensionImplementation"
             priority="-5"
+            customPriority="5"
             testFilterAttribute="value2">
       </extensionElementWithPriority>
       <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P10ExtensionPointReaderExtensionImplementation"
-            priority="10">
+            priority="10"
+            customPriority="10">
       </extensionElementWithPriority>
       <extensionElementWithPriority
             class="org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest$P0ExtensionPointReaderExtensionImplementation">

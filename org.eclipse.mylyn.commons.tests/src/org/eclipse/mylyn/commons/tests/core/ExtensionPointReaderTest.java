@@ -123,4 +123,19 @@ public class ExtensionPointReaderTest extends TestCase {
 						new PNegative5ExtensionPointReaderExtensionImplementation() }), reader.getItems());
 	}
 
+	public void testReadWithCustomPriority() {
+		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<ExtensionPointReaderExtension>(
+				ID_PLUGIN, "extensionPointReaderTest", "extensionElementWithPriority",
+				ExtensionPointReaderExtension.class);
+		reader.setPriorityAttributeId("customPriority");
+		IStatus status = reader.read();
+		assertEquals(IStatus.OK, status.getSeverity());
+		assertEquals(
+				Arrays.asList(new ExtensionPointReaderExtension[] {
+						new P10ExtensionPointReaderExtensionImplementation(),
+						new PNegative5ExtensionPointReaderExtensionImplementation(),
+						new P0ExtensionPointReaderExtensionImplementation(),
+						new P5ExtensionPointReaderExtensionImplementation() }), reader.getItems());
+	}
+
 }

@@ -32,21 +32,19 @@ import org.eclipse.osgi.util.NLS;
  * @since 3.7
  */
 public class ExtensionPointReader<T> {
-
-	private static final class PriorityComparator implements Comparator<IConfigurationElement> {
-
+	private final class PriorityComparator implements Comparator<IConfigurationElement> {
 		public int compare(IConfigurationElement arg0, IConfigurationElement arg1) {
 			double p0 = 0;
 			double p1 = 0;
 			try {
-				String priorityAttribute = arg0.getAttribute(DEFAULT_ATTRIBUTE_ID_PRIORITY);
+				String priorityAttribute = arg0.getAttribute(getPriorityAttributeId());
 				if (priorityAttribute != null) {
 					p0 = Double.parseDouble(priorityAttribute);
 				}
 			} catch (NumberFormatException e) {
 			}
 			try {
-				String priorityAttribute = arg1.getAttribute(DEFAULT_ATTRIBUTE_ID_PRIORITY);
+				String priorityAttribute = arg1.getAttribute(getPriorityAttributeId());
 				if (priorityAttribute != null) {
 					p1 = Double.parseDouble(priorityAttribute);
 				}
@@ -66,7 +64,7 @@ public class ExtensionPointReader<T> {
 
 	private static final String DEFAULT_ATTRIBUTE_ID_PRIORITY = "priority"; //$NON-NLS-1$
 
-	private static final PriorityComparator PRIORITY_COMPARATOR = new PriorityComparator();
+	private final PriorityComparator priorityComparator = new PriorityComparator();
 
 	private String classAttributeId;
 
@@ -147,7 +145,7 @@ public class ExtensionPointReader<T> {
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for (IExtension extension : extensions) {
 				IConfigurationElement[] elements = extension.getConfigurationElements();
-				Arrays.sort(elements, PRIORITY_COMPARATOR);
+				Arrays.sort(elements, priorityComparator);
 				for (IConfigurationElement element : elements) {
 					if (element.getName().equals(elementId) && shouldRead(element)) {
 						T item = readElement(element, result);
