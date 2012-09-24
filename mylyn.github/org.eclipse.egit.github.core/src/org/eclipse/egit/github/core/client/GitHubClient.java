@@ -642,7 +642,6 @@ public class GitHubClient {
 			throws IOException {
 		HttpURLConnection connection = createPost(uri);
 		sendParams(connection, params);
-		updateRateLimits(connection);
 		return getResponseStream(connection);
 	}
 
@@ -657,6 +656,7 @@ public class GitHubClient {
 			throws IOException {
 		InputStream stream = getStream(request);
 		int code = request.getResponseCode();
+		updateRateLimits(request);
 		if (isOk(code))
 			return stream;
 		else
