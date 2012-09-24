@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.spi.ActivityProvider;
 import org.eclipse.mylyn.tasks.activity.core.spi.IActivitySession;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -46,14 +47,16 @@ public class TaskActivityProvider extends ActivityProvider {
 	public void query(ActivityScope scope, IProgressMonitor monitor) throws CoreException {
 		if (scope instanceof TaskActivityScope) {
 			ITask scopeTask = ((TaskActivityScope) scope).getTask();
-
-			GetAssociatedTasks collector = new GetAssociatedTasks(session);
-			IndexReference reference = new IndexReference();
-			try {
-				TaskListIndex taskListIndex = reference.index();
-				taskListIndex.find(scopeTask.getTaskKey(), collector, 50);
-			} finally {
-				reference.dispose();
+			String url = scopeTask.getUrl();
+			if (url != null) {
+				GetAssociatedTasks collector = new GetAssociatedTasks(session);
+				IndexReference reference = new IndexReference();
+				try {
+					TaskListIndex taskListIndex = reference.index();
+					taskListIndex.find(NLS.bind("content:\"{0}\"", url), collector, 50); //$NON-NLS-1$
+				} finally {
+					reference.dispose();
+				}
 			}
 		}
 	}

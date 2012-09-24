@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Timur Achmetow - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.activity.ui;
@@ -17,21 +18,22 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.activity.core.ActivityManager;
 import org.eclipse.mylyn.internal.tasks.activity.ui.provider.ActivityRecordContentProvider;
 import org.eclipse.mylyn.internal.tasks.activity.ui.provider.ActivityRecordLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.activity.core.IActivityStream;
 import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Timur Achmetow
+ * @author Steffen Pingel
  */
 @SuppressWarnings("restriction")
-public class ActivityPart extends AbstractTaskEditorPart {
+public class ActivityPart extends AbstractTaskEditorSection {
+
 	public ActivityPart() {
 		setPartName("Activity"); //$NON-NLS-1$
 		setExpandVertically(true);
@@ -39,27 +41,35 @@ public class ActivityPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		final Section section = createSection(parent, toolkit, false);
-		section.setText("Activity"); //$NON-NLS-1$
-
-		Composite activityComposite = toolkit.createComposite(section);
-		activityComposite.setLayout(new GridLayout(1, false));
-		activityComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		createTreeViewer(toolkit, activityComposite);
-
-		toolkit.paintBordersFor(activityComposite);
-		section.setClient(activityComposite);
-		setSection(toolkit, section);
+		// do not show the part for unsubmitted tasks
+		if (getTaskData().isNew()) {
+			return;
+		}
+		super.createControl(parent, toolkit);
 	}
 
-	private void createTreeViewer(FormToolkit toolkit, Composite activityComposite) {
-		TreeViewer viewer = new TreeViewer(toolkit.createTree(activityComposite, SWT.MULTI | SWT.H_SCROLL
+	@Override
+	protected Control createContent(FormToolkit toolkit, Composite parent) {
+		Composite activityComposite = toolkit.createComposite(parent);
+		activityComposite.setLayout(EditorUtil.createSectionClientLayout());
+
+		TreeViewer viewer = new TreeViewer(toolkit.createTree(activityComposite, SWT.SINGLE | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION));
 		GridDataFactory.fillDefaults().hint(500, 100).grab(true, true).applyTo(viewer.getControl());
 		viewer.setContentProvider(new ActivityRecordContentProvider());
 		viewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ActivityRecordLabelProvider(), null, null));
 		IActivityStream stream = new ActivityManager().getStream(new TaskActivityScope(getModel().getTask()));
 		viewer.setInput(stream);
+
+		EditorUtil.addScrollListener(viewer.getTree());
+		toolkit.paintBordersFor(activityComposite);
+
+		return activityComposite;
 	}
+
+	@Override
+	protected boolean shouldExpandOnCreate() {
+		return false;
+	}
+
 }

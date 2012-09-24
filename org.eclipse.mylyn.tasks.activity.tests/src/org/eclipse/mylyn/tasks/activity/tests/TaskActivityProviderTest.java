@@ -38,6 +38,7 @@ import org.junit.Test;
  */
 @SuppressWarnings("restriction")
 public class TaskActivityProviderTest {
+
 	protected List<ActivityEvent> events = new ArrayList<ActivityEvent>();
 
 	private IndexReference reference;
@@ -47,13 +48,13 @@ public class TaskActivityProviderTest {
 	@Before
 	public void setUp() throws Exception {
 		task1 = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL, "2");
-		task1.setSummary("1: hit");
+		task1.setSummary("1: hit http://task/url1");
 		task1.setTaskKey("2");
 		task1.setCreationDate(new Date());
 
 		TaskTask task2 = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL,
 				"3");
-		task2.setSummary("2: miss");
+		task2.setSummary("2: miss http://task/url2");
 		task2.setTaskKey("3");
 		task2.setCreationDate(new Date());
 
@@ -76,6 +77,7 @@ public class TaskActivityProviderTest {
 				LocalRepositoryConnector.REPOSITORY_URL, "1");
 		searchTask.setSummary("summary");
 		searchTask.setTaskKey("1");
+		searchTask.setUrl("http://task/url1");
 
 		TaskActivityProvider provider = new TaskActivityProvider();
 		IActivitySession session = new IActivitySession() {
