@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat, Inc. Bug 384685 - consume Apache Lucene 3.x
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.index.core;
@@ -77,6 +78,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
+import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -682,7 +684,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (!hasBooleanSpecifiers && defaultField.equals(FIELD_SUMMARY) && !containsSpecialCharacters(patternString)) {
 			return new PrefixQuery(new Term(defaultField.getIndexKey(), patternString));
 		}
-		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.getIndexKey(), new TaskAnalyzer());
+		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.getIndexKey(), TaskAnalyzer.instance());
 		Query q;
 		try {
 			q = qp.parse(patternString);
@@ -1117,7 +1119,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					}
 
 					if (writer == null) {
-						writer = new IndexWriter(directory, new TaskAnalyzer(), false,
+						writer = new IndexWriter(directory, TaskAnalyzer.instance(), false,
 								IndexWriter.MaxFieldLength.UNLIMITED);
 					}
 
@@ -1171,7 +1173,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		monitor.beginTask(Messages.TaskListIndex_task_rebuilding_index, taskListState.indexableTasks.size());
 		try {
-			final IndexWriter writer = new IndexWriter(directory, new TaskAnalyzer(), true,
+			final IndexWriter writer = new IndexWriter(directory, TaskAnalyzer.instance(), true,
 					IndexWriter.MaxFieldLength.UNLIMITED);
 			try {
 

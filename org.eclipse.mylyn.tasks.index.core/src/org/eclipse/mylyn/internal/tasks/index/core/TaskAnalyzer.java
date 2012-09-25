@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat, Inc. Bug 384685 - consume Apache Lucene 3.x
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.index.core;
 
@@ -20,13 +21,13 @@ import org.apache.lucene.util.Version;
  * 
  * @author David Green
  */
-class TaskAnalyzer extends PerFieldAnalyzerWrapper {
+class TaskAnalyzer {
 
-	public TaskAnalyzer() {
-		super(new StandardAnalyzer(Version.LUCENE_CURRENT));
-		addAnalyzer(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
-		addAnalyzer(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
-		addAnalyzer(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());
+	public static PerFieldAnalyzerWrapper instance() {
+		PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new StandardAnalyzer(Version.LUCENE_CURRENT));
+		wrapper.addAnalyzer(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
+		wrapper.addAnalyzer(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
+		wrapper.addAnalyzer(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());
+		return wrapper;
 	}
-
 }
