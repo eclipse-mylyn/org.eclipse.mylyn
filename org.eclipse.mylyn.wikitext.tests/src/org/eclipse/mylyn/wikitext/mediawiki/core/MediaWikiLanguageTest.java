@@ -988,6 +988,30 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>a and  and 3 and </p>"));
 	}
 
+	public void testTemplateExcludesComplexNames() {
+		//Bug 367525
+		markupLanguage.setTemplateExcludes("#eclipseproject:technology.linux-distros");
+		markupLanguage.setTemplates(Arrays.asList(new Template("#eclipseproject:technology.linux-distros",
+				"! Not excluded - !")));
+		String html = parser.parseToHtml("foo {{#eclipseproject:technology.linux-distros}} bar");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<p>foo  bar</p>"));
+	}
+
+	public void testTemplateExcludesRegEx() {
+		//Bug 367525
+		markupLanguage.setTemplateExcludes("*eclipseproject*, Linux_Tools");
+		markupLanguage.setTemplates(Arrays.asList(new Template("Linux_Tools", "!Not excluded - Linux_Tools!"),
+				new Template("#eclipseproject:technology.linux-distros", "!Not excluded - eclipseproject!")));
+		String html = parser.parseToHtml("foo {{#eclipseproject:technology.linux-distros}} bar {{Linux_Tools}} baz");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<p>foo  bar  baz</p>"));
+	}
+
 	public void testTableOfContents() throws IOException {
 		String html = parser.parseToHtml("= Table Of Contents =\n\n__TOC__\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
 

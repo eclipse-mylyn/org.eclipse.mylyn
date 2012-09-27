@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 public class TemplateProcessor {
 
-	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z0-9_ :]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
+	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z0-9_ :\\.\\-]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
 
 	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)(?:\\|([^\\}]*))?\\}\\}\\}"); //$NON-NLS-1$
 
