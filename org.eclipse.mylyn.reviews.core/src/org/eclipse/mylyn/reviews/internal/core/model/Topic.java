@@ -43,7 +43,7 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTask <em>Task</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getLocation <em>Location</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getLocations <em>Locations</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getComments <em>Comments</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getReview <em>Review</em>}</li>
  *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTitle <em>Title</em>}</li>
@@ -65,14 +65,14 @@ public class Topic extends Comment implements ITopic {
 	protected ITaskReference task;
 
 	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' containment reference.
+	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLocation()
+	 * @see #getLocations()
 	 * @generated
 	 * @ordered
 	 */
-	protected ILocation location;
+	protected EList<ILocation> locations;
 
 	/**
 	 * The cached value of the '{@link #getComments() <em>Comments</em>}' reference list.
@@ -197,49 +197,11 @@ public class Topic extends Comment implements ITopic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ILocation getLocation() {
-		return location;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetLocation(ILocation newLocation, NotificationChain msgs) {
-		ILocation oldLocation = location;
-		location = newLocation;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.TOPIC__LOCATION, oldLocation, newLocation);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
+	public List<ILocation> getLocations() {
+		if (locations == null) {
+			locations = new EObjectContainmentEList<ILocation>(ILocation.class, this, ReviewsPackage.TOPIC__LOCATIONS);
 		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLocation(ILocation newLocation) {
-		if (newLocation != location) {
-			NotificationChain msgs = null;
-			if (location != null)
-				msgs = ((InternalEObject) location).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.TOPIC__LOCATION, null, msgs);
-			if (newLocation != null)
-				msgs = ((InternalEObject) newLocation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.TOPIC__LOCATION, null, msgs);
-			msgs = basicSetLocation(newLocation, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__LOCATION, newLocation,
-					newLocation));
+		return locations;
 	}
 
 	/**
@@ -407,8 +369,8 @@ public class Topic extends Comment implements ITopic {
 		switch (featureID) {
 		case ReviewsPackage.TOPIC__TASK:
 			return basicSetTask(null, msgs);
-		case ReviewsPackage.TOPIC__LOCATION:
-			return basicSetLocation(null, msgs);
+		case ReviewsPackage.TOPIC__LOCATIONS:
+			return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__ITEM:
 			return basicSetItem(null, msgs);
 		}
@@ -425,8 +387,8 @@ public class Topic extends Comment implements ITopic {
 		switch (featureID) {
 		case ReviewsPackage.TOPIC__TASK:
 			return getTask();
-		case ReviewsPackage.TOPIC__LOCATION:
-			return getLocation();
+		case ReviewsPackage.TOPIC__LOCATIONS:
+			return getLocations();
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return getComments();
 		case ReviewsPackage.TOPIC__REVIEW:
@@ -455,8 +417,9 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__TASK:
 			setTask((ITaskReference) newValue);
 			return;
-		case ReviewsPackage.TOPIC__LOCATION:
-			setLocation((ILocation) newValue);
+		case ReviewsPackage.TOPIC__LOCATIONS:
+			getLocations().clear();
+			getLocations().addAll((Collection<? extends ILocation>) newValue);
 			return;
 		case ReviewsPackage.TOPIC__COMMENTS:
 			getComments().clear();
@@ -486,8 +449,8 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__TASK:
 			setTask((ITaskReference) null);
 			return;
-		case ReviewsPackage.TOPIC__LOCATION:
-			setLocation((ILocation) null);
+		case ReviewsPackage.TOPIC__LOCATIONS:
+			getLocations().clear();
 			return;
 		case ReviewsPackage.TOPIC__COMMENTS:
 			getComments().clear();
@@ -515,8 +478,8 @@ public class Topic extends Comment implements ITopic {
 		switch (featureID) {
 		case ReviewsPackage.TOPIC__TASK:
 			return task != null;
-		case ReviewsPackage.TOPIC__LOCATION:
-			return location != null;
+		case ReviewsPackage.TOPIC__LOCATIONS:
+			return locations != null && !locations.isEmpty();
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return comments != null && !comments.isEmpty();
 		case ReviewsPackage.TOPIC__REVIEW:

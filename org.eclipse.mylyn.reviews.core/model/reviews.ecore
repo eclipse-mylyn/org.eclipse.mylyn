@@ -56,8 +56,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Topic" eSuperTypes="#//Comment">
     <eStructuralFeatures xsi:type="ecore:EReference" name="task" eType="#//TaskReference"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="location" eType="#//Location"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
+        eType="#//Location" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
         eType="#//Comment" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"

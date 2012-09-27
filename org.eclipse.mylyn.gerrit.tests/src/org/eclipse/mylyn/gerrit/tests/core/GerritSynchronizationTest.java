@@ -132,7 +132,8 @@ public class GerritSynchronizationTest extends TestCase {
 		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_COMMENT);
 		TaskCommentMapper lastComment = TaskCommentMapper.createFrom(comments.get(comments.size() - 1));
-		assertEquals("Patch Set 1:\n\n" + message, lastComment.getText()); //$NON-NLS-1$
+		assertEquals(
+				"Failure on " + GerritFixture.current().getRepositoryUrl() + "/" + task.getTaskId(), "Patch Set 1:\n\n" + message, lastComment.getText()); //$NON-NLS-1$
 	}
 
 	private ITask assertTaskListHasOneTask() throws CoreException {

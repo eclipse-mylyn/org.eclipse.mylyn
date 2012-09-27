@@ -181,7 +181,7 @@ public class GerritUtil {
 			topic.setId(comment.getKey().get());
 			topic.setAuthor(author);
 			topic.setCreationDate(comment.getWrittenOn());
-			topic.setLocation(location);
+			topic.getLocations().add(location);
 			topic.setItem(revision);
 			topic.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
 			topic.setDescription(comment.getMessage());

@@ -36,7 +36,7 @@ import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
-import org.eclipse.mylyn.reviews.core.model.ILineRange;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
@@ -76,7 +76,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 			if (notification.getEventType() == Notification.ADD) {
 				AnnotationModelEvent event = new AnnotationModelEvent(ReviewAnnotationModel.this);
 				if (notification.getNewValue() instanceof ITopic) {
-					createCommentAnnotation(document, event, (ITopic) notification.getNewValue());
+					createCommentAnnotations(document, event, (ITopic) notification.getNewValue());
 				}
 				fireModelChanged(event);
 			}
@@ -202,34 +202,36 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		}
 	}
 
-	private void createCommentAnnotation(IDocument document, AnnotationModelEvent event, ITopic comment) {
-		try {
+	private void createCommentAnnotations(IDocument document, AnnotationModelEvent event, ITopic topic) {
+		int startLine = 0;
+		int endLine = 0;
+		//TODO We need to ensure that this works properly with cases where 0 or many locations exist.
+		for (ILocation location : topic.getLocations()) {
+			if (location instanceof ILineLocation) {
+				ILineLocation lineLocation = (ILineLocation) location;
+				try {
+					startLine = lineLocation.getTotalMin();
+					endLine = lineLocation.getTotalMax();
 
-			int startLine = 0;
-			int endLine = 0;
+					int offset = 0;
+					int length = 0;
+					if (startLine != 0) {
+						offset = document.getLineOffset(startLine - 1);
+						if (endLine == 0) {
+							endLine = startLine;
+						}
+						length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
 
-			ILineLocation location = (ILineLocation) comment.getLocation();
-			final List<ILineRange> lineRanges = location.getRanges();
-			startLine = location.getTotalMin();
-			endLine = location.getTotalMax();
-
-			int offset = 0;
-			int length = 0;
-			if (startLine != 0) {
-				offset = document.getLineOffset(startLine - 1);
-				if (endLine == 0) {
-					endLine = startLine;
+					}
+					length = Math.max(1, length);
+					CommentAnnotation ca = new CommentAnnotation(offset, length, topic);
+					annotations.add(ca);
+					event.annotationAdded(ca);
+				} catch (BadLocationException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.",
+							e));
 				}
-				length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
-
 			}
-			length = Math.max(1, length);
-			CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
-			annotations.add(ca);
-			event.annotationAdded(ca);
-
-		} catch (BadLocationException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", e));
 		}
 	}
 
@@ -265,7 +267,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 
 		if (document != null && reviewItem != null) {
 			for (ITopic comment : reviewItem.getTopics()) {
-				createCommentAnnotation(document, event, comment);
+				createCommentAnnotations(document, event, comment);
 			}
 		}
 

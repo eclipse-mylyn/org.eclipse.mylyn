@@ -96,12 +96,19 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 				int startLine;
 				int endLine;
 				ITopic comment = annotation.getTopic();
-				startLine = ((ILineLocation) comment.getLocation()).getTotalMin();
-				endLine = ((ILineLocation) comment.getLocation()).getTotalMax();
-				if (lineNr >= startLine && lineNr <= endLine) {
-					AnnotationPreference pref = new AnnotationPreferenceLookup().getAnnotationPreference(annotation);
-					if (pref.getHighlightPreferenceValue()) {
-						event.lineBackground = colorCommented;
+				//TODO This code assumes that we have one comment per annotation. That won't work for r4E.
+				if (comment.getLocations().size() == 1) {
+					ILocation location = comment.getLocations().get(0);
+					if (location instanceof ILineLocation) {
+						ILineLocation lineLocation = (ILineLocation) location;
+						startLine = lineLocation.getTotalMin();
+						endLine = lineLocation.getTotalMax();
+						if (lineNr >= startLine && lineNr <= endLine) {
+							AnnotationPreference pref = new AnnotationPreferenceLookup().getAnnotationPreference(annotation);
+							if (pref.getHighlightPreferenceValue()) {
+								event.lineBackground = colorCommented;
+							}
+						}
 					}
 				}
 			}

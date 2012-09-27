@@ -654,13 +654,13 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int TOPIC__TASK = COMMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Location</b></em>' containment reference.
+	 * The feature id for the '<em><b>Locations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TOPIC__LOCATION = COMMENT_FEATURE_COUNT + 1;
+	public static final int TOPIC__LOCATIONS = COMMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Comments</b></em>' reference list.
@@ -1688,15 +1688,15 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getLocation <em>Location</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getLocations <em>Locations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Location</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getLocation()
+	 * @return the meta object for the containment reference list '<em>Locations</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getLocations()
 	 * @see #getTopic()
 	 * @generated
 	 */
-	public EReference getTopic_Location() {
+	public EReference getTopic_Locations() {
 		return (EReference) topicEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2043,7 +2043,7 @@ public class ReviewsPackage extends EPackageImpl {
 
 		topicEClass = createEClass(TOPIC);
 		createEReference(topicEClass, TOPIC__TASK);
-		createEReference(topicEClass, TOPIC__LOCATION);
+		createEReference(topicEClass, TOPIC__LOCATIONS);
 		createEReference(topicEClass, TOPIC__COMMENTS);
 		createEReference(topicEClass, TOPIC__REVIEW);
 		createEAttribute(topicEClass, TOPIC__TITLE);
@@ -2257,10 +2257,10 @@ public class ReviewsPackage extends EPackageImpl {
 				null,
 				"task", null, 0, 1, ITopic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
-				getTopic_Location(),
+				getTopic_Locations(),
 				this.getLocation(),
 				null,
-				"location", null, 0, 1, ITopic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"locations", null, 0, -1, ITopic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getTopic_Comments(),
 				this.getComment(),
@@ -2691,12 +2691,12 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference TOPIC__TASK = eINSTANCE.getTopic_Task();
 
 		/**
-		 * The meta object literal for the '<em><b>Location</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Locations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		public static final EReference TOPIC__LOCATION = eINSTANCE.getTopic_Location();
+		public static final EReference TOPIC__LOCATIONS = eINSTANCE.getTopic_Locations();
 
 		/**
 		 * The meta object literal for the '<em><b>Comments</b></em>' reference list feature.

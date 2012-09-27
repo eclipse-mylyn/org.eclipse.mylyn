@@ -97,7 +97,7 @@ public class AddCommentDialog extends ProgressDialog {
 		user.setDisplayName("Me");
 		topic.setAuthor(user);
 		topic.setDescription(commentEditor.getText());
-		topic.setLocation(getLocation());
+		topic.getLocations().add(getLocation());
 		topic.setItem(item);
 
 		IComment comment = ReviewsFactory.eINSTANCE.createComment();

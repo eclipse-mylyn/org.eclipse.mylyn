@@ -667,7 +667,7 @@ public class GerritClient {
 			ITopic topic = FACTORY.createTopic();
 			topic.setAuthor(author);
 			topic.setCreationDate(comment.getWrittenOn());
-			topic.setLocation(location);
+			topic.getLocations().add(location);
 			topic.setItem(revision);
 			topic.setDescription(comment.getMessage());
 			topic.getComments().add(topicComment);
