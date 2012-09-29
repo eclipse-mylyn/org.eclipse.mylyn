@@ -82,7 +82,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IFileRevision getBase() {
-		if (base != null && ((EObject) base).eIsProxy()) {
+		if (base != null && base.eIsProxy()) {
 			InternalEObject oldBase = (InternalEObject) base;
 			base = (IFileRevision) eResolveProxy(oldBase);
 			if (base != oldBase) {
@@ -121,7 +121,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IFileRevision getTarget() {
-		if (target != null && ((EObject) target).eIsProxy()) {
+		if (target != null && target.eIsProxy()) {
 			InternalEObject oldTarget = (InternalEObject) target;
 			target = (IFileRevision) eResolveProxy(oldTarget);
 			if (target != oldTarget) {

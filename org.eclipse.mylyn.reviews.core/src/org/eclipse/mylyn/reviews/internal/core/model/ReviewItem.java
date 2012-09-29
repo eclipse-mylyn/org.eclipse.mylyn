@@ -142,7 +142,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * @generated
 	 */
 	public IUser getAddedBy() {
-		if (addedBy != null && ((EObject) addedBy).eIsProxy()) {
+		if (addedBy != null && addedBy.eIsProxy()) {
 			InternalEObject oldAddedBy = (InternalEObject) addedBy;
 			addedBy = (IUser) eResolveProxy(oldAddedBy);
 			if (addedBy != oldAddedBy) {
@@ -182,7 +182,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	 * @generated
 	 */
 	public IReview getReview() {
-		if (review != null && ((EObject) review).eIsProxy()) {
+		if (review != null && review.eIsProxy()) {
 			InternalEObject oldReview = (InternalEObject) review;
 			review = (IReview) eResolveProxy(oldReview);
 			if (review != oldReview) {

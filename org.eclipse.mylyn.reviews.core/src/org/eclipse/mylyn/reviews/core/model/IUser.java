@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>User</b></em>'.
@@ -26,7 +28,7 @@ package org.eclipse.mylyn.reviews.core.model;
  *
  * @generated
  */
-public interface IUser {
+public interface IUser extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Review Component</b></em>'.
@@ -24,7 +26,7 @@ package org.eclipse.mylyn.reviews.core.model;
  *
  * @generated
  */
-public interface IReviewComponent {
+public interface IReviewComponent extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Enabled</b></em>' attribute.
 	 * The default value is <code>"true"</code>.

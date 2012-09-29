@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Comment Type</b></em>'.
@@ -18,5 +20,5 @@ package org.eclipse.mylyn.reviews.core.model;
  *
  * @generated
  */
-public interface ICommentType {
+public interface ICommentType extends EObject {
 } // ICommentType

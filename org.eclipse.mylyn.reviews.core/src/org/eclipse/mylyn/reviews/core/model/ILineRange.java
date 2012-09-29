@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Line Range</b></em>'.
@@ -25,7 +27,7 @@ package org.eclipse.mylyn.reviews.core.model;
  *
  * @generated
  */
-public interface ILineRange {
+public interface ILineRange extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Start</b></em>' attribute.
 	 * <!-- begin-user-doc -->

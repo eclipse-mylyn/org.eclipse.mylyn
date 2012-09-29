@@ -222,7 +222,7 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public IReview getReview() {
-		if (review != null && ((EObject) review).eIsProxy()) {
+		if (review != null && review.eIsProxy()) {
 			InternalEObject oldReview = (InternalEObject) review;
 			review = (IReview) eResolveProxy(oldReview);
 			if (review != oldReview) {
@@ -282,7 +282,7 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public IReviewItem getItem() {
-		if (item != null && ((EObject) item).eIsProxy()) {
+		if (item != null && item.eIsProxy()) {
 			InternalEObject oldItem = (InternalEObject) item;
 			item = (IReviewItem) eResolveProxy(oldItem);
 			if (item != oldItem) {

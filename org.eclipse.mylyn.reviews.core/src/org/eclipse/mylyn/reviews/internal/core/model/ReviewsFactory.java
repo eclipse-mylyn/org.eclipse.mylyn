@@ -72,31 +72,31 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 		case ReviewsPackage.REVIEW:
-			return (EObject) createReview();
+			return createReview();
 		case ReviewsPackage.COMMENT:
-			return (EObject) createComment();
+			return createComment();
 		case ReviewsPackage.REVIEW_ITEM:
-			return (EObject) createReviewItem();
+			return createReviewItem();
 		case ReviewsPackage.USER:
-			return (EObject) createUser();
+			return createUser();
 		case ReviewsPackage.TASK_REFERENCE:
-			return (EObject) createTaskReference();
+			return createTaskReference();
 		case ReviewsPackage.REVIEW_GROUP:
-			return (EObject) createReviewGroup();
+			return createReviewGroup();
 		case ReviewsPackage.TOPIC:
-			return (EObject) createTopic();
+			return createTopic();
 		case ReviewsPackage.REVIEW_COMPONENT:
-			return (EObject) createReviewComponent();
+			return createReviewComponent();
 		case ReviewsPackage.FILE_ITEM:
-			return (EObject) createFileItem();
+			return createFileItem();
 		case ReviewsPackage.REVIEW_ITEM_SET:
-			return (EObject) createReviewItemSet();
+			return createReviewItemSet();
 		case ReviewsPackage.LINE_LOCATION:
-			return (EObject) createLineLocation();
+			return createLineLocation();
 		case ReviewsPackage.LINE_RANGE:
-			return (EObject) createLineRange();
+			return createLineRange();
 		case ReviewsPackage.FILE_REVISION:
-			return (EObject) createFileRevision();
+			return createFileRevision();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
