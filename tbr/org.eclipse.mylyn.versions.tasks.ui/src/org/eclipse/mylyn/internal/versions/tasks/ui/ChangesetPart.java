@@ -8,33 +8,30 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui;
+package org.eclipse.mylyn.internal.versions.tasks.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.eclipse.mylyn.versions.tasks.core.TaskChangeSet;
-import org.eclipse.mylyn.versions.tasks.ui.internal.IChangesetModel;
-import org.eclipse.mylyn.versions.tasks.ui.internal.IncludeSubTasksAction;
-import org.eclipse.mylyn.versions.tasks.ui.internal.TaskChangesetLabelProvider;
-import org.eclipse.mylyn.versions.tasks.ui.internal.TaskVersionsUiPlugin;
+import org.eclipse.mylyn.versions.tasks.ui.AbstractChangesetMappingProvider;
+import org.eclipse.mylyn.versions.tasks.ui.TaskChangesetUtil;
+import org.eclipse.mylyn.versions.tasks.ui.spi.ITaskVersionsContributionAction;
+import org.eclipse.mylyn.versions.tasks.ui.spi.ITaskVersionsModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.FillLayout;
@@ -42,16 +39,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * 
+ *
  * @author Kilian Matt
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ChangesetPart extends AbstractTaskEditorPart {
@@ -110,6 +106,15 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	protected void fillToolBar(ToolBarManager toolBarManager) {
 		super.fillToolBar(toolBarManager);
 		toolBarManager.add(new IncludeSubTasksAction(model));
+		List<ITaskVersionsContributionAction> contributions = InternalExtensionPointLoader.loadActionContributions();
+		for(final ITaskVersionsContributionAction action : contributions) {
+			toolBarManager.add(new ActionDelegate(action) {
+			@Override
+			public void runWithEvent(Event event) {
+					action.run(model);
+				}
+			});
+		}
 	}
 
 	private void registerContextMenu(TableViewer table) {
@@ -131,7 +136,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 
 	private AbstractChangesetMappingProvider determineBestProvider(
 			final ITask task) {
-		AbstractChangesetMappingProvider bestProvider = null;
+		AbstractChangesetMappingProvider bestProvider = new NullProvider();
 		int score = Integer.MIN_VALUE;
 		for (AbstractChangesetMappingProvider mappingProvider : TaskChangesetUtil
 				.getMappingProviders()) {
@@ -140,6 +145,19 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 			}
 		}
 		return bestProvider;
+	}
+	private static class NullProvider extends AbstractChangesetMappingProvider{
+
+		@Override
+		public void getChangesetsForTask(IChangeSetMapping mapping,
+				IProgressMonitor monitor) throws CoreException {
+		}
+
+		@Override
+		public int getScoreFor(ITask task) {
+			return 0;
+		}
+
 	}
 
 	private IChangeSetMapping createChangeSetMapping(final ITask task,
@@ -160,7 +178,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		table.setInput(model.getInput());
 	}
 
-	private class ChangesetModel implements IChangesetModel {
+	private class ChangesetModel implements ITaskVersionsModel {
 
 		private boolean includeSubTasks;
 
@@ -200,8 +218,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 				public void run() {
 					try {
 						for (IChangeSetMapping csm : changesetsMapping) {
-							provider.getChangesetsForTask(csm,
-									new NullProgressMonitor());
+							provider.getChangesetsForTask(csm, new NullProgressMonitor());
 						}
 					} catch (CoreException e) {
 						getTaskEditorPage().getTaskEditor().setMessage("An exception occurred " + e.getMessage(), IMessageProvider.ERROR);

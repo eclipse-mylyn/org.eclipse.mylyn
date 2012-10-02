@@ -4,7 +4,7 @@
    <extension
          id="org.eclipse.mylyn.versions.tasks.mapper.generic"
          name="Generic Implementation"
-         point="org.eclipse.mylyn.versions.tasks.changesetmapping">
+         point="org.eclipse.mylyn.versions.tasks.ui.changesetmapping">
       <changesetMapper
             class="org.eclipse.mylyn.versions.tasks.mapper.generic.GenericTaskChangesetMapper">
       </changesetMapper>

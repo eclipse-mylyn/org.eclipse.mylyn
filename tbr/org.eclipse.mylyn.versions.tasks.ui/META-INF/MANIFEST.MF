@@ -14,6 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.commons.core;bundle-version="3.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.mylyn.versions.tasks.ui;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.versions.tasks.ui;x-internal:=true,
+ org.eclipse.mylyn.versions.tasks.ui;x-internal:=true,
+ org.eclipse.mylyn.versions.tasks.ui.spi;x-internal:=true
 Bundle-Vendor: %Bundle-Vendor
-Bundle-Activator: org.eclipse.mylyn.versions.tasks.ui.internal.TaskVersionsUiPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.versions.tasks.ui.TaskVersionsUiPlugin

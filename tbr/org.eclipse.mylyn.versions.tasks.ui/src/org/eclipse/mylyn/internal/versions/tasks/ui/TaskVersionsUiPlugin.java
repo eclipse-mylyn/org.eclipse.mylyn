@@ -8,26 +8,25 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui;
+package org.eclipse.mylyn.internal.versions.tasks.ui;
 
-import java.util.List;
-
-import org.eclipse.mylyn.internal.versions.tasks.ui.InternalExtensionPointLoader;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  *
  * @author Kilian Matt
  *
  */
-public class TaskChangesetUtil {
+public class TaskVersionsUiPlugin extends AbstractUIPlugin {
+	private static TaskVersionsUiPlugin instance;
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.versions.tasks.ui";
 
-	private static List<AbstractChangesetMappingProvider> providers;
+	public TaskVersionsUiPlugin() {
+		instance = this;
+	}
 
-	public static List<AbstractChangesetMappingProvider> getMappingProviders() {
-		if (providers != null)
-			return providers;
-
-		return providers = InternalExtensionPointLoader.loadMappingProviders();
+	public static TaskVersionsUiPlugin getDefault() {
+		return instance;
 	}
 
 }

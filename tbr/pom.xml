@@ -16,6 +16,7 @@
     <module>org.eclipse.mylyn.reviews.tasks.core</module>
     <module>org.eclipse.mylyn.reviews.tasks.dsl</module>
     <module>org.eclipse.mylyn.reviews.tasks.ui</module>
+    <module>org.eclipse.mylyn.versions.context.ui</module>
     <module>org.eclipse.mylyn.versions.tasks.core</module>
     <module>org.eclipse.mylyn.versions.tasks.ui</module>
     <module>org.eclipse.mylyn.versions.tasks.mapper.generic</module>

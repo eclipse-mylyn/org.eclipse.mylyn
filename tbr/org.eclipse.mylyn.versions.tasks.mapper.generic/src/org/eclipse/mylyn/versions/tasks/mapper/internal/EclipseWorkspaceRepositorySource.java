@@ -55,4 +55,10 @@ public class EclipseWorkspaceRepositorySource implements IChangeSetSource {
 		}
 
 	}
+	
+	// TODO
+	//notification on new (shared) projects, attn detect overlaps with existing repositories.
+	// registering a listener for detecting new repository changes
+	// 
+	
 }

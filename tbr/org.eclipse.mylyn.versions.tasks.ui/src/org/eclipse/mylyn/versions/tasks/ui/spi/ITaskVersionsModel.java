@@ -8,26 +8,32 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui.internal;
+package org.eclipse.mylyn.versions.tasks.ui.spi;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
+import java.util.List;
+
+import org.eclipse.mylyn.versions.tasks.core.TaskChangeSet;
 
 /**
- * 
- * @author Kilian Matt
+ * Model of a list of Task Changesets. Can optionally include sub-tasks
  *
+ * @author Kilian Matt
  */
-public class TaskVersionsUiPlugin extends AbstractUIPlugin {
-	private static TaskVersionsUiPlugin instance;
-	public static final String PLUGIN_ID="org.eclipse.mylyn.versions.tasks.ui";
-	
-	public TaskVersionsUiPlugin() {
-		instance = this;
-	}
+public interface ITaskVersionsModel {
 
-	public static TaskVersionsUiPlugin getDefault() {
-		return instance;
-	}
-	
+	/**
+	 * Switch, whether sub-tasks of the task should be include in the task
+	 * changeset mapping.
+	 *
+	 * @param includeSubTasks
+	 */
+	public void setIncludeSubTasks(boolean includeSubTasks);
+
+	/**
+	 * Returns a list of TaskChangeSet objects, for each changeset of the task
+	 * (or a subtask)
+	 *
+	 * @return a non-null List
+	 */
+	public List<TaskChangeSet> getInput();
 }

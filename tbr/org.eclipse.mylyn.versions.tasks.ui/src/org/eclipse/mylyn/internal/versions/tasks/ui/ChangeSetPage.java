@@ -8,7 +8,7 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui;
+package org.eclipse.mylyn.internal.versions.tasks.ui;
 
 import java.util.HashSet;
 import java.util.Set;

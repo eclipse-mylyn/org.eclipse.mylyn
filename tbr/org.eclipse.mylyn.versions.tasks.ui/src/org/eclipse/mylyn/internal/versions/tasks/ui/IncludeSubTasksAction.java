@@ -8,19 +8,20 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui.internal;
+package org.eclipse.mylyn.internal.versions.tasks.ui;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.versions.tasks.ui.spi.ITaskVersionsModel;
 import org.eclipse.swt.widgets.Event;
 
 /**
  * @author Kilian Matt
  */
 public class IncludeSubTasksAction extends Action {
-	private IChangesetModel model;
+	private ITaskVersionsModel model;
 
-	public IncludeSubTasksAction(IChangesetModel model) {
+	public IncludeSubTasksAction(ITaskVersionsModel model) {
 		super("Include subtasks",AS_CHECK_BOX);
 		setImageDescriptor(TasksUiImages.TASK_NEW_SUB);
 		this.model = model;

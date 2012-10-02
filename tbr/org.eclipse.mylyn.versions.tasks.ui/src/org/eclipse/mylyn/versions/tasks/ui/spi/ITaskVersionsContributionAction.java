@@ -8,11 +8,16 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.ui.internal;
+package org.eclipse.mylyn.versions.tasks.ui.spi;
+
+import org.eclipse.jface.action.IAction;
 
 /**
+ *
  * @author Kilian Matt
+ *
  */
-public interface IChangesetModel {
-	public void setIncludeSubTasks(boolean includeSubTasks);
+public interface ITaskVersionsContributionAction extends IAction {
+
+	public void run(ITaskVersionsModel model);
 }
