@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorBranding;
@@ -55,17 +56,13 @@ public class RepositoryConnectorUiExtensionReader {
 	/**
 	 * Plug-in ids of connector extensions that failed to load.
 	 */
-	private final Set<String> disabledContributors;
+	private final ContributorBlackList blackList;
 
-	public RepositoryConnectorUiExtensionReader(IExtensionRegistry registry, Set<String> disabledContributors) {
+	public RepositoryConnectorUiExtensionReader(IExtensionRegistry registry, ContributorBlackList blackList) {
 		Assert.isNotNull(registry);
-		Assert.isNotNull(disabledContributors);
+		Assert.isNotNull(blackList);
 		this.registry = registry;
-		this.disabledContributors = disabledContributors;
-	}
-
-	private boolean isDisabled(IConfigurationElement element) {
-		return disabledContributors.contains(element.getContributor().getName());
+		this.blackList = blackList;
 	}
 
 	public void registerConnectorUis() {
@@ -139,7 +136,7 @@ public class RepositoryConnectorUiExtensionReader {
 		for (IExtension repositoryExtension : repositoryExtensions) {
 			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (!isDisabled(element)) {
+				if (!blackList.isDisabled(element)) {
 					if (element.getName().equals(ELMNT_REPOSITORY_UI)) {
 						registerRepositoryConnectorUi(element);
 					}

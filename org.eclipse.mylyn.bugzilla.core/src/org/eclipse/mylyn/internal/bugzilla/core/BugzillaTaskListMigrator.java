@@ -9,14 +9,11 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -24,7 +21,6 @@ import org.w3c.dom.Element;
 
 /**
  * @author Rob Elves
- * @since 3.0
  */
 public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 

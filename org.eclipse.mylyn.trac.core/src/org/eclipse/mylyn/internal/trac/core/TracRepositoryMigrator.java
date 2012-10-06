@@ -9,9 +9,8 @@
  *     Steffen Pingel - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.core;
 
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 

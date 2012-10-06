@@ -85,6 +85,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.util.TasksCoreExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
@@ -1443,7 +1444,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static synchronized AbstractTaskContextStore getContextStore() {
 		if (contextStore == null) {
-			contextStore = TasksUiExtensionReader.loadTaskContextStore();
+			contextStore = TasksCoreExtensionReader.loadTaskContextStore();
 		}
 		return contextStore;
 	}

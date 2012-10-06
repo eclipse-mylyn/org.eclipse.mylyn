@@ -13,11 +13,9 @@ package org.eclipse.mylyn.internal.tasks.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -55,6 +53,8 @@ public class RepositoryConnectorExtensionReader {
 
 	private static final String EXTENSION_CONTRIBUTORS = ITasksCoreConstants.ID_PLUGIN
 			+ ".repositoryConnectorContributor"; //$NON-NLS-1$
+
+	private static final String EXTENSION_REPOSITORIES = ITasksCoreConstants.ID_PLUGIN + ".repositories"; //$NON-NLS-1$
 
 	private static class ConnectorFactory {
 
@@ -197,10 +197,7 @@ public class RepositoryConnectorExtensionReader {
 
 	}
 
-	/**
-	 * Plug-in ids of connector extensions that failed to load.
-	 */
-	private final Set<String> disabledContributors = new HashSet<String>();
+	private final ContributorBlackList blackList = new ContributorBlackList();
 
 	private final TaskListExternalizer taskListExternalizer;
 
@@ -210,26 +207,29 @@ public class RepositoryConnectorExtensionReader {
 
 	private final List<RepositoryConnectorDescriptor> descriptors = new ArrayList<RepositoryConnectorDescriptor>();
 
-	private MultiStatus result;
+	private final MultiStatus result;
 
 	public RepositoryConnectorExtensionReader(TaskListExternalizer taskListExternalizer,
 			TaskRepositoryManager repositoryManager) {
 		this.taskListExternalizer = taskListExternalizer;
 		this.repositoryManager = repositoryManager;
+		this.result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
 	}
 
-	public void registerConnectors(IExtensionPoint repositoriesExtensionPoint) {
-		if (result != null) {
-			throw new IllegalStateException("registerConnectors may only be invoked once"); //$NON-NLS-1$
-		}
-
-		result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
-
+	public void loadConnectors(IExtensionPoint repositoriesExtensionPoint) {
 		Map<String, List<ConnectorFactory>> factoryById = readFromRepositoriesExtensionPoint(repositoriesExtensionPoint);
 		checkForConflicts(factoryById);
+	}
 
+	public void loadConnectorsFromRepositoriesExtension() {
+		loadConnectors(Platform.getExtensionRegistry().getExtensionPoint(EXTENSION_REPOSITORIES));
+	}
+
+	public void loadConnectorsFromContributors() {
 		readFromContributorsExtensionPoint();
+	}
 
+	public void registerConnectors() {
 		Map<String, List<ConnectorFactory>> factoryByConnectorKind = createConnectorInstances();
 		checkForConflicts(factoryByConnectorKind);
 
@@ -366,7 +366,7 @@ public class RepositoryConnectorExtensionReader {
 				for (ConnectorFactory factory : entry.getValue()) {
 					status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
 							"All extensions contributed by ''{0}'' have been disabled.", factory.getPluginId()), null)); //$NON-NLS-1$
-					disabledContributors.add(factory.getPluginId());
+					blackList.disableContributor(factory.getPluginId());
 					factories.remove(factory);
 				}
 				result.add(status);
@@ -387,8 +387,8 @@ public class RepositoryConnectorExtensionReader {
 		return new ArrayList<RepositoryConnectorDescriptor>(descriptors);
 	}
 
-	public Set<String> getDisabledContributors() {
-		return new HashSet<String>(disabledContributors);
+	public ContributorBlackList getBlackList() {
+		return blackList;
 	}
 
 	public IStatus getResult() {

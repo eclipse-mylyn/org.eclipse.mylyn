@@ -28,13 +28,14 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
 import org.eclipse.mylyn.internal.tasks.core.context.DefaultTaskContextStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
 import org.eclipse.mylyn.internal.tasks.core.util.RepositoryConnectorExtensionReader;
+import org.eclipse.mylyn.internal.tasks.core.util.RepositoryTemplateExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
@@ -55,32 +56,6 @@ public class TasksUiExtensionReader {
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories"; //$NON-NLS-1$
 
 	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylyn.tasks.ui.projectLinkProviders"; //$NON-NLS-1$
-
-	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylyn.tasks.core.templates"; //$NON-NLS-1$
-
-	public static final String EXTENSION_TMPL_REPOSITORY = "repository"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_LABEL = "label"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_CHARACTERENCODING = "characterEncoding"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_VERSION = "version"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_URLNEWTASK = "urlNewTask"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_URLTASK = "urlTask"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_URLTASKQUERY = "urlTaskQuery"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_NEWACCOUNTURL = "urlNewAccount"; //$NON-NLS-1$
-
-	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically"; //$NON-NLS-1$
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider"; //$NON-NLS-1$
 
@@ -129,7 +104,7 @@ public class TasksUiExtensionReader {
 	/**
 	 * Plug-in ids of connector extensions that failed to load.
 	 */
-	private static Set<String> disabledContributors = new HashSet<String>();
+	private static ContributorBlackList blackList = new ContributorBlackList();
 
 	private static Set<RepositoryConnectorDescriptor> descriptors = new HashSet<RepositoryConnectorDescriptor>();
 
@@ -139,32 +114,28 @@ public class TasksUiExtensionReader {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// NOTE: has to be read first, consider improving
-			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			RepositoryConnectorExtensionReader reader = new RepositoryConnectorExtensionReader(taskListExternalizer,
 					repositoryManager);
-			reader.registerConnectors(repositoriesExtensionPoint);
+			// load core extension point
+			reader.loadConnectorsFromRepositoriesExtension();
+			// load legacy ui extension point
+			reader.loadConnectors(registry.getExtensionPoint(EXTENSION_REPOSITORIES));
+			// load connectors contributed at runtime
+			reader.loadConnectorsFromContributors();
+			reader.registerConnectors();
 			descriptors.addAll(reader.getDescriptors());
-			disabledContributors.addAll(reader.getDisabledContributors());
+			blackList.merge(reader.getBlackList());
 
-			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
-			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
-			for (IExtension templateExtension : templateExtensions) {
-				IConfigurationElement[] elements = templateExtension.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (!isDisabled(element)) {
-						if (element.getName().equals(EXTENSION_TMPL_REPOSITORY)) {
-							readRepositoryTemplate(element);
-						}
-					}
-				}
-			}
+			RepositoryTemplateExtensionReader templateExtensionReader = new RepositoryTemplateExtensionReader(
+					TasksUi.getRepositoryManager(), TasksUiPlugin.getRepositoryTemplateManager());
+			templateExtensionReader.loadExtensions(blackList);
 
 			IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
 			IExtension[] presentations = presentationsExtensionPoint.getExtensions();
 			for (IExtension presentation : presentations) {
 				IConfigurationElement[] elements = presentation.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					if (!isDisabled(element)) {
+					if (!blackList.isDisabled(element)) {
 						readPresentation(element);
 					}
 				}
@@ -176,7 +147,7 @@ public class TasksUiExtensionReader {
 			for (IExtension editor : editors) {
 				IConfigurationElement[] elements = editor.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					if (!isDisabled(element)) {
+					if (!blackList.isDisabled(element)) {
 						if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
 							readTaskEditorPageFactory(element);
 						}
@@ -191,8 +162,7 @@ public class TasksUiExtensionReader {
 	public static void initWorkbenchUiExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-		RepositoryConnectorUiExtensionReader reader = new RepositoryConnectorUiExtensionReader(registry,
-				disabledContributors);
+		RepositoryConnectorUiExtensionReader reader = new RepositoryConnectorUiExtensionReader(registry, blackList);
 		reader.registerConnectorUis();
 
 		IExtensionPoint linkProvidersExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORY_LINKS_PROVIDERS);
@@ -200,7 +170,7 @@ public class TasksUiExtensionReader {
 		for (IExtension linkProvidersExtension : linkProvidersExtensions) {
 			IConfigurationElement[] elements = linkProvidersExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (!isDisabled(element)) {
+				if (!blackList.isDisabled(element)) {
 					if (element.getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
 						readLinkProvider(element);
 					}
@@ -213,7 +183,7 @@ public class TasksUiExtensionReader {
 		for (IExtension dulicateDetectorsExtension : dulicateDetectorsExtensions) {
 			IConfigurationElement[] elements = dulicateDetectorsExtension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (!isDisabled(element)) {
+				if (!blackList.isDisabled(element)) {
 					if (element.getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
 						readDuplicateDetector(element);
 					}
@@ -226,7 +196,7 @@ public class TasksUiExtensionReader {
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 			for (IConfigurationElement element : elements) {
-				if (!isDisabled(element)) {
+				if (!blackList.isDisabled(element)) {
 					if (element.getName().equals(DYNAMIC_POPUP_ELEMENT)) {
 						readDynamicPopupContributor(element);
 					}
@@ -318,44 +288,6 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readRepositoryTemplate(IConfigurationElement element) {
-		boolean anonymous = false;
-		boolean addAuto = false;
-
-		String label = element.getAttribute(ELMNT_TMPL_LABEL);
-		String serverUrl = element.getAttribute(ELMNT_TMPL_URLREPOSITORY);
-		String repKind = element.getAttribute(ELMNT_TMPL_REPOSITORYKIND);
-		String version = element.getAttribute(ELMNT_TMPL_VERSION);
-		String newTaskUrl = element.getAttribute(ELMNT_TMPL_URLNEWTASK);
-		String taskPrefix = element.getAttribute(ELMNT_TMPL_URLTASK);
-		String taskQueryUrl = element.getAttribute(ELMNT_TMPL_URLTASKQUERY);
-		String newAccountUrl = element.getAttribute(ELMNT_TMPL_NEWACCOUNTURL);
-		String encoding = element.getAttribute(ELMNT_TMPL_CHARACTERENCODING);
-		addAuto = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ADDAUTO));
-		anonymous = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ANONYMOUS));
-
-		if (serverUrl != null && label != null && repKind != null
-				&& TasksUi.getRepositoryManager().getRepositoryConnector(repKind) != null) {
-			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl,
-					taskPrefix, taskQueryUrl, newAccountUrl, anonymous, addAuto);
-			TasksUiPlugin.getRepositoryTemplateManager().addTemplate(repKind, template);
-
-			for (IConfigurationElement configElement : element.getChildren()) {
-				String name = configElement.getAttribute("name"); //$NON-NLS-1$
-				String value = configElement.getAttribute("value"); //$NON-NLS-1$
-				if (name != null && !name.equals("") && value != null) { //$NON-NLS-1$
-					template.addAttribute(name, value);
-				}
-			}
-		} else {
-			// TODO change error message to include hints about the cause of the error 
-			StatusHandler.log(new Status(
-					IStatus.ERROR,
-					TasksUiPlugin.ID_PLUGIN,
-					"Could not load repository template extension contributed by " + element.getNamespaceIdentifier() + " with connectorKind " + repKind)); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
-
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try {
 			Object dynamicPopupContributor = element.createExecutableExtension(ATTR_CLASS);
@@ -440,10 +372,6 @@ public class TasksUiExtensionReader {
 			}
 		}
 		return new DefaultTaskContextStore();
-	}
-
-	private static boolean isDisabled(IConfigurationElement element) {
-		return disabledContributors.contains(element.getContributor().getName());
 	}
 
 }

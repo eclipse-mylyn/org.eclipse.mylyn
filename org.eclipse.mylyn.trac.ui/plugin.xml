@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?><!--
-    Copyright (c) 2009 Tasktop Technologies and others.
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2009 Steffen Pingel and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -8,40 +9,20 @@
    
     Contributors:
          Steffen Pingel - initial API and implementation
+         Tasktop Technologies - improvements
  -->
-
 <plugin>
    <extension
          id="org.eclipse.mylyn.trac.repository"
          name="%repository.name"
          point="org.eclipse.mylyn.tasks.ui.repositories">
-      <connectorCore
-            class="org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector"
-            id="trac"
-            name="%TracRepositoryConnector.name"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylyn.internal.trac.ui.TracConnectorUi"
             id="trac"
             name="%TracConnectorUi.name"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
-      <taskListMigrator
-            class="org.eclipse.mylyn.internal.trac.ui.TracTaskListMigrator">
-      </taskListMigrator>
-      <repositoryMigrator
-            class="org.eclipse.mylyn.internal.trac.ui.TracRepositoryMigrator">
-      </repositoryMigrator>
    </extension>
-   <extension
-         point="org.eclipse.mylyn.tasks.core.templates">
-      <repository
-            addAutomatically="false"
-            anonymous="true"
-            label="Edgewall"
-            repositoryKind="trac"
-            urlRepository="http://trac.edgewall.org"
-            version="TRAC_0_9"/>
-   </extension> 
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <pageFactory
@@ -58,5 +39,4 @@
             targetId="org.eclipse.mylyn.tasks.ui.TaskEditor">
       </hyperlinkDetector>
    </extension>
-
 </plugin>
