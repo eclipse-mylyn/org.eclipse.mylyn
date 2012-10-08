@@ -7,6 +7,7 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    Kaloyan Raev <kaloyan.raev@sap.com> - bug 390757
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
@@ -87,6 +88,9 @@ public class Messages extends NLS {
 
 	/** */
 	public static String IssueRepositorySettingsPage_Title;
+
+	/** */
+	public static String IssueTaskEditorPage_MessageAnonymousCannotSubmit;
 
 	/** */
 	public static String IssueTaskEditorPageFactory_PageText;
