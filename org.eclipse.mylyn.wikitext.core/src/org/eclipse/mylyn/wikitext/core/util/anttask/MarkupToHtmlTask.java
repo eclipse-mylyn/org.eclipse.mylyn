@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,6 +78,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 	private boolean emitDoctype = true;
 
 	private String htmlDoctype = null;
+
+	private String copyrightNotice = null;
 
 	@Override
 	public void execute() throws BuildException {
@@ -232,6 +234,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setDefaultAbsoluteLinkTarget(defaultAbsoluteLinkTarget);
 				builder.setPrependImagePrefix(prependImagePrefix);
 				builder.setXhtmlStrict(xhtmlStrict);
+				builder.setCopyrightNotice(copyrightNotice);
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles
 						? new DefaultSplittingStrategy()
@@ -579,6 +582,26 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 */
 	public void setHtmlDoctype(String htmlDoctype) {
 		this.htmlDoctype = htmlDoctype;
+	}
+
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @since 1.8
+	 */
+	public String getCopyrightNotice() {
+		return copyrightNotice;
+	}
+
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @param copyrightNotice
+	 *            the notice, or null if there should be none
+	 * @since 1.8
+	 */
+	public void setCopyrightNotice(String copyrightNotice) {
+		this.copyrightNotice = copyrightNotice;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,8 @@ public class MarkupToEclipseToc {
 
 	private String helpPrefix;
 
+	private String copyrightNotice;
+
 	public String parse(String markupContent) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("Must set markupLanguage"); //$NON-NLS-1$
@@ -56,6 +58,10 @@ public class MarkupToEclipseToc {
 		XmlStreamWriter writer = createXmlStreamWriter(out);
 
 		writer.writeStartDocument("utf-8", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (copyrightNotice != null) {
+			writer.writeComment(copyrightNotice);
+		}
 
 		writer.writeStartElement("toc"); //$NON-NLS-1$
 		writer.writeAttribute("topic", adjustForPrefix(getHtmlFile())); //$NON-NLS-1$
@@ -155,4 +161,23 @@ public class MarkupToEclipseToc {
 		this.helpPrefix = helpPrefix;
 	}
 
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @since 1.8
+	 */
+	public String getCopyrightNotice() {
+		return copyrightNotice;
+	}
+
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @param copyrightNotice
+	 *            the notice, or null if there should be none
+	 * @since 1.8
+	 */
+	public void setCopyrightNotice(String copyrightNotice) {
+		this.copyrightNotice = copyrightNotice;
+	}
 }

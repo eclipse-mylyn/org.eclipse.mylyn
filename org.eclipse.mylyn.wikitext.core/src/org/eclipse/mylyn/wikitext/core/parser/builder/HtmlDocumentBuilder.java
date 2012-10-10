@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,6 +227,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private boolean filterEntityReferences = false;
 
+	private String copyrightNotice;
+
 	/**
 	 * construct the HtmlDocumentBuilder.
 	 * 
@@ -281,6 +283,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setSuppressBuiltInStyles(isSuppressBuiltInStyles());
 		other.setXhtmlStrict(xhtmlStrict);
 		other.setPrependImagePrefix(prependImagePrefix);
+		other.setCopyrightNotice(getCopyrightNotice());
 		if (stylesheets != null) {
 			other.stylesheets = new ArrayList<Stylesheet>();
 			other.stylesheets.addAll(stylesheets);
@@ -589,12 +592,14 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeDTD(htmlDtd);
 			}
 
+			if (copyrightNotice != null) {
+				writer.writeComment(copyrightNotice);
+			}
+
 			writer.writeStartElement(htmlNsUri, "html"); //$NON-NLS-1$
 			writer.writeDefaultNamespace(htmlNsUri);
 
-			writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
-			emitHeadContents();
-			writer.writeEndElement(); // head
+			emitHead();
 			beginBody();
 		} else {
 			// sanity check
@@ -605,9 +610,23 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
+	 * Emit the HTML head, including the head tag itself.
+	 * 
+	 * @since 1.8
+	 * @see #emitHeadContents()
+	 */
+	protected void emitHead() {
+		writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
+		emitHeadContents();
+		writer.writeEndElement(); // head
+	}
+
+	/**
 	 * emit the contents of the HTML head, excluding the head tag itself. Subclasses may override to change the contents
 	 * of the head. Subclasses should consider calling <code>super.emitHeadContents()</code> in order to preserve
 	 * features such as emitting the base, title and stylesheets.
+	 * 
+	 * @see #emitHead()
 	 */
 	protected void emitHeadContents() {
 		if (encoding != null && encoding.length() > 0) {
@@ -618,6 +637,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
 			writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("content", String.format("text/html; charset=%s", encoding)); //$NON-NLS-1$//$NON-NLS-2$
+		}
+		if (copyrightNotice != null) {
+			writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
+			writer.writeAttribute("name", "copyright"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("content", copyrightNotice); //$NON-NLS-1$
 		}
 		if (base != null && baseInHead) {
 			writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$
@@ -1339,4 +1363,23 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		this.filterEntityReferences = filterEntityReferences;
 	}
 
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @since 1.8
+	 */
+	public String getCopyrightNotice() {
+		return copyrightNotice;
+	}
+
+	/**
+	 * the copyright notice that should appear in the generated output
+	 * 
+	 * @param copyrightNotice
+	 *            the notice, or null if there should be none
+	 * @since 1.8
+	 */
+	public void setCopyrightNotice(String copyrightNotice) {
+		this.copyrightNotice = copyrightNotice;
+	}
 }

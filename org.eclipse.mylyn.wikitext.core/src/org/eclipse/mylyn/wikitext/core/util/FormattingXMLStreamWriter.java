@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -133,6 +133,8 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		if (data == null) {
 			data = ""; //$NON-NLS-1$
 		}
+		++childCount;
+		maybeIndent();
 		delegate.writeComment(data);
 	}
 

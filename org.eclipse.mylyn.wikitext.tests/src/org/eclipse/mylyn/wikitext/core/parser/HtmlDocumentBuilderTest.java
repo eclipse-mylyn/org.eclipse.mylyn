@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2012 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,5 +65,32 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		TestUtil.println("HTML: \n" + html + "\nURI:" + uri);
 		String expected = "<a href=\"" + uri.toString() + "/foo/bar.html\">An URL</a>";
 		assertTrue("Expected " + expected, html.contains(expected));
+	}
+
+	public void testCopyrightNotice() {
+		builder.setCopyrightNotice("Copyright notice here");
+		parser.parse("content");
+		String html = out.toString();
+		TestUtil.println("HTML: \n" + html);
+		String expected = "<!-- Copyright notice here -->";
+		assertTrue("Expected " + expected + " but received " + html, html.contains(expected));
+		String metaExpected = "<meta name=\"copyright\" content=\"Copyright notice here\"/>";
+		assertTrue("Expected " + metaExpected + " but received " + html, html.contains(metaExpected));
+	}
+
+	public void testCopyrightNoticeFormatted() {
+		out = new StringWriter();
+		builder = new HtmlDocumentBuilder(out, true);
+		parser.setBuilder(builder);
+
+		builder.setCopyrightNotice("Copyright notice here");
+		parser.parse("content");
+		String html = out.toString();
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<!-- Copyright notice here -->";
+		assertTrue("Expected " + expected + " but received " + html,
+				html.startsWith("<?xml version='1.0' encoding='utf-8' ?>\n" + "<!-- Copyright notice here -->\n"
+						+ "<html"));
 	}
 }

@@ -266,6 +266,7 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @xhtmlStrict@ | Indicate if the builder should attempt to conform to strict XHTML rules. The default is false. |
 | @emitDoctype@ | Indicate if the builder should emit a DTD doctype declaration.  The default is true. |
 | @htmlDoctype@ | The doctype to use.  Defaults to @<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@. |
+| @copyrightNotice@ | The copyright notice to include in generated output files. |
 
 *stylesheet*
 
@@ -762,5 +763,5 @@ h2. Feedback
 
 We're interested in any feedback that you might have.  For patches, enhancement requests, bugs: "post an issue":https://bugs.eclipse.org/bugs under under Tools/Mylyn/WikiText.
 
-p{font-style: italic;}. Copyright (c) 2008, 2011 David Green and others.
+p{font-style: italic;}. Copyright (c) 2008, 2012 David Green and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at "http://www.eclipse.org/legal/epl-v10.html":http://www.eclipse.org/legal/epl-v10.html
