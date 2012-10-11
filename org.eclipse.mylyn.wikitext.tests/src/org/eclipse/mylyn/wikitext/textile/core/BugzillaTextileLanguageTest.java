@@ -19,14 +19,12 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
-import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * @author David Green
  */
 @EclipseRuntimeRequired
-@HeadRequired
 public class BugzillaTextileLanguageTest extends TestCase {
 
 	private MarkupParser parser;
@@ -164,6 +162,20 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		TestUtil.println(html);
 
 		assertTrue(html.contains("<pre class=\"javaStackTrace\">java.io.EOFException\nat java.io.DataInputStream.readInt(Unknown Source)\nat org.eclipse.jdt.internal.core.JavaModelManager.loadNonChainingJarsCache(JavaModelManager.java:2843)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;init&gt;(JavaModelManager.java:1477)\nat org.eclipse.jdt.internal.core.JavaModelManager.&lt;clinit&gt;(JavaModelManager.java:1012)\nat org.eclipse.jdt.core.JavaCore.start(JavaCore.java:4965)\nat org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:783)\nat java.security.AccessController.doPrivileged(Native Method)\n</pre>"));
+	}
+
+	public void testJavaStackTraceDetection_bug391723() {
+		String markup = "java.lang.IllegalStateException: message\n" + // 
+				"	at com.foo.Bar.baz(Bar.java:199)\n" + //
+				"	at $Proxy40.findProcessArea(Unknown Source)";
+
+		String html = parser.parseToHtml(markup);
+
+		TestUtil.println(html);
+
+		assertEquals("<body><pre class=\"javaStackTrace\">java.lang.IllegalStateException: message\n"
+				+ "	at com.foo.Bar.baz(Bar.java:199)\n" + "	at $Proxy40.findProcessArea(Unknown Source)\n"
+				+ "</pre></body>", TestUtil.tagFragment("body", html));
 	}
 
 	public void testEclipseErrorDetailsBlock() {
