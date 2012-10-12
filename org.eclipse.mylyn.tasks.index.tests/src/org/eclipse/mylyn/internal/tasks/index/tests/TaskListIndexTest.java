@@ -229,6 +229,38 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 	}
 
 	@Test
+	public void testMatchesOnTaskKey() throws Exception {
+		setupIndex();
+
+		ITask repositoryTask = context.createRepositoryTask();
+
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
+
+		TaskData taskData = context.getDataManager().getTaskData(repositoryTask);
+
+		// sanity
+		assertNotNull(taskData);
+		assertNotNull(taskData.getRoot().getMappedAttribute(TaskAttribute.TASK_KEY));
+
+		String taskKey = repositoryTask.getTaskKey();
+		assertTrue(taskKey.length() > 1);
+
+		final String querySuffix = " AND " + TaskListIndex.FIELD_CONTENT.getIndexKey() + ":\""
+				+ index.escapeFieldValue(taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).getValue())
+				+ "\"";
+
+		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":" + taskKey
+				+ querySuffix));
+
+		// does not match on task key prefix
+		assertTrue(index.matches(repositoryTask,
+				TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":" + taskKey.substring(0, taskKey.length() - 1)
+						+ querySuffix));
+	}
+
+	@Test
 	public void testMatchesSummaryWithExpectedQueryBehaviour() throws InterruptedException {
 		setupIndex();
 

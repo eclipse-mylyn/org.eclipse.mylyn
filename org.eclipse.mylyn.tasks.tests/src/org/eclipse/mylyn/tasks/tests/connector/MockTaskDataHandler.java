@@ -61,6 +61,7 @@ public class MockTaskDataHandler extends AbstractTaskDataHandler {
 		mapper.setReporter("");
 		mapper.setStatus("NEW");
 		mapper.setSummary("");
+		mapper.setTaskKey("");
 		return true;
 	}
 

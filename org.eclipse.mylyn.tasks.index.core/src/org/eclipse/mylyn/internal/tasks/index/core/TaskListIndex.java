@@ -179,6 +179,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	}
 
+	/**
+	 * keeps track of fields that are handled specially in the code so that we don't use the generalized field handling
+	 * for indexing them.
+	 */
 	private final Set<AbstractTaskSchema.Field> specialFields = new HashSet<AbstractTaskSchema.Field>();
 
 	private final Set<AbstractTaskSchema.Field> indexedFields = new LinkedHashSet<AbstractTaskSchema.Field>();
@@ -187,6 +191,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		specialFields.add(FIELD_REPOSITORY_URL);
 		specialFields.add(FIELD_CONTENT);
 		specialFields.add(FIELD_PERSON);
+		specialFields.add(FIELD_TASK_KEY);
 
 		addIndexedField(FIELD_IDENTIFIER);
 		addIndexedField(FIELD_TASK_KEY);

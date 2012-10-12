@@ -151,6 +151,7 @@ public class MockTestContext {
 		taskData.getRoot()
 				.getMappedAttribute(TaskAttribute.DESCRIPTION)
 				.setValue("task description " + task.getTaskKey());
+		taskData.getRoot().getMappedAttribute(TaskAttribute.TASK_KEY).setValue(task.getTaskKey());
 
 		mockRepositoryConnector.getTaskMapping(taskData).applyTo(task);
 
