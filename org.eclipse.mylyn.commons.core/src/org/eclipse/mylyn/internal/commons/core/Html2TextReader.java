@@ -290,7 +290,7 @@ public class Html2TextReader extends SubstitutionTextReader {
 				return str;
 			}
 		}
-		return "&" + symbol; // not found //$NON-NLS-1$
+		return "&" + symbol + ";"; // not found //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/*
