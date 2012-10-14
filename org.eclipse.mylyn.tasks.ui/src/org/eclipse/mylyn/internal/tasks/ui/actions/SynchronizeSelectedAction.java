@@ -19,9 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.Person;
@@ -29,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -129,6 +133,13 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				for (RepositoryQuery query : queriesToSync) {
 					TaskRepository repos = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 							query.getRepositoryUrl());
+					if (repos == null) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Failed to synchronize query \"" + query.getUrl() //$NON-NLS-1$
+										+ "\" because Repository is null")); //$NON-NLS-1$
+						continue;
+					}
+
 					Set<RepositoryQuery> queries = repositoriesToSync.get(repos);
 					if (queries == null) {
 						queries = new HashSet<RepositoryQuery>();
