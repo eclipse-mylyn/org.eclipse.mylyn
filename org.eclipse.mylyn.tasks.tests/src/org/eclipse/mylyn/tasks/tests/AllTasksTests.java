@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskAttributeMapperTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskAttributeTest;
+import org.eclipse.mylyn.tasks.tests.data.TaskDataDiffTest;
 import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.AbstractRepositoryConnectorUiTest;
@@ -144,6 +145,7 @@ public class AllTasksTests {
 		suite.addTestSuite(ScheduledTaskContainerTest.class);
 		suite.addTestSuite(RepositoryConnectorContributorTest.class);
 		suite.addTestSuite(TaskInitializationDataTest.class);
+		suite.addTestSuite(TaskDataDiffTest.class);
 		return suite;
 	}
 
