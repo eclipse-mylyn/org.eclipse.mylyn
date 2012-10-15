@@ -16,12 +16,12 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
@@ -67,6 +67,14 @@ public class TracTestCleanupUtil extends TestCase {
 
 	public void testCleanup012() throws Exception {
 		TracFixture fixture = TracFixture.TRAC_0_12_XML_RPC.activate();
+		System.err.println("Connected to " + fixture.getRepositoryUrl());
+		client = fixture.connect(PrivilegeLevel.ADMIN);
+		deleteOldAttachments();
+		deleteOldTickets();
+	}
+
+	public void testCleanup_1_0() throws Exception {
+		TracFixture fixture = TracFixture.TRAC_1_0_XML_RPC.activate();
 		System.err.println("Connected to " + fixture.getRepositoryUrl());
 		client = fixture.connect(PrivilegeLevel.ADMIN);
 		deleteOldAttachments();
