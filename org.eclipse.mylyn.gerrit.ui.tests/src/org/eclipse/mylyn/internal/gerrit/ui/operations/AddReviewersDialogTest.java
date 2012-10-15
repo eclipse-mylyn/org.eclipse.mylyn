@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ public class AddReviewersDialogTest {
 		dialog.create();
 	}
 
+	@After
 	public void tearDown() {
 		shell.dispose();
 	}
