@@ -87,7 +87,7 @@ public class ContentProposalProvider implements IContentProposalProvider {
 			// suggest field name prefixes
 			for (Field field : reference.index().getIndexedFields()) {
 
-				// searching on URL is not useful
+				// searching on identifier field (task handle) is not useful
 				if (field.equals(TaskListIndex.FIELD_IDENTIFIER)) {
 					continue;
 				}

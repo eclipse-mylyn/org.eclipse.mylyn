@@ -72,13 +72,13 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
-import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -128,6 +128,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	private static final String TASK_ATTRIBUTE_PERSON = INDEX_TASK_ATTRIBUTE_PREFIX + "person"; //$NON-NLS-1$
 
+	private static final String TASK_ATTRIBUTE_ATTACHMENT_NAME = INDEX_TASK_ATTRIBUTE_PREFIX + "attachment"; //$NON-NLS-1$
+
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_IDENTIFIER = new AbstractTaskSchema.Field(
 			TASK_ATTRIBUTE_IDENTIFIER, Messages.TaskListIndex_field_identifier, TaskAttribute.TYPE_SHORT_TEXT,
 			"identifier"); //$NON-NLS-1$
@@ -145,6 +147,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_TASK_KEY = DefaultTaskSchema.getInstance().TASK_KEY;
 
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_ATTACHMENT_NAME = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_ATTACHMENT_NAME, Messages.TaskListIndex_field_attachment, TaskAttribute.TYPE_SHORT_TEXT,
+			"attachment"); //$NON-NLS-1$
 
 	private class MaintainIndexJob extends Job {
 
@@ -192,12 +198,14 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		specialFields.add(FIELD_CONTENT);
 		specialFields.add(FIELD_PERSON);
 		specialFields.add(FIELD_TASK_KEY);
+		specialFields.add(FIELD_ATTACHMENT_NAME);
 
 		addIndexedField(FIELD_IDENTIFIER);
 		addIndexedField(FIELD_TASK_KEY);
 		addIndexedField(FIELD_REPOSITORY_URL);
 		addIndexedField(FIELD_SUMMARY);
 		addIndexedField(FIELD_CONTENT);
+		addIndexedField(FIELD_ATTACHMENT_NAME);
 		addIndexedField(DefaultTaskSchema.getInstance().USER_ASSIGNED);
 		addIndexedField(DefaultTaskSchema.getInstance().USER_REPORTER);
 		addIndexedField(FIELD_PERSON);
@@ -217,8 +225,6 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	private static enum MaintainIndexType {
 		STARTUP, REINDEX
 	}
-
-	// FIXME: document concurrency model
 
 	private Directory directory;
 
@@ -840,14 +846,15 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		addIndexedDateAttributes(document, task);
 
-		List<TaskAttribute> commentAttributes = root.getTaskData()
-				.getAttributeMapper()
-				.getAttributesByType(root.getTaskData(), TaskAttribute.TYPE_COMMENT);
+		TaskData taskData = root.getTaskData();
+
+		List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_COMMENT);
 		for (TaskAttribute commentAttribute : commentAttributes) {
 
-			TaskComment taskComment = new TaskComment(root.getTaskData().getAttributeMapper().getTaskRepository(),
-					task, commentAttribute);
-			root.getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
+			TaskComment taskComment = new TaskComment(taskData.getAttributeMapper().getTaskRepository(), task,
+					commentAttribute);
+			taskData.getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 
 			String text = taskComment.getText();
 			if (text.length() != 0) {
@@ -859,11 +866,28 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			}
 		}
 
-		List<TaskAttribute> personAttributes = root.getTaskData()
-				.getAttributeMapper()
-				.getAttributesByType(root.getTaskData(), TaskAttribute.TYPE_PERSON);
+		List<TaskAttribute> personAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_PERSON);
 		for (TaskAttribute personAttribute : personAttributes) {
 			addIndexedAttribute(document, FIELD_PERSON, personAttribute);
+		}
+
+		TaskRepository repository = getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+
+		if (repository != null) {
+			List<TaskAttribute> attachmentAttributes = taskData.getAttributeMapper().getAttributesByType(taskData,
+					TaskAttribute.TYPE_ATTACHMENT);
+			Set<String> attachmentNames = new HashSet<String>();
+			for (TaskAttribute attribute : attachmentAttributes) {
+				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);
+				taskData.getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
+
+				if (attachmentNames.add(taskAttachment.getFileName())) {
+					addIndexedAttribute(document, FIELD_ATTACHMENT_NAME, taskAttachment.getFileName());
+				}
+				addIndexedAttribute(document, FIELD_CONTENT, taskAttachment.getDescription());
+			}
 		}
 
 		for (AbstractTaskSchema.Field field : indexedFields) {

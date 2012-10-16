@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex.TaskCollector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -444,6 +445,40 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 			deleteFolderRecursively(newLocation);
 			assertFalse(newLocation.exists());
 		}
+	}
+
+	@Test
+	public void testFindByTaskAttachmentName() throws CoreException, InterruptedException {
+		setupIndex();
+
+		ITask repositoryTask = context.createRepositoryTask();
+
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
+
+		TaskData taskData = context.getDataManager().getTaskData(repositoryTask);
+
+		TaskAttribute attachmentAttribute = taskData.getRoot().createAttribute("attachment-0");
+		attachmentAttribute.getMetaData().setType(TaskAttribute.TYPE_ATTACHMENT);
+
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+		attachmentMapper.setFileName("test-file.txt");
+		attachmentMapper.setDescription("test file " + System.currentTimeMillis());
+		attachmentMapper.applyTo(attachmentAttribute);
+
+		context.getDataManager().putSubmittedTaskData(repositoryTask, taskData, new DelegatingProgressMonitor());
+		context.getTaskList().notifyElementsChanged(Collections.singleton(repositoryTask));
+
+		index.waitUntilIdle();
+
+		assertTrue(index.matches(repositoryTask, "\"" + attachmentMapper.getDescription() + "\""));
+		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\""
+				+ attachmentMapper.getFileName() + "\""));
+		assertFalse(index.matches(repositoryTask,
+				TaskListIndex.FIELD_CONTENT.getIndexKey() + ":\"" + attachmentMapper.getFileName() + "\""));
+		assertFalse(index.matches(repositoryTask, TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\""
+				+ attachmentMapper.getDescription() + "\""));
 	}
 
 	private void assertCanFindTask(ITask task) {
