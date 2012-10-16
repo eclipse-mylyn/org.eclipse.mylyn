@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381506, 381912
+ *     Jeremie Bresson - Bug 381506, 381912, 391850
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -122,10 +122,44 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("<body><p><b>aa</b>bb</p></body>").matcher(html).find());
 	}
 
+	public void testBoldWithWhitespace() {
+		//Bug 391850
+		String html;
+
+		html = parser.parseToHtml("normal ''' bold text''' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <b> bold text</b> normal</p></body>"));
+
+		html = parser.parseToHtml("normal '''bold text ''' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <b>bold text </b> normal</p></body>"));
+
+		html = parser.parseToHtml("normal ''' bold text ''' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <b> bold text </b> normal</p></body>"));
+	}
+
 	public void testItalic() {
 		String html = parser.parseToHtml("normal ''italic text'' normal");
 		TestUtil.println(html);
 		assertTrue(Pattern.compile("<body><p>normal <i>italic text</i> normal</p></body>").matcher(html).find());
+	}
+
+	public void testItalicWithWhitespace() {
+		//Bug 391850
+		String html;
+
+		html = parser.parseToHtml("normal '' italic text'' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <i> italic text</i> normal</p></body>"));
+
+		html = parser.parseToHtml("normal ''italic text '' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <i>italic text </i> normal</p></body>"));
+
+		html = parser.parseToHtml("normal '' italic text '' normal");
+		TestUtil.println(html);
+		assertTrue(html.contains("<body><p>normal <i> italic text </i> normal</p></body>"));
 	}
 
 	public void testHeadings() {

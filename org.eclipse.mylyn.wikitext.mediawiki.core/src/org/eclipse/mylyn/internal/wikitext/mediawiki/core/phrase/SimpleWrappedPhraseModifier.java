@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 391850
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase;
 
@@ -76,7 +77,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 
 		return quotedStartDelimiter + //
 				"(?!" + quotedStartDelimiterLastChar + ")" + //  //$NON-NLS-1$//$NON-NLS-2$
-				"([^\\s" + quotedEndDelimiter + "]+|\\S(?:.*?\\S)?)" + // conten //$NON-NLS-1$ //$NON-NLS-2$
+				"([^" + quotedEndDelimiter + "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ //$NON-NLS-2$
 				quotedEndDelimiter;
 	}
 
