@@ -41,6 +41,7 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.dialogs.IValidatable;
 import org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
+import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -58,6 +59,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -237,6 +239,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	private boolean isValid;
 
 	/**
+	 * @since 3.9
+	 */
+	protected SectionComposite innerComposite;
+
+	/**
 	 * @since 3.0
 	 */
 	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
@@ -280,19 +287,18 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		initializeDialogUnits(parent);
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 
-		Composite compositeContainer = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
-		compositeContainer.setLayout(layout);
-
-		createSettingControls(compositeContainer);
-		createValidationControls(compositeContainer);
+		innerComposite = new SectionComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+		createSettingControls(innerComposite.getContent());
+		createValidationControls(innerComposite.getContent());
 		if (needsValidateOnFinish()) {
-			validateOnFinishButton = new Button(compositeContainer, SWT.CHECK);
+			validateOnFinishButton = new Button(innerComposite, SWT.CHECK);
 			validateOnFinishButton.setText(Messages.AbstractRepositorySettingsPage_Validate_on_Finish);
 			validateOnFinishButton.setSelection(true);
 		}
-		Dialog.applyDialogFont(compositeContainer);
-		setControl(compositeContainer);
+		Point p = innerComposite.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		innerComposite.setMinSize(p);
+		Dialog.applyDialogFont(innerComposite);
+		setControl(innerComposite);
 	}
 
 	/**
@@ -359,8 +365,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).span(2, SWT.DEFAULT).applyTo(
-				serverUrlCombo);
+		GridDataFactory.fillDefaults()
+				.hint(300, SWT.DEFAULT)
+				.grab(true, false)
+				.span(2, SWT.DEFAULT)
+				.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -549,7 +558,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			createProxySection();
 		}
 
-		createContributionControls(parent);
+		createContributionControls(innerComposite);
 
 		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
@@ -617,7 +626,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void createAdvancedSection() {
-		ExpandableComposite section = createSection(compositeContainer,
+		ExpandableComposite section = createSection(innerComposite,
 				Messages.AbstractRepositorySettingsPage_Additional_Settings);
 
 		advancedComp = toolkit.createComposite(section, SWT.NONE);
@@ -705,7 +714,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void createCertAuthSection() {
-		ExpandableComposite section = createSection(compositeContainer,
+		ExpandableComposite section = createSection(innerComposite,
 				Messages.AbstractRepositorySettingsPage_certificate_settings);
 
 		certAuthComp = toolkit.createComposite(section, SWT.NONE);
@@ -713,8 +722,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		section.setClient(certAuthComp);
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
-				certAuthButton);
+		GridDataFactory.fillDefaults()
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -797,7 +809,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void createHttpAuthSection() {
-		ExpandableComposite section = createSection(compositeContainer,
+		ExpandableComposite section = createSection(innerComposite,
 				Messages.AbstractRepositorySettingsPage_Http_Authentication);
 
 		httpAuthComp = toolkit.createComposite(section, SWT.NONE);
@@ -805,8 +817,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		section.setClient(httpAuthComp);
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().indent(0, 5).align(SWT.LEFT, SWT.TOP).span(3, SWT.DEFAULT).applyTo(
-				httpAuthButton);
+		GridDataFactory.fillDefaults()
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -932,7 +947,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void createProxySection() {
-		ExpandableComposite section = createSection(compositeContainer,
+		ExpandableComposite section = createSection(innerComposite,
 				Messages.AbstractRepositorySettingsPage_Proxy_Server_Configuration);
 
 		proxyAuthComp = toolkit.createComposite(section, SWT.NONE);
@@ -2060,4 +2075,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		return isValid;
 	}
 
+	@Override
+	protected ExpandableComposite createSection(Composite parentControl, String title) {
+		if (parentControl instanceof SectionComposite) {
+			return ((SectionComposite) parentControl).createSection(title);
+		} else {
+			return super.createSection(parentControl, title);
+		}
+	}
 }
