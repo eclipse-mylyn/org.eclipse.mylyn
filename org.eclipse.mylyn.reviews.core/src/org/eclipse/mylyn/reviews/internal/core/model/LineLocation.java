@@ -67,7 +67,7 @@ public class LineLocation extends Location implements ILineLocation {
 	 */
 	public List<ILineRange> getRanges() {
 		if (ranges == null) {
-			ranges = new EObjectContainmentEList<ILineRange>(ILineRange.class, this,
+			ranges = new EObjectContainmentEList.Resolving<ILineRange>(ILineRange.class, this,
 					ReviewsPackage.LINE_LOCATION__RANGES);
 		}
 		return ranges;

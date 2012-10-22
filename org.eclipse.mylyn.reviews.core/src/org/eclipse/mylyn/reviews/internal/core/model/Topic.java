@@ -149,6 +149,31 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public ITaskReference getTask() {
+		if (task != null && task.eIsProxy()) {
+			InternalEObject oldTask = (InternalEObject) task;
+			task = (ITaskReference) eResolveProxy(oldTask);
+			if (task != oldTask) {
+				InternalEObject newTask = (InternalEObject) task;
+				NotificationChain msgs = oldTask.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.TOPIC__TASK, null, null);
+				if (newTask.eInternalContainer() == null) {
+					msgs = newTask.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.TOPIC__TASK, null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__TASK, oldTask, task));
+			}
+		}
+		return task;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ITaskReference basicGetTask() {
 		return task;
 	}
 
@@ -199,7 +224,8 @@ public class Topic extends Comment implements ITopic {
 	 */
 	public List<ILocation> getLocations() {
 		if (locations == null) {
-			locations = new EObjectContainmentEList<ILocation>(ILocation.class, this, ReviewsPackage.TOPIC__LOCATIONS);
+			locations = new EObjectContainmentEList.Resolving<ILocation>(ILocation.class, this,
+					ReviewsPackage.TOPIC__LOCATIONS);
 		}
 		return locations;
 	}
@@ -386,7 +412,9 @@ public class Topic extends Comment implements ITopic {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.TOPIC__TASK:
-			return getTask();
+			if (resolve)
+				return getTask();
+			return basicGetTask();
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			return getLocations();
 		case ReviewsPackage.TOPIC__COMMENTS:

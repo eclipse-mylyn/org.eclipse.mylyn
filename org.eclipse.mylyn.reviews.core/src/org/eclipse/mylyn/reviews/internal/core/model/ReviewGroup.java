@@ -112,7 +112,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 */
 	public List<IReview> getReviews() {
 		if (reviews == null) {
-			reviews = new EObjectContainmentEList<IReview>(IReview.class, this, ReviewsPackage.REVIEW_GROUP__REVIEWS);
+			reviews = new EObjectContainmentEList.Resolving<IReview>(IReview.class, this,
+					ReviewsPackage.REVIEW_GROUP__REVIEWS);
 		}
 		return reviews;
 	}
@@ -123,6 +124,33 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 * @generated
 	 */
 	public ITaskReference getReviewGroupTask() {
+		if (reviewGroupTask != null && reviewGroupTask.eIsProxy()) {
+			InternalEObject oldReviewGroupTask = (InternalEObject) reviewGroupTask;
+			reviewGroupTask = (ITaskReference) eResolveProxy(oldReviewGroupTask);
+			if (reviewGroupTask != oldReviewGroupTask) {
+				InternalEObject newReviewGroupTask = (InternalEObject) reviewGroupTask;
+				NotificationChain msgs = oldReviewGroupTask.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, null);
+				if (newReviewGroupTask.eInternalContainer() == null) {
+					msgs = newReviewGroupTask.eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+							- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, oldReviewGroupTask, reviewGroupTask));
+			}
+		}
+		return reviewGroupTask;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ITaskReference basicGetReviewGroupTask() {
 		return reviewGroupTask;
 	}
 
@@ -216,7 +244,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
 			return getReviews();
 		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			return getReviewGroupTask();
+			if (resolve)
+				return getReviewGroupTask();
+			return basicGetReviewGroupTask();
 		case ReviewsPackage.REVIEW_GROUP__DESCRIPTION:
 			return getDescription();
 		}

@@ -159,6 +159,33 @@ public class Review extends ReviewComponent implements IReview {
 	 * @generated
 	 */
 	public ITaskReference getReviewTask() {
+		if (reviewTask != null && reviewTask.eIsProxy()) {
+			InternalEObject oldReviewTask = (InternalEObject) reviewTask;
+			reviewTask = (ITaskReference) eResolveProxy(oldReviewTask);
+			if (reviewTask != oldReviewTask) {
+				InternalEObject newReviewTask = (InternalEObject) reviewTask;
+				NotificationChain msgs = oldReviewTask.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.REVIEW__REVIEW_TASK, null, null);
+				if (newReviewTask.eInternalContainer() == null) {
+					msgs = newReviewTask.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW__REVIEW_TASK,
+							null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW__REVIEW_TASK,
+							oldReviewTask, reviewTask));
+			}
+		}
+		return reviewTask;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ITaskReference basicGetReviewTask() {
 		return reviewTask;
 	}
 
@@ -209,6 +236,32 @@ public class Review extends ReviewComponent implements IReview {
 	 * @generated
 	 */
 	public IReviewState getState() {
+		if (state != null && state.eIsProxy()) {
+			InternalEObject oldState = (InternalEObject) state;
+			state = (IReviewState) eResolveProxy(oldState);
+			if (state != oldState) {
+				InternalEObject newState = (InternalEObject) state;
+				NotificationChain msgs = oldState.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.REVIEW__STATE, null, null);
+				if (newState.eInternalContainer() == null) {
+					msgs = newState.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW__STATE, null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW__STATE, oldState,
+							state));
+			}
+		}
+		return state;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IReviewState basicGetState() {
 		return state;
 	}
 
@@ -302,9 +355,13 @@ public class Review extends ReviewComponent implements IReview {
 		case ReviewsPackage.REVIEW__ITEMS:
 			return getItems();
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
-			return getReviewTask();
+			if (resolve)
+				return getReviewTask();
+			return basicGetReviewTask();
 		case ReviewsPackage.REVIEW__STATE:
-			return getState();
+			if (resolve)
+				return getState();
+			return basicGetState();
 		case ReviewsPackage.REVIEW__ID:
 			return getId();
 		}

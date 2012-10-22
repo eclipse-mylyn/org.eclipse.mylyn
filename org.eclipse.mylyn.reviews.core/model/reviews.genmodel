@@ -6,10 +6,10 @@
     modelName="Reviews" modelPluginClass="" nonNLSMarkers="true" rootImplementsInterface=""
     suppressEMFTypes="true" suppressEMFMetaData="true" suppressEMFModelTags="true"
     codeFormatting="true" testsDirectory="/org.eclipse.mylyn.reviews.core.tests/src"
-    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="5.0"
-    copyrightFields="false" editPluginID="org.eclipse.mylyn.reviews.edit" editorPluginID="org.eclipse.mylyn.reviews.editor"
-    testsPluginID="org.eclipse.mylyn.reviews.core.tests" runtimeVersion="2.5" interfaceNamePattern="I{0}"
-    classNamePattern="{0}">
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" containmentProxies="true"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="org.eclipse.mylyn.reviews.edit"
+    editorPluginID="org.eclipse.mylyn.reviews.editor" testsPluginID="org.eclipse.mylyn.reviews.core.tests"
+    runtimeVersion="2.5" interfaceNamePattern="I{0}" classNamePattern="{0}">
   <foreignModel>reviews.ecore</foreignModel>
   <genPackages prefix="Reviews" basePackage="org.eclipse.mylyn" resource="XML" disposableProviderFactory="true"
       interfacePackageSuffix="core.model" metaDataPackageSuffix="core.model" classPackageSuffix="internal.core.model"
@@ -90,6 +90,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileRevision/path"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileRevision/revision"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//FileRevision/content"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="reviews.ecore#//ModelVersioning">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ModelVersioning/fragmentVersion"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

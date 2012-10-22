@@ -204,6 +204,32 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @generated
 	 */
 	public ICommentType getType() {
+		if (type != null && type.eIsProxy()) {
+			InternalEObject oldType = (InternalEObject) type;
+			type = (ICommentType) eResolveProxy(oldType);
+			if (type != oldType) {
+				InternalEObject newType = (InternalEObject) type;
+				NotificationChain msgs = oldType.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.COMMENT__TYPE, null, null);
+				if (newType.eInternalContainer() == null) {
+					msgs = newType.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.COMMENT__TYPE, null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.COMMENT__TYPE, oldType,
+							type));
+			}
+		}
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ICommentType basicGetType() {
 		return type;
 	}
 
@@ -319,7 +345,8 @@ public class Comment extends ReviewComponent implements IComment {
 	 */
 	public List<IComment> getReplies() {
 		if (replies == null) {
-			replies = new EObjectContainmentEList<IComment>(IComment.class, this, ReviewsPackage.COMMENT__REPLIES);
+			replies = new EObjectContainmentEList.Resolving<IComment>(IComment.class, this,
+					ReviewsPackage.COMMENT__REPLIES);
 		}
 		return replies;
 	}
@@ -372,7 +399,9 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__AUTHOR:
 			return getAuthor();
 		case ReviewsPackage.COMMENT__TYPE:
-			return getType();
+			if (resolve)
+				return getType();
+			return basicGetType();
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 			return getDescription();
 		case ReviewsPackage.COMMENT__CREATION_DATE:
