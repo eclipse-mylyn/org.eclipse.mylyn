@@ -41,7 +41,7 @@ public class ImportAsContextAction extends Action implements
 	}
 
 	public void run() {
-
+		throw new java.lang.UnsupportedOperationException();
 	}
 
 	private String formatHandleString(Change c) {
@@ -71,11 +71,9 @@ public class ImportAsContextAction extends Action implements
 				if (elementNotDeleted(c)) {
 					InteractionEvent interactionEvent = new InteractionEvent(
 							Kind.SELECTION, null, formatHandleString(c), ORIGIN);
+					ContextCore.getContextManager().processInteractionEvent(interactionEvent);
 
-					ContextCore.getContextManager().processInteractionEvent(
-							interactionEvent);
-					MonitorUiPlugin.getDefault().notifyInteractionObserved(
-							interactionEvent);
+					MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 				}
 			}
 		}

@@ -45,14 +45,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- *
  * @author Kilian Matt
- *
  */
 @SuppressWarnings("restriction")
 public class ChangesetPart extends AbstractTaskEditorPart {
 	private TableViewer table;
-	private ChangesetModel model = new ChangesetModel();
+
+	private final ChangesetModel model = new ChangesetModel();
 
 	public ChangesetPart() {
 		setPartName("Changeset");
@@ -67,8 +66,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		createTable(composite);
 	}
 
-	private Composite createContentComposite(FormToolkit toolkit,
-			Section createSection) {
+	private Composite createContentComposite(FormToolkit toolkit, Section createSection) {
 		Composite composite = toolkit.createComposite(createSection);
 		createSection.setClient(composite);
 		composite.setLayout(new FillLayout());
@@ -107,10 +105,10 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		super.fillToolBar(toolBarManager);
 		toolBarManager.add(new IncludeSubTasksAction(model));
 		List<ITaskVersionsContributionAction> contributions = InternalExtensionPointLoader.loadActionContributions();
-		for(final ITaskVersionsContributionAction action : contributions) {
+		for (final ITaskVersionsContributionAction action : contributions) {
 			toolBarManager.add(new ActionDelegate(action) {
-			@Override
-			public void runWithEvent(Event event) {
+				@Override
+				public void runWithEvent(Event event) {
 					action.run(model);
 				}
 			});
@@ -120,37 +118,33 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	private void registerContextMenu(TableViewer table) {
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		getTaskEditorPage().getEditorSite().registerContextMenu(
-				"org.eclipse.mylyn.versions.changesets", menuManager, table,
-				true);
+		getTaskEditorPage().getEditorSite().registerContextMenu("org.eclipse.mylyn.versions.changesets", menuManager,
+				table, true);
 		Menu menu = menuManager.createContextMenu(table.getControl());
 		table.getTable().setMenu(menu);
 	}
 
 	private void addColumn(TableViewer table, String name) {
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(table,
-				SWT.LEFT);
+		TableViewerColumn tableViewerColumn = new TableViewerColumn(table, SWT.LEFT);
 		tableViewerColumn.getColumn().setText(name);
 		tableViewerColumn.getColumn().setWidth(100);
 	}
 
-	private AbstractChangesetMappingProvider determineBestProvider(
-			final ITask task) {
+	private AbstractChangesetMappingProvider determineBestProvider(final ITask task) {
 		AbstractChangesetMappingProvider bestProvider = new NullProvider();
 		int score = Integer.MIN_VALUE;
-		for (AbstractChangesetMappingProvider mappingProvider : TaskChangesetUtil
-				.getMappingProviders()) {
+		for (AbstractChangesetMappingProvider mappingProvider : TaskChangesetUtil.getMappingProviders()) {
 			if (score < mappingProvider.getScoreFor(task)) {
 				bestProvider = mappingProvider;
 			}
 		}
 		return bestProvider;
 	}
-	private static class NullProvider extends AbstractChangesetMappingProvider{
+
+	private static class NullProvider extends AbstractChangesetMappingProvider {
 
 		@Override
-		public void getChangesetsForTask(IChangeSetMapping mapping,
-				IProgressMonitor monitor) throws CoreException {
+		public void getChangesetsForTask(IChangeSetMapping mapping, IProgressMonitor monitor) throws CoreException {
 		}
 
 		@Override
@@ -160,8 +154,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 
 	}
 
-	private IChangeSetMapping createChangeSetMapping(final ITask task,
-			final List<TaskChangeSet> changesets) {
+	private IChangeSetMapping createChangeSetMapping(final ITask task, final List<TaskChangeSet> changesets) {
 		return new IChangeSetMapping() {
 
 			public ITask getTask() {
@@ -207,8 +200,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 				if (task instanceof ITaskContainer) {
 					ITaskContainer taskContainer = (ITaskContainer) task;
 					for (ITask subTask : taskContainer.getChildren()) {
-						changesetsMapping.add(createChangeSetMapping(subTask,
-								changesets));
+						changesetsMapping.add(createChangeSetMapping(subTask, changesets));
 					}
 				}
 			}
@@ -221,7 +213,8 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 							provider.getChangesetsForTask(csm, new NullProgressMonitor());
 						}
 					} catch (CoreException e) {
-						getTaskEditorPage().getTaskEditor().setMessage("An exception occurred " + e.getMessage(), IMessageProvider.ERROR);
+						getTaskEditorPage().getTaskEditor().setMessage("An exception occurred " + e.getMessage(),
+								IMessageProvider.ERROR);
 					}
 				}
 
