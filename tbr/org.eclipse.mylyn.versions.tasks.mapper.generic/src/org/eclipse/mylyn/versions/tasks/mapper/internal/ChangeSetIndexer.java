@@ -9,14 +9,11 @@
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.versions.tasks.mapper.internal;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.lucene.LucenePackage;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -25,22 +22,15 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.DisjunctionMaxQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.spans.SpanOrQuery;
-import org.apache.lucene.search.spans.SpanQuery;
-import org.apache.lucene.search.spans.SpanTermQuery;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.util.Version;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -51,7 +41,7 @@ import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexer;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetSource;
 
 /**
- * 
+ *
  * @author Kilian Matt
  */
 public class ChangeSetIndexer implements IChangeSetIndexSearcher {
@@ -67,12 +57,10 @@ public class ChangeSetIndexer implements IChangeSetIndexSearcher {
 		this.source = source;
 	}
 
+
 	public void reindex(IProgressMonitor monitor) {
 		try {
-			PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(Version.LUCENE_CURRENT));
-			analyzer.addAnalyzer(IndexedFields.REPOSITORY.getIndexKey(), new KeywordAnalyzer());
-			indexWriter = new IndexWriter(new NIOFSDirectory(indexDirectory),
-					analyzer, true, MaxFieldLength.UNLIMITED);
+			indexWriter = new IndexWriter(new NIOFSDirectory(indexDirectory),ChangeSetAnalyzer.get(), true, MaxFieldLength.UNLIMITED);
 
 			IChangeSetIndexer indexer = new IChangeSetIndexer() {
 
@@ -96,29 +84,29 @@ public class ChangeSetIndexer implements IChangeSetIndexSearcher {
 		}
 	}
 
-	public int search(ITask task, String scmRepositoryUrl, int resultsLimit, IChangeSetCollector collector) throws CoreException {
+	public int search(ITask task, String scmRepositoryUrl, int resultsLimit,IChangeSetCollector collector) throws CoreException {
 		int count = 0;
 		IndexReader indexReader = getIndexReader();
 		if (indexReader != null) {
 			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 			try {
-				Query query = createQuery(task,scmRepositoryUrl);
+				Query query = createQuery(task, scmRepositoryUrl);
 				TopDocs results = indexSearcher.search(query, resultsLimit);
 				for (ScoreDoc scoreDoc : results.scoreDocs) {
 					Document document = indexReader.document(scoreDoc.doc);
 					count++;
-					if(count > resultsLimit)
+					if (count > resultsLimit)
 						break;
-					
-					
+
 					String revision = document.getField(IndexedFields.REVISION.getIndexKey()).stringValue();
-					String repositoryUrl =document.getField(IndexedFields.REPOSITORY.getIndexKey()).stringValue();
-					
+					String repositoryUrl = document.getField(IndexedFields.REPOSITORY.getIndexKey()).stringValue();
+
 					collector.collect(revision, repositoryUrl);
 				}
 			} catch (IOException e) {
-//				StatusHandler.log(new Status(IStatus.ERROR, org.eclipse.mylyn.versions.tasks.ui.internal.TaPLUGIN_ID,
-//"Unexpected failure within task list index", e)); //$NON-NLS-1$
+				// StatusHandler.log(new Status(IStatus.ERROR,
+				// org.eclipse.mylyn.versions.tasks.ui.internal.TaPLUGIN_ID,
+				//"Unexpected failure within task list index", e)); //$NON-NLS-1$
 			} finally {
 				try {
 					indexSearcher.close();
@@ -132,20 +120,22 @@ public class ChangeSetIndexer implements IChangeSetIndexSearcher {
 	}
 
 	private Query createQuery(ITask task, String repositoryUrl) {
-		BooleanQuery query =new BooleanQuery();
+		BooleanQuery query = new BooleanQuery();
 		query.setMinimumNumberShouldMatch(1);
-		query.add(new TermQuery(new Term(IndexedFields.REPOSITORY.getIndexKey(),repositoryUrl)),Occur.MUST);
-		query.add(new PrefixQuery(new Term(IndexedFields.COMMIT_MESSAGE.getIndexKey(),task.getUrl())),Occur.SHOULD);
-		query.add(new PrefixQuery(new Term(IndexedFields.COMMIT_MESSAGE.getIndexKey(),task.getTaskId())),Occur.SHOULD);
+		query.add(new TermQuery(new Term(IndexedFields.REPOSITORY.getIndexKey(), repositoryUrl)), Occur.MUST);
+		query.add(new PrefixQuery(new Term(IndexedFields.COMMIT_MESSAGE.getIndexKey(), task.getUrl())), Occur.SHOULD);
+		query.add(new PrefixQuery(new Term(IndexedFields.COMMIT_MESSAGE.getIndexKey(), task.getTaskId())), Occur.SHOULD);
+		query.add(new PrefixQuery(new Term(IndexedFields.COMMIT_MESSAGE.getIndexKey(), task.getTaskKey())), Occur.SHOULD);
+
 		return query;
 	}
-
 
 	private IndexReader getIndexReader() {
 		try {
 			synchronized (this) {
 				if (indexReader == null) {
-					indexReader = IndexReader.open(new NIOFSDirectory(indexDirectory), true);
+					indexReader = IndexReader.open(new NIOFSDirectory(
+							indexDirectory), true);
 				}
 				return indexReader;
 			}

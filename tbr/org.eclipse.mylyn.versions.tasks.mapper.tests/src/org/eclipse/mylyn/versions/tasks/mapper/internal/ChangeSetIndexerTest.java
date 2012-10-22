@@ -36,15 +36,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Kilian Matt
  *
  */
+@SuppressWarnings("restriction")
 public class ChangeSetIndexerTest {
 
 	protected static final String REPO_URL = "http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.versions.git";
 	private ChangeSetIndexer indexer;
-	
+
 	@Before
 	public void prepareIndex() {
 		File dir = createTempDirectoryForIndex();
@@ -61,7 +62,7 @@ public class ChangeSetIndexerTest {
 		collectors.expect("1", REPO_URL);
 		assertEquals(1, indexer.search(task,REPO_URL, 5,collectors));
 		collectors.verifyAllExpectations();
-	}	
+	}
 	@Test
 	public void testMultipleResults() throws CoreException{
 		ITask task =  new MockTask(REPO_URL,"2");
@@ -73,13 +74,33 @@ public class ChangeSetIndexerTest {
 		collectors.verifyAllExpectations();
 	}
 
+	@Test
+	public void testFindByTaskUrl() throws CoreException{
+		ITask task =  new MockTask(REPO_URL,"4");
+		task.setUrl(REPO_URL+"/4");
+		ExpectingChangeSetCollector collectors= new ExpectingChangeSetCollector();
+		collectors.expect("4", REPO_URL);
+		assertEquals(1, indexer.search(task,REPO_URL, 5,collectors));
+		collectors.verifyAllExpectations();
+	}
+	@Test
+	public void testComplexTaskKeys() throws CoreException{
+		ITask task =  new MockTask(REPO_URL,"2131");
+		task.setTaskKey("SPR-9030");
+		task.setUrl(REPO_URL+"/1");
+		ExpectingChangeSetCollector collectors= new ExpectingChangeSetCollector();
+		collectors.expect("5", REPO_URL);
+		collectors.expect("6", REPO_URL);
+		assertEquals(2, indexer.search(task,REPO_URL, 5,collectors));
+		collectors.verifyAllExpectations();
+	}
 
 	static class ExpectingChangeSetCollector implements IChangeSetCollector{
 		private List<Pair> expected=new LinkedList<Pair>();
 		void expect(String revision, String repositoryUrl){
 			this.expected.add(new Pair(revision,repositoryUrl));
 		}
-		
+
 		public void verifyAllExpectations() {
 			if(expected.size()>0){
 				fail( expected.size() + " expected changesets not collected");
@@ -108,16 +129,20 @@ public class ChangeSetIndexerTest {
 	}
 	private ListChangeSetSource createIndexerSource() {
 		ScmRepository repository=new ScmRepository(null, "", REPO_URL);
-		ScmRepository otherRepo=new ScmRepository(null, "", "http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.reviews.git");		
+		ScmRepository otherRepo=new ScmRepository(null, "", "http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.reviews.git");
 		ListChangeSetSource source = new ListChangeSetSource(Arrays.asList(
 				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "1", "commit message 1", repository, new ArrayList<Change>()),
 				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "1", "commit message 1", otherRepo, new ArrayList<Change>()),
 				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "2", "commit message 2", repository, new ArrayList<Change>()),
-				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "3", "commit message 2", repository, new ArrayList<Change>())
+				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "3", "commit message 2", repository, new ArrayList<Change>()),
+				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "4", "another commit message with url http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.versions.git/4 ", repository, new ArrayList<Change>()),
+
+				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "5", "SPR-9030: Test", repository, new ArrayList<Change>()),
+				new ChangeSet(new ScmUser("test", "Name", "test@eclipse.org"), new Date(), "6", "Fixed Bug (SPR-9030)", repository, new ArrayList<Change>())
 		));
 		return source;
 	}
-	
+
 	class ListChangeSetSource implements IChangeSetSource {
 		private List<ChangeSet> changesets;
 		public ListChangeSetSource(List<ChangeSet> changesets){
@@ -131,7 +156,7 @@ public class ChangeSetIndexerTest {
 			}
 		}
 	}
-	
+
 	private File createTempDirectoryForIndex() {
 		File dir = null;
 		try {
@@ -144,7 +169,7 @@ public class ChangeSetIndexerTest {
 		}
 		return dir;
 	}
-	
-	
-	
+
+
+
 }
