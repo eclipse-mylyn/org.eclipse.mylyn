@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.versions.ui;
@@ -29,6 +30,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
@@ -42,8 +44,10 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author Steffen Pingel
+ * @author Kilian Matt
  */
 public class ScmUi {
+
 	private static HashMap<String, ScmConnectorUi> connectorById = new HashMap<String, ScmConnectorUi>();
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.versions.ui"; //$NON-NLS-1$
@@ -130,8 +134,9 @@ public class ScmUi {
 	}
 
 	/**
-	 * @param resource
-	 * @return
+	 * Returns the UI connector that corresponds to <code>resource</code>.
+	 * 
+	 * @return the connector instance or null, if no connector could be found for <code>resource</code>
 	 */
 	public static ScmConnectorUi getUiConnector(IResource resource) {
 		if (!RepositoryProvider.isShared(resource.getProject())) {
@@ -140,6 +145,15 @@ public class ScmUi {
 
 		RepositoryProvider provider = RepositoryProvider.getProvider(resource.getProject());
 		return getScmUiConnectorById(provider.getID());
+	}
+
+	/**
+	 * Returns the UI connector that corresponds to <code>coreConnector</code>.
+	 * 
+	 * @return the connector instance or null if no UI connector is registered for <code>coreConnector</code>
+	 */
+	public static ScmConnectorUi getUiConnector(ScmConnector coreConnector) {
+		return getScmUiConnectorById(coreConnector.getProviderId());
 	}
 
 	private synchronized static ScmConnectorUi getScmUiConnectorById(String id) {
