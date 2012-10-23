@@ -257,4 +257,35 @@ public class TaskDataStoreTest extends TestCase {
 		}
 	}
 
+	public void testReadWriteSetValue() throws Exception {
+		setupData();
+		TaskAttribute attribute = data.getRoot().createAttribute("attribute");
+		assertFalse(attribute.hasValue());
+		attribute.setValue("foo");
+		assertTrue(attribute.hasValue());
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		TaskDataState state2 = storage.getTaskDataState(file);
+		assertTrue(state2.getRepositoryData().getRoot().getAttribute("attribute").hasValue());
+	}
+
+	public void testReadWriteUnsetValue() throws Exception {
+		setupData();
+		TaskAttribute attribute = data.getRoot().createAttribute("attribute");
+		assertFalse(attribute.hasValue());
+		attribute.setValue("foo");
+		assertTrue(attribute.hasValue());
+		attribute.clearValues();
+		assertFalse(attribute.hasValue());
+
+		File file = File.createTempFile("mylyn", null);
+		file.deleteOnExit();
+		storage.putTaskData(file, state);
+
+		TaskDataState state2 = storage.getTaskDataState(file);
+		assertFalse(state2.getRepositoryData().getRoot().getAttribute("attribute").hasValue());
+	}
 }

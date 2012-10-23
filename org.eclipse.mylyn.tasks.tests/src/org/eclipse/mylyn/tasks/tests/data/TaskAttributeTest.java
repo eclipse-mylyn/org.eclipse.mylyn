@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Benjamin Muskalla
+ * @author Miles Parker
  */
 public class TaskAttributeTest extends TestCase {
 
@@ -36,6 +37,13 @@ public class TaskAttributeTest extends TestCase {
 		attribute = new TaskAttribute(data.getRoot(), "test");
 	}
 
+	public void testGetValue() {
+		attribute.setValue("baz");
+		assertEquals("baz", attribute.getValue());
+		attribute.setValue("bee");
+		assertEquals("bee", attribute.getValue());
+	}
+
 	public void testRegularValue() throws Exception {
 		attribute.setValue("foo");
 		assertEquals("foo", attribute.getValue());
@@ -44,6 +52,19 @@ public class TaskAttributeTest extends TestCase {
 	public void testRegularValues() throws Exception {
 		attribute.setValues(Collections.singletonList("foo"));
 		assertEquals("foo", attribute.getValue());
+	}
+
+	public void testHasValue() {
+		assertFalse(attribute.hasValue());
+
+		attribute.setValue("description");
+		assertTrue(attribute.hasValue());
+
+		attribute.clearValues();
+		assertFalse(attribute.hasValue());
+
+		attribute.setValue("description");
+		assertTrue(attribute.hasValue());
 	}
 
 	public void testNullValue() throws Exception {

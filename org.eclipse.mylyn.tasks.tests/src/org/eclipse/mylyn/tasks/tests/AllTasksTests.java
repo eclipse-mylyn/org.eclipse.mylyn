@@ -48,6 +48,7 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
  * @author Shawn Minto
  * @author Steffen Pingel
  * @author Benjamin Muskalla
+ * @author Miles Parker
  */
 public class AllTasksTests {
 
@@ -129,6 +130,7 @@ public class AllTasksTests {
 		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(RegionComparatorTest.class);
 		suite.addTestSuite(PriorityLevelTest.class);
+		suite.addTestSuite(TaskAttributeTest.class);
 		suite.addTestSuite(TaskAttributeMapperTest.class);
 		suite.addTestSuite(SupportHandlerManagerTest.class);
 		suite.addTestSuite(RepositoryClientManagerTest.class);

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Rob Elves
  * @author Steffen Pingel
+ * @author Miles Parker
  * @since 3.0
  */
 public final class TaskAttribute {
@@ -500,7 +501,9 @@ public final class TaskAttribute {
 	}
 
 	/**
-	 * @return empty String if not available
+	 * Returns the current value for a single value attribute. For a multi-value attribute, returns the first value.
+	 * Note: returns an empty string if the value has not been set <em>or</em> if the value is actually an empty string.
+	 * To determine whether a value has been explicitly set, use {@link #hasValue()}.
 	 */
 	public String getValue() {
 		if (values.size() > 0) {
@@ -512,6 +515,18 @@ public final class TaskAttribute {
 
 	public List<String> getValues() {
 		return Collections.unmodifiableList(values);
+	}
+
+	/**
+	 * Indicates whether any value(s) are currently set for this attribute. Note that this is a different case from
+	 * testing whether or not {@link #getValue()} returns an empty string, as it is possible that an empty string value
+	 * has been explicitly set for the attribute. Call {@link #clearValues()} to return the attribute to the unset
+	 * state.
+	 * 
+	 * @return true if any value is set (may be an empty string), false if no value is set.
+	 */
+	public boolean hasValue() {
+		return values.size() > 0;
 	}
 
 	@Override
