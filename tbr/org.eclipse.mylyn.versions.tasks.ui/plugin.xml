@@ -10,5 +10,18 @@
             id="org.eclipse.mylyn.versions.tasks.pageFactory1">
       </pageFactory>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.versions.tasks.ui.openCommitContribution"
+            objectClass="org.eclipse.mylyn.versions.tasks.core.TaskChangeSet">
+         <action
+               class="org.eclipse.mylyn.versions.tasks.ui.OpenCommitAction"
+               id="org.eclipse.mylyn.versions.tasks.ui.action1"
+               label="Open">
+         </action>
+      </objectContribution>
+   </extension>
 
 </plugin>

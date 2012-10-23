@@ -16,14 +16,11 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 
 /**
- *
  * @author Kilian Matt
- *
  */
 public abstract class AbstractChangesetMappingProvider {
 
-	public abstract void getChangesetsForTask(IChangeSetMapping mapping, IProgressMonitor monitor) throws CoreException ;
+	public abstract void getChangesetsForTask(IChangeSetMapping mapping, IProgressMonitor monitor) throws CoreException;
 
 	public abstract int getScoreFor(ITask task);
 }
-
