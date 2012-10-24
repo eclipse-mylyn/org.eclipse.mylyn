@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Ericsson Research Canada and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Ericsson - Initial API and implementation
  *******************************************************************************/
@@ -15,7 +15,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.egit.core.GitProvider;
+import org.eclipse.egit.ui.internal.commit.CommitEditor;
+import org.eclipse.egit.ui.internal.commit.RepositoryCommit;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.mylyn.internal.git.core.GitRepository;
 import org.eclipse.mylyn.internal.git.ui.GetChangeSetDialog;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmCore;
@@ -56,4 +63,25 @@ public class GitConnectorUi extends ScmConnectorUi {
 		return null;
 	}
 
+	@Override
+	public void showChangeSetInView(ChangeSet cs) {
+		String objectId = cs.getId();
+		GitRepository repo = (GitRepository) cs.getRepository();
+		Repository repository = repo.getRepository();
+		CommitEditor.openQuiet(new RepositoryCommit(repository, getCommit(repository, objectId)));
+	}
+
+	private RevCommit getCommit(Repository repository, String objectId) {
+		RevWalk revWalk = null;
+		try {
+			revWalk = new RevWalk(repository);
+			return revWalk.parseCommit(ObjectId.fromString(objectId));
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (revWalk != null) {
+				revWalk.release();
+			}
+		}
+	}
 }

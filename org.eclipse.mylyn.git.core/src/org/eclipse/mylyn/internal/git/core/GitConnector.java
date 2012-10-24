@@ -126,15 +126,11 @@ public class GitConnector extends ScmConnector {
 		try {
 			RevCommit commit;
 			commit = walk.parseCommit(ObjectId.fromString(revision.getContentIdentifier()));
-			List<Change> changes = diffCommit(repository, repository2, walk, commit);
-
+			//diffCommit(repository, repository2, walk, commit);
 			return changeSet(commit, gitRepository);
-
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new CoreException(new Status(IStatus.ERROR, GitConnector.PLUGIN_ID, e.getMessage()));
 		}
-
 	}
 
 	List<Change> diffCommit(ScmRepository repository, Repository repository2, RevWalk walk, RevCommit commit)

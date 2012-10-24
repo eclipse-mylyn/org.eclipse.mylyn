@@ -12,7 +12,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.forms,
  org.eclipse.mylyn.versions.ui,
  org.eclipse.mylyn.commons.core;bundle-version="3.8.0",
- org.eclipse.egit.core;bundle-version="0.10.0"
+ org.eclipse.egit.core,
+ org.eclipse.egit.ui,
+ org.eclipse.mylyn.git.core,
+ org.eclipse.jgit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
