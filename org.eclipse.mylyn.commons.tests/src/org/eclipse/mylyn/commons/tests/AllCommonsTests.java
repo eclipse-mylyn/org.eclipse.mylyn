@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest;
+import org.eclipse.mylyn.commons.tests.core.Html2TextReaderTest;
 import org.eclipse.mylyn.commons.tests.core.storage.CommonStoreTest;
 import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
@@ -44,6 +45,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(ExtensionPointReaderTest.class);
 		suite.addTestSuite(CommonListenerListTest.class);
 		suite.addTestSuite(CommonStoreTest.class);
+		suite.addTestSuite(Html2TextReaderTest.class);
 		return suite;
 	}
 
