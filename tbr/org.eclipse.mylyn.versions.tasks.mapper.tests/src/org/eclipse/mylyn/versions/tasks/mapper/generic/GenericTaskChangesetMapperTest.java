@@ -14,12 +14,15 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.versions.core.ChangeSet;
+import org.eclipse.mylyn.versions.core.ScmRepository;
+import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.junit.After;
 import org.junit.Before;
@@ -35,12 +38,15 @@ public class GenericTaskChangesetMapperTest {
 
 	private GenericTaskChangesetMapper mapper;
 	private IChangeSetIndexSearcher indexSearcher;
-
+	private IConfiguration configuration;
 	@Before
 	public void setUp() throws Exception {
-		IConfiguration config = mock(IConfiguration.class);
+		configuration = mock(IConfiguration.class);
 		indexSearcher = mock(IChangeSetIndexSearcher.class);
-		mapper = new GenericTaskChangesetMapper(config, indexSearcher);
+		mapper = new GenericTaskChangesetMapper(configuration, indexSearcher);
+
+		ScmConnector connector = mock(ScmConnector.class);
+		when(configuration.getRepositoriesFor(any(ITask.class))).thenReturn(Collections.singletonList(new ScmRepository(connector,"test", "http://localhost")));
 	}
 
 	@Test
@@ -56,15 +62,16 @@ public class GenericTaskChangesetMapperTest {
 	}
 
 	@Test
-	public void testGetChangesetsForTask_() throws CoreException {
+	public void testGetChangesetsForTask() throws CoreException {
+
 		ITask task = mock(ITask.class);
 		TestChangeSetMapping mapping = new TestChangeSetMapping(task);
 		doAnswer(new Answer<Object>() {
 
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				((IChangeSetCollector) invocation.getArguments()[3]).collect(
-						"123", (String) invocation.getArguments()[1]);
+				IChangeSetCollector collector = (IChangeSetCollector) invocation.getArguments()[3];
+				collector.collect("123", (String) invocation.getArguments()[1]);
 				return null;
 			}
 

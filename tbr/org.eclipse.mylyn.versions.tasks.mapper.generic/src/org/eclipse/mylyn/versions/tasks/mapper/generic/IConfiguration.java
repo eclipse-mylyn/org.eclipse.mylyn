@@ -13,16 +13,17 @@ package org.eclipse.mylyn.versions.tasks.mapper.generic;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.versions.core.ScmRepository;
 
 /**
- * 
+ *
  * @author Kilian Matt
  *
  */
 public interface IConfiguration {
 
-	List<IProject> getProjectsForTaskRepository(String connectorKind,
-			String repositoryUrl);
+	List<ScmRepository> getRepositoriesFor(ITask task) throws CoreException;
 
 }

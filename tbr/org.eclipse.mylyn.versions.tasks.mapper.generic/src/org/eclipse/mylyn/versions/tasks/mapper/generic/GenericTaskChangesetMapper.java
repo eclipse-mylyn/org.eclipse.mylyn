@@ -31,9 +31,9 @@ import org.eclipse.mylyn.versions.tasks.mapper.internal.RepositoryIndexerPlugin;
 import org.eclipse.mylyn.versions.tasks.ui.AbstractChangesetMappingProvider;
 
 /**
- * 
+ *
  * @author Kilian Matt
- * 
+ *
  */
 public class GenericTaskChangesetMapper extends AbstractChangesetMappingProvider {
 
@@ -56,39 +56,14 @@ public class GenericTaskChangesetMapper extends AbstractChangesetMappingProvider
 		if (task == null)
 			throw new IllegalArgumentException("task must not be null");
 
-		List<ScmRepository> repos = getRepositoriesFor(task);
-		for (final ScmRepository repo : repos) {
+		for (final ScmRepository repo : configuration.getRepositoriesFor(task)) {
 			ChangeSetProvider provider = new ChangeSetProvider(repo);
 			indexSearch.search(task, repo.getUrl(), 10,
 					new MappingChangeSetCollector(monitor, mapping, provider));
 		}
 	}
 
-	private List<ScmRepository> getRepositoriesFor(ITask task)
-			throws CoreException {
-		Set<ScmRepository> repos = new HashSet<ScmRepository>();
 
-		List<IProject> projects = configuration.getProjectsForTaskRepository(
-				task.getConnectorKind(), task.getRepositoryUrl());
-		for (IProject p : projects) {
-			ScmRepository repository = getRepositoryForProject(p);
-			if(repository!=null) {
-				repos.add(repository);
-			}
-		}
-		return new ArrayList<ScmRepository>(repos);
-	}
-
-	private ScmRepository getRepositoryForProject(IProject p)
-			throws CoreException {
-		ScmConnector connector = ScmCore.getConnector(p);
-		if(connector==null) {
-			return null;
-		}
-		ScmRepository repository = connector.getRepository(p,
-				new NullProgressMonitor());
-		return repository;
-	}
 
 	public int getScoreFor(ITask task) {
 		return 0;
