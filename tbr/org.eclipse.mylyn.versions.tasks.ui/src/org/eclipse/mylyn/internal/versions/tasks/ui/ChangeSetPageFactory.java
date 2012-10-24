@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
- * 
+ *
  * @author Kilian Matt
  *
  */

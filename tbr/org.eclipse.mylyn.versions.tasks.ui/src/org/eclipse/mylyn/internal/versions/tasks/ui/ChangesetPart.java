@@ -18,13 +18,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.eclipse.mylyn.versions.tasks.core.TaskChangeSet;
@@ -37,10 +35,15 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -48,22 +51,28 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Kilian Matt
  */
 @SuppressWarnings("restriction")
-public class ChangesetPart extends AbstractTaskEditorPart {
+public class ChangesetPart extends AbstractFormPart {
 	private TableViewer table;
 
 	private final ChangesetModel model = new ChangesetModel();
 
-	public ChangesetPart() {
-		setPartName("Changeset");
-		setExpandVertically(true);
-	}
+	private ChangeSetPage page;
 
-	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
+	public Control createControl(Composite parent, FormToolkit toolkit) {
 		Section createSection = createSection(parent, toolkit);
 		Composite composite = createContentComposite(toolkit, createSection);
 
 		createTable(composite);
+		return createSection;
+	}
+
+	@Override
+	public void initialize(IManagedForm form) {
+		super.initialize(form);
+	}
+
+	public void initialize(ChangeSetPage page) {
+		this.page = page;
 	}
 
 	private Composite createContentComposite(FormToolkit toolkit, Section createSection) {
@@ -74,15 +83,16 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	}
 
 	private Section createSection(Composite parent, FormToolkit toolkit) {
-		Section createSection = createSection(parent, toolkit, true);
+		Section createSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR
+				| ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		createSection.setText("Changesets");
-		setSection(toolkit, createSection);
 		GridLayout gl = new GridLayout(1, false);
 		gl.marginBottom = 16;
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 4;
 		createSection.setLayout(gl);
 		createSection.setLayoutData(gd);
+		addToolBar(toolkit, createSection);
 		return createSection;
 	}
 
@@ -100,9 +110,30 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		registerContextMenu(table);
 	}
 
-	@Override
-	protected void fillToolBar(ToolBarManager toolBarManager) {
-		super.fillToolBar(toolBarManager);
+	private void addToolBar(FormToolkit toolkit, Section section) {
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+		fillToolBar(toolBarManager);
+
+		if (toolBarManager.getSize() == 0) {
+			return;
+		}
+		Composite toolbarComposite = toolkit.createComposite(section);
+		toolbarComposite.setBackground(null);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.center = true;
+		toolbarComposite.setLayout(rowLayout);
+
+		toolBarManager.createControl(toolbarComposite);
+		section.clientVerticalSpacing = 0;
+		section.descriptionVerticalSpacing = 0;
+		section.setTextClient(toolbarComposite);
+	}
+
+	private void fillToolBar(ToolBarManager toolBarManager) {
 		toolBarManager.add(new IncludeSubTasksAction(model));
 		List<ITaskVersionsContributionAction> contributions = InternalExtensionPointLoader.loadActionContributions();
 		for (final ITaskVersionsContributionAction action : contributions) {
@@ -118,8 +149,8 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 	private void registerContextMenu(TableViewer table) {
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
-		getTaskEditorPage().getEditorSite().registerContextMenu("org.eclipse.mylyn.versions.changesets", menuManager,
-				table, true);
+		getPage().getEditorSite()
+				.registerContextMenu("org.eclipse.mylyn.versions.changesets", menuManager, table, true);
 		Menu menu = menuManager.createContextMenu(table.getControl());
 		table.getTable().setMenu(menu);
 	}
@@ -188,7 +219,7 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 		}
 
 		public List<TaskChangeSet> getInput() {
-			final ITask task = getModel().getTask();
+			final ITask task = getPage().getTask();
 
 			AbstractChangesetMappingProvider bestProvider = determineBestProvider(task);
 			final List<TaskChangeSet> changesets = new ArrayList<TaskChangeSet>();
@@ -213,8 +244,6 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 							provider.getChangesetsForTask(csm, new NullProgressMonitor());
 						}
 					} catch (CoreException e) {
-						getTaskEditorPage().getTaskEditor().setMessage("An exception occurred " + e.getMessage(),
-								IMessageProvider.ERROR);
 					}
 				}
 
@@ -222,5 +251,9 @@ public class ChangesetPart extends AbstractTaskEditorPart {
 
 			return changesets;
 		}
+	}
+
+	private ChangeSetPage getPage() {
+		return page;
 	}
 }
