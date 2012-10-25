@@ -91,21 +91,7 @@ public class AddCommentDialog extends ProgressDialog {
 	}
 
 	private ITopic getTopic() {
-		ITopic topic = ReviewsFactory.eINSTANCE.createTopic();
-		topic.setDraft(true);
-		IUser user = ReviewsFactory.eINSTANCE.createUser();
-		user.setDisplayName("Me");
-		topic.setAuthor(user);
-		topic.setDescription(commentEditor.getText());
-		topic.getLocations().add(getLocation());
-		topic.setItem(item);
-
-		IComment comment = ReviewsFactory.eINSTANCE.createComment();
-		comment.setDescription(topic.getDescription());
-		comment.setAuthor(topic.getAuthor());
-		comment.setCreationDate(new Date());
-		topic.getComments().add(comment);
-
+		ITopic topic = item.createTopicComment(getLocation(), commentEditor.getText());
 		return topic;
 	}
 

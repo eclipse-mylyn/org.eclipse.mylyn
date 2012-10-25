@@ -11,46 +11,44 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Review Item</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Item</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReviewItem extends ReviewComponent implements IReviewItem {
 	/**
-	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getAddedBy()
 	 * @generated
 	 * @ordered
@@ -58,9 +56,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected IUser addedBy;
 
 	/**
-	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getReview()
 	 * @generated
 	 * @ordered
@@ -68,9 +66,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected IReview review;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -78,9 +76,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -88,9 +86,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getTopics()
 	 * @generated
 	 * @ordered
@@ -98,9 +96,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected EList<ITopic> topics;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -108,9 +105,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -118,8 +114,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReviewItem() {
@@ -127,8 +123,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -137,8 +133,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser getAddedBy() {
@@ -146,17 +142,18 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			InternalEObject oldAddedBy = (InternalEObject) addedBy;
 			addedBy = (IUser) eResolveProxy(oldAddedBy);
 			if (addedBy != oldAddedBy) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__ADDED_BY,
 							oldAddedBy, addedBy));
+				}
 			}
 		}
 		return addedBy;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser basicGetAddedBy() {
@@ -164,21 +161,22 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAddedBy(IUser newAddedBy) {
 		IUser oldAddedBy = addedBy;
 		addedBy = newAddedBy;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__ADDED_BY, oldAddedBy,
 					addedBy));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview getReview() {
@@ -186,17 +184,18 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 			InternalEObject oldReview = (InternalEObject) review;
 			review = (IReview) eResolveProxy(oldReview);
 			if (review != oldReview) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__REVIEW,
 							oldReview, review));
+				}
 			}
 		}
 		return review;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview basicGetReview() {
@@ -204,20 +203,21 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setReview(IReview newReview) {
 		IReview oldReview = review;
 		review = newReview;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REVIEW, oldReview, review));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -225,20 +225,21 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__NAME, oldName, name));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ITopic> getTopics() {
@@ -250,8 +251,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -259,20 +260,49 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__ID, oldId, id));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public ITopic createTopicComment(ILocation initalLocation, String commentText) {
+		ITopic topic = ReviewsFactory.eINSTANCE.createTopic();
+		topic.setDraft(true);
+		IUser user = getAddedBy();
+		if (user == null) {
+			user = ReviewsFactory.eINSTANCE.createUser();
+			user.setDisplayName("<Undefined>"); //$NON-NLS-1$
+		}
+		topic.setAuthor(user);
+		topic.setDescription(commentText);
+		topic.getLocations().add(initalLocation);
+
+		IComment comment = ReviewsFactory.eINSTANCE.createComment();
+		comment.setDescription(topic.getDescription());
+		comment.setAuthor(topic.getAuthor());
+		Date created = new Date();
+		comment.setCreationDate(created);
+		topic.setCreationDate(created);
+		topic.getComments().add(comment);
+		getTopics().add(topic);
+		return topic;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -286,8 +316,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -300,20 +330,22 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			if (resolve)
+			if (resolve) {
 				return getAddedBy();
+			}
 			return basicGetAddedBy();
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			if (resolve)
+			if (resolve) {
 				return getReview();
+			}
 			return basicGetReview();
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return getName();
@@ -326,8 +358,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -355,8 +387,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -382,8 +414,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -404,14 +436,15 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$

@@ -143,4 +143,11 @@ public interface IReviewItem extends IReviewComponent {
 	 */
 	void setId(String value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	ITopic createTopicComment(ILocation initalLocation, String commentText);
+
 } // IReviewItem
