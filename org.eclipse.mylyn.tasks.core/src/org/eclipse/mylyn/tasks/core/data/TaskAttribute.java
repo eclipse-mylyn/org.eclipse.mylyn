@@ -524,6 +524,7 @@ public final class TaskAttribute {
 	 * state.
 	 * 
 	 * @return true if any value is set (may be an empty string), false if no value is set.
+	 * @since 3.9
 	 */
 	public boolean hasValue() {
 		return values.size() > 0;
