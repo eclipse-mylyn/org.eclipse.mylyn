@@ -646,9 +646,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			ITracClient client = getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, true);
-		} catch (Exception e) {
-			throw new CoreException(RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-					TracCorePlugin.ID_PLUGIN, "Could not update attributes")); //$NON-NLS-1$
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
 
