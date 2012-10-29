@@ -275,7 +275,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			boolean refreshed = refreshConfiguration(false);
 			if (!refreshed) {
 				// always do a refresh when page is initially shown
-				doRefreshControls();
+				if (!innerComposite.isDisposed()) {
+					doRefreshControls();
+				}
 			}
 		}
 		boolean restored = false;
@@ -287,7 +289,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		}
 		if (!restored) {
 			// initialize with default values
-			doClearControls();
+			if (!innerComposite.isDisposed()) {
+				doClearControls();
+			}
 		}
 	}
 
@@ -296,7 +300,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 			setErrorMessage(null);
 			try {
 				doRefreshConfiguration();
-				doRefreshControls();
+				if (!innerComposite.isDisposed()) {
+					doRefreshControls();
+				}
 				return true;
 			} catch (InvocationTargetException e) {
 				if (e.getCause() instanceof CoreException) {
