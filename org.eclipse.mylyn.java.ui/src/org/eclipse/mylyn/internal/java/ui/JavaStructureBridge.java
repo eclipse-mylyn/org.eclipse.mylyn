@@ -45,7 +45,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -210,7 +209,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 		boolean accepts = object instanceof IJavaElement || object instanceof PackageFragmentRootContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
-				|| object instanceof IPackageFragment || object instanceof WorkingSet || isWtpClass(object);
+				|| object instanceof IPackageFragment || isWtpClass(object);
 
 		return accepts;
 	}
@@ -237,21 +236,6 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 						return false;
 					}
 				}
-			}
-		} else if (object instanceof WorkingSet) {
-			try {
-				WorkingSet workingSet = (WorkingSet) object;
-				IAdaptable[] elements = workingSet.getElements();
-				for (IAdaptable adaptable : elements) {
-					IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
-							getHandleIdentifier(adaptable));
-					if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
-						return false;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
 			}
 		}
 		return true;

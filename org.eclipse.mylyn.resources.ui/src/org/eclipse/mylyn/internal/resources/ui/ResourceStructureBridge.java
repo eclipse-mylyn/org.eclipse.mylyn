@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Yatta Solutions -  WorkingSet filtering (bug 334024)
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.resources.ui;
@@ -32,11 +33,14 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
+ * @author Carsten Reckord (bug 334024: focused package explorer not working if top level element is working set)
  */
 public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
@@ -179,7 +183,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean acceptsObject(Object object) {
-		if (object instanceof IResource) {
+		if (object instanceof IResource || object instanceof IWorkingSet) {
 			return true;
 		}
 		if (object instanceof IAdaptable) {
@@ -195,6 +199,24 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean canFilter(Object element) {
+		if (element instanceof IWorkingSet) {
+			try {
+				IWorkingSet workingSet = (IWorkingSet) element;
+				IAdaptable[] elements = workingSet.getElements();
+				for (IAdaptable adaptable : elements) {
+					final AbstractContextStructureBridge elementBridge = ContextCore.getStructureBridge(adaptable);
+					String handle = elementBridge.getHandleIdentifier(adaptable);
+					if (handle != null) {
+						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(handle);
+						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
+							return false;
+						}
+					}
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		}
 		return true;
 	}
 

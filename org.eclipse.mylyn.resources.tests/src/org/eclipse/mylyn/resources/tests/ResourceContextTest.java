@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Yatta Solutions -  WorkingSet tests (bug 334024)
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -21,17 +22,23 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Carsten Reckord (bug 334024: focused package explorer not working if top level element is working set)
  */
 public class ResourceContextTest extends AbstractResourceContextTest {
 
@@ -56,6 +63,12 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ResourcesUiBridgePlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
+
+		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
+		IWorkingSet workingSet = workingSetManager.getWorkingSet("TestWorkingSet");
+		if (workingSet != null) {
+			workingSetManager.removeWorkingSet(workingSet);
+		}
 	}
 
 	public void testResourceSelect() throws CoreException {
@@ -181,6 +194,46 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertEquals(0, context.getInteractionHistory().size());
 		ResourceTestUtil.deleteProject(project2);
 		assertEquals(0, context.getInteractionHistory().size());
+	}
+
+	/**
+	 * Test that working sets are properly handled by the resource bridge
+	 */
+	public void testWorkingSetHandledByResourceBridge() {
+		IProject project2 = project.getProject();
+
+		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
+		IWorkingSet workingSet = workingSetManager.createWorkingSet("TestWorkingSet", new IAdaptable[] { project2 });
+
+		assertTrue(structureBridge.acceptsObject(workingSet));
+
+		AbstractContextStructureBridge workingSetBridge = ContextCore.getStructureBridge(workingSet);
+		assertEquals(ContextCore.CONTENT_TYPE_RESOURCE, workingSetBridge.getContentType());
+	}
+
+	/**
+	 * Test that working sets are filtered based on the interest of their contents
+	 */
+	public void testWorkingSetFiltering() throws CoreException {
+		IProject project2 = project.getProject();
+		IFile file = project2.getFile("file");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+
+		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
+		IWorkingSet workingSet = workingSetManager.createWorkingSet("TestWorkingSet", new IAdaptable[] { project2 });
+		workingSetManager.addWorkingSet(workingSet);
+
+		context.reset();
+		assertEquals(0, context.getInteractionHistory().size());
+
+		assertTrue(structureBridge.canFilter(workingSet));
+
+		monitor.selectionChanged(navigator, new StructuredSelection(file));
+		IInteractionElement element = ContextCore.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
+		assertTrue(element.getInterest().isInteresting());
+		assertFalse(structureBridge.canFilter(workingSet));
 	}
 
 	@SuppressWarnings("deprecation")

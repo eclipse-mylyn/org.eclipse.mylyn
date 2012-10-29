@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -186,28 +185,14 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 		}
 
 		boolean accepts = (object instanceof ICElement && !(object instanceof IBinary))
-				|| object instanceof IWorkingSet || object instanceof CElementGrouping;
+				|| object instanceof CElementGrouping;
 
 		return accepts;
 	}
 
 	@Override
 	public boolean canFilter(Object object) {
-		if (object instanceof IWorkingSet) {
-			try {
-				IWorkingSet workingSet = (IWorkingSet) object;
-				IAdaptable[] elements = workingSet.getElements();
-				for (IAdaptable adaptable : elements) {
-					IInteractionElement element = ContextCore.getContextManager().getElement(
-							getHandleIdentifier(adaptable));
-					if (element != null && element.getInterest().isInteresting()) {
-						return false;
-					}
-				}
-			} catch (Exception e) {
-				return false;
-			}
-		} else if (object instanceof CElementGrouping) {
+		if (object instanceof CElementGrouping) {
 			try {
 				CElementGrouping grouping = (CElementGrouping) object;
 				Object[] elements = grouping.getChildren(grouping);
