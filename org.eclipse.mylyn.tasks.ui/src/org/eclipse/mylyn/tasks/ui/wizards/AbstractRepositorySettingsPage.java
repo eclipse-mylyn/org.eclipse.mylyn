@@ -2083,4 +2083,20 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			return super.createSection(parentControl, title);
 		}
 	}
+
+	/**
+	 * Returns the toolkit used to construct sections and hyperlinks.
+	 * 
+	 * @return the toolkit
+	 * @throws IllegalStateException
+	 *             if the toolkit has not been initialized
+	 * @since 3.9
+	 */
+	protected FormToolkit getToolkit() {
+		if (toolkit == null) {
+			throw new IllegalStateException("Toolkit is not initialized, createControl() must be invoked first"); //$NON-NLS-1$
+		}
+		return toolkit;
+	}
+
 }
