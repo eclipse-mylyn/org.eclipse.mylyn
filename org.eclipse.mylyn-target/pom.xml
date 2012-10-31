@@ -51,6 +51,11 @@
                   <type>target</type>
                   <classifier>mylyn-e4.2</classifier>
                 </artifact>
+                <artifact>
+                  <file>mylyn-e4.3.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.3</classifier>
+                </artifact>
               </artifacts>
             </configuration>
           </execution>

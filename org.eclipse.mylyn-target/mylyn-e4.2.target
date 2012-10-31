@@ -50,21 +50,21 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.2.0.I20120608-1400"/>
+<unit id="org.eclipse.sdk.ide" version="4.2.1.M20120914-1800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.2"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.1.0.201206111645"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.1.1.201209170703"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="3.5.6.v20120610-1946"/>
 <unit id="org.eclipse.equinox.concurrent" version="1.0.300.v20120522-2049"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.8.0.v20120606-0717"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.8.0.v20120606-0717"/>
-<unit id="org.eclipse.emf.common.ui.feature.group" version="2.7.0.v20120608-0554"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20120608-0554"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.8.0.v20120608-0554"/>
-<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.8.0.v20120608-0554"/>
-<unit id="org.eclipse.egit.feature.group" version="2.0.0.201206130900-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="2.0.0.201206130900-r"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.8.1.v20120911-0500"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.8.0.v20120911-0500"/>
+<unit id="org.eclipse.emf.common.ui.feature.group" version="2.7.0.v20120917-0436"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.2.0.v20120917-0436"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="2.8.0.v20120917-0436"/>
+<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.8.0.v20120917-0436"/>
+<unit id="org.eclipse.egit.feature.group" version="2.1.0.201209190230-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="2.1.0.201209190230-r"/>
 <repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -72,7 +72,7 @@
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
 <repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
 </location>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.osgi" version="3.8.0.v20120529-1548"/>
 <unit id="org.eclipse.core.runtime.compatibility.auth" version="3.2.300.v20120523-2004"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8-201206081200"/>
