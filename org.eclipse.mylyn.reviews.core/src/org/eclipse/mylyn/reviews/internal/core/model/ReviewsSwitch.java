@@ -229,6 +229,13 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ReviewsPackage.MODEL_VERSIONING: {
+			IModelVersioning modelVersioning = (IModelVersioning) theEObject;
+			T result = caseModelVersioning(modelVersioning);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -471,6 +478,21 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseFileRevision(IFileRevision object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Model Versioning</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Model Versioning</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModelVersioning(IModelVersioning object) {
 		return null;
 	}
 

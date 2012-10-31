@@ -27,6 +27,7 @@ import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IItem;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
+import org.eclipse.mylyn.reviews.core.model.IModelVersioning;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewComponent;
 import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
@@ -1056,6 +1057,34 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_REVISION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning <em>Model Versioning</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.mylyn.reviews.core.model.IModelVersioning
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getModelVersioning()
+	 * @generated
+	 */
+	public static final int MODEL_VERSIONING = 16;
+
+	/**
+	 * The feature id for the '<em><b>Fragment Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int MODEL_VERSIONING__FRAGMENT_VERSION = 0;
+
+	/**
+	 * The number of structural features of the '<em>Model Versioning</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	public static final int MODEL_VERSIONING_FEATURE_COUNT = 1;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1166,6 +1195,13 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass fileRevisionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass modelVersioningEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1969,6 +2005,31 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning <em>Model Versioning</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Model Versioning</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IModelVersioning
+	 * @generated
+	 */
+	public EClass getModelVersioning() {
+		return modelVersioningEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning#getFragmentVersion <em>Fragment Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Fragment Version</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IModelVersioning#getFragmentVersion()
+	 * @see #getModelVersioning()
+	 * @generated
+	 */
+	public EAttribute getModelVersioning_FragmentVersion() {
+		return (EAttribute) modelVersioningEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2072,6 +2133,9 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(fileRevisionEClass, FILE_REVISION__PATH);
 		createEAttribute(fileRevisionEClass, FILE_REVISION__REVISION);
 		createEAttribute(fileRevisionEClass, FILE_REVISION__CONTENT);
+
+		modelVersioningEClass = createEClass(MODEL_VERSIONING);
+		createEAttribute(modelVersioningEClass, MODEL_VERSIONING__FRAGMENT_VERSION);
 	}
 
 	/**
@@ -2352,6 +2416,13 @@ public class ReviewsPackage extends EPackageImpl {
 				getFileRevision_Content(),
 				ecorePackage.getEString(),
 				"content", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(modelVersioningEClass, IModelVersioning.class,
+				"ModelVersioning", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getModelVersioning_FragmentVersion(),
+				ecorePackage.getEString(),
+				"fragmentVersion", "1.0.0", 0, 1, IModelVersioning.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -2883,6 +2954,24 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute FILE_REVISION__CONTENT = eINSTANCE.getFileRevision_Content();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning <em>Model Versioning</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.mylyn.reviews.core.model.IModelVersioning
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getModelVersioning()
+		 * @generated
+		 */
+		public static final EClass MODEL_VERSIONING = eINSTANCE.getModelVersioning();
+
+		/**
+		 * The meta object literal for the '<em><b>Fragment Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		public static final EAttribute MODEL_VERSIONING__FRAGMENT_VERSION = eINSTANCE.getModelVersioning_FragmentVersion();
 
 	}
 
