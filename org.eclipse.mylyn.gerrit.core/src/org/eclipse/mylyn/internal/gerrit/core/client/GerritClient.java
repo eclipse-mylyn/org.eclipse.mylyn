@@ -44,9 +44,9 @@ import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
@@ -87,7 +87,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  */
 public class GerritClient {
 
-	private static final ReviewsFactory FACTORY = ReviewsFactory.eINSTANCE;
+	private static final IReviewsFactory FACTORY = IReviewsFactory.INSTANCE;
 
 	private abstract class Operation<T> implements AsyncCallback<T> {
 

@@ -34,9 +34,9 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -64,7 +64,7 @@ import com.google.gerrit.reviewdb.UserIdentity;
  */
 public class GerritUtil {
 
-	private static final ReviewsFactory FACTORY = ReviewsFactory.eINSTANCE;
+	private static final IReviewsFactory FACTORY = IReviewsFactory.INSTANCE;
 
 	public static GerritChange getChange(TaskData taskData) {
 		JSonSupport json = new JSonSupport();
