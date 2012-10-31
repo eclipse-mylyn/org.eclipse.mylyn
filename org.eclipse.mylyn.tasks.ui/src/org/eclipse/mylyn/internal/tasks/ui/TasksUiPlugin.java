@@ -775,8 +775,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 
 			if (PlatformUI.isWorkbenchRunning()) {
-				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
-				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
+				if (taskListNotificationManager != null) {
+					getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
+				}
+				if (taskListBackupManager != null) {
+					getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
+				}
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				//taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				CommonColors.dispose();
