@@ -114,21 +114,10 @@ public class OPS2Publication extends OPSPublication {
 	@Override
 	protected void generateTableOfContents() throws ParserConfigurationException, SAXException, IOException {
 		log(Messages.getString("OPS2Publication.0"), Severity.INFO, indent++); //$NON-NLS-1$
-		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
-		ncxTOC.setNavMap(navMap);
-		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
-		// Create the required head element
-		Head head = NCXFactory.eINSTANCE.createHead();
-		ncxTOC.setHead(head);
 		Meta meta = NCXFactory.eINSTANCE.createMeta();
 		meta.setName("dtb:uid"); //$NON-NLS-1$
 		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
-		head.getMetas().add(meta);
-		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
-		Text text = NCXFactory.eINSTANCE.createText();
-		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
-		docTitle.setText(text);
-		ncxTOC.setDocTitle(docTitle);
+		ncxTOC.getHead().getMetas().add(meta);
 		int playOrder = 0;
 		// Iterate over the spine
 		EList<Itemref> spineItems = getSpine().getSpineItems();
@@ -232,6 +221,21 @@ public class OPS2Publication extends OPSPublication {
 	private void setup() {
 		opfPackage.setVersion(getVersion());
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();
+		// Set the required version attribute
+		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
+		// Create the required head element
+		Head head = NCXFactory.eINSTANCE.createHead();
+		ncxTOC.setHead(head);
+		// Create the required title element
+		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
+		Text text = NCXFactory.eINSTANCE.createText();
+		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
+		docTitle.setText(text);
+		ncxTOC.setDocTitle(docTitle);
+		// Create the required navigation map element
+		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
+		ncxTOC.setNavMap(navMap);
+		// Create the required metadata element
 		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
 		opfPackage.setMetadata(opfMetadata);
 		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
