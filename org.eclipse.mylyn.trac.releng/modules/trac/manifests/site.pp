@@ -86,6 +86,7 @@ define trac::site(
     	content => template('trac/trac.fcgi.erb'),
 		mode => 755,
 		require => File["$envbase"],
+		notify  => Service["apache2"],
 	}
 
 	if $xmlrpcplugin {
