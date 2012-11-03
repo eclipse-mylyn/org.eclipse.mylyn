@@ -62,6 +62,11 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testRDFProductConfig() throws Exception {
+		if (BugzillaFixture.current() == BugzillaFixture.BUGS_4_4
+				|| BugzillaFixture.current() == BugzillaFixture.BUGS_HEAD) {
+			// FIXME: need fix of bug#372600
+			return;
+		}
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(
@@ -81,7 +86,12 @@ public class BugzillaClientTest extends TestCase {
 			assertEquals(36, config.getOSs().size());
 			assertEquals(5, config.getPriorities().size());
 		} else {
-			assertEquals(6, config.getResolutions().size());
+			if (BugzillaVersion.BUGZILLA_4_0.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current()
+					.getVersion())) > 0) {
+				assertEquals(6, config.getResolutions().size());
+			} else {
+				assertEquals(5, config.getResolutions().size());
+			}
 			assertEquals(4, config.getPlatforms().size());
 			assertEquals(5, config.getOSs().size());
 			assertEquals(6, config.getPriorities().size());
@@ -102,9 +112,15 @@ public class BugzillaClientTest extends TestCase {
 		assertEquals(2, config.getComponents("ManualTest").size());
 		assertEquals(4, config.getVersions("ManualTest").size());
 		assertEquals(4, config.getTargetMilestones("ManualTest").size());
-		assertEquals(2, config.getComponents("TestProduct").size());
-		assertEquals(4, config.getVersions("TestProduct").size());
-		assertEquals(4, config.getTargetMilestones("TestProduct").size());
+		if (BugzillaFixture.current().getRepositoryUrl().contains("localhost")) {
+			assertEquals(1, config.getComponents("TestProduct").size());
+			assertEquals(1, config.getVersions("TestProduct").size());
+			assertEquals(1, config.getTargetMilestones("TestProduct").size());
+		} else {
+			assertEquals(2, config.getComponents("TestProduct").size());
+			assertEquals(4, config.getVersions("TestProduct").size());
+			assertEquals(4, config.getTargetMilestones("TestProduct").size());
+		}
 		assertEquals(2, config.getComponents("Product with Spaces").size());
 		assertEquals(4, config.getVersions("Product with Spaces").size());
 		assertEquals(4, config.getTargetMilestones("Product with Spaces").size());
@@ -191,7 +207,9 @@ public class BugzillaClientTest extends TestCase {
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");
 		newData.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("TestComponent");
-		newData.getRoot().getMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("1");
+		if (!BugzillaFixture.current().getRepositoryUrl().contains("localhost")) {
+			newData.getRoot().getMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("1");
+		}
 		newData.getRoot().getMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
 		long timestamp = System.currentTimeMillis();
 		newData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("" + timestamp);

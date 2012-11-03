@@ -16,19 +16,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * Tests should be run against Bugzilla 3.2.4 or greater
@@ -36,23 +33,16 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
  * @author Frank Becker
  * @author Robert Elves
  */
-public class BugzillaCustomFieldsTest extends TestCase {
-
-	private BugzillaClient client;
-
-	private TaskRepository repository;
+public class BugzillaCustomFieldsTest extends AbstractBugzillaTest {
 
 	private TaskData fruitTaskData;
 
-	@Override
-	protected void setUp() throws Exception {
-		repository = BugzillaFixture.current().repository();
-		client = BugzillaFixture.current().client();
-	}
-
 	public void testCustomAttributes() throws Exception {
-
-		String taskNumber = "2";
+		String taskId = harness.taskCustomFieldExists();
+		if (taskId == null) {
+			taskId = harness.createCustomFieldTask();
+		}
+		String taskNumber = taskId;
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		TaskMapper mapper = new TaskMapper(taskData);

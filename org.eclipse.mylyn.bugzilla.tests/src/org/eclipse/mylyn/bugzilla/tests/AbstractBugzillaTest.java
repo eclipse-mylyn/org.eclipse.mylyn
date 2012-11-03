@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -53,8 +54,11 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected BugzillaClient client;
 
+	protected BugzillaHarness harness;
+
 	public AbstractBugzillaTest() {
 		super();
+		harness = new BugzillaHarness(this);
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
-	protected TaskDataModel createModel(ITask task) throws CoreException {
+	public TaskDataModel createModel(ITask task) throws CoreException {
 		ITaskDataWorkingCopy taskDataState = getWorkingCopy(task);
 		return new TaskDataModel(repository, task, taskDataState);
 	}
@@ -113,4 +117,25 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 		return task;
 	}
+
+	public BugzillaRepositoryConnector getConnector() {
+		return connector;
+	}
+
+	public TaskRepositoryManager getManager() {
+		return manager;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
+	}
+
+	public TaskList getTaskList() {
+		return taskList;
+	}
+
+	public BugzillaClient getClient() {
+		return client;
+	}
+
 }

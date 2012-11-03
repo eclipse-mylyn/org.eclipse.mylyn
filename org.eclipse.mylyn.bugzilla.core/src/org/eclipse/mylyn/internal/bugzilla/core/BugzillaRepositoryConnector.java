@@ -115,6 +115,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("error_login", "account locked"); //$NON-NLS-1$//$NON-NLS-2$
 		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!"); //$NON-NLS-1$ //$NON-NLS-2$
+		enSetting.addLanguageAttribute("error_collision", "Mid-air collision detected!"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("error_comment_required", "Comment Required"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("error_logged_out", "logged out"); //$NON-NLS-1$ //$NON-NLS-2$
 		enSetting.addLanguageAttribute("bad_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$

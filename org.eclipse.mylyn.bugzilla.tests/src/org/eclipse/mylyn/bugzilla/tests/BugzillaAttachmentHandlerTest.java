@@ -13,31 +13,36 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * @author Robert Elves
@@ -447,7 +452,12 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	 * Ensure obsoletes and patches are marked as such by the parser.
 	 */
 	public void testAttachmentAttributes() throws Exception {
-		String taskNumber = "3";
+		String taskId = harness.taskAttachmentAttributesExists();
+		if (taskId == null) {
+			taskId = harness.createAttachmentAttributesTask();
+		}
+
+		String taskNumber = taskId;
 		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
 		assertNotNull(taskData);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
@@ -505,5 +515,77 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			return;
 		}
 		fail("Should have failed due to invalid userid and password.");
+	}
+
+	public void testDownloadAttachmentFile() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+				"description for testUpdateAttachmentFlags");
+		assertNotNull(taskData);
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
+		assertEquals(0, numAttached);
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+		attachmentMapper.setComment("test Update AttachmentFlags");
+
+		/* Test uploading a proper file */
+		String fileName = "test-attach-1.txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		attachFile.deleteOnExit();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		String expected = "test file from " + System.currentTimeMillis();
+		write.write(expected);
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType("text/plain");
+		attachment.setDescription("Description");
+		attachment.setName("My Attachment 1");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
+		assertEquals(1, numAttached);
+		TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
+
+		File file = File.createTempFile("mylyn", null);
+		ITask iTask = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), taskData.getTaskId());
+
+		ITaskAttachment taskAttachment;
+		taskAttachment = new TaskAttachment(repository, iTask, attachmentAttribute);
+
+		DownloadAttachmentJob job = new DownloadAttachmentJob(taskAttachment, file);
+		job.schedule();
+		job.join();
+
+		assertEquals(Status.OK_STATUS, job.getResult());
+
+		FileInputStream raf = new FileInputStream(file);
+
+		byte[] data = new byte[expected.length()];
+		try {
+			raf.read(data);
+		}
+
+		finally {
+			raf.close();
+			file.delete();
+		}
+		assertEquals(expected, new String(data));
 	}
 }

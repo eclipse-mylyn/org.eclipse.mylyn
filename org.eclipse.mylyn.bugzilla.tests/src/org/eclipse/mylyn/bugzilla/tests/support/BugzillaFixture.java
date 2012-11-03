@@ -58,6 +58,8 @@ public class BugzillaFixture extends TestFixture {
 
 	public static final String TEST_BUGZILLA_42_URL = getServerUrl("bugs42");
 
+	public static final String TEST_BUGZILLA_44_URL = getServerUrl("bugs44");
+
 	public static final String TEST_BUGZILLA_HEAD_URL = getServerUrl("bugshead");
 
 	private static final String getServerUrl(String version) {
@@ -97,13 +99,17 @@ public class BugzillaFixture extends TestFixture {
 	public static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
 			"4.2", "");
 
+	public static BugzillaFixture BUGS_4_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_44_URL, //
+			"4.3", "");
+
 	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.5", "");
 
 	public static BugzillaFixture DEFAULT = BUGS_4_2;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_4, BUGS_3_6, BUGS_3_6_XML_RPC_DISABLED,
-			BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS, BUGS_4_0, BUGS_4_2, BUGS_HEAD };
+	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_4, //
+			BUGS_3_6, BUGS_3_6_XML_RPC_DISABLED, BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS, //
+			BUGS_4_0, BUGS_4_2, BUGS_4_4, BUGS_HEAD };
 
 	private final String version;
 

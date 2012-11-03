@@ -70,17 +70,12 @@ public class AllBugzillaHeadlessStandaloneTests {
 		// fixture.add(fixtureSuite, BugzillaTaskHistoryTest.class); 
 		fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
 		fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
+		fixture.add(BugzillaClientTest.class);
 
-		// Move any tests here that are resulting in spurious failures
-		// due to recent changes in Bugzilla Server head.
-		if (fixture != BugzillaFixture.BUGS_HEAD) {
-			fixture.add(BugzillaClientTest.class);
-
-			// Only run these tests on > 3.2 repositories
-			if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
-				fixture.add(BugzillaCustomFieldsTest.class);
-				fixture.add(BugzillaFlagsTest.class);
-			}
+		// Only run these tests on > 3.2 repositories
+		if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
+			fixture.add(BugzillaCustomFieldsTest.class);
+			fixture.add(BugzillaFlagsTest.class);
 		}
 		fixture.done();
 	}
