@@ -12,8 +12,8 @@
 -->
 <project name="Download epubcheck" basedir="." default="all">
 
-	<property name="epubcheck-version" value="3.0b5" />
-	<property name="previous-version" value="3.0b4" />
+	<property name="epubcheck-version" value="3.0-RC-1" />
+	<property name="previous-version" value="3.0b5" />
 	<property name="epubcheck-zip" value="epubcheck-${epubcheck-version}.zip" />
 	<property name="epubcheck-dir" location="${basedir}/epubcheck/" />
 	<property name="epubcheck-jar" location="${epubcheck-dir}/epubcheck-${epubcheck-version}.jar" />
