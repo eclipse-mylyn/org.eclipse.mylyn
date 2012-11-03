@@ -1,14 +1,9 @@
 Vagrant::Config.run do |config|
-	config.vm.define :trac do |trac_config|
-		trac_config.vm.box = "lucid32"
-		trac_config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
+  config.vm.box = "lucid32"
+  config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
 
-		trac_config.vm.provision :puppet do |puppet|
-			puppet.module_path = "modules"
-			puppet.manifests_path = "modules/trac/manifests"
-			puppet.manifest_file = "trac.pp"
-		end
-		trac_config.vm.forward_port 80, 3080
-		trac_config.vm.forward_port 443, 3443
-	end
+  config.vm.forward_port 80, 2080
+  config.vm.forward_port 443, 2443
+
+  config.vm.provision :puppet, :module_path => "modules"
 end
