@@ -1,0 +1,448 @@
+# -*- Mode: perl; indent-tabs-mode: nil -*-
+#
+# Copyright (c) 2012 Frank Becker and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     Frank Becker - initial API and implementation
+#
+
+package Bugzilla::Extension::Mylyn;
+use strict;
+use base qw(Bugzilla::Extension);
+
+# This code for this is in ./extensions/Mylyn/lib/Util.pm
+use Bugzilla::Extension::Mylyn::Util;
+
+use Bugzilla::Constants;
+use Bugzilla::Error;
+use Bugzilla::Product;
+use Bugzilla::FlagType;
+
+use Data::Dumper;
+
+our $VERSION = '0.01';
+
+<% if @custom_wf %>
+use constant STATUS_WORKFLOW => (
+	['REOPENED','UNCONFIRMED'],
+	['REOPENED','VERIFIED'],
+	['REOPENED','CLOSED'],
+	['NEW','CLOSED'],
+);
+use constant STATUS_WORKFLOW_DELETE => (
+	['CLOSED','UNCONFIRMED'],
+	['CLOSED','REOPENED'],
+	['ASSIGNED','NEW'],
+);
+<% end %>
+<% if @custom_wf_and_status %>
+use constant STATUS_WORKFLOW => (
+	['VERIFIED','MODIFIED'],
+	['ON_DEV','POST'],
+	['MODIFIED','ON_DEV'],
+	['CLOSED','VERIFIED'],
+	['NEW','UNCONFIRMED'],
+);
+use constant STATUS_WORKFLOW_DELETE => (
+	['UNCONFIRMED','ASSIGNED'],
+	['RESOLVED','UNCONFIRMED'],
+	['VERIFIED','UNCONFIRMED'],
+	['CLOSED','UNCONFIRMED'],
+	['ASSIGNED','NEW'],
+	['REOPENED','NEW'],
+	['REOPENED','ASSIGNED'],
+	['RESOLVED','REOPENED'],
+	['VERIFIED','REOPENED'],
+	['CLOSED','REOPENED'],
+	['UNCONFIRMED','RESOLVED'],
+	['NEW','RESOLVED'],
+	['ASSIGNED','RESOLVED'],
+	['REOPENED','RESOLVED'],
+	['RESOLVED','VERIFIED'],
+
+);
+<% end %>
+
+sub install_before_final_checks {
+	my ($self, $args) = @_;
+	print "Mylyn Extension: install-before_final_checks hook\n" unless $args->{silent};
+
+	my $dbh = Bugzilla->dbh;
+	if (!$dbh->selectrow_array('SELECT 1 FROM profiles where userid > 1')) {
+		print "create additional profiles...\n" unless $args->{silent};
+
+		# create tests@mylyn.eclipse.org
+		# add this user to group bz_canusewhineatothers
+		my $testu = Bugzilla::User->create({ login_name    => 'tests@mylyn.eclipse.org', 
+											 realname      => 'Mylyn Test',
+											 cryptpassword => 'mylyntest' });
+		my $private_group = new Bugzilla::Group({name => 'bz_canusewhineatothers'});		
+		my $sth = $dbh->prepare( "INSERT INTO user_group_map
+								 (user_id, group_id, isbless, grant_type)
+								 VALUES (?, ?, ?, ?)");
+		$sth->execute($testu->id, $private_group->id, 0, GRANT_DIRECT);
+
+		# create guest@mylyn.eclipse.org		
+		Bugzilla::User->create({ login_name    => 'guest@mylyn.eclipse.org', 
+		realname      => 'Mylyn guest',
+		cryptpassword => 'mylyntest' });
+	}
+
+	# create two new products
+	if (!$dbh->selectrow_array('SELECT 1 FROM products where id > 1')) {
+		print "create additional products...\n" unless $args->{silent};
+
+		# Get the user who will be the owner of the Component.
+		# We pick the tests@mylyn.eclipse.org, which is the
+		# user Extension.pl just created.
+
+		my ($testuser_id)  = $dbh->selectrow_array(
+			'SELECT userid FROM profiles WHERE login_name = ? ' ,
+			undef, 'tests@mylyn.eclipse.org');
+		my $testuser = Bugzilla::User->new($testuser_id);
+
+		my $product2 = Bugzilla::Product->create({
+											name => 'Product with Spaces',
+											description => 'Product with Spaces is the renamed Scratch Product.',
+											version => Bugzilla::Version::DEFAULT_VERSION,
+											classification => 'Unclassified',
+											defaultmilestone => DEFAULT_MILESTONE,
+						});
+		Bugzilla::Component->create({ %{ ({
+											name => 'Component 1',
+											description => '1'
+										}) },
+										product => $product2,
+            							initialowner => $testuser->login });
+		Bugzilla::Component->create({ %{ ({
+											name => 'Component 2',
+											description => '2'
+										}) },
+										product => $product2,
+										initialowner => $testuser->login });
+
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'a', product => $product2 });
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'b', product => $product2 });
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'c', product => $product2 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M1.0', product => $product2 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M2.0', product => $product2 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M3.0', product => $product2 });
+
+		my $product3 = Bugzilla::Product->create({
+											name => 'ManualTest',
+											description => 'Product for manual testing',
+											version => Bugzilla::Version::DEFAULT_VERSION,
+											classification => 'Unclassified',
+											defaultmilestone => DEFAULT_MILESTONE,
+						});
+		Bugzilla::Component->create({ %{ ({
+											name => 'ManualC1',
+											description => '1'
+										}) },
+										product => $product3,
+									initialowner => $testuser->login });
+		Bugzilla::Component->create({ %{ ({
+											name => 'ManualC2',
+											description => '2'
+										}) },
+										product => $product3,
+									initialowner => $testuser->login });
+ 
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'R1', product => $product3 });
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'R1.1', product => $product3 });
+		Bugzilla::Version->create({ <%= @VersionCreateName %> => 'R2.0', product => $product3 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M1', product => $product3 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M2', product => $product3 });
+		Bugzilla::Milestone->create({ <%= @VersionCreateName %> => 'M3', product => $product3 });
+	}
+
+	# create the needed custon fields
+	if (!$dbh->selectrow_array('SELECT 1 FROM fielddefs where name like "cf_%"')) {
+		print "create additional fielddefs...\n" unless $args->{silent};
+		Bugzilla::Field->create({ %{ ({
+				description => 'free text custom field',
+				type        => 1,
+				sortkey     => 351,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_freetext', custom => 1
+		});
+		Bugzilla::Field->create({ %{ ({
+				description => 'drop down custom field',
+				type        => 2,
+				sortkey     => 451,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_dropdown', custom => 1
+		});
+
+		# create the options for cf_dropdown		
+		Bugzilla::Field::Choice->type('cf_dropdown')->create({
+			value   => 'one', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		Bugzilla::Field::Choice->type('cf_dropdown')->create({
+			value   => 'two', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		Bugzilla::Field::Choice->type('cf_dropdown')->create({
+			value   => 'three', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		
+		Bugzilla::Field->create({ %{ ({
+				description => 'large text box custom field',
+				type        => 4,
+				sortkey     => 551,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_largetextbox', custom => 1
+		});
+		Bugzilla::Field->create({ %{ ({
+				description => 'multi selection box custom field',
+				type        => 3,
+				sortkey     => 651,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_multiselect', custom => 1
+		});
+
+		# create the options for cf_multiselect		
+		Bugzilla::Field::Choice->type('cf_multiselect')->create({
+			value   => 'Blue', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		Bugzilla::Field::Choice->type('cf_multiselect')->create({
+			value   => 'Green', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		Bugzilla::Field::Choice->type('cf_multiselect')->create({
+			value   => 'Red', 
+			sortkey => 0,
+			is_open => 1,
+		});
+		Bugzilla::Field::Choice->type('cf_multiselect')->create({
+			value   => 'Yellow', 
+			sortkey => 0,
+			is_open => 1,
+		});
+
+		Bugzilla::Field->create({ %{ ({
+				description => 'date time custom field',
+				type        => 5,
+				sortkey     => 751,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_datetime', custom => 1
+		});
+		Bugzilla::Field->create({ %{ ({
+				description => 'bug id custom field',
+				type        => 6,
+				sortkey     => 851,
+				mailhead    => 1,
+				enter_bug   => 1,
+				obsolete    => 0,
+				buglist     => 1,
+			}) },
+			name => 'cf_bugid', custom => 1
+		});
+	}
+#	if (!$dbh->selectrow_array('SELECT 1 FROM bug_status where value = "test"')) {
+#		print "Anlegen von Status!!!!\n" unless $args->{silent};
+#		Bugzilla::Status->create({ value => 'test', is_open => 0 });
+#	}
+
+	if (!$dbh->selectrow_array('SELECT 1 FROM flagtypes')) {
+		print "create additional flagtypes...\n" unless $args->{silent};
+		my $flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'BugFlag1',
+			description => '1',
+			target_type => 'bug',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 0,
+			is_requesteeble  => 0,
+			is_multiplicable => 0,
+		});
+		# set the inclusion to __Any__:__Any__
+		my $sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+
+		$flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'BugFlag2',
+			description => '2',
+			target_type => 'bug',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 1,
+			is_requesteeble  => 0,
+			is_multiplicable => 0,
+		});
+		# set the inclusion to __Any__:__Any__
+		$sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+
+		$flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'AttachmentFlag1',
+			description => '1',
+			target_type => 'attachment',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 1,
+			is_requesteeble  => 1,
+			is_multiplicable => 1,
+		});
+		# set the inclusion to __Any__:__Any__
+		$sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+
+		$flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'AttachmentFlag2',
+			description => '2',
+			target_type => 'attachment',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 1,
+			is_requesteeble  => 1,
+			is_multiplicable => 1,
+		});
+		# set the inclusion to __Any__:__Any__
+		$sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+
+		$flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'BugFlag3',
+			description => '3',
+			target_type => 'bug',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 1,
+			is_requesteeble  => 0,
+			is_multiplicable => 1,
+		});
+		# set the inclusion to __Any__:__Any__
+		$sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+
+		$flagtype = Bugzilla::FlagType->insert_create_data({
+			name        => 'BugFlag4',
+			description => '4',
+			target_type => 'bug',
+			cc_list     => '',
+			sortkey     => 1,
+			is_active   => 1,
+			is_requestable   => 1,
+			is_requesteeble  => 1,
+			is_multiplicable => 1,
+		});
+		# set the inclusion to __Any__:__Any__
+		$sth = $dbh->prepare("INSERT INTO flaginclusions
+				(type_id, product_id, component_id) VALUES (?, ?, ?)");
+		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+	}
+
+	if (!$dbh->selectrow_array('SELECT 1 FROM keyworddefs')) {
+		print "create additional keyworddefs...\n" unless $args->{silent};
+		Bugzilla::Keyword->create({ name => 'Keyword1', description => '1' });
+		Bugzilla::Keyword->create({ name => 'Keyword2', description => '2' });
+	}
+<% if @custom_wf %>
+	my %status_ids = @{ $dbh->selectcol_arrayref(
+		'SELECT value, id FROM bug_status', {Columns=>[1,2]}) };
+		my $old_id =  $status_ids{'REOPENED'};
+		my $new_id = $status_ids{'UNCONFIRMED'};
+    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status ='. $old_id . ' and new_status ='.$new_id)) {
+		print "create additional status_workflow...\n" unless $args->{silent};
+		my $sth_insert = $dbh->prepare('INSERT INTO status_workflow (old_status, new_status)
+										VALUES (?, ?)');
+		my $sth_delete = $dbh->prepare('DELETE FROM status_workflow
+										WHERE old_status = ? AND new_status = ?');
+
+		foreach my $pair (STATUS_WORKFLOW) {
+			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
+			my $new_id = $status_ids{$pair->[1]};
+			$sth_insert->execute($old_id, $new_id);
+		}
+		foreach my $pair (STATUS_WORKFLOW_DELETE) {
+			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
+			my $new_id = $status_ids{$pair->[1]};
+			$sth_delete->execute($old_id, $new_id);
+		}
+	}
+<% end %>
+<% if @custom_wf_and_status %>
+	if (!$dbh->selectrow_array('SELECT 1 FROM bug_status where value = "ON_DEV"')) {
+		print "Anlegen von Status!!!!\n" unless $args->{silent};
+		Bugzilla::Status->create({ value => 'ON_DEV', is_open => 1 , sortkey => 800});
+		Bugzilla::Status->create({ value => 'POST', is_open => 0 , sortkey => 900});
+		Bugzilla::Status->create({ value => 'MODIFIED', is_open => 1 , sortkey => 1200});
+	}
+	my %status_ids = @{ $dbh->selectcol_arrayref(
+		'SELECT value, id FROM bug_status', {Columns=>[1,2]}) };
+		my $old_id =  $status_ids{'REOPENED'};
+		my $new_id = $status_ids{'UNCONFIRMED'};
+    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status ='. $old_id . ' and new_status ='.$new_id)) {
+		print "create additional status_workflow...\n" unless $args->{silent};
+		my $sth_insert = $dbh->prepare('INSERT INTO status_workflow (old_status, new_status)
+										VALUES (?, ?)');
+		my $sth_delete = $dbh->prepare('DELETE FROM status_workflow
+										WHERE old_status = ? AND new_status = ?');
+    	my $sth_delnul = $dbh->prepare('DELETE FROM status_workflow
+                                    WHERE old_status IS NULL AND new_status = ?');
+
+print "before insert";
+		foreach my $pair (STATUS_WORKFLOW) {
+			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
+			my $new_id = $status_ids{$pair->[1]};
+			$sth_insert->execute($old_id, $new_id);
+		}
+print "before delete";
+		foreach my $pair (STATUS_WORKFLOW_DELETE) {
+			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
+			my $new_id = $status_ids{$pair->[1]};
+			$sth_delete->execute($old_id, $new_id);
+		}
+print "before delete null";
+		my $new_id = $status_ids{'ASSIGNED'};
+		$sth_delnul->execute($new_id);
+	}
+<% end %>
+	
+	print "Mylyn Extension: end of install-before_final_checks hook\n" unless $args->{silent};
+}
+
+__PACKAGE__->NAME;

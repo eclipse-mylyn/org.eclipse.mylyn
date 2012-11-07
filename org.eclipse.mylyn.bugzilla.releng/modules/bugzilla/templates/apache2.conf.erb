@@ -1,0 +1,9 @@
+Alias /<%= @www_url %> <%= @base %>/<%= @version %>
+<Directory <%= @base %>/<%= @version %>>
+    AddHandler cgi-script .cgi
+    Options +Indexes +ExecCGI
+    DirectoryIndex index.cgi
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>

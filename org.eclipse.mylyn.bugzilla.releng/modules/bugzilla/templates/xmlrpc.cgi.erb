@@ -1,0 +1,12 @@
+#!/usr/bin/perl -wT
+
+use strict;
+use lib qw(. lib);
+
+use Bugzilla;
+use Bugzilla::Constants;
+use Bugzilla::Error;
+use Bugzilla::WebService::Constants;
+BEGIN {
+  ThrowCodeError('feature_disabled', { feature => 'xmlrpc' });
+}
