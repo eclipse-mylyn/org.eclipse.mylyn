@@ -38,6 +38,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.adobe.epubcheck.api.EpubCheck;
+import com.adobe.epubcheck.api.Report;
+import com.adobe.epubcheck.util.DefaultReportImpl;
 
 /**
  * Tests features and regressions for all versions of the OPS supporting implementation {@link OPSPublication}.
@@ -374,6 +376,7 @@ public class TestOPSPublication extends AbstractTest {
 		Assert.assertEquals(null, Sources.get(2).getId());
 		Assert.assertEquals(null, Sources.get(2).getLang());
 		Assert.assertEquals("My Source", getText(Sources.get(2)));
+		// An IllegalArgumentException is expected
 		try {
 			oebps.addSource(null, null, null);
 			fail();
@@ -546,7 +549,8 @@ public class TestOPSPublication extends AbstractTest {
 		epub.add(oebps);
 		epub.pack(epubFile);
 		oebps.validateMetadata();
-		EpubCheck checker = new EpubCheck(epubFile);
+		Report report = new DefaultReportImpl(epubFile.toString());
+		EpubCheck checker = new EpubCheck(epubFile, report);
 		System.out.println("Validating plain EPUB 2.0.1 file");
 		System.out.println("Using version " + EpubCheck.VERSION + " of EpubCheck.");
 		Assert.assertTrue(checker.validate());
@@ -663,6 +667,7 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug380016() throws Exception {
+		setErrorExpected();
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_380016/chapter.xhtml"));
 		epub.add(oebps);
@@ -683,6 +688,7 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug360701() throws Exception {
+		setErrorExpected();
 		oebps.setIncludeReferencedResources(true);
 		// This page is similar to what WikiText would generate
 		oebps.addItem(new File("testdata/plain-page_link.html"));
@@ -712,6 +718,7 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug373052() throws Exception {
+		setErrorExpected();
 		// We need to link to a absolute file so we create a temporary HTML file
 		// in which we have the link.m
 		File htmlFile = File.createTempFile("temp", ".xhtml");
@@ -750,6 +757,7 @@ public class TestOPSPublication extends AbstractTest {
 	 * @throws Exception
 	 */
 	public final void test_Bug376312() throws Exception {
+		setErrorExpected();
 		oebps.setIncludeReferencedResources(true);
 		oebps.addItem(new File("testdata/circular/file-a.xhtml"));
 		oebps.addItem(new File("testdata/circular/file-b.xhtml"));

@@ -93,6 +93,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 * @throws Exception
 	 */
 	public final void testGenerateEmptyTableOfContents() throws Exception {
+		setErrorExpected();
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		oebps.setGenerateToc(false);
@@ -178,6 +179,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void testValidateContents() throws Exception {
+		setErrorExpected();
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page_warnings.xhtml"));
 		epub.pack(epubFile);
@@ -221,6 +223,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug358671_Illegal_Item() throws Exception {
+		setErrorExpected();
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		epub.pack(epubFile);
@@ -244,6 +247,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 */
 	@Test
 	public final void test_Bug358671_Illegal_Fallback() throws Exception {
+		setErrorExpected();
 		epub.add(oebps);
 		Item item = oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		item.setFallback("fallback");

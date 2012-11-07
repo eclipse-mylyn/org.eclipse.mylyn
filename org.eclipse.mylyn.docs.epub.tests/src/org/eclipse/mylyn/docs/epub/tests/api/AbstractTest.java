@@ -25,13 +25,18 @@ import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
+import org.eclipse.mylyn.docs.epub.tests.ValidationReport;
 import org.junit.After;
 import org.junit.Before;
+
+import com.adobe.epubcheck.api.EpubCheck;
 
 @SuppressWarnings("nls")
 public abstract class AbstractTest extends TestCase {
 
 	private static final boolean DEBUGGING = false;;
+
+	private boolean errorExpected;
 
 	private class StdOutLogger implements ILogger {
 
@@ -120,6 +125,7 @@ public abstract class AbstractTest extends TestCase {
 	@Override
 	@Before
 	public void setUp() throws Exception {
+		errorExpected = false;
 		if (epubFile.exists()) {
 			epubFile.delete();
 		}
@@ -132,6 +138,13 @@ public abstract class AbstractTest extends TestCase {
 	}
 
 	/**
+	 * Call this method in a test when an EPUB validation error is expected.
+	 */
+	protected void setErrorExpected() {
+		errorExpected = true;
+	}
+
+	/**
 	 * @throws java.lang.Exception
 	 */
 	@Override
@@ -141,10 +154,14 @@ public abstract class AbstractTest extends TestCase {
 			deleteFolder(epubFolder);
 		}
 		if (epubFile.exists()) {
-//			EpubCheck check = new EpubCheck(epubFile);
-//			Assert.assertEquals(true, check.validate());
+			ValidationReport report = new ValidationReport(epubFile.toString());
+			EpubCheck checker = new EpubCheck(epubFile, report);
+			checker.validate();
+			final String logMessage = report.getErrors();
 			epubFile.delete();
+			if (!errorExpected && report.getErrorCount() > 0) {
+				fail(logMessage);
+			}
 		}
 	}
-
 }

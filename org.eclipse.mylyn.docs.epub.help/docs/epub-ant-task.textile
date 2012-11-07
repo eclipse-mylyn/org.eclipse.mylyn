@@ -28,7 +28,7 @@ p.
 * **workingfolder** - optionally used to specify the folder used for assembling the EPUB. If not specified a temporary folder will be used and deleted when the processing has completed.
 * **includeReferenced** - optionally used to automatically include referenced items in the finished publication. The default value of this setting is **false**.
 
-p. Note that only XHTML items directly referenced from a file added to the manifest will be automatically included when the **includeReferenced** option is used. Generated XHTML files, such as the cover page will not be searched for additional content. This mechanism can be used to automatically add image files and such.
+p. Note that only XHTML items _directly_ referenced from a file added to the manifest will be automatically included when the **includeReferenced** option is used. Generated XHTML files, such as the cover page will not be searched for additional content. This mechanism can be used to automatically add image files and such.
 
 h2. Adding "header" information
 
