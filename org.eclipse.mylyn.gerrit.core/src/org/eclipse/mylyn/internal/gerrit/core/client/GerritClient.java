@@ -16,6 +16,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +42,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -72,6 +75,7 @@ import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.Project;
+import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 import com.google.gwtjsonrpc.client.VoidResult;
@@ -226,6 +230,12 @@ public class GerritClient {
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
 
 	private volatile boolean configRefreshed;
+
+	/**
+	 * The GWT query API was removed in Gerrit 2.5 and replaced with a REST API. If this flag is true, the REST API is
+	 * used.
+	 */
+	private boolean restQueryAPIEnabled;
 
 	public GerritClient(AbstractWebLocation location) {
 		this(location, null, null, null);
@@ -396,8 +406,7 @@ public class GerritClient {
 		} catch (GerritException e) {
 			try {
 				// fallback for Gerrit < 2.1.7
-				String message = e.getMessage();
-				if (message != null && message.contains("No such service method")) { //$NON-NLS-1$
+				if (isNoSuchServiceError(e)) {
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
@@ -426,6 +435,11 @@ public class GerritClient {
 		return result;
 	}
 
+	boolean isNoSuchServiceError(GerritException e) {
+		String message = e.getMessage();
+		return message != null && message.contains("No such service method");
+	}
+
 	public PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
 		PatchSetPublishDetailX publishDetail = execute(monitor,
@@ -444,9 +458,9 @@ public class GerritClient {
 		try {
 			id = id(reviewId);
 		} catch (GerritException e) {
-			List<ChangeInfo> result = executeQuery(monitor, reviewId);
+			List<GerritQueryResult> result = executeQuery(monitor, reviewId);
 			if (result.size() == 1) {
-				id = result.get(0).getId().get();
+				id = result.get(0).getNumber();
 			} else {
 				throw e;
 			}
@@ -519,14 +533,15 @@ public class GerritClient {
 	/**
 	 * Returns the latest 25 reviews.
 	 */
-	public List<ChangeInfo> queryAllReviews(IProgressMonitor monitor) throws GerritException {
+	public List<GerritQueryResult> queryAllReviews(IProgressMonitor monitor) throws GerritException {
 		return executeQuery(monitor, "status:open"); //$NON-NLS-1$
 	}
 
 	/**
 	 * Returns the latest 25 reviews for the given project.
 	 */
-	public List<ChangeInfo> queryByProject(IProgressMonitor monitor, final String project) throws GerritException {
+	public List<GerritQueryResult> queryByProject(IProgressMonitor monitor, final String project)
+			throws GerritException {
 		return executeQuery(monitor, "status:open project:" + project); //$NON-NLS-1$
 	}
 
@@ -534,25 +549,37 @@ public class GerritClient {
 	 * Called to get all gerrit tasks associated with the id of the user. This includes all open, closed and reviewable
 	 * reviews for the user.
 	 */
-	public List<ChangeInfo> queryMyReviews(IProgressMonitor monitor) throws GerritException {
-		final Account account = getAccount(monitor);
-		AccountDashboardInfo ad = execute(monitor, new Operation<AccountDashboardInfo>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeListService().forAccount(account.getId(), this);
-			}
-		});
+	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
+		if (!restQueryAPIEnabled) {
+			try {
+				final Account account = getAccount(monitor);
+				AccountDashboardInfo ad = execute(monitor, new Operation<AccountDashboardInfo>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getChangeListService().forAccount(account.getId(), this);
+					}
+				});
 
-		List<ChangeInfo> allMyChanges = ad.getByOwner();
-		allMyChanges.addAll(ad.getForReview());
-		allMyChanges.addAll(ad.getClosed());
-		return allMyChanges;
+				List<ChangeInfo> allMyChanges = ad.getByOwner();
+				allMyChanges.addAll(ad.getForReview());
+				allMyChanges.addAll(ad.getClosed());
+				return convert(allMyChanges);
+			} catch (GerritException e) {
+				if (isNoSuchServiceError(e)) {
+					restQueryAPIEnabled = true;
+				} else {
+					throw e;
+				}
+			}
+		}
+		// the "self" alias is only supported in Gerrit 2.5 and later
+		return executeQueryRest(monitor, "is:open owner:self reviewer:self");
 	}
 
 	/**
 	 * Returns watched changes of the currently logged in user
 	 */
-	public List<ChangeInfo> queryWatchedReviews(IProgressMonitor monitor) throws GerritException {
+	public List<GerritQueryResult> queryWatchedReviews(IProgressMonitor monitor) throws GerritException {
 		return executeQuery(monitor, "is:watched status:open"); //$NON-NLS-1$
 	}
 
@@ -676,14 +703,80 @@ public class GerritClient {
 		}
 	}
 
-	public List<ChangeInfo> executeQuery(IProgressMonitor monitor, final String queryString) throws GerritException {
-		SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
+	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
+			throws GerritException {
+		if (!restQueryAPIEnabled) {
+			try {
+				SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
+					@Override
+					public void execute(IProgressMonitor monitor) throws GerritException {
+						getChangeListService().allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
+					}
+				});
+				return convert(sl.getChanges());
+			} catch (GerritException e) {
+				if (isNoSuchServiceError(e)) {
+					restQueryAPIEnabled = true;
+				} else {
+					throw e;
+				}
+			}
+		}
+
+		return executeQueryRest(monitor, queryString);
+	}
+
+	private List<GerritQueryResult> convert(List<ChangeInfo> changes) {
+		List<GerritQueryResult> results = new ArrayList<GerritQueryResult>(changes.size());
+		for (ChangeInfo changeInfo : changes) {
+			GerritQueryResult result = new GerritQueryResult();
+			result.setNumber(changeInfo.getId().get());
+			result.setId(changeInfo.getKey().get());
+			result.setProject(changeInfo.getProject().getName());
+			result.setSubject(changeInfo.getSubject());
+			result.setStatus(changeInfo.getStatus().toString());
+			result.setUpdated(changeInfo.getLastUpdatedOn());
+			results.add(result);
+		}
+		return results;
+	}
+
+	public List<GerritQueryResult> executeQueryRest(IProgressMonitor monitor, final String queryString)
+			throws GerritException {
+		return execute(monitor, new Operation<List<GerritQueryResult>>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeListService().allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
+				try {
+					Request<List<GerritQueryResult>> request = new Request<List<GerritQueryResult>>() {
+						@Override
+						public HttpMethodBase createMethod() throws IOException {
+							GetMethod method = new GetMethod(client.getUrl()
+									+ "/changes/?format=JSON&q=" + URLEncoder.encode(queryString, "UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$ 
+							method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+							return method;
+						}
+
+						@Override
+						public List<GerritQueryResult> process(HttpMethodBase method) throws IOException {
+							JSonSupport json = new JSonSupport();
+							// Gerrit 2.5 prepends the output with bogus characters
+							// see http://code.google.com/p/gerrit/issues/detail?id=1648
+							String content = method.getResponseBodyAsString();
+							if (content.startsWith(")]}'\n")) { //$NON-NLS-1$
+								content = content.substring(5);
+							}
+							Type type = new TypeToken<List<GerritQueryResult>>() {
+							}.getType();
+							return json.getGson().fromJson(content, type);
+						}
+					};
+					List<GerritQueryResult> result = client.execute(request, monitor);
+					onSuccess(result);
+				} catch (Exception e) {
+					onFailure(e);
+				}
 			}
 		});
-		return sl.getChanges();
 	}
 
 	/**
@@ -756,8 +849,7 @@ public class GerritClient {
 			}
 		} catch (GerritException e) {
 			// Gerrit <= 2.2.1
-			String message = e.getMessage();
-			if (message != null && message.contains("No such service method")) { //$NON-NLS-1$
+			if (isNoSuchServiceError(e)) {
 				List<Project> projects = execute(monitor, new Operation<List<Project>>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {

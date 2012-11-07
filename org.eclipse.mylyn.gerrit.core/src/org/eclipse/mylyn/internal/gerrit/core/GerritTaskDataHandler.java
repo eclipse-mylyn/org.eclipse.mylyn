@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -198,6 +199,20 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getKey().get());
 		if (changeInfo.getStatus() != null && changeInfo.getStatus().isClosed()) {
 			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getLastUpdatedOn()));
+		}
+	}
+
+	public void updateTaskData(TaskRepository repository, TaskData data, GerritQueryResult changeInfo) {
+		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
+		setAttributeValue(data, schema.KEY, changeInfo.getId().substring(0, Math.min(9, changeInfo.getId().length())));
+		setAttributeValue(data, schema.PROJECT, changeInfo.getProject());
+		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
+		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
+		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
+		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getUpdated()));
+		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getId());
+		if (GerritConnector.isClosed(changeInfo.getStatus())) {
+			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getUpdated()));
 		}
 	}
 

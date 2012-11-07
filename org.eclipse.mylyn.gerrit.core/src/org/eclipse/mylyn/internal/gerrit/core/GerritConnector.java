@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -48,7 +49,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -203,7 +203,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 			monitor.beginTask("Executing query", IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
 			client.refreshConfigOnce(monitor);
-			List<ChangeInfo> result = null;
+
+			List<GerritQueryResult> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);
 			} else if (GerritQuery.CUSTOM.equals(query.getAttribute(GerritQuery.TYPE))) {
@@ -219,18 +220,18 @@ public class GerritConnector extends AbstractRepositoryConnector {
 			}
 
 			if (result != null) {
-				for (ChangeInfo changeInfo : result) {
+				for (GerritQueryResult changeInfo : result) {
 					TaskData taskData = taskDataHandler.createPartialTaskData(repository,
-							changeInfo.getId() + "", monitor); //$NON-NLS-1$
+							changeInfo.getNumber() + "", monitor); //$NON-NLS-1$
 					taskData.setPartial(true);
 					taskDataHandler.updateTaskData(repository, taskData, changeInfo);
 					resultCollector.accept(taskData);
 				}
 				return Status.OK_STATUS;
-			} else {
-				return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknows query type: {0}",
-						query.getAttribute(GerritQuery.PROJECT)));
 			}
+
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknows query type: {0}",
+					query.getAttribute(GerritQuery.PROJECT)));
 		} catch (UnsupportedClassVersionError e) {
 			return toStatus(repository, e);
 		} catch (GerritException e) {
@@ -377,6 +378,10 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		String message = NLS.bind("The Gerrit Connector requires at Java 1.6 or higer (installed version: {0})",
 				System.getProperty("java.version"));
 		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
+	}
+
+	public static boolean isClosed(String status) {
+		return "MERGED".equals(status) || "ABANDONED".equals(status);
 	}
 
 }
