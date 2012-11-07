@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.gerrit.core.operations.AbandonRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AddReviewersRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.PublishRequest;
+import org.eclipse.mylyn.internal.gerrit.core.operations.RebaseRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RestoreRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
@@ -60,6 +61,10 @@ public class GerritOperationFactory {
 
 	public GerritOperation<GerritConfiguration> createRefreshConfigOperation(ITask review, RefreshConfigRequest request) {
 		return new GerritOperation<GerritConfiguration>("Refreshing Configuration", getClient(review), request);
+	}
+
+	public GerritOperation<ChangeDetail> createRebaseOperation(ITask review, RebaseRequest request) {
+		return new GerritOperation<ChangeDetail>("Rebasing Change", getClient(review), request);
 	}
 
 	public GerritOperation<ChangeDetail> createRestoreOperation(ITask review, RestoreRequest request) {

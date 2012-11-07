@@ -37,6 +37,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeManageService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
@@ -58,7 +59,6 @@ import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
-import com.google.gerrit.common.data.ChangeManageService;
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -651,6 +651,26 @@ public class GerritClient {
 		return getConfiguration();
 	}
 
+	public ChangeDetail publish(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
+		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
+		return execute(monitor, new Operation<ChangeDetail>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeManageService().publish(id, this);
+			}
+		});
+	}
+
+	public ChangeDetail rebase(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
+		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
+		return execute(monitor, new Operation<ChangeDetail>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeManageService().rebaseChange(id, this);
+			}
+		});
+	}
+
 	public ChangeDetail restore(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
@@ -658,6 +678,17 @@ public class GerritClient {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				getChangeManageService().restoreChange(id, message, this);
+			}
+		});
+	}
+
+	public ChangeDetail revert(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
+			throws GerritException {
+		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
+		return execute(monitor, new Operation<ChangeDetail>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeManageService().revertChange(id, message, this);
 			}
 		});
 	}

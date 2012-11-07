@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,54 +12,33 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
 import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
- * Provides additional fields used by Gerrit 2.2.
- * 
  * @author Steffen Pingel
  */
-public class ChangeDetailX extends ChangeDetail {
-
-	/**
-	 * Available since Gerrit 2.2.
-	 */
-	private boolean canRevert;
-
-	/**
-	 * Available since Gerrit 2.2.
-	 */
-	private boolean canSubmit;
-
-	/**
-	 * Available since Gerrit 2.4.
-	 */
-	private boolean canRebase;
+public interface ChangeManageService extends com.google.gerrit.common.data.ChangeManageService {
 
 	/**
 	 * Available since Gerrit 2.3.
 	 */
-	private boolean canDeleteDraft;
+	void publish(PatchSet.Id patchSetId, AsyncCallback<ChangeDetail> callback);
 
-	private boolean canEdit;
+	/**
+	 * Available since Gerrit 2.2.
+	 */
+	void revertChange(PatchSet.Id patchSetId, String message, AsyncCallback<ChangeDetail> callback);
 
-	public boolean canRevert() {
-		return canRevert;
-	}
+	/**
+	 * Available since Gerrit 2.4.
+	 */
+	void rebaseChange(PatchSet.Id patchSetId, AsyncCallback<ChangeDetail> callback);
 
-	public boolean canSubmit() {
-		return canSubmit;
-	}
-
-	public boolean canRebase() {
-		return canRebase;
-	}
-
-	public boolean canEdit() {
-		return canEdit;
-	}
-
-	public boolean canDeleteDraft() {
-		return canDeleteDraft;
-	}
+	/**
+	 * Available since Gerrit 2.3.
+	 */
+	void deleteDraftChange(PatchSet.Id patchSetId, AsyncCallback<VoidResult> callback);
 
 }

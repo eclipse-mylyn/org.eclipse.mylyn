@@ -59,6 +59,7 @@ import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AbandonDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.PublishDialog;
+import org.eclipse.mylyn.internal.gerrit.ui.operations.RebaseDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
@@ -202,11 +203,13 @@ public class PatchSetSection extends AbstractGerritSection {
 		boolean canPublish = getTaskData().getAttributeMapper().getBooleanValue(
 				getTaskData().getRoot().getAttribute(GerritTaskSchema.getDefault().CAN_PUBLISH.getKey()));
 		boolean canSubmit = false;
+		boolean canRebase = false;
 		if (changeDetail.getCurrentActions() != null) {
 			canSubmit = changeDetail.getCurrentActions().contains(ApprovalCategory.SUBMIT);
 		} else if (changeDetail instanceof ChangeDetailX) {
-			// Gerrit 2.2
+			// Gerrit 2.2 and later
 			canSubmit = ((ChangeDetailX) changeDetail).canSubmit();
+			canRebase = ((ChangeDetailX) changeDetail).canRebase();
 		}
 
 		if (canPublish) {
@@ -257,6 +260,16 @@ public class PatchSetSection extends AbstractGerritSection {
 					fillCompareWithMenu(changeDetail, patchSetDetail, menu);
 					menu.setLocation(p);
 					menu.setVisible(true);
+				}
+			});
+		}
+
+		if (canRebase) {
+			Button rebaseButton = toolkit.createButton(buttonComposite, "Rebase", SWT.PUSH);
+			rebaseButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					doRebase(patchSetDetail.getPatchSet());
 				}
 			});
 		}
@@ -457,6 +470,11 @@ public class PatchSetSection extends AbstractGerritSection {
 
 	private String getGerritProject(ChangeDetail changeDetail) {
 		return changeDetail.getChange().getProject().get();
+	}
+
+	protected void doRebase(PatchSet patchSet) {
+		RebaseDialog dialog = new RebaseDialog(getShell(), getTask(), patchSet);
+		openOperationDialog(dialog);
 	}
 
 	protected void doRestore(PatchSet patchSet) {
