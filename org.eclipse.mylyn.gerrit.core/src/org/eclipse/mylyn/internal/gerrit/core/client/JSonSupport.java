@@ -14,16 +14,11 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.jgit.diff.Edit;
@@ -127,19 +122,7 @@ public class JSonSupport {
 				return false;
 			}
 		};
-		gson = JsonServlet.defaultGsonBuilder().registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-			DateFormat format = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.SSSSSSS", Locale.US);
-
-			@Override
-			public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-					throws JsonParseException {
-				try {
-					return format.parse(json.getAsString());
-				} catch (ParseException e) {
-					throw new JsonParseException(e);
-				}
-			}
-		})
+		gson = JsonServlet.defaultGsonBuilder()
 				.registerTypeAdapter(JSonResponse.class, new JSonResponseDeserializer())
 				.registerTypeAdapter(Edit.class, new JsonDeserializer<Edit>() {
 					public Edit deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

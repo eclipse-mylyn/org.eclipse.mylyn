@@ -729,13 +729,7 @@ public class GerritClient {
 	private List<GerritQueryResult> convert(List<ChangeInfo> changes) {
 		List<GerritQueryResult> results = new ArrayList<GerritQueryResult>(changes.size());
 		for (ChangeInfo changeInfo : changes) {
-			GerritQueryResult result = new GerritQueryResult();
-			result.setNumber(changeInfo.getId().get());
-			result.setId(changeInfo.getKey().get());
-			result.setProject(changeInfo.getProject().getName());
-			result.setSubject(changeInfo.getSubject());
-			result.setStatus(changeInfo.getStatus().toString());
-			result.setUpdated(changeInfo.getLastUpdatedOn());
+			GerritQueryResult result = new GerritQueryResult(changeInfo);
 			results.add(result);
 		}
 		return results;

@@ -11,8 +11,10 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.data;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Map;
+
+import com.google.gerrit.common.data.ChangeInfo;
 
 /**
  * @author Steffen Pingel
@@ -23,7 +25,7 @@ public class GerritQueryResult {
 
 	private String branch;
 
-	private Date created;
+	private Timestamp created;
 
 	private String id;
 
@@ -37,13 +39,25 @@ public class GerritQueryResult {
 
 	private String subject;
 
-	private Date updated;
+	private Timestamp updated;
+
+	public GerritQueryResult(ChangeInfo changeInfo) {
+		setNumber(changeInfo.getId().get());
+		setId(changeInfo.getKey().get());
+		setProject(changeInfo.getProject().getName());
+		setSubject(changeInfo.getSubject());
+		setStatus(changeInfo.getStatus().toString());
+		setUpdated(changeInfo.getLastUpdatedOn());
+	}
+
+	public GerritQueryResult() {
+	}
 
 	public String getBranch() {
 		return branch;
 	}
 
-	public Date getCreated() {
+	public Timestamp getCreated() {
 		return created;
 	}
 
@@ -75,47 +89,31 @@ public class GerritQueryResult {
 		return subject;
 	}
 
-	public Date getUpdated() {
+	public Timestamp getUpdated() {
 		return updated;
 	}
 
-	public void setBranch(String branch) {
-		this.branch = branch;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public void setId(String id) {
+	private void setId(String id) {
 		this.id = id;
 	}
 
-	public void setLabels(Map<String, GerritLabel> labels) {
-		this.labels = labels;
-	}
-
-	public void setNumber(int number) {
+	private void setNumber(int number) {
 		this._number = number;
 	}
 
-	public void setOwner(GerritPerson owner) {
-		this.owner = owner;
-	}
-
-	public void setProject(String project) {
+	private void setProject(String project) {
 		this.project = project;
 	}
 
-	public void setStatus(String status) {
+	private void setStatus(String status) {
 		this.status = status;
 	}
 
-	public void setSubject(String subject) {
+	private void setSubject(String subject) {
 		this.subject = subject;
 	}
 
-	public void setUpdated(Date updated) {
+	private void setUpdated(Timestamp updated) {
 		this.updated = updated;
 	}
 

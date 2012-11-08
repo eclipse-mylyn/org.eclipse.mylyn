@@ -148,7 +148,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 
-		updateTaskData(repository, data, new ChangeInfo(change));
+		updateTaskData(repository, data, new GerritQueryResult(new ChangeInfo(change)));
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
 		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
 		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
@@ -186,20 +186,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		JSonSupport json = new JSonSupport();
 		setAttributeValue(data, schema.OBJ_REVIEW, json.getGson().toJson(review));
 		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
-	}
-
-	public void updateTaskData(TaskRepository repository, TaskData data, ChangeInfo changeInfo) {
-		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
-		setAttributeValue(data, schema.KEY, changeInfo.getKey().abbreviate());
-		setAttributeValue(data, schema.PROJECT, changeInfo.getProject().getName());
-		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
-		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
-		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
-		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getLastUpdatedOn()));
-		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getKey().get());
-		if (changeInfo.getStatus() != null && changeInfo.getStatus().isClosed()) {
-			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getLastUpdatedOn()));
-		}
 	}
 
 	public void updateTaskData(TaskRepository repository, TaskData data, GerritQueryResult changeInfo) {
