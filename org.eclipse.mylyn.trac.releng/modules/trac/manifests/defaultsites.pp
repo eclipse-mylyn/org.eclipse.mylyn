@@ -1,33 +1,38 @@
-define trac::defaultsites {
+define trac::defaultsites (
+  $base = $trac::base,
+) {
 
-/* Trac automatically provisions during install "python-genshi" */
+include "trac"
 
-$requirements = [ "python-pysqlite2", "python-setuptools", "python-subversion", "subversion", ]
-package { $requirements: 
-	ensure => "installed" 
+/* Defaults */
+
+Trac::Trac {
+  base => $base,
 }
-
-/* Defaults. */
-Trac {
-	require => Package[$requirements],
+Trac::Plugin {
+  base => $base,
 }
-
 Trac::Site {
+  base => $base,
 	version => "1.0",
 	require => Trac["1.0"],	
 }
 
-trac { "0.11.7":
+/* Instances */
+
+trac::trac { "0.11.7":
 }
 
-trac { "0.12.4":
+trac::trac { "0.12.4":
 }
 
-trac { "1.0":
+trac::trac { "1.0":
 }
 
-trac { "trunk":
+trac::trac { "trunk":
 }
+
+/* Plugins */
 
 trac::plugin { "accountmanagerplugin-0.11":
 	url => "http://trac-hacks.org/svn/accountmanagerplugin/0.11",
@@ -43,6 +48,8 @@ trac::plugin { "xmlrpcplugin-trunk":
 	url => "http://trac-hacks.org/svn/xmlrpcplugin/trunk",
 	egg => "TracXMLRPC",
 }
+
+/* Sites */
 
 trac::site { "trac-0.11":
 	version => "0.11.7",

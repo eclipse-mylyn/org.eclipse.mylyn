@@ -2,19 +2,23 @@ define trac::plugin(
 	$plugin = "$title",
 	$egg,
 	$url,
-	$base = "/home/tools/trac",
+	$base = $trac::base,
 ) {
 	$srcbase = "$base/src/$plugin"
 	
-	file { "$srcbase":
-		ensure => "directory",
-	}
+	include "trac"
+	
+	exec { "prepare $plugin":
+    command => "mkdir -p $srcbase",
+    creates => "$srcbase",
+    require => Exec["prepare trac"]
+  }
 	
 	exec { "svn checkout $plugin":
     	command => "svn checkout $url src",
     	cwd => "$srcbase",
     	creates => "$srcbase/src",
-    	require => File["$srcbase"],
+    	require => Exec["prepare $plugin"],
 	}
 	
 	exec { "setup $plugin":

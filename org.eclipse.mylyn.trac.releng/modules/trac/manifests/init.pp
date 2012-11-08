@@ -1,66 +1,61 @@
-define trac(
-	$version = "$title",
-	$base = "/home/tools/trac"
-) {  
-	$srcbase = "$base/src/trac-$version"
-	$prefix = "$base/share/trac-$version"
+class trac {
+  $base = "/home/tools/trac"
 
-	Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }	
-	
-	exec { "prepare $version":
-		command => "mkdir -p $base/bin $base/conf.d $base/src $base/var $prefix",
-		creates => "$prefix",
-	}
-	
-	file { "$srcbase":
-		ensure => "directory",
-		require => Exec["prepare $version"]
-	}
-	if $version == "trunk" {
-		exec { "extract trac $version":
-	    	command => "svn checkout http://svn.edgewall.org/repos/trac/trunk Trac-trunk",
-	    	cwd => "$srcbase",
-	    	creates => "$srcbase/Trac-$version",
-	    	require => File["$srcbase"],
-		}		
-	} else {
-		exec { "download trac $version":
-	    	command => "wget -O $srcbase/Trac-$version.tar.gz http://download.edgewall.org/trac/Trac-$version.tar.gz",
-	    	creates => "$srcbase/Trac-$version.tar.gz",
-	    	require => File["$srcbase"],
-		}
-		
-		exec { "extract trac $version":
-	    	command => "tar -C $srcbase -xzvf $srcbase/Trac-$version.tar.gz",
-	    	require => Exec["download trac $version"],
-	    	creates => "$srcbase/Trac-$version",
-		}
-	}
+  /* Common requirements for all Trac instances */
 
+  exec { "apt-get update":
+    command => "apt-get update",
+    onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
+  }
 
-	file { "$srcbase/install.sh": 
-    	source => "puppet:///modules/trac/install.sh", 
-    	mode => '755', 
-  	}
-  	
-    exec { "install $version":
-        command => "$srcbase/install.sh $srcbase/Trac-$version $prefix $version",
-        path => ".",
-        logoutput => false,
-		require => Exec["extract trac $version"],
-		creates => "$prefix/lib/.provisioned",
-    }
+  /* Trac automatically provisions during install "python-genshi" */
 
-	file { "$base/bin/trac-$version.cgi":
-    	content => template('trac/trac.cgi.erb'),
-		require => Exec["prepare $version"],
-		mode => 755,
-	}
+  $requirements = ["apache2", "libapache2-mod-fcgid", "python-pysqlite2", "python-setuptools", "python-subversion", "subversion",]
 
-	file { "$base/bin/tracadmin-$version":
-    	content => template('trac/tracadmin.erb'),
-		mode => 755,
-		require => Exec["prepare $version"]
-	}
+  package { $requirements:
+    ensure  => "installed",
+    require => Exec["apt-get update"],
+  }
 
+  service { "apache2":
+    ensure  => running,
+    require => Package["apache2"],
+  }
+
+  exec { "Enable auth_digest module":
+    command => "a2enmod auth_digest",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/auth_digest.load",
+  }
+
+  exec { "Enable fcgid module":
+    command => "a2enmod fcgid",
+    require => Package["libapache2-mod-fcgid"],
+    creates => "/etc/apache2/mods-enabled/fcgid.load",
+  }
+
+  exec { "Enable ssl module":
+    command => "a2enmod ssl",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/ssl.load",
+  }
+
+  file { "/etc/apache2/sites-enabled/001-default-ssl":
+    ensure  => link,
+    target  => "/etc/apache2/sites-available/default-ssl",
+    require => Package["apache2"],
+    notify  => Service["apache2"],
+  }
+
+  file { "/etc/apache2/conf.d/python.conf":
+    content => "DefaultInitEnv PYTHON_EGG_CACHE /tmp/eggs",
+    require => Package["apache2"],
+    notify  => Service["apache2"],
+  }
+  
+  exec { "prepare trac":
+    command => "echo Trac pre-requisites are installed",
+    require => Package[$requirements],
+  }
+  
 }
