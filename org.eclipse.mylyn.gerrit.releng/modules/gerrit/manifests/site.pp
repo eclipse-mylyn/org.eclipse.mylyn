@@ -7,6 +7,8 @@ define gerrit::site(
   $certauth = false,
   $digestauth = false,
 	$base = "/home/tools/gerrit",
+	$envtype = "gerrit",
+	$envinfo = "",
 ) { 
 	$envbase = "$base/$envid"
 	$conf = "$base/conf.d"
@@ -58,6 +60,11 @@ define gerrit::site(
 
   file { "$envbase/setup.sql":
     source => "puppet:///modules/gerrit/setup.sql",
+    require => File["$envbase"],
+  }
+
+  file { "$envbase/service.json":
+    content => template('gerrit/service.json.erb'),
     require => File["$envbase"],
   }
       

@@ -1,7 +1,5 @@
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
-$tools = "/tmp/tools"
-
 include apache
 
 class apache {
@@ -48,16 +46,9 @@ class apache {
 }
 
 file { "/etc/apache2/conf.d/gerrit.conf":
-  content => "Include $tools/gerrit/conf.d/[^.#]*\n",
+  content => "Include /home/tools/gerrit/conf.d/[^.#]*\n",
   require => [ Package["apache2"], Gerrit::Defaultsites["gerrit"], ],
   notify  => Service["apache2"],
-}
-
-Gerrit {
-	base => "$tools/gerrit",
-}
-Gerrit::Site {
-	base => "$tools/gerrit",
 }
 
 gerrit::defaultsites { "gerrit":
