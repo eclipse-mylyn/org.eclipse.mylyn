@@ -68,18 +68,22 @@ trac::site { "trac-1.0":
 
 trac::site { "trac-allbasic":
 	allbasicauth => true,
+	envinfo => "AllBasicAuth",
 }
 
 trac::site { "trac-cert":
 	certauth => true,
+	envinfo => "CertAuth",
 }
 
 trac::site { "trac-digest":
 	digestauth => true,
+	envinfo => "DigestAuth",
 }
 
 trac::site { "trac-form-auth":
-	accountmanagerplugin => "0.11"
+	accountmanagerplugin => "0.11",
+	envinfo => "FormAuth",
 }
 
 trac::site { "trac-trunk":

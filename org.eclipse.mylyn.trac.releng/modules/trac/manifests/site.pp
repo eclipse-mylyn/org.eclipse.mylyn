@@ -7,7 +7,9 @@ define trac::site (
   $allbasicauth         = false,
   $certauth             = false,
   $digestauth           = false,
-  $base                 = "/home/tools/trac",) {
+  $base                 = $trac::base,
+  $envtype              = "trac",
+  $envinfo              = "",) {
     
   $prefix = "$base/share/trac-$version"
   $envbase = "$base/var/$envid"
@@ -126,11 +128,16 @@ define trac::site (
     }
   }
 
+  file { "$envbase/service.json":
+    content => template('trac/service.json.erb'),
+    require => File["$envbase"],
+  }
+
   exec { "add $envbase to /etc/apache2/conf.d/trac.conf":
     command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf.d/trac.conf",
     require => File["$conf/$envid.conf"],
     notify  => Service["apache2"],
-    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/trac.conf; test $? != 0"
+    onlyif  => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/trac.conf; test $? != 0"
   }
 
 }
