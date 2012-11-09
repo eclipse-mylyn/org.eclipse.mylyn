@@ -7,7 +7,8 @@ define hudson::site(
   $allbasicauth = false,
   $certauth = false,
   $digestauth = false,
-	$base = "/home/tools/hudson",
+	$base = $hudson::base,
+	$envinfo = "",
 ) { 
 	$envbase = "$base/$envid"
 	$conf = "$base/conf.d"
@@ -54,11 +55,23 @@ define hudson::site(
     require => File["$envbase"],
   }
 
+  file { "$envbase/service.json":
+    content => template('hudson/service.json.erb'),
+    require => File["$envbase"],
+  }
+
   exec { "start $envid":
     command => "$envbase/start.sh",
     cwd => "$envbase",
     require => File["$envbase/start.sh"],
     creates => "$envbase/pid",
+  }
+
+  exec { "add $envbase to apache":
+    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf.d/hudson.conf",
+    require => File["$conf/$envid.conf"],
+    notify  => Service["apache2"],
+    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/hudson.conf; test $? != 0"
   }
 
 }

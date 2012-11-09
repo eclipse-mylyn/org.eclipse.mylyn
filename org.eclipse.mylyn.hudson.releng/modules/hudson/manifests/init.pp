@@ -1,36 +1,63 @@
-define hudson(
-	$version = "$title",
-	$type,
-	$qualifier = "",
-	$base = "/home/tools/hudson",
-) {  
-	Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }	
-	
-	exec { "prepare $version":
-		command => "mkdir -p $base/archive $base/conf.d",
-		creates => "$base/archive",
-	}
-	
-	if $type == "hudson" {
-	  if $qualifier == "eclipse" {
-	    $url = "http://www.eclipse.org/downloads/download.php?r=1&file=/hudson/war/hudson-${version}.war"
-	  } else {
-	    $url = "http://java.net/projects/hudson/downloads/download/war/hudson-${version}.war"
-	  }
-	} elsif $type == "jenkins" {
-	  if $qualifier == "stable" {
-	    $url = "http://mirrors.jenkins-ci.org/war-stable/${version}/jenkins.war"
-	  } else {
-	    $url = "http://mirrors.jenkins-ci.org/war/${version}/jenkins.war"
-	  }
-	} else {
-	  fail("unknown type: $type")
-	}
-	
-	exec { "download $version":
-    command => "wget -O $base/archive/${type}-$version.war $url",
-	  creates => "$base/archive/${type}-$version.war",
-	  require => Exec["prepare $version"],
-	}
-	
+class hudson {
+
+  $base = "/home/tools/hudson"
+
+  exec { "apt-get update":
+    command => "apt-get update",
+    onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
+  }
+
+  $requirements = [ "apache2", "openjdk-6-jre", "git-core", ]
+
+  package { $requirements:
+    ensure  => "installed",
+    require => Exec["apt-get update"],
+  }
+
+  service { "apache2":
+    ensure  => running,
+    require => Package["apache2"],
+  }
+
+  exec { "Enable auth_digest module":
+    command => "a2enmod auth_digest",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/auth_digest.load",
+  }
+
+  exec { "Enable proxy mod":
+    command => "a2enmod proxy",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/proxy.load",
+  }
+
+  exec { "Enable proxy_http mod":
+    command => "a2enmod proxy_http",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/proxy_http.load",
+  }
+
+  exec { "Enable ssl module":
+    command => "a2enmod ssl",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/ssl.load",
+  }
+
+  file { "/etc/apache2/sites-enabled/001-default-ssl":
+    ensure  => link,
+    target  => "/etc/apache2/sites-available/default-ssl",
+    require => Exec["Enable ssl module"],
+  }
+
+  file { "/etc/apache2/conf.d/proxy.conf":
+    source  => "puppet:/modules/hudson/proxy.conf",
+    require => Package["apache2"],
+    notify  => Service["apache2"],
+  }
+
+  exec { "prepare hudson":
+    command => "echo Hudson pre-requisites are installed",
+    require => Package[$requirements],
+  }
+
 }
