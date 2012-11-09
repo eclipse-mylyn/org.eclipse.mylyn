@@ -3,6 +3,10 @@
 	<name>org.eclipse.mylyn.releng</name>
 	<comment></comment>
 	<projects>
+		<project>org.eclipse.mylyn.bugzilla.releng</project>
+		<project>org.eclipse.mylyn.gerrit.releng</project>
+		<project>org.eclipse.mylyn.hudson.releng</project>
+		<project>org.eclipse.mylyn.trac.releng</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

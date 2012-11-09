@@ -1,10 +1,23 @@
 Vagrant::Config.run do |config|
-  config.vm.box = "lucid32"
-  config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
-
-  config.vm.provision :puppet, :module_path => [ "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.trac.releng/modules" ] 
-  config.vm.provision :shell, :path => "scripts/start.sh"
+  config.vm.box = "precise32"
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
   config.vm.forward_port 80, 2080
   config.vm.forward_port 443, 2443
+
+  Vagrant::Config.run do |config|
+   config.vm.customize ["modifyvm", :id, "--memory", 2048]
+  end
+
+  config.vm.share_folder "bugzilla", "/tmp/vagrant-bugzilla", "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.bugzilla.releng"
+  config.vm.share_folder "hudson", "/tmp/vagrant-hudson", "../../../org.eclipse.mylyn.builds/org.eclipse.mylyn.hudson.releng"
+  config.vm.share_folder "gerrit", "/tmp/vagrant-gerrit", "../../../org.eclipse.mylyn.reviews/org.eclipse.mylyn.gerrit.releng" 
+  config.vm.share_folder "trac", "/tmp/vagrant-trac", "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.trac.releng"
+  
+  config.vm.provision :shell, :inline => "cd /tmp/vagrant-bugzilla && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-bugzilla/modules manifests/default.pp"
+  config.vm.provision :shell, :inline => "cd /tmp/vagrant-hudson && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-hudson/modules manifests/default.pp"
+  config.vm.provision :shell, :inline => "cd /tmp/vagrant-gerrit && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-gerrit/modules manifests/default.pp"
+  config.vm.provision :shell, :inline => "cd /tmp/vagrant-trac && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-trac/modules manifests/default.pp"
+
+  config.vm.provision :puppet
 end
