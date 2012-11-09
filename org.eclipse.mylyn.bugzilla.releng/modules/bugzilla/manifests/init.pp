@@ -1,11 +1,12 @@
 define bugzillaVersion (
   $major,
   $minor,
+  $branch               = " ",
+  $bugz_dbname          = "$title",
+
   $www_url              = "$title",
   $version              = "$title",
-  $branch               = "${::major}.${::minor}",
   $branchTag            = "bugzilla-stable",
-  $bugz_dbname          = "bugs_${::major}_${::minor}",
   $custom_wf            = false,
   $custom_wf_and_status = false,
   $xmlrpc_enabled       = true,
@@ -20,17 +21,23 @@ define bugzillaVersion (
   } else {
     $VersionCreateName = "value"
   }
+  
+  if ($branch == "trunk") {
+  	$branchName = "$branch"
+  } else {
+   	$branchName = "${major}.${minor}"
+  }
 
   if $branchTag == "trunk" {
     exec { "extract bugzilla $version":
-      command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branch $version",
+      command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branchName $version",
       cwd     => "$base",
       timeout => 300,
       creates => "$base/$version",
     }
   } else {
     exec { "extract bugzilla $version":
-      command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branch $version",
+      command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branchName $version",
       cwd     => "$base",
       timeout => 300,
       creates => "$base/$version",

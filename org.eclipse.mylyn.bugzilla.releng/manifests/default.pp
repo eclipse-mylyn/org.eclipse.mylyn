@@ -86,6 +86,7 @@ class bugzilla {
     require => Package["apache2"],
     notify  => Service["apache2"],
   }
+
 }
 
 include bugzilla
