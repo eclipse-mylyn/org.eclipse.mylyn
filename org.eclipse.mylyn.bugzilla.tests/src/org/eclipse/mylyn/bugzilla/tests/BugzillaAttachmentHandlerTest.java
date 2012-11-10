@@ -11,16 +11,18 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -35,7 +37,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
-import org.eclipse.mylyn.internal.tasks.ui.util.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -569,12 +570,12 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		ITaskAttachment taskAttachment;
 		taskAttachment = new TaskAttachment(repository, iTask, attachmentAttribute);
 
-		DownloadAttachmentJob job = new DownloadAttachmentJob(taskAttachment, file);
-		job.schedule();
-		job.join();
-
-		assertEquals(Status.OK_STATUS, job.getResult());
-
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+		try {
+			AttachmentUtil.downloadAttachment(taskAttachment, out, new NullProgressMonitor());
+		} finally {
+			out.close();
+		}
 		FileInputStream raf = new FileInputStream(file);
 
 		byte[] data = new byte[expected.length()];
