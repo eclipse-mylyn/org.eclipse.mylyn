@@ -134,6 +134,25 @@ public class EditorStateParticipantTest extends TestCase {
 		assertEquals(toString(memento), toString(memento2));
 	}
 
+//	public void testRestoreNewWorkbenchPageApi() throws Exception {
+//		IEditorReference[] references = createFilesAndOpenEditors();
+//
+//		IMemento[] mementos = page.getEditorState(references, true);
+//		for (IMemento memento : mementos) {
+//			System.err.println(toString((XMLMemento) memento));
+//		}
+//
+//		page.closeAllEditors(false);
+//		page.openEditors(null, null, mementos, IWorkbenchPage.MATCH_INPUT, 0);
+//
+//		System.err.println(">>>>>>>>>>>>>>>");
+//
+//		mementos = page.getEditorState(page.getEditorReferences(), true);
+//		for (IMemento memento : mementos) {
+//			System.err.println(toString((XMLMemento) memento));
+//		}
+//	}
+
 	private String toString(XMLMemento memento) throws IOException {
 		File workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
 		OutputStream out = new ByteArrayOutputStream();
