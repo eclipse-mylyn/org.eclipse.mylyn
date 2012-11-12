@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Steffen Pingel - initial API and implementation
+ *     Benjamin Muskalla (Tasktop Technologies) - support for deleting tasks
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core;
@@ -35,6 +36,7 @@ import org.eclipse.mylyn.internal.trac.core.client.AbstractWikiHandler;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.ITracWikiClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
@@ -58,6 +60,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Steffen Pingel
+ * @author Benjamin Muskalla
  */
 public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
@@ -750,5 +753,22 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (Throwable e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
+	}
+
+	@Override
+	public boolean canDeleteTask(TaskRepository repository, ITask task) {
+		return hasRichEditor(repository);
+	}
+
+	@Override
+	public IStatus deleteTask(TaskRepository repository, ITask task, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		ITracClient client = getClientManager().getTracClient(repository);
+		try {
+			client.deleteTicket(getTicketId(task.getTaskId()), monitor);
+		} catch (TracException e) {
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		}
+		return Status.OK_STATUS;
 	}
 }

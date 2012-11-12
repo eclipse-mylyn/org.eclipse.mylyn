@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Steffen Pingel - initial API and implementation
+ *     Benjamin Muskalla (Tasktop Technologies) - support for deleting tasks     
  *******************************************************************************/
 
 package org.eclipse.mylyn.trac.tests.core;
@@ -316,4 +317,18 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(new Date(123 * 1000), task.getCompletionDate());
 	}
 
+	public void testDeleteNewTask() throws Exception {
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		TracTicket ticket = TracTestUtil.createTicket(client, "testDeleteNewTask");
+		String taskId = String.valueOf(ticket.getId());
+		ITask task = TracTestUtil.createTask(repository, taskId);
+		assertTrue(connector.canDeleteTask(repository, task));
+		connector.deleteTask(repository, task, null);
+		try {
+			connector.getTaskData(repository, taskId, null);
+			fail("Task should be gone");
+		} catch (CoreException e) {
+			assertTrue(e.getMessage().contains("does not exist"));
+		}
+	}
 }
