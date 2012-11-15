@@ -32,6 +32,7 @@ define bugzillaVersion (
     exec { "extract bugzilla $version":
       command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branchName $version",
       cwd     => "$base",
+      user => "$bugzilla::userOwner",
       timeout => 300,
       creates => "$base/$version",
     }
@@ -39,6 +40,7 @@ define bugzillaVersion (
     exec { "extract bugzilla $version":
       command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branchName $version",
       cwd     => "$base",
+      user => "$bugzilla::userOwner",
       timeout => 300,
       creates => "$base/$version",
     }
@@ -69,6 +71,8 @@ define bugzillaVersion (
 
   file { "$bugzilla::installHelper/answers$version":
     content => template('bugzilla/answers.erb'),
+    owner   => "$bugzilla::userOwner",
+    group   => "$bugzilla::userGroup",
     require => Exec["extract bugzilla $version"],
   }
 
@@ -77,8 +81,8 @@ define bugzillaVersion (
     recurse => true, # enable recursive directory management
     purge   => true, # purge all unmanaged junk
     force   => true, # also purge subdirs and links etc.
-    owner   => "root",
-    group   => "root",
+    owner   => "$bugzilla::userOwner",
+    group   => "$bugzilla::userGroup",
     source  => "puppet:///modules/bugzilla/extensions/Mylyn",
     require => Exec["extract bugzilla $version"],
   }
@@ -86,6 +90,8 @@ define bugzillaVersion (
   file { "$base/$version/extensions/Mylyn/Extension.pm":
     content => template('bugzilla/Extension.pm.erb'),
     require => FILE["$base/$version/extensions/Mylyn"],
+    owner   => "$bugzilla::userOwner",
+    group   => "$bugzilla::userGroup",
     mode    => 0644,
   }
 
@@ -93,6 +99,7 @@ define bugzillaVersion (
     command => "$base/$version/checksetup.pl $bugzilla::installHelper/answers$version -verbose",
     cwd     => "$base/$version",
     creates => "$base/$version/localconfig",
+    user => "$bugzilla::userOwner",
     require => [
       EXEC["mysql-createdb-$version"],
       File["$bugzilla::installHelper/answers$version"],
@@ -102,6 +109,7 @@ define bugzillaVersion (
   exec { "update bugzilla_checksetup $version":
     command   => "$base/$version/checksetup.pl $bugzilla::installHelper/answers$version -verbose",
     cwd       => "$base/$version",
+    user => "$bugzilla::userOwner",
     logoutput => true,
     require   => [
       EXEC["mysql-createdb-$version"],
@@ -113,6 +121,8 @@ define bugzillaVersion (
   if !$xmlrpc_enabled {
     file { "$base/$version/xmlrpc.cgi":
       content => template('bugzilla/xmlrpc.cgi.erb'),
+      owner   => "$bugzilla::userOwner",
+      group   => "$bugzilla::userGroup",
       mode    => 755,
       require => Exec["update bugzilla_checksetup $version"],
     }

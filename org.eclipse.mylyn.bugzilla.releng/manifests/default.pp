@@ -5,16 +5,24 @@ class bugzilla {
   $dbuser = 'bugz'
   $dbuserPassword = 'ovlwq8'
 
-  $toolsDir = "/home/tools"
   $bugzillaBase = "/home/tools/bugzilla"
   $installHelper = "$bugzillaBase/installHelper"
   $installLog = "$bugzillaBase/installLog"
   $confDir = "$bugzillaBase/conf.d"
+  $userOwner = "tools"
+  $userGroup = "tools"
 
   exec { "apt-get update":
     command => "apt-get update",
     onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
   }
+  
+ user { "tools":
+        ensure => present,
+        membership => minimum,
+        shell => "/bin/bash",
+        managehome => 'true',
+}
 
   bugzilla::defaultsites { "bugzilla":
   }
@@ -67,7 +75,6 @@ class bugzilla {
   bugzillaVersion { "bugs44":
     major     => "4",
     minor     => "4",
-    branch    => "4.4",
     branchTag => "trunk",
     require   => [Service["mysql"], Exec["mysql-create-user-${dbuser}"]]
   }

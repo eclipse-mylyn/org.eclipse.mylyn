@@ -90,33 +90,31 @@ define bugzilla::defaultsites {
     target => "/etc/apache2/sites-available/default-ssl",
   }
 
-  exec { "create $bugzilla::toolsDir":
-    command => "mkdir $bugzilla::toolsDir",
-    creates => "$bugzilla::toolsDir",
-    require => Exec['phpmyadmin_Apache2']
-  }
-
   exec { "create $bugzilla::bugzillaBase":
-    command => "mkdir $bugzilla::bugzillaBase",
+    command => "mkdir -p $bugzilla::bugzillaBase",
     creates => "$bugzilla::bugzillaBase",
-    require => Exec["create $bugzilla::toolsDir"]
+    user => "$bugzilla::userOwner",
+    require => Exec['phpmyadmin_Apache2']
   }
 
   exec { "create $bugzilla::installHelper":
     command => "mkdir $bugzilla::installHelper",
     creates => "$bugzilla::installHelper",
+    user => "$bugzilla::userOwner",
     require => Exec["create $bugzilla::bugzillaBase"]
   }
 
   exec { "create $bugzilla::confDir":
     command => "mkdir $bugzilla::confDir",
     creates => "$bugzilla::confDir",
+    user => "$bugzilla::userOwner",
     require => Exec["create $bugzilla::bugzillaBase"]
   }
 
   exec { "create $bugzilla::installLog":
     command => "mkdir $bugzilla::installLog",
     creates => "$bugzilla::installLog",
+    user => "$bugzilla::userOwner",
     require => Exec["create $bugzilla::bugzillaBase"]
   }
 
