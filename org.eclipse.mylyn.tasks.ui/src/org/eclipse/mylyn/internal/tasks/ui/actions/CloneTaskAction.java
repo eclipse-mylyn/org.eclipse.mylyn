@@ -17,11 +17,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -68,8 +68,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					}
 				}
 
-				ITaskMapping taskSelection = new DefaultTaskMapping();
-				((DefaultTaskMapping) taskSelection).setDescription(description);
+				TaskInitializationData initializationData = new TaskInitializationData();
+				initializationData.setDescription(description);
 
 				TaskData taskData;
 				try {
@@ -79,24 +79,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					continue;
 				}
 
-				if (taskData != null) {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
-					ITaskMapping mapping = connector.getTaskMapping(taskData);
-					if (mapping.getDescription() != null) {
-						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n" //$NON-NLS-1$
-								+ mapping.getDescription());
-
-						TaskAttribute attrDescription = mapping.getTaskData()
-								.getRoot()
-								.getMappedAttribute(TaskAttribute.DESCRIPTION);
-						if (attrDescription != null) {
-							attrDescription.getMetaData().setReadOnly(false);
-						}
-
-					}
-					mapping.merge(taskSelection);
-					taskSelection = mapping;
-				}
+				ITaskMapping taskSelection = getTaskMapping(initializationData, taskData);
 
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (!TasksUiUtil.openNewTaskEditor(shell, taskSelection, null)) {
@@ -104,6 +87,29 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					return;
 				}
 			}
+		}
+	}
+
+	public ITaskMapping getTaskMapping(TaskInitializationData initializationData, TaskData taskData) {
+		if (taskData != null) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+			ITaskMapping mapping = connector.getTaskMapping(taskData);
+			if (mapping.getDescription() != null) {
+				initializationData.setDescription(initializationData.getDescription() + "\n\n" //$NON-NLS-1$
+						+ mapping.getDescription());
+
+				TaskAttribute attrDescription = mapping.getTaskData()
+						.getRoot()
+						.getMappedAttribute(TaskAttribute.DESCRIPTION);
+				if (attrDescription != null) {
+					attrDescription.getMetaData().setReadOnly(false);
+				}
+
+			}
+			mapping.merge(initializationData);
+			return mapping;
+		} else {
+			return initializationData;
 		}
 	}
 

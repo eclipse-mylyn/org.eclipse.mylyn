@@ -21,6 +21,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -55,6 +56,17 @@ public abstract class AbstractTaskDataHandler {
 	/**
 	 * Initialize a new task data object with default attributes and values
 	 * 
+	 * @param repository
+	 *            The {@code TaskRepository} the taskdata belongs to.
+	 * @param data
+	 *            The {@code TaskData} to be initialized
+	 * @param initializationData
+	 *            the {@link ITaskMapping} to initialize the {@link TaskData}. It is recommended to pass in a
+	 *            {@link TaskInitializationData}.
+	 * @param monitor
+	 *            The {@link IProgressMonitor} that will be used during initialization.
+	 * @return whether the initialization of the {@code TaskData} was successful. Implementations can alternativly throw
+	 *         a {@code CoreException} with further details.
 	 * @since 3.0
 	 */
 	public abstract boolean initializeTaskData(@NonNull TaskRepository repository, @NonNull TaskData data,

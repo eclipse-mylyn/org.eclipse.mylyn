@@ -18,8 +18,8 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -48,7 +48,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 				"test description for clone");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
-		DefaultTaskMapping taskSelection = new DefaultTaskMapping();
+		TaskInitializationData taskSelection = new TaskInitializationData();
 		taskSelection.setDescription("Test description");
 
 		TaskAttribute attrDescription = mapping.getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);

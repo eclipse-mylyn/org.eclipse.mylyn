@@ -14,12 +14,15 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Steffen Pingel
+ * @deprecated use {@link TaskInitializationData} instead
  */
+@Deprecated
 public class DefaultTaskMapping extends TaskMapping {
 
 	public Map<String, String> values = new HashMap<String, String>();
