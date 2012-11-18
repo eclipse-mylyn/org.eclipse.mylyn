@@ -30,7 +30,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -487,7 +486,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private void populateOsCombo() {
 		if (null != repositoryConfiguration && defaultOSCombo != null) {
 			defaultOSCombo.removeAll();
-			List<String> optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.OP_SYS);
+			List<String> optionValues = repositoryConfiguration.getOSs();
 			for (String option : optionValues) {
 				defaultOSCombo.add(option.toString());
 			}
@@ -509,7 +508,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private void populatePlatformCombo() {
 		if (null != repositoryConfiguration && defaultPlatformCombo != null) {
 			defaultPlatformCombo.removeAll();
-			List<String> optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.REP_PLATFORM);
+			List<String> optionValues = repositoryConfiguration.getPlatforms();
 			for (String option : optionValues) {
 				defaultPlatformCombo.add(option.toString());
 			}

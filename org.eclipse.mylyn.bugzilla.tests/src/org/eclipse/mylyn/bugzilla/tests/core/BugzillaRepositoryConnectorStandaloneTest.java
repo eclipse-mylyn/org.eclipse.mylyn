@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -43,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * @author Nathan Hapke
@@ -218,7 +218,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 		// queries for bugs assigned to tests@mylyn.eclipse.org, updated in the last hour, trivial with P1
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
-		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
+		List<String> priorities = repositoryConfiguration.getPriorities();
 		String priority = priorities.get(0);
 		String severity = "trivial";
 		String email = "tests%40mylyn.eclipse.org";

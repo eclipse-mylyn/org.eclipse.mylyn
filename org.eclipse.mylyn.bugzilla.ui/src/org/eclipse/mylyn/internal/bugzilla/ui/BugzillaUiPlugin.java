@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -144,24 +143,21 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 				&& selectedProducts != null) {
 			for (String product : selectedProducts) {
 				if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
-					for (String option : repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT,
-							product)) {
+					for (String option : repositoryConfiguration.getComponents(product)) {
 						if (!options.contains(option)) {
 							options.add(option);
 						}
 					}
 				}
 				if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
-					for (String option : repositoryConfiguration.getProductOptionValues(BugzillaAttribute.VERSION,
-							product)) {
+					for (String option : repositoryConfiguration.getVersions(product)) {
 						if (!options.contains(option)) {
 							options.add(option);
 						}
 					}
 				}
 				if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
-					for (String option : repositoryConfiguration.getProductOptionValues(
-							BugzillaAttribute.TARGET_MILESTONE, product)) {
+					for (String option : repositoryConfiguration.getTargetMilestones(product)) {
 						if (!options.contains(option)) {
 							options.add(option);
 						}
@@ -170,13 +166,13 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			}
 		} else {
 			if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
-				options = repositoryConfiguration.getOptionValues(BugzillaAttribute.COMPONENT);
+				options = repositoryConfiguration.getComponents();
 			}
 			if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
-				options = repositoryConfiguration.getOptionValues(BugzillaAttribute.VERSION);
+				options = repositoryConfiguration.getVersions();
 			}
 			if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
-				options = repositoryConfiguration.getOptionValues(BugzillaAttribute.TARGET_MILESTONE);
+				options = repositoryConfiguration.getTargetMilestones();
 			}
 		}
 		return options.toArray(new String[options.size()]);

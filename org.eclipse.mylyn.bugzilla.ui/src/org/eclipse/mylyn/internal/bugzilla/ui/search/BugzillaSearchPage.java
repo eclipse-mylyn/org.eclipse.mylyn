@@ -43,7 +43,6 @@ import org.eclipse.mylyn.commons.ui.dialogs.InPlaceDialogEvent;
 import org.eclipse.mylyn.commons.workbench.InPlaceCheckBoxTreeDialog;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaSearch;
@@ -911,7 +910,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 
 				Map<String, String> validValues = new HashMap<String, String>();
 				if (getRepositoryConfiguration() != null) {
-					for (String string : getRepositoryConfiguration().getOptionValues(BugzillaAttribute.KEYWORDS)) {
+					for (String string : getRepositoryConfiguration().getKeywords()) {
 						validValues.put(string, string);
 					}
 				}
@@ -1551,19 +1550,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 			String[] saved_hardware = hardware.getSelection();
 			String[] saved_os = os.getSelection();
 
-			java.util.List<String> products = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT);
+			java.util.List<String> products = repositoryConfiguration.getProducts();
 			String[] productsList = products.toArray(new String[products.size()]);
 			Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
 			product.setItems(productsList);
 
 			updateAttributesBasedOnProductSelection(selectedProducts, repositoryConfiguration);
 
-			status.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS)));
-			resolution.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.RESOLUTION)));
-			severity.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_SEVERITY)));
-			priority.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY)));
-			hardware.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.REP_PLATFORM)));
-			os.setItems(convertStringListToArray(repositoryConfiguration.getOptionValues(BugzillaAttribute.OP_SYS)));
+			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
+			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
+			severity.setItems(convertStringListToArray(repositoryConfiguration.getSeverities()));
+			priority.setItems(convertStringListToArray(repositoryConfiguration.getPriorities()));
+			hardware.setItems(convertStringListToArray(repositoryConfiguration.getPlatforms()));
+			os.setItems(convertStringListToArray(repositoryConfiguration.getOSs()));
 
 			setSelection(product, selectedProducts);
 			setSelection(status, saved_status);

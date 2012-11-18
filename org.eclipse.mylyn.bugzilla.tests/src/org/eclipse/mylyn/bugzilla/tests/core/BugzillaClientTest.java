@@ -74,30 +74,30 @@ public class BugzillaClientTest extends TestCase {
 				config.getInstallVersion().compareMajorMinorOnly(
 						new BugzillaVersion(BugzillaFixture.current().getVersion())));
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
-			assertEquals(10, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
+			assertEquals(10, config.getStatusValues().size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
+			assertEquals(7, config.getStatusValues().size());
 		} else {
-			assertEquals(5, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
+			assertEquals(5, config.getStatusValues().size());
 		}
-		if (config.getOptionValues(BugzillaAttribute.RESOLUTION).contains("LATER")) {
-			assertEquals(8, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
-			assertEquals(8, config.getOptionValues(BugzillaAttribute.REP_PLATFORM).size());
-			assertEquals(36, config.getOptionValues(BugzillaAttribute.OP_SYS).size());
-			assertEquals(5, config.getOptionValues(BugzillaAttribute.PRIORITY).size());
+		if (config.getResolutions().contains("LATER")) {
+			assertEquals(8, config.getResolutions().size());
+			assertEquals(8, config.getPlatforms().size());
+			assertEquals(36, config.getOSs().size());
+			assertEquals(5, config.getPriorities().size());
 		} else {
 			if (BugzillaVersion.BUGZILLA_4_0.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current()
 					.getVersion())) > 0) {
-				assertEquals(6, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
+				assertEquals(6, config.getResolutions().size());
 			} else {
-				assertEquals(5, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
+				assertEquals(5, config.getResolutions().size());
 			}
-			assertEquals(4, config.getOptionValues(BugzillaAttribute.REP_PLATFORM).size());
-			assertEquals(5, config.getOptionValues(BugzillaAttribute.OP_SYS).size());
-			assertEquals(6, config.getOptionValues(BugzillaAttribute.PRIORITY).size());
+			assertEquals(4, config.getPlatforms().size());
+			assertEquals(5, config.getOSs().size());
+			assertEquals(6, config.getPriorities().size());
 		}
-		assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_SEVERITY).size());
-		assertEquals(3, config.getOptionValues(BugzillaAttribute.PRODUCT).size());
+		assertEquals(7, config.getSeverities().size());
+		assertEquals(3, config.getProducts().size());
 		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
 			assertEquals(6, config.getOpenStatusValues().size());
 			assertEquals(1, config.getClosedStatusValues().size());
@@ -108,22 +108,22 @@ public class BugzillaClientTest extends TestCase {
 			assertEquals(3, config.getOpenStatusValues().size());
 			assertEquals(2, config.getClosedStatusValues().size());
 		}
-		assertEquals(2, config.getOptionValues(BugzillaAttribute.KEYWORDS).size());
-		assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "ManualTest").size());
-		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "ManualTest").size());
-		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "ManualTest").size());
+		assertEquals(2, config.getKeywords().size());
+		assertEquals(2, config.getComponents("ManualTest").size());
+		assertEquals(4, config.getVersions("ManualTest").size());
+		assertEquals(4, config.getTargetMilestones("ManualTest").size());
 		if (BugzillaFixture.current().getRepositoryUrl().contains("localhost")) {
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "TestProduct").size());
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.VERSION, "TestProduct").size());
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
+			assertEquals(1, config.getComponents("TestProduct").size());
+			assertEquals(1, config.getVersions("TestProduct").size());
+			assertEquals(1, config.getTargetMilestones("TestProduct").size());
 		} else {
-			assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "TestProduct").size());
-			assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "TestProduct").size());
-			assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
+			assertEquals(2, config.getComponents("TestProduct").size());
+			assertEquals(4, config.getVersions("TestProduct").size());
+			assertEquals(4, config.getTargetMilestones("TestProduct").size());
 		}
-		assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "Product with Spaces").size());
-		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "Product with Spaces").size());
-		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "Product with Spaces").size());
+		assertEquals(2, config.getComponents("Product with Spaces").size());
+		assertEquals(4, config.getVersions("Product with Spaces").size());
+		assertEquals(4, config.getTargetMilestones("Product with Spaces").size());
 	}
 
 	public void testValidate() throws Exception {

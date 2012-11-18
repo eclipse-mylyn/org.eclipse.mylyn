@@ -773,11 +773,11 @@ public class BugzillaClient {
 										repositoryConfiguration.setValidTransitions(monitor,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE), null);
 									}
-									if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
+									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 									}
 
-									if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
+									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										return repositoryConfiguration;
 									} else {
 										if (attempt == 0) {
@@ -1379,9 +1379,9 @@ public class BugzillaClient {
 				String id = a.getId();
 				if (id.equals(BugzillaAttribute.BUG_STATUS.getKey())
 						&& bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) >= 0) {
-					if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+					if (repositoryConfiguration.getStatusValues().contains(
 							BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-							|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+							|| repositoryConfiguration.getStatusValues().contains(
 									BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 						TaskAttribute attributeOperation = taskData.getRoot().getMappedAttribute(
 								TaskAttribute.OPERATION);

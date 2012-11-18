@@ -286,7 +286,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			if (attributeProduct != null && attributeProduct.getValue().length() > 0) {
 				List<String> options = configuration.getAttributeOptions(attributeProduct.getValue(), attribute);
 				if (options.size() == 0 && attribute.getId().equals("resolutionInput")) { //$NON-NLS-1$
-					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION);
+					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
 					// DUPLICATE and MOVED have special meanings so do not show as resolution
 					// TODO: COPIED FUNCTIONALITY from RepositoryConfiguration.addOperation() refactor.
 					options.remove("DUPLICATE"); //$NON-NLS-1$

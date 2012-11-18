@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -29,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 
 /**
  * @author Rob Elves
@@ -78,7 +78,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testPostingAndReadingAttributes() throws Exception {
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
-		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
+		List<String> priorities = repositoryConfiguration.getPriorities();
 		String priority = priorities.get(priorities.size() > 0 ? priorities.size() - 1 : 0);
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "testPostingAndReading() summary",
 				"testPostingAndReading() description");

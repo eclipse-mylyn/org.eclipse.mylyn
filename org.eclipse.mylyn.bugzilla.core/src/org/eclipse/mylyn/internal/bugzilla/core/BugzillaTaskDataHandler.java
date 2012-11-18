@@ -449,8 +449,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				String product = null;
 				String component = null;
 				if (initializationData == null || initializationData.getProduct() == null) {
-					if (repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).size() > 0) {
-						product = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).get(0);
+					if (repositoryConfiguration.getProducts().size() > 0) {
+						product = repositoryConfiguration.getProducts().get(0);
 					}
 				} else {
 					product = initializationData.getProduct();
@@ -465,21 +465,18 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					component = initializationData.getComponent();
 				}
 
-				if (component == null
-						&& repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product).size() > 0) {
-					component = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product)
-							.get(0);
+				if (component == null && repositoryConfiguration.getComponents(product).size() > 0) {
+					component = repositoryConfiguration.getComponents(product).get(0);
 				}
 				if (component == null) {
-					if (repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).size() > 0) {
-						product = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).get(0);
+					if (repositoryConfiguration.getProducts().size() > 0) {
+						product = repositoryConfiguration.getProducts().get(0);
 					}
 					if (product == null) {
 						return false;
 					}
-					if (repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product).size() > 0) {
-						component = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product)
-								.get(0);
+					if (repositoryConfiguration.getComponents(product).size() > 0) {
+						component = repositoryConfiguration.getComponents(product).get(0);
 					} else {
 						return false;
 					}
@@ -535,14 +532,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute productAttribute = createAttribute(taskData, BugzillaAttribute.PRODUCT);
 		productAttribute.setValue(product);
 
-		List<String> optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT);
+		List<String> optionValues = repositoryConfiguration.getProducts();
 		Collections.sort(optionValues);
 		for (String optionValue : optionValues) {
 			productAttribute.putOption(optionValue, optionValue);
 		}
 
 		TaskAttribute attributeStatus = createAttribute(taskData, BugzillaAttribute.BUG_STATUS);
-		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS);
+		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
 			attributeStatus.putOption(option, option);
 		}
@@ -554,9 +551,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			attributeStatus.setValue(repositoryConfiguration.getStartStatus());
 		} else {
-			if (repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-					BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-					|| repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+			if (repositoryConfiguration.getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| repositoryConfiguration.getStatusValues().contains(
 							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 
 				attributeStatus.setValue(IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.START.toString());
@@ -569,8 +565,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 
 		TaskAttribute attributeVersion = createAttribute(taskData, BugzillaAttribute.VERSION);
-		optionValues = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.VERSION,
-				productAttribute.getValue());
+		optionValues = repositoryConfiguration.getVersions(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			attributeVersion.putOption(option, option);
@@ -580,8 +575,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeComponent = createAttribute(taskData, BugzillaAttribute.COMPONENT);
-		optionValues = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT,
-				productAttribute.getValue());
+		optionValues = repositoryConfiguration.getComponents(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			attributeComponent.putOption(option, option);
@@ -594,10 +588,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskRepository taskRepository = taskData.getAttributeMapper().getTaskRepository();
-		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository,
-				IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE)) {
-			optionValues = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE,
-					productAttribute.getValue());
+		if (BugzillaUtil.getTaskPropertyWithDefaultTrue(taskRepository, IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE)) {
+			optionValues = repositoryConfiguration.getTargetMilestones(productAttribute.getValue());
 			if (optionValues.size() > 0) {
 				TaskAttribute attributeTargetMilestone = createAttribute(taskData, BugzillaAttribute.TARGET_MILESTONE);
 				for (String option : optionValues) {
@@ -616,7 +608,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 		TaskAttribute attributePlatform = createAttribute(taskData, BugzillaAttribute.REP_PLATFORM);
-		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.REP_PLATFORM);
+		optionValues = repositoryConfiguration.getPlatforms();
 		for (String option : optionValues) {
 			attributePlatform.putOption(option, option);
 		}
@@ -626,7 +618,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeOPSYS = createAttribute(taskData, BugzillaAttribute.OP_SYS);
-		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.OP_SYS);
+		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
 			attributeOPSYS.putOption(option, option);
 		}
@@ -636,7 +628,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributePriority = createAttribute(taskData, BugzillaAttribute.PRIORITY);
-		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
+		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
 			attributePriority.putOption(option, option);
 		}
@@ -646,7 +638,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeSeverity = createAttribute(taskData, BugzillaAttribute.BUG_SEVERITY);
-		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_SEVERITY);
+		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
 			attributeSeverity.putOption(option, option);
 		}
@@ -670,7 +662,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(taskData, BugzillaAttribute.NEWCC);
 		createAttribute(taskData, BugzillaAttribute.LONG_DESC);
 
-		List<String> keywords = repositoryConfiguration.getOptionValues(BugzillaAttribute.KEYWORDS);
+		List<String> keywords = repositoryConfiguration.getKeywords();
 		if (keywords.size() > 0) {
 			createAttribute(taskData, BugzillaAttribute.KEYWORDS);
 		}

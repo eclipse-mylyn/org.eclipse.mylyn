@@ -451,8 +451,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							.getRoot()
 							.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 					if (attributeComponent != null) {
-						List<String> optionValues = repositoryConfiguration.getProductOptionValues(
-								BugzillaAttribute.COMPONENT, taskAttribute.getValue());
+						List<String> optionValues = repositoryConfiguration.getComponents(taskAttribute.getValue());
 						Collections.sort(optionValues);
 						attributeComponent.clearOptions();
 						for (String option : optionValues) {
@@ -468,8 +467,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							.getRoot()
 							.getMappedAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 					if (attributeTargetMilestone != null) {
-						List<String> optionValues = repositoryConfiguration.getProductOptionValues(
-								BugzillaAttribute.TARGET_MILESTONE, taskAttribute.getValue());
+						List<String> optionValues = repositoryConfiguration.getTargetMilestones(taskAttribute.getValue());
 						Collections.sort(optionValues);
 						attributeTargetMilestone.clearOptions();
 						for (String option : optionValues) {
@@ -487,8 +485,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 							.getRoot()
 							.getMappedAttribute(BugzillaAttribute.VERSION.getKey());
 					if (attributeVersion != null) {
-						List<String> optionValues = repositoryConfiguration.getProductOptionValues(
-								BugzillaAttribute.VERSION, taskAttribute.getValue());
+						List<String> optionValues = repositoryConfiguration.getVersions(taskAttribute.getValue());
 						Collections.sort(optionValues);
 						attributeVersion.clearOptions();
 						for (String option : optionValues) {

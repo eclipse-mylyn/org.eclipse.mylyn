@@ -417,7 +417,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public void updateConfiguration(IProgressMonitor monitor, RepositoryConfiguration repositoryConfiguration,
 			String fileName) throws CoreException {
 		repositoryConfiguration.setValidTransitions(monitor, fileName, this);
-		if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
+		if (!repositoryConfiguration.getProducts().isEmpty()) {
 			updateProductInfo(monitor, repositoryConfiguration);
 		}
 	}

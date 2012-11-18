@@ -675,7 +675,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					// Did not know how the configuration can be null here
 					return getTaskPriority(priority);
 				}
-				List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
+				List<String> priorities = repositoryConfiguration.getPriorities();
 				return BugzillaRepositoryConnector.getTaskPriority(priority, priorities);
 			}
 		};
