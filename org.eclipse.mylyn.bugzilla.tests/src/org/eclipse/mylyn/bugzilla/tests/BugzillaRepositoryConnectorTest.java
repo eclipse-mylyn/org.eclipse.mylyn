@@ -963,7 +963,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// test anonymous update of configuration
 		RepositoryConfiguration config = connector.getRepositoryConfiguration(repository, false, null);
 		assertNotNull(config);
-		assertTrue(config.getComponents().size() > 0);
+		assertTrue(config.getOptionValues(BugzillaAttribute.COMPONENT).size() > 0);
 	}
 
 	public void testTimeTracker() throws Exception {
@@ -1077,7 +1077,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			return;
 		}
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
-		List<String> priorities = repositoryConfiguration.getPriorities();
+		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		String priority1 = priorities.get(0);
 		String priority2 = priorities.get(1);
 
