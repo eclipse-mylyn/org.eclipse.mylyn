@@ -91,14 +91,6 @@ public class RepositoryConfiguration implements Serializable {
 	public RepositoryConfiguration() {
 	}
 
-	public void addStatus(String status) {
-		bugStatus.add(status);
-	}
-
-	public void addResolution(String res) {
-		resolutionValues.add(res);
-	}
-
 	/**
 	 * Adds a product to the configuration.
 	 */
@@ -144,14 +136,10 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	public void addOS(String os) {
-		operatingSystems.add(os);
-	}
-
 	/**
 	 * Adds a component to the given product.
 	 */
-	public void addComponent(String product, String component) {
+	private void addComponent(String product, String component) {
 		if (!components.contains(component)) {
 			components.add(component);
 		}
@@ -163,7 +151,7 @@ public class RepositoryConfiguration implements Serializable {
 		entry.addComponent(component);
 	}
 
-	public void addVersion(String product, String version) {
+	private void addVersion(String product, String version) {
 		if (!versions.contains(version)) {
 			versions.add(version);
 		}
@@ -175,22 +163,6 @@ public class RepositoryConfiguration implements Serializable {
 		entry.addVersion(version);
 	}
 
-	public void addKeyword(String keyword) {
-		keywords.add(keyword);
-	}
-
-	public void addPlatform(String platform) {
-		platforms.add(platform);
-	}
-
-	public void addPriority(String priority) {
-		priorities.add(priority);
-	}
-
-	public void addSeverity(String severity) {
-		severities.add(severity);
-	}
-
 	public void setInstallVersion(String version) {
 		this.version = new BugzillaVersion(version);
 	}
@@ -199,7 +171,7 @@ public class RepositoryConfiguration implements Serializable {
 		return version;
 	}
 
-	public void addTargetMilestone(String product, String target) {
+	private void addTargetMilestone(String product, String target) {
 		if (!milestones.contains(target)) {
 			milestones.add(target);
 		}
@@ -403,6 +375,51 @@ public class RepositoryConfiguration implements Serializable {
 			return getComponents(product);
 		default:
 			return Collections.emptyList();
+		}
+	}
+
+	public void addItem2Configuration(BugzillaAttribute element, String value) {
+		switch (element) {
+		case BUG_STATUS:
+			bugStatus.add(value);
+			break;
+		case RESOLUTION:
+			resolutionValues.add(value);
+			break;
+		case KEYWORDS:
+			keywords.add(value);
+			break;
+		case REP_PLATFORM:
+			platforms.add(value);
+		case OP_SYS:
+			operatingSystems.add(value);
+			break;
+		case PRIORITY:
+			priorities.add(value);
+			break;
+		case BUG_SEVERITY:
+			severities.add(value);
+			break;
+		case PRODUCT:
+			addProduct(value);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void addItem2ProductConfiguration(BugzillaAttribute element, String product, String value) {
+		switch (element) {
+		case COMPONENT:
+			addComponent(product, value);
+			break;
+		case VERSION:
+			addVersion(product, value);
+			break;
+		case TARGET_MILESTONE:
+			addTargetMilestone(product, value);
+		default:
+			break;
 		}
 	}
 
