@@ -307,23 +307,23 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				return;
 			}
 			if (state == (IN_STATUS)) {
-				configuration.addItem2Configuration(BugzillaAttribute.BUG_STATUS, characters.toString());
+				configuration.addStatus(characters.toString());
 			} else if (state == (IN_STATUS_OPEN)) {
 				configuration.addOpenStatusValue(characters.toString());
 			} else if (state == (IN_STATUS_CLOSED)) {
 				configuration.addClosedStatusValue(characters.toString());
 			} else if (state == (IN_RESOLUTION)) {
-				configuration.addItem2Configuration(BugzillaAttribute.RESOLUTION, characters.toString());
+				configuration.addResolution(characters.toString());
 			} else if (state == (IN_KEYWORD)) {
-				configuration.addItem2Configuration(BugzillaAttribute.KEYWORDS, characters.toString());
+				configuration.addKeyword(characters.toString());
 			} else if (state == (IN_PLATFORM)) {
-				configuration.addItem2Configuration(BugzillaAttribute.REP_PLATFORM, characters.toString());
+				configuration.addPlatform(characters.toString());
 			} else if (state == (IN_OP_SYS)) {
-				configuration.addItem2Configuration(BugzillaAttribute.OP_SYS, characters.toString());
+				configuration.addOS(characters.toString());
 			} else if (state == (IN_PRIORITY)) {
-				configuration.addItem2Configuration(BugzillaAttribute.PRIORITY, characters.toString());
+				configuration.addPriority(characters.toString());
 			} else if (state == (IN_SEVERITY)) {
-				configuration.addItem2Configuration(BugzillaAttribute.BUG_SEVERITY, characters.toString());
+				configuration.addSeverity(characters.toString());
 			} else if (state == (IN_CUSTOM_OPTION)) {
 				// Option for CutstomFields
 				if (currentCustomOptionName != null) {
@@ -570,7 +570,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : componentURIs) {
 				String realName = componentNames.get(uri);
 				if (realName != null) {
-					configuration.addItem2ProductConfiguration(BugzillaAttribute.COMPONENT, product, realName);
+					configuration.addComponent(product, realName);
 				}
 			}
 		}
@@ -580,7 +580,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : versionURIs) {
 				String realName = versionNames.get(uri);
 				if (realName != null) {
-					configuration.addItem2ProductConfiguration(BugzillaAttribute.VERSION, product, realName);
+					configuration.addVersion(product, realName);
 				}
 			}
 
@@ -591,7 +591,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : milestoneURIs) {
 				String realName = milestoneNames.get(uri);
 				if (realName != null) {
-					configuration.addItem2ProductConfiguration(BugzillaAttribute.TARGET_MILESTONE, product, realName);
+					configuration.addTargetMilestone(product, realName);
 				}
 			}
 
