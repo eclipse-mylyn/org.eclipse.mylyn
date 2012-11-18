@@ -16,16 +16,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.bugzilla.core.data.RepositoryConfigurationData;
-import org.eclipse.mylyn.bugzilla.core.data.RepositoryConfigurationItem;
-import org.eclipse.mylyn.bugzilla.core.data.RepositoryConfigurationProductItem;
-import org.eclipse.mylyn.bugzilla.core.data.RepositoryConfigurationSubItem;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
@@ -48,11 +46,33 @@ public class RepositoryConfiguration implements Serializable {
 
 	private String repositoryUrl = "<unknown>"; //$NON-NLS-1$
 
+	private final Map<String, ProductEntry> products = new HashMap<String, ProductEntry>();
+
+	private final List<String> platforms = new ArrayList<String>();
+
+	private final List<String> operatingSystems = new ArrayList<String>();
+
+	private final List<String> priorities = new ArrayList<String>();
+
+	private final List<String> severities = new ArrayList<String>();
+
+	private final List<String> bugStatus = new ArrayList<String>();
+
 	private final List<String> openStatusValues = new ArrayList<String>();
 
 	private final List<String> closedStatusValues = new ArrayList<String>();
 
-	private final RepositoryConfigurationData data = new RepositoryConfigurationData();
+	private final List<String> resolutionValues = new ArrayList<String>();
+
+	private final List<String> keywords = new ArrayList<String>();
+
+	// master lists
+
+	private final List<String> versions = new ArrayList<String>();
+
+	private final List<String> components = new ArrayList<String>();
+
+	private final List<String> milestones = new ArrayList<String>();
 
 	private final List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
 
@@ -75,11 +95,9 @@ public class RepositoryConfiguration implements Serializable {
 	 * Adds a product to the configuration.
 	 */
 	public void addProduct(String name) {
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, name);
-		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(name);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+		if (!products.containsKey(name)) {
+			ProductEntry product = new ProductEntry(name);
+			products.put(name, product);
 		}
 	}
 
@@ -87,7 +105,9 @@ public class RepositoryConfiguration implements Serializable {
 	 * Returns an array of names of current products.
 	 */
 	private List<String> getProducts() {
-		return data.getConfigurationNamedItemsAsStringList(BugzillaAttribute.PRODUCT);
+		ArrayList<String> productList = new ArrayList<String>(products.keySet());
+		Collections.sort(productList, String.CASE_INSENSITIVE_ORDER);
+		return productList;
 	}
 
 	/**
@@ -95,12 +115,12 @@ public class RepositoryConfiguration implements Serializable {
 	 * not exist.
 	 */
 	private List<String> getComponents(String product) {
-		RepositoryConfigurationItem productData = data.getNamedItem(BugzillaAttribute.PRODUCT, product);
-		if (productData instanceof RepositoryConfigurationSubItem) {
-			RepositoryConfigurationSubItem productConfiguration = (RepositoryConfigurationSubItem) productData;
-			return productConfiguration.getConfigurationItemsAsStringList(BugzillaAttribute.COMPONENT);
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getComponents();
+		} else {
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
 	}
 
 	/**
@@ -108,43 +128,39 @@ public class RepositoryConfiguration implements Serializable {
 	 * exist.
 	 */
 	private List<String> getVersions(String product) {
-		RepositoryConfigurationItem productData = data.getNamedItem(BugzillaAttribute.PRODUCT, product);
-		if (productData instanceof RepositoryConfigurationSubItem) {
-			RepositoryConfigurationSubItem productConfiguration = (RepositoryConfigurationSubItem) productData;
-			return productConfiguration.getConfigurationItemsAsStringList(BugzillaAttribute.VERSION);
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getVersions();
+		} else {
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
 	}
 
 	/**
 	 * Adds a component to the given product.
 	 */
 	private void addComponent(String product, String component) {
-		List<String> subData = data.getConfigurationItemsAsStringList(BugzillaAttribute.COMPONENT);
-		if (subData == null || !subData.contains(component)) {
-			data.addItem(BugzillaAttribute.COMPONENT, new RepositoryConfigurationItem(component));
+		if (!components.contains(component)) {
+			components.add(component);
 		}
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, product);
+		ProductEntry entry = products.get(product);
 		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(product);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+			entry = new ProductEntry(product);
+			products.put(product, entry);
 		}
-		entry.addItem(BugzillaAttribute.COMPONENT, new RepositoryConfigurationItem(component));
+		entry.addComponent(component);
 	}
 
 	private void addVersion(String product, String version) {
-		List<String> subData = data.getConfigurationItemsAsStringList(BugzillaAttribute.VERSION);
-		if (subData == null || !subData.contains(version)) {
-			data.addItem(BugzillaAttribute.VERSION, new RepositoryConfigurationItem(version));
+		if (!versions.contains(version)) {
+			versions.add(version);
 		}
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, product);
+		ProductEntry entry = products.get(product);
 		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(product);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+			entry = new ProductEntry(product);
+			products.put(product, entry);
 		}
-		entry.addItem(BugzillaAttribute.VERSION, new RepositoryConfigurationItem(version));
+		entry.addVersion(version);
 	}
 
 	public void setInstallVersion(String version) {
@@ -156,36 +172,104 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	private void addTargetMilestone(String product, String target) {
-		List<String> subData = data.getConfigurationItemsAsStringList(BugzillaAttribute.TARGET_MILESTONE);
-		if (subData == null || !subData.contains(target)) {
-			data.addItem(BugzillaAttribute.TARGET_MILESTONE, new RepositoryConfigurationItem(target));
+		if (!milestones.contains(target)) {
+			milestones.add(target);
 		}
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, product);
+		ProductEntry entry = products.get(product);
 		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(product);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+			entry = new ProductEntry(product);
+			products.put(product, entry);
 		}
-		entry.addItem(BugzillaAttribute.TARGET_MILESTONE, new RepositoryConfigurationItem(target));
+
+		entry.addTargetMilestone(target);
+
 	}
 
 	private List<String> getTargetMilestones(String product) {
-		RepositoryConfigurationItem productData = data.getNamedItem(BugzillaAttribute.PRODUCT, product);
-		if (productData instanceof RepositoryConfigurationSubItem) {
-			RepositoryConfigurationSubItem productConfiguration = (RepositoryConfigurationSubItem) productData;
-			return productConfiguration.getConfigurationItemsAsStringList(BugzillaAttribute.TARGET_MILESTONE);
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getTargetMilestones();
+		} else {
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
 	}
 
 	public void addUnconfirmedAllowed(String product, Boolean unconfirmedAllowed) {
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, product);
+		ProductEntry entry = products.get(product);
 		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(product);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+			entry = new ProductEntry(product);
+			products.put(product, entry);
 		}
 		entry.setUnconfirmedAllowed(unconfirmedAllowed);
+	}
+
+	/**
+	 * Container for product information: name, components.
+	 */
+	private static class ProductEntry implements Serializable {
+
+		private static final long serialVersionUID = 4120139521246741120L;
+
+		@SuppressWarnings("unused")
+		String productName;
+
+		List<String> components = new ArrayList<String>();
+
+		List<String> versions = new ArrayList<String>();
+
+		List<String> milestones = new ArrayList<String>();
+
+		String defaultMilestone = null;
+
+		Boolean unconfirmedAllowed = false;
+
+		ProductEntry(String name) {
+			this.productName = name;
+		}
+
+		List<String> getComponents() {
+			return components;
+		}
+
+		void addComponent(String componentName) {
+			if (!components.contains(componentName)) {
+				components.add(componentName);
+			}
+		}
+
+		List<String> getVersions() {
+			return versions;
+		}
+
+		void addVersion(String name) {
+			if (!versions.contains(name)) {
+				versions.add(name);
+			}
+		}
+
+		List<String> getTargetMilestones() {
+			return milestones;
+		}
+
+		void addTargetMilestone(String target) {
+			milestones.add(target);
+		}
+
+		public String getDefaultMilestone() {
+			return defaultMilestone;
+		}
+
+		public void setDefaultMilestone(String defaultMilestone) {
+			this.defaultMilestone = defaultMilestone;
+		}
+
+		public Boolean getUnconfirmedAllowed() {
+			return unconfirmedAllowed;
+		}
+
+		public void setUnconfirmedAllowed(Boolean unconfirmedAllowed) {
+			this.unconfirmedAllowed = unconfirmedAllowed;
+		}
 	}
 
 	public List<String> getOpenStatusValues() {
@@ -254,19 +338,28 @@ public class RepositoryConfiguration implements Serializable {
 
 	public List<String> getOptionValues(BugzillaAttribute element) {
 		switch (element) {
-		case TARGET_MILESTONE:
-		case RESOLUTION:
-		case BUG_STATUS:
-		case KEYWORDS:
-		case REP_PLATFORM:
-		case OP_SYS:
-		case VERSION:
-		case COMPONENT:
-		case BUG_SEVERITY:
-		case PRIORITY:
-			return data.getConfigurationItemsAsStringList(element);
 		case PRODUCT:
 			return getProducts();
+		case TARGET_MILESTONE:
+			return milestones;
+		case BUG_STATUS:
+			return bugStatus;
+		case VERSION:
+			return versions;
+		case COMPONENT:
+			return components;
+		case REP_PLATFORM:
+			return platforms;
+		case OP_SYS:
+			return operatingSystems;
+		case PRIORITY:
+			return priorities;
+		case BUG_SEVERITY:
+			return severities;
+		case KEYWORDS:
+			return keywords;
+		case RESOLUTION:
+			return resolutionValues;
 		default:
 			return Collections.emptyList();
 		}
@@ -287,14 +380,25 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addItem2Configuration(BugzillaAttribute element, String value) {
 		switch (element) {
-		case RESOLUTION:
 		case BUG_STATUS:
+			bugStatus.add(value);
+			break;
+		case RESOLUTION:
+			resolutionValues.add(value);
+			break;
 		case KEYWORDS:
+			keywords.add(value);
+			break;
 		case REP_PLATFORM:
-		case PRIORITY:
+			platforms.add(value);
 		case OP_SYS:
+			operatingSystems.add(value);
+			break;
+		case PRIORITY:
+			priorities.add(value);
+			break;
 		case BUG_SEVERITY:
-			data.addItem(element, new RepositoryConfigurationItem(value));
+			severities.add(value);
 			break;
 		case PRODUCT:
 			addProduct(value);
@@ -590,13 +694,7 @@ public class RepositoryConfiguration implements Serializable {
 		} else {
 			TaskAttribute everConfirmed = bugReport.getRoot().getAttribute(BugzillaAttribute.EVERCONFIRMED.getKey());
 			TaskAttribute product = bugReport.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
-			Boolean unconfirmedAllowed = false;
-
-			RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-					BugzillaAttribute.PRODUCT, product.getValue());
-			if (entry != null) {
-				unconfirmedAllowed = entry.getUnconfirmedAllowed();
-			}
+			Boolean unconfirmedAllowed = products.get(product.getValue()).getUnconfirmedAllowed();
 
 			switch (status) {
 			case START:
@@ -1097,20 +1195,19 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public String getDefaultMilestones(String product) {
-		RepositoryConfigurationItem productData = data.getNamedItem(BugzillaAttribute.PRODUCT, product);
-		if (productData instanceof RepositoryConfigurationProductItem) {
-			RepositoryConfigurationProductItem productConfiguration = (RepositoryConfigurationProductItem) productData;
-			return productConfiguration.getDefaultMilestone();
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getDefaultMilestone();
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	public void setDefaultMilestone(String product, String defaultMilestone) {
-		RepositoryConfigurationProductItem entry = (RepositoryConfigurationProductItem) data.getNamedItem(
-				BugzillaAttribute.PRODUCT, product);
+		ProductEntry entry = products.get(product);
 		if (entry == null) {
-			entry = new RepositoryConfigurationProductItem(product);
-			data.addNamedItem(BugzillaAttribute.PRODUCT, entry);
+			entry = new ProductEntry(product);
+			products.put(product, entry);
 		}
 		entry.setDefaultMilestone(defaultMilestone);
 	}
@@ -1124,11 +1221,11 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public Boolean getUnconfirmedAllowed(String product) {
-		RepositoryConfigurationItem productData = data.getNamedItem(BugzillaAttribute.PRODUCT, product);
-		if (productData instanceof RepositoryConfigurationProductItem) {
-			RepositoryConfigurationProductItem productConfiguration = (RepositoryConfigurationProductItem) productData;
-			return productConfiguration.getUnconfirmedAllowed();
+		ProductEntry entry = products.get(product);
+		if (entry != null) {
+			return entry.getUnconfirmedAllowed();
+		} else {
+			return null;
 		}
-		return null;
 	}
 }
