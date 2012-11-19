@@ -291,7 +291,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		createSettingControls(innerComposite.getContent());
 		createValidationControls(innerComposite.getContent());
 		if (needsValidateOnFinish()) {
-			validateOnFinishButton = new Button(innerComposite, SWT.CHECK);
+			validateOnFinishButton = new Button(innerComposite.getContent(), SWT.CHECK);
 			validateOnFinishButton.setText(Messages.AbstractRepositorySettingsPage_Validate_on_Finish);
 			validateOnFinishButton.setSelection(true);
 		}
