@@ -71,7 +71,13 @@ public class Messages extends NLS {
 
 	public static String TaskActivationExternalizationParticipant_Task_Activation_History;
 
+	public static String TaskAttachmentEditorViewer_Do_not_warn_me_again;
+
+	public static String TaskAttachmentEditorViewer_Open_Attachment;
+
 	public static String TaskAttachmentEditorViewer_openingAttachment;
+
+	public static String TaskAttachmentEditorViewer_Some_files_can_harm_your_computer;
 
 	public static String TaskAttachmentViewerBrowser_browser;
 

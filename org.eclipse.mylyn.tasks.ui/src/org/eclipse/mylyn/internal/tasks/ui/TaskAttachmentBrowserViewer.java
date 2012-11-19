@@ -31,4 +31,8 @@ public class TaskAttachmentBrowserViewer implements ITaskAttachmentViewer {
 		TasksUiUtil.openUrl(attachment.getUrl());
 	}
 
+	public boolean isWorkbenchDefault() {
+		return false;
+	}
+
 }

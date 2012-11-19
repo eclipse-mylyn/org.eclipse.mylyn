@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskAttachmentViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskAttachmentViewerManager;
@@ -27,6 +28,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -63,11 +65,17 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 			index += itemsAdded;
 		}
 
+		int defaultViewerIndex = -1;
 		List<ITaskAttachmentViewer> viewers = manager.getWorkbenchViewers(attachment);
 		if (viewers.size() > 0) {
 			itemsAdded = addSeparator(menu, index, itemsAdded);
 			index += itemsAdded;
 
+			for (int i = 0; i < viewers.size(); i++) {
+				if (viewers.get(i).isWorkbenchDefault()) {
+					defaultViewerIndex = index + i;
+				}
+			}
 			itemsAdded = addItems(menu, index, viewers, attachments, viewerId);
 			index += itemsAdded;
 		}
@@ -77,9 +85,29 @@ public class OpenTaskAttachmentWithMenu extends ContributionItem {
 			itemsAdded = addSeparator(menu, index, itemsAdded);
 			index += itemsAdded;
 
+			if (defaultViewerIndex == -1 && Platform.getOS().equals(Platform.OS_WIN32)) {
+				for (int i = 0; i < viewers.size(); i++) {
+					if (IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID.equals(viewers.get(i).getId())) {
+						defaultViewerIndex = index + i;
+					}
+				}
+			}
 			itemsAdded = addItems(menu, index, viewers, attachments, viewerId);
 			index += itemsAdded;
 		}
+		if (defaultViewerIndex != -1) {
+			boolean selectedPreferredViewer = false;
+			for (MenuItem item : menu.getItems()) {
+				if (item.getSelection()) {
+					selectedPreferredViewer = true;
+					break;
+				}
+			}
+			if (!selectedPreferredViewer) {
+				menu.getItem(defaultViewerIndex).setSelection(true);
+			}
+		}
+
 	}
 
 	protected int addSeparator(Menu menu, int index, int itemsAdded) {

@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -41,7 +42,7 @@ public class TaskAttachmentViewerManager {
 
 		IEditorDescriptor defaultEditor = registry.getDefaultEditor(AttachmentUtil.getAttachmentFilename(attachment));
 		if (defaultEditor != null) {
-			result.add(new TaskAttachmentEditorViewer(defaultEditor));
+			result.add(new TaskAttachmentEditorViewer(defaultEditor, true));
 		}
 
 		IEditorDescriptor defaultTextEditor = registry.findEditor(EditorsUI.DEFAULT_TEXT_EDITOR_ID); // may be null
@@ -67,11 +68,11 @@ public class TaskAttachmentViewerManager {
 		// Don't check whether system external editor is available (IEditorRegistry.isSystemExternalEditorAvailable) ...
 		// At least Windows can handle even unknown files, and offers user to choose correct program to open file with
 		IEditorDescriptor extern = registry.findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-		result.add(new TaskAttachmentEditorViewer(extern));
+		result.add(new TaskAttachmentEditorViewer(extern, false, true));
 
 		if (registry.isSystemInPlaceEditorAvailable(AttachmentUtil.getAttachmentFilename(attachment))) {
 			IEditorDescriptor inplace = registry.findEditor(IEditorRegistry.SYSTEM_INPLACE_EDITOR_ID);
-			result.add(new TaskAttachmentEditorViewer(inplace));
+			result.add(new TaskAttachmentEditorViewer(inplace, false, true));
 		}
 
 		return result;
@@ -93,22 +94,27 @@ public class TaskAttachmentViewerManager {
 	 * @return preferred attachment viewers, or null if no suitable viewer can be found
 	 */
 	public ITaskAttachmentViewer getPreferredViewer(ITaskAttachment attachment) {
+		/*
+		 * Find viewers in order of preference: preferred, workbench default, system editor, first editor in list
+		 */
 		List<ITaskAttachmentViewer> viewers = getTaskAttachmentViewers(attachment);
-
+		ITaskAttachmentViewer defaultViewer = null;
 		String preferred = getPreferredViewerID(attachment);
-		if (preferred != null) {
-			for (int i = 0; i < viewers.size(); i++) {
-				if (preferred.equals(viewers.get(i).getId())) {
-					return viewers.get(i);
-				}
+		for (ITaskAttachmentViewer viewer : viewers) {
+			if ((preferred != null && preferred.equals(viewer.getId()))) {
+				return viewer;
+			} else if (viewer.isWorkbenchDefault()) {
+				defaultViewer = viewer;
+			} else if (defaultViewer == null && Platform.getOS().equals(Platform.OS_WIN32)
+					&& IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID.equals(viewer.getId())) {
+				defaultViewer = viewer;
 			}
 		}
-
-		if (viewers.isEmpty()) {
-			return null;
+		if (defaultViewer == null && !viewers.isEmpty()) {
+			defaultViewer = viewers.get(0);
 		}
 
-		return viewers.get(0);
+		return defaultViewer;
 	}
 
 	public String getPreferredViewerID(ITaskAttachment attachment) {
@@ -118,7 +124,7 @@ public class TaskAttachmentViewerManager {
 		}
 
 		return getPreferencesStore().getString(
-				ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext); //$NON-NLS-1$
+				ITasksUiPreferenceConstants.PREFERRED_TASK_ATTACHMENT_VIEWER_ID + "_" + ext);//$NON-NLS-1$
 	}
 
 	private IPreferenceStore getPreferencesStore() {

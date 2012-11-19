@@ -32,4 +32,6 @@ public interface ITaskAttachmentViewer {
 	public String getLabel();
 
 	public void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) throws CoreException;
+
+	public boolean isWorkbenchDefault();
 }
