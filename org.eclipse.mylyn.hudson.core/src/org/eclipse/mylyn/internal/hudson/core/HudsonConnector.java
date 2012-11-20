@@ -66,18 +66,20 @@ public class HudsonConnector extends BuildConnector {
 	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
 		if (url.startsWith(server.getUrl())) {
 			String path = url.substring(server.getUrl().length());
-			Pattern p = Pattern.compile(".*/job/(.*)/(\\d+)");
+			Pattern p = Pattern.compile("(.*/job/(.*)/)(\\d+)");
 			Matcher matcher = p.matcher(url);
 			if (matcher.find()) {
 				IBuildPlan plan = IBuildFactory.INSTANCE.createBuildPlan();
 				plan.setServer(server);
-				plan.setName(matcher.group(1));
-				plan.setId(matcher.group(1));
+				plan.setName(matcher.group(2));
+				plan.setId(matcher.group(2));
+				plan.setUrl(matcher.group(1));
 
 				IBuild build = IBuildFactory.INSTANCE.createBuild();
-				build.setId(matcher.group(2));
-				build.setLabel(matcher.group(2));
+				build.setId(matcher.group(3));
+				build.setLabel(matcher.group(3));
 				build.setPlan(plan);
+				build.setUrl(url);
 				return build;
 			}
 		}

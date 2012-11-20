@@ -34,6 +34,8 @@ public class HudsonConnectorTest extends TestCase {
 		IBuild build = (IBuild) element;
 		assertEquals("3", build.getId());
 		assertEquals("my-plan", build.getPlan().getId());
+		assertEquals("http://server/job/my-plan/3/", build.getUrl());
+		assertEquals("http://server/job/my-plan/", build.getPlan().getUrl());
 	}
 
 	public void testBuildElementFromUrlViewsUrl() throws Exception {
@@ -46,6 +48,8 @@ public class HudsonConnectorTest extends TestCase {
 		IBuild build = (IBuild) element;
 		assertEquals("3", build.getId());
 		assertEquals("my-plan", build.getPlan().getId());
+		assertEquals("http://server/me/my-view/All/job/my-plan/3/", build.getUrl());
+		assertEquals("http://server/me/my-view/All/job/my-plan/", build.getPlan().getUrl());
 	}
 
 	public void testBuildElementFromUrlUserUrl() throws Exception {

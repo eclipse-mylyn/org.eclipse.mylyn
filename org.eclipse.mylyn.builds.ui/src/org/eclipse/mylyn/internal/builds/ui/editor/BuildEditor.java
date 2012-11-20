@@ -21,6 +21,7 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
@@ -50,6 +51,8 @@ import org.eclipse.ui.forms.widgets.Form;
 public class BuildEditor extends SharedHeaderFormEditor {
 
 	private IBuildPlan plan;
+
+	private IBuild build;
 
 	@Override
 	protected void addPages() {
@@ -97,6 +100,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		super.init(site, input);
 
 		this.plan = ((BuildEditorInput) input).getPlan();
+		this.build = ((BuildEditorInput) input).getBuild();
 		setPartName(input.getName());
 	}
 
@@ -149,7 +153,11 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		Action openWithBrowserAction = new Action() {
 			@Override
 			public void run() {
-				BrowserUtil.openUrl(plan.getUrl());
+				if (build != null) {
+					BrowserUtil.openUrl(build.getUrl(), BrowserUtil.NO_RICH_EDITOR);
+				} else {
+					BrowserUtil.openUrl(plan.getUrl(), BrowserUtil.NO_RICH_EDITOR);
+				}
 			}
 		};
 		openWithBrowserAction.setImageDescriptor(CommonImages.WEB);
