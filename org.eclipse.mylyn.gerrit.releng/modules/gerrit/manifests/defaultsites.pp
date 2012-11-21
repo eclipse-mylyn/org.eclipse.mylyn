@@ -1,4 +1,6 @@
 define gerrit::defaultsites {
+  $userOwner = "tools"
+  $userGroup = "tools"
 
 exec { "apt-get update":
     command => "apt-get update",
