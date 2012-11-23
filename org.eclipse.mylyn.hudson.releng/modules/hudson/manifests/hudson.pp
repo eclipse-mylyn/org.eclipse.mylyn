@@ -3,6 +3,8 @@ define hudson::hudson(
 	$type,
 	$qualifier = "",
 	$base = $hudson::base,
+	$userOwner = $hudson::userOwner,
+	$userGroup = $hudson::userGroup,
 ) {
 
   include "hudson"
@@ -10,6 +12,7 @@ define hudson::hudson(
 	exec { "prepare $version":
 		command => "mkdir -p $base/archive $base/conf.d",
 		creates => "$base/archive",
+		user => "$userOwner",
 		require => Exec["prepare hudson"],
 	}
 
@@ -32,8 +35,9 @@ define hudson::hudson(
 
 	exec { "download $version":
     command => "wget -O '$base/archive/${type}-$version.war' '$url'",
-	  creates => "$base/archive/${type}-$version.war",
-	  require => Exec["prepare $version"],
+      creates => "$base/archive/${type}-$version.war",
+      user => "$userOwner",
+      require => Exec["prepare $version"],
 	}
 
 }

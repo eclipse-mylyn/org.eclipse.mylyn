@@ -4,11 +4,13 @@ define hudson::site(
 	$data,
 	$port,
 	$version,
-  $allbasicauth = false,
-  $certauth = false,
-  $digestauth = false,
+    $allbasicauth = false,
+    $certauth = false,
+    $digestauth = false,
 	$base = $hudson::base,
 	$envinfo = "",
+	$userOwner = $hudson::userOwner,
+	$userGroup = $hudson::userGroup,
 ) { 
 	$envbase = "$base/$envid"
 	$conf = "$base/conf.d"
@@ -23,17 +25,23 @@ define hudson::site(
   file { "$envbase":
     source => "puppet:///modules/hudson/${data}",
     recurse => true,
+    owner   => "$userOwner",
+    group   => "$userGroup",
     require => Exec["stop $envid"],
   }
 
 	if $digestauth {
 		file { "$envbase/htpasswd.digest":
     	content => template('hudson/htpasswd.digest.erb'),
+        owner   => "$userOwner",
+        group   => "$userGroup",
 			require => File["$envbase"],
 		}
 	} else {
 		file { "$envbase/htpasswd":
 	    content => template('hudson/htpasswd.erb'),
+        owner   => "$userOwner",
+        group   => "$userGroup",
 			require => File["$envbase"],
 		}
 	}
@@ -46,17 +54,23 @@ define hudson::site(
   file { "$envbase/start.sh":
     content => template('hudson/start.sh.erb'),
     mode => 755,
+    owner   => "$userOwner",
+    group   => "$userGroup",
     require => File["$envbase"],
   }
 
   file { "$envbase/stop.sh":
     content => template('hudson/stop.sh.erb'),
     mode => 755,
+    owner   => "$userOwner",
+    group   => "$userGroup",
     require => File["$envbase"],
   }
 
   file { "$envbase/service.json":
     content => template('hudson/service.json.erb'),
+    owner   => "$userOwner",
+    group   => "$userGroup",
     require => File["$envbase"],
   }
 
@@ -64,7 +78,8 @@ define hudson::site(
     command => "$envbase/start.sh",
     cwd => "$envbase",
     require => File["$envbase/start.sh"],
-    creates => "$envbase/pid",
+    user   => "$userOwner",
+     creates => "$envbase/pid",
   }
 
   exec { "add $envbase to apache":
