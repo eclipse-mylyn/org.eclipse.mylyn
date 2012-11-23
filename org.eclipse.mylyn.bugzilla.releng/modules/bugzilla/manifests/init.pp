@@ -3,15 +3,34 @@ define bugzillaVersion (
   $minor,
   $branch               = " ",
   $bugz_dbname          = "$title",
-
   $www_url              = "$title",
   $version              = "$title",
   $branchTag            = "bugzilla-stable",
   $custom_wf            = false,
   $custom_wf_and_status = false,
   $xmlrpc_enabled       = true,
-  $base                 = "/home/tools/bugzilla") {
-    
+  $base                 = "/home/tools/bugzilla",
+  $envtype              = "bugzilla",
+  $envid                = "$title",
+  ) {
+
+  if $branch == "trunk" {
+        $envinfo = "trunk"  
+  } else {
+    if $xmlrpc_enabled {
+      if $custom_wf {
+        $envinfo = "Custom Workflow"  
+      } else {
+        if $custom_wf_and_status {
+          $envinfo = "Custom Workflow and Status"  
+        } else {
+          $envinfo = ""  
+        }
+      }
+    } else {
+      $envinfo = "XML-RPC disabled"
+    }
+  }
   if $major == "3" {
     if $minor == "6" {
       $VersionCreateName = "name"
@@ -73,21 +92,21 @@ define bugzillaVersion (
     "/usr/bin/mysql --user=root --batch -e \"SELECT user FROM db WHERE Host='localhost' and Db='${bugz_dbname}' and User='${bugzilla::dbuser}'\" mysql | /bin/grep '${bugzilla::dbuser}'",
     command   => "/usr/bin/mysql --verbose --user=root -e \"GRANT ALL ON ${bugz_dbname}.* TO '${bugzilla::dbuser}'@localhost\" \
         		; /usr/bin/mysqladmin --verbose --user=root flush-privileges",
-    logoutput => true,
+##    logoutput => true,
     require   => Exec["post extract bugzilla $version"]
   }
 
   exec { "mysql-dropdb-$version":
     onlyif    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
     command   => "/usr/bin/mysqladmin -v --user=root --force drop '${bugz_dbname}'",
-    logoutput => true,
+##    logoutput => true,
     require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
   }
 
   exec { "mysql-createdb-$version":
     unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
     command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
-    logoutput => true,
+##    logoutput => true,
     require   => Exec["mysql-dropdb-$version"]
   }
 
@@ -132,7 +151,7 @@ define bugzillaVersion (
     command   => "$base/$version/checksetup.pl $bugzilla::installHelper/answers$version -verbose",
     cwd       => "$base/$version",
     user => "$bugzilla::userOwner",
-    logoutput => true,
+##    logoutput => true,
     require   => [
       EXEC["mysql-createdb-$version"],
       EXEC["init bugzilla_checksetup $version"],
@@ -148,6 +167,13 @@ define bugzillaVersion (
       mode    => 755,
       require => Exec["update bugzilla_checksetup $version"],
     }
+  }
+
+  file { "$base/$version/service.json":
+    content => template('bugzilla/service.json.erb'),
+    owner   => "$bugzilla::userOwner",
+    group   => "$bugzilla::userGroup",
+    require =>  Exec["update bugzilla_checksetup $version"],
   }
 
   file { "$bugzilla::confDir/$version.conf":
