@@ -36,6 +36,17 @@ define bugzillaVersion (
       timeout => 300,
       creates => "$base/$version",
     }
+ 
+ 	# we need a extras setup because for bughead we need
+	# template 2.24 but libtemplate-perl from precise32 is only 2.22
+    exec { "post extract bugzilla $version":
+      command => "/usr/bin/perl install-module.pl Template >$base/$version/extra.out",
+      cwd     => "$base/$version",
+      creates => "$base/$version/extra.out",
+      user => "$bugzilla::userOwner",
+      timeout => 300,
+      require   => Exec["extract bugzilla $version"]
+    }
   } else {
     exec { "extract bugzilla $version":
       command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branchName $version",
@@ -43,6 +54,17 @@ define bugzillaVersion (
       user => "$bugzilla::userOwner",
       timeout => 300,
       creates => "$base/$version",
+    }
+
+	# we need no extras setup because for bugzilla <= 4.4 all
+	# perl libs have the correct version
+    exec { "post extract bugzilla $version":
+      command => "ls >$base/$version/extra.out",
+      cwd     => "$base/$version",
+      creates => "$base/$version/extra.out",
+      user => "$bugzilla::userOwner",
+      timeout => 300,
+      require   => Exec["extract bugzilla $version"]
     }
   }
 
@@ -52,7 +74,7 @@ define bugzillaVersion (
     command   => "/usr/bin/mysql --verbose --user=root -e \"GRANT ALL ON ${bugz_dbname}.* TO '${bugzilla::dbuser}'@localhost\" \
         		; /usr/bin/mysqladmin --verbose --user=root flush-privileges",
     logoutput => true,
-    require   => Exec["extract bugzilla $version"]
+    require   => Exec["post extract bugzilla $version"]
   }
 
   exec { "mysql-dropdb-$version":
@@ -73,7 +95,7 @@ define bugzillaVersion (
     content => template('bugzilla/answers.erb'),
     owner   => "$bugzilla::userOwner",
     group   => "$bugzilla::userGroup",
-    require => Exec["extract bugzilla $version"],
+    require => Exec["post extract bugzilla $version"],
   }
 
   file { "$base/$version/extensions/Mylyn":
@@ -84,7 +106,7 @@ define bugzillaVersion (
     owner   => "$bugzilla::userOwner",
     group   => "$bugzilla::userGroup",
     source  => "puppet:///modules/bugzilla/extensions/Mylyn",
-    require => Exec["extract bugzilla $version"],
+    require => Exec["post extract bugzilla $version"],
   }
 
   file { "$base/$version/extensions/Mylyn/Extension.pm":
