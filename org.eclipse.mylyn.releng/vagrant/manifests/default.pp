@@ -1,12 +1,21 @@
-$content ="#!/bin/bash
+$content ='#!/bin/bash
 
 echo content-type: application/json
 echo
 
-echo '['
-find /home/tools -name service.json | xargs cat
-echo ']'
-"
+echo "["
+c=0
+for i in $(find /home/tools -name "service*.json")
+do
+  if [ $c != 0 ]
+  then
+    echo ","
+  fi
+  cat $i
+  c=c+1
+done
+echo "]"
+'
 
 file { "/usr/lib/cgi-bin/services":
   content => "$content",
