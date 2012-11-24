@@ -9,8 +9,9 @@ define trac::site (
   $digestauth           = false,
   $base                 = $trac::base,
   $envtype              = "trac",
-  $envinfo              = "",) {
-    
+  $envinfo              = "",
+  $userOwner            = $trac::userOwner,
+  $userGroup            = $trac::userGroup,) {
   $prefix = "$base/share/trac-$version"
   $envbase = "$base/var/$envid"
   $env = "$base/var/$envid/env"
@@ -22,17 +23,20 @@ define trac::site (
     command => "mkdir -p $base/bin $base/conf.d $base/src $base/var $envbase",
     creates => "$envbase",
     require => Exec["prepare trac"],
+    user    => "$userOwner",
   }
 
   file { "$envbase":
     ensure  => "directory",
     owner   => "www-data",
+    group   => "$userGroup",
     require => Exec["prepare $envbase"],
   }
 
   file { "$envbase/svn":
     ensure  => "directory",
     owner   => "www-data",
+    group   => "$userGroup",
     require => File["$envbase"],
   }
 
@@ -40,6 +44,7 @@ define trac::site (
     command => "svnadmin create $envbase/svn",
     require => File["$envbase/svn"],
     creates => "$envbase/svn/format",
+    user    => "www-data",
   }
 
   exec { "initenv $envid":
@@ -80,22 +85,30 @@ define trac::site (
   file { "$env/conf/trac.ini":
     content => template('trac/trac.ini.erb'),
     require => Exec["initenv $envid"],
+    owner   => "www-data",
+    group   => "$userGroup",
   }
 
   file { "$conf/$envid.conf":
     content => template('trac/trac.conf.erb'),
     require => Exec["prepare $envbase"],
+    owner   => "$userOwner",
+    group   => "$userGroup",
   }
 
   if $digestauth {
     file { "$envbase/htpasswd.digest":
       content => template('trac/htpasswd.digest.erb'),
       require => File["$envbase"],
+      owner   => "$userOwner",
+      group   => "$userGroup",
     }
   } else {
     file { "$envbase/htpasswd":
       content => template('trac/htpasswd.erb'),
       require => File["$envbase"],
+      owner   => "$userOwner",
+      group   => "$userGroup",
     }
   }
 
@@ -103,12 +116,16 @@ define trac::site (
     content => template('trac/trac.fcgi.erb'),
     mode    => 755,
     require => File["$envbase"],
+    owner   => "$userOwner",
+    group   => "$userGroup",
   }
 
   if $xmlrpcplugin {
     file { "$env/plugins/TracXMLRPC.egg":
       source  => "$base/src/xmlrpcplugin-$xmlrpcplugin/src/dist/TracXMLRPC.egg",
       require => Exec["initenv $envid"],
+      owner   => "$userOwner",
+      group   => "$userGroup",
     }
 
     exec { "add xmlrpc permissions $envid":
@@ -125,12 +142,9 @@ define trac::site (
     file { "$env/plugins/TracAccountManager.egg":
       source  => "$base/src/accountmanagerplugin-$accountmanagerplugin/src/dist/TracAccountManager.egg",
       require => Exec["initenv $envid"],
+      owner   => "$userOwner",
+      group   => "$userGroup",
     }
-  }
-
-  file { "$envbase/service.json":
-    content => template('trac/service.json.erb'),
-    require => File["$envbase"],
   }
 
   exec { "add $envbase to /etc/apache2/conf.d/trac.conf":
@@ -138,6 +152,22 @@ define trac::site (
     require => File["$conf/$envid.conf"],
     notify  => Service["apache2"],
     onlyif  => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/trac.conf; test $? != 0"
+  }
+
+  trac::service { "${envid}-xml-rpc":
+    envid      => "$title",
+    version    => "$version",
+    envinfo    => "$envinfo",
+    envmode    => "XML-RPC",
+    accessmode => "XML_RPC",
+  }
+
+  trac::service { "${envid}-web":
+    envid      => "$title",
+    version    => "$version",
+    envinfo    => "$envinfo",
+    envmode    => "Web",
+    accessmode => "TRAC_0_9",
   }
 
 }

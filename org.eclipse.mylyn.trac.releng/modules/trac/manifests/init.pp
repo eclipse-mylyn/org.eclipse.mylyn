@@ -1,5 +1,7 @@
 class trac {
   $base = "/home/tools/trac"
+  $userOwner = "tools"
+  $userGroup = "tools"
 
   /* Common requirements for all Trac instances */
 
