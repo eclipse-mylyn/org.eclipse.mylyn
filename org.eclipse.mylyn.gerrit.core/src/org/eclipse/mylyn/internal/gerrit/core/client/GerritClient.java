@@ -546,8 +546,8 @@ public class GerritClient {
 	}
 
 	/**
-	 * Called to get all gerrit tasks associated with the id of the user. This includes all open, closed and reviewable
-	 * reviews for the user.
+	 * Returns changes associated with the logged in user. This includes all open, closed and review requests for the
+	 * user. On Gerrit 2.4 and earlier closed reviews are not included.
 	 */
 	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
 		if (!restQueryAPIEnabled) {
@@ -573,7 +573,7 @@ public class GerritClient {
 			}
 		}
 		// the "self" alias is only supported in Gerrit 2.5 and later
-		return executeQueryRest(monitor, "is:open owner:self reviewer:self");
+		return executeQueryRest(monitor, "owner:self reviewer:self"); //$NON-NLS-1$
 	}
 
 	/**
