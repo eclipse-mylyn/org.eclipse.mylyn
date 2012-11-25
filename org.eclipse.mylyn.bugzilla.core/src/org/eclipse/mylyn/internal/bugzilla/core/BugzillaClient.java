@@ -815,10 +815,9 @@ public class BugzillaClient {
 	public void getAttachmentData(String attachmentId, OutputStream out, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-		GetMethod method = connectInternal(url, false, monitor, null);//getConnectGzip(url, monitor);
+		GetMethod method = getConnect(url, monitor);//getConnectGzip(url, monitor);
 		try {
-			int status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			if (status == HttpStatus.SC_OK) {
+			if (method.getStatusCode() == HttpStatus.SC_OK) {
 				//copy the response
 				InputStream instream = method.getResponseBodyAsStream();
 				if (instream != null) {
@@ -831,8 +830,6 @@ public class BugzillaClient {
 			} else {
 				parseHtmlError(method.getResponseBodyAsStream());
 			}
-		} catch (IOException e) {
-			throw e;
 		} finally {
 			WebUtil.releaseConnection(method, monitor);
 		}
