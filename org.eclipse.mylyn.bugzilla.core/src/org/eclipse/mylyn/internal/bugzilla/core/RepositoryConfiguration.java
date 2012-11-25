@@ -91,6 +91,10 @@ public class RepositoryConfiguration implements Serializable {
 	public RepositoryConfiguration() {
 	}
 
+	public List<String> getResolutions() {
+		return resolutionValues;
+	}
+
 	/**
 	 * Adds a product to the configuration.
 	 */
@@ -104,7 +108,7 @@ public class RepositoryConfiguration implements Serializable {
 	/**
 	 * Returns an array of names of current products.
 	 */
-	private List<String> getProducts() {
+	public List<String> getProducts() {
 		ArrayList<String> productList = new ArrayList<String>(products.keySet());
 		Collections.sort(productList, String.CASE_INSENSITIVE_ORDER);
 		return productList;
@@ -114,7 +118,7 @@ public class RepositoryConfiguration implements Serializable {
 	 * Returns an array of names of component that exist for a given product or <code>null</code> if the product does
 	 * not exist.
 	 */
-	private List<String> getComponents(String product) {
+	public List<String> getComponents(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getComponents();
@@ -127,13 +131,41 @@ public class RepositoryConfiguration implements Serializable {
 	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
 	 * exist.
 	 */
-	private List<String> getVersions(String product) {
+	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getVersions();
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	/**
+	 * Returns an array of names of valid severity values.
+	 */
+	public List<String> getSeverities() {
+		return severities;
+	}
+
+	/**
+	 * Returns an array of names of valid OS values.
+	 */
+	public List<String> getOSs() {
+		return operatingSystems;
+	}
+
+	/**
+	 * Returns an array of names of valid platform values.
+	 */
+	public List<String> getPlatforms() {
+		return platforms;
+	}
+
+	/**
+	 * Returns an array of names of valid platform values.
+	 */
+	public List<String> getPriorities() {
+		return priorities;
 	}
 
 	/**
@@ -163,6 +195,10 @@ public class RepositoryConfiguration implements Serializable {
 		entry.addVersion(version);
 	}
 
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
 	public void setInstallVersion(String version) {
 		this.version = new BugzillaVersion(version);
 	}
@@ -185,7 +221,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	}
 
-	private List<String> getTargetMilestones(String product) {
+	public List<String> getTargetMilestones(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getTargetMilestones();
@@ -292,6 +328,18 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addClosedStatusValue(String value) {
 		closedStatusValues.add(value);
+	}
+
+	public List<String> getComponents() {
+		return components;
+	}
+
+	public List<String> getTargetMilestones() {
+		return milestones;
+	}
+
+	public List<String> getVersions() {
+		return versions;
 	}
 
 	public String getRepositoryUrl() {
