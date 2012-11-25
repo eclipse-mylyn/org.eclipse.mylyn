@@ -29,6 +29,7 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.CustomTransitionManager;
@@ -696,12 +697,12 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 
-		for (String product : repositoryConfiguration.getProducts()) {
+		for (String product : repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT)) {
 			repositoryConfiguration.setDefaultMilestone(product, null);
 		}
 
 		bugzillaClient.updateProductInfo(new NullProgressMonitor(), repositoryConfiguration);
-		for (String product : repositoryConfiguration.getProducts()) {
+		for (String product : repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT)) {
 			if (product.equals("ManualTest") || product.equals("Product with Spaces") || product.equals("TestProduct")) {
 				assertEquals("---", repositoryConfiguration.getDefaultMilestones(product));
 			} else {

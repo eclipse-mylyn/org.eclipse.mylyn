@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
@@ -43,12 +44,12 @@ public class BugzillaConfigurationTest extends TestCase {
 		RepositoryConfiguration configuration1 = new RepositoryConfiguration();
 		configuration1.setRepositoryUrl("url1");
 		configuration1.addProduct("Test Product 1");
-		assertEquals(1, configuration1.getProducts().size());
+		assertEquals(1, configuration1.getOptionValues(BugzillaAttribute.PRODUCT).size());
 
 		RepositoryConfiguration configuration2 = new RepositoryConfiguration();
 		configuration1.setRepositoryUrl("url2");
 		configuration2.addProduct("Test Product 2");
-		assertEquals(1, configuration2.getProducts().size());
+		assertEquals(1, configuration2.getOptionValues(BugzillaAttribute.PRODUCT).size());
 
 		connector.addRepositoryConfiguration(configuration1);
 		connector.addRepositoryConfiguration(configuration2);
@@ -66,8 +67,9 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertNotNull(connector.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
 		assertNotNull(connector.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
 		RepositoryConfiguration testLoadedConfig = connector.getRepositoryConfiguration(configuration1.getRepositoryUrl());
-		assertEquals(1, testLoadedConfig.getProducts().size());
-		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
+		assertEquals(1, testLoadedConfig.getOptionValues(BugzillaAttribute.PRODUCT).size());
+		assertEquals(configuration1.getOptionValues(BugzillaAttribute.PRODUCT).get(0),
+				testLoadedConfig.getOptionValues(BugzillaAttribute.PRODUCT).get(0));
 	}
 
 	public void testNullCacheFile() {
@@ -142,7 +144,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		assertNotNull(config);
 
-		assertTrue(config.getProducts().contains(
+		assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT).contains(
 				"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
 		// Add your additional checking for valid data here if necessary

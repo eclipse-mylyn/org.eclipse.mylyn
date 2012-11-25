@@ -95,16 +95,8 @@ public class RepositoryConfiguration implements Serializable {
 		bugStatus.add(status);
 	}
 
-	public List<String> getStatusValues() {
-		return bugStatus;
-	}
-
 	public void addResolution(String res) {
 		resolutionValues.add(res);
-	}
-
-	public List<String> getResolutions() {
-		return resolutionValues;
 	}
 
 	/**
@@ -120,7 +112,7 @@ public class RepositoryConfiguration implements Serializable {
 	/**
 	 * Returns an array of names of current products.
 	 */
-	public List<String> getProducts() {
+	private List<String> getProducts() {
 		ArrayList<String> productList = new ArrayList<String>(products.keySet());
 		Collections.sort(productList, String.CASE_INSENSITIVE_ORDER);
 		return productList;
@@ -130,7 +122,7 @@ public class RepositoryConfiguration implements Serializable {
 	 * Returns an array of names of component that exist for a given product or <code>null</code> if the product does
 	 * not exist.
 	 */
-	public List<String> getComponents(String product) {
+	private List<String> getComponents(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getComponents();
@@ -143,7 +135,7 @@ public class RepositoryConfiguration implements Serializable {
 	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
 	 * exist.
 	 */
-	public List<String> getVersions(String product) {
+	private List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getVersions();
@@ -152,36 +144,8 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	/**
-	 * Returns an array of names of valid severity values.
-	 */
-	public List<String> getSeverities() {
-		return severities;
-	}
-
-	/**
-	 * Returns an array of names of valid OS values.
-	 */
-	public List<String> getOSs() {
-		return operatingSystems;
-	}
-
 	public void addOS(String os) {
 		operatingSystems.add(os);
-	}
-
-	/**
-	 * Returns an array of names of valid platform values.
-	 */
-	public List<String> getPlatforms() {
-		return platforms;
-	}
-
-	/**
-	 * Returns an array of names of valid platform values.
-	 */
-	public List<String> getPriorities() {
-		return priorities;
 	}
 
 	/**
@@ -213,10 +177,6 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addKeyword(String keyword) {
 		keywords.add(keyword);
-	}
-
-	public List<String> getKeywords() {
-		return keywords;
 	}
 
 	public void addPlatform(String platform) {
@@ -253,7 +213,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	}
 
-	public List<String> getTargetMilestones(String product) {
+	private List<String> getTargetMilestones(String product) {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getTargetMilestones();
@@ -362,18 +322,6 @@ public class RepositoryConfiguration implements Serializable {
 		closedStatusValues.add(value);
 	}
 
-	public List<String> getComponents() {
-		return components;
-	}
-
-	public List<String> getTargetMilestones() {
-		return milestones;
-	}
-
-	public List<String> getVersions() {
-		return versions;
-	}
-
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -416,33 +364,43 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	/*
-	 * Intermediate step until configuration is made generic.
-	 */
-	public List<String> getOptionValues(BugzillaAttribute element, String product) {
+	public List<String> getOptionValues(BugzillaAttribute element) {
 		switch (element) {
 		case PRODUCT:
 			return getProducts();
 		case TARGET_MILESTONE:
-			return getTargetMilestones(product);
+			return milestones;
 		case BUG_STATUS:
-			return getStatusValues();
+			return bugStatus;
+		case VERSION:
+			return versions;
+		case COMPONENT:
+			return components;
+		case REP_PLATFORM:
+			return platforms;
+		case OP_SYS:
+			return operatingSystems;
+		case PRIORITY:
+			return priorities;
+		case BUG_SEVERITY:
+			return severities;
+		case KEYWORDS:
+			return keywords;
+		case RESOLUTION:
+			return resolutionValues;
+		default:
+			return Collections.emptyList();
+		}
+	}
+
+	public List<String> getProductOptionValues(BugzillaAttribute element, String product) {
+		switch (element) {
+		case TARGET_MILESTONE:
+			return getTargetMilestones(product);
 		case VERSION:
 			return getVersions(product);
 		case COMPONENT:
 			return getComponents(product);
-		case REP_PLATFORM:
-			return getPlatforms();
-		case OP_SYS:
-			return getOSs();
-		case PRIORITY:
-			return getPriorities();
-		case BUG_SEVERITY:
-			return getSeverities();
-		case KEYWORDS:
-			return getKeywords();
-		case RESOLUTION:
-			return getResolutions();
 		default:
 			return Collections.emptyList();
 		}
@@ -644,9 +602,12 @@ public class RepositoryConfiguration implements Serializable {
 					}
 					throw e;
 				}
-
-				options = getOptionValues(element, product);
-
+				if ((element == BugzillaAttribute.TARGET_MILESTONE || element == BugzillaAttribute.VERSION || element == BugzillaAttribute.COMPONENT)
+						&& (product != null && !product.equals(""))) { //$NON-NLS-1$
+					options = getProductOptionValues(element, product);
+				} else {
+					options = getOptionValues(element);
+				}
 				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
 						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
 						&& element != BugzillaAttribute.BUG_STATUS && element != BugzillaAttribute.TARGET_MILESTONE
@@ -666,8 +627,10 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			addValidOperationsBefore4(bugReport);
 		} else {
-			if (getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-					|| getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+			if (getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+					BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 				addValidOperationsAfter4(bugReport);
 			} else {
 				addValidOperationsBefore4(bugReport);
@@ -959,14 +922,14 @@ public class RepositoryConfiguration implements Serializable {
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
 			attrResolvedInput.getMetaData().setType(op.getInputType());
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
-			for (String resolution : getResolutions()) {
+			for (String resolution : getOptionValues(BugzillaAttribute.RESOLUTION)) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
 				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
-			if (getResolutions().size() > 0) {
-				attrResolvedInput.setValue(getResolutions().get(0));
+			if (getOptionValues(BugzillaAttribute.RESOLUTION).size() > 0) {
+				attrResolvedInput.setValue(getOptionValues(BugzillaAttribute.RESOLUTION).get(0));
 			}
 		} else if (op.toString().equals(BugzillaOperation.verify_with_resolution.toString()) && op.getInputId() != null) {
 			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
@@ -976,13 +939,13 @@ public class RepositoryConfiguration implements Serializable {
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
 			attrResolvedInput.getMetaData().setType(op.getInputType());
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
-			for (String resolution : getResolutions()) {
+			for (String resolution : getOptionValues(BugzillaAttribute.RESOLUTION)) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
 				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
-			if (getResolutions().size() > 0) {
+			if (getOptionValues(BugzillaAttribute.RESOLUTION).size() > 0) {
 				attrResolvedInput.setValue(oldResolutionValue);
 			}
 		} else if (op.toString().equals(BugzillaOperation.close_with_resolution.toString()) && op.getInputId() != null) {
@@ -991,14 +954,14 @@ public class RepositoryConfiguration implements Serializable {
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
 			attrResolvedInput.getMetaData().setType(op.getInputType());
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, op.getInputId());
-			for (String resolution : getResolutions()) {
+			for (String resolution : getOptionValues(BugzillaAttribute.RESOLUTION)) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
 				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) { //$NON-NLS-1$ //$NON-NLS-2$
 					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
-			if (getResolutions().size() > 0) {
-				attrResolvedInput.setValue(getResolutions().get(0));
+			if (getOptionValues(BugzillaAttribute.RESOLUTION).size() > 0) {
+				attrResolvedInput.setValue(getOptionValues(BugzillaAttribute.RESOLUTION).get(0));
 			}
 		} else if (op.toString() == BugzillaOperation.duplicate.toString()) {
 
@@ -1204,8 +1167,9 @@ public class RepositoryConfiguration implements Serializable {
 	public String getStartStatus() {
 		if (validTransitions == null) {
 			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
-					|| !(getStatusValues().contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) || getStatusValues().contains(
-							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
+					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
+							BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) || getOptionValues(
+							BugzillaAttribute.BUG_STATUS).contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
 					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
 					: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
