@@ -426,7 +426,7 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	public void addItem2Configuration(BugzillaAttribute element, String value) {
+	public void addItem(BugzillaAttribute element, String value) {
 		switch (element) {
 		case BUG_STATUS:
 			bugStatus.add(value);

@@ -307,23 +307,23 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				return;
 			}
 			if (state == (IN_STATUS)) {
-				configuration.addItem2Configuration(BugzillaAttribute.BUG_STATUS, characters.toString());
+				configuration.addItem(BugzillaAttribute.BUG_STATUS, characters.toString());
 			} else if (state == (IN_STATUS_OPEN)) {
 				configuration.addOpenStatusValue(characters.toString());
 			} else if (state == (IN_STATUS_CLOSED)) {
 				configuration.addClosedStatusValue(characters.toString());
 			} else if (state == (IN_RESOLUTION)) {
-				configuration.addItem2Configuration(BugzillaAttribute.RESOLUTION, characters.toString());
+				configuration.addItem(BugzillaAttribute.RESOLUTION, characters.toString());
 			} else if (state == (IN_KEYWORD)) {
-				configuration.addItem2Configuration(BugzillaAttribute.KEYWORDS, characters.toString());
+				configuration.addItem(BugzillaAttribute.KEYWORDS, characters.toString());
 			} else if (state == (IN_PLATFORM)) {
-				configuration.addItem2Configuration(BugzillaAttribute.REP_PLATFORM, characters.toString());
+				configuration.addItem(BugzillaAttribute.REP_PLATFORM, characters.toString());
 			} else if (state == (IN_OP_SYS)) {
-				configuration.addItem2Configuration(BugzillaAttribute.OP_SYS, characters.toString());
+				configuration.addItem(BugzillaAttribute.OP_SYS, characters.toString());
 			} else if (state == (IN_PRIORITY)) {
-				configuration.addItem2Configuration(BugzillaAttribute.PRIORITY, characters.toString());
+				configuration.addItem(BugzillaAttribute.PRIORITY, characters.toString());
 			} else if (state == (IN_SEVERITY)) {
-				configuration.addItem2Configuration(BugzillaAttribute.BUG_SEVERITY, characters.toString());
+				configuration.addItem(BugzillaAttribute.BUG_SEVERITY, characters.toString());
 			} else if (state == (IN_CUSTOM_OPTION)) {
 				// Option for CutstomFields
 				if (currentCustomOptionName != null) {
