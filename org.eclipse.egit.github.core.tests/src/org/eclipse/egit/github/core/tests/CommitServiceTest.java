@@ -160,11 +160,25 @@ public class CommitServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void getComments() throws IOException {
+	public void getCommitComments() throws IOException {
 		RepositoryId repo = new RepositoryId("o", "n");
 		service.getComments(repo, "abc");
 		GitHubRequest request = new GitHubRequest();
 		request.setUri(Utils.page("/repos/o/n/commits/abc/comments"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Get all commit comments
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getAllComments() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getComments(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/comments"));
 		verify(client).get(request);
 	}
 

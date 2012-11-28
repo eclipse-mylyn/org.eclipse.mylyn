@@ -425,4 +425,61 @@ public class CommitService extends GitHubService {
 
 		return client.post(uri.toString(), params, CommitStatus.class);
 	}
+
+	/**
+	 * Get all comments on all commits in the given repository
+	 *
+	 * @param repository
+	 * @return non-null but possibly empty list of commits
+	 * @throws IOException
+	 */
+	public List<CommitComment> getComments(IRepositoryIdProvider repository)
+			throws IOException {
+		return getAll(pageComments(repository));
+	}
+
+	/**
+	 * Page all comments on all commits in the given repository
+	 *
+	 * @param repository
+	 * @return page iterator over comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository) {
+		return pageComments(repository, PAGE_SIZE);
+	}
+
+	/**
+	 * Page all comments on all commits in the given repository
+	 *
+	 * @param repository
+	 * @param size
+	 * @return page iterator over comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository, int size) {
+		return pageComments(repository, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page all comments on all commits in the given repository
+	 *
+	 * @param repository
+	 * @param start
+	 * @param size
+	 * @return page iterator over comments
+	 */
+	public PageIterator<CommitComment> pageComments(
+			IRepositoryIdProvider repository, int start, int size) {
+		String id = getId(repository);
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_COMMENTS);
+		PagedRequest<CommitComment> request = createPagedRequest(start, size);
+		request.setUri(uri);
+		request.setType(new TypeToken<List<CommitComment>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
 }
