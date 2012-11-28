@@ -439,6 +439,7 @@ public class RepositoryConfiguration implements Serializable {
 			break;
 		case REP_PLATFORM:
 			platforms.add(value);
+			break;
 		case OP_SYS:
 			operatingSystems.add(value);
 			break;
