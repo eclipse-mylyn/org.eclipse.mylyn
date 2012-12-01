@@ -178,7 +178,7 @@ public class GitHubClient {
 		uri.append("://"); //$NON-NLS-1$
 		uri.append(hostname);
 		if (port > 0)
-			uri.append(port);
+			uri.append(':').append(port);
 		baseUri = uri.toString();
 
 		// Use URI prefix on non-standard host names
