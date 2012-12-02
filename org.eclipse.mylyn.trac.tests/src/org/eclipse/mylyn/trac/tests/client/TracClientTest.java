@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
@@ -57,14 +58,15 @@ public class TracClientTest extends TestCase {
 
 	protected List<Ticket> tickets;
 
+	private TracHarness harness;
+
 	public TracClientTest() {
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
 		fixture = TracFixture.current();
+		harness = fixture.createHarness();
 		client = fixture.connect();
 		data = TracFixture.init010();
 		tickets = data.tickets;
@@ -72,23 +74,16 @@ public class TracClientTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		// TestFixture.cleanupRepository1();
+		harness.dispose();
 	}
 
 	public void testGetTicket() throws Exception {
+		TracTicket expectedTicket = harness.createTicket("getTicket");
 		TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
-		TracTestUtil.assertTicketEquals(tickets.get(0), ticket);
-
-		ticket = client.getTicket(tickets.get(1).getId(), null);
-		TracTestUtil.assertTicketEquals(tickets.get(1), ticket);
+		TracTestUtil.assertTicketEquals(expectedTicket, ticket);
 	}
 
 	public void testGetTicketInvalidId() throws Exception {
-//		if (version == Version.XML_RPC) {
-//			return;
-//		}
 		try {
 			client.getTicket(Integer.MAX_VALUE, null);
 			fail("Expected TracException");
@@ -97,10 +92,6 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testGetTicketUmlaute() throws Exception {
-//		if (version == Version.TRAC_0_9) {
-//			// XXX need to fix bug 175211
-//			return;
-//		}
 		TracTicket ticket = client.getTicket(data.htmlEntitiesTicketId, null);
 		assertEquals("test html entities: \u00E4\u00F6\u00FC", ticket.getValue(Key.SUMMARY));
 		if (client.getAccessMode() == Version.XML_RPC) {
@@ -121,11 +112,11 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchAll() throws Exception {
+		harness.createTicket("searchAllTickets");
 		TracSearch search = new TracSearch();
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		client.search(search, result, null);
-		//assertEquals(tickets.size(), result.size());
-		assertTrue(result.size() >= tickets.size());
+		assertTrue(!result.isEmpty());
 	}
 
 	public void testSearchEmpty() throws Exception {
@@ -149,15 +140,24 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchMilestone1() throws Exception {
+		TracTicket ticket = harness.createTicketWithMilestone("searchMilestone1", "milestone1");
+		harness.createTicketWithMilestone("searchMilestone1", "milestone2");
+
 		TracSearch search = new TracSearch();
+		search.addFilter("summary", "searchMilestone1");
+		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		client.search(search, result, null);
 		assertEquals(1, result.size());
-		TracTestUtil.assertTicketEquals(tickets.get(0), result.get(0));
+		TracTestUtil.assertTicketEquals(ticket, result.get(0));
 	}
 
 	public void testSearchMilestone2() throws Exception {
+		TracTicket ticket1 = harness.createTicketWithMilestone("searchMilestone2", "milestone1");
+		TracTicket ticket2 = harness.createTicketWithMilestone("searchMilestone2", "milestone1");
+		TracTicket ticket3 = harness.createTicketWithMilestone("searchMilestone2", "milestone2");
+
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone2");
@@ -165,9 +165,9 @@ public class TracClientTest extends TestCase {
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		client.search(search, result, null);
 		assertEquals(3, result.size());
-		TracTestUtil.assertTicketEquals(tickets.get(0), result.get(0));
-		TracTestUtil.assertTicketEquals(tickets.get(1), result.get(1));
-		TracTestUtil.assertTicketEquals(tickets.get(2), result.get(2));
+		TracTestUtil.assertTicketEquals(ticket1, result.get(0));
+		TracTestUtil.assertTicketEquals(ticket2, result.get(1));
+		TracTestUtil.assertTicketEquals(ticket3, result.get(2));
 	}
 
 	public void testSearchMilestoneAmpersand() throws Exception {

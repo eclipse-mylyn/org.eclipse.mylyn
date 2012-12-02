@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -42,22 +44,17 @@ public class AllTracHeadlessStandaloneTests {
 		suite.addTestSuite(TracTicketTest.class);
 		suite.addTestSuite(TracRepositoryInfoTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
-		// core tests
-		suite.addTestSuite(TracClientManagerTest.class);
 		// network tests
 		if (!configuration.isLocalOnly()) {
-			if (configuration.isDefaultOnly()) {
-				addTests(suite, TracFixture.DEFAULT);
-			} else {
-				for (TracFixture fixture : TracFixture.ALL) {
-					addTests(suite, fixture);
-				}
-				// validation tests
-				for (TracFixture fixture : TracFixture.MISC) {
+			List<TracFixture> fixtures = configuration.discover(TracFixture.class, "trac");
+			for (TracFixture fixture : fixtures) {
+				if (fixture.hasTag(TracFixture.TAG_MISC)) {
 					fixture.createSuite(suite);
 					fixture.add(TracClientFactoryTest.class);
 					fixture.add(TracClientTest.class);
 					fixture.done();
+				} else {
+					addTests(suite, fixture);
 				}
 			}
 		}
@@ -66,6 +63,7 @@ public class AllTracHeadlessStandaloneTests {
 
 	private static void addTests(TestSuite suite, TracFixture fixture) {
 		fixture.createSuite(suite);
+		fixture.add(TracClientManagerTest.class);
 		fixture.add(TracClientFactoryTest.class);
 		fixture.add(TracClientTest.class);
 		if (fixture.getAccessMode() == Version.XML_RPC) {

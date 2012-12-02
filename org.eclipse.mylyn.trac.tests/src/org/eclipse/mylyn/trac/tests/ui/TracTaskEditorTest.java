@@ -19,24 +19,30 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
-import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 
 /**
  * @author Steffen Pingel
  */
 public class TracTaskEditorTest extends TestCase {
 
+	private TracHarness harness;
+
 	@Override
 	protected void setUp() throws Exception {
-		TestFixture.resetTaskList();
+		TracFixture fixture = TracFixture.current();
+		harness = fixture.createHarness();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		harness.dispose();
 	}
 
 	public void testGetSelectedRepository() throws Exception {
-		TaskRepository repository = TracFixture.DEFAULT.singleRepository();
-
-		ITask task = TracTestUtil.createTask(repository, "1");
+		TaskRepository repository = harness.repository();
+		ITask task = harness.createTask("testGetSelectedRepository");
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 

@@ -12,19 +12,24 @@
 package org.eclipse.mylyn.trac.tests.support;
 
 import java.net.Proxy;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
 /**
@@ -34,6 +39,8 @@ import org.eclipse.mylyn.tests.util.TestFixture;
  * @author Steffen Pingel
  */
 public class TracFixture extends TestFixture {
+
+	public static String TAG_MISC = "misc";
 
 	private static TracFixture current;
 
@@ -161,11 +168,24 @@ public class TracFixture extends TestFixture {
 
 	private final String version;
 
+	private final Set<String> tags;
+
 	public TracFixture(Version accessMode, String url, String version, String info) {
 		super(TracCorePlugin.CONNECTOR_KIND, url);
+		Assert.isNotNull(accessMode);
+		Assert.isNotNull(info);
 		this.accessMode = accessMode;
 		this.version = version;
+		this.tags = new HashSet<String>();
 		setInfo("Trac", version, info);
+	}
+
+	public TracFixture(FixtureConfiguration configuration) {
+		this(Version.fromVersion(configuration.getProperties().get("version")), configuration.getUrl(),
+				configuration.getVersion(), configuration.getInfo());
+		if (configuration.getTags() != null) {
+			this.tags.addAll(configuration.getTags());
+		}
 	}
 
 	@Override
@@ -184,8 +204,10 @@ public class TracFixture extends TestFixture {
 		return connect(repositoryUrl);
 	}
 
-	public ITracClient connect(PrivilegeLevel level) throws Exception {
-		return connect(repositoryUrl, getDefaultProxy(repositoryUrl), level);
+	public ITracClient connectXmlRpc(PrivilegeLevel level) throws Exception {
+		UserCredentials credentials = CommonTestUtil.getCredentials(level);
+		return connect(repositoryUrl, credentials.getUserName(), credentials.getPassword(),
+				getDefaultProxy(repositoryUrl), Version.XML_RPC);
 	}
 
 	private Proxy getDefaultProxy(String url) {
@@ -244,7 +266,7 @@ public class TracFixture extends TestFixture {
 
 	@Override
 	public TaskRepository singleRepository() {
-		return singleRepository(TracCorePlugin.getDefault().getConnector());
+		return singleRepository(connector());
 	}
 
 	@Override
@@ -257,6 +279,20 @@ public class TracFixture extends TestFixture {
 	@Override
 	protected void resetRepositories() {
 		TracCorePlugin.getDefault().getConnector().getClientManager().clearClients();
+	}
+
+	@Override
+	public TracRepositoryConnector connector() {
+		return (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
+	}
+
+	public TracHarness createHarness() {
+		return new TracHarness(this);
+	}
+
+	@Override
+	public boolean hasTag(String tag) {
+		return tags.contains(tag);
 	}
 
 //	private static void initializeRepository(XmlRpcServer server) throws Exception {

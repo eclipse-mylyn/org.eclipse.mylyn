@@ -28,10 +28,13 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   trac::trac { "0.11.7":
   }
 
-  trac::trac { "0.12.4":
+  trac::trac { "0.12.5":
   }
 
   trac::trac { "1.0":
+  }
+
+  trac::trac { "1.0.1":
   }
 
   trac::trac { "trunk":
@@ -56,37 +59,43 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
 
   /* Sites */
 
-  trac::site { "trac-0.11":
+  trac::site { "trac-0.11.7":
     version => "0.11.7",
     require => Trac["0.11.7"],
   }
 
-  trac::site { "trac-0.12":
-    version => "0.12.4",
-    require => Trac["0.12.4"],
+  trac::site { "trac-0.12.5":
+    version => "0.12.5",
+    require => Trac["0.12.5"],
   }
 
   trac::site { "trac-1.0":
     version => "1.0",
-    require => Trac["1.0"],
+    require => Trac["1.0"]
   }
 
-  trac::site { "trac-allbasic":
+  trac::site { "trac-1.0.1":
+    version => "1.0.1",
+    require => Trac["1.0.1"],
+    envdefault => 1,
+  }
+
+  trac::site { "trac-1.0-allbasic":
     allbasicauth => true,
     envinfo      => "AllBasicAuth",
   }
 
-  trac::site { "trac-cert":
+  trac::site { "trac-1.0-cert":
     certauth => true,
     envinfo  => "CertAuth",
   }
 
-  trac::site { "trac-digest":
+  trac::site { "trac-1.0-digest":
     digestauth => true,
     envinfo    => "DigestAuth",
   }
 
-  trac::site { "trac-form-auth":
+  trac::site { "trac-1.0-form-auth":
     accountmanagerplugin => "0.11",
     envinfo              => "FormAuth",
   }

@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -52,13 +53,20 @@ public class TracXmlRpcClientTest extends TestCase {
 
 	private ITracClient client;
 
+	private TracHarness harness;
+
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		client = TracFixture.current().connect();
+		TracFixture fixture = TracFixture.current();
+		harness = fixture.createHarness();
+		client = fixture.connect();
 		data = TracFixture.init010();
 		tickets = data.tickets;
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		harness.dispose();
 	}
 
 	public void testValidateFailNoAuth() throws Exception {
@@ -358,7 +366,7 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testInvalidCharacters() throws Exception {
-		TracTicket ticket = TracTestUtil.createTicket(client, "invalid characters");
+		TracTicket ticket = harness.createTicket("invalid characters");
 		ticket.putBuiltinValue(Key.DESCRIPTION, "Control Character: \u0002");
 		try {
 			client.updateTicket(ticket, "set invalid characters in description", null);

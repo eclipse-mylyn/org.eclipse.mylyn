@@ -7,7 +7,15 @@
 <% else %>
   "info": "<%= envinfo %>/<%= envmode %>",
 <% end %>
+  "tags": [
+<% if @envinfo == "DigestAuth" || @envinfo == "FormAuth" %>
+     "misc"
+<% end %>
+  ],
   "properties":{
+<% if @envdefault != 0 %>
+    "default": "<%= envdefault %>",
+<% end %>
     "version": "<%= accessmode %>"
   }
 }

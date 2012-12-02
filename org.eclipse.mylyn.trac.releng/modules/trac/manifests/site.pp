@@ -10,6 +10,7 @@ define trac::site (
   $base                 = $trac::base,
   $envtype              = "trac",
   $envinfo              = "",
+  $envdefault           = 0,
   $userOwner            = $trac::userOwner,
   $userGroup            = $trac::userGroup,) {
   $prefix = "$base/share/trac-$version"
@@ -41,7 +42,7 @@ define trac::site (
   }
 
   exec { "svn create $envid":
-    command => "svnadmin create $envbase/svn",
+    command => "/usr/bin/svnadmin create $envbase/svn",
     require => File["$envbase/svn"],
     creates => "$envbase/svn/format",
     user    => "www-data",
@@ -158,6 +159,7 @@ define trac::site (
     envid      => "$title",
     version    => "$version",
     envinfo    => "$envinfo",
+    envdefault => $envdefault,
     envmode    => "XML-RPC",
     accessmode => "XML_RPC",
   }
@@ -166,6 +168,7 @@ define trac::site (
     envid      => "$title",
     version    => "$version",
     envinfo    => "$envinfo",
+    envdefault => 0,
     envmode    => "Web",
     accessmode => "TRAC_0_9",
   }

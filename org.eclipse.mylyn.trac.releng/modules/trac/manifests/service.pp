@@ -3,6 +3,7 @@ define trac::service (
   $version,
   $envtype    = "trac",
   $envinfo    = "",
+  $envdefault = 0,
   $envmode    = "XML-RPC",
   $accessmode = "XML_RPC",
   $base       = $trac::base,

@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -29,7 +31,6 @@ import org.eclipse.mylyn.trac.tests.core.TracUtilTest;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestCleanupUtil;
 import org.eclipse.mylyn.trac.tests.ui.TracHyperlinkUtilTest;
-import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 
 /**
  * @author Mik Kersten
@@ -50,31 +51,28 @@ public class AllTracTests {
 	}
 
 	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		if (configuration.hasKind(TestKind.INTEGRATION) && !configuration.isLocalOnly()
-				&& CommonTestUtil.hasCredentials(PrivilegeLevel.ADMIN)) {
-			suite.addTestSuite(TracTestCleanupUtil.class);
-		}
-
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
+		// FIXME re-enable
+		//suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
 		suite.addTestSuite(TracUtilTest.class);
-		// XXX fails when run from continuous build: suite.addTestSuite(TracTaskEditorTest.class);
+		// FIXME move test to tasks framework
+		//suite.addTestSuite(TracTaskEditorTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
 
 		if (!configuration.isLocalOnly()) {
 			suite.addTestSuite(TracRepositoryQueryTest.class);
-			suite.addTestSuite(TracRepositorySettingsPageTest.class);
+			// FIXME re-enable
+			//suite.addTestSuite(TracRepositorySettingsPageTest.class);
 			// network tests
-			if (configuration.isDefaultOnly()) {
-				addTests(suite, TracFixture.DEFAULT);
-			} else {
-				for (TracFixture fixture : TracFixture.ALL) {
-					addTests(suite, fixture);
+			List<TracFixture> fixtures = configuration.discover(TracFixture.class, "trac");
+			for (TracFixture fixture : fixtures) {
+				if (!fixture.hasTag(TracFixture.TAG_MISC)) {
+					addTests(suite, configuration, fixture);
 				}
 			}
 		}
 	}
 
-	protected static void addTests(TestSuite suite, TracFixture fixture) {
+	protected static void addTests(TestSuite suite, TestConfiguration configuration, TracFixture fixture) {
 		fixture.createSuite(suite);
 		fixture.add(TracRepositoryConnectorTest.class);
 		if (fixture.getAccessMode() == Version.XML_RPC) {
@@ -82,6 +80,10 @@ public class AllTracTests {
 			fixture.add(TracAttachmentHandlerTest.class);
 		} else {
 			fixture.add(TracRepositoryConnectorWebTest.class);
+		}
+		if (configuration.hasKind(TestKind.INTEGRATION) && !configuration.isLocalOnly()
+				&& CommonTestUtil.hasCredentials(PrivilegeLevel.ADMIN)) {
+			suite.addTest(new TracTestCleanupUtil(fixture, fixture.getInfo()));
 		}
 		fixture.done();
 	}

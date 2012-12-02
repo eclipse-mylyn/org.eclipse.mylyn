@@ -20,11 +20,16 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -190,4 +195,27 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		assertTrue(page.isValidUrl("http://mylyn.org/trac30"));
 		assertTrue(page.isValidUrl("http://www.mylyn.org/trac30"));
 	}
+
+	public void testClientManagerChangeTaskRepositorySettings() throws Exception {
+		TaskRepository repository = TracFixture.TRAC_0_10_WEB.singleRepository();
+		TracRepositoryConnector connector = (TracRepositoryConnector) TracFixture.TRAC_0_10_WEB.connector();
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		assertEquals(Version.TRAC_0_9, client.getAccessMode());
+
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		WizardDialog dialog = new WizardDialog(shell, wizard);
+		try {
+			dialog.create();
+
+			((TracRepositorySettingsPage) wizard.getSettingsPage()).setTracVersion(Version.XML_RPC);
+			assertTrue(wizard.performFinish());
+
+			client = connector.getClientManager().getTracClient(repository);
+			assertEquals(Version.XML_RPC, client.getAccessMode());
+		} finally {
+			dialog.close();
+		}
+	}
+
 }

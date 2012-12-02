@@ -251,6 +251,10 @@ public abstract class TestFixture {
 		}
 	}
 
+	public boolean hasTag(String tag) {
+		return false;
+	}
+
 	public boolean isExcluded() {
 		String excludeFixture = System.getProperty("mylyn.test.exclude", "");
 		String[] excludeFixtureArray = excludeFixture.split(",");

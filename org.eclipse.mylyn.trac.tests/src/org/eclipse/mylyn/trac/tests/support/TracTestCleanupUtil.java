@@ -17,12 +17,14 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
-import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Utility that cleans up artifacts created by the Trac test suite. This class should be run periodically to speed up
@@ -30,83 +32,33 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
  * 
  * @author Steffen Pingel
  */
+@RunWith(Parameterized.class)
 public class TracTestCleanupUtil extends TestCase {
 
-	private TestData data;
+	private final TracFixture fixture;
 
-	private ITracClient client;
-
-	@Override
-	protected void setUp() throws Exception {
-		data = TracFixture.init010();
-	}
-
-	public void testCleanup010() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_0_10_XML_RPC.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	public void testCleanup010FormAuth() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_0_10_XML_RPC_FORM_AUTH.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	public void testCleanup011() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_0_11_XML_RPC.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	public void testCleanup012() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_0_12_XML_RPC.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	public void testCleanup_1_0() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_1_0_XML_RPC.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	public void testCleanupTrunk() throws Exception {
-		TracFixture fixture = TracFixture.TRAC_TRUNK_XML_RPC.activate();
-		System.err.println("Connected to " + fixture.getRepositoryUrl());
-		client = fixture.connect(PrivilegeLevel.ADMIN);
-		deleteOldAttachments();
-		deleteOldTickets();
-	}
-
-	private void deleteOldAttachments() throws TracException {
-		TracTicket ticket = client.getTicket(data.attachmentTicketId, null);
-		TracAttachment[] attachments = ticket.getAttachments();
-		System.err.println("Found " + attachments.length + " attachments");
-		// skips the first attachment
-		System.err.print("Deleting attachment: ");
-		for (int i = 1; i < attachments.length; i++) {
-			System.err.print(i + ", ");
-			client.deleteAttachment(data.attachmentTicketId, attachments[i].getFilename(), null);
-			if (i % 20 == 0) {
-				System.err.println();
-				System.err.print(" ");
-			}
+	@Parameters(name = "{1}")
+	public static Iterable<Object[]> data() {
+		List<TracFixture> fixtures = TestConfiguration.getDefault().discover(TracFixture.class, "trac");
+		List<Object[]> data = new ArrayList<Object[]>(fixtures.size());
+		for (TracFixture fixture : fixtures) {
+			data.add(new Object[] { fixture, fixture.getInfo() });
 		}
-		System.err.println();
+		return data;
 	}
 
-	public void deleteOldTickets() throws TracException {
+	public TracTestCleanupUtil(TracFixture fixture, String name) {
+		this.fixture = fixture;
+	}
+
+	@Test
+	public void testCleanUpTasks() throws Exception {
+		System.err.println("Connected to " + fixture.getRepositoryUrl());
+		ITracClient client = fixture.connectXmlRpc(PrivilegeLevel.ADMIN);
+		deleteOldTickets(client);
+	}
+
+	public void deleteOldTickets(ITracClient client) throws TracException {
 		TracSearch query = new TracSearch();
 		query.setMax(10000);
 		List<Integer> result = new ArrayList<Integer>();

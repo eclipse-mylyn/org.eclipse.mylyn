@@ -20,17 +20,16 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
  * @author Steffen Pingel
@@ -43,19 +42,26 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	private AbstractTaskAttachmentHandler attachmentHandler;
 
-	private TestData data;
+	private TracHarness harness;
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-		data = TracFixture.init010();
-		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
+		harness = TracFixture.current().createHarness();
+		connector = harness.connector();
 		attachmentHandler = connector.getTaskAttachmentHandler();
-		repository = TracFixture.current().singleRepository(connector);
+		repository = harness.repository();
 	}
 
-	public void testDownloadAttachment() throws Exception {
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+	@Override
+	protected void tearDown() throws Exception {
+		harness.dispose();
+	}
+
+	public void testGetContent() throws Exception {
+		TracTicket ticket = harness.createTicket("GetContent");
+		harness.attachFile(ticket.getId(), "attachment.txt", "Mylar\n");
+
+		ITask task = harness.getTask(ticket);
 		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
 		assertTrue(attachments.size() > 0);
 		InputStream in = attachmentHandler.getContent(repository, task, attachments.get(0).getTaskAttribute(), null);
@@ -69,22 +75,8 @@ public class TracAttachmentHandlerTest extends TestCase {
 		}
 	}
 
-	public void testGetAttachmentData() throws Exception {
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
-		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
-		assertTrue(attachments.size() > 0);
-		InputStream in = attachmentHandler.getContent(repository, task, attachments.get(0).getTaskAttribute(), null);
-		byte[] result = new byte[6];
-		try {
-			in.read(result);
-		} finally {
-			in.close();
-		}
-		assertEquals("Mylar\n", new String(result));
-	}
-
-	public void testUploadAttachment() throws Exception {
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+	public void testPostConent() throws Exception {
+		ITask task = harness.createTask("GetContent");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
 		OutputStream out = new FileOutputStream(file);
@@ -96,7 +88,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		attachmentHandler.postContent(repository, task, new FileTaskAttachmentSource(file), "comment", null, null);
 
 		ITracClient client = connector.getClientManager().getTracClient(repository);
-		InputStream in = client.getAttachmentData(data.attachmentTicketId, file.getName(), null);
+		InputStream in = client.getAttachmentData(Integer.parseInt(task.getTaskId()), file.getName(), null);
 		try {
 			byte[] result = new byte[5];
 			in.read(result);
@@ -106,28 +98,22 @@ public class TracAttachmentHandlerTest extends TestCase {
 		}
 	}
 
-	public void testCanUploadAttachmentXmlRpc() throws Exception {
-		repository = TracFixture.TRAC_0_10_XML_RPC.singleRepository();
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
-		assertTrue(attachmentHandler.canPostContent(repository, task));
-	}
-
-	public void testCanUploadAttachmentWeb() throws Exception {
-		repository = TracFixture.TRAC_0_10_WEB.singleRepository();
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
-		assertFalse(attachmentHandler.canPostContent(repository, task));
+	public void testCanUploadAttachment() throws Exception {
+		ITask task = harness.createTask("canUploadAttachment");
+		if (harness.isXmlRpc()) {
+			assertTrue(attachmentHandler.canPostContent(repository, task));
+		} else {
+			assertFalse(attachmentHandler.canPostContent(repository, task));
+		}
 	}
 
 	public void testCanDownloadAttachmentXmlRpc() throws Exception {
-		repository = TracFixture.TRAC_0_10_XML_RPC.singleRepository();
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
-		assertTrue(attachmentHandler.canGetContent(repository, task));
-	}
-
-	public void testCanDownloadAttachmentWeb() throws Exception {
-		repository = TracFixture.TRAC_0_10_WEB.singleRepository();
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
-		assertFalse(attachmentHandler.canGetContent(repository, task));
+		ITask task = harness.createTask("canDownloadAttachment");
+		if (harness.isXmlRpc()) {
+			assertTrue(attachmentHandler.canGetContent(repository, task));
+		} else {
+			assertFalse(attachmentHandler.canGetContent(repository, task));
+		}
 	}
 
 }

@@ -51,10 +51,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
  * @author Steffen Pingel
@@ -66,23 +65,27 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	private TaskRepository repository;
 
-	private TestData data;
-
 	private TracTaskDataHandler taskDataHandler;
 
 	private ITracClient client;
+
+	private TracHarness harness;
 
 	public TracTaskDataHandlerXmlRpcTest() {
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-		data = TracFixture.init010();
-		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
+		harness = TracFixture.current().createHarness();
+		connector = harness.connector();
 		taskDataHandler = connector.getTaskDataHandler();
-		repository = TracFixture.current().singleRepository(connector);
+		repository = harness.repository();
 		client = connector.getClientManager().getTracClient(repository);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		harness.dispose();
 	}
 
 	private SynchronizationSession createSession(ITask... tasks) {
@@ -98,8 +101,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		SynchronizationSession session;
 		// sleep for one second to ensure that the created ticket has a unique time stamp
 		Thread.sleep(1000);
-		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
-		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
+		TracTicket ticket = harness.createTicket("markStaleTasks");
+		ITask task = harness.getTask(ticket);
 		long lastModified = TracUtil.toTracTime(task.getModificationDate());
 
 		// an empty set should not cause contact to the repository
@@ -157,10 +160,9 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testMarkStaleTasksNoTimeStamp() throws Exception {
-		SynchronizationSession session;
-		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
+		ITask task = harness.createTask("MarkStaleTasksNoTimeStamp");
 
-		session = createSession(task);
+		SynchronizationSession session = createSession(task);
 		repository.setSynchronizationTimeStamp(null);
 		connector.preSynchronization(session, null);
 		assertTrue(session.needsPerformQueries());
@@ -195,12 +197,12 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	public void testAttachmentChangesLastModifiedDate() throws Exception {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		ITask task = harness.createTask("attachmentChangesLastModifiedDate");
 		Date lastModified = task.getModificationDate();
 		// XXX the test case fails when comment == null
 		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc"), "comment", null, null);
 
-		task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		task = harness.getTask(task.getTaskId());
 		Date newLastModified = task.getModificationDate();
 		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified,
 				newLastModified.after(lastModified));
@@ -208,8 +210,9 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 
 	public void testAttachmentUrlEncoding() throws Exception {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		TracTicket ticket = TracTestUtil.createTicket(client, "attachment url test");
-		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
+		TracTicket ticket = harness.createTicket("attachment url test");
+
+		ITask task = harness.getTask(ticket);
 		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc") {
 			@Override
 			public String getName() {
@@ -217,7 +220,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 			}
 		}, "comment", null, null);
 
-		task = TracTestUtil.createTask(repository, ticket.getId() + "");
+		task = harness.getTask(ticket);
 		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
 		assertEquals(1, attachments.size());
 		assertEquals(repository.getUrl() + "/attachment/ticket/" + ticket.getId()
@@ -225,8 +228,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testPostTaskDataInvalidCredentials() throws Exception {
-		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
-		TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+		TaskData taskData = harness.createTaskData("postTaskDataInvalidCredentials");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).setValue("new comment");
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("foo", "bar"), false);
 		try {
@@ -242,9 +244,11 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		assertFalse(taskDataHandler.canInitializeSubTaskData(repository, task));
 		task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.TRUE.toString());
 		assertTrue(taskDataHandler.canInitializeSubTaskData(repository, task));
+	}
 
-		task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
-		TaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", null);
+	public void testCanInitializeTaskDataRepositoryTask() throws Exception {
+		ITask task = harness.createTask("canInitializeTaskDataRepositoryTask");
+		TaskData taskData = taskDataHandler.getTaskData(repository, task.getTaskId(), null);
 		assertFalse(taskDataHandler.canInitializeSubTaskData(repository, task));
 
 		taskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
@@ -257,8 +261,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testInitializeSubTaskDataInvalidParent() throws Exception {
-		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
-				new NullProgressMonitor());
+		TaskData parentTaskData = harness.createTaskData("initializeSubTaskDataInvalidParent");
 		try {
 			taskDataHandler.initializeSubTaskData(repository, parentTaskData, parentTaskData, null);
 			fail("expected CoreException");
@@ -267,7 +270,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testInitializeSubTaskData() throws Exception {
-		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", null);
+		TaskData parentTaskData = harness.createTaskData("initializeSubTaskData");
 		TaskMapper parentTaskMapper = new TracTaskMapper(parentTaskData, null);
 		parentTaskMapper.setSummary("abc");
 		parentTaskMapper.setDescription("def");
@@ -410,7 +413,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testPostTaskDataUnsetResolution() throws Exception {
-		TracTicket ticket = TracTestUtil.createTicket(client, "postTaskDataUnsetResolution");
+		TracTicket ticket = harness.createTicket("postTaskDataUnsetResolution");
 		TaskData taskData = taskDataHandler.getTaskData(repository, ticket.getId() + "", new NullProgressMonitor());
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 		attribute.setValue("fixed");
@@ -423,7 +426,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 	}
 
 	public void testPostTaskDataMidAirCollision() throws Exception {
-		TracTicket ticket = TracTestUtil.createTicket(client, "midAirCollision");
+		TracTicket ticket = harness.createTicket("midAirCollision");
 		if (ticket.getValue(Key.TOKEN) == null) {
 			// repository does not have mid-air collision support
 			System.err.println("Skipping TracTaskDataHandler.testPostTaskDataMidAirCollision() due to lack of mid-air collision support on "

@@ -35,9 +35,8 @@ acct_mgr.web_ui.RegistrationModule = disabled
 
 <% if @accountmanagerplugin != "" %>
 [account-manager]
-password_format = htpasswd
 password_store = HtPasswdStore
-password_file = <%= envbase %>/htpasswd
+htpasswd_file = <%= envbase %>/htpasswd
 <% end %>
 
 [header_logo]

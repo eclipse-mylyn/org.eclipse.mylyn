@@ -17,28 +17,28 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.trac.core.TracClientManager;
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 
 /**
  * @author Steffen Pingel
  */
 public class TracClientManagerTest extends TestCase {
 
-	public void testNullCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_010_URL);
-		taskRepository.setVersion(Version.TRAC_0_9.name());
+	private TaskRepository repository;
 
+	@Override
+	protected void setUp() throws Exception {
+		repository = TracFixture.current().repository();
+	}
+
+	public void testNullCache() throws Exception {
 		TracClientManager manager = new TracClientManager(null, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getTracClient(taskRepository);
+		ITracClient client = manager.getTracClient(repository);
 		assertNull(client.getMilestones());
 
 		manager.writeCache();
@@ -46,29 +46,20 @@ public class TracClientManagerTest extends TestCase {
 	}
 
 	public void testReadCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_010_URL);
-		taskRepository.setVersion(Version.TRAC_0_9.name());
-
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
 
 		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getTracClient(taskRepository);
+		ITracClient client = manager.getTracClient(repository);
 		assertNull(client.getMilestones());
 	}
 
 	public void testWriteCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_010_URL);
-		taskRepository.setVersion(Version.TRAC_0_9.name());
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, false);
-
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
 
 		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getTracClient(taskRepository);
+		ITracClient client = manager.getTracClient(repository);
 		assertNull(client.getMilestones());
 
 		client.updateAttributes(new NullProgressMonitor(), false);

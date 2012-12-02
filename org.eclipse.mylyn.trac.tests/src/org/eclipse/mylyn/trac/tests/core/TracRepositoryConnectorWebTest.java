@@ -19,35 +19,34 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
-import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
+import org.eclipse.mylyn.trac.tests.support.TracHarness;
 
 /**
  * @author Steffen Pingel
  */
 public class TracRepositoryConnectorWebTest extends TestCase {
 
-	private TracRepositoryConnector connector;
+	private TracHarness harness;
 
 	private TaskRepository repository;
 
-	private TestData data;
-
-	public TracRepositoryConnectorWebTest() {
-	}
+	private TracRepositoryConnector connector;
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-		data = TracFixture.init010();
-		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
-		repository = TracFixture.current(TracFixture.TRAC_0_10_WEB).singleRepository(connector);
+		TracFixture fixture = TracFixture.current();
+		harness = fixture.createHarness();
+		connector = harness.connector();
+		repository = harness.repository();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		harness.dispose();
 	}
 
 	private SynchronizationSession createSession(ITask... tasks) {
@@ -59,8 +58,8 @@ public class TracRepositoryConnectorWebTest extends TestCase {
 		return session;
 	}
 
-	public void testPreSynchronizationWeb096() throws Exception {
-		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
+	public void testPreSynchronization() throws Exception {
+		ITask task = harness.createTask("preSynchronization");
 
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
