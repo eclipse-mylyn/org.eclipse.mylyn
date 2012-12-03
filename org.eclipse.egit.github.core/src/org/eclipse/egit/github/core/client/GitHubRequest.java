@@ -32,11 +32,31 @@ public class GitHubRequest {
 
 	private String responseContentType;
 
+	private Type arrayType;
+
 	/**
 	 * Create empty request
 	 */
 	public GitHubRequest() {
 
+	}
+
+	/**
+	 * Set type to expect if first token is a beginning of an array
+	 *
+	 * @param arrayType
+	 * @return this request
+	 */
+	public GitHubRequest setArrayType(Type arrayType) {
+		this.arrayType = arrayType;
+		return this;
+	}
+
+	/**
+	 * @return arrayType
+	 */
+	public Type getArrayType() {
+		return arrayType;
 	}
 
 	/**
