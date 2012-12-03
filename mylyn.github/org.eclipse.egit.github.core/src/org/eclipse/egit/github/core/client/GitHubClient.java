@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.client;
 
+import static com.google.gson.stream.JsonToken.BEGIN_ARRAY;
 import static java.net.HttpURLConnection.HTTP_ACCEPTED;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CONFLICT;
@@ -33,6 +34,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V3_AP
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.gson.stream.JsonReader;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -398,20 +400,56 @@ public class GitHubClient {
 	 * @throws IOException
 	 */
 	protected <V> V parseJson(InputStream stream, Type type) throws IOException {
+		return parseJson(stream, type, null);
+	}
+
+	/**
+	 * Parse JSON to specified type
+	 *
+	 * @param <V>
+	 * @param stream
+	 * @param type
+	 * @param listType
+	 * @return parsed type
+	 * @throws IOException
+	 */
+	protected <V> V parseJson(InputStream stream, Type type, Type listType)
+			throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				stream, CHARSET_UTF8), bufferSize);
-		try {
-			return gson.fromJson(reader, type);
-		} catch (JsonParseException jpe) {
-			IOException ioe = new IOException(
-					"Parse exception converting JSON to object"); //$NON-NLS-1$
-			ioe.initCause(jpe);
-			throw ioe;
-		} finally {
+		if (listType == null)
 			try {
-				reader.close();
-			} catch (IOException ignored) {
-				// Ignored
+				return gson.fromJson(reader, type);
+			} catch (JsonParseException jpe) {
+				IOException ioe = new IOException(
+						"Parse exception converting JSON to object"); //$NON-NLS-1$
+				ioe.initCause(jpe);
+				throw ioe;
+			} finally {
+				try {
+					reader.close();
+				} catch (IOException ignored) {
+					// Ignored
+				}
+			}
+		else {
+			JsonReader jsonReader = new JsonReader(reader);
+			try {
+				if (jsonReader.peek() == BEGIN_ARRAY)
+					return gson.fromJson(jsonReader, listType);
+				else
+					return gson.fromJson(jsonReader, type);
+			} catch (JsonParseException jpe) {
+				IOException ioe = new IOException(
+						"Parse exception converting JSON to object"); //$NON-NLS-1$
+				ioe.initCause(jpe);
+				throw ioe;
+			} finally {
+				try {
+					jsonReader.close();
+				} catch (IOException ignored) {
+					// Ignored
+				}
 			}
 		}
 	}
@@ -488,7 +526,7 @@ public class GitHubClient {
 			throws IOException {
 		Type type = request.getType();
 		if (type != null)
-			return parseJson(stream, type);
+			return parseJson(stream, type, request.getArrayType());
 		else
 			return null;
 	}

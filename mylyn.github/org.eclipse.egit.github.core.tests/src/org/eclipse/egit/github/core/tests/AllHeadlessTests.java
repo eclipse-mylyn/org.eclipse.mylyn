@@ -32,6 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CommitStatusTest.class, //
 		CommitTest.class, //
 		CommitUserTest.class, //
+		ContentsServiceTest.class, //
 		ContributorTest.class, //
 		DataServiceTest.class, //
 		DateFormatterTest.class, //
@@ -79,6 +80,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		RepositoryBranchTest.class, //
 		RepositoryCommitCompareTest.class, //
 		RepositoryCommitTest.class, //
+		RepositoryContentsTest.class, //
 		RepositoryHookResponseTest.class, //
 		RepositoryHookTest.class, //
 		RepositoryIdTest.class, //

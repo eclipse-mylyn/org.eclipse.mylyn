@@ -83,6 +83,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_COMMENTS = "/comments"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_CONTENTS= "/contents"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_CONTRIBUTORS = "/contributors"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_COMMITS = "/commits"; //$NON-NLS-1$
@@ -142,6 +144,8 @@ public interface IGitHubConstants {
 	String SEGMENT_PUBLIC_MEMBERS = "/public_members"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_PULLS = "/pulls"; //$NON-NLS-1$
+	/** */
+	String SEGMENT_README = "/readme"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_RECEIVED_EVENTS = "/received_events"; //$NON-NLS-1$
 	/** */
