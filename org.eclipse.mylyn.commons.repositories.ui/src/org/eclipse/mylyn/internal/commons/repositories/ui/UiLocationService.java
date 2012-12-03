@@ -15,6 +15,7 @@ import java.net.Proxy;
 
 import javax.net.ssl.X509TrustManager;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
@@ -36,6 +37,7 @@ public class UiLocationService implements ILocationService {
 	}
 
 	public ICredentialsStore getCredentialsStore(String id) {
+		Assert.isNotNull(id);
 		return new SecureCredentialsStore(id);
 	}
 
