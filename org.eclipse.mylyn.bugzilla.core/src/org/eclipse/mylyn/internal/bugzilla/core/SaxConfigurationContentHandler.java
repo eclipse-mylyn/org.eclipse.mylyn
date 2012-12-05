@@ -83,6 +83,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_KEYWORD = "keyword"; //$NON-NLS-1$
 
+	private static final String ELEMENT_KEYWORDS = "keywords"; //$NON-NLS-1$
+
 	private static final String ELEMENT_OP_SYS = "op_sys"; //$NON-NLS-1$
 
 	private static final String ELEMENT_PLATFORM = "platform"; //$NON-NLS-1$
@@ -158,6 +160,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final int IN_FLAG_TYPE = 1 << 25;
 
 	private static final int IN_DB_ENCODING = 1 << 26;
+
+	private static final int IN_KEYWORDS = 1 << 27;
 
 	private int state = EXPECTING_ROOT;
 
@@ -271,6 +275,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state | IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
 			state = state | IN_KEYWORD;
+		} else if (localName.equals(ELEMENT_KEYWORDS)) {
+			state = state | IN_KEYWORDS;
 		} else if (localName.equals(ELEMENT_FIELDS)) {
 			state = state | IN_FIELDS;
 		} else if (localName.equals(ELEMENT_FIELD)) {
@@ -377,6 +383,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 						milestoneNames.put(about, characters.toString());
 					}
 				}
+			} else if (state == (IN_KEYWORDS | IN_LI | IN_KEYWORD)) {
+				// KEYWORD NAME
+				currentName = characters.toString();
 			} else if (state == (IN_FIELDS | IN_LI | IN_FIELD) || state == (IN_FLAG_TYPES | IN_LI | IN_FLAG_TYPE)) {
 				// FIELDS NAME
 				currentName = characters.toString();
@@ -415,7 +424,12 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_RESOLUTION)) {
 			state = state & ~IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
+			if (state == (IN_KEYWORDS | IN_LI | IN_KEYWORD)) {
+				configuration.addItem(BugzillaAttribute.KEYWORDS, currentName);
+			}
 			state = state & ~IN_KEYWORD;
+		} else if (localName.equals(ELEMENT_KEYWORDS)) {
+			state = state & ~IN_KEYWORDS;
 		} else if (localName.equals(ELEMENT_FIELDS)) {
 			state = state & ~IN_FIELDS;
 		} else if (localName.equals(ELEMENT_FIELD)) {

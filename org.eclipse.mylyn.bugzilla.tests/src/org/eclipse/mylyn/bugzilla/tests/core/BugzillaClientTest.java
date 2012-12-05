@@ -62,11 +62,6 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testRDFProductConfig() throws Exception {
-		if (BugzillaFixture.current() == BugzillaFixture.BUGS_4_4
-				|| BugzillaFixture.current() == BugzillaFixture.BUGS_HEAD) {
-			// FIXME: need fix of bug#372600
-			return;
-		}
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(
