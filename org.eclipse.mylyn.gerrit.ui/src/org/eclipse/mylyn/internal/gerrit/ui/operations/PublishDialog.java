@@ -61,10 +61,14 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private final int addedDrafts;
 
-	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, int addedDrafts) {
+	private final String editorCommentText;
+
+	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, int addedDrafts,
+			String editorCommentText) {
 		super(parentShell, task);
 		this.publishDetail = publishDetail;
 		this.addedDrafts = addedDrafts;
+		this.editorCommentText = editorCommentText;
 		this.approvalButtons = new ArrayList<Button>();
 		setNeedsConfig(true);
 	}
@@ -105,7 +109,9 @@ public class PublishDialog extends GerritOperationDialog {
 		approvalComposite.setLayout(layout);
 
 		messageEditor = createRichTextEditor(composite, "");
-		GridDataFactory.fillDefaults().grab(true, true).minSize(400, 150).applyTo(messageEditor.getControl());
+		GridDataFactory.fillDefaults().grab(true, true).hint(600, 200).applyTo(messageEditor.getControl());
+		messageEditor.setText(editorCommentText);
+		messageEditor.getViewer().setSelectedRange(editorCommentText.length(), 0);
 		messageEditor.getControl().setFocus();
 
 		statusLabel = new Label(composite, SWT.NONE);

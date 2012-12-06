@@ -21,7 +21,9 @@ import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -64,10 +66,13 @@ import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -406,8 +411,21 @@ public class PatchSetSection extends AbstractGerritSection {
 	}
 
 	protected void doPublish(PatchSetPublishDetail publishDetail) {
-		PublishDialog dialog = new PublishDialog(getShell(), getTask(), publishDetail, addedDrafts);
+		TaskAttribute comment = getTaskData().getRoot().getAttribute(TaskAttribute.COMMENT_NEW);
+		String editorCommentText = comment != null ? comment.getValue() : "";
+		PublishDialog dialog = new PublishDialog(getShell(), getTask(), publishDetail, addedDrafts, editorCommentText);
 		openOperationDialog(dialog);
+		if (dialog.getReturnCode() == Window.OK && comment != null) {
+			comment.clearValues();
+			getTaskEditorPage().doSave(new NullProgressMonitor());
+			try {
+				TasksUi.getTaskDataManager().discardEdits(getTask());
+			} catch (CoreException e) {
+				Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						"Error while clearing task status.", e);
+				TasksUiInternal.displayStatus("Clear outgoing task status failed", status);
+			}
+		}
 	}
 
 	protected void doFetch(ChangeDetail changeDetail, PatchSetDetail patchSetDetail) {

@@ -188,6 +188,15 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
 	}
 
+	@Override
+	public void migrateTaskData(TaskRepository repository, TaskData taskData) {
+		super.migrateTaskData(repository, taskData);
+		//Support 1.1.0 commenting capability see https://bugs.eclipse.org/bugs/show_bug.cgi?id=344108
+		if (taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().NEW_COMMENT.getKey()) == null) {
+			taskData.getRoot().createAttribute(GerritTaskSchema.getDefault().NEW_COMMENT.getKey());
+		}
+	}
+
 	public void updateTaskData(TaskRepository repository, TaskData data, GerritQueryResult changeInfo) {
 		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
 		setAttributeValue(data, schema.KEY, changeInfo.getId().substring(0, Math.min(9, changeInfo.getId().length())));

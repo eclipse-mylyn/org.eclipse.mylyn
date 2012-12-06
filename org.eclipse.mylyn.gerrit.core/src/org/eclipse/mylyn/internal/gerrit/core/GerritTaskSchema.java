@@ -41,4 +41,5 @@ public class GerritTaskSchema extends GerritQueryResultSchema {
 
 	public final Field CAN_PUBLISH = createField("org.eclipse.gerrit.CanPublish", "Publish", TaskAttribute.TYPE_BOOLEAN);
 
+	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 }
