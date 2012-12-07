@@ -23,6 +23,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
@@ -44,8 +45,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gerrit.common.data.GerritConfig;
@@ -63,6 +66,8 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 
 	protected FormToolkit toolkit;
 
+	private CommonTextSupport textSupport;
+
 	public GerritOperationDialog(Shell parentShell, ITask task) {
 		super(parentShell);
 		this.task = task;
@@ -75,6 +80,9 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 			if (!shouldClose) {
 				return false;
 			}
+		}
+		if (textSupport != null) {
+			textSupport.dispose();
 		}
 		return super.close();
 	}
@@ -158,7 +166,13 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 
 		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension, task);
 		editor.setText(value);
+		editor.setSpellCheckingEnabled(true);
 		editor.createControl(composite, toolkit);
+		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		if (handlerService != null) {
+			textSupport = new CommonTextSupport(handlerService);
+			textSupport.install(editor.getViewer(), true);
+		}
 
 		// HACK: this is to make sure that we can't have multiple things highlighted
 		editor.getViewer().getTextWidget().addFocusListener(new FocusListener() {

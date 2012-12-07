@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.reviews.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,16 +19,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
-import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -43,11 +40,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
+ * @author Miles Parker
  */
 public class AddCommentDialog extends ProgressDialog {
 
@@ -62,6 +62,8 @@ public class AddCommentDialog extends ProgressDialog {
 	protected FormToolkit toolkit;
 
 	private final IReviewItem item;
+
+	private CommonTextSupport textSupport;
 
 	public AddCommentDialog(Shell parentShell, ReviewBehavior reviewBehavior, IReviewItem item, ILocation location) {
 		super(parentShell);
@@ -78,6 +80,9 @@ public class AddCommentDialog extends ProgressDialog {
 			if (!shouldClose) {
 				return false;
 			}
+		}
+		if (textSupport != null) {
+			textSupport.dispose();
 		}
 		return super.close();
 	}
@@ -157,7 +162,13 @@ public class AddCommentDialog extends ProgressDialog {
 
 		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension, task);
 		editor.setText(value);
+		editor.setSpellCheckingEnabled(true);
 		editor.createControl(composite, toolkit);
+		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		if (handlerService != null) {
+			textSupport = new CommonTextSupport(handlerService);
+			textSupport.install(editor.getViewer(), true);
+		}
 
 		// HACK: this is to make sure that we can't have multiple things highlighted
 		editor.getViewer().getTextWidget().addFocusListener(new FocusListener() {
@@ -172,5 +183,4 @@ public class AddCommentDialog extends ProgressDialog {
 
 		return editor;
 	}
-
 }
