@@ -26,8 +26,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jgit,
  org.eclipse.egit.core,
  org.eclipse.egit.ui,
- org.eclipse.mylyn.commons.net;bundle-version="3.8.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0"
+ org.eclipse.mylyn.commons.net;bundle-version="3.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Eclipse Mylyn

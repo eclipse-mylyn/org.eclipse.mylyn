@@ -53,5 +53,12 @@
             class="org.eclipse.mylyn.internal.gerrit.ui.egit.GerritRepositorySearchPage">
       </repositorySearchPage>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <repositoryAssociation
+            connectorKind="org.eclipse.mylyn.gerrit"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
    
 </plugin>
