@@ -359,10 +359,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				changedTasks.add(changedTask);
 			}
 		}
-		if (syncSession.getData() == null && collector.getQueryTimestamp() != null) {
-			syncSession.setData(collector.getQueryTimestamp());
-		}
 
+		if (syncSession.getData() == null && collector.getQueryTimestamp() != null) {
+			Date queryDate = BugzillaAttributeMapper.parseDate(collector.getQueryTimestamp());
+			if (queryDate != null) {
+				// Ensure time is in right format
+				syncSession.setData(new SimpleDateFormat(TIMESTAMP_WITH_OFFSET).format(queryDate));
+			}
+		}
 	}
 
 	@Override
@@ -391,19 +395,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				client.logout(monitor);
 				client.getSearchHits(query, resultCollector, mapper, monitor);
 			}
-
-			if (resultCollector instanceof BugzillaTaskDataCollector) {
-				BugzillaTaskDataCollector bCollector = (BugzillaTaskDataCollector) resultCollector;
-				if (bCollector.getQueryTimestamp() != null) {
-					Date queryDate = ((BugzillaAttributeMapper) mapper).getDate(BugzillaAttribute.DELTA_TS.getKey(),
-							bCollector.getQueryTimestamp());
-					if (queryDate != null) {
-						// Ensure time is in right format
-						event.setData(new SimpleDateFormat(TIMESTAMP_WITH_OFFSET).format(queryDate));
-					}
-				}
-			}
-
 			return Status.OK_STATUS;
 		} catch (UnrecognizedReponseException e) {
 			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
@@ -515,6 +506,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("", 1); //$NON-NLS-1$
 			if (event.isFullSynchronization() && event.getStatus() == null) {
@@ -563,7 +555,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				BugzillaAttributeMapper mapper = (BugzillaAttributeMapper) taskData.getAttributeMapper();
-				Date oldModDate = mapper.getDate(BugzillaAttribute.DELTA_TS.getKey(), lastKnownMod);
+				Date oldModDate = BugzillaAttributeMapper.parseDate(lastKnownMod);
 				Date newModDate = mapper.getDateValue(attrModification);
 
 				// If either of the dates can't be parsed, fall back to string comparison

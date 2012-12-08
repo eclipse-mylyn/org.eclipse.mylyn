@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataCollector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaUserMatchResponse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
@@ -44,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -947,6 +949,51 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		for (ITask task : query.getChildren()) {
 			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
 		}
+	}
+
+	public void testMissingHitsWhileTaskChanged() throws Exception {
+		String summary1 = "testMissingHitsWhileTaskChanged" + System.currentTimeMillis();
+		TaskData data1 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, summary1, null);
+		ITask task1 = generateLocalTaskAndDownload(data1.getTaskId());
+		// ensure that time advances by 1 second between creation and query time
+		Thread.sleep(1000);
+
+		repository = BugzillaFixture.current().repository();
+		String stamp = data1.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION).getValue();
+		repository.setSynchronizationTimeStamp(stamp);
+		SynchronizationSession session = new SynchronizationSession();
+		session.setFullSynchronization(true);
+		session.setTasks(Collections.singleton(task1));
+		session.setTaskRepository(repository);
+
+		// pre synchronization
+		connector.preSynchronization(session, null);
+		Object data = session.getData();
+		assertNotNull(session.getData());
+		assertEquals(Collections.singleton(task1), session.getStaleTasks());
+
+		// update task
+		data1.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(summary1 + "updated");
+		connector.getTaskDataHandler().postTaskData(repository, data1, null, null);
+
+		// perform query
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		query.setUrl(repository.getUrl()
+				+ "buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=" + summary1);
+		BugzillaTaskDataCollector collector = new BugzillaTaskDataCollector();
+		connector.performQuery(repository, query, collector, session, null);
+		assertEquals(data, session.getData());
+
+		// post synchronizaion
+		connector.postSynchronization(session, null);
+		assertFalse(stamp.equals(repository.getSynchronizationTimeStamp()));
+
+		// second pre synchronization
+		SynchronizationSession session2 = new SynchronizationSession();
+		session2.setTasks(Collections.singleton(task1));
+		session2.setTaskRepository(repository);
+		connector.preSynchronization(session2, null);
+		assertEquals(Collections.singleton(task1), session2.getStaleTasks());
 	}
 
 	public void testAnonymousRepositoryAccess() throws Exception {
