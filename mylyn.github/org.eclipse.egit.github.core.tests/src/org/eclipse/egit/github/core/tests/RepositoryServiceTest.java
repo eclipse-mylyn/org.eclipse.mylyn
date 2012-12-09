@@ -285,6 +285,32 @@ public class RepositoryServiceTest {
 	}
 
 	/**
+	 * Page all repositories
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageAllRepositories() throws IOException {
+		service.pageAllRepositories().next();
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repositories"));
+		verify(client).get(request);
+	}
+
+	/**
+	 * Page all repositories
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void pageAllRepositoriesSince() throws IOException {
+		service.pageAllRepositories(1234).next();
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repositories?since=1234"));
+		verify(client).get(request);
+	}
+
+	/**
 	 * Get repositories with null user
 	 *
 	 * @throws IOException
