@@ -67,6 +67,7 @@ import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProto
 /**
  * @author Steffen Pingel
  * @author Shawn Minto
+ * @author Christian Janz
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class HttpUtil {
@@ -138,7 +139,7 @@ public class HttpUtil {
 		String host = NetUtil.getHost(url);
 		int port = NetUtil.getPort(url);
 
-		NTCredentials ntlmCredentials = getNtCredentials(credentials, null);
+		NTCredentials ntlmCredentials = getNtCredentials(credentials, ""); //$NON-NLS-1$
 		if (ntlmCredentials != null) {
 			AuthScope authScopeNtlm = new AuthScope(host, port, AuthScope.ANY_REALM, AuthPolicy.NTLM);
 			client.getCredentialsProvider().setCredentials(authScopeNtlm, ntlmCredentials);
