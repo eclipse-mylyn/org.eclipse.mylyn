@@ -21,6 +21,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGU
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOSITORIES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEST;
@@ -226,6 +227,32 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setParams(filterData);
+		request.setType(new TypeToken<List<Repository>>() {
+		}.getType());
+		return createPageIterator(request);
+	}
+
+	/**
+	 * Page all repositories
+	 *
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageAllRepositories() {
+		return pageAllRepositories(-1);
+	}
+
+	/**
+	 * Page all repositories
+	 *
+	 * @param since
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageAllRepositories(final long since) {
+		PagedRequest<Repository> request = createPagedRequest();
+		request.setUri(SEGMENT_REPOSITORIES);
+		if (since > 0)
+			request.setParams(Collections.singletonMap("since",
+					Long.toString(since)));
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return createPageIterator(request);
