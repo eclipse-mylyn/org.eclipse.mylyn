@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -34,6 +35,7 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Topic</b></em>'. <!-- end-user-doc -->
@@ -120,7 +122,7 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 * @ordered
 	 */
-	protected IReviewItem item;
+	protected ITopicContainer item;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -235,7 +237,8 @@ public class Topic extends Comment implements ITopic {
 	 */
 	public List<IComment> getComments() {
 		if (comments == null) {
-			comments = new EObjectResolvingEList<IComment>(IComment.class, this, ReviewsPackage.TOPIC__COMMENTS);
+			comments = new EObjectWithInverseResolvingEList<IComment>(IComment.class, this,
+					ReviewsPackage.TOPIC__COMMENTS, ReviewsPackage.COMMENT__PARENT_TOPIC);
 		}
 		return comments;
 	}
@@ -305,10 +308,10 @@ public class Topic extends Comment implements ITopic {
 	 * 
 	 * @generated
 	 */
-	public IReviewItem getItem() {
+	public ITopicContainer getItem() {
 		if (item != null && item.eIsProxy()) {
 			InternalEObject oldItem = (InternalEObject) item;
-			item = (IReviewItem) eResolveProxy(oldItem);
+			item = (ITopicContainer) eResolveProxy(oldItem);
 			if (item != oldItem) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__ITEM, oldItem, item));
@@ -322,7 +325,7 @@ public class Topic extends Comment implements ITopic {
 	 * 
 	 * @generated
 	 */
-	public IReviewItem basicGetItem() {
+	public ITopicContainer basicGetItem() {
 		return item;
 	}
 
@@ -331,8 +334,8 @@ public class Topic extends Comment implements ITopic {
 	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetItem(IReviewItem newItem, NotificationChain msgs) {
-		IReviewItem oldItem = item;
+	public NotificationChain basicSetItem(ITopicContainer newItem, NotificationChain msgs) {
+		ITopicContainer oldItem = item;
 		item = newItem;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM,
@@ -350,15 +353,15 @@ public class Topic extends Comment implements ITopic {
 	 * 
 	 * @generated
 	 */
-	public void setItem(IReviewItem newItem) {
+	public void setItem(ITopicContainer newItem) {
 		if (newItem != item) {
 			NotificationChain msgs = null;
 			if (item != null)
-				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
-						IReviewItem.class, msgs);
+				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
+						ITopicContainer.class, msgs);
 			if (newItem != null)
-				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
-						IReviewItem.class, msgs);
+				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
+						ITopicContainer.class, msgs);
 			msgs = basicSetItem(newItem, msgs);
 			if (msgs != null)
 				msgs.dispatch();
@@ -367,18 +370,35 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
+	 * <!-- begin-user-doc --> Returns 0; base comments aren't ordered. <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	@Override
+	public long getIndex() {
+		long index = Long.MAX_VALUE;
+		for (ILocation location : getLocations()) {
+			index = Math.min(index, location.getIndex());
+		}
+		return index;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case ReviewsPackage.TOPIC__COMMENTS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__ITEM:
 			if (item != null)
-				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.REVIEW_ITEM__TOPICS,
-						IReviewItem.class, msgs);
-			return basicSetItem((IReviewItem) otherEnd, msgs);
+				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
+						ITopicContainer.class, msgs);
+			return basicSetItem((ITopicContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -395,6 +415,8 @@ public class Topic extends Comment implements ITopic {
 			return basicSetTask(null, msgs);
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.TOPIC__COMMENTS:
+			return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__ITEM:
 			return basicSetItem(null, msgs);
 		}
@@ -458,7 +480,7 @@ public class Topic extends Comment implements ITopic {
 			setTitle((String) newValue);
 			return;
 		case ReviewsPackage.TOPIC__ITEM:
-			setItem((IReviewItem) newValue);
+			setItem((ITopicContainer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -488,7 +510,7 @@ public class Topic extends Comment implements ITopic {
 			setTitle(TITLE_EDEFAULT);
 			return;
 		case ReviewsPackage.TOPIC__ITEM:
-			setItem((IReviewItem) null);
+			setItem((ITopicContainer) null);
 			return;
 		}
 		super.eUnset(featureID);

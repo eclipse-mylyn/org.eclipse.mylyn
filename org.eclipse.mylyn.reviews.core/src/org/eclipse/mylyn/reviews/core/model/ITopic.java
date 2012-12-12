@@ -70,7 +70,9 @@ public interface ITopic extends IComment {
 
 	/**
 	 * Returns the value of the '<em><b>Comments</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}'. <!-- begin-user-doc
+	 * -->
 	 * <p>
 	 * If the meaning of the '<em>Comments</em>' reference list isn't clear, there really should be more of a
 	 * description here...
@@ -78,6 +80,7 @@ public interface ITopic extends IComment {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Comments</em>' reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic
 	 * @generated
 	 */
 	List<IComment> getComments();
@@ -134,18 +137,19 @@ public interface ITopic extends IComment {
 
 	/**
 	 * Returns the value of the '<em><b>Item</b></em>' reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}'. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.ITopicContainer#getDirectTopics <em>Direct Topics</em>}'. <!--
+	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Item</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Item</em>' reference.
-	 * @see #setItem(IReviewItem)
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics
+	 * @see #setItem(ITopicContainer)
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer#getDirectTopics
 	 * @generated
 	 */
-	IReviewItem getItem();
+	ITopicContainer getItem();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}' reference. <!--
@@ -156,6 +160,6 @@ public interface ITopic extends IComment {
 	 * @see #getItem()
 	 * @generated
 	 */
-	void setItem(IReviewItem value);
+	void setItem(ITopicContainer value);
 
 } // ITopic

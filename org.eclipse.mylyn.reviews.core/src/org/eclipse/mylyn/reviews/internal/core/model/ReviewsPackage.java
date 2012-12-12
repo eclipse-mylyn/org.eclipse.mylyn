@@ -21,11 +21,12 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentType;
+import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IIndexed;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
-import org.eclipse.mylyn.reviews.core.model.IItem;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IModelVersioning;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -37,6 +38,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
@@ -89,7 +91,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewComponent()
 	 * @generated
 	 */
-	public static final int REVIEW_COMPONENT = 10;
+	public static final int REVIEW_COMPONENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -109,14 +111,14 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_COMPONENT_FEATURE_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Review <em>Review</em>}' class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.TopicContainer
+	 * <em>Topic Container</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.Review
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReview()
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.TopicContainer
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTopicContainer()
 	 * @generated
 	 */
-	public static final int REVIEW = 0;
+	public static final int TOPIC_CONTAINER = 0;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -124,7 +126,16 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__ENABLED = REVIEW_COMPONENT__ENABLED;
+	public static final int TOPIC_CONTAINER__ENABLED = REVIEW_COMPONENT__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC_CONTAINER__ALL_COMMENTS = REVIEW_COMPONENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -132,7 +143,86 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 0;
+	public static final int TOPIC_CONTAINER__TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC_CONTAINER__DIRECT_TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Topic Container</em>' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC_CONTAINER_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Review <em>Review</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.Review
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReview()
+	 * @generated
+	 */
+	public static final int REVIEW = 1;
+
+	/**
+	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__ENABLED = TOPIC_CONTAINER__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__ALL_COMMENTS = TOPIC_CONTAINER__ALL_COMMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__TOPICS = TOPIC_CONTAINER__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__DIRECT_TOPICS = TOPIC_CONTAINER__DIRECT_TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__CREATION_DATE = TOPIC_CONTAINER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__MODIFICATION_DATE = TOPIC_CONTAINER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Items</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -140,7 +230,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__ITEMS = REVIEW_COMPONENT_FEATURE_COUNT + 1;
+	public static final int REVIEW__ITEMS = TOPIC_CONTAINER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Review Task</b></em>' containment reference. <!-- begin-user-doc --> <!--
@@ -149,7 +239,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__REVIEW_TASK = REVIEW_COMPONENT_FEATURE_COUNT + 2;
+	public static final int REVIEW__REVIEW_TASK = TOPIC_CONTAINER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -158,7 +248,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__STATE = REVIEW_COMPONENT_FEATURE_COUNT + 3;
+	public static final int REVIEW__STATE = TOPIC_CONTAINER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -166,7 +256,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW__ID = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+	public static final int REVIEW__ID = TOPIC_CONTAINER_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Owner</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW__OWNER = TOPIC_CONTAINER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Review</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -174,7 +272,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 5;
+	public static final int REVIEW_FEATURE_COUNT = TOPIC_CONTAINER_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Comment <em>Comment</em>}'
@@ -184,7 +282,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getComment()
 	 * @generated
 	 */
-	public static final int COMMENT = 1;
+	public static final int COMMENT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -195,12 +293,37 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int COMMENT__ENABLED = REVIEW_COMPONENT__ENABLED;
 
 	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMENT__INDEX = REVIEW_COMPONENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMENT__CREATION_DATE = REVIEW_COMPONENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMENT__MODIFICATION_DATE = REVIEW_COMPONENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Author</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__AUTHOR = REVIEW_COMPONENT_FEATURE_COUNT + 0;
+	public static final int COMMENT__AUTHOR = REVIEW_COMPONENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -209,7 +332,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__TYPE = REVIEW_COMPONENT_FEATURE_COUNT + 1;
+	public static final int COMMENT__TYPE = REVIEW_COMPONENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -217,15 +340,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__DESCRIPTION = REVIEW_COMPONENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int COMMENT__CREATION_DATE = REVIEW_COMPONENT_FEATURE_COUNT + 3;
+	public static final int COMMENT__DESCRIPTION = REVIEW_COMPONENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -233,7 +348,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__ID = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+	public static final int COMMENT__ID = REVIEW_COMPONENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Replies</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -242,7 +357,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__REPLIES = REVIEW_COMPONENT_FEATURE_COUNT + 5;
+	public static final int COMMENT__REPLIES = REVIEW_COMPONENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Draft</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -250,7 +365,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT__DRAFT = REVIEW_COMPONENT_FEATURE_COUNT + 6;
+	public static final int COMMENT__DRAFT = REVIEW_COMPONENT_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Parent Topic</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMENT__PARENT_TOPIC = REVIEW_COMPONENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>Comment</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -258,7 +381,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 7;
+	public static final int COMMENT_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem <em>Review Item</em>}
@@ -268,7 +391,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewItem()
 	 * @generated
 	 */
-	public static final int REVIEW_ITEM = 2;
+	public static final int REVIEW_ITEM = 3;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -276,31 +399,16 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM__ENABLED = REVIEW_COMPONENT__ENABLED;
+	public static final int REVIEW_ITEM__ENABLED = TOPIC_CONTAINER__ENABLED;
 
 	/**
-	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM__ADDED_BY = REVIEW_COMPONENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Review</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REVIEW_ITEM__REVIEW = REVIEW_COMPONENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REVIEW_ITEM__NAME = REVIEW_COMPONENT_FEATURE_COUNT + 2;
+	public static final int REVIEW_ITEM__ALL_COMMENTS = TOPIC_CONTAINER__ALL_COMMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -308,7 +416,40 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM__TOPICS = REVIEW_COMPONENT_FEATURE_COUNT + 3;
+	public static final int REVIEW_ITEM__TOPICS = TOPIC_CONTAINER__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM__DIRECT_TOPICS = TOPIC_CONTAINER__DIRECT_TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM__ADDED_BY = TOPIC_CONTAINER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Review</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM__REVIEW = TOPIC_CONTAINER_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM__NAME = TOPIC_CONTAINER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -316,7 +457,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM__ID = REVIEW_COMPONENT_FEATURE_COUNT + 4;
+	public static final int REVIEW_ITEM__ID = TOPIC_CONTAINER_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Review Item</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
@@ -325,7 +466,33 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_FEATURE_COUNT = REVIEW_COMPONENT_FEATURE_COUNT + 5;
+	public static final int REVIEW_ITEM_FEATURE_COUNT = TOPIC_CONTAINER_FEATURE_COUNT + 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIndexed()
+	 * @generated
+	 */
+	public static final int INDEXED = 18;
+
+	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int INDEXED__INDEX = 0;
+
+	/**
+	 * The number of structural features of the '<em>Indexed</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int INDEXED_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Location <em>Location</em>}'
@@ -335,7 +502,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getLocation()
 	 * @generated
 	 */
-	public static final int LOCATION = 3;
+	public static final int LOCATION = 4;
+
+	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int LOCATION__INDEX = INDEXED__INDEX;
 
 	/**
 	 * The number of structural features of the '<em>Location</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -343,7 +518,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LOCATION_FEATURE_COUNT = 0;
+	public static final int LOCATION_FEATURE_COUNT = INDEXED_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.User <em>User</em>}' class. <!--
@@ -353,7 +528,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getUser()
 	 * @generated
 	 */
-	public static final int USER = 4;
+	public static final int USER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -395,7 +570,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTaskReference()
 	 * @generated
 	 */
-	public static final int TASK_REFERENCE = 5;
+	public static final int TASK_REFERENCE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -438,7 +613,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewState()
 	 * @generated
 	 */
-	public static final int REVIEW_STATE = 6;
+	public static final int REVIEW_STATE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -465,7 +640,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewGroup()
 	 * @generated
 	 */
-	public static final int REVIEW_GROUP = 7;
+	public static final int REVIEW_GROUP = 8;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -518,7 +693,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getCommentType()
 	 * @generated
 	 */
-	public static final int COMMENT_TYPE = 8;
+	public static final int COMMENT_TYPE = 9;
 
 	/**
 	 * The number of structural features of the '<em>Comment Type</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
@@ -537,7 +712,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTopic()
 	 * @generated
 	 */
-	public static final int TOPIC = 9;
+	public static final int TOPIC = 10;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -546,6 +721,31 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int TOPIC__ENABLED = COMMENT__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC__INDEX = COMMENT__INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC__CREATION_DATE = COMMENT__CREATION_DATE;
+
+	/**
+	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC__MODIFICATION_DATE = COMMENT__MODIFICATION_DATE;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -573,14 +773,6 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int TOPIC__DESCRIPTION = COMMENT__DESCRIPTION;
 
 	/**
-	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int TOPIC__CREATION_DATE = COMMENT__CREATION_DATE;
-
-	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -604,6 +796,14 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int TOPIC__DRAFT = COMMENT__DRAFT;
+
+	/**
+	 * The feature id for the '<em><b>Parent Topic</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TOPIC__PARENT_TOPIC = COMMENT__PARENT_TOPIC;
 
 	/**
 	 * The feature id for the '<em><b>Task</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
@@ -671,7 +871,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileItem()
 	 * @generated
 	 */
-	public static final int FILE_ITEM = 11;
+	public static final int FILE_ITEM = 12;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -680,6 +880,32 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int FILE_ITEM__ENABLED = REVIEW_ITEM__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_ITEM__ALL_COMMENTS = REVIEW_ITEM__ALL_COMMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_ITEM__TOPICS = REVIEW_ITEM__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_ITEM__DIRECT_TOPICS = REVIEW_ITEM__DIRECT_TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -704,14 +930,6 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int FILE_ITEM__NAME = REVIEW_ITEM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FILE_ITEM__TOPICS = REVIEW_ITEM__TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -754,7 +972,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewItemSet()
 	 * @generated
 	 */
-	public static final int REVIEW_ITEM_SET = 12;
+	public static final int REVIEW_ITEM_SET = 13;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -763,6 +981,32 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int REVIEW_ITEM_SET__ENABLED = REVIEW_ITEM__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__ALL_COMMENTS = REVIEW_ITEM__ALL_COMMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__TOPICS = REVIEW_ITEM__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__DIRECT_TOPICS = REVIEW_ITEM__DIRECT_TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -789,14 +1033,6 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM_SET__NAME = REVIEW_ITEM__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REVIEW_ITEM_SET__TOPICS = REVIEW_ITEM__TOPICS;
-
-	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -805,12 +1041,29 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM_SET__ID = REVIEW_ITEM__ID;
 
 	/**
+	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__CREATION_DATE = REVIEW_ITEM_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__MODIFICATION_DATE = REVIEW_ITEM_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Items</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 0;
+	public static final int REVIEW_ITEM_SET__ITEMS = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -818,7 +1071,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET__REVISION = REVIEW_ITEM_FEATURE_COUNT + 1;
+	public static final int REVIEW_ITEM_SET__REVISION = REVIEW_ITEM_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Review Item Set</em>' class. <!-- begin-user-doc --> <!--
@@ -827,7 +1080,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 2;
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation
@@ -837,7 +1090,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getLineLocation()
 	 * @generated
 	 */
-	public static final int LINE_LOCATION = 13;
+	public static final int LINE_LOCATION = 14;
+
+	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int LINE_LOCATION__INDEX = LOCATION__INDEX;
 
 	/**
 	 * The feature id for the '<em><b>Ranges</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -849,13 +1110,29 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int LINE_LOCATION__RANGES = LOCATION_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Range Min</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int LINE_LOCATION__RANGE_MIN = LOCATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Range Max</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int LINE_LOCATION__RANGE_MAX = LOCATION_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Line Location</em>' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LINE_LOCATION_FEATURE_COUNT = LOCATION_FEATURE_COUNT + 1;
+	public static final int LINE_LOCATION_FEATURE_COUNT = LOCATION_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineRange <em>Line Range</em>}'
@@ -865,7 +1142,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getLineRange()
 	 * @generated
 	 */
-	public static final int LINE_RANGE = 14;
+	public static final int LINE_RANGE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Start</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -900,7 +1177,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileRevision()
 	 * @generated
 	 */
-	public static final int FILE_REVISION = 15;
+	public static final int FILE_REVISION = 16;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -909,6 +1186,32 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int FILE_REVISION__ENABLED = REVIEW_ITEM__ENABLED;
+
+	/**
+	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__ALL_COMMENTS = REVIEW_ITEM__ALL_COMMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__TOPICS = REVIEW_ITEM__TOPICS;
+
+	/**
+	 * The feature id for the '<em><b>Direct Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__DIRECT_TOPICS = REVIEW_ITEM__DIRECT_TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -933,14 +1236,6 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int FILE_REVISION__NAME = REVIEW_ITEM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FILE_REVISION__TOPICS = REVIEW_ITEM__TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -975,13 +1270,21 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_REVISION__CONTENT = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>File</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_REVISION__FILE = REVIEW_ITEM_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>File Revision</em>' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 3;
+	public static final int FILE_REVISION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
@@ -991,7 +1294,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getModelVersioning()
 	 * @generated
 	 */
-	public static final int MODEL_VERSIONING = 16;
+	public static final int MODEL_VERSIONING = 17;
 
 	/**
 	 * The feature id for the '<em><b>Fragment Version</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1010,6 +1313,48 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @ordered
 	 */
 	public static final int MODEL_VERSIONING_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.reviews.core.model.IDated
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getDated()
+	 * @generated
+	 */
+	public static final int DATED = 19;
+
+	/**
+	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DATED__CREATION_DATE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DATED__MODIFICATION_DATE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Dated</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DATED_FEATURE_COUNT = 2;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass topicContainerEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1131,6 +1476,20 @@ public class ReviewsPackage extends EPackageImpl {
 	private EClass modelVersioningEClass = null;
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass indexedEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass datedEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
 	 * EPackage.Registry} by the package package URI value.
 	 * <p>
@@ -1192,6 +1551,60 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ITopicContainer
+	 * <em>Topic Container</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Topic Container</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer
+	 * @generated
+	 */
+	public EClass getTopicContainer() {
+		return topicContainerEClass;
+	}
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link org.eclipse.mylyn.reviews.core.model.ITopicContainer#getAllComments <em>All Comments</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>All Comments</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer#getAllComments()
+	 * @see #getTopicContainer()
+	 * @generated
+	 */
+	public EReference getTopicContainer_AllComments() {
+		return (EReference) topicContainerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link org.eclipse.mylyn.reviews.core.model.ITopicContainer#getTopics <em>Topics</em>}'. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Topics</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer#getTopics()
+	 * @see #getTopicContainer()
+	 * @generated
+	 */
+	public EReference getTopicContainer_Topics() {
+		return (EReference) topicContainerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link org.eclipse.mylyn.reviews.core.model.ITopicContainer#getDirectTopics <em>Direct Topics</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Direct Topics</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer#getDirectTopics()
+	 * @see #getTopicContainer()
+	 * @generated
+	 */
+	public EReference getTopicContainer_DirectTopics() {
+		return (EReference) topicContainerEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IReview <em>Review</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1204,19 +1617,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.mylyn.reviews.core.model.IReview#getTopics
-	 * <em>Topics</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the reference list '<em>Topics</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getTopics()
-	 * @see #getReview()
-	 * @generated
-	 */
-	public EReference getReview_Topics() {
-		return (EReference) reviewEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.mylyn.reviews.core.model.IReview#getItems
 	 * <em>Items</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1226,7 +1626,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getReview_Items() {
-		return (EReference) reviewEClass.getEStructuralFeatures().get(1);
+		return (EReference) reviewEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1240,7 +1640,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getReview_ReviewTask() {
-		return (EReference) reviewEClass.getEStructuralFeatures().get(2);
+		return (EReference) reviewEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1254,7 +1654,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getReview_State() {
-		return (EReference) reviewEClass.getEStructuralFeatures().get(3);
+		return (EReference) reviewEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1267,7 +1667,20 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getReview_Id() {
-		return (EAttribute) reviewEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) reviewEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IReview#getOwner
+	 * <em>Owner</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Owner</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getOwner()
+	 * @see #getReview()
+	 * @generated
+	 */
+	public EReference getReview_Owner() {
+		return (EReference) reviewEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1323,19 +1736,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IComment#getCreationDate
-	 * <em>Creation Date</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Creation Date</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getCreationDate()
-	 * @see #getComment()
-	 * @generated
-	 */
-	public EAttribute getComment_CreationDate() {
-		return (EAttribute) commentEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId
 	 * <em>Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1345,7 +1745,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getComment_Id() {
-		return (EAttribute) commentEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1359,7 +1759,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getComment_Replies() {
-		return (EReference) commentEClass.getEStructuralFeatures().get(5);
+		return (EReference) commentEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1372,7 +1772,20 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getComment_Draft() {
-		return (EAttribute) commentEClass.getEStructuralFeatures().get(6);
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic
+	 * <em>Parent Topic</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Parent Topic</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic()
+	 * @see #getComment()
+	 * @generated
+	 */
+	public EReference getComment_ParentTopic() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1427,20 +1840,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference list '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}'. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @return the meta object for the reference list '<em>Topics</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics()
-	 * @see #getReviewItem()
-	 * @generated
-	 */
-	public EReference getReviewItem_Topics() {
-		return (EReference) reviewItemEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId
 	 * <em>Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1450,7 +1849,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getReviewItem_Id() {
-		return (EAttribute) reviewItemEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) reviewItemEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1856,6 +2255,32 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMin
+	 * <em>Range Min</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Range Min</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMin()
+	 * @see #getLineLocation()
+	 * @generated
+	 */
+	public EAttribute getLineLocation_RangeMin() {
+		return (EAttribute) lineLocationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMax
+	 * <em>Range Max</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Range Max</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMax()
+	 * @see #getLineLocation()
+	 * @generated
+	 */
+	public EAttribute getLineLocation_RangeMax() {
+		return (EAttribute) lineLocationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ILineRange <em>Line Range</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1945,6 +2370,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile
+	 * <em>File</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>File</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile()
+	 * @see #getFileRevision()
+	 * @generated
+	 */
+	public EReference getFileRevision_File() {
+		return (EReference) fileRevisionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
 	 * <em>Model Versioning</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1968,6 +2406,70 @@ public class ReviewsPackage extends EPackageImpl {
 	 */
 	public EAttribute getModelVersioning_FragmentVersion() {
 		return (EAttribute) modelVersioningEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Indexed</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
+	 * @generated
+	 */
+	public EClass getIndexed() {
+		return indexedEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IIndexed#getIndex
+	 * <em>Index</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Index</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed#getIndex()
+	 * @see #getIndexed()
+	 * @generated
+	 */
+	public EAttribute getIndexed_Index() {
+		return (EAttribute) indexedEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Dated</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IDated
+	 * @generated
+	 */
+	public EClass getDated() {
+		return datedEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IDated#getCreationDate
+	 * <em>Creation Date</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Creation Date</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IDated#getCreationDate()
+	 * @see #getDated()
+	 * @generated
+	 */
+	public EAttribute getDated_CreationDate() {
+		return (EAttribute) datedEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate <em>Modification Date</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Modification Date</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate()
+	 * @see #getDated()
+	 * @generated
+	 */
+	public EAttribute getDated_ModificationDate() {
+		return (EAttribute) datedEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1999,27 +2501,31 @@ public class ReviewsPackage extends EPackageImpl {
 		isCreated = true;
 
 		// Create classes and their features
+		topicContainerEClass = createEClass(TOPIC_CONTAINER);
+		createEReference(topicContainerEClass, TOPIC_CONTAINER__ALL_COMMENTS);
+		createEReference(topicContainerEClass, TOPIC_CONTAINER__TOPICS);
+		createEReference(topicContainerEClass, TOPIC_CONTAINER__DIRECT_TOPICS);
+
 		reviewEClass = createEClass(REVIEW);
-		createEReference(reviewEClass, REVIEW__TOPICS);
 		createEReference(reviewEClass, REVIEW__ITEMS);
 		createEReference(reviewEClass, REVIEW__REVIEW_TASK);
 		createEReference(reviewEClass, REVIEW__STATE);
 		createEAttribute(reviewEClass, REVIEW__ID);
+		createEReference(reviewEClass, REVIEW__OWNER);
 
 		commentEClass = createEClass(COMMENT);
 		createEReference(commentEClass, COMMENT__AUTHOR);
 		createEReference(commentEClass, COMMENT__TYPE);
 		createEAttribute(commentEClass, COMMENT__DESCRIPTION);
-		createEAttribute(commentEClass, COMMENT__CREATION_DATE);
 		createEAttribute(commentEClass, COMMENT__ID);
 		createEReference(commentEClass, COMMENT__REPLIES);
 		createEAttribute(commentEClass, COMMENT__DRAFT);
+		createEReference(commentEClass, COMMENT__PARENT_TOPIC);
 
 		reviewItemEClass = createEClass(REVIEW_ITEM);
 		createEReference(reviewItemEClass, REVIEW_ITEM__ADDED_BY);
 		createEReference(reviewItemEClass, REVIEW_ITEM__REVIEW);
 		createEAttribute(reviewItemEClass, REVIEW_ITEM__NAME);
-		createEReference(reviewItemEClass, REVIEW_ITEM__TOPICS);
 		createEAttribute(reviewItemEClass, REVIEW_ITEM__ID);
 
 		locationEClass = createEClass(LOCATION);
@@ -2063,6 +2569,8 @@ public class ReviewsPackage extends EPackageImpl {
 
 		lineLocationEClass = createEClass(LINE_LOCATION);
 		createEReference(lineLocationEClass, LINE_LOCATION__RANGES);
+		createEAttribute(lineLocationEClass, LINE_LOCATION__RANGE_MIN);
+		createEAttribute(lineLocationEClass, LINE_LOCATION__RANGE_MAX);
 
 		lineRangeEClass = createEClass(LINE_RANGE);
 		createEAttribute(lineRangeEClass, LINE_RANGE__START);
@@ -2072,9 +2580,17 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(fileRevisionEClass, FILE_REVISION__PATH);
 		createEAttribute(fileRevisionEClass, FILE_REVISION__REVISION);
 		createEAttribute(fileRevisionEClass, FILE_REVISION__CONTENT);
+		createEReference(fileRevisionEClass, FILE_REVISION__FILE);
 
 		modelVersioningEClass = createEClass(MODEL_VERSIONING);
 		createEAttribute(modelVersioningEClass, MODEL_VERSIONING__FRAGMENT_VERSION);
+
+		indexedEClass = createEClass(INDEXED);
+		createEAttribute(indexedEClass, INDEXED__INDEX);
+
+		datedEClass = createEClass(DATED);
+		createEAttribute(datedEClass, DATED__CREATION_DATE);
+		createEAttribute(datedEClass, DATED__MODIFICATION_DATE);
 	}
 
 	/**
@@ -2105,25 +2621,49 @@ public class ReviewsPackage extends EPackageImpl {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		reviewEClass.getESuperTypes().add(this.getReviewComponent());
+		topicContainerEClass.getESuperTypes().add(this.getReviewComponent());
+		reviewEClass.getESuperTypes().add(this.getTopicContainer());
+		reviewEClass.getESuperTypes().add(this.getDated());
 		commentEClass.getESuperTypes().add(this.getReviewComponent());
-		reviewItemEClass.getESuperTypes().add(this.getReviewComponent());
+		commentEClass.getESuperTypes().add(this.getIndexed());
+		commentEClass.getESuperTypes().add(this.getDated());
+		reviewItemEClass.getESuperTypes().add(this.getTopicContainer());
+		locationEClass.getESuperTypes().add(this.getIndexed());
 		taskReferenceEClass.getESuperTypes().add(this.getReviewComponent());
 		reviewStateEClass.getESuperTypes().add(this.getReviewComponent());
 		reviewGroupEClass.getESuperTypes().add(this.getReviewComponent());
 		topicEClass.getESuperTypes().add(this.getComment());
 		fileItemEClass.getESuperTypes().add(this.getReviewItem());
 		reviewItemSetEClass.getESuperTypes().add(this.getReviewItem());
+		reviewItemSetEClass.getESuperTypes().add(this.getDated());
 		lineLocationEClass.getESuperTypes().add(this.getLocation());
 		fileRevisionEClass.getESuperTypes().add(this.getReviewItem());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(topicContainerEClass, ITopicContainer.class,
+				"TopicContainer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
-				getReview_Topics(),
+				getTopicContainer_AllComments(),
+				this.getComment(),
+				null,
+				"allComments", null, 0, -1, ITopicContainer.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getTopicContainer_Topics(),
 				this.getTopic(),
 				null,
-				"topics", null, 0, -1, IReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"topics", null, 0, -1, ITopicContainer.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getTopicContainer_DirectTopics(),
+				this.getTopic(),
+				this.getTopic_Item(),
+				"directTopics", null, 0, -1, ITopicContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		EOperation op = addEOperation(topicContainerEClass, this.getTopic(),
+				"createTopicComment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, this.getLocation(), "initalLocation", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, ecorePackage.getEString(), "commentText", 1, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
 				getReview_Items(),
 				this.getReviewItem(),
@@ -2143,6 +2683,11 @@ public class ReviewsPackage extends EPackageImpl {
 				getReview_Id(),
 				ecorePackage.getEString(),
 				"id", null, 0, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReview_Owner(),
+				this.getUser(),
+				null,
+				"owner", null, 0, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(commentEClass, IComment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -2160,10 +2705,6 @@ public class ReviewsPackage extends EPackageImpl {
 				ecorePackage.getEString(),
 				"description", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
-				getComment_CreationDate(),
-				ecorePackage.getEDate(),
-				"creationDate", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
 				getComment_Id(),
 				ecorePackage.getEString(),
 				"id", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -2176,6 +2717,11 @@ public class ReviewsPackage extends EPackageImpl {
 				getComment_Draft(),
 				ecorePackage.getEBoolean(),
 				"draft", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getComment_ParentTopic(),
+				this.getTopic(),
+				this.getTopic_Comments(),
+				"parentTopic", null, 0, 1, IComment.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(reviewItemEClass, IReviewItem.class,
 				"ReviewItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2193,20 +2739,10 @@ public class ReviewsPackage extends EPackageImpl {
 				getReviewItem_Name(),
 				ecorePackage.getEString(),
 				"name", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReviewItem_Topics(),
-				this.getTopic(),
-				this.getTopic_Item(),
-				"topics", null, 0, -1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getReviewItem_Id(),
 				ecorePackage.getEString(),
 				"id", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		EOperation op = addEOperation(reviewItemEClass, this.getTopic(),
-				"createTopicComment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-		addEParameter(op, this.getLocation(), "initalLocation", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
-		addEParameter(op, ecorePackage.getEString(), "commentText", 1, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(locationEClass, ILocation.class, "Location", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
@@ -2272,7 +2808,7 @@ public class ReviewsPackage extends EPackageImpl {
 		initEReference(
 				getTopic_Comments(),
 				this.getComment(),
-				null,
+				this.getComment_ParentTopic(),
 				"comments", null, 0, -1, ITopic.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getTopic_Review(),
@@ -2285,8 +2821,8 @@ public class ReviewsPackage extends EPackageImpl {
 				"title", null, 0, 1, ITopic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getTopic_Item(),
-				this.getReviewItem(),
-				this.getReviewItem_Topics(),
+				this.getTopicContainer(),
+				this.getTopicContainer_DirectTopics(),
 				"item", null, 0, 1, ITopic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(reviewComponentEClass, IReviewComponent.class,
@@ -2328,6 +2864,14 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getLineRange(),
 				null,
 				"ranges", null, 0, -1, ILineLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getLineLocation_RangeMin(),
+				ecorePackage.getEInt(),
+				"rangeMin", null, 1, 1, ILineLocation.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getLineLocation_RangeMax(),
+				ecorePackage.getEInt(),
+				"rangeMax", null, 1, 1, ILineLocation.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(lineRangeEClass, ILineRange.class,
 				"LineRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2354,6 +2898,11 @@ public class ReviewsPackage extends EPackageImpl {
 				getFileRevision_Content(),
 				ecorePackage.getEString(),
 				"content", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getFileRevision_File(),
+				this.getFileItem(),
+				null,
+				"file", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(modelVersioningEClass, IModelVersioning.class,
 				"ModelVersioning", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -2361,6 +2910,22 @@ public class ReviewsPackage extends EPackageImpl {
 				getModelVersioning_FragmentVersion(),
 				ecorePackage.getEString(),
 				"fragmentVersion", "1.0.0", 0, 1, IModelVersioning.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+
+		initEClass(indexedEClass, IIndexed.class, "Indexed", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getIndexed_Index(),
+				ecorePackage.getELong(),
+				"index", null, 1, 1, IIndexed.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(datedEClass, IDated.class, "Dated", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getDated_CreationDate(),
+				ecorePackage.getEDate(),
+				"creationDate", null, 0, 1, IDated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDated_ModificationDate(),
+				ecorePackage.getEDate(),
+				"modificationDate", null, 0, 1, IDated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -2398,6 +2963,40 @@ public class ReviewsPackage extends EPackageImpl {
 	 */
 	public interface Literals {
 		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.TopicContainer
+		 * <em>Topic Container</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.TopicContainer
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTopicContainer()
+		 * @generated
+		 */
+		public static final EClass TOPIC_CONTAINER = eINSTANCE.getTopicContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>All Comments</b></em>' reference list feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TOPIC_CONTAINER__ALL_COMMENTS = eINSTANCE.getTopicContainer_AllComments();
+
+		/**
+		 * The meta object literal for the '<em><b>Topics</b></em>' reference list feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TOPIC_CONTAINER__TOPICS = eINSTANCE.getTopicContainer_Topics();
+
+		/**
+		 * The meta object literal for the '<em><b>Direct Topics</b></em>' reference list feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference TOPIC_CONTAINER__DIRECT_TOPICS = eINSTANCE.getTopicContainer_DirectTopics();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Review <em>Review</em>}
 		 * ' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -2406,14 +3005,6 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EClass REVIEW = eINSTANCE.getReview();
-
-		/**
-		 * The meta object literal for the '<em><b>Topics</b></em>' reference list feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EReference REVIEW__TOPICS = eINSTANCE.getReview_Topics();
 
 		/**
 		 * The meta object literal for the '<em><b>Items</b></em>' reference list feature. <!-- begin-user-doc --> <!--
@@ -2446,6 +3037,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute REVIEW__ID = eINSTANCE.getReview_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Owner</b></em>' reference feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference REVIEW__OWNER = eINSTANCE.getReview_Owner();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Comment
@@ -2482,14 +3081,6 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EAttribute COMMENT__DESCRIPTION = eINSTANCE.getComment_Description();
 
 		/**
-		 * The meta object literal for the '<em><b>Creation Date</b></em>' attribute feature. <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute COMMENT__CREATION_DATE = eINSTANCE.getComment_CreationDate();
-
-		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
@@ -2512,6 +3103,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute COMMENT__DRAFT = eINSTANCE.getComment_Draft();
+
+		/**
+		 * The meta object literal for the '<em><b>Parent Topic</b></em>' reference feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference COMMENT__PARENT_TOPIC = eINSTANCE.getComment_ParentTopic();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem
@@ -2546,14 +3145,6 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute REVIEW_ITEM__NAME = eINSTANCE.getReviewItem_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Topics</b></em>' reference list feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EReference REVIEW_ITEM__TOPICS = eINSTANCE.getReviewItem_Topics();
 
 		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!--
@@ -2834,6 +3425,22 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference LINE_LOCATION__RANGES = eINSTANCE.getLineLocation_Ranges();
 
 		/**
+		 * The meta object literal for the '<em><b>Range Min</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute LINE_LOCATION__RANGE_MIN = eINSTANCE.getLineLocation_RangeMin();
+
+		/**
+		 * The meta object literal for the '<em><b>Range Max</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute LINE_LOCATION__RANGE_MAX = eINSTANCE.getLineLocation_RangeMax();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineRange
 		 * <em>Line Range</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -2894,6 +3501,14 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EAttribute FILE_REVISION__CONTENT = eINSTANCE.getFileRevision_Content();
 
 		/**
+		 * The meta object literal for the '<em><b>File</b></em>' reference feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference FILE_REVISION__FILE = eINSTANCE.getFileRevision_File();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
 		 * <em>Model Versioning</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -2910,6 +3525,50 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute MODEL_VERSIONING__FRAGMENT_VERSION = eINSTANCE.getModelVersioning_FragmentVersion();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'
+		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIndexed()
+		 * @generated
+		 */
+		public static final EClass INDEXED = eINSTANCE.getIndexed();
+
+		/**
+		 * The meta object literal for the '<em><b>Index</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute INDEXED__INDEX = eINSTANCE.getIndexed_Index();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}' class.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.reviews.core.model.IDated
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getDated()
+		 * @generated
+		 */
+		public static final EClass DATED = eINSTANCE.getDated();
+
+		/**
+		 * The meta object literal for the '<em><b>Creation Date</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute DATED__CREATION_DATE = eINSTANCE.getDated_CreationDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Modification Date</b></em>' attribute feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute DATED__MODIFICATION_DATE = eINSTANCE.getDated_ModificationDate();
 
 	}
 

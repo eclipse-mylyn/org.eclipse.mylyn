@@ -210,8 +210,8 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
 				try {
-					startLine = lineLocation.getTotalMin();
-					endLine = lineLocation.getTotalMax();
+					startLine = lineLocation.getRangeMin();
+					endLine = lineLocation.getRangeMax();
 
 					int offset = 0;
 					int length = 0;

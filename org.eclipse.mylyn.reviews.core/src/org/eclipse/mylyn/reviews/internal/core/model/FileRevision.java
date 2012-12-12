@@ -17,7 +17,9 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
@@ -32,6 +34,7 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getPath <em>Path</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getRevision <em>Revision</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getContent <em>Content</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getFile <em>File</em>}</li>
  * </ul>
  * </p>
  * 
@@ -97,6 +100,16 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 * @ordered
 	 */
 	protected String content = CONTENT_EDEFAULT;
+
+	/**
+	 * <<<<<<< Upstream, based on origin/master ======= The cached value of the '{@link #getFile() <em>File</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getFile()
+	 * @generated
+	 * @ordered
+	 */
+	protected IFileItem file;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -187,6 +200,45 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 * 
 	 * @generated
 	 */
+	public IFileItem getFile() {
+		if (file != null && file.eIsProxy()) {
+			InternalEObject oldFile = (InternalEObject) file;
+			file = (IFileItem) eResolveProxy(oldFile);
+			if (file != oldFile) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_REVISION__FILE,
+							oldFile, file));
+			}
+		}
+		return file;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IFileItem basicGetFile() {
+		return file;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setFile(IFileItem newFile) {
+		IFileItem oldFile = file;
+		file = newFile;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_REVISION__FILE, oldFile, file));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -196,6 +248,10 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 			return getRevision();
 		case ReviewsPackage.FILE_REVISION__CONTENT:
 			return getContent();
+		case ReviewsPackage.FILE_REVISION__FILE:
+			if (resolve)
+				return getFile();
+			return basicGetFile();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -218,6 +274,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		case ReviewsPackage.FILE_REVISION__CONTENT:
 			setContent((String) newValue);
 			return;
+		case ReviewsPackage.FILE_REVISION__FILE:
+			setFile((IFileItem) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -239,6 +298,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		case ReviewsPackage.FILE_REVISION__CONTENT:
 			setContent(CONTENT_EDEFAULT);
 			return;
+		case ReviewsPackage.FILE_REVISION__FILE:
+			setFile((IFileItem) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -257,6 +319,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
 		case ReviewsPackage.FILE_REVISION__CONTENT:
 			return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
+		case ReviewsPackage.FILE_REVISION__FILE:
+			return file != null;
 		}
 		return super.eIsSet(featureID);
 	}

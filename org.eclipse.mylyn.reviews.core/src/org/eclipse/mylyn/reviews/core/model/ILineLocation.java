@@ -18,6 +18,8 @@ import java.util.List;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRanges <em>Ranges</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMin <em>Range Min</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMax <em>Range Max</em>}</li>
  * </ul>
  * </p>
  * 
@@ -38,8 +40,30 @@ public interface ILineLocation extends ILocation {
 	 */
 	List<ILineRange> getRanges();
 
-	int getTotalMin();
+	/**
+	 * Returns the value of the '<em><b>Range Min</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Range Min</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Range Min</em>' attribute.
+	 * @generated
+	 */
+	int getRangeMin();
 
-	int getTotalMax();
+	/**
+	 * Returns the value of the '<em><b>Range Max</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Range Max</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Range Max</em>' attribute.
+	 * @generated
+	 */
+	int getRangeMax();
 
 } // ILineLocation

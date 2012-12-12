@@ -71,6 +71,11 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 */
 	protected ReviewsSwitch<Adapter> modelSwitch = new ReviewsSwitch<Adapter>() {
 		@Override
+		public Adapter caseTopicContainer(ITopicContainer object) {
+			return createTopicContainerAdapter();
+		}
+
+		@Override
 		public Adapter caseReview(IReview object) {
 			return createReviewAdapter();
 		}
@@ -156,6 +161,16 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseIndexed(IIndexed object) {
+			return createIndexedAdapter();
+		}
+
+		@Override
+		public Adapter caseDated(IDated object) {
+			return createDatedAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -172,6 +187,20 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	@Override
 	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject) target);
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ITopicContainer
+	 * <em>Topic Container</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
+	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer
+	 * @generated
+	 */
+	public Adapter createTopicContainerAdapter() {
+		return null;
 	}
 
 	/**
@@ -405,6 +434,32 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createModelVersioningAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IIndexed
+	 * <em>Indexed</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
+	 * cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
+	 * @generated
+	 */
+	public Adapter createIndexedAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}
+	 * '. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IDated
+	 * @generated
+	 */
+	public Adapter createDatedAdapter() {
 		return null;
 	}
 

@@ -101,8 +101,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 					ILocation location = comment.getLocations().get(0);
 					if (location instanceof ILineLocation) {
 						ILineLocation lineLocation = (ILineLocation) location;
-						startLine = lineLocation.getTotalMin();
-						endLine = lineLocation.getTotalMax();
+						startLine = lineLocation.getRangeMin();
+						endLine = lineLocation.getRangeMax();
 						if (lineNr >= startLine && lineNr <= endLine) {
 							AnnotationPreference pref = new AnnotationPreferenceLookup().getAnnotationPreference(annotation);
 							if (pref.getHighlightPreferenceValue()) {
@@ -217,8 +217,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		if (range instanceof ILineLocation) {
 			ILineLocation lineLocation = (ILineLocation) range;
 			// editors count lines from 0, Crucible counts from 1
-			final int startLine = lineLocation.getTotalMin() - 1;
-			final int endLine = lineLocation.getTotalMax() - 1;
+			final int startLine = lineLocation.getRangeMin() - 1;
+			final int endLine = lineLocation.getRangeMax() - 1;
 			if (sourceViewer != null) {
 				IDocument document = sourceViewer.getDocument();
 				if (document != null) {

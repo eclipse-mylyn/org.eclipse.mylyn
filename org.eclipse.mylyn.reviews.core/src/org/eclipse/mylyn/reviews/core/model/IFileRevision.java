@@ -10,8 +10,6 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
-import java.util.List;
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>File Revision</b></em>'. <!-- end-user-doc -->
  * <p>
@@ -20,6 +18,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getPath <em>Path</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getRevision <em>Revision</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getContent <em>Content</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile <em>File</em>}</li>
  * </ul>
  * </p>
  * 
@@ -99,5 +98,29 @@ public interface IFileRevision extends IReviewItem {
 	 * @generated
 	 */
 	void setContent(String value);
+
+	/**
+	 * Returns the value of the '<em><b>File</b></em>' reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>File</em>' reference isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>File</em>' reference.
+	 * @see #setFile(IFileItem)
+	 * @generated
+	 */
+	IFileItem getFile();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile <em>File</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>File</em>' reference.
+	 * @see #getFile()
+	 * @generated
+	 */
+	void setFile(IFileItem value);
 
 } // IFileRevision

@@ -10,12 +10,10 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Location</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */
-public interface ILocation extends EObject {
+public interface ILocation extends IIndexed {
 } // ILocation

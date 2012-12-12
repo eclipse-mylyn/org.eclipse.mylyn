@@ -10,8 +10,6 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
-import java.util.List;
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Review Item</b></em>'. <!-- end-user-doc -->
  * <p>
@@ -20,14 +18,13 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getAddedBy <em>Added By</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview <em>Review</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getTopics <em>Topics</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IReviewItem extends IReviewComponent {
+public interface IReviewItem extends ITopicContainer {
 	/**
 	 * Returns the value of the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
@@ -103,22 +100,6 @@ public interface IReviewItem extends IReviewComponent {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Topics</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}'. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Topics</em>' reference list isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Topics</em>' reference list.
-	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getItem
-	 * @generated
-	 */
-	List<ITopic> getTopics();
-
-	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
@@ -141,12 +122,5 @@ public interface IReviewItem extends IReviewComponent {
 	 * @generated
 	 */
 	void setId(String value);
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	ITopic createTopicComment(ILocation initalLocation, String commentText);
 
 } // IReviewItem

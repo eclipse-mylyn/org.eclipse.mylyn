@@ -52,7 +52,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 		for (ILocation location : topic.getLocations()) {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
-				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getTotalMin(), side);
+				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side);
 				request.setMessage(topic.getDescription());
 
 				GerritOperation<PatchLineComment> operation = getOperationFactory().createSaveDraftOperation(getTask(),

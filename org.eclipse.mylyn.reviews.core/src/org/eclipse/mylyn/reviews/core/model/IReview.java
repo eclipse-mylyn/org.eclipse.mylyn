@@ -17,31 +17,17 @@ import java.util.List;
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getTopics <em>Topics</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getItems <em>Items</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewTask <em>Review Task</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getState <em>State</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getOwner <em>Owner</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IReview extends IReviewComponent {
-	/**
-	 * Returns the value of the '<em><b>Topics</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic}. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Topics</em>' reference list isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Topics</em>' reference list.
-	 * @generated
-	 */
-	List<ITopic> getTopics();
-
+public interface IReview extends ITopicContainer, IDated {
 	/**
 	 * Returns the value of the '<em><b>Items</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. <!-- begin-user-doc -->
@@ -129,5 +115,30 @@ public interface IReview extends IReviewComponent {
 	 * @generated
 	 */
 	void setId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Owner</b></em>' reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Owner</em>' reference.
+	 * @see #setOwner(IUser)
+	 * @generated
+	 */
+	IUser getOwner();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getOwner <em>Owner</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Owner</em>' reference.
+	 * @see #getOwner()
+	 * @generated
+	 */
+	void setOwner(IUser value);
 
 } // IReview

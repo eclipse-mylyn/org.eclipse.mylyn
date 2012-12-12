@@ -10,7 +10,6 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,16 +20,16 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getAuthor <em>Author</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getType <em>Type</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getDescription <em>Description</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getCreationDate <em>Creation Date</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getReplies <em>Replies</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#isDraft <em>Draft</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IComment extends IReviewComponent {
+public interface IComment extends IReviewComponent, IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
@@ -107,31 +106,6 @@ public interface IComment extends IReviewComponent {
 	void setDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Creation Date</em>' attribute isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Creation Date</em>' attribute.
-	 * @see #setCreationDate(Date)
-	 * @generated
-	 */
-	Date getCreationDate();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getCreationDate
-	 * <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Creation Date</em>' attribute.
-	 * @see #getCreationDate()
-	 * @generated
-	 */
-	void setCreationDate(Date value);
-
-	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
@@ -159,7 +133,7 @@ public interface IComment extends IReviewComponent {
 	 * Returns the value of the '<em><b>Replies</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Replies</em>' containment reference isn't clear, there really should be more of a
+	 * If the meaning of the '<em>Replies</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
@@ -193,5 +167,32 @@ public interface IComment extends IReviewComponent {
 	 * @generated
 	 */
 	void setDraft(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Parent Topic</b></em>' reference. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parent Topic</em>' reference isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Parent Topic</em>' reference.
+	 * @see #setParentTopic(ITopic)
+	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getComments
+	 * @generated
+	 */
+	ITopic getParentTopic();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}
+	 * ' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Parent Topic</em>' reference.
+	 * @see #getParentTopic()
+	 * @generated
+	 */
+	void setParentTopic(ITopic value);
 
 } // IComment

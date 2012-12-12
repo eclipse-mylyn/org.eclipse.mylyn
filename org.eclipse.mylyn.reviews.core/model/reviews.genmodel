@@ -36,7 +36,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/addedBy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/review"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItem/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/topics"/>
+      <genFeatures createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference reviews.ecore#//ReviewItem/topics"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute reviews.ecore#//ReviewItem/id"/>
       <genOperations ecoreOperation="reviews.ecore#//ReviewItem/createTopicComment">
         <genParameters ecoreParameter="reviews.ecore#//ReviewItem/createTopicComment/initalLocation"/>

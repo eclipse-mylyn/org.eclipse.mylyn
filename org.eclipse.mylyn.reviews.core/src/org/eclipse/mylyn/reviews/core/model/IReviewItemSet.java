@@ -24,13 +24,13 @@ import java.util.List;
  * 
  * @generated
  */
-public interface IReviewItemSet extends IReviewItem {
+public interface IReviewItemSet extends IReviewItem, IDated {
 	/**
 	 * Returns the value of the '<em><b>Items</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Items</em>' reference list isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
