@@ -13,44 +13,41 @@ package org.eclipse.mylyn.reviews.core.model;
 import java.util.List;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Review Item Set</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Review Item Set</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IReviewItemSet extends IReviewItem {
 	/**
-	 * Returns the value of the '<em><b>Items</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Items</b></em>' reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Items</em>' reference list.
 	 * @generated
 	 */
 	List<IReviewItem> getItems();
 
 	/**
-	 * Returns the value of the '<em><b>Revision</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Revision</b></em>' attribute. The default value is <code>""</code>. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Revision</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @generated
@@ -58,10 +55,11 @@ public interface IReviewItemSet extends IReviewItem {
 	String getRevision();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Revision</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()
 	 * @generated
 	 */

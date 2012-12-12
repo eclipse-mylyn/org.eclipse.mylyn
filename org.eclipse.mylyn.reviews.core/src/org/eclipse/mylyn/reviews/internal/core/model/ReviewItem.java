@@ -34,21 +34,21 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getTopics <em>Topics</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReviewItem extends ReviewComponent implements IReviewItem {
 	/**
-	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getAddedBy()
 	 * @generated
 	 * @ordered
@@ -56,9 +56,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected IUser addedBy;
 
 	/**
-	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getReview()
 	 * @generated
 	 * @ordered
@@ -86,9 +86,9 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getTopics()
 	 * @generated
 	 * @ordered
@@ -96,8 +96,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected EList<ITopic> topics;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -105,8 +105,8 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -115,6 +115,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReviewItem() {
@@ -123,6 +124,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -132,6 +134,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser getAddedBy() {
@@ -149,6 +152,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser basicGetAddedBy() {
@@ -157,6 +161,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAddedBy(IUser newAddedBy) {
@@ -169,6 +174,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview getReview() {
@@ -186,6 +192,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview basicGetReview() {
@@ -194,6 +201,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setReview(IReview newReview) {
@@ -205,6 +213,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -213,6 +222,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
@@ -224,6 +234,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ITopic> getTopics() {
@@ -236,6 +247,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -244,6 +256,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setId(String newId) {
@@ -283,6 +296,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -297,6 +311,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -310,6 +325,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -335,6 +351,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -363,6 +380,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -389,6 +407,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -410,6 +429,7 @@ public class ReviewItem extends ReviewComponent implements IReviewItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

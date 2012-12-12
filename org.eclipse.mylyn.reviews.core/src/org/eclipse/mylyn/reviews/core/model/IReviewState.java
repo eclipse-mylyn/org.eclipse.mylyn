@@ -11,11 +11,8 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Review State</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Review State</b></em>'. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public interface IReviewState extends IReviewComponent {

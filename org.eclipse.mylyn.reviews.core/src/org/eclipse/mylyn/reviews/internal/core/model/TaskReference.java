@@ -19,24 +19,22 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Task Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Task Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TaskReference#getTaskId <em>Task Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TaskReference#getRepositoryURL <em>Repository URL</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TaskReference#getTaskId <em>Task Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TaskReference#getRepositoryURL <em>Repository URL</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TaskReference extends ReviewComponent implements ITaskReference {
 	/**
-	 * The default value of the '{@link #getTaskId() <em>Task Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTaskId() <em>Task Id</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getTaskId()
 	 * @generated
 	 * @ordered
@@ -44,9 +42,9 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	protected static final String TASK_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTaskId() <em>Task Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTaskId() <em>Task Id</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getTaskId()
 	 * @generated
 	 * @ordered
@@ -54,9 +52,9 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	protected String taskId = TASK_ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRepositoryURL() <em>Repository URL</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRepositoryURL() <em>Repository URL</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRepositoryURL()
 	 * @generated
 	 * @ordered
@@ -64,9 +62,9 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	protected static final String REPOSITORY_URL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRepositoryURL() <em>Repository URL</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRepositoryURL() <em>Repository URL</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getRepositoryURL()
 	 * @generated
 	 * @ordered
@@ -74,8 +72,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	protected String repositoryURL = REPOSITORY_URL_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TaskReference() {
@@ -83,8 +81,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -93,8 +91,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getTaskId() {
@@ -102,8 +100,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTaskId(String newTaskId) {
@@ -115,8 +113,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRepositoryURL() {
@@ -124,8 +122,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRepositoryURL(String newRepositoryURL) {
@@ -137,8 +135,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,8 +151,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -171,8 +169,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -189,8 +187,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -207,8 +205,8 @@ public class TaskReference extends ReviewComponent implements ITaskReference {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

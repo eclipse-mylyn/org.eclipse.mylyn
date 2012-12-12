@@ -13,11 +13,8 @@ package org.eclipse.mylyn.reviews.core.model;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Comment Type</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Comment Type</b></em>'. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public interface ICommentType extends EObject {

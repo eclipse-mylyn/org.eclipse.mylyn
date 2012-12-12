@@ -31,25 +31,23 @@ import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Review Group</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Group</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviews <em>Reviews</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviewGroupTask <em>Review Group Task</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getDescription <em>Description</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviews <em>Reviews</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviewGroupTask <em>Review Group Task</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	/**
-	 * The cached value of the '{@link #getReviews() <em>Reviews</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReviews() <em>Reviews</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getReviews()
 	 * @generated
 	 * @ordered
@@ -57,9 +55,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	protected EList<IReview> reviews;
 
 	/**
-	 * The cached value of the '{@link #getReviewGroupTask() <em>Review Group Task</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReviewGroupTask() <em>Review Group Task</em>}' containment reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getReviewGroupTask()
 	 * @generated
 	 * @ordered
@@ -67,9 +65,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	protected ITaskReference reviewGroupTask;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -77,9 +75,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -87,8 +85,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReviewGroup() {
@@ -96,8 +94,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,8 +104,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IReview> getReviews() {
@@ -119,8 +117,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITaskReference getReviewGroupTask() {
@@ -146,8 +144,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITaskReference basicGetReviewGroupTask() {
@@ -155,8 +153,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetReviewGroupTask(ITaskReference newReviewGroupTask, NotificationChain msgs) {
@@ -174,8 +172,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setReviewGroupTask(ITaskReference newReviewGroupTask) {
@@ -196,8 +194,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDescription() {
@@ -205,8 +203,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
@@ -218,8 +216,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -234,8 +232,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -254,8 +252,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -277,8 +275,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -298,8 +296,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -316,8 +314,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

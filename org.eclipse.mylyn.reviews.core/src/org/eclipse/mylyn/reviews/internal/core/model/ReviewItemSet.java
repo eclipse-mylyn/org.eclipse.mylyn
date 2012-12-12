@@ -28,24 +28,23 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Review Item Set</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Item Set</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getItems <em>Items</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getRevision <em>Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getItems <em>Items</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
-	 * The cached value of the '{@link #getItems() <em>Items</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getItems()
 	 * @generated
 	 * @ordered
@@ -53,9 +52,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected EList<IReviewItem> items;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -63,9 +62,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected static final String REVISION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -73,8 +72,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected String revision = REVISION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReviewItemSet() {
@@ -82,8 +81,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,8 +91,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IReviewItem> getItems() {
@@ -105,8 +104,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRevision() {
@@ -114,8 +113,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRevision(String newRevision) {
@@ -127,8 +126,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -143,8 +142,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -163,8 +162,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -181,8 +180,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -197,8 +196,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

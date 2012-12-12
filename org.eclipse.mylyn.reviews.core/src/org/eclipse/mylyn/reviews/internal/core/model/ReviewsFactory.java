@@ -21,24 +21,21 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.mylyn.reviews.core.model.*;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final ReviewsFactory eINSTANCE = init();
 
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static ReviewsFactory init() {
@@ -54,9 +51,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ReviewsFactory() {
@@ -64,8 +60,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -103,8 +99,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview createReview() {
@@ -113,8 +109,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IComment createComment() {
@@ -123,8 +119,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewItem createReviewItem() {
@@ -133,8 +129,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IUser createUser() {
@@ -143,8 +139,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITaskReference createTaskReference() {
@@ -153,8 +149,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewGroup createReviewGroup() {
@@ -163,8 +159,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITopic createTopic() {
@@ -173,8 +169,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewComponent createReviewComponent() {
@@ -183,8 +179,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IFileItem createFileItem() {
@@ -193,8 +189,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewItemSet createReviewItemSet() {
@@ -203,8 +199,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ILineLocation createLineLocation() {
@@ -213,8 +209,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ILineRange createLineRange() {
@@ -223,8 +219,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IFileRevision createFileRevision() {
@@ -233,8 +229,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ReviewsPackage getReviewsPackage() {
@@ -242,8 +238,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */

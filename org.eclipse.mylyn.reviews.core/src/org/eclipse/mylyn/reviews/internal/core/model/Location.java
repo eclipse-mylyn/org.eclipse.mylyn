@@ -22,18 +22,16 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Location</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Location</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class Location extends EObjectImpl implements ILocation {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Location() {
@@ -41,8 +39,8 @@ public abstract class Location extends EObjectImpl implements ILocation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

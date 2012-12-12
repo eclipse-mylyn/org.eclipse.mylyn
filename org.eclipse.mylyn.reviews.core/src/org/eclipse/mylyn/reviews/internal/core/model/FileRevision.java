@@ -25,25 +25,23 @@ import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>File Revision</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Revision</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getPath <em>Path</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getRevision <em>Revision</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getContent <em>Content</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getPath <em>Path</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getRevision <em>Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getContent <em>Content</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class FileRevision extends ReviewItem implements IFileRevision {
 	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getPath()
 	 * @generated
 	 * @ordered
@@ -51,9 +49,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected static final String PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getPath()
 	 * @generated
 	 * @ordered
@@ -61,9 +59,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected String path = PATH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -71,9 +69,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected static final String REVISION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -81,9 +79,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected String revision = REVISION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -91,9 +89,9 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected static final String CONTENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -101,8 +99,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected String content = CONTENT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected FileRevision() {
@@ -110,8 +108,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -120,8 +118,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getPath() {
@@ -129,8 +127,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setPath(String newPath) {
@@ -141,8 +139,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRevision() {
@@ -150,8 +148,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRevision(String newRevision) {
@@ -163,8 +161,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getContent() {
@@ -172,8 +170,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setContent(String newContent) {
@@ -185,8 +183,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -203,8 +201,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -225,8 +223,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -246,8 +244,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -264,8 +262,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

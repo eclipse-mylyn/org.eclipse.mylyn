@@ -27,17 +27,17 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation#getRanges <em>Ranges</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation#getRanges <em>Ranges</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class LineLocation extends Location implements ILineLocation {
 	/**
-	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRanges()
 	 * @generated
 	 * @ordered
@@ -46,6 +46,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected LineLocation() {
@@ -54,6 +55,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -63,6 +65,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ILineRange> getRanges() {
@@ -75,6 +78,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -88,6 +92,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,6 +106,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -117,6 +123,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -131,6 +138,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

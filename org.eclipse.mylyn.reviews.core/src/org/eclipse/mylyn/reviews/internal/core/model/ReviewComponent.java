@@ -20,23 +20,22 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.reviews.core.model.IReviewComponent;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Review Component</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Component</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewComponent#isEnabled <em>Enabled</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewComponent#isEnabled <em>Enabled</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	/**
-	 * The default value of the '{@link #isEnabled() <em>Enabled</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isEnabled() <em>Enabled</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #isEnabled()
 	 * @generated
 	 * @ordered
@@ -44,9 +43,9 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	protected static final boolean ENABLED_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isEnabled() <em>Enabled</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isEnabled() <em>Enabled</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #isEnabled()
 	 * @generated
 	 * @ordered
@@ -54,8 +53,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	protected boolean enabled = ENABLED_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReviewComponent() {
@@ -63,8 +62,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -73,8 +72,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isEnabled() {
@@ -82,8 +81,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setEnabled(boolean newEnabled) {
@@ -95,8 +94,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -109,8 +108,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -124,8 +123,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -139,8 +138,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,8 +152,8 @@ public class ReviewComponent extends EObjectImpl implements IReviewComponent {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

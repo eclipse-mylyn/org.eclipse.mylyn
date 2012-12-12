@@ -36,28 +36,26 @@ import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Topic</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Topic</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTask <em>Task</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getLocations <em>Locations</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getComments <em>Comments</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getReview <em>Review</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTitle <em>Title</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getItem <em>Item</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTask <em>Task</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getLocations <em>Locations</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getComments <em>Comments</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getReview <em>Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTitle <em>Title</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getItem <em>Item</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class Topic extends Comment implements ITopic {
 	/**
-	 * The cached value of the '{@link #getTask() <em>Task</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTask() <em>Task</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getTask()
 	 * @generated
 	 * @ordered
@@ -65,9 +63,9 @@ public class Topic extends Comment implements ITopic {
 	protected ITaskReference task;
 
 	/**
-	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLocations()
 	 * @generated
 	 * @ordered
@@ -75,9 +73,9 @@ public class Topic extends Comment implements ITopic {
 	protected EList<ILocation> locations;
 
 	/**
-	 * The cached value of the '{@link #getComments() <em>Comments</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getComments()
 	 * @generated
 	 * @ordered
@@ -85,9 +83,9 @@ public class Topic extends Comment implements ITopic {
 	protected EList<IComment> comments;
 
 	/**
-	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getReview()
 	 * @generated
 	 * @ordered
@@ -95,9 +93,9 @@ public class Topic extends Comment implements ITopic {
 	protected IReview review;
 
 	/**
-	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -105,9 +103,9 @@ public class Topic extends Comment implements ITopic {
 	protected static final String TITLE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -115,9 +113,9 @@ public class Topic extends Comment implements ITopic {
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getItem() <em>Item</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getItem() <em>Item</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @see #getItem()
 	 * @generated
 	 * @ordered
@@ -125,8 +123,8 @@ public class Topic extends Comment implements ITopic {
 	protected IReviewItem item;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Topic() {
@@ -134,8 +132,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -144,8 +142,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITaskReference getTask() {
@@ -169,8 +167,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ITaskReference basicGetTask() {
@@ -178,8 +176,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetTask(ITaskReference newTask, NotificationChain msgs) {
@@ -197,8 +195,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTask(ITaskReference newTask) {
@@ -218,8 +216,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<ILocation> getLocations() {
@@ -231,8 +229,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public List<IComment> getComments() {
@@ -243,8 +241,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview getReview() {
@@ -261,8 +259,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReview basicGetReview() {
@@ -270,8 +268,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setReview(IReview newReview) {
@@ -282,8 +280,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getTitle() {
@@ -291,8 +289,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTitle(String newTitle) {
@@ -303,8 +301,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewItem getItem() {
@@ -320,8 +318,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IReviewItem basicGetItem() {
@@ -329,8 +327,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetItem(IReviewItem newItem, NotificationChain msgs) {
@@ -348,8 +346,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setItem(IReviewItem newItem) {
@@ -369,8 +367,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -386,8 +384,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -404,8 +402,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -434,8 +432,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -467,8 +465,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -497,8 +495,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -521,8 +519,8 @@ public class Topic extends Comment implements ITopic {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

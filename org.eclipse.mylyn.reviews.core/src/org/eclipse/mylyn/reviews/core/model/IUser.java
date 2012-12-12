@@ -13,30 +13,26 @@ package org.eclipse.mylyn.reviews.core.model;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>User</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>User</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getEmail <em>Email</em>}</li>
- *   <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getDisplayName <em>Display Name</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getEmail <em>Email</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IUser#getDisplayName <em>Display Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public interface IUser extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @generated
@@ -44,23 +40,24 @@ public interface IUser extends EObject {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IUser#getId <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IUser#getId <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Email</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Email</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Email</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Email</em>' attribute.
 	 * @see #setEmail(String)
 	 * @generated
@@ -69,22 +66,23 @@ public interface IUser extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IUser#getEmail <em>Email</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Email</em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Email</em>' attribute.
 	 * @see #getEmail()
 	 * @generated
 	 */
 	void setEmail(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Display Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Display Name</em>' attribute.
 	 * @see #setDisplayName(String)
 	 * @generated
@@ -92,10 +90,11 @@ public interface IUser extends EObject {
 	String getDisplayName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IUser#getDisplayName <em>Display Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IUser#getDisplayName <em>Display Name</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Display Name</em>' attribute.
 	 * @see #getDisplayName()
 	 * @generated
 	 */
