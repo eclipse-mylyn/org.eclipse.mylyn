@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381506, 381912, 391850
+ *     Jeremie Bresson - Bug 381506, 381912, 391850, 304495
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -839,6 +839,106 @@ public class MediaWikiLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<th colspan=\"6\">\\s*XYZ uv\\s*</th>\\s*</tr>\\s*<tr>\\s*<td rowspan=\"2\">\\s*X1 &amp; X2\\s*</td>\\s*<td>\\s*y1\\s*</td>\\s*<td>\\s*y2\\s*</td>\\s*<td>\\s*y3\\s*</td>\\s*<td colspan=\"2\">\\s*Z9\\s*</td>\\s*</tr>\\s*<tr>\\s*<td>\\s*z8\\s*</td>\\s*<td colspan=\"2\">\\s*T6\\s*</td>\\s*<td>\\s*u4\\s*</td>\\s*<td>\\s*U6\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
+	}
+
+	public void testTableNested() {
+		//BUG 304495:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{|\n");
+		sb.append("| f ||\n");
+		sb.append("{| border=\"1\"\n");
+		sb.append("| a\n");
+		sb.append("| b\n");
+		sb.append("|}\n");
+		sb.append("| ,\n");
+		sb.append("|\n");
+		sb.append("{| border=\"1\"\n");
+		sb.append("| c\n");
+		sb.append("| d\n");
+		sb.append("|}\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+		Pattern pattern = Pattern.compile("<table>\\s*<tr>\\s*<td>\\s*f\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*a\\s*</td>\\s*<td>\\s*b\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*<td>\\s*,\\s*</td>\\s*<td>\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*c\\s*</td>\\s*<td>\\s*d\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*</tr>\\s*</table>");
+		assertContainsPattern(html, pattern);
+	}
+
+	public void testTableMalformed() {
+		//BUG 304495:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{| \n");
+		sb.append("| first table first cell\n");
+		sb.append("{| \n");
+		sb.append("| second table first cell\n");
+		sb.append("|}\n");
+		sb.append("| first table first cell\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<table><tr><td>first table first cell<table><tr><td>second table first cell</td></tr></table></td><td>first table first cell</td></tr></table>";
+		assertTrue(html.contains(expected));
+	}
+
+	public void testTableNestedMultiple() {
+		//BUG 304495:
+		StringBuilder sb;
+		sb = new StringBuilder();
+		sb.append("{| style=\"background-color:red;\"\n");
+		sb.append("! AAA !! AAAAAAAA !! AA\n");
+		sb.append("|-\n");
+		sb.append("| a\n");
+		sb.append("| aaaaa\n");
+		sb.append("| aaa\n");
+		sb.append("{| style=\"background-color:green;\"\n");
+		sb.append("! B \n");
+		sb.append("| bbbb\n");
+		sb.append("|-\n");
+		sb.append("! BBB\n");
+		sb.append("| bb\n");
+		sb.append("|-\n");
+		sb.append("! BBBBB\n");
+		sb.append("| bb\n");
+		sb.append("|}\n");
+		sb.append("|-\n");
+		sb.append("| aaaa\n");
+		sb.append("{| style=\"background-color:yellow;\"\n");
+		sb.append("! BBBBB !! BBB\n");
+		sb.append("|-\n");
+		sb.append("| bbbbb\n");
+		sb.append("| bbb\n");
+		sb.append("|-\n");
+		sb.append("| bb\n");
+		sb.append("{| style=\"background-color:blue;\"\n");
+		sb.append("! CCC !! CCCCC !! CCCCC\n");
+		sb.append("|-\n");
+		sb.append("| cc\n");
+		sb.append("| ccccc\n");
+		sb.append("| ccc\n");
+		sb.append("|-\n");
+		sb.append("| c\n");
+		sb.append("| cccc\n");
+		sb.append("| ccc\n");
+		sb.append("|}\n");
+		sb.append("| bbbbb\n");
+		sb.append("|-\n");
+		sb.append("| bbbb\n");
+		sb.append("| bb\n");
+		sb.append("|}\n");
+		sb.append("| aaaaaaa\n");
+		sb.append("| aa\n");
+		sb.append("|-\n");
+		sb.append("| aaa\n");
+		sb.append("| aaaaaaaa\n");
+		sb.append("| aaaa\n");
+		sb.append("|}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<table style=\"background-color:red;\"><tr><th>AAA</th><th>AAAAAAAA</th><th>AA</th></tr><tr><td>a</td><td>aaaaa</td><td>aaa<table style=\"background-color:green;\"><tr><th>B </th><td>bbbb</td></tr><tr><th>BBB</th><td>bb</td></tr><tr><th>BBBBB</th><td>bb</td></tr></table></td></tr><tr><td>aaaa<table style=\"background-color:yellow;\"><tr><th>BBBBB</th><th>BBB</th></tr><tr><td>bbbbb</td><td>bbb</td></tr><tr><td>bb<table style=\"background-color:blue;\"><tr><th>CCC</th><th>CCCCC</th><th>CCCCC</th></tr><tr><td>cc</td><td>ccccc</td><td>ccc</td></tr><tr><td>c</td><td>cccc</td><td>ccc</td></tr></table></td><td>bbbbb</td></tr><tr><td>bbbb</td><td>bb</td></tr></table></td><td>aaaaaaa</td><td>aa</td></tr><tr><td>aaa</td><td>aaaaaaaa</td><td>aaaa</td></tr></table>";
+		assertTrue(html.contains(expected));
 	}
 
 	public void testEntityReference() {

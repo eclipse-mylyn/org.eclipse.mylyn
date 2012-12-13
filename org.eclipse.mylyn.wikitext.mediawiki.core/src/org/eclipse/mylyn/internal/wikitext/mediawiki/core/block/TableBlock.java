@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381912
+ *     Jeremie Bresson - Bug 381912, 304495
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
@@ -301,12 +301,12 @@ public class TableBlock extends Block {
 
 	@Override
 	public boolean beginNesting() {
-		return openCell;
+		return !isClosed();
 	}
 
 	@Override
 	public int findCloseOffset(String line, int lineOffset) {
-		if (openCell) {
+		if (!isClosed()) {
 			if (!checkAtNewTableRow(line, lineOffset)) {
 				return -1;
 			}
