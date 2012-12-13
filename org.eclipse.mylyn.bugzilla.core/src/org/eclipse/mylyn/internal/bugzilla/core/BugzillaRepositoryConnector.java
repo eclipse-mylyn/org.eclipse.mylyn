@@ -80,7 +80,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	//private static final String DEADLINE_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
 
-	private static final String TIMESTAMP_WITH_OFFSET = "yyyy-MM-dd HH:mm:ss Z"; //$NON-NLS-1$
+	//private static final String TIMESTAMP_WITH_OFFSET = "yyyy-MM-dd HH:mm:ss Z"; //$NON-NLS-1$
 
 	private static final long HOUR = 1000 * 60 * 60;
 
@@ -361,11 +361,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		if (syncSession.getData() == null && collector.getQueryTimestamp() != null) {
-			Date queryDate = BugzillaAttributeMapper.parseDate(collector.getQueryTimestamp());
-			if (queryDate != null) {
-				// Ensure time is in right format
-				syncSession.setData(new SimpleDateFormat(TIMESTAMP_WITH_OFFSET).format(queryDate));
-			}
+			// Bugzilla 4.2 does not parse the timezone of the time stamp properly hence it needs to be persisted in 
+			// server time and not local time
+			syncSession.setData(collector.getQueryTimestamp());
+//			Date queryDate = BugzillaAttributeMapper.parseDate(collector.getQueryTimestamp());
+//			if (queryDate != null) {
+//				// Ensure time is in right format
+//				syncSession.setData(new SimpleDateFormat(TIMESTAMP_WITH_OFFSET).format(queryDate));
+//			}
 		}
 	}
 
