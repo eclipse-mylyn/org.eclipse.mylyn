@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Billy Huang - Bug 396332
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
@@ -97,6 +98,76 @@ public class HtmlCleanerTest {
 		String result = clean("<p>foo<span> </span>bar</p>");
 		TestUtil.println(result);
 		assertTrue(result.contains("<p>foo bar</p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle3CharactersNonHex() {
+		String result = clean("<p><span style=\"color: 123\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #123;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle6CharactersNonHex() {
+		String result = clean("<p><span style=\"color: 123456\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #123456;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle3CharactersHex() {
+		String result = clean("<p><span style=\"color: adc\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #adc;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle6CharactersHex() {
+		String result = clean("<p><span style=\"color: afcebd\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #afcebd;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle6CharactersMixed() {
+		String result = clean("<p><span style=\"color: A1B2C3\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #A1B2C3;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingValidCssColorStyleHexNotChanged() {
+		String result = clean("<p><span style=\"color: #ABCDEF\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #ABCDEF;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingValidCssColorStyleNonHexNotChanged() {
+		String result = clean("<p><span style=\"color: red\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: red;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingValidCssColorStyleNonHexLotsOfStylesNotChanged() {
+		String result = clean("<p><span style=\"font-style: italic;font-weight: bold;color: red\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"font-style: italic;font-weight: bold;color: red;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle6CharactersMixedWithImportantDeclaration() {
+		String result = clean("<p><span style=\"color: A1B2C3 !important\">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #A1B2C3 !important;\">foo bar</span></p>"));
+	}
+
+	@Test
+	public void testRepairSpanContainingMalformedCssColorStyle6CharactersMixedWithImportantDeclarationLotsOfWhitespace() {
+		String result = clean("<p><span style=\"  color: A1B2C3 !    important   \">foo bar</span></p>");
+		TestUtil.println(result);
+		assertTrue(result.contains("<p><span style=\"color: #A1B2C3 !    important;\">foo bar</span></p>"));
 	}
 
 	private String clean(String originalHtml) {

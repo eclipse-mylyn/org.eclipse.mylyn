@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Billy Huang - Bug 396332
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
@@ -28,6 +29,7 @@ public class HtmlCleaner {
 		processors.add(new WhitespaceCleanupProcessor()); // ORDER DEPENDENCY - should come first
 		processors.add(new RemoveEmptySpansProcessor());
 		processors.add(new RemoveExcessiveStylesProcessor());
+		processors.add(new RepairBrokenCSSColorStylesProcessor());
 	}
 
 	public void configure(HtmlParser parser) {
