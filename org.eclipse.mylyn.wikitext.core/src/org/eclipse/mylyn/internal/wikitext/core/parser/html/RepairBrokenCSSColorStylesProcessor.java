@@ -53,7 +53,7 @@ public class RepairBrokenCSSColorStylesProcessor extends DocumentProcessor {
 						String color = rule.value;
 						// no 3- or 6-character CSS color names are written in hex characters
 						Matcher invalidHexColorMatcher = Pattern.compile(
-								"^\\s*([0-9a-fA-F]{6}|[0-9a-fA-F]{3})(?:\\s+(.*))?\\s*$") //$NON-NLS-1$
+								"^\\s*([0-9a-fA-F]{6}|[0-9a-fA-F]{3})(?:\\s+(.+))?\\s*$") //$NON-NLS-1$
 								.matcher(color);
 						if (invalidHexColorMatcher.matches()) {
 							String newColor = "#" + invalidHexColorMatcher.group(1); //$NON-NLS-1$
