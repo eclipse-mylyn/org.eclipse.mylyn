@@ -589,4 +589,5 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		}
 		assertEquals(expected, new String(data));
 	}
+
 }

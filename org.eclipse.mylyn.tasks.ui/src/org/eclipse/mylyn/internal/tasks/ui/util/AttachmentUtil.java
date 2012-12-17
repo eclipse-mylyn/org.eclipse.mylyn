@@ -34,6 +34,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -75,8 +76,6 @@ public class AttachmentUtil {
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$
 
 	private static final String CTYPE_ZIP = "zip"; //$NON-NLS-1$
-
-	private static final String CTYPE_OCTET_STREAM = "octet-stream"; //$NON-NLS-1$
 
 	private static final String CTYPE_TEXT = "text"; //$NON-NLS-1$
 
@@ -366,24 +365,33 @@ public class AttachmentUtil {
 	}
 
 	public static String getAttachmentFilename(ITaskAttachment attachment) {
+		Assert.isNotNull(attachment);
 		String name = attachment.getFileName();
-		// if no filename is set, make one up with the proper extension so
-		// we can support opening in that filetype's default editor
-		if (name == null || "".equals(name)) { //$NON-NLS-1$
-			String ctype = attachment.getContentType();
-			if (ctype.endsWith(CTYPE_HTML)) {
-				name = ATTACHMENT_DEFAULT_NAME + ".html"; //$NON-NLS-1$
-			} else if (ctype.startsWith(CTYPE_TEXT)) {
-				name = ATTACHMENT_DEFAULT_NAME + ".txt"; //$NON-NLS-1$
-			} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
-				name = ATTACHMENT_DEFAULT_NAME;
-			} else if (ctype.endsWith(CTYPE_ZIP)) {
-				name = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP; //$NON-NLS-1$
-			} else {
-				name = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
+		if (name != null && name.length() > 0) {
+			return CoreUtil.asFileName(name);
+		} else {
+			String extension = ""; //$NON-NLS-1$
 
-		return name;
+			// if no filename is set, make one up with the proper extension so
+			// we can support opening in that filetype's default editor
+			String ctype = attachment.getContentType();
+			if (ctype != null) {
+				if (ctype.endsWith(CTYPE_HTML)) {
+					extension = ".html"; //$NON-NLS-1$
+				} else if (ctype.startsWith(CTYPE_TEXT)) {
+					extension = ".txt"; //$NON-NLS-1$
+				} else if (ctype.endsWith(CTYPE_ZIP)) {
+					extension = ".zip"; //$NON-NLS-1$
+				} else {
+					int i = ctype.lastIndexOf("/"); //$NON-NLS-1$
+					if (i != -1) {
+						extension = "." + ctype.substring(i + 1); //$NON-NLS-1$
+					}
+				}
+			}
+
+			return ATTACHMENT_DEFAULT_NAME + extension;
+		}
 	}
+
 }
