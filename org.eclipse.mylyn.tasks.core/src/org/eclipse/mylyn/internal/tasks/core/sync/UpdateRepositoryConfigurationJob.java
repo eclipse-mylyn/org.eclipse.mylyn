@@ -45,7 +45,7 @@ public class UpdateRepositoryConfigurationJob extends TaskJob {
 		monitor.beginTask(Messages.UpdateRepositoryConfigurationJob_Receiving_configuration, IProgressMonitor.UNKNOWN);
 		try {
 			try {
-				connector.updateRepositoryConfiguration(repository, null, monitor);
+				connector.updateRepositoryConfiguration(repository, monitor);
 			} catch (CoreException e) {
 				error = e.getStatus();
 			}
