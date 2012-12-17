@@ -319,6 +319,10 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testDeleteNewTask() throws Exception {
 		ITracClient client = connector.getClientManager().getTracClient(repository);
+		if (client.getAccessMode() == Version.TRAC_0_9) {
+			// not supported in web mode
+			return;
+		}
 		TracTicket ticket = TracTestUtil.createTicket(client, "testDeleteNewTask");
 		String taskId = String.valueOf(ticket.getId());
 		ITask task = TracTestUtil.createTask(repository, taskId);
@@ -331,4 +335,5 @@ public class TracRepositoryConnectorTest extends TestCase {
 			assertTrue(e.getMessage().contains("does not exist"));
 		}
 	}
+
 }
