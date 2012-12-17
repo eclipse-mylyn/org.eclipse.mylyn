@@ -62,20 +62,12 @@ EclipseStyles.prototype.init = function(editor) {
 		{
 			if ( thisInstance.styles[ tag ].checkActive( elementPath ) )
 			{
-				try {
-					_delegate_selectedformat(tag);
-				} catch(e) {
-					// skip
-				}
+				_delegate_selectedformat(tag);
 				return;
 			}
 		}
 		// If no styles match, just empty it.
-		try {
-			_delegate_selectedformat('');	
-		} catch (e) {
-			//skip
-		}
+		_delegate_selectedformat('');
 	
 	});
 	this.editor.on( 'selectionChange', function( ev )
@@ -85,20 +77,12 @@ EclipseStyles.prototype.init = function(editor) {
 		{
 			if ( thisInstance.sizes[ tag ].checkActive( elementPath ) )
 			{
-				try {
-					_delegate_selectedsize(thisInstance.plainSizes[ tag ]);
-				} catch (e) {
-					// skip
-				}
+				_delegate_selectedsize(thisInstance.plainSizes[ tag ]);
 				return;
 			}
 		}
 		// If no styles match, send -1
-		try {
-			_delegate_selectedsize(-1);
-		} catch(e) {
-			// skip
-		}
+		_delegate_selectedsize(-1);
 		
 	});
 	this.editor.on( 'selectionChange', function( ev )
