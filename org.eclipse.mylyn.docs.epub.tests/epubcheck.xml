@@ -13,17 +13,15 @@
 <project name="Download epubcheck" basedir="." default="all">
 
 	<property name="epubcheck-version" value="3.0-RC-1" />
-	<property name="previous-version" value="3.0b5" />
 	<property name="epubcheck-zip" value="epubcheck-${epubcheck-version}.zip" />
 	<property name="epubcheck-dir" location="${basedir}/epubcheck/" />
 	<property name="epubcheck-jar" location="${epubcheck-dir}/epubcheck-${epubcheck-version}.jar" />
-
-	<available file="${epubcheck-jar}" type="file" property="epubcheck-present" />
-	<available file="${epubcheck-dir}/epubcheck-${previous-version}.jar" property="clean-old" />
+	<available file="${epubcheck-jar}" type="file" property="jar-present" />
+	<available file="${epubcheck-dir}" type="dir" property="folder-present" />
 
 	<!--Remove older of EpubCheck if present -->
-	<target name="clean" if="clean-old">
-		<echo>Replacing old version of EpubCheck</echo>
+	<target name="clean" if="folder-present">
+		<echo>Deleting older version of EpubCheck.</echo>
 		<delete>
 			<fileset dir="${epubcheck-dir}">
 				<include name="**/" />
@@ -31,9 +29,12 @@
 		</delete>
 	</target>
 
-	<target name="all" unless="epubcheck-present" depends="clean">
+	<target name="all" unless="jar-present" >
+		<echo>Downloading version ${epubcheck-version} of EpubCheck.</echo>
 		<get src="http://epubcheck.googlecode.com/files/${epubcheck-zip}" dest="${epubcheck-zip}" skipexisting="true" verbose="true" retries="5" />
 		<unzip src="${epubcheck-zip}" dest="${basedir}" />
+		<antcall target="clean"/>
+		<echo>Switching to new version of EpubCheck</echo>
 		<move file="epubcheck-${epubcheck-version}" tofile="${epubcheck-dir}" />
 		<delete file="${epubcheck-zip}" />
 	</target>
