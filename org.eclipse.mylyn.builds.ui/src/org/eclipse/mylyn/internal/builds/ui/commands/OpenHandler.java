@@ -34,6 +34,7 @@ import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,34 +51,41 @@ public class OpenHandler extends AbstractHandler {
 		final EditorHandle handle = new EditorHandle();
 
 		final IBuildPlan plan = build.getPlan();
-		GetBuildsRequest request = new GetBuildsRequest(build.getPlan(), Collections.singletonList(build.getLabel()),
-				Scope.FULL);
+		final String label = build.getLabel();
+		GetBuildsRequest request = new GetBuildsRequest(build.getPlan(), Collections.singletonList(label), Scope.FULL);
 		GetBuildsOperation operation = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
 		operation.addOperationChangeListener(new OperationChangeListener() {
 			@Override
 			public void done(OperationChangeEvent event) {
 				if (event.getStatus().isOK() && !Display.getDefault().isDisposed()) {
 					final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							if (!page.getWorkbenchWindow().getShell().isDisposed()) {
-								IBuild build2 = operation.getBuilds().get(0);
-								build2.setPlan(plan);
-								build2.setServer(plan.getServer());
-								BuildEditorInput input = new BuildEditorInput(build2);
-								try {
-									IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
-									handle.setPart(part);
-									handle.setStatus(Status.OK_STATUS);
-								} catch (PartInitException e) {
-									IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-											"Unexpected error while opening build", e); //$NON-NLS-1$
-									StatusHandler.log(status);
-									handle.setStatus(status);
+					List<IBuild> builds = operation.getBuilds();
+					if (builds != null && builds.size() > 0) {
+						final IBuild build2 = builds.get(0);
+						build2.setPlan(plan);
+						build2.setServer(plan.getServer());
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								if (!page.getWorkbenchWindow().getShell().isDisposed()) {
+									BuildEditorInput input = new BuildEditorInput(build2);
+									try {
+										IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
+										handle.setPart(part);
+										handle.setStatus(Status.OK_STATUS);
+									} catch (PartInitException e) {
+										IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+												"Unexpected error while opening build", e); //$NON-NLS-1$
+										StatusHandler.log(status);
+										handle.setStatus(status);
+									}
 								}
 							}
-						}
-					});
+						});
+					} else {
+						IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
+								"The requested build ''{0}'' was not found", label)); //$NON-NLS-1$
+						handle.setStatus(status);
+					}
 				} else {
 					handle.setStatus(event.getStatus());
 				}
