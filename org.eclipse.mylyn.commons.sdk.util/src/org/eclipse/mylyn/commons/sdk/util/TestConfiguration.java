@@ -134,7 +134,9 @@ public class TestConfiguration {
 		List<FixtureConfiguration> configurations = getConfigurations(url + "/cgi-bin/services");
 		if (configurations != null) {
 			for (FixtureConfiguration configuration : configurations) {
-				configuration.setUrl(url + configuration.getUrl());
+				if (configuration != null) {
+					configuration.setUrl(url + configuration.getUrl());
+				}
 			}
 			return loadFixtures(configurations, clazz, fixtureType);
 		}
@@ -145,7 +147,7 @@ public class TestConfiguration {
 			String fixtureType) {
 		List<T> result = new ArrayList<T>();
 		for (FixtureConfiguration configuration : configurations) {
-			if (fixtureType.equals(configuration.getType())) {
+			if (configuration != null && fixtureType.equals(configuration.getType())) {
 				try {
 					Constructor<T> constructor = clazz.getConstructor(FixtureConfiguration.class);
 					result.add(constructor.newInstance(configuration));
