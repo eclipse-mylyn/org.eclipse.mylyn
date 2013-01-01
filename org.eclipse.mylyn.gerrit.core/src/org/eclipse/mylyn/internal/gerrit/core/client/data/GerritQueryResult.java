@@ -14,7 +14,10 @@ package org.eclipse.mylyn.internal.gerrit.core.client.data;
 import java.sql.Timestamp;
 import java.util.Map;
 
+import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+
 import com.google.gerrit.common.data.ChangeInfo;
+import com.google.gerrit.reviewdb.Change.Status;
 
 /**
  * @author Steffen Pingel
@@ -46,7 +49,12 @@ public class GerritQueryResult {
 		setId(changeInfo.getKey().get());
 		setProject(changeInfo.getProject().getName());
 		setSubject(changeInfo.getSubject());
-		setStatus(changeInfo.getStatus().toString());
+		Status status = changeInfo.getStatus();
+		if (GerritUtil.isDraft(status)) {
+			setStatus("DRAFT"); //$NON-NLS-1$
+		} else {
+			setStatus(status.toString());
+		}
 		setUpdated(changeInfo.getLastUpdatedOn());
 	}
 

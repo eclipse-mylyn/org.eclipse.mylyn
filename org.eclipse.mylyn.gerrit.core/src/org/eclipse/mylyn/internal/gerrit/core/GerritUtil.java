@@ -52,6 +52,7 @@ import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
+import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -377,4 +378,10 @@ public class GerritUtil {
 		uriMap.put(DownloadScheme.ANON_GIT, getAnonGitCloneUri(repository, config, project));
 		return uriMap;
 	}
+
+	public static boolean isDraft(Status status) {
+		// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field 
+		return status == null;
+	}
+
 }

@@ -202,7 +202,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.KEY, changeInfo.getId().substring(0, Math.min(9, changeInfo.getId().length())));
 		setAttributeValue(data, schema.PROJECT, changeInfo.getProject());
 		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
-		setAttributeValue(data, schema.STATUS, changeInfo.getStatus().toString());
+		setAttributeValue(data, schema.STATUS, changeInfo.getStatus());
 		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
 		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getUpdated()));
 		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getId());

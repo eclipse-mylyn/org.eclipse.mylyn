@@ -192,7 +192,8 @@ public class ReviewSection extends AbstractGerritSection {
 	}
 
 	private boolean canAddReviewers(ChangeDetail changeDetail) {
-		return changeDetail.getChange().getStatus() == Change.Status.NEW;
+		return changeDetail.getChange().getStatus() == Change.Status.NEW
+				|| GerritUtil.isDraft(changeDetail.getChange().getStatus());
 	}
 
 	private void createRequirementsSubSection(final FormToolkit toolkit, final Composite parent, GerritConfig config,
