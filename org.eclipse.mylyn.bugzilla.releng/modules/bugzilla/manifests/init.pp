@@ -184,6 +184,7 @@ define bugzillaVersion (
     content => template('bugzilla/service.json.erb'),
     owner   => "$bugzilla::userOwner",
     group   => "$bugzilla::userGroup",
+    mode    => 644,
     require =>  Exec["update bugzilla_checksetup $version"],
   }
 
