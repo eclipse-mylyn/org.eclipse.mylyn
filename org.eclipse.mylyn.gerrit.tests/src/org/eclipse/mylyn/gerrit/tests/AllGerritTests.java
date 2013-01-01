@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.gerrit.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -45,7 +47,12 @@ public class AllGerritTests {
 			// network tests
 			suite.addTestSuite(GerritUrlHandlerTest.class);
 			suite.addTestSuite(OpenIdAuthenticationTest.class);
-			if (configuration.isDefaultOnly()) {
+			List<GerritFixture> fixtures = configuration.discover(GerritFixture.class, "gerrit"); //$NON-NLS-1$
+			if (!fixtures.isEmpty()) {
+				for (GerritFixture fixture : fixtures) {
+					addTests(suite, fixture);
+				}
+			} else if (configuration.isDefaultOnly()) {
 				addTests(suite, GerritFixture.DEFAULT);
 			} else {
 				for (GerritFixture fixture : GerritFixture.ALL) {

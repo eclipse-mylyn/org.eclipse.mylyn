@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.support;
 
+import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
@@ -46,6 +47,10 @@ public class GerritFixture extends TestFixture {
 	public GerritFixture(String url, String version, String description) {
 		super(GerritConnector.CONNECTOR_KIND, url);
 		setInfo(url, version, description);
+	}
+
+	public GerritFixture(FixtureConfiguration configuration) {
+		this(configuration.getUrl(), configuration.getVersion(), configuration.getInfo());
 	}
 
 	public static GerritFixture current() {
