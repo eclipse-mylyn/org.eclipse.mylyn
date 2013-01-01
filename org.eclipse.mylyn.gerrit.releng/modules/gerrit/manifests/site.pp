@@ -63,6 +63,13 @@ define gerrit::site(
 		}
 	}
 
+  file { "$envbase/service.json":
+    content => template('gerrit/service.json.erb'),
+    owner   => "$gerrit::userOwner",
+    group   => "$gerrit::userGroup",
+    require => File["$envbase"],
+  }
+
   file { "$envbase/admin.id_rsa":
     source => "puppet:///modules/gerrit/admin.id_rsa",
     owner   => "$gerrit::userOwner",
@@ -70,32 +77,40 @@ define gerrit::site(
     require => File["$envbase"],
   }
 
-  file { "$envbase/setup.sql":
-    source => "puppet:///modules/gerrit/setup.sql",
+  file { "$envbase/tests.id_rsa":
+    source => "puppet:///modules/gerrit/tests.id_rsa",
     owner   => "$gerrit::userOwner",
     group   => "$gerrit::userGroup",
     require => File["$envbase"],
+  }
+   
+  gerrit::user { "admin user for $envid":
+    username => "admin",
+    userid => 1000000,
+    useremail => "admin@mylyn.eclipse.org",
+    userkey => template('gerrit/admin.id_rsa.pub'),
+    usergroup => "Administrators",
+    base => $base,
+    envid => $envid,
+    require => [ Exec["configure $envid"], ],
   }
 
-  file { "$envbase/service.json":
-    content => template('gerrit/service.json.erb'),
-    owner   => "$gerrit::userOwner",
-    group   => "$gerrit::userGroup",
-    require => File["$envbase"],
-  }
-      
-  exec { "create admin user for $envid":
-    command => "java -jar bin/gerrit.war gsql < $envbase/setup.sql",
-    cwd => "$envbase",
-    user => "$gerrit::userOwner",
-    require => [ Exec["configure $envid"], File["$envbase/setup.sql"], File["$envbase/admin.id_rsa"], ],
+  gerrit::user { "tests user for $envid":
+    username => "tests",
+    userid => 1000001,
+    useremail => "tests@mylyn.eclipse.org",
+    userkey => template('gerrit/tests.id_rsa.pub'),
+    usergroup => "N/A",
+    base => $base,
+    envid => $envid,
+    require => [ Exec["configure $envid"], ]
   }
 
   exec { "start $envid":
     command => "$envbase/bin/gerrit.sh start",
     cwd => "$envbase",
     user => "$gerrit::userOwner",
-    require => [ Exec["create admin user for $envid"], File["$envbase/etc/gerrit.config"] ],
+    require => [ Gerrit::User["admin user for $envid"], Gerrit::User["tests user for $envid"], File["$envbase/etc/gerrit.config"] ],
     creates => "$envbase/log/gerrit.pid",
   }
   

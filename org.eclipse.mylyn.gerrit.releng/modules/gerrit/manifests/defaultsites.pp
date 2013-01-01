@@ -18,13 +18,12 @@ Gerrit {
 }
 
 Gerrit::Site {
-	version => "1.0",
 }
 
 gerrit { "2.4.2":
 }
 
-gerrit { "2.5":
+gerrit { "2.5.1":
   postfix => "-full",
 }
 
@@ -36,10 +35,10 @@ gerrit::site { "gerrit-2.4":
 }
 
 gerrit::site { "gerrit-2.5":
-  version => "2.5",
-  port => 28250,
-  sshport => 29250,
-  require => Gerrit["2.5"],
+  version => "2.5.1",
+  port => 28251,
+  sshport => 29251,
+  require => Gerrit["2.5.1"],
 }
 
 }
