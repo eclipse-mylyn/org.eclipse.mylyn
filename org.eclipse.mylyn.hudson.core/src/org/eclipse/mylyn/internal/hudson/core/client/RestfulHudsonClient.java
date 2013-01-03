@@ -300,7 +300,11 @@ public class RestfulHudsonClient {
 		} catch (URISyntaxException e) {
 			throw new HudsonException(e);
 		}
-		return client.getLocation().getUrl() + "/job/" + encodedJobname;
+		String url = client.getLocation().getUrl();
+		if (!url.endsWith("/")) { //$NON-NLS-1$
+			url += "/"; //$NON-NLS-1$
+		}
+		return url + "job/" + encodedJobname;
 	}
 
 	Element parse(InputStream in, String url) throws HudsonException {
