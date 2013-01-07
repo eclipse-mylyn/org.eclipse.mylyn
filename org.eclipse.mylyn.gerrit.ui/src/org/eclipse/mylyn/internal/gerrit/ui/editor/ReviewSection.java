@@ -98,7 +98,7 @@ public class ReviewSection extends AbstractGerritSection {
 		}
 
 		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
-				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
+				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT | ExpandableComposite.EXPANDED;
 
 		final Section subSection = toolkit.createSection(parent, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
