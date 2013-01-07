@@ -60,6 +60,8 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		TaskEditorPartDescriptor commentsDescriptor = null;
+		TaskEditorPartDescriptor newCommentsDescriptor = null;
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			TaskEditorPartDescriptor descriptor = it.next();
 			if (PATH_ACTIONS.equals(descriptor.getPath())) {
@@ -67,6 +69,14 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 			}
 			if (PATH_PEOPLE.equals(descriptor.getPath())) {
 				it.remove();
+			}
+			if (ID_PART_COMMENTS.equals(descriptor.getId())) {
+				it.remove();
+				commentsDescriptor = descriptor;
+			}
+			if (ID_PART_NEW_COMMENT.equals(descriptor.getId())) {
+				it.remove();
+				newCommentsDescriptor = descriptor;
 			}
 		}
 		descriptors.add(new TaskEditorPartDescriptor(ReviewSection.class.getName()) {
@@ -81,6 +91,12 @@ public class GerritTaskEditorPage extends AbstractTaskEditorPage {
 				return new PatchSetSection();
 			}
 		});
+		if (commentsDescriptor != null) {
+			descriptors.add(commentsDescriptor);
+		}
+		if (newCommentsDescriptor != null) {
+			descriptors.add(newCommentsDescriptor);
+		}
 		return descriptors;
 	}
 
