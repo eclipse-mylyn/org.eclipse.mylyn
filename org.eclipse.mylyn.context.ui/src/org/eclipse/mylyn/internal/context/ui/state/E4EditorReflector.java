@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -111,22 +112,24 @@ public class E4EditorReflector {
 		}
 	}
 
-	public void showPart(WorkbenchPage page, Object editor) {
+	public IEditorReference showPart(WorkbenchPage page, Object editorPart) {
 		try {
 			//EditorReference reference = page.createEditorReferenceForPart(editor, null, editor.getElementId(), null);
 			Method method = mApplicationElementClazz.getDeclaredMethod("getElementId");
-			String elementId = (String) method.invoke(editor);
+			String elementId = (String) method.invoke(editorPart);
 
 			method = WorkbenchPage.class.getDeclaredMethod("createEditorReferenceForPart", mPartClazz,
 					IEditorInput.class, String.class, IMemento.class);
-			method.invoke(page, editor, null, elementId, null);
+			Object editorReference = method.invoke(page, editorPart, null, elementId, null);
 
 			Object partService = getPartService(page.getWorkbenchWindow());
 			// PartState.ACTIVATE
 			Object partStateActivate = partStateClazz.getEnumConstants()[0];
 			//partService.showPart(editor, PartState.ACTIVATE);
 			method = ePartServiceClazz.getDeclaredMethod("showPart", mPartClazz, partStateClazz);
-			method.invoke(partService, editor, partStateActivate);
+			method.invoke(partService, editorPart, partStateActivate);
+
+			return (IEditorReference) editorReference;
 		} catch (Exception e) {
 			throw handleException(e);
 		}

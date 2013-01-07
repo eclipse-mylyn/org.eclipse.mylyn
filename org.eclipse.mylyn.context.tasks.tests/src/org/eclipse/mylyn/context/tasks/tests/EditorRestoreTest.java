@@ -46,6 +46,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Verifies that editors are restored on task activation.
+ * 
  * @author Steffen Pingel
  */
 public class EditorRestoreTest extends TestCase {

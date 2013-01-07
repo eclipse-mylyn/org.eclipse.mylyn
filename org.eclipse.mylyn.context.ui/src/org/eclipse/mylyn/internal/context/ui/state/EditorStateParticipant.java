@@ -259,7 +259,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		savedMemento = null;
 	}
 
-	private void saveEditors_e_8_2(IWorkbenchPage page, IMemento memento) throws Exception {
+	protected void saveEditors_e_8_2(IWorkbenchPage page, IMemento memento) throws Exception {
 		Method getEditorStateMethod = IWorkbenchPage.class.getDeclaredMethod(
 				"getEditorState", IEditorReference[].class, boolean.class); //$NON-NLS-1$
 		IMemento[] states = (IMemento[]) getEditorStateMethod.invoke(page, page.getEditorReferences(), true);
@@ -271,7 +271,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void saveEditors_e_4_legacy(final WorkbenchPage page, IMemento memento) throws Exception {
+	protected void saveEditors_e_4_legacy(final WorkbenchPage page, IMemento memento) throws Exception {
 		Method getInternalEditorReferences = WorkbenchPage.class.getDeclaredMethod("getInternalEditorReferences"); //$NON-NLS-1$
 		final List<EditorReference> editorReferences = (List<EditorReference>) getInternalEditorReferences.invoke(page);
 		SafeRunner.run(new SafeRunnable() {
@@ -306,7 +306,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		}
 	}
 
-	private void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
+	protected void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
 		Method getEditorManagerMethod = WorkbenchPage.class.getDeclaredMethod("getEditorManager"); //$NON-NLS-1$
 		Object editorManager = getEditorManagerMethod.invoke(page);
 
@@ -364,13 +364,13 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			if (is_3_x()) {
 				restoreEditors_e_3_x(page, visibleEditors, activeEditor, result, editorMementoSet);
 			} else if (is_3_8_2()) {
-				restoreEditors_e_3_8_2(page, visibleEditors, activeEditor, result, editorMementoSet);
+				restoreEditors_e_3_8_2(page, visibleEditors, result, editorMementoSet);
 			} else {
 				restoreEditors_e_4_legacy(page, visibleEditors, activeEditor, result, editorMementoSet);
 			}
 
 			// the 3.8.2 implementation automatically activates the first editor
-			if (!is_3_8_2() && activeEditor[0] != null && isActiveWindow) {
+			if (activeEditor[0] != null && isActiveWindow) {
 				IWorkbenchPart editor = activeEditor[0].getPart(true);
 				if (editor != null) {
 					page.activate(editor);
@@ -398,7 +398,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	/**
 	 * Returns true if the environment supports the Eclipse 3.x API for editor save and restore.
 	 */
-	private boolean is_3_x() {
+	protected boolean is_3_x() {
 		try {
 			Class<?> editorManager = Class.forName("org.eclipse.ui.internal.EditorManager"); //$NON-NLS-1$
 			editorManager.getDeclaredMethod("restoreEditorState", //$NON-NLS-1$
@@ -410,8 +410,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 	}
 
 	private void restoreEditors_e_3_8_2(WorkbenchPage page, final ArrayList<?> visibleEditors,
-			final IEditorReference[] activeEditor, final MultiStatus result, Set<IMemento> editorMementoSet)
-			throws Exception {
+			final MultiStatus result, Set<IMemento> editorMementoSet) throws Exception {
 		Method openEditorsMethod = IWorkbenchPage.class.getDeclaredMethod(
 				"openEditors", IEditorInput[].class, String[].class, IMemento[].class, int.class, int.class); //$NON-NLS-1$
 		openEditorsMethod.invoke(page, null, null, editorMementoSet.toArray(new IMemento[0]),
@@ -441,12 +440,16 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 			if (!found) {
 				// create part
-				Object editor = reflector.createPart(page.getWorkbenchWindow());
+				Object editorPart = reflector.createPart(page.getWorkbenchWindow());
 				// inject persisted editor state
 				((XMLMemento) memento).save(writer);
-				reflector.getPersistedState(editor).put("memento", writer.toString()); //$NON-NLS-1$
+				reflector.getPersistedState(editorPart).put("memento", writer.toString()); //$NON-NLS-1$
 				// create legacy editor control
-				reflector.showPart(page, editor);
+				IEditorReference editorReference = reflector.showPart(page, editorPart);
+				// make first restored editor the visible editor
+				if (activeEditor[0] == null) {
+					activeEditor[0] = editorReference;
+				}
 			}
 		}
 	}
