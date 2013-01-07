@@ -114,6 +114,8 @@ import com.google.gerrit.reviewdb.PatchSet;
  */
 public class PatchSetSection extends AbstractGerritSection {
 
+	private static final int MAXIMUM_ITEMS_SHOWN = 30;
+
 	private class CompareAction extends Action {
 
 		private final PatchSet base;
@@ -588,8 +590,16 @@ public class PatchSetSection extends AbstractGerritSection {
 		Text refText = new Text(composite, SWT.READ_ONLY);
 		refText.setText(patchSetDetail.getPatchSet().getRefName());
 
-		final TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.VIRTUAL);
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
+		boolean fixedViewerSize = patchSetDetail.getPatches().size() > MAXIMUM_ITEMS_SHOWN;
+		int heightHint = fixedViewerSize ? 300 : SWT.DEFAULT;
+		int style = SWT.SINGLE | SWT.BORDER | SWT.VIRTUAL;
+		if (fixedViewerSize) {
+			style |= SWT.V_SCROLL;
+		} else {
+			style |= SWT.NO_SCROLL;
+		}
+		final TableViewer viewer = new TableViewer(composite, style);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).hint(500, heightHint).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 			private EContentAdapter modelAdapter;
 
