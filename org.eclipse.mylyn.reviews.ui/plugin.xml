@@ -49,6 +49,90 @@
 			verticalRulerPreferenceKey="comment_verticalRuler" 
 			verticalRulerPreferenceValue="true" />
 	</extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          category="org.eclipse.mylyn.ui"
+          class="org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer"
+          icon="icons/obj16/review.png"
+          id="org.eclipse.mylyn.reviews.Explorer"
+          name="Review">
+       <description>
+          View artifacts and comments associated with reviews.
+       </description>
+    </view>
+ </extension>
+ <extension
+       point="org.eclipse.ui.navigator.viewer">
+    <viewerActionBinding
+          viewerId="org.eclipse.mylyn.reviews.Explorer">
+       <includes>
+          <actionExtension
+                pattern="org.eclipse.mylyn.reviews.ui.actions">
+          </actionExtension>
+       </includes>
+    </viewerActionBinding>
+    <viewerContentBinding
+          viewerId="org.eclipse.mylyn.reviews.Explorer">
+       <includes>
+          <contentExtension
+                isRoot="true"
+                pattern="org.eclipse.mylyn.reviews.ui.ReviewContent">
+          </contentExtension>
+          <contentExtension
+                isRoot="true"
+                pattern="org.eclipse.mylyn.reviews.ui.ReviewFlatContent">
+          </contentExtension>
+          <contentExtension
+                pattern="org.eclipse.mylyn.reviews.ui.CommonFilter">
+          </contentExtension>
+       </includes>
+    </viewerContentBinding>
+    <viewer
+          viewerId="org.eclipse.mylyn.reviews.Explorer">
+    </viewer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent
+          contentProvider="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsTreeContentProvider"
+          id="org.eclipse.mylyn.reviews.ui.ReviewContent"
+          labelProvider="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider$Tree"
+          name="Review Artifacts and Comments">
+       <triggerPoints>
+          <instanceof
+                value="org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage">
+          </instanceof>
+       </triggerPoints>
+       <commonSorter
+             class="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsSorter"
+             id="sorter.orderable">
+       </commonSorter>
+    </navigatorContent>
+    <navigatorContent
+          contentProvider="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsFlatContentProvider"
+          id="org.eclipse.mylyn.reviews.ui.ReviewFlatContent"
+          labelProvider="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider$Flat"
+          name="Review Comments">
+       <triggerPoints>
+          <instanceof
+                value="org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage">
+          </instanceof>
+       </triggerPoints>
+       <commonSorter
+             class="org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsSorter"
+             id="sorter.orderable">
+       </commonSorter>
+    </navigatorContent>
+    <commonFilter
+          activeByDefault="false"
+          class="org.eclipse.mylyn.internal.reviews.ui.providers.NonCommentFilter"
+          description="Hides all artifacts and containers that do not contain comments as well as machine generated comments."
+          id="org.eclipse.mylyn.reviews.ui.CommonFilter"
+          name="Artifacts without Comments"
+          visibleInUI="true">
+    </commonFilter>
+ </extension>
 
 	<!--
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">

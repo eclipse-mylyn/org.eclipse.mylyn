@@ -5,20 +5,21 @@ Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui;singleton:=true
 Bundle-Version: 1.1.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.eclipse.core.expressions,
+ org.eclipse.compare,
+ org.eclipse.emf.ecore,
+ org.eclipse.jface,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.workbench.texteditor,
  org.eclipse.mylyn.commons.core;bundle-version="3.8.0",
  org.eclipse.mylyn.commons.ui;bundle-version="3.8.0",
  org.eclipse.mylyn.commons.workbench;bundle-version="3.8.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.8.0",
- org.eclipse.mylyn.reviews.core;bundle-version="1.0.0",
- org.eclipse.jface,
- org.eclipse.jface.text,
- org.eclipse.compare,
- org.eclipse.ui.editors,
- org.eclipse.ui.forms,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.emf.ecore,
- org.eclipse.core.expressions
+ org.eclipse.mylyn.reviews.core;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
@@ -29,6 +30,10 @@ Export-Package: org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.dialogs;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.editors.parts;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.editors.ruler;x-internal:=true,
- org.eclipse.mylyn.reviews.ui;x-internal:=true
-Import-Package: org.apache.commons.io;version="1.4.0"
+ org.eclipse.mylyn.internal.reviews.ui.providers;x-internal:=true,
+ org.eclipse.mylyn.internal.reviews.ui.views;x-internal:=true,
+ org.eclipse.mylyn.reviews.ui;x-internal:=true,
+ org.eclipse.mylyn.reviews.ui.spi.editor;x-internal:=true
+Import-Package: org.apache.commons.io;version="1.4.0",
+ org.apache.commons.lang;version="2.3.0"
 Bundle-Activator: org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin

@@ -22,7 +22,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritPatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
@@ -52,7 +51,9 @@ import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
 import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
+import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Change.Status;
+import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -76,8 +77,30 @@ public class GerritUtil {
 		return null;
 	}
 
-	public static IReview toReview(ChangeDetail detail) throws GerritException {
+	public static IReview toReview(ChangeDetail detail) {
 		IReview review = FACTORY.createReview();
+		Change change = detail.getChange();
+		AccountInfo owner = detail.getAccounts().get(change.getOwner());
+		IUser reviewAuthor = createUser(owner.getId(), detail.getAccounts());
+		review.setOwner(reviewAuthor);
+		review.setCreationDate(change.getCreatedOn());
+		review.setModificationDate(change.getLastUpdatedOn());
+		for (ChangeMessage message : detail.getMessages()) {
+			ITopic topic = review.createTopicComment(null, message.getMessage());
+			topic.setDraft(false);
+			topic.setCreationDate(message.getWrittenOn());
+			for (IComment comment : topic.getComments()) {
+				comment.setDraft(false);
+			}
+			if (message.getAuthor() != null) {
+				topic.setAuthor(createUser(message.getAuthor(), detail.getAccounts()));
+				//TODO Should be handled by edit framework
+				for (IComment comment : topic.getComments()) {
+					comment.setAuthor(topic.getAuthor());
+				}
+			}
+		}
+
 		review.setId(detail.getChange().getId().get() + "");
 		List<PatchSet> patchSets = detail.getPatchSets();
 		for (PatchSet patchSet : patchSets) {
@@ -88,6 +111,31 @@ public class GerritUtil {
 		return review;
 	}
 
+	public static void updateMessages(IReview review, ChangeDetail detail) {
+		Change change = detail.getChange();
+		review.setModificationDate(change.getLastUpdatedOn());
+		List<ITopic> existingTopics = review.getTopics();
+		int index = 0;
+		for (ChangeMessage message : detail.getMessages()) {
+			if (index++ < existingTopics.size()) {
+				continue;
+			}
+			ITopic topic = review.createTopicComment(null, message.getMessage());
+			topic.setDraft(false);
+			topic.setCreationDate(message.getWrittenOn());
+			for (IComment comment : topic.getComments()) {
+				comment.setDraft(false);
+			}
+			if (message.getAuthor() != null) {
+				topic.setAuthor(createUser(message.getAuthor(), detail.getAccounts()));
+				//TODO Should be handled by edit framework
+				for (IComment comment : topic.getComments()) {
+					comment.setAuthor(topic.getAuthor());
+				}
+			}
+		}
+	}
+
 	public static IReviewItemSet toReviewItemSet(ChangeDetail detail, PatchSet base, PatchSet patchSet) {
 		IReviewItemSet itemSet = FACTORY.createReviewItemSet();
 		if (base == null) {
@@ -95,6 +143,7 @@ public class GerritUtil {
 		} else {
 			itemSet.setName(NLS.bind("Compare Patch Set {0} and {1}", patchSet.getPatchSetId(), base.getPatchSetId()));
 		}
+		itemSet.setCreationDate(patchSet.getCreatedOn());
 		itemSet.setId(patchSet.getPatchSetId() + "");
 		itemSet.setAddedBy(createUser(patchSet.getUploader(), detail.getAccounts()));
 		itemSet.setRevision(patchSet.getRevision().get());
@@ -134,6 +183,7 @@ public class GerritUtil {
 						revisionA.setPath(patchScript.getA().getPath());
 						revisionA.setRevision((content.getBase() != null) ? NLS.bind("Patch Set {0}", content.getBase()
 								.getPatchSetId()) : "Base");
+						revisionA.setFile(item);
 						addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
 						cache.put(revisionA);
 					}
@@ -149,6 +199,7 @@ public class GerritUtil {
 						revisionB.setRevision(NLS.bind("Patch Set {0}", content.getTarget()
 								.getPatchSet()
 								.getPatchSetId()));
+						revisionB.setFile(item);
 						addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
 						cache.put(revisionB);
 					}
@@ -177,6 +228,7 @@ public class GerritUtil {
 			topicComment.setAuthor(author);
 			topicComment.setCreationDate(comment.getWrittenOn());
 			topicComment.setDescription(comment.getMessage());
+			topicComment.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
 
 			ITopic topic = FACTORY.createTopic();
 			topic.setId(comment.getKey().get());

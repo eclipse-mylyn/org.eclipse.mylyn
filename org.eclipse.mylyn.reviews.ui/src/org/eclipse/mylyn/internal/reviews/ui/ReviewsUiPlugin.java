@@ -10,6 +10,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.reviews.ui;
 
+import org.eclipse.mylyn.commons.workbench.CommonImageManger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -19,6 +20,8 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	private static ReviewsUiPlugin plugin;
 
+	CommonImageManger imageManager;
+
 	public ReviewsUiPlugin() {
 	}
 
@@ -26,16 +29,21 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		imageManager = new CommonImageManger();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		imageManager.dispose();
 	}
 
 	public static ReviewsUiPlugin getDefault() {
 		return plugin;
 	}
 
+	public CommonImageManger getImageManager() {
+		return imageManager;
+	}
 }

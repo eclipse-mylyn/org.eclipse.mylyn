@@ -54,11 +54,32 @@
       </repositorySearchPage>
    </extension>
    <extension
-         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
-      <repositoryAssociation
-            connectorKind="org.eclipse.mylyn.gerrit"
-            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
-      </repositoryAssociation>
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="org.eclipse.mylyn.internal.gerrit.ui.providers.OpenCompareEditorProvider"
+            id="org.eclipse.mylyn.gerrit.ui.actions.OpenCompareProvider">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.eclipse.mylyn.reviews.core.model.ITopic">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.mylyn.reviews.core.model.IFileItem">
+               </instanceof>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding
+            viewerId="org.eclipse.mylyn.reviews.Explorer">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.mylyn.gerrit.ui.actions.*">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
    </extension>
    
 </plugin>

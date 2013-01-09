@@ -65,9 +65,11 @@ import org.eclipse.mylyn.internal.gerrit.ui.operations.RebaseDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RestoreDialog;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.SubmitDialog;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
+import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
@@ -89,8 +91,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -157,6 +157,8 @@ public class PatchSetSection extends AbstractGerritSection {
 
 	private final ReviewItemCache cache;
 
+	private ReviewsLabelProvider labelProvider;
+
 	public PatchSetSection() {
 		setPartName("Patch Sets");
 		this.jobs = new ArrayList<Job>();
@@ -169,6 +171,7 @@ public class PatchSetSection extends AbstractGerritSection {
 			job.cancel();
 		}
 		super.dispose();
+		labelProvider.dispose();
 	}
 
 	public void updateTextClient(Section section, final PatchSetDetail patchSetDetail, boolean cachingInProgress) {
@@ -335,17 +338,17 @@ public class PatchSetSection extends AbstractGerritSection {
 		addTextClient(toolkit, subSection, "", false); //$NON-NLS-1$
 		updateTextClient(subSection, patchSetDetail, false);
 
-		if (subSection.isExpanded()) {
-			createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
-		}
-		subSection.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				if (subSection.getClient() == null) {
-					createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
-				}
-			}
-		});
+//		if (subSection.isExpanded()) {
+		createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
+//		}
+//		subSection.addExpansionListener(new ExpansionAdapter() {
+//			@Override
+//			public void expansionStateChanged(ExpansionEvent e) {
+//				if (subSection.getClient() == null) {
+//					createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
+//				}
+//			}
+//		});
 	}
 
 	private int getNumComments(PatchSetDetail patchSetDetail) {
@@ -359,7 +362,11 @@ public class PatchSetSection extends AbstractGerritSection {
 	private void subSectionExpanded(final ChangeDetail changeDetail, final PatchSetDetail patchSetDetail,
 			final Section composite, final Viewer viewer) {
 		updateTextClient(composite, patchSetDetail, true);
+		updateReviewItems(changeDetail, patchSetDetail, composite, viewer);
+	}
 
+	void updateReviewItems(final ChangeDetail changeDetail, final PatchSetDetail patchSetDetail,
+			final Section composite, final Viewer viewer) {
 		final GetPatchSetContentJob job = new GetPatchSetContentJob(getTaskEditorPage().getTaskRepository(),
 				patchSetDetail);
 		job.addJobChangeListener(new JobChangeAdapter() {
@@ -369,9 +376,24 @@ public class PatchSetSection extends AbstractGerritSection {
 					public void run() {
 						if (getControl() != null && !getControl().isDisposed()) {
 							if (event.getResult().isOK()) {
+								GerritTaskEditorPage editor = (GerritTaskEditorPage) getTaskEditorPage();
+								IReview review = editor.getReview();
 								GerritPatchSetContent content = job.getPatchSetContent();
 								if (content != null && content.getPatchScriptByPatchKey() != null) {
-									viewer.setInput(GerritUtil.createInput(changeDetail, content, cache));
+									IReviewItemSet reviewItem = GerritUtil.createInput(changeDetail, content, cache);
+									IReviewItem replaceItem = null;
+									for (IReviewItem item : review.getItems()) {
+										if (item.getId().equals(reviewItem.getId())) {
+											replaceItem = item;
+											break;
+										}
+									}
+									if (replaceItem != null) {
+										review.getItems().remove(replaceItem);
+									}
+									review.getItems().add(reviewItem);
+									viewer.setInput(reviewItem);
+									editor.refreshExplorer();
 								}
 							}
 
@@ -613,7 +635,8 @@ public class PatchSetSection extends AbstractGerritSection {
 				}
 			}
 		});
-		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new ReviewItemLabelProvider()));
+		labelProvider = new ReviewsLabelProvider.Simple();
+		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
