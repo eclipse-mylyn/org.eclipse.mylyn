@@ -642,6 +642,13 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><table><tr><td>Orange</td><td>Apple</td><td>more</td></tr><tr><td>Bread</td><td>Pie</td><td>more</td></tr><tr><td>Butter</td><td>Ice cream</td><td>and more</td></tr></table></body>"));
 	}
 
+	public void testTableWithBlankLine() {
+		String html = parser.parseToHtml("{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n\nMore bread\n"
+				+ "|Pie\n" + "|-\n" + "|Butter\n" + "|Ice cream \n" + "|}");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread<p>More bread</p></td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table></body>"));
+	}
+
 	public void testTableHeadings() {
 		String html = parser.parseToHtml("{|\n" + "!  Fruit    !!   Quantity   !!  Price\n" + "|-\n"
 				+ "|   Apple    ||   lb     ||   0.99\n" + "|}\n");
