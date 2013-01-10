@@ -12,14 +12,23 @@
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.repositories.tests.support.DelegatingSecurePreferences;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
+import org.eclipse.mylyn.internal.commons.repositories.ui.UiLocationService;
+import org.eclipse.mylyn.internal.commons.repositories.ui.UiSecureCredentialsStore;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
 /**
@@ -27,9 +36,13 @@ import org.junit.Test;
  */
 public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
-	private class StubSecureCredentialsStore extends SecureCredentialsStore {
+	private class StubSecureCredentialsStore extends UiSecureCredentialsStore {
 
 		DelegatingSecurePreferences delegate;
+
+		private boolean openSecurePreferencesCalled;
+
+		private Display display;
 
 		public StubSecureCredentialsStore() {
 			super(SecureCredentialsStore.class.getName());
@@ -59,6 +72,20 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 			return super.getInMemoryStore();
 		}
 
+		@Override
+		protected ISecurePreferences openSecurePreferences() {
+			openSecurePreferencesCalled = true;
+			display = Display.getCurrent();
+			return super.openSecurePreferences();
+		}
+
+		protected boolean wasOpenSecurePreferencesCalled() {
+			return openSecurePreferencesCalled;
+		}
+
+		protected Display getDisplay() {
+			return display;
+		}
 	}
 
 	@Test
@@ -138,4 +165,71 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 		assertEquals("value", store.get("key", null));
 	}
 
+	@Test
+	public void testopenSecurePreferencesThrowsExceptionOnUiThread() throws Exception {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				assertNotNull(Display.getCurrent());
+				StubSecureCredentialsStore store = new StubSecureCredentialsStore();
+				try {
+					store.openSecurePreferences();
+				} catch (AssertionFailedException e) {// expected
+					return;
+				}
+				assertTrue(false);
+			}
+		});
+	}
+
+	@Test
+	public void testAccessSecureStoreOnUiThread() throws Exception {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				assertNotNull(Display.getCurrent());
+				StubSecureCredentialsStore store = new StubSecureCredentialsStore();
+				assertFalse(store.wasOpenSecurePreferencesCalled());
+				store.put("key", "value", false);
+				assertEquals("value", store.get("key", null));
+				// check that openSecurePreferences was called but not from the UI thread
+				assertTrue(store.wasOpenSecurePreferencesCalled());
+				assertNull(store.getDisplay());
+			}
+		});
+	}
+
+	protected void runOnUiThread(final Runnable runnable) throws AssertionError {
+		final AssertionError assertionError[] = new AssertionError[1];
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				try {
+					runnable.run();
+				} catch (AssertionError e) {
+					assertionError[0] = e;
+				}
+
+			}
+		});
+		if (assertionError[0] != null) {
+			throw assertionError[0];
+		}
+	}
+
+	@Test
+	public void testRunOnUiThread() throws Exception {
+		try {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					assertTrue(false);
+				}
+			});
+		} catch (AssertionError e) {// expected
+			return;
+		}
+		assertTrue(false);
+	}
+
+	@Test
+	public void testUiLocationService() throws Exception {
+		assertTrue(new UiLocationService().getCredentialsStore("test") instanceof UiSecureCredentialsStore);
+	}
 }

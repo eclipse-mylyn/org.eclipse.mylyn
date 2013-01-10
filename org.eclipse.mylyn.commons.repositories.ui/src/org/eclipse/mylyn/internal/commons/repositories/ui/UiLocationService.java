@@ -25,7 +25,6 @@ import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredential
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
-import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.ui.auth.RepositoryAuthenticator;
 
 /**
@@ -38,7 +37,7 @@ public class UiLocationService implements ILocationService {
 
 	public ICredentialsStore getCredentialsStore(String id) {
 		Assert.isNotNull(id);
-		return new SecureCredentialsStore(id);
+		return new UiSecureCredentialsStore(id);
 	}
 
 	public Proxy getProxyForHost(String host, String proxyType) {

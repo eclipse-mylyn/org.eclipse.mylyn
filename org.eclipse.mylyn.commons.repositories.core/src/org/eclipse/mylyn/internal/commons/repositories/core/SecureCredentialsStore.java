@@ -176,9 +176,13 @@ public class SecureCredentialsStore implements ICredentialsStore {
 	}
 
 	protected ISecurePreferences getSecurePreferences() {
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault().node(ID_NODE);
+		ISecurePreferences securePreferences = openSecurePreferences().node(ID_NODE);
 		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getId()));
 		return securePreferences;
+	}
+
+	protected ISecurePreferences openSecurePreferences() {
+		return SecurePreferencesFactory.getDefault();
 	}
 
 	private void handle(StorageException e) {
