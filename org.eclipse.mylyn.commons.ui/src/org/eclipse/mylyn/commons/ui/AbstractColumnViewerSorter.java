@@ -68,7 +68,7 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 		if (column != null) {
 			int index = getColumnIndex(columnViewer, column);
 			int result = compare(columnViewer, e1, e2, index);
-			if (getSortDirection(columnViewer) == SWT.UP) {
+			if (getSortDirection(columnViewer) == SWT.DOWN) {
 				return -result;
 			}
 			return result;

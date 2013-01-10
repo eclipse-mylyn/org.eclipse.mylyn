@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.mylyn.commons.ui.AbstractColumnViewerSorter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,6 +93,16 @@ public class ColumnViewerSorterTest {
 	public void testCompareDefault() {
 		ColumnViewer viewer = mock(ColumnViewer.class);
 		assertEquals(-1, sorter.compareDefault(viewer, "a", "b"));
+	}
+
+	@Test
+	public void testCompareDirection() {
+		ColumnViewer viewer = mock(ColumnViewer.class);
+		sorter.sortColumn = mock(Item.class);
+		sorter.sortDirection = SWT.UP;
+		assertEquals(-1, sorter.compare(viewer, "a", "b"));
+		sorter.sortDirection = SWT.DOWN;
+		assertEquals(1, sorter.compare(viewer, "a", "b"));
 	}
 
 }
