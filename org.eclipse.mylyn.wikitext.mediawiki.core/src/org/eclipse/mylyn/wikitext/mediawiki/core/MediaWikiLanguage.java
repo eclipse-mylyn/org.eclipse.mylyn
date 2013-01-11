@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 396545
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -88,6 +89,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 		blocks.add(new HeadingBlock());
 		blocks.add(new ListBlock());
+		blocks.add(new TableBlock());
 
 		if (hasPreformattedBlock()) {
 			// preformatted blocks are lines that start with a single space, and thus are non-optimal for
@@ -96,7 +98,6 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		}
 		blocks.add(new SourceBlock());
 
-		blocks.add(new TableBlock());
 		blocks.add(new TableOfContentsBlock());
 		blocks.add(new EscapeBlock());
 		blocks.add(new CommentBlock());

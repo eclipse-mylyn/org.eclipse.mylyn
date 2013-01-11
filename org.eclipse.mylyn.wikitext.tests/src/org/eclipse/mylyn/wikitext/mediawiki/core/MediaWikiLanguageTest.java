@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381506, 381912, 391850, 304495
+ *     Jeremie Bresson - Bug 381506, 381912, 391850, 304495, 396545
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
@@ -871,7 +871,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertContainsPattern(html, pattern);
 	}
 
-	public void testTableMalformed() {
+	public void testTableNestedMalformed() {
 		//BUG 304495:
 		StringBuilder sb = new StringBuilder();
 		sb.append("{| \n");
@@ -945,6 +945,63 @@ public class MediaWikiLanguageTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 
 		String expected = "<table style=\"background-color:red;\"><tr><th>AAA</th><th>AAAAAAAA</th><th>AA</th></tr><tr><td>a</td><td>aaaaa</td><td>aaa<table style=\"background-color:green;\"><tr><th>B </th><td>bbbb</td></tr><tr><th>BBB</th><td>bb</td></tr><tr><th>BBBBB</th><td>bb</td></tr></table></td></tr><tr><td>aaaa<table style=\"background-color:yellow;\"><tr><th>BBBBB</th><th>BBB</th></tr><tr><td>bbbbb</td><td>bbb</td></tr><tr><td>bb<table style=\"background-color:blue;\"><tr><th>CCC</th><th>CCCCC</th><th>CCCCC</th></tr><tr><td>cc</td><td>ccccc</td><td>ccc</td></tr><tr><td>c</td><td>cccc</td><td>ccc</td></tr></table></td><td>bbbbb</td></tr><tr><td>bbbb</td><td>bb</td></tr></table></td><td>aaaaaaa</td><td>aa</td></tr><tr><td>aaa</td><td>aaaaaaaa</td><td>aaaa</td></tr></table>";
+		assertTrue(html.contains(expected));
+	}
+
+	public void testTableLeadingSpaces() {
+		//BUG 396545:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{| \n");
+		sb.append(" ! lorem\n");
+		sb.append(" ! ipsum\n");
+		sb.append(" |-\n");
+		sb.append(" | dolor\n");
+		sb.append(" | amtis\n");
+		sb.append(" |}\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<table><tr><th>lorem</th><th>ipsum</th></tr><tr><td>dolor</td><td>amtis</td></tr></table>";
+		assertTrue(html.contains(expected));
+	}
+
+	public void testTableLeadingSpacesInContext() {
+		//BUG 396545:
+		StringBuilder sb = new StringBuilder();
+		sb.append("aaa\n");
+		sb.append("  {| border=\"1\" \n");
+		sb.append(" ! other !! test !! table\n");
+		sb.append("   |-\n");
+		sb.append("     | with\n");
+		sb.append("       | some\n");
+		sb.append("         | cells\n");
+		sb.append("|-\n");
+		sb.append("  | and || a || line\n");
+		sb.append(" |}\n");
+		sb.append(" bbb");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<p>aaa</p><table border=\"1\"><tr><th>other</th><th>test</th><th>table</th></tr><tr><td>with</td><td>some</td><td>cells</td></tr><tr><td>and</td><td>a</td><td>line</td></tr></table><pre>bbb\n</pre>";
+		assertTrue(html.contains(expected));
+	}
+
+	public void testTableLeadingSpacesNestedMalformed() {
+		//BUG 396545:
+		StringBuilder sb = new StringBuilder();
+		sb.append("{| \n");
+		sb.append(" | first table first cell\n");
+		sb.append("{| \n");
+		sb.append(" | second table first cell\n");
+		sb.append(" |}\n");
+		sb.append(" | first table first cell\n");
+
+		String html = parser.parseToHtml(sb.toString());
+		TestUtil.println("HTML: \n" + html);
+
+		String expected = "<table><tr><td>first table first cell<table><tr><td>second table first cell</td></tr></table></td><td>first table first cell</td></tr></table>";
 		assertTrue(html.contains(expected));
 	}
 

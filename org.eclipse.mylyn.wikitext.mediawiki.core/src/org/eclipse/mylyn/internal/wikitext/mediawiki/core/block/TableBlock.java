@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Jeremie Bresson - Bug 381912, 304495
+ *     Jeremie Bresson - Bug 381912, 304495, 396545
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
@@ -31,17 +31,17 @@ public class TableBlock extends Block {
 
 	private static final Pattern rowCellSplitter = Pattern.compile("\\s*(\\|\\||!!)\\s*"); //$NON-NLS-1$
 
-	private static final Pattern startPattern = Pattern.compile("\\{\\|\\s*(.+)?"); //$NON-NLS-1$
+	private static final Pattern startPattern = Pattern.compile("\\s*\\{\\|\\s*(.+)?"); //$NON-NLS-1$
 
 	private static final Pattern optionsPattern = Pattern.compile("([a-zA-Z]+)=\"([^\"]*)\""); //$NON-NLS-1$
 
-	private static final Pattern newRowPattern = Pattern.compile("\\|-\\s*(.+)?"); //$NON-NLS-1$
+	private static final Pattern newRowPattern = Pattern.compile("\\s*\\|-\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern cellPattern = Pattern.compile("(\\||!)\\s*(.+)?"); //$NON-NLS-1$
+	private static final Pattern cellPattern = Pattern.compile("\\s*(\\||!)\\s*(.+)?"); //$NON-NLS-1$
 
 	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|\\[]+)?\\|)?\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern endPattern = Pattern.compile("\\|\\}\\s*(.+)?"); //$NON-NLS-1$
+	private static final Pattern endPattern = Pattern.compile("\\s*\\|\\}\\s*(.+)?"); //$NON-NLS-1$
 
 	private int blockLineCount;
 
@@ -316,11 +316,9 @@ public class TableBlock extends Block {
 
 	private boolean checkAtNewTableRow(String line, int lineOffset) {
 		if (lineOffset < line.length()) {
-			char startChar = line.charAt(lineOffset);
-			if (startChar == '|' || startChar == '!') {
-				//new line, a new cell or a new header cell
-				return true;
-			}
+			Matcher m = cellPattern.matcher(line);
+			m.region(lineOffset, line.length());
+			return m.matches();
 		}
 		return false;
 	}
