@@ -114,6 +114,8 @@ public class ManagedTestSuite extends TestSuite {
 			if (task != null) {
 				task.cancel();
 			}
+			// clear flag in case timeout occurred 
+			Thread.interrupted();
 		}
 
 		public void startTest(Test test) {
