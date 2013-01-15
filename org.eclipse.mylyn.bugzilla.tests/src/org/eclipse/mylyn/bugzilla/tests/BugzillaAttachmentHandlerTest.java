@@ -480,6 +480,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testContextAttachFailure() throws Exception {
+		// use the client's repository when setting credentials below
+		repository = client.getTaskRepository();
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());

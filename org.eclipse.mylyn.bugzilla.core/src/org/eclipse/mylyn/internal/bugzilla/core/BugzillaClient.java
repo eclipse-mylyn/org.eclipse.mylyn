@@ -83,6 +83,7 @@ import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0;
 import org.eclipse.mylyn.internal.bugzilla.core.service.BugzillaXmlRpcClient;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -2573,6 +2574,13 @@ public class BugzillaClient {
 
 	public BugzillaRepositoryConnector getConnector() {
 		return connector;
+	}
+
+	public TaskRepository getTaskRepository() {
+		if (location instanceof TaskRepositoryLocation) {
+			return ((TaskRepositoryLocation) location).getTaskRepository();
+		}
+		return null;
 	}
 
 }

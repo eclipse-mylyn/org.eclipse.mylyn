@@ -15,8 +15,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,20 +24,15 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.security.storage.EncodingUtils;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.ILocationService;
+import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
+import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 
 /**
@@ -53,14 +46,13 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use
  * the date string given to us by the repository itself.</li>
  * </ul>
- *
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  * @since 2.0
  */
-@SuppressWarnings("deprecation")
 public final class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8"; //$NON-NLS-1$
@@ -115,12 +107,6 @@ public final class TaskRepository extends PlatformObject {
 
 	public static final String NO_VERSION_SPECIFIED = "unknown"; //$NON-NLS-1$
 
-	private static final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
-
-	private static final String AUTH_REALM = ""; //$NON-NLS-1$
-
-	private static final URL DEFAULT_URL;
-
 	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp"; //$NON-NLS-1$
 
 	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault"; //$NON-NLS-1$
@@ -149,7 +135,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage tasks.
-	 *
+	 * 
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -157,7 +143,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage bugs.
-	 *
+	 * 
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -165,7 +151,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage builds.
-	 *
+	 * 
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -173,7 +159,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage reviews.
-	 *
+	 * 
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -189,16 +175,6 @@ public final class TaskRepository extends PlatformObject {
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
 	private static String CREATED_FROM_TEMPLATE = "org.eclipse.mylyn.tasklist.repositories.template"; //$NON-NLS-1$
-
-	static {
-		URL url = null;
-		try {
-			url = new URL("http://eclipse.org/mylyn"); //$NON-NLS-1$
-		} catch (Exception ex) {
-			// TODO ?
-		}
-		DEFAULT_URL = url;
-	}
 
 	private static String getKeyPrefix(AuthenticationType type) {
 		switch (type) {
@@ -234,6 +210,8 @@ public final class TaskRepository extends PlatformObject {
 	private transient volatile boolean updating;
 
 	private boolean shouldPersistCredentials = true;
+
+	private final ILocationService service = LocationService.getDefault();
 
 	public TaskRepository(String connectorKind, String repositoryUrl) {
 		this(connectorKind, repositoryUrl, NO_VERSION_SPECIFIED);
@@ -278,48 +256,19 @@ public final class TaskRepository extends PlatformObject {
 		this.setProperty(AUTH_PROXY + SAVE_PASSWORD, String.valueOf(true));
 	}
 
-	private ISecurePreferences getSecurePreferences() {
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-				.node(ITasksCoreConstants.ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getRepositoryUrl()));
-		return securePreferences;
+	private ICredentialsStore getCredentialsStore() {
+		return getService().getCredentialsStore(getRepositoryUrl());
 	}
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
 		if (Platform.isRunning() && shouldPersistCredentials()) {
-			if (useSecureStorage()) {
-				try {
-					ISecurePreferences securePreferences = getSecurePreferences();
-					if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-						this.setProperty(userProperty, username);
-					} else {
-						securePreferences.put(userProperty, username, false);
-					}
-					securePreferences.put(passwordProperty, password, true);
-				} catch (StorageException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Could not store authorization credentials", e)); //$NON-NLS-1$
-				}
+			ICredentialsStore credentialsStore = getCredentialsStore();
+			if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
+				this.setProperty(userProperty, username);
 			} else {
-				synchronized (LOCK) {
-					Map<String, String> map = getAuthInfo();
-					if (map == null) {
-						map = new HashMap<String, String>();
-					}
-					try {
-						try {
-							map.put(userProperty, username);
-							map.put(passwordProperty, password);
-							Platform.addAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME, map);
-						} catch (MalformedURLException ex) {
-							Platform.addAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME, map);
-						}
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Could not set authorization credentials", e)); //$NON-NLS-1$
-					}
-				}
+				credentialsStore.put(userProperty, username, false);
 			}
+			credentialsStore.put(passwordProperty, password, true);
 		} else {
 			synchronized (LOCK) {
 				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
@@ -330,30 +279,6 @@ public final class TaskRepository extends PlatformObject {
 				headlessCreds.put(userProperty, username);
 				headlessCreds.put(passwordProperty, password);
 			}
-		}
-	}
-
-	@SuppressWarnings({ "unchecked" })
-	private Map<String, String> getAuthInfo() {
-		synchronized (LOCK) {
-			if (Platform.isRunning()) {
-				try {
-					return Platform.getAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
-				} catch (MalformedURLException ex) {
-					return Platform.getAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
-				}
-			} else {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
-				if (headlessCreds == null) {
-					headlessCreds = new HashMap<String, String>();
-					credentials.put(getRepositoryUrl(), headlessCreds);
-				}
-				return headlessCreds;
-			}
-			return null;
 		}
 	}
 
@@ -388,33 +313,12 @@ public final class TaskRepository extends PlatformObject {
 			isCachedUserName = false;
 		}
 
-		synchronized (LOCK) {
-			if (Platform.isRunning() && shouldPersistCredentials()) {
-				if (useSecureStorage()) {
-					if (Platform.isRunning()) {
-						ISecurePreferences securePreferences = getSecurePreferences();
-						securePreferences.removeNode();
-						this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
-					} else {
-						Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
-						if (headlessCreds != null) {
-							headlessCreds.clear();
-						}
-					}
-				} else {
-					try {
-						try {
-							Platform.flushAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
-						} catch (MalformedURLException ex) {
-							Platform.flushAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
-						}
-					} catch (CoreException e) {
-						// FIXME propagate exception?
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Could not flush authorization credentials", e)); //$NON-NLS-1$
-					}
-				}
-			} else {
+		if (Platform.isRunning() && shouldPersistCredentials()) {
+			ICredentialsStore credentialsStore = getCredentialsStore();
+			credentialsStore.clear();
+			this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
+		} else {
+			synchronized (LOCK) {
 				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
 				if (headlessCreds != null) {
 					headlessCreds.clear();
@@ -423,54 +327,13 @@ public final class TaskRepository extends PlatformObject {
 		}
 	}
 
-	private boolean useSecureStorage() {
-		String useSecure = getProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE);
-		if (useSecure != null) {
-			return "true".equals(useSecure); //$NON-NLS-1$
-		}
-		return false;
-	}
-
-	@SuppressWarnings("unchecked")
 	private String getAuthInfo(String property) {
 		if (Platform.isRunning() && shouldPersistCredentials()) {
-			if (useSecureStorage()) {
-				String propertyValue = null;
-				if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-					propertyValue = this.getProperty(property);
-				} else {
-					try {
-						ISecurePreferences securePreferences = getSecurePreferences();
-						propertyValue = securePreferences.get(property, null);
-					} catch (StorageException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
-					}
-				}
-				return propertyValue;
-			} else {
-				synchronized (LOCK) {
-					try {
-						Map<String, String> map = Platform.getAuthorizationInfo(new URL(getRepositoryUrl()),
-								AUTH_REALM, AUTH_SCHEME);
-						if (map != null) {
-							String propertyValue = map.get(property);
-							return propertyValue;
-						}
-					} catch (MalformedURLException ex) {
-						Map<String, String> map = Platform.getAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(),
-								AUTH_SCHEME);
-						if (map != null) {
-							String propertyValue = map.get(property);
-							return propertyValue;
-						}
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
-					}
-					return null;
-				}
+			if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
+				return getProperty(property);
 			}
+			ICredentialsStore credentialsStore = getCredentialsStore();
+			return credentialsStore.get(property, null);
 		} else {
 			synchronized (LOCK) {
 				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
@@ -485,7 +348,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns {@code} if credentials persisted in the platform keystore.
-	 *
+	 * 
 	 * @since 3.10
 	 * @see #setShouldPersistCredentials(boolean)
 	 */
@@ -498,7 +361,7 @@ public final class TaskRepository extends PlatformObject {
 	 * will not be persisted in the platform keystore.
 	 * <p>
 	 * This flag does not have any effect if not running in an OSGi environment.
-	 *
+	 * 
 	 * @since 3.10
 	 * @see #shouldPersistCredentials()
 	 */
@@ -513,7 +376,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
-	 *
+	 * 
 	 * @return {@link Date} configuration date, null if not set
 	 */
 	public Date getConfigurationDate() {
@@ -542,7 +405,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns the credentials for an authentication type.
-	 *
+	 * 
 	 * @param authType
 	 *            the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
@@ -552,7 +415,7 @@ public final class TaskRepository extends PlatformObject {
 		String key = getKeyPrefix(authType);
 
 		String enabled = getProperty(key + ENABLED);
-		if (enabled == null || "true".equals(enabled)) { //$NON-NLS-1$
+		if ("true".equals(enabled)) { //$NON-NLS-1$
 			String userName = getAuthInfo(key + USERNAME);
 			String password;
 
@@ -568,11 +431,6 @@ public final class TaskRepository extends PlatformObject {
 			}
 			if (password == null) {
 				password = ""; //$NON-NLS-1$
-			}
-
-			if (enabled == null && userName.length() == 0) {
-				// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
-				return null;
 			}
 
 			return new AuthenticationCredentials(userName, password);
@@ -683,12 +541,8 @@ public final class TaskRepository extends PlatformObject {
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
-			if (useSecureStorage()) {
-				// do not open secure store for username to avoid prompting user for password during initialization
-				cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
-			} else {
-				cachedUserName = getUserName(AuthenticationType.REPOSITORY);
-			}
+			// do not open secure store for username to avoid prompting user for password during initialization 
+			cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
 			isCachedUserName = true;
 		}
 		return cachedUserName;
@@ -769,12 +623,12 @@ public final class TaskRepository extends PlatformObject {
 	public void setCharacterEncoding(String characterEncoding) {
 		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null
 				? DEFAULT_CHARACTER_ENCODING
-						: characterEncoding);
+				: characterEncoding);
 	}
 
 	/**
 	 * Set the Configuration date to the {@link Date} indicated.
-	 *
+	 * 
 	 * @param configuration
 	 *            date {@link {@link Date}
 	 */
@@ -786,7 +640,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Sets the credentials for <code>authType</code>.
-	 *
+	 * 
 	 * @param authType
 	 *            the type of authentication
 	 * @param credentials
@@ -805,14 +659,14 @@ public final class TaskRepository extends PlatformObject {
 		if (credentials == null) {
 			setProperty(key + ENABLED, String.valueOf(false));
 			transientProperties.remove(key + PASSWORD);
-			addAuthInfo("", "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$ //$NON-NLS-2$
+			addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
 		} else {
 			setProperty(key + ENABLED, String.valueOf(true));
 			if (savePassword) {
 				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
 				transientProperties.remove(key + PASSWORD);
 			} else {
-				addAuthInfo(credentials.getUserName(), "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$
+				addAuthInfo(credentials.getUserName(), null, key + USERNAME, key + PASSWORD);
 				transientProperties.put(key + PASSWORD, credentials.getPassword());
 			}
 		}
@@ -891,7 +745,7 @@ public final class TaskRepository extends PlatformObject {
 	public void setTimeZoneId(String timeZoneId) {
 		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null
 				? TimeZone.getDefault().getID()
-						: timeZoneId);
+				: timeZoneId);
 	}
 
 	/**
@@ -977,7 +831,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * If this repository was automatically created from a template <code>value</code> should be set to true.
-	 *
+	 * 
 	 * @since 3.5
 	 * @see #isCreatedFromTemplate()
 	 */
@@ -987,7 +841,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns true, if this repository was automatically created from a template.
-	 *
+	 * 
 	 * @since 3.5
 	 * @see #setCreatedFromTemplate(boolean)
 	 */
@@ -1007,6 +861,10 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public void setCategory(String category) {
 		setProperty(IRepositoryConstants.PROPERTY_CATEGORY, category);
+	}
+
+	private ILocationService getService() {
+		return service;
 	}
 
 }

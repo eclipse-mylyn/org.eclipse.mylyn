@@ -52,6 +52,8 @@ public class RepositoryReportFactoryTest extends TestCase {
 	public void testInvalidCredentials() throws Exception {
 		try {
 			client.logout(new NullProgressMonitor());
+			// use the client's repository when setting credentials below
+			repository = client.getTaskRepository();
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials("invalid", "invalid"), false);
 			connector.getTaskData(repository, "1", new NullProgressMonitor());

@@ -938,6 +938,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testAuthenticationCredentials() throws Exception {
+		// use the client's repository when setting credentials below
+		repository = client.getTaskRepository();
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(data);
 		ITask task = generateLocalTaskAndDownload(data.getTaskId());

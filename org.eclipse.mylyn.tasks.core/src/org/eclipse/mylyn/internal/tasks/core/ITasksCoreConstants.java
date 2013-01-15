@@ -65,6 +65,10 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_TASK_SUPPRESS_INCOMING = "task.common.suppress.incoming"; //$NON-NLS-1$
 
+	/**
+	 * @deprecated Since Mylyn 3.11, all TaskRepositories store their credentials in the secure store.
+	 */
+	@Deprecated
 	public static final String PROPERTY_USE_SECURE_STORAGE = "org.eclipse.mylyn.tasklist.repositories.configuration.securestorage"; //$NON-NLS-1$
 
 	/**

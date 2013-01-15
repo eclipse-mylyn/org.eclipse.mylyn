@@ -12,23 +12,19 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -62,6 +58,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	private final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
 
+	private static final String SECURE_CREDENTIALS_STORE_NODE_ID = "org.eclipse.mylyn.commons.repository"; //$NON-NLS-1$
+
 	private final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$
 
 	private final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
@@ -90,24 +88,24 @@ public class TaskRepositoryManagerTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testsUseSecureStorage() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository2/");
-		repository.setProperty(ITasksCoreConstants.PROPERTY_USE_SECURE_STORAGE, "true");
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
 				"testPassword"), true);
 
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-				.node(ITasksCoreConstants.ID_PLUGIN);
+		repository.setCredentials(AuthenticationType.HTTP,
+				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
+
+		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault().node(
+				SECURE_CREDENTIALS_STORE_NODE_ID);
 		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
 		assertEquals("testPassword", securePreferences.get(AUTH_PASSWORD, null));
-		assertEquals("testUserName", repository.getProperty(AUTH_USERNAME));
-		assertEquals("shouldbenull", securePreferences.get(AUTH_USERNAME, "shouldbenull"));
-		assertNull(Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME));
+		assertNull(securePreferences.get(AUTH_USERNAME, null));
+		assertEquals("httpUserName", securePreferences.get(AUTH_HTTP_USERNAME, null));
+		assertEquals("httpPassword", securePreferences.get(AUTH_HTTP_PASSWORD, null));
 	}
 
-	@SuppressWarnings("deprecation")
-	public void testsUseKeyring() throws Exception {
+	public void testsSaveCredentials() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository3/");
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUserName",
 				"testPassword"), true);
@@ -115,16 +113,10 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository.setCredentials(AuthenticationType.HTTP,
 				new AuthenticationCredentials("httpUserName", "httpPassword"), true);
 
-		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-				.node(ITasksCoreConstants.ID_PLUGIN);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository.getUrl()));
-		assertNull(securePreferences.get(AUTH_PASSWORD, null));
-		assertNull("testUserName", repository.getProperty(AUTH_USERNAME));
-		Map<?, ?> map = Platform.getAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME);
-		assertEquals("testUserName", map.get(AUTH_USERNAME));
-		assertEquals("testPassword", map.get(AUTH_PASSWORD));
-		assertEquals("httpUserName", map.get(AUTH_HTTP_USERNAME));
-		assertEquals("httpPassword", map.get(AUTH_HTTP_PASSWORD));
+		assertEquals("testUserName", repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertEquals("testPassword", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		assertEquals("httpUserName", repository.getCredentials(AuthenticationType.HTTP).getUserName());
+		assertEquals("httpPassword", repository.getCredentials(AuthenticationType.HTTP).getPassword());
 	}
 
 	// FIXME 3.5 re-enable test

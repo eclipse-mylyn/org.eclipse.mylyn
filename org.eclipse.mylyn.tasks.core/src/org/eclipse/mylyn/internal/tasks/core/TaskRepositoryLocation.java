@@ -59,4 +59,8 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		return taskRepository.getCredentials(type);
 	}
 
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
 }
