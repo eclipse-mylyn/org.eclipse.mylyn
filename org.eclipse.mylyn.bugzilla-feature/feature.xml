@@ -29,8 +29,8 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.commons.net" version="3.8.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.commons.xmlrpc" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.net" version="3.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.xmlrpc" version="3.9.0" match="compatible"/>
       <import plugin="org.apache.xmlrpc" version="3.0.0" match="compatible"/>
       <import plugin="org.apache.ws.commons.util" version="1.0.1" match="compatible"/>
       <import plugin="javax.xml.bind" version="2.0.0" match="compatible"/>
