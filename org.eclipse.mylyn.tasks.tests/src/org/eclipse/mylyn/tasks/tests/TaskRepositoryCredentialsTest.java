@@ -159,4 +159,46 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		assertEquals("Time stamp set", stamp.getTime(), taskRepository.getConfigurationDate().getTime());
 	}
 
+	public void testDoNotPersistCredentials() throws Exception {
+		TaskRepository repository = new TaskRepository("kind", "http://url");
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		assertEquals("pwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+
+		repository.setShouldPersistCredentials(false);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "newpwd"), true);
+		assertEquals("newpwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+
+		repository.setShouldPersistCredentials(true);
+		assertEquals("pwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+	}
+
+	public void testSetCredentialsDoesNotAffectExistingRepositoryWhenShouldNotPersistIsSetToTrue() throws Exception {
+		TaskRepository repository = new TaskRepository("kind", "http://url");
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		assertEquals("pwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+
+		TaskRepository newRepository = new TaskRepository("kind", "http://url");
+		newRepository.setShouldPersistCredentials(false);
+		newRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("newuser", "newpwd"),
+				true);
+		assertEquals("pwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		assertEquals("newpwd", newRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd2"), true);
+		assertEquals("pwd2", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		assertEquals("newpwd", newRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+	}
+
+	public void testSetCredentialsAffectExistingRepository() throws Exception {
+		TaskRepository repository = new TaskRepository("kind", "http://url");
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
+		assertEquals("pwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+
+		TaskRepository newRepository = new TaskRepository("kind", "http://url");
+		newRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("newuser", "newpwd"),
+				true);
+		assertEquals("newpwd", repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		assertEquals("newpwd", newRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+	}
+
 }

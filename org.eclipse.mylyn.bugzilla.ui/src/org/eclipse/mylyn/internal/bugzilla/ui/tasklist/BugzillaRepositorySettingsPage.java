@@ -697,6 +697,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	@Override
 	public TaskRepository createTaskRepository() {
 		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
+		// do not modify the secure storage for a temporary repository
+		repository.setShouldPersistCredentials(false);
 		applyToInternal(repository);
 		return repository;
 	}

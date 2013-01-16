@@ -1672,10 +1672,18 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
+	 * Creates a {@link TaskRepository} based on the current settings.
+	 * <p>
+	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding,
+	 * subclasses must either call super or call {@link TaskRepository#setShouldPersistCredentials(boolean)
+	 * setShouldPersistCredentials(false)} before calling {@link #applyTo(TaskRepository)}.
+	 * 
 	 * @since 2.0
 	 */
 	public TaskRepository createTaskRepository() {
 		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
+		// do not modify the secure storage for a temporary repository
+		repository.setShouldPersistCredentials(false);
 		applyTo(repository);
 		return repository;
 	}

@@ -233,6 +233,8 @@ public final class TaskRepository extends PlatformObject {
 
 	private transient volatile boolean updating;
 
+	private boolean shouldPersistCredentials = true;
+
 	public TaskRepository(String connectorKind, String repositoryUrl) {
 		this(connectorKind, repositoryUrl, NO_VERSION_SPECIFIED);
 	}
@@ -284,7 +286,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
-		if (Platform.isRunning()) {
+		if (Platform.isRunning() && shouldPersistCredentials()) {
 			if (useSecureStorage()) {
 				try {
 					ISecurePreferences securePreferences = getSecurePreferences();
@@ -387,7 +389,7 @@ public final class TaskRepository extends PlatformObject {
 		}
 
 		synchronized (LOCK) {
-			if (Platform.isRunning()) {
+			if (Platform.isRunning() && shouldPersistCredentials()) {
 				if (useSecureStorage()) {
 					if (Platform.isRunning()) {
 						ISecurePreferences securePreferences = getSecurePreferences();
@@ -431,7 +433,7 @@ public final class TaskRepository extends PlatformObject {
 
 	@SuppressWarnings("unchecked")
 	private String getAuthInfo(String property) {
-		if (Platform.isRunning()) {
+		if (Platform.isRunning() && shouldPersistCredentials()) {
 			if (useSecureStorage()) {
 				String propertyValue = null;
 				if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
@@ -479,6 +481,29 @@ public final class TaskRepository extends PlatformObject {
 				return headlessCreds.get(property);
 			}
 		}
+	}
+
+	/**
+	 * Returns {@code} if credentials persisted in the platform keystore.
+	 * 
+	 * @since 3.10
+	 * @see #setShouldPersistCredentials(boolean)
+	 */
+	public boolean shouldPersistCredentials() {
+		return shouldPersistCredentials;
+	}
+
+	/**
+	 * Toggles the flag for persisting credentials. If {@code shouldPersistCredentials} is {@code false} credentials
+	 * will not be persisted in the platform keystore.
+	 * <p>
+	 * This flag does not have any effect if not running in an OSGi environment.
+	 * 
+	 * @since 3.10
+	 * @see #shouldPersistCredentials()
+	 */
+	public void setShouldPersistCredentials(boolean shouldPersistCredentials) {
+		this.shouldPersistCredentials = shouldPersistCredentials;
 	}
 
 	public String getCharacterEncoding() {
