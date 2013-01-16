@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.versions" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.versions" version="1.1.0" match="compatible"/>
       <import feature="org.eclipse.egit" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
