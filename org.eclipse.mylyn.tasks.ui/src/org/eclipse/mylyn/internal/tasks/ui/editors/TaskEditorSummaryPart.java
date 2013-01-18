@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Raphael Ackermann
  * @author Steffen Pingel
+ * @author Miles Parker
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
@@ -43,25 +44,12 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		setPartName(Messages.TaskEditorSummaryPart_Summary);
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		addAttribute(composite, toolkit, attribute, EditorUtil.HEADER_COLUMN_MARGIN);
-	}
-
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent) {
-		addAttribute(composite, toolkit, attribute, indent, true);
-	}
-
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
-			boolean showLabel) {
-		addAttribute(composite, toolkit, attribute, indent, true, false);
-	}
-
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
-			boolean showLabel, boolean decorationEnabled) {
+	protected void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent,
+			boolean showLabel, boolean decorationEnabled, boolean readOnly) {
 		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			// having editable controls in the header looks odd
-			editor.setReadOnly(true);
+			editor.setReadOnly(readOnly);
 			editor.setDecorationEnabled(decorationEnabled);
 
 			boolean isPriority = isAttribute(attribute, TaskAttribute.PRIORITY);
@@ -97,7 +85,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	protected Control addAttributeWithIcon(Composite composite, FormToolkit toolkit, TaskAttribute attribute,
+	protected Control addPriorityAttributeWithIcon(Composite composite, FormToolkit toolkit, TaskAttribute attribute,
 			boolean forceReadOnly) {
 		if (attribute != null) {
 			//can't be added via a factory because these attributes already have a default editor?
@@ -166,9 +154,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		layout.verticalSpacing = 3;
 		composite.setLayout(layout);
 
-		// add priority as an icon 
 		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
-		final Control priorityEditor = addAttributeWithIcon(composite, toolkit, priorityAttribute, false);
+		final Control priorityEditor = addPriorityAttributeWithIcon(composite, toolkit, priorityAttribute, false);
 		if (priorityEditor != null) {
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(1, 2).applyTo(priorityEditor);
 			// forward focus to the summary editor		
@@ -222,49 +209,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		headerComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComposite);
 
-//		ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
-//		if (mapping != null) {
-//			toolkit.createLabel(headerComposite, mapping.getStatus());
-//			String resolution = mapping.getResolution();
-//			if (resolution != null && resolution.length() > 0) {
-//				toolkit.createLabel(headerComposite, "(" + resolution + ")");
-//			}
-//			String priority = mapping.getPriority();
-//			if (priority != null) {
-//				Label label = toolkit.createLabel(headerComposite, "Priority:");
-//				label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-//				PriorityLevel priorityLevel = mapping.getPriorityLevel();
-//				if (priorityLevel != null) {
-//					Image image = TasksUiImages.getImageForPriority(priorityLevel);
-//					if (image != null) {
-//						label = toolkit.createLabel(headerComposite, null);
-//						label.setImage(image);
-//					}
-//				}
-//				toolkit.createLabel(headerComposite, priority);
-//			}
-//		}
-		TaskAttribute statusAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		addAttribute(headerComposite, toolkit, statusAtribute, 0, true, true);
-
-		ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
-		if (mapping != null && mapping.getResolution() != null && mapping.getResolution().length() > 0) {
-			TaskAttribute resolutionAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
-			addAttribute(headerComposite, toolkit, resolutionAtribute, 0, false);
-		}
-
-//		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
-//		addAttribute(headerComposite, toolkit, keyAttribute);
-
-		// right align controls
-//		Composite spacer = toolkit.createComposite(headerComposite, SWT.NONE);
-//		GridDataFactory.fillDefaults().hint(0, 10).grab(true, false).applyTo(spacer);
-
-		TaskAttribute dateCreation = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_CREATION);
-		addAttribute(headerComposite, toolkit, dateCreation);
-
-		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-		addAttribute(headerComposite, toolkit, dateModified);
+		createAttributeEditors(toolkit, headerComposite);
 
 		// ensure layout does not wrap
 		layout.numColumns = headerComposite.getChildren().length;
@@ -276,6 +221,23 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		}
 
 		return headerComposite;
+	}
+
+	protected void createAttributeEditors(FormToolkit toolkit, Composite headerComposite) {
+		TaskAttribute statusAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		addAttribute(headerComposite, toolkit, statusAtribute, 0, true, true, true);
+
+		ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
+		if (mapping != null && mapping.getResolution() != null && mapping.getResolution().length() > 0) {
+			TaskAttribute resolutionAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+			addAttribute(headerComposite, toolkit, resolutionAtribute, 0, false, false, true);
+		}
+
+		TaskAttribute dateCreation = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_CREATION);
+		addAttribute(headerComposite, toolkit, dateCreation, EditorUtil.HEADER_COLUMN_MARGIN, true, false, true);
+
+		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		addAttribute(headerComposite, toolkit, dateModified, EditorUtil.HEADER_COLUMN_MARGIN, true, false, true);
 	}
 
 	public boolean needsHeader() {
