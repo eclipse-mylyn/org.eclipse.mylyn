@@ -7,15 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker         - bug# 395029
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Rob Elves
+ * @author Frank Becker
  * @since 3.0
  */
 public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler {
@@ -56,12 +55,15 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 	@Override
 	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
+		BugzillaClient client;
 		try {
 			monitor.beginTask(Messages.BugzillaTaskAttachmentHandler_Getting_attachment, IProgressMonitor.UNKNOWN);
 			TaskAttachmentMapper attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			downloadAttachment(repository, task, attachment.getAttachmentId(), out, monitor);
-			return new ByteArrayInputStream(out.toByteArray());
+			client = connector.getClientManager().getClient(repository, monitor);
+			return client.getAttachmentData(attachment.getAttachmentId(), monitor);
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					"Unable to retrieve attachment", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -82,20 +84,5 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 		} finally {
 			monitor.done();
 		}
-
 	}
-
-	private void downloadAttachment(TaskRepository repository, ITask task, String attachmentId, OutputStream out,
-			IProgressMonitor monitor) throws CoreException {
-		BugzillaClient client;
-		try {
-			client = connector.getClientManager().getClient(repository,
-					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			client.getAttachmentData(attachmentId, out, monitor);
-		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Unable to retrieve attachment", e)); //$NON-NLS-1$
-		}
-	}
-
 }

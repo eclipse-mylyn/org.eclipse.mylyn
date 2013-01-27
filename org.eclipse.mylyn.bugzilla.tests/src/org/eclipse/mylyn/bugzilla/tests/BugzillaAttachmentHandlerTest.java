@@ -590,4 +590,69 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		assertEquals(expected, new String(data));
 	}
 
+	public void testDownloadNonExsistingAttachmentFile() throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+				"description for testUpdateAttachmentFlags");
+		assertNotNull(taskData);
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
+		assertEquals(0, numAttached);
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+		attachmentMapper.setComment("test Update AttachmentFlags");
+
+		/* Test uploading a proper file */
+		String fileName = "test-attach-1.txt";
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		attachFile.deleteOnExit();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		String expected = "test file from " + System.currentTimeMillis();
+		write.write(expected);
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType("text/plain");
+		attachment.setDescription("Description");
+		attachment.setName("My Attachment 1");
+
+		try {
+			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
+		assertEquals(1, numAttached);
+		TaskAttribute attachmentAttribute = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.get(0);
+
+		attachmentAttribute.setValue("99999999");
+		File file = File.createTempFile("mylyn", null);
+		ITask iTask = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), taskData.getTaskId());
+
+		ITaskAttachment taskAttachment;
+		taskAttachment = new TaskAttachment(repository, iTask, attachmentAttribute);
+
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+		try {
+			AttachmentUtil.downloadAttachment(taskAttachment, out, new NullProgressMonitor());
+		} catch (CoreException e) {
+			String message = e.getMessage();
+			assertTrue(message.startsWith("invalid attachment id: "));
+		} catch (Exception e) {
+			fail("CoreException expected");
+		} finally {
+			out.close();
+		}
+	}
 }

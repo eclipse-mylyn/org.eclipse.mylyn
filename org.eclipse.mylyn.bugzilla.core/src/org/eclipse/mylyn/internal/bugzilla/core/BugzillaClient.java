@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -98,6 +99,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
+ * @author Frank Becker
  */
 public class BugzillaClient {
 
@@ -508,7 +510,7 @@ public class BugzillaClient {
 				if (!loggedIn) {
 					InputStream input = getResponseStream(postMethod, monitor);
 					try {
-						parseHtmlError(input);
+						throw new CoreException(parseHtmlError(input));
 					} finally {
 						input.close();
 					}
@@ -637,13 +639,12 @@ public class BugzillaClient {
 				}
 			}
 			// because html is not a valid config content type it is save to get the response here
-			parseHtmlError(getResponseStream(postMethod, monitor));
+			throw new CoreException(parseHtmlError(getResponseStream(postMethod, monitor)));
 		} finally {
 			if (postMethod != null) {
 				WebUtil.releaseConnection(postMethod, monitor);
 			}
 		}
-		return false;
 	}
 
 	protected RepositoryQueryResultsFactory getQueryResultsFactory(InputStream stream) {
@@ -796,8 +797,7 @@ public class BugzillaClient {
 
 					}
 					if (loggedIn) {
-						parseHtmlError(stream);
-						return null;
+						throw new CoreException(parseHtmlError(stream));
 					}
 				} finally {
 					stream.close();
@@ -812,27 +812,32 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public void getAttachmentData(String attachmentId, OutputStream out, IProgressMonitor monitor) throws IOException,
+	public InputStream getAttachmentData(String attachmentId, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-		GetMethod method = getConnect(url, monitor);//getConnectGzip(url, monitor);
+		GetMethod method = getConnect(url, monitor);
+		Status status = null;
 		try {
 			if (method.getStatusCode() == HttpStatus.SC_OK) {
-				//copy the response
-				InputStream instream = method.getResponseBodyAsStream();
-				if (instream != null) {
-					byte[] buffer = new byte[4096];
-					int len;
-					while ((len = instream.read(buffer)) > 0) {
-						out.write(buffer, 0, len);
-					}
+				Header contentDisposition = method.getResponseHeader("Content-disposition"); //$NON-NLS-1$
+				if (contentDisposition == null) {
+					status = parseHtmlError(method.getResponseBodyAsStream());
+				} else {
+					//copy the response
+					return method.getResponseBodyAsStream();
 				}
 			} else {
-				parseHtmlError(method.getResponseBodyAsStream());
+				status = parseHtmlError(method.getResponseBodyAsStream());
 			}
+		} catch (Exception e) {
+			status = new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "Unable to retrieve attachment", e); //$NON-NLS-1$
 		} finally {
-			WebUtil.releaseConnection(method, monitor);
+			if (status != null) {
+				WebUtil.releaseConnection(method, monitor);
+				throw new CoreException(status);
+			}
 		}
+		throw new CoreException(status);
 	}
 
 	private String getCharacterEncoding() {
@@ -1863,10 +1868,24 @@ public class BugzillaClient {
 	/**
 	 * Utility method for determining what potential error has occurred from a bugzilla html reponse page
 	 */
-	private BugzillaRepositoryResponse parseHtmlError(InputStream inputStream) throws IOException, CoreException {
+	private Status parseHtmlError(InputStream inputStream) {
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
-		return parseRepositoryResponse(null, in);
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
+			parseRepositoryResponse(null, in);
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "No Exception from parseHtmlError"); //$NON-NLS-1$
+		} catch (CoreException e) {
+			if (e.getStatus() instanceof BugzillaStatus || e.getStatus() instanceof RepositoryStatus) {
+				return (Status) e.getStatus();
+			} else {
+				return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						"No Exception from parseHtmlError, Status is not from expected Type"); //$NON-NLS-1$
+			}
+		} catch (UnsupportedEncodingException e1) {
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "UnsupportedEncodingException:", e1); //$NON-NLS-1$
+		} catch (IOException e) {
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "IOException:", e); //$NON-NLS-1$
+		}
 	}
 
 	private BugzillaRepositoryResponse parsePostResponse(String taskId, InputStream inputStream) throws IOException,
@@ -2186,8 +2205,7 @@ public class BugzillaClient {
 
 				if (!parseable) {
 					// because html is not a valid config content type it is save to get the response here
-					parseHtmlError(getResponseStream(method, monitor));
-					break;
+					throw new CoreException(parseHtmlError(getResponseStream(method, monitor)));
 				}
 			} catch (CoreException c) {
 				if (c.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN && authenticationAttempt < 1) {
