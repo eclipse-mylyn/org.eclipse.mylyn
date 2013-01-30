@@ -67,7 +67,7 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 		TaskData taskData = response.getTaskData();
 		if (contribution instanceof ProductStatus) {
 			if (response instanceof AttributeTaskMapper) {
-				if (((AttributeTaskMapper) response).getAttribute("severity") == null) {
+				if (((AttributeTaskMapper) response).getAttribute("severity") == null) { //$NON-NLS-1$
 					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
 					ITaskMapping mapping = connector.getTaskMapping(taskData);
 					mapping.merge(new TaskMapping() {

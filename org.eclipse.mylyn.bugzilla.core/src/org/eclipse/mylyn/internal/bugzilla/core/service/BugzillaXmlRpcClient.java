@@ -129,8 +129,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public static final String XML_RESPONSE_BUGS = "bugs"; //$NON-NLS-1$
 
-	private static final String Date = null;
-
 	/*
 	 * Fields
 	 * 
@@ -860,7 +858,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				attachmentMapper.setPatch(is_patch.equals("1")); //$NON-NLS-1$
 				attachmentMapper.applyTo(attachmentAttribute);
 
-				addFlags(taskData, attachment.get("flags"), attachmentAttribute);
+				addFlags(taskData, attachment.get("flags"), attachmentAttribute); //$NON-NLS-1$
 			}
 		}
 	}
@@ -888,7 +886,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 							idAttribute.setValue(commentID.toString());
 							if (useIsPrivate) {
 								TaskAttribute isprivateAttribute = description.createAttribute(IBugzillaConstants.BUGZILLA_DESCRIPTION_IS_PRIVATE);
-								isprivateAttribute.setValue(is_private ? "1" : "0");
+								isprivateAttribute.setValue(is_private ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 						commentNum++;
@@ -1082,7 +1080,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}
 		for (TaskAttribute attachment : taskAttachments) {
 			BugzillaAttachmentMapper attachmentMapper = BugzillaAttachmentMapper.createFrom(attachment);
-			attachmentMapper.setUrl(repURL.substring(0, repURL.indexOf("/xmlrpc.cgi"))
+			attachmentMapper.setUrl(repURL.substring(0, repURL.indexOf("/xmlrpc.cgi")) //$NON-NLS-1$
 					+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentMapper.getAttachmentId());
 			attachmentMapper.applyTo(attachment);
 		}

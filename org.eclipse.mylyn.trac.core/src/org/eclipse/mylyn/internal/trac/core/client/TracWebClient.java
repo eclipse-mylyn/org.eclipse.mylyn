@@ -399,7 +399,7 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
 							// TODO handle custom fields
-						} else if ((tag.getTagType() == Tag.H2 && ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class"))))
+						} else if ((tag.getTagType() == Tag.H2 && ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$
 								|| tag.getTagType() == Tag.SPAN && ("summary".equals(tag.getAttribute("class")))) { //$NON-NLS-1$ //$NON-NLS-2$ 
 							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
 						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -547,7 +547,7 @@ public class TracWebClient extends AbstractTracClient {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.SCRIPT) {
 							String text = getText(tokenizer).trim();
-							int i = text.indexOf("var properties=");
+							int i = text.indexOf("var properties="); //$NON-NLS-1$
 							if (i != -1) {
 								if (!parseAttributesJSon(text.substring(i))) {
 									// fall back

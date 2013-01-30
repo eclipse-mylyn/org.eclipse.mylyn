@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Robert Elves
  */
-@SuppressWarnings("restriction")
 public class OslcServiceLabelProvider extends LabelProvider {
 
 	@Override

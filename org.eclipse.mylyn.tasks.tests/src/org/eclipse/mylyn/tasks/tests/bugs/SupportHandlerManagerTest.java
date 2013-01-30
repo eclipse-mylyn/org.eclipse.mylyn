@@ -60,7 +60,7 @@ public class SupportHandlerManagerTest extends TestCase {
 	public void tearDown() throws Exception {
 	}
 
-	public void testSupportHandlerManager() {
+	public void testSupportHandlerManager() throws CoreException {
 		SupportHandlerManager handlerManager = new SupportHandlerManager();
 		SupportProviderManager providerManager = new SupportProviderManager();
 		SupportProduct product = providerManager.getProduct("org.eclipse.mylyn.tasks.tests.productnormal");
@@ -74,11 +74,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		AttributeTaskMapper mapper = ((AttributeTaskMapper) request.getDefaultContribution());
 		assertTrue(!mapper.isHandled());
 		TaskData taskData = null;
-		try {
-			taskData = mapper.createTaskData(monitor);
-		} catch (CoreException e) {
-			fail("unexpected CoreException " + e.getMessage());
-		}
+		taskData = mapper.createTaskData(monitor);
 		assertNotNull(taskData);
 		mapper.setTaskData(taskData);
 		handlerManager.postProcess(mapper, monitor);
@@ -86,7 +82,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		assertEquals("enhancement", serv.getValue());
 	}
 
-	public void testSeverityDefinedInExtensionPoint() {
+	public void testSeverityDefinedInExtensionPoint() throws CoreException {
 		SupportHandlerManager handlerManager = new SupportHandlerManager();
 		SupportProviderManager providerManager = new SupportProviderManager();
 		SupportProduct product = providerManager.getProduct("org.eclipse.mylyn.tasks.tests.productseverity");
@@ -100,11 +96,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		AttributeTaskMapper mapper = ((AttributeTaskMapper) request.getDefaultContribution());
 		assertTrue(!mapper.isHandled());
 		TaskData taskData = null;
-		try {
-			taskData = mapper.createTaskData(monitor);
-		} catch (CoreException e) {
-			fail("unexpected CoreException " + e.getMessage());
-		}
+		taskData = mapper.createTaskData(monitor);
 		assertNotNull(taskData);
 		mapper.setTaskData(taskData);
 		handlerManager.postProcess(mapper, monitor);

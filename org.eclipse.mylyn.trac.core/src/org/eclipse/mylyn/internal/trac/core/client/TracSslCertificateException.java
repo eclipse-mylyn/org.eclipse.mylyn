@@ -19,7 +19,7 @@ public class TracSslCertificateException extends TracException {
 	private static final long serialVersionUID = -693879319319751584L;
 
 	public TracSslCertificateException() {
-		super("Opening of the certificate keystore failed");
+		super("Opening of the certificate keystore failed"); //$NON-NLS-1$
 	}
 
 }
