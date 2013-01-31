@@ -380,24 +380,27 @@ public class PatchSetSection extends AbstractGerritSection {
 					public void run() {
 						if (getControl() != null && !getControl().isDisposed()) {
 							if (event.getResult().isOK()) {
-								GerritTaskEditorPage editor = (GerritTaskEditorPage) getTaskEditorPage();
-								IReview review = editor.getReview();
+								IReview review = getReview();
 								GerritPatchSetContent content = job.getPatchSetContent();
 								if (content != null && content.getPatchScriptByPatchKey() != null) {
 									IReviewItemSet reviewItem = GerritUtil.createInput(changeDetail, content, cache);
-									IReviewItem replaceItem = null;
-									for (IReviewItem item : review.getItems()) {
-										if (item.getId().equals(reviewItem.getId())) {
-											replaceItem = item;
-											break;
+									if (review != null) {
+										IReviewItem replaceItem = null;
+										for (IReviewItem item : review.getItems()) {
+											if (item.getId().equals(reviewItem.getId())) {
+												replaceItem = item;
+												break;
+											}
 										}
+										if (replaceItem != null) {
+											review.getItems().remove(replaceItem);
+										}
+										review.getItems().add(reviewItem);
 									}
-									if (replaceItem != null) {
-										review.getItems().remove(replaceItem);
-									}
-									review.getItems().add(reviewItem);
 									viewer.setInput(reviewItem);
-									editor.refreshExplorer();
+									if (getTaskEditorPage() instanceof GerritTaskEditorPage) {
+										((GerritTaskEditorPage) getTaskEditorPage()).refreshExplorer();
+									}
 								}
 							}
 
@@ -681,6 +684,13 @@ public class PatchSetSection extends AbstractGerritSection {
 		GerritReviewBehavior behavior = new GerritReviewBehavior(getTask());
 		CompareConfiguration configuration = new CompareConfiguration();
 		CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, item, behavior));
+	}
+
+	protected IReview getReview() {
+		if (getTaskEditorPage() instanceof GerritTaskEditorPage) {
+			return ((GerritTaskEditorPage) getTaskEditorPage()).getReview();
+		}
+		return null;
 	}
 
 }
