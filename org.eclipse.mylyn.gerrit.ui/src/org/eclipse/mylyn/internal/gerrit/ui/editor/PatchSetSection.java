@@ -173,7 +173,9 @@ public class PatchSetSection extends AbstractGerritSection {
 			job.cancel();
 		}
 		super.dispose();
-		labelProvider.dispose();
+		if (labelProvider != null) {
+			labelProvider.dispose();
+		}
 	}
 
 	public void updateTextClient(Section section, final PatchSetDetail patchSetDetail, boolean cachingInProgress) {
