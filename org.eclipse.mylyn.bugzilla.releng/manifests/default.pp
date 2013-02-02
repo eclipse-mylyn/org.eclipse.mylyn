@@ -14,7 +14,7 @@ Exec {
 
 include "bugzilla"
 
-user { "$bugzilla::userOwner":
+user { "tools":
   ensure     => present,
   membership => minimum,
   shell      => "/bin/bash",

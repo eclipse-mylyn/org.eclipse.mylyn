@@ -10,10 +10,10 @@
  *     Steffen Pingel (Tasktop Techologies)
  *******************************************************************************/
 class bugzilla {
-  $userOwner = "tools2"
-  $userGroup = "tools2"
+  $userOwner = "tools"
+  $userGroup = "tools"
   $bugzillaBase = "/home/$userOwner/bugzilla"
-  $dbuser = 'bugzilla'
+  $dbuser = 'bugz'
   $dbuserPassword = 'ovlwq8'
 
   exec { "apt-get update":
