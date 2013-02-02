@@ -91,6 +91,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -342,17 +344,17 @@ public class PatchSetSection extends AbstractGerritSection {
 		addTextClient(toolkit, subSection, "", false); //$NON-NLS-1$
 		updateTextClient(subSection, patchSetDetail, false);
 
-//		if (subSection.isExpanded()) {
-		createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
-//		}
-//		subSection.addExpansionListener(new ExpansionAdapter() {
-//			@Override
-//			public void expansionStateChanged(ExpansionEvent e) {
-//				if (subSection.getClient() == null) {
-//					createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
-//				}
-//			}
-//		});
+		if (subSection.isExpanded()) {
+			createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
+		}
+		subSection.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				if (subSection.getClient() == null) {
+					createSubSectionContents(changeDetail, patchSetDetail, publishDetail, subSection);
+				}
+			}
+		});
 	}
 
 	private int getNumComments(PatchSetDetail patchSetDetail) {
