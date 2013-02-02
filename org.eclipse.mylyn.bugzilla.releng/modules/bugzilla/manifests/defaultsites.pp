@@ -9,14 +9,24 @@
  *     Frank Becker - initial API and implementation
  *     Steffen Pingel (Tasktop Techologies)
  *******************************************************************************/
-define bugzilla::defaultsites {
+define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bugzilla::userOwner, $userGroup = $bugzilla::userGroup,) {
+  
+  include "bugzilla"
+
+  /* Defaults */
+
+  Bugzilla::Site {
+    base      => $base,
+    userOwner => $userOwner,
+    userGroup => $userGroup,
+  }
  
-  bugzilla::site { "bugs36":
+  bugzilla::site { "bugz36":
     major   => "3",
     minor   => "6",
   }
 
-  bugzilla::site { "bugs36-custom-wf":
+  bugzilla::site { "bugz36-custom-wf":
     major       => "3",
     minor       => "6",
     branch      => "3.6",
@@ -24,44 +34,44 @@ define bugzilla::defaultsites {
     custom_wf   => true,
   }
 
-  bugzilla::site { "bugs36-custom-wf-and-status":
+  bugzilla::site { "bugz36-custom-wf-and-status":
     major                => "3",
     minor                => "6",
     branch               => "3.6",
-    bugz_dbname          => "bugs_3_6_cwf_ws",
+    bugz_dbname          => "bugz_3_6_cwf_ws",
     custom_wf_and_status => true,
   }
 
-  bugzilla::site { "bugs36-xml-rpc-disabled":
+  bugzilla::site { "bugz36-xml-rpc-disabled":
     major          => "3",
     minor          => "6",
     branch         => "3.6",
-    bugz_dbname    => "bugs_3_6_norpc",
+    bugz_dbname    => "bugz_3_6_norpc",
     xmlrpc_enabled => false,
   }
 
-  bugzilla::site { "bugs40":
+  bugzilla::site { "bugz40":
     major   => "4",
     minor   => "0",
   }
 
-  bugzilla::site { "bugs42":
+  bugzilla::site { "bugz42":
     major   => "4",
     minor   => "2",
   }
 
-  bugzilla::site { "bugs44":
+  bugzilla::site { "bugz44":
     major     => "4",
     minor     => "4",
     branchTag => "trunk",
   }
 
-  bugzilla::site { "bugshead":
+  bugzilla::site { "bugzhead":
     major       => "4",
     minor       => "5",
     branch      => "trunk",
     branchTag   => "trunk",
-    bugz_dbname => "bugs_head",
+    bugz_dbname => "bugz_head",
   }
 
 }
