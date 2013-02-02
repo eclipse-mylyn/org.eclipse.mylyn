@@ -86,4 +86,9 @@ public class GerritConnectorTest {
 				connector.getTaskUrl("http://review.source.android.com", "13492")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Test
+	public void testGetTaskUrlTrailingSlash() {
+		assertEquals("http://review.mylyn.org/#/c/4698/", //$NON-NLS-1$
+				connector.getTaskUrl("http://review.mylyn.org/", "4698")); //$NON-NLS-1$ //$NON-NLS-2$
+	}
 }

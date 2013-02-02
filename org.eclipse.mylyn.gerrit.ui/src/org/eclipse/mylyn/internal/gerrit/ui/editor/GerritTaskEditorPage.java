@@ -40,13 +40,14 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mikael Kober
  * @author Thomas Westling
+ * @author Miles Parker
  */
 public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 
 	IReview review;
 
 	public GerritTaskEditorPage(TaskEditor editor) {
-		super(editor, GerritConnector.CONNECTOR_KIND);
+		super(editor, GerritTaskEditorPage.class.getName(), "Gerrit Page", GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
 		setNeedsSubmitButton(false);
 	}

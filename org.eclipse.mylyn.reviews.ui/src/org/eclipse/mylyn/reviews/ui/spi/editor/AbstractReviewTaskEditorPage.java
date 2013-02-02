@@ -26,6 +26,10 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 		super(editor, connectorKind);
 	}
 
+	public AbstractReviewTaskEditorPage(TaskEditor editor, String id, String label, String connectorKind) {
+		super(editor, id, label, connectorKind);
+	}
+
 	/**
 	 * Returns the current review. All instances should provide one open, accessible review model instance at init time,
 	 * and that review should be constant throughout the editor life-cycle.

@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
@@ -113,6 +114,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 /**
  * @author Steffen Pingel
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public class PatchSetSection extends AbstractGerritSection {
 
@@ -163,6 +165,8 @@ public class PatchSetSection extends AbstractGerritSection {
 
 	private ReviewsLabelProvider labelProvider;
 
+	private List<Section> patchSetSections;
+
 	public PatchSetSection() {
 		setPartName("Patch Sets");
 		this.jobs = new ArrayList<Job>();
@@ -203,6 +207,7 @@ public class PatchSetSection extends AbstractGerritSection {
 
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
+		patchSetSections = new ArrayList<Section>();
 		super.initialize(taskEditorPage);
 	}
 
@@ -355,6 +360,18 @@ public class PatchSetSection extends AbstractGerritSection {
 				}
 			}
 		});
+		patchSetSections.add(subSection);
+	}
+
+	public void revealPatchSet(int patchSetNumber) {
+		if (patchSetNumber > 0 && patchSetNumber <= patchSetSections.size()) {
+			int index = patchSetNumber - 1;
+			Section patchSetSection = patchSetSections.get(index);
+			if (!patchSetSection.isExpanded()) {
+				CommonFormUtil.setExpanded(patchSetSection, true);
+			}
+			CommonFormUtil.ensureVisible(patchSetSection);
+		}
 	}
 
 	private int getNumComments(PatchSetDetail patchSetDetail) {

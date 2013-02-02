@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -199,6 +200,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
+		repositoryUrl = StringUtils.removeEnd(repositoryUrl, "/"); //$NON-NLS-1$
 		return repositoryUrl + CHANGE_PREFIX_NEW + taskId + "/"; //$NON-NLS-1$
 	}
 

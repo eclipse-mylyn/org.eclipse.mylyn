@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+1 * Copyright (c) 2012 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,4 +96,51 @@ public class GerritUrlHandlerTest {
 		assertEquals("4698", handler.getTaskId(repository, "http://review.mylyn.org/#/c/4698/5/foo/bar"));
 	}
 
+	@Test
+	public void testGetPatchSetNumberPatchSet() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/4698/5";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPatchSetNumberPatchSetTrailingSlash() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/4698/5/";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPatchSetNumberPatchSetFile() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/4698/5/foo/bar";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPatchSetNumberNoneSpecified() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/4698";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPatchSetNumberNoneSpecifiedTrailingSlash() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/4698/";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPatchSetNumberNoneSpecifiedNotAnInteger() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
+		String url = "http://review.mylyn.org/#/c/A1";
+		String taskId = handler.getTaskId(repository, url);
+		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
+	}
 }
