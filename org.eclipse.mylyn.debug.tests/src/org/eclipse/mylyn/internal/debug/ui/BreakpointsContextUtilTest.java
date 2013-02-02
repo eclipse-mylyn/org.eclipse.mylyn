@@ -106,7 +106,7 @@ public class BreakpointsContextUtilTest {
 		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
 		breakpoints.add(breakpoint);
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
-		assertTrue(IOUtils.contentEquals(expectedResult, exportedBreakpoints));
+		assertEquals(IOUtils.toString(expectedResult), IOUtils.toString(exportedBreakpoints));
 	}
 
 	@Test
