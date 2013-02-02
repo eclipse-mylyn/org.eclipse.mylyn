@@ -10,145 +10,58 @@
  *     Steffen Pingel (Tasktop Techologies)
  *******************************************************************************/
 define bugzilla::defaultsites {
-  
-  $requirements = [
-    "apache2",
-    "apache2.2-common",
-    "libapache2-mod-auth-mysql",
-    "libapache2-mod-fcgid",
-    "libapache2-mod-php5",
-    "mysql-server",
-    "bzr",
-    "make",
-    "perl-doc",
-    "php5",
-    "php5-mysql",
-    "phpmyadmin",
-    "libcgi-pm-perl",
-    "libdbd-mysql-perl",
-    "libdatetime-perl",
-    "libdatetime-timezone-perl",
-    "libemail-mime-perl",
-    "libemail-send-perl",
-    "libjson-rpc-perl",
-    "libmail-sendmail-perl",
-    "libmath-random-isaac-perl",
-    "libtest-taint-perl",
-    "liburi-perl",
-    "libsoap-lite-perl",
-    "libtemplate-perl",]
-
-  package { $requirements:
-    ensure  => "installed",
-    require => Exec["apt-get update"],
+ 
+  bugzilla::site { "bugs36":
+    major   => "3",
+    minor   => "6",
   }
 
-  exec { "Enable php5 module":
-    command => "a2enmod php5",
-    require => Package["libapache2-mod-php5"],
-    creates => "/etc/apache2/mods-enabled/php5.load",
+  bugzilla::site { "bugs36-custom-wf":
+    major       => "3",
+    minor       => "6",
+    branch      => "3.6",
+    bugz_dbname => "bugs_3_6_cwf",
+    custom_wf   => true,
   }
 
-  service { "apache2":
-    ensure  => running,
-    require => Package["apache2"],
+  bugzilla::site { "bugs36-custom-wf-and-status":
+    major                => "3",
+    minor                => "6",
+    branch               => "3.6",
+    bugz_dbname          => "bugs_3_6_cwf_ws",
+    custom_wf_and_status => true,
   }
 
-  exec { "Enable auth_digest module":
-    command => "a2enmod auth_digest",
-    require => Package["apache2"],
-    creates => "/etc/apache2/mods-enabled/auth_digest.load",
+  bugzilla::site { "bugs36-xml-rpc-disabled":
+    major          => "3",
+    minor          => "6",
+    branch         => "3.6",
+    bugz_dbname    => "bugs_3_6_norpc",
+    xmlrpc_enabled => false,
   }
 
-  exec { "Enable fcgid module":
-    command => "a2enmod fcgid",
-    require => Package["libapache2-mod-fcgid"],
-    creates => "/etc/apache2/mods-enabled/fcgid.load",
+  bugzilla::site { "bugs40":
+    major   => "4",
+    minor   => "0",
   }
 
-  exec { "Enable proxy mod":
-    command => "a2enmod proxy",
-    require => Package["apache2"],
-    creates => "/etc/apache2/mods-enabled/proxy.load",
+  bugzilla::site { "bugs42":
+    major   => "4",
+    minor   => "2",
   }
 
-  exec { "Enable proxy_http mod":
-    command => "a2enmod proxy_http",
-    require => Package["apache2"],
-    creates => "/etc/apache2/mods-enabled/proxy_http.load",
+  bugzilla::site { "bugs44":
+    major     => "4",
+    minor     => "4",
+    branchTag => "trunk",
   }
 
-  exec { "Enable ssl module":
-    command => "a2enmod ssl",
-    require => Package["apache2"],
-    creates => "/etc/apache2/mods-enabled/ssl.load",
-  }
-
-  service { "mysql":
-    ensure  => "running",
-    enable  => true,
-    require => Package["mysql-server"],
-  }
-
-  exec { "phpmyadmin_Apache2":
-    command => "echo '#phpmyadmin\nInclude /etc/phpmyadmin/apache.conf' >>/etc/apache2/apache2.conf",
-    require => [Package["phpmyadmin"], Package["libapache2-mod-php5"]],
-    unless  => 'cat /etc/apache2/apache2.conf | grep "#phpmyadmin"'
-  }
-
-  file { "/etc/apache2/sites-enabled/001-default-ssl":
-    ensure => link,
-    target => "/etc/apache2/sites-available/default-ssl",
-  }
-
-  exec { "create $bugzilla::bugzillaBase":
-    command => "mkdir -p $bugzilla::bugzillaBase",
-    creates => "$bugzilla::bugzillaBase",
-    user => "$bugzilla::userOwner",
-    require => Exec['phpmyadmin_Apache2']
-  }
-
-  exec { "create $bugzilla::installHelper":
-    command => "mkdir $bugzilla::installHelper",
-    creates => "$bugzilla::installHelper",
-    user => "$bugzilla::userOwner",
-    require => Exec["create $bugzilla::bugzillaBase"]
-  }
-
-  exec { "create $bugzilla::confDir":
-    command => "mkdir $bugzilla::confDir",
-    creates => "$bugzilla::confDir",
-    user => "$bugzilla::userOwner",
-    require => Exec["create $bugzilla::bugzillaBase"]
-  }
-
-  exec { "create $bugzilla::installLog":
-    command => "mkdir $bugzilla::installLog",
-    creates => "$bugzilla::installLog",
-    user => "$bugzilla::userOwner",
-    require => Exec["create $bugzilla::bugzillaBase"]
-  }
-
-  exec { "mysql-create-user-${bugzilla::dbuser}":
-    unless    => "/usr/bin/mysql --user='${bugzilla::dbuser}' --password='${bugzilla::dbuserPassword}'",
-    command   => 
-    "/usr/bin/mysql -v --user='root' -e \"CREATE USER '${bugzilla::dbuser}'@localhost IDENTIFIED BY '${bugzilla::dbuserPassword}'\"",
-    logoutput => true,
-    require   => [
-      Package["mysql-server"],
-      Exec["create $bugzilla::installHelper"],
-      Exec["create $bugzilla::installLog"],
-      Package[$requirements]]
-  }
-
-  file { "/var/www/index.php":
-    notify  => Service["apache2"],
-    ensure  => "present",
-    source  => "puppet:///modules/bugzilla/index.php",
-    owner   => "root",
-    group   => "root",
-    mode    => 644,
-    require => [Package["apache2"], Package["php5"]],
+  bugzilla::site { "bugshead":
+    major       => "4",
+    minor       => "5",
+    branch      => "trunk",
+    branchTag   => "trunk",
+    bugz_dbname => "bugs_head",
   }
 
 }
