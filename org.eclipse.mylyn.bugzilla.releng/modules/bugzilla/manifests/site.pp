@@ -31,8 +31,6 @@ define bugzilla::site (
 
   include "bugzilla"
 
-  $installHelper = "$base/installHelper"
-  $installLog = "$base/installLog"
   $confDir = "$base/conf.d"
 
   if $branch == "trunk" {
@@ -70,7 +68,7 @@ define bugzilla::site (
 
 
   exec { "prepare $version":
-    command => "mkdir -p $installHelper $installLog $confDir",
+    command => "mkdir -p $confDir",
     creates => "$base",
     user => "$userOwner",
     require => Exec["prepare bugzilla"],
@@ -148,7 +146,7 @@ define bugzilla::site (
     require   => Exec["mysql-dropdb-$version"]
   }
 
-  file { "$installHelper/answers$version":
+  file { "$base/$version/answers":
     content => template('bugzilla/answers.erb'),
     owner   => "$userOwner",
     group   => "$userGroup",
@@ -175,25 +173,25 @@ define bugzilla::site (
   }
 
   exec { "init bugzilla_checksetup $version":
-    command => "$base/$version/checksetup.pl $installHelper/answers$version -verbose",
+    command => "$base/$version/checksetup.pl $base/$version/answers -verbose",
     cwd     => "$base/$version",
     creates => "$base/$version/localconfig",
     user => "$userOwner",
     require => [
       Exec["mysql-createdb-$version"],
-      File["$installHelper/answers$version"],
+      File["$base/$version/answers"],
       File["$base/$version/extensions/Mylyn/Extension.pm"]]
   }
 
   exec { "update bugzilla_checksetup $version":
-    command   => "$base/$version/checksetup.pl $installHelper/answers$version -verbose",
+    command   => "$base/$version/checksetup.pl $base/$version/answers -verbose",
     cwd       => "$base/$version",
     user => "$userOwner",
 ##    logoutput => true,
     require   => [
       Exec["mysql-createdb-$version"],
       Exec["init bugzilla_checksetup $version"],
-      File["$installHelper/answers$version"],
+      File["$base/$version/answers"],
       File["$base/$version/extensions/Mylyn/Extension.pm"]]
   }
 
