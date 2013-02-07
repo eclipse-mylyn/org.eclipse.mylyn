@@ -14,7 +14,10 @@ package org.eclipse.mylyn.bugzilla.tests.support;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 
@@ -26,6 +29,7 @@ import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
@@ -78,52 +82,65 @@ public class BugzillaFixture extends TestFixture {
 	 * @deprecated not supported any more
 	 */
 	@Deprecated
-	public static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
+	private static BugzillaFixture BUGS_3_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_34_URL, //
 			"3.4.14", "");
 
-	public static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
+	private static BugzillaFixture BUGS_3_6 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL, //
 			"3.6", "");
 
-	public static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
+	private static BugzillaFixture BUGS_3_6_CUSTOM_WF = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
 			+ "-custom-wf", "3.6", CUSTOM_WF);
 
-	public static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
+	private static BugzillaFixture BUGS_3_6_CUSTOM_WF_AND_STATUS = new BugzillaFixture(
 			BugzillaFixture.TEST_BUGZILLA_36_URL + "-custom-wf-and-status", "3.6", CUSTOM_WF_AND_STATUS);
 
-	public static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
+	private static BugzillaFixture BUGS_3_6_XML_RPC_DISABLED = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_36_URL
 			+ "-xml-rpc-disabled", "3.6", XML_RPC_DISABLED);
 
-	public static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
+	private static BugzillaFixture BUGS_4_0 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_40_URL, //
 			"4.0", "");
 
-	public static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
+	private static BugzillaFixture BUGS_4_2 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_42_URL, //
 			"4.2", "");
 
-	public static BugzillaFixture BUGS_4_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_44_URL, //
+	private static BugzillaFixture BUGS_4_4 = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_44_URL, //
 			"4.4", "");
 
-	public static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
+	private static BugzillaFixture BUGS_HEAD = new BugzillaFixture(BugzillaFixture.TEST_BUGZILLA_HEAD_URL, //
 			"4.5", "");
 
-	public static BugzillaFixture DEFAULT = BUGS_4_2;
+	public static BugzillaFixture DEFAULT;
 
-	public static final BugzillaFixture[] ALL = new BugzillaFixture[] { BUGS_3_4, //
-			BUGS_3_6, BUGS_3_6_XML_RPC_DISABLED, BUGS_3_6_CUSTOM_WF, BUGS_3_6_CUSTOM_WF_AND_STATUS, //
-			BUGS_4_0, BUGS_4_2, BUGS_4_4, BUGS_HEAD };
+	public static final List<BugzillaFixture> ALL;
 
 	private final String version;
 
 	private final BugzillaVersion bugzillaVersion;
+
+	private final Map<String, String> properties;
+
+	public BugzillaFixture(FixtureConfiguration config) {
+		super(BugzillaCorePlugin.CONNECTOR_KIND, config.getUrl());
+		this.version = config.getVersion();
+		this.bugzillaVersion = new BugzillaVersion(version);
+		setInfo("Bugzilla", version, config.getInfo());
+		this.properties = config.getProperties();
+	}
 
 	public BugzillaFixture(String url, String version, String info) {
 		super(BugzillaCorePlugin.CONNECTOR_KIND, url);
 		this.version = version;
 		this.bugzillaVersion = new BugzillaVersion(version);
 		setInfo("Bugzilla", version, info);
+		this.properties = null;
 	}
 
 	public BugzillaVersion getBugzillaVersion() {
 		return bugzillaVersion;
+	}
+
+	public Map<String, String> getProperties() {
+		return properties;
 	}
 
 	public static void cleanup010() throws Exception {
@@ -285,4 +302,64 @@ public class BugzillaFixture extends TestFixture {
 		return (BugzillaRepositoryConnector) connector;
 	}
 
+	private static final String getServerUrl() {
+		String url = TestConfiguration.getRepositoryUrl("");
+		if (url.endsWith("/")) {
+			return url.substring(0, url.length() - 1);
+		}
+		return url;
+	}
+
+	public String getProperty(String key) {
+		if (properties != null) {
+			return properties.get(key);
+		}
+		return null;
+	}
+
+	private static BugzillaFixture getDefaultFixture(List<BugzillaFixture> fixtureList) {
+		if (fixtureList != null && fixtureList.size() > 0) {
+			String defaultFixture = System.getProperty("mylyn.test.default", "");
+			for (BugzillaFixture fixture : fixtureList) {
+				if (!"".equals(defaultFixture)) {
+					if (defaultFixture.equals(fixture.getRepositoryUrl())) {
+						return fixture;
+					}
+				} else {
+					Map<String, String> property = fixture.getProperties();
+					if (property != null) {
+						String defaultProperty = property.get("default");
+						if (defaultProperty != null && "1".equals(defaultProperty)) {
+							return fixture;
+						}
+					}
+				}
+			}
+		}
+		return BUGS_4_2;
+	}
+
+	private static List<BugzillaFixture> getAll(List<BugzillaFixture> fixtureList) {
+		if (fixtureList != null && fixtureList.size() > 0) {
+			return fixtureList;
+		}
+		List<BugzillaFixture> result = new ArrayList<BugzillaFixture>(9);
+		result.add(BUGS_3_4);
+		result.add(BUGS_3_6);
+		result.add(BUGS_3_6_XML_RPC_DISABLED);
+		result.add(BUGS_3_6_CUSTOM_WF);
+		result.add(BUGS_3_6_CUSTOM_WF_AND_STATUS);
+		result.add(BUGS_4_0);
+		result.add(BUGS_4_2);
+		result.add(BUGS_4_4);
+		result.add(BUGS_HEAD);
+		return result;
+	}
+
+	static {
+		List<BugzillaFixture> fixtureList = TestConfiguration.discover(BugzillaFixture.getServerUrl(),
+				BugzillaFixture.class, "bugzilla");
+		DEFAULT = getDefaultFixture(fixtureList);
+		ALL = getAll(fixtureList);
+	}
 }

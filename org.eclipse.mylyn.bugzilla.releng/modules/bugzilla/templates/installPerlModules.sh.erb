@@ -1,0 +1,16 @@
+#!/bin/bash
+<% if @operatingsystemrelease == "10.04" %>
+/usr/bin/perl install-module.pl CGI
+/usr/bin/perl install-module.pl Template
+<% if @envversion > "3.6" %>
+/usr/bin/perl install-module.pl Email::MIME
+<% end %>
+<% if @envversion > "4.2" %>
+/usr/bin/perl install-module.pl List::MoreUtils
+<% end %>
+<% end %>
+<% if @operatingsystemrelease = "12.04" && @envversion > "4.4" %>
+/usr/bin/perl install-module.pl Template
+<% end %>
+echo "Ende1"
+

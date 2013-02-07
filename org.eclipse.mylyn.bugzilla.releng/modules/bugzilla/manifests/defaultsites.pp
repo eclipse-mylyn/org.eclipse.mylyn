@@ -60,6 +60,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugs42":
     major   => "4",
     minor   => "2",
+    envdefault => "1"
   }
 
   bugzilla::site { "bugs44":

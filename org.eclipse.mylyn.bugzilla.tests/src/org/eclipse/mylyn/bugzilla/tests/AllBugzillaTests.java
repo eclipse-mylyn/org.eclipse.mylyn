@@ -24,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 
 /**
  * @author Mik Kersten
@@ -81,13 +82,9 @@ public class AllBugzillaTests {
 		fixture.add(BugzillaRepositoryConnectorTest.class);
 		fixture.add(BugzillaAttachmentHandlerTest.class);
 
-		// Move any tests here that are resulting in spurious failures
-		// due to recent changes in Bugzilla Server head.
-		if (fixture != BugzillaFixture.BUGS_HEAD) {
-		}
-
 		// Only run this if we have custom status and Workflow
-		if (fixture.equals(BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS)) {
+		if (BugzillaVersion.BUGZILLA_3_6.compareTo(fixture.getBugzillaVersion()) == 0
+				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(fixture.getDescription())) {
 			fixture.add(BugzillaCustomRepositoryTest.class);
 		}
 

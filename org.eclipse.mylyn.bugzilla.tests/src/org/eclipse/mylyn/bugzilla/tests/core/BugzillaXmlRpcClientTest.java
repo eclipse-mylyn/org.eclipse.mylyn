@@ -343,7 +343,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 //			HashMap<?, ?> x1 = bugzillaClient.getTime(monitor);
 //			Date x2 = bugzillaClient.getDBTime(monitor);
 //			Date x3 = bugzillaClient.getWebTime(monitor);
-//			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_4) {
+//			if (BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
 //				Object[] xx3 = bugzillaClient.getAllFields(monitor);
 //				Object[] xx4 = bugzillaClient.getFieldsWithNames(monitor, new String[] { "qa_contact" });
 //				Object[] xx5 = bugzillaClient.getFieldsWithIDs(monitor, new Integer[] { 12, 18 });
@@ -395,22 +395,6 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("name"));
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList1[0]).get("real_name"));
 			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList1[0]).get("can_login"));
-
-			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_4) {
-				Object[] userList2 = bugzillaClient.getUserInfoWithMatch(monitor, new String[] { "est" });
-				assertEquals(2, userList2.length);
-				assertEquals(((Integer) 3), ((HashMap<String, Integer>) userList2[0]).get("id"));
-				assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("email"));
-				assertEquals("guest@mylyn.eclipse.org", ((HashMap<String, String>) userList2[0]).get("name"));
-				assertEquals("Mylyn guest", ((HashMap<String, String>) userList2[0]).get("real_name"));
-				assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[0]).get("can_login"));
-
-				assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList2[1]).get("id"));
-				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("email"));
-				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList2[1]).get("name"));
-				assertEquals("Mylyn Test", ((HashMap<String, String>) userList2[1]).get("real_name"));
-				assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList2[1]).get("can_login"));
-			}
 		}
 	}
 
@@ -519,7 +503,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	public void testXmlRpcBugGet() throws Exception {
 		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
-				|| BugzillaFixture.current() == BugzillaFixture.BUGS_3_4) {
+				|| BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
 			return;
 		} else {
 			Set<String> taskIds = new HashSet<String>();
@@ -692,7 +676,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	public void testUpdateProductInfo() throws Exception {
 		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
-				|| BugzillaFixture.current() == BugzillaFixture.BUGS_3_4) {
+				|| BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
 			return;
 		}
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());

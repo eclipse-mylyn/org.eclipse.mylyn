@@ -1,6 +1,12 @@
 { 
 "type": "<%= envtype %>", 
-"url": "/<%= envid %>/", 
-"version": "<%= version %>", 
-"info": "<%= envinfo %>" 
+"url": "/<%= envid %>", 
+"version": "<%= envversion %>", 
+"info": "<%= envinfo %>" ,
+  "properties":{
+    "custom_wf": "<%= custom_wf %>",
+    "custom_wf_and_status": "<%= custom_wf_and_status %>",
+    "xmlrpc_enabled": "<%= xmlrpc_enabled %>",
+    "default": "<%= envdefault %>"
+  }
 }

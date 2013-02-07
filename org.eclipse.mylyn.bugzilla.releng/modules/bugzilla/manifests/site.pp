@@ -27,6 +27,8 @@ define bugzilla::site (
   $envid                = "$title",
   $userOwner            = $bugzilla::userOwner,
   $userGroup            = $bugzilla::userGroup,
+  $envversion           = "${major}.${minor}",
+  $envdefault           = "0",
   ) {
 
   include "bugzilla"
@@ -90,17 +92,6 @@ define bugzilla::site (
       creates => "$base/$version",
       require   => Exec["prepare $version"]
     }
- 
- 	  # we need a extras setup because for bughead we need
-	  # template 2.24 but libtemplate-perl from precise32 is only 2.22
-    exec { "post extract bugzilla $version":
-      command => "/usr/bin/perl install-module.pl Template >$base/$version/extra.out",
-      cwd     => "$base/$version",
-      creates => "$base/$version/extra.out",
-      user => "$userOwner",
-      timeout => 300,
-      require   => Exec["extract bugzilla $version"]
-    }
   } else {
     exec { "extract bugzilla $version":
       command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branchName $version",
@@ -110,19 +101,25 @@ define bugzilla::site (
       creates => "$base/$version",
       require   => Exec["prepare $version"]
     }
-
-	# we need no extras setup because for bugzilla <= 4.4 all
-	# perl libs have the correct version
-    exec { "post extract bugzilla $version":
-      command => "ls >$base/$version/extra.out",
-      cwd     => "$base/$version",
-      creates => "$base/$version/extra.out",
-      user => "$userOwner",
-      timeout => 300,
-      require   => Exec["extract bugzilla $version"]
-    }
+  }
+ 
+  file { "$base/$version/installPerlModules.sh":
+    content => template('bugzilla/installPerlModules.sh.erb'),
+    owner   => "$userOwner",
+    group   => "$userGroup",
+    mode    => 0755,
+    require => Exec["extract bugzilla $version"],
   }
 
+  exec { "post extract bugzilla $version":
+    command => "$base/$version/installPerlModules.sh  >$base/$version/CGI.out",
+    cwd     => "$base/$version",
+    creates => "$base/$version/CGI.out",
+    user => "$userOwner",
+    timeout => 300,
+    require   => File["$base/$version/installPerlModules.sh"]
+  }  
+  
   exec { "mysql-grant-${bugz_dbname}-${bugzilla::dbuser}":
     unless    => 
     "/usr/bin/mysql --user=root --batch -e \"SELECT user FROM db WHERE Host='localhost' and Db='${bugz_dbname}' and User='${bugzilla::dbuser}'\" mysql | /bin/grep '${bugzilla::dbuser}'",
@@ -144,6 +141,14 @@ define bugzilla::site (
     command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
 ##    logoutput => true,
     require   => Exec["mysql-dropdb-$version"]
+  }
+
+  file { "$base/$version/callchecksetup.pl":
+    content => template('bugzilla/callchecksetup.pl.erb'),
+    owner   => "$userOwner",
+    group   => "$userGroup",
+    mode    => 0755,
+    require => Exec["post extract bugzilla $version"],
   }
 
   file { "$base/$version/answers":
@@ -173,26 +178,30 @@ define bugzilla::site (
   }
 
   exec { "init bugzilla_checksetup $version":
-    command => "$base/$version/checksetup.pl $base/$version/answers -verbose",
+    command => "$base/$version/callchecksetup.pl",
     cwd     => "$base/$version",
     creates => "$base/$version/localconfig",
     user => "$userOwner",
+    logoutput => true,
     require => [
       Exec["mysql-createdb-$version"],
       File["$base/$version/answers"],
+      File["$base/$version/callchecksetup.pl"],
       File["$base/$version/extensions/Mylyn/Extension.pm"]]
   }
 
   exec { "update bugzilla_checksetup $version":
-    command   => "$base/$version/checksetup.pl $base/$version/answers -verbose",
+    command   => "$base/$version/callchecksetup.pl",
     cwd       => "$base/$version",
     user => "$userOwner",
-##    logoutput => true,
+#   logoutput => true,
     require   => [
       Exec["mysql-createdb-$version"],
       Exec["init bugzilla_checksetup $version"],
       File["$base/$version/answers"],
-      File["$base/$version/extensions/Mylyn/Extension.pm"]]
+      File["$base/$version/extensions/Mylyn/Extension.pm"],
+#      File["$base/$version/localconfig"],
+      ]
   }
 
   if !$xmlrpc_enabled {
@@ -225,5 +234,4 @@ define bugzilla::site (
     notify  => Service["apache2"],
     onlyif  => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/bugzilla.conf; test $? != 0"
   }
-
 }

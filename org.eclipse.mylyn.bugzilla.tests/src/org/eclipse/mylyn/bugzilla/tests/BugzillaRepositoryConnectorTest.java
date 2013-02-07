@@ -348,8 +348,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //
 	public void testStdWorkflow() throws Exception {
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			if (BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF
-					&& BugzillaFixture.current() != BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
+			if (!(BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0 && BugzillaFixture.CUSTOM_WF.equals(BugzillaFixture.current()
+					.getDescription()))
+					&& !(BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0 && BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current()
+							.getDescription()))
+
+			) {
 				doStdWorkflow32("3");
 			}
 		} else {
@@ -1113,7 +1117,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testSynchChangedReports() throws Exception {
 		TaskData data = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-		if (BugzillaFixture.current().equals(BugzillaFixture.BUGS_HEAD)
+		if (BugzillaVersion.BUGZILLA_HEAD.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
 				&& BugzillaFixture.current().getRepositoryUrl().contains("mylyn.eclipse.org")) {
 			//FIXME:  for some actual unknown reason 
 			// connector.preSynchronization(event, null);
@@ -1607,7 +1611,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			}
 
 		};
-		if (BugzillaFixture.current().equals(BugzillaFixture.BUGS_3_4)) {
+		if (BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
 			return;
 		}
 		final TaskData[] taskDataNew = new TaskData[1];
@@ -1692,7 +1696,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			}
 
 		};
-		if (BugzillaFixture.current().equals(BugzillaFixture.BUGS_3_4)) {
+		if (BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
 			return;
 		}
 

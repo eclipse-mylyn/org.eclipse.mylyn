@@ -62,13 +62,19 @@ public class BugzillaClientTest extends TestCase {
 	}
 
 	public void testRDFProductConfig() throws Exception {
+		if (BugzillaVersion.BUGZILLA_4_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
+				|| BugzillaVersion.BUGZILLA_HEAD.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
+			// FIXME: need fix of bug#372600
+			return;
+		}
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(
 				0,
 				config.getInstallVersion().compareMajorMinorOnly(
 						new BugzillaVersion(BugzillaFixture.current().getVersion())));
-		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
+		if (BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
+				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current().getDescription())) {
 			assertEquals(10, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
@@ -93,7 +99,8 @@ public class BugzillaClientTest extends TestCase {
 		}
 		assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_SEVERITY).size());
 		assertEquals(3, config.getOptionValues(BugzillaAttribute.PRODUCT).size());
-		if (BugzillaFixture.current() == BugzillaFixture.BUGS_3_6_CUSTOM_WF_AND_STATUS) {
+		if (BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
+				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current().getDescription())) {
 			assertEquals(6, config.getOpenStatusValues().size());
 			assertEquals(1, config.getClosedStatusValues().size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
@@ -107,15 +114,9 @@ public class BugzillaClientTest extends TestCase {
 		assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "ManualTest").size());
 		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "ManualTest").size());
 		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "ManualTest").size());
-		if (BugzillaFixture.current().getRepositoryUrl().contains("localhost")) {
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "TestProduct").size());
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.VERSION, "TestProduct").size());
-			assertEquals(1, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
-		} else {
-			assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "TestProduct").size());
-			assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "TestProduct").size());
-			assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
-		}
+		assertEquals(1, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "TestProduct").size());
+		assertEquals(1, config.getProductOptionValues(BugzillaAttribute.VERSION, "TestProduct").size());
+		assertEquals(1, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
 		assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "Product with Spaces").size());
 		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "Product with Spaces").size());
 		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "Product with Spaces").size());
@@ -202,9 +203,6 @@ public class BugzillaClientTest extends TestCase {
 		newData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("testCommentQuery()");
 		newData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT).setValue("TestProduct");
 		newData.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("TestComponent");
-		if (!BugzillaFixture.current().getRepositoryUrl().contains("localhost")) {
-			newData.getRoot().getMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("1");
-		}
 		newData.getRoot().getMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
 		long timestamp = System.currentTimeMillis();
 		newData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("" + timestamp);

@@ -116,4 +116,9 @@ class bugzilla {
     require => Package[$requirements],
   }
 
+  file { "/usr/lib/cgi-bin/services":
+    source  => "puppet:///modules/bugzilla/services.cgi",
+    mode => 755,
+    require => Package[$requirements],
+  }
 }
