@@ -144,38 +144,4 @@ public class TestUtil {
 		return !Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"));
 	}
 
-//	public static File getFile(String bundleId, Class<?> clazz, String filename) throws IOException {
-//		Bundle bundle = Platform.getBundle(bundleId);
-//		if (bundle != null) {
-//			URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
-//			filename = localURL.getFile();
-//		} else {
-//			URL localURL = clazz.getResource("");
-//			String path = localURL.getFile();
-//			int i = path.indexOf("!");
-//			if (i != -1) {
-//				int j = path.lastIndexOf(File.separatorChar, i);
-//				if (j != -1) {
-//					path = path.substring(0, j) + File.separator;
-//				} else {
-//					Assert.fail("Unable to determine location for '" + filename + "' at '" + path + "'");
-//				}
-//				// class file is nested in jar, use jar path as base
-//				if (path.startsWith("file:")) {
-//					path = path.substring(5);
-//				}
-//			} else {
-//				// create relative path to base of class file location
-//				String[] tokens = clazz.getName().split("\\.");
-//				for (int j = 0; j < tokens.length - 1; j++) {
-//					path += ".." + File.separator;
-//				}
-//				if (path.contains("bin" + File.separator)) {
-//					path += ".." + File.separator;
-//				}
-//			}
-//			filename = path + filename.replaceAll("/", File.separator);
-//		}
-//		return new File(filename).getCanonicalFile();
-//	}
 }

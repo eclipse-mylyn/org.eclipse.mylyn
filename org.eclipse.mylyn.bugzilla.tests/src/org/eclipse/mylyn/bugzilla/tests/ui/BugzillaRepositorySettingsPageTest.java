@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -54,6 +55,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		repository.setCredentials(AuthenticationType.REPOSITORY,
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiTestUtil.ensureTasksUiInitialization();
 	}
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,

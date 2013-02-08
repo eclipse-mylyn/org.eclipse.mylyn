@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -152,6 +153,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		super.setUp();
 
 		detector = new TaskHyperlinkDetector();
+		TasksUiTestUtil.ensureTasksUiInitialization();
 
 		repository1 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url1");
 		repository2 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url2");
