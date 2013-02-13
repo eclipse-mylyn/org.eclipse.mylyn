@@ -8,7 +8,7 @@
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.mockito" version="1.8.4.v201102171835"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <repository location="http://download.eclipse.org/eclipse/updates/4.2"/>
