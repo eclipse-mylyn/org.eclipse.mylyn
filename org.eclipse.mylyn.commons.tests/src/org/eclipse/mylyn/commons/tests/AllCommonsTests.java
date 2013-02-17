@@ -14,6 +14,7 @@ package org.eclipse.mylyn.commons.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.core.HtmlStreamTokenizerTest;
 import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
@@ -48,6 +49,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(CommonStoreTest.class);
 		suite.addTestSuite(Html2TextReaderTest.class);
 		suite.addTestSuite(CommonHttpMethod3Test.class);
+		suite.addTestSuite(HtmlStreamTokenizerTest.class);
 		return suite;
 	}
 

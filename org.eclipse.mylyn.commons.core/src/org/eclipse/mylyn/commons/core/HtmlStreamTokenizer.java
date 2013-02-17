@@ -205,6 +205,13 @@ public class HtmlStreamTokenizer {
 		for (; i < s.length() && !Character.isWhitespace(s.charAt(i)); i++) {
 			// just move forward
 		}
+
+		if (s.charAt(i - 1) == '/') {
+			tag.setSelfTerminating(true);
+			tag.setTagName(s.substring(start, i - 1));
+			return;
+		}
+
 		tag.setTagName(s.substring(start, i));
 
 		for (; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
