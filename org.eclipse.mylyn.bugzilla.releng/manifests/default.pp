@@ -12,14 +12,14 @@
 Exec {
   path => ["/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"] }
 
-include "bugzilla"
-
 user { "tools":
   ensure     => present,
   membership => minimum,
   shell      => "/bin/bash",
   managehome => true,
 }
+
+include "bugzilla"
 
 bugzilla::defaultsites { "bugzilla":
 }

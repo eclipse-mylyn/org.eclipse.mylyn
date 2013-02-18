@@ -13,12 +13,12 @@ define bugzilla::site (
   $major,
   $minor,
   $branch               = " ",
-  $bugz_dbname          = "$title",
+  $bugz_dbname          =  regsubst($title, '([^.-]+)([.-]+)', '\1_', 'G'),
   $bugz_user            = $bugzilla::dbuser,
   $bugz_password        = $bugzilla::dbuserPassword,
   $www_url              = "$title",
   $version              = "$title",
-  $branchTag            = "bugzilla-stable",
+  $branchTag            = "$title",
   $custom_wf            = false,
   $custom_wf_and_status = false,
   $xmlrpc_enabled       = true,
@@ -29,12 +29,13 @@ define bugzilla::site (
   $userGroup            = $bugzilla::userGroup,
   $envversion           = "${major}.${minor}",
   $envdefault           = "0",
+  $clearDB              = $bugzilla::clearDB,
   ) {
 
   include "bugzilla"
 
   $confDir = "$base/conf.d"
-
+ 
   if $branch == "trunk" {
         $envinfo = "trunk"  
   } else {
@@ -52,6 +53,7 @@ define bugzilla::site (
       $envinfo = "XML-RPC disabled"
     }
   }
+
   if $major == "3" {
     if $minor == "6" {
       $VersionCreateName = "name"
@@ -125,22 +127,27 @@ define bugzilla::site (
     "/usr/bin/mysql --user=root --batch -e \"SELECT user FROM db WHERE Host='localhost' and Db='${bugz_dbname}' and User='${bugzilla::dbuser}'\" mysql | /bin/grep '${bugzilla::dbuser}'",
     command   => "/usr/bin/mysql --verbose --user=root -e \"GRANT ALL ON ${bugz_dbname}.* TO '${bugzilla::dbuser}'@localhost\" \
         		; /usr/bin/mysqladmin --verbose --user=root flush-privileges",
-##    logoutput => true,
     require   => Exec["post extract bugzilla $version"]
   }
 
+  if $clearDB {
   exec { "mysql-dropdb-$version":
     onlyif    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
     command   => "/usr/bin/mysqladmin -v --user=root --force drop '${bugz_dbname}'",
-##    logoutput => true,
     require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
   }
 
   exec { "mysql-createdb-$version":
     unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
     command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
-##    logoutput => true,
     require   => Exec["mysql-dropdb-$version"]
+  }
+  } else {
+  exec { "mysql-createdb-$version":
+    unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
+    command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
+    require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
+  }
   }
 
   file { "$base/$version/callchecksetup.pl":
@@ -193,14 +200,13 @@ define bugzilla::site (
   exec { "update bugzilla_checksetup $version":
     command   => "$base/$version/callchecksetup.pl",
     cwd       => "$base/$version",
+    logoutput => true,
     user => "$userOwner",
-#   logoutput => true,
     require   => [
       Exec["mysql-createdb-$version"],
       Exec["init bugzilla_checksetup $version"],
       File["$base/$version/answers"],
       File["$base/$version/extensions/Mylyn/Extension.pm"],
-#      File["$base/$version/localconfig"],
       ]
   }
 

@@ -15,6 +15,7 @@ class bugzilla {
   $bugzillaBase = "/home/$userOwner/bugzilla"
   $dbuser = 'bugz'
   $dbuserPassword = 'ovlwq8'
+  $clearDB = false
 
   exec { "apt-get update":
     command => "apt-get update",
@@ -115,10 +116,10 @@ class bugzilla {
     command => "echo Bugzilla pre-requisites are installed",
     require => Package[$requirements],
   }
-
-  file { "/usr/lib/cgi-bin/services":
-    source  => "puppet:///modules/bugzilla/services.cgi",
-    mode => 755,
+  
+  file { "/usr/lib/cgi-bin/services":		
+    source  => "puppet:///modules/bugzilla/services.cgi",		
+    mode => 755,		
     require => Package[$requirements],
   }
 }

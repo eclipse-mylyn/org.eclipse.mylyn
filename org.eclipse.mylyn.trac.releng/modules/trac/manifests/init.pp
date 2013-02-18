@@ -60,4 +60,10 @@ class trac {
     require => Package[$requirements],
   }
   
+  file { "/usr/lib/cgi-bin/services":		
+    source  => "puppet:///modules/trac/services.cgi",		
+    mode => 755,		
+    require => Package[$requirements],
+  }
+  
 }
