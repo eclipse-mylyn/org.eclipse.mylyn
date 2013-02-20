@@ -137,7 +137,7 @@ public class GerritSynchronizationTest extends TestCase {
 	}
 
 	private ITask assertTaskListHasOneTask() throws CoreException {
-		assertEquals(1, taskList.getAllTasks().size());
+		assertTrue(taskList.getAllTasks().size() >= 1);
 		ITask task = taskList.getAllTasks().iterator().next();
 		assertEquals(repository.getUrl(), task.getRepositoryUrl());
 		assertTrue(taskDataManager.hasTaskData(task));

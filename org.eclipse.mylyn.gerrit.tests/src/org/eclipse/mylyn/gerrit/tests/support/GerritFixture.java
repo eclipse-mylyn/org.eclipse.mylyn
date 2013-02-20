@@ -32,15 +32,15 @@ public class GerritFixture extends TestFixture {
 	@Deprecated
 	public static GerritFixture GERRIT_2_3 = new GerritFixture("http://mylyn.org/gerrit-2.3.0", "2.3.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture GERRIT_2_4 = new GerritFixture("http://mylyn.org/gerrit-2.4.0", "2.4.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static GerritFixture GERRIT_2_4 = new GerritFixture("http://mylyn.org/gerrit-2.4", "2.4.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture GERRIT_2_5 = new GerritFixture("http://mylyn.org/gerrit-2.5.0", "2.5.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static GerritFixture GERRIT_2_5 = new GerritFixture("http://mylyn.org/gerrit-2.5", "2.5.0", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static GerritFixture[] ALL = new GerritFixture[] { GERRIT_2_4, GERRIT_2_5 };
+	public static GerritFixture[] ALL = new GerritFixture[] { GERRIT_2_5, GERRIT_2_4 };
 
-	public static GerritFixture DEFAULT = GERRIT_2_5;
+	public static GerritFixture DEFAULT = GERRIT_2_4;
 
 	private static GerritFixture current;
 
