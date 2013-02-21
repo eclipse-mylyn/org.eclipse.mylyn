@@ -21,12 +21,17 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * @author Steffen Pingel
  * @author Sascha Scholz
  * @author Miles Parker
+ * @author Lei Zhu
  */
 public class ReviewsImages {
 
 	private static final URL baseURL = ReviewsUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_REVIEW = create("eview16/overlay-review.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_ADDED = create("ovr/added.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor OVERLAY_REMOVED = create("ovr/removed.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REFRESH = create("elcl16/refresh.gif"); //$NON-NLS-1$
 

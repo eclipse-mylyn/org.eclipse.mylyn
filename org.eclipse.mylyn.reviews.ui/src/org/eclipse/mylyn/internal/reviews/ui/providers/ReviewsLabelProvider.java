@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Miles Parker
  * @author Steffen Pingel
  * @author Kevin Sawicki
+ * @author Lei Zhu
  */
 public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
@@ -116,7 +118,23 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReviewItem) {
 				IReviewItem item = (IReviewItem) element;
-				return ReviewsUiPlugin.getDefault().getImageManager().getFileImage(item.getName());
+				Image image = ReviewsUiPlugin.getDefault().getImageManager().getFileImage(item.getName());
+				if (element instanceof IFileItem) {
+					ImageDescriptor baseImage = ImageDescriptor.createFromImage(image);
+					IFileItem fileItem = (IFileItem) element;
+					IFileRevision base = fileItem.getBase();
+					IFileRevision target = fileItem.getTarget();
+					if (base != null && target != null) {
+						if (base.getPath() == null && target.getPath() != null) {
+							ImageDescriptor overlay = ReviewsImages.OVERLAY_ADDED;
+							image = CommonImages.getImageWithOverlay(baseImage, overlay, false, false);
+						} else if (base.getPath() != null && target.getPath() == null) {
+							ImageDescriptor overlay = ReviewsImages.OVERLAY_REMOVED;
+							image = CommonImages.getImageWithOverlay(baseImage, overlay, false, false);
+						}
+					}
+				}
+				return image;
 			}
 			if (element instanceof IComment) {
 				//See https://bugs.eclipse.org/bugs/show_bug.cgi?id=334967#c16
@@ -508,8 +526,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		@Override
 		public Image getImage(Object element) {
 			if (element instanceof IReviewItem) {
-				IReviewItem item = (IReviewItem) element;
-				return ReviewsUiPlugin.getDefault().getImageManager().getFileImage(item.getName());
+				return super.getImage(element);
 			}
 			return null;
 		}
