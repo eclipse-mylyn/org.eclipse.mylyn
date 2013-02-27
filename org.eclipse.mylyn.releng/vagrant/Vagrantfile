@@ -19,5 +19,5 @@ Vagrant::Config.run do |config|
   config.vm.provision :shell, :inline => "cd /tmp/vagrant-gerrit && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-gerrit/modules manifests/default.pp"
   config.vm.provision :shell, :inline => "cd /tmp/vagrant-trac && sudo /opt/vagrant_ruby/bin/puppet apply --modulepath /tmp/vagrant-trac/modules manifests/default.pp"
 
-  config.vm.provision :puppet
+  config.vm.provision :puppet , :module_path => "modules"
 end

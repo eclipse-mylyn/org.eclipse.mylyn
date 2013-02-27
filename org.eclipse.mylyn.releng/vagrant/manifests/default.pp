@@ -1,23 +1,15 @@
-$content ='#!/bin/bash
+/*******************************************************************************
+ * Copyright (c) 2012 Frank Becker and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *     Steffen Pingel (Tasktop Techologies)
+ *******************************************************************************/
+Exec {
+  path => ["/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"] }
 
-echo content-type: application/json
-echo
-
-echo "["
-c=0
-for i in $(find /home/tools -name "service*.json")
-do
-  if [ $c != 0 ]
-  then
-    echo ","
-  fi
-  cat $i
-  c=c+1
-done
-echo "]"
-'
-
-file { "/usr/lib/cgi-bin/services":
-  content => "$content",
-  mode => 755,
-}
+include "mylyn"
