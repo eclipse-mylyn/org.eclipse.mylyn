@@ -141,6 +141,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor OVERLAY_SYNC_WARNING = create(T_OVR, "overlay-sync-warning.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor OVERLAY_SYNC_ERROR = create(T_OVR, "overlay-sync-error.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "warning_ovr.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_SUCCESS = create(T_OVR, "success_ovr.gif"); //$NON-NLS-1$
@@ -186,6 +188,8 @@ public class CommonImages {
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor ERROR = create(T_ELCL, "error.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif"); //$NON-NLS-1$
 
