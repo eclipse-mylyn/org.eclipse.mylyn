@@ -331,6 +331,13 @@ public class TaskListToolTip extends GradientToolTip {
 		return null;
 	}
 
+	private Image getStatusIcon(IRepositoryElement element) {
+		if (element instanceof RepositoryQuery) {
+			return CommonImages.getImage(TasksUiInternal.getIconFromStatusOfQuery((RepositoryQuery) element));
+		}
+		return CommonImages.getImage(CommonImages.WARNING);
+	}
+
 	private String getStatusText(IRepositoryElement element) {
 		IStatus status = null;
 		if (element instanceof AbstractTask) {
@@ -556,7 +563,7 @@ public class TaskListToolTip extends GradientToolTip {
 
 		String statusText = getStatusText(currentTipElement);
 		if (statusText != null) {
-			addIconAndLabel(composite, CommonImages.getImage(CommonImages.WARNING), statusText);
+			addIconAndLabel(composite, getStatusIcon(currentTipElement), statusText);
 		}
 
 		String helpText = getHelpText(currentTipElement);

@@ -117,6 +117,8 @@ public class Messages extends NLS {
 
 	public static String UiLegendControl_Synchronization_failed;
 
+	public static String UiLegendControl_Synchronization_error;
+
 	public static String UiLegendControl_Task;
 
 	public static String UiLegendControl_Task_Activity;

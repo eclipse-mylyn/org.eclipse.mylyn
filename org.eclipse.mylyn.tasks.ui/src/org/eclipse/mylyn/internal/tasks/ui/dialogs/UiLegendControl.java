@@ -435,6 +435,10 @@ public class UiLegendControl extends Composite {
 		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Synchronization_failed);
 
 		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_ERROR));
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Synchronization_error);
+
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_CONFLICT));
 		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Conflicting_changes);
 	}

@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -337,27 +338,39 @@ public class BugzillaClient {
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
-
-			if (code == HttpURLConnection.HTTP_OK) {
+			switch (code) {
+			case HttpURLConnection.HTTP_OK:
 				return getMethod;
-			} else {
+			case HttpURLConnection.HTTP_NOT_MODIFIED:
 				WebUtil.releaseConnection(getMethod, monitor);
-				if (code == HttpURLConnection.HTTP_NOT_MODIFIED) {
-					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
-				} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-					// login or reauthenticate due to an expired session
-					loggedIn = false;
-					authenticate(monitor);
-				} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
-					loggedIn = false;
-					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-							"Proxy authentication required")); //$NON-NLS-1$
-				} else {
-					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
-				}
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$			
+			case HttpURLConnection.HTTP_UNAUTHORIZED:
+			case HttpURLConnection.HTTP_FORBIDDEN:
+				// login or reauthenticate due to an expired session
+				loggedIn = false;
+				WebUtil.releaseConnection(getMethod, monitor);
+				authenticate(monitor);
+				break;
+			case HttpURLConnection.HTTP_PROXY_AUTH:
+				loggedIn = false;
+				WebUtil.releaseConnection(getMethod, monitor);
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+						"Proxy authentication required")); //$NON-NLS-1$
+			case HttpURLConnection.HTTP_INTERNAL_ERROR:
+				loggedIn = false;
+				InputStream stream = getResponseStream(getMethod, monitor);
+				ByteArrayOutputStream ou = new ByteArrayOutputStream(1024);
+				transferData(stream, ou);
+				WebUtil.releaseConnection(getMethod, monitor);
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Error = 500")); //$NON-NLS-1$
+			default:
+				WebUtil.releaseConnection(getMethod, monitor);
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
 			}
+
 		}
 
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,

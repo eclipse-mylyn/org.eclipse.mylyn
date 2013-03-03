@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -1452,6 +1453,23 @@ public class TasksUiInternal {
 
 	public static TaskDropHandler getTaskDropHandler() {
 		return taskDropHandler;
+	}
+
+	public static ImageDescriptor getIconFromStatusOfQuery(RepositoryQuery query) {
+		ImageDescriptor image;
+		boolean showError = false;
+		Throwable exception = query.getStatus().getException();
+		showError = (query.getLastSynchronizedTimeStamp().equals("<never>") //$NON-NLS-1$
+		&& ((RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null && exception instanceof SocketTimeoutException) || //
+		// only when we change SocketTimeout or Eclipse.org change there timeout for long running Queries
+		(RepositoryStatus.ERROR_NETWORK) == query.getStatus().getCode()
+				&& query.getStatus().getMessage().equals("Http error: Internal Server Error"))); //$NON-NLS-1$
+		if (showError) {
+			image = CommonImages.OVERLAY_SYNC_ERROR;
+		} else {
+			image = CommonImages.OVERLAY_SYNC_WARNING;
+		}
+		return image;
 	}
 
 }

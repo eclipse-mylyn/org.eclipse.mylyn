@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -204,7 +205,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 				} else if (element instanceof IRepositoryQuery) {
 					RepositoryQuery query = (RepositoryQuery) element;
 					if (query.getStatus() != null) {
-						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING);
+						image = CommonImages.getImage(TasksUiInternal.getIconFromStatusOfQuery(query));
 						if (synchronizationOverlaid) {
 							imageOffset = 11;
 						} else {
@@ -306,9 +307,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 			}
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
-			if (query.getStatus() != null) {
-				return CommonImages.OVERLAY_SYNC_WARNING;
-			}
+			return TasksUiInternal.getIconFromStatusOfQuery(query);
 		}
 		// HACK: need a proper blank image
 		return CommonImages.OVERLAY_CLEAR;
