@@ -20,18 +20,18 @@ public class UserPlan implements Serializable {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 4759542049129654659L;
 
-	private int collaborators;
+	private long collaborators;
 
-	private int privateRepos;
+	private long privateRepos;
 
-	private int space;
+	private long space;
 
 	private String name;
 
 	/**
 	 * @return collaborators
 	 */
-	public int getCollaborators() {
+	public long getCollaborators() {
 		return collaborators;
 	}
 
@@ -39,7 +39,7 @@ public class UserPlan implements Serializable {
 	 * @param collaborators
 	 * @return this user plan
 	 */
-	public UserPlan setCollaborators(int collaborators) {
+	public UserPlan setCollaborators(long collaborators) {
 		this.collaborators = collaborators;
 		return this;
 	}
@@ -47,7 +47,7 @@ public class UserPlan implements Serializable {
 	/**
 	 * @return privateRepos
 	 */
-	public int getPrivateRepos() {
+	public long getPrivateRepos() {
 		return privateRepos;
 	}
 
@@ -55,7 +55,7 @@ public class UserPlan implements Serializable {
 	 * @param privateRepos
 	 * @return this user plan
 	 */
-	public UserPlan setPrivateRepos(int privateRepos) {
+	public UserPlan setPrivateRepos(long privateRepos) {
 		this.privateRepos = privateRepos;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class UserPlan implements Serializable {
 	/**
 	 * @return space
 	 */
-	public int getSpace() {
+	public long getSpace() {
 		return space;
 	}
 
@@ -71,7 +71,7 @@ public class UserPlan implements Serializable {
 	 * @param space
 	 * @return this user plan
 	 */
-	public UserPlan setSpace(int space) {
+	public UserPlan setSpace(long space) {
 		this.space = space;
 		return this;
 	}
