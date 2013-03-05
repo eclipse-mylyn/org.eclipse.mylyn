@@ -12,5 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.reviews.core.model;x-friends:="org.eclipse.mylyn.reviews.ui,org.eclipse.mylyn.reviews.edit",
+ org.eclipse.mylyn.reviews.core.spi.remote;x-friends:="org.eclipse.mylyn.reviews.ui",
+ org.eclipse.mylyn.reviews.core.spi.remote.emf;x-friends:="org.eclipse.mylyn.reviews.ui",
  org.eclipse.mylyn.reviews.internal.core.model;x-friends:="org.eclipse.mylyn.reviews.edit"
 Bundle-Vendor: Eclipse Mylyn
