@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -379,7 +379,8 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 	private String adjustHref(String href) {
 		if (href != null && href.startsWith("#")) { //$NON-NLS-1$
 			SplitOutlineItem target = outline.getOutlineItemById(href.substring(1));
-			if (target != null && target.getSplitTarget() != null) {
+			if (target != null && target.getSplitTarget() != null
+					&& !currentFile.getName().equals(target.getSplitTarget())) {
 				href = target.getSplitTarget().replace(" ", "%20") + href; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}

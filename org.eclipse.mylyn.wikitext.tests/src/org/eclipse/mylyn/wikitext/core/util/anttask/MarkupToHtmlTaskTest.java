@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,6 +160,55 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content2.contains("<a href=\"markup.html#HeadingOne\">link to one</a>"));
 	}
 
+	public void testTocFilenameCorrectnessSingleFile() throws IOException {
+		File markup = createTextileMarkupFile("{toc}\n\nh1. Heading One\n\nh1. Heading Two\n\nh2. Heading Two Point One");
+		task.setFile(markup);
+		task.setMultipleOutputFiles(false);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+		TestUtil.println(content);
+
+		assertTrue(content.contains("<a href=\"#HeadingOne\">Heading One</a>"));
+		assertTrue(content.contains("<a href=\"#HeadingTwo\">Heading Two</a>"));
+	}
+
+	public void testTocFilenameCorrectnessMultipleFiles() throws IOException {
+		File markup = createTextileMarkupFile("{toc}\n\nh1. Heading One\n\nh1. Heading Two\n\nh2. Heading Two Point One\n\n\"link\":#HeadingOne");
+		task.setFile(markup);
+		task.setMultipleOutputFiles(true);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+		TestUtil.println(content);
+
+		assertTrue(content.contains("<a href=\"#HeadingOne\">Heading One</a>"));
+		assertTrue(content.contains("<a href=\"Heading-Two.html#HeadingTwo\">Heading Two</a>"));
+		assertTrue(content.contains("<a href=\"Heading-Two.html#HeadingTwoPointOne\">Heading Two Point One</a>"));
+
+		// navigation
+		assertTrue(content.contains("<a href=\"Heading-Two.html\" title=\"Heading Two\">Next</a>"));
+
+		htmlFile = new File(markup.getParentFile(), "Heading-Two.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		content = getContent(htmlFile);
+		TestUtil.println(content);
+
+		assertTrue(content.contains("<a href=\"markup.html\" title=\"Heading One\">Previous</a>"));
+		assertTrue(content.contains("<a href=\"markup.html#HeadingOne\">link</a>"));
+	}
+
 	protected File createSimpleTextileMarkup() throws IOException {
 		StringWriter out = new StringWriter();
 		PrintWriter writer = new PrintWriter(out);
@@ -203,4 +252,5 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToHtmlTask.class.getPackage().getName() + ".tasks");
 		assertEquals(MarkupToHtmlTask.class.getName(), bundle.getString("wikitext-to-html"));
 	}
+
 }
