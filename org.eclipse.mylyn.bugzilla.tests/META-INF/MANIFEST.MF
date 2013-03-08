@@ -26,7 +26,8 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.commons.net,
- org.apache.xmlrpc
+ org.apache.xmlrpc,
+ org.apache.commons.io
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.core;x-internal:=true,
