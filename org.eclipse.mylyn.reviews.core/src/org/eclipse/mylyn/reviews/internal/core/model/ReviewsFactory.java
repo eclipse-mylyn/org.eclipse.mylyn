@@ -40,7 +40,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	public static ReviewsFactory init() {
 		try {
-			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/mylyn/reviews/core/1.0"); //$NON-NLS-1$ 
+			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory(ReviewsPackage.eNS_URI);
 			if (theReviewsFactory != null) {
 				return theReviewsFactory;
 			}

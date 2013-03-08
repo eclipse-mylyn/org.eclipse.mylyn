@@ -102,8 +102,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected String content = CONTENT_EDEFAULT;
 
 	/**
-	 * <<<<<<< Upstream, based on origin/master ======= The cached value of the '{@link #getFile() <em>File</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFile() <em>File</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @see #getFile()
 	 * @generated

@@ -15,7 +15,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="#//TopicContainer #//Dated">
     <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"
-        eType="#//ReviewItem" transient="true" derived="true"/>
+        eType="#//ReviewItem" transient="true" derived="true" eOpposite="#//ReviewItem/review"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviewTask" eType="#//TaskReference"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="1" eType="#//ReviewState"
@@ -39,10 +39,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="ReviewItem" eSuperTypes="#//TopicContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="addedBy" lowerBound="1"
         eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="committedBy" lowerBound="1"
+        eType="#//User"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"
-        eType="#//Review"/>
+        eType="#//Review" transient="true" eOpposite="#//Review/items"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Location" abstract="true" eSuperTypes="#//Indexed"/>
   <eClassifiers xsi:type="ecore:EClass" name="User">

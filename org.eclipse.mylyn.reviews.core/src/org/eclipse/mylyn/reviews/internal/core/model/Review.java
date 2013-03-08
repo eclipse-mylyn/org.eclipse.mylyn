@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -246,7 +248,8 @@ public class Review extends TopicContainer implements IReview {
 	 */
 	public List<IReviewItem> getItems() {
 		if (items == null) {
-			items = new EObjectResolvingEList<IReviewItem>(IReviewItem.class, this, ReviewsPackage.REVIEW__ITEMS);
+			items = new EObjectWithInverseResolvingEList<IReviewItem>(IReviewItem.class, this,
+					ReviewsPackage.REVIEW__ITEMS, ReviewsPackage.REVIEW_ITEM__REVIEW);
 		}
 		return items;
 	}
@@ -468,9 +471,26 @@ public class Review extends TopicContainer implements IReview {
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW__ITEMS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getItems()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case ReviewsPackage.REVIEW__ITEMS:
+			return ((InternalEList<?>) getItems()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW__REVIEW_TASK:
 			return basicSetReviewTask(null, msgs);
 		case ReviewsPackage.REVIEW__STATE:

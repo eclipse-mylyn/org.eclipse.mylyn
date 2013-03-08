@@ -13,6 +13,7 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -30,9 +31,11 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * The following features are implemented:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getAddedBy <em>Added By</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getCommittedBy <em>Committed By</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReview <em>Review</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getName <em>Name</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReference <em>Reference</em>}</li>
  * </ul>
  * </p>
  * 
@@ -48,6 +51,16 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @ordered
 	 */
 	protected IUser addedBy;
+
+	/**
+	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getCommittedBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected IUser committedBy;
 
 	/**
 	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
@@ -96,6 +109,26 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @ordered
 	 */
 	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getReference()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String REFERENCE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getReference()
+	 * @generated
+	 * @ordered
+	 */
+	protected String reference = REFERENCE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -171,6 +204,46 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * 
 	 * @generated
 	 */
+	public IUser getCommittedBy() {
+		if (committedBy != null && committedBy.eIsProxy()) {
+			InternalEObject oldCommittedBy = (InternalEObject) committedBy;
+			committedBy = (IUser) eResolveProxy(oldCommittedBy);
+			if (committedBy != oldCommittedBy) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__COMMITTED_BY,
+							oldCommittedBy, committedBy));
+			}
+		}
+		return committedBy;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IUser basicGetCommittedBy() {
+		return committedBy;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setCommittedBy(IUser newCommittedBy) {
+		IUser oldCommittedBy = committedBy;
+		committedBy = newCommittedBy;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__COMMITTED_BY,
+					oldCommittedBy, committedBy));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public IReview getReview() {
 		if (review != null && review.eIsProxy()) {
 			InternalEObject oldReview = (InternalEObject) review;
@@ -198,11 +271,40 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * 
 	 * @generated
 	 */
-	public void setReview(IReview newReview) {
+	public NotificationChain basicSetReview(IReview newReview, NotificationChain msgs) {
 		IReview oldReview = review;
 		review = newReview;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REVIEW, oldReview, review));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.REVIEW_ITEM__REVIEW, oldReview, newReview);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setReview(IReview newReview) {
+		if (newReview != review) {
+			NotificationChain msgs = null;
+			if (review != null)
+				msgs = ((InternalEObject) review).eInverseRemove(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
+						msgs);
+			if (newReview != null)
+				msgs = ((InternalEObject) newReview).eInverseAdd(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
+						msgs);
+			msgs = basicSetReview(newReview, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REVIEW, newReview,
+					newReview));
 	}
 
 	/**
@@ -250,6 +352,59 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
+	 * @generated
+	 */
+	public String getReference() {
+		return reference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setReference(String newReference) {
+		String oldReference = reference;
+		reference = newReference;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REFERENCE, oldReference,
+					reference));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM__REVIEW:
+			if (review != null)
+				msgs = ((InternalEObject) review).eInverseRemove(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
+						msgs);
+			return basicSetReview((IReview) otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM__REVIEW:
+			return basicSetReview(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	@Override
@@ -279,6 +434,10 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 			if (resolve)
 				return getAddedBy();
 			return basicGetAddedBy();
+		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+			if (resolve)
+				return getCommittedBy();
+			return basicGetCommittedBy();
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
 			if (resolve)
 				return getReview();
@@ -287,6 +446,8 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 			return getName();
 		case ReviewsPackage.REVIEW_ITEM__ID:
 			return getId();
+		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+			return getReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -303,6 +464,9 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
 			setAddedBy((IUser) newValue);
 			return;
+		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+			setCommittedBy((IUser) newValue);
+			return;
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
 			setReview((IReview) newValue);
 			return;
@@ -311,6 +475,9 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 			return;
 		case ReviewsPackage.REVIEW_ITEM__ID:
 			setId((String) newValue);
+			return;
+		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+			setReference((String) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -327,6 +494,9 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
 			setAddedBy((IUser) null);
 			return;
+		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+			setCommittedBy((IUser) null);
+			return;
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
 			setReview((IReview) null);
 			return;
@@ -335,6 +505,9 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 			return;
 		case ReviewsPackage.REVIEW_ITEM__ID:
 			setId(ID_EDEFAULT);
+			return;
+		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+			setReference(REFERENCE_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -350,12 +523,16 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
 			return addedBy != null;
+		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
+			return committedBy != null;
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
 			return review != null;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case ReviewsPackage.REVIEW_ITEM__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
+			return REFERENCE_EDEFAULT == null ? reference != null : !REFERENCE_EDEFAULT.equals(reference);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -375,6 +552,8 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		result.append(name);
 		result.append(", id: "); //$NON-NLS-1$
 		result.append(id);
+		result.append(", reference: "); //$NON-NLS-1$
+		result.append(reference);
 		result.append(')');
 		return result.toString();
 	}

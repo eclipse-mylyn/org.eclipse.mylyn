@@ -30,7 +30,8 @@ import java.util.List;
 public interface IReview extends ITopicContainer, IDated {
 	/**
 	 * Returns the value of the '<em><b>Items</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview <em>Review</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Items</em>' reference list isn't clear, there really should be more of a description
 	 * here...
@@ -38,6 +39,7 @@ public interface IReview extends ITopicContainer, IDated {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Items</em>' reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview
 	 * @generated
 	 */
 	List<IReviewItem> getItems();
