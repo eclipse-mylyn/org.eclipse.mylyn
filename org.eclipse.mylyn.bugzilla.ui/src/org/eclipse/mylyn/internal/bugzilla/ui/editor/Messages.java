@@ -99,6 +99,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskEditorPage_Proposal_Detail;
 
+	public static String BugzillaTaskEditorPage_Please_enter_a_target_milestone_before_submitting;
+
 	public static String BugzillaTaskEditorPage_submit_disabled_please_refresh;
 
 	public static String BugzillaTaskEditorPage_submitted_Changes_Details;

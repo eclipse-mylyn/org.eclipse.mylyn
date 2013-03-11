@@ -314,6 +314,20 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			}
 			return;
 		}
+		TaskAttribute targetMilestoneAttribute = getModel().getTaskData()
+				.getRoot()
+				.getMappedAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
+		if (targetMilestoneAttribute != null && targetMilestoneAttribute.getValue().length() == 0
+				&& getModel().getTaskData().isNew()) {
+			getTaskEditor().setMessage(
+					Messages.BugzillaTaskEditorPage_Please_enter_a_target_milestone_before_submitting,
+					IMessageProvider.ERROR);
+			AbstractTaskEditorPart descriptionPart = getPart(ID_PART_ATTRIBUTES);
+			if (descriptionPart != null) {
+				descriptionPart.setFocus();
+			}
+			return;
+		}
 
 		TaskAttribute attributeOperation = getModel().getTaskData()
 				.getRoot()

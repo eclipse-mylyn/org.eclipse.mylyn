@@ -37,7 +37,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -198,11 +200,25 @@ public class BugzillaFixture extends TestFixture {
 		if (description == null) {
 			description = "description";
 		}
+		ITaskMapping initializationData = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				// ignore
+				return "ManualC1";
+			}
+
+		};
 		BugzillaClient client = client(level);
 		AbstractTaskDataHandler taskDataHandler = connector().getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
 		TaskData taskData = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(repository(), taskData, null, null);
+		taskDataHandler.initializeTaskData(repository(), taskData, initializationData, null);
 		taskData.getRoot().createMappedAttribute(TaskAttribute.SUMMARY).setValue(summary);
 		taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue(description);
 		taskData.getRoot().createMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");

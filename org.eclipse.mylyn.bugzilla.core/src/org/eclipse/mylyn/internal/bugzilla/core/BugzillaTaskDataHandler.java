@@ -465,29 +465,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					component = initializationData.getComponent();
 				}
 
-				if (component == null
-						&& repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product).size() > 0) {
-					component = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product)
-							.get(0);
-				}
-				if (component == null) {
-					if (repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).size() > 0) {
-						product = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).get(0);
-					}
-					if (product == null) {
-						return false;
-					}
-					if (repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product).size() > 0) {
-						component = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT, product)
-								.get(0);
-					} else {
-						return false;
-					}
-					if (component == null) {
-						return false;
-					}
-				}
-
 				initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, component, monitor);
 				if (connector != null) {
 					connector.setPlatformDefaultsOrGuess(repository, taskData);
@@ -608,10 +585,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					if (defaultMilestone != null) {
 						attributeTargetMilestone.setValue(defaultMilestone);
 					} else {
-						attributeTargetMilestone.setValue(optionValues.get(0));
+						if (optionValues.contains("---")) { //$NON-NLS-1$
+							attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
+						}
 					}
 				} else {
-					attributeTargetMilestone.setValue(optionValues.get(0));
+					if (optionValues.contains("---")) { //$NON-NLS-1$
+						attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
+					}
 				}
 			}
 		}
