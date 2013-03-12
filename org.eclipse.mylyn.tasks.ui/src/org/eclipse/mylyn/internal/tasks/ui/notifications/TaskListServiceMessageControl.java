@@ -20,9 +20,11 @@ import java.util.Date;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.notifications.feed.IServiceMessageListener;
 import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageEvent;
 import org.eclipse.mylyn.commons.notifications.ui.NotificationControl;
@@ -130,7 +132,7 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 					return;
 				}
 
-				String action = getAction(e.text);
+				final String action = getAction(e.text);
 				if ("create-local-task".equals(action)) { //$NON-NLS-1$
 					closeMessage();
 					LocalTask task = TasksUiInternal.createNewLocalTask(null);
@@ -156,6 +158,14 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 					}
 				} else if (TasksUiInternal.isValidUrl(e.text)) {
 					TasksUiUtil.openUrl(e.text);
+				} else if (currentMessage != null) {
+					SafeRunner.run(new SafeRunnable() {
+						public void run() throws Exception {
+							if (currentMessage.openLink(action)) {
+								closeMessage();
+							}
+						}
+					});
 				}
 			}
 

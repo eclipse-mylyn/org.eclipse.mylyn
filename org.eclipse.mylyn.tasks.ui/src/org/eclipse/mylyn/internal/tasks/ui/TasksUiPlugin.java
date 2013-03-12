@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -59,6 +60,7 @@ import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.workbench.TaskBarManager;
+import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
 import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
@@ -87,6 +89,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -454,7 +457,45 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			} finally {
 				monitor.done();
 			}
+			hideNonMatchingSubtasks();
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
+		}
+
+		/**
+		 * hide non-matching subtasks, or display a message about it if this is not a fresh installation
+		 */
+		protected void hideNonMatchingSubtasks() {
+			final String HIDE_SUBTASKS = "hide-subtasks"; //$NON-NLS-1$
+			if (!getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING)
+					&& !getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.ENCOURAGED_FILTER_NON_MATCHING)) {
+				if (taskList.getQueries().isEmpty()) {
+					getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, true);
+				} else {
+					TaskListView view = TaskListView.getFromActivePerspective();
+					if (view != null && view.getServiceMessageControl() != null) {
+						ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
+							@Override
+							public boolean openLink(String link) {
+								if (HIDE_SUBTASKS.equals(link)) {
+									getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, true);
+									savePluginPreferences();
+									return true;
+								}
+								return false;
+							}
+						};
+						message.setId("hide.nonmatching.subtasks"); //$NON-NLS-1$
+						message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
+						message.setTitle(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks);
+						message.setDescription(NLS.bind(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks_Message,
+								HIDE_SUBTASKS));
+						view.getServiceMessageControl().setMessage(message);
+					}
+				}
+				// never do this again
+				getPreferenceStore().setValue(ITasksUiPreferenceConstants.ENCOURAGED_FILTER_NON_MATCHING, true);
+				savePluginPreferences();
+			}
 		}
 	}
 

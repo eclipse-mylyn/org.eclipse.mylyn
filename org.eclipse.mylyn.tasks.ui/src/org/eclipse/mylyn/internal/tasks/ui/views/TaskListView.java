@@ -381,6 +381,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 	private final PresentationDropDownSelectionAction presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(
 			this);
 
+	private ShowNonMatchingSubtasksAction showNonMatchingSubtasksAction;
+
 	private final TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
 	private final TaskCompletionFilter filterComplete = new TaskCompletionFilter();
@@ -561,6 +563,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.GROUP_SUBTASKS)) {
 				filterPresentation.updateSettings();
 				refresh(true);
+				if (showNonMatchingSubtasksAction != null) {
+					showNonMatchingSubtasksAction.update();
+				}
 			}
 		}
 	};
@@ -1203,7 +1208,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		manager.add(filterCompleteTask);
 		IMenuManager advancedMenu = new MenuManager(Messages.TaskListView_Advanced_Filters_Label);
 		advancedMenu.add(new ShowAllQueriesAction());
-		advancedMenu.add(new ShowNonMatchingSubtasksAction());
+		showNonMatchingSubtasksAction = new ShowNonMatchingSubtasksAction();
+		advancedMenu.add(showNonMatchingSubtasksAction);
 		advancedMenu.add(new Separator());
 		advancedMenu.add(groupSubTasksAction);
 		manager.add(advancedMenu);
@@ -1755,5 +1761,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			};
 		}
 		return super.getAdapter(adapter);
+	}
+
+	public TaskListServiceMessageControl getServiceMessageControl() {
+		return serviceMessageControl;
 	}
 }

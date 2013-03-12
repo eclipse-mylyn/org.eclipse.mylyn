@@ -35,4 +35,10 @@ public class ShowNonMatchingSubtasksAction extends Action {
 				.setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, !isChecked());
 	}
 
+	public void update() {
+		setChecked(!TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
+	}
+
 }

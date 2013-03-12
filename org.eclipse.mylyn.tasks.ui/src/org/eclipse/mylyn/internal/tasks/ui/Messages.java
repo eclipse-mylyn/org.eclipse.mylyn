@@ -123,6 +123,10 @@ public class Messages extends NLS {
 
 	public static String TasksUiPlugin_Activate_Task;
 
+	public static String TasksUiPlugin_Hide_Irrelevant_Subtasks;
+
+	public static String TasksUiPlugin_Hide_Irrelevant_Subtasks_Message;
+
 	public static String TasksUiPlugin_Initializing_Task_List;
 
 	public static String TasksUiPlugin_Task_Repositories;

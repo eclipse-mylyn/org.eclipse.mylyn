@@ -48,6 +48,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String FILTER_NON_MATCHING = "org.eclipse.mylyn.tasks.ui.filters.nonmatching"; //$NON-NLS-1$
 
+	public static final String ENCOURAGED_FILTER_NON_MATCHING = "org.eclipse.mylyn.tasks.ui.filters.nonmatching.encouraged"; //$NON-NLS-1$
+
 	public static final String FILTER_PRIORITY = "org.eclipse.mylyn.tasks.ui.filters.priority"; //$NON-NLS-1$
 
 	public static final String GROUP_SUBTASKS = "org.eclipse.mylyn.tasks.ui.group.subtasks"; //$NON-NLS-1$
@@ -107,4 +109,5 @@ public interface ITasksUiPreferenceConstants {
 	public static final String LAST_SERVICE_MESSAGE_LAST_MODIFIED = "org.eclipse.mylyn.tasks.ui.servicemessage.lastmodified"; //$NON-NLS-1$
 
 	public static final String LAST_SERVICE_MESSAGE_CHECKTIME = "org.eclipse.mylyn.tasks.ui.servicemessage.checktime"; //$NON-NLS-1$
+
 }
