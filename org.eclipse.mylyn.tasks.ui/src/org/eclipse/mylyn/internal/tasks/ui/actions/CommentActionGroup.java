@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 
@@ -27,6 +28,8 @@ public class CommentActionGroup extends ActionGroup {
 
 	private CopyCommenterNameAction copyCommenterNameAction;
 
+	private CopyCommentDetailsURLAction copyCommentDetailsURL;
+
 	private boolean initialized;
 
 	private void initialize() {
@@ -36,6 +39,7 @@ public class CommentActionGroup extends ActionGroup {
 		initialized = true;
 		copyDetailsAction = new CopyCommentDetailsAction();
 		copyCommenterNameAction = new CopyCommenterNameAction();
+		copyCommentDetailsURL = new CopyCommentDetailsURLAction();
 	}
 
 	@Override
@@ -43,6 +47,7 @@ public class CommentActionGroup extends ActionGroup {
 		updateActions();
 		manager.add(copyDetailsAction);
 		manager.add(copyCommenterNameAction);
+		manager.add(copyCommentDetailsURL);
 	}
 
 	private void updateActions() {
@@ -50,6 +55,11 @@ public class CommentActionGroup extends ActionGroup {
 		IStructuredSelection selection = getStructuredSelection();
 		copyDetailsAction.selectionChanged(selection);
 		copyCommenterNameAction.selectionChanged(selection);
+		copyCommentDetailsURL.selectionChanged(selection);
+		Object firstElement = selection.getFirstElement();
+		if (firstElement instanceof ITaskComment) {
+			copyCommentDetailsURL.setEnabled(((ITaskComment) firstElement).getUrl() != null);
+		}
 	}
 
 	public IStructuredSelection getStructuredSelection() {

@@ -710,6 +710,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 		taskComment.setCommentId(comment.id + ""); //$NON-NLS-1$
 		taskComment.setNumber(commentNum);
+		taskComment.setUrl(repositoryTaskData.getRepositoryUrl() + "/show_bug.cgi?id=" //$NON-NLS-1$
+				+ repositoryTaskData.getTaskId() + "#c" + commentNum); //$NON-NLS-1$
 		IRepositoryPerson author = repositoryTaskData.getAttributeMapper()
 				.getTaskRepository()
 				.createPerson(comment.author);
