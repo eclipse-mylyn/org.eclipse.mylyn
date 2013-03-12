@@ -18,18 +18,19 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.ui.operations.AddReviewersDialog;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
+import org.eclipse.mylyn.internal.gerrit.ui.factories.ReviewUiFactoryProvider;
+import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewSection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.forms.IFormColors;
@@ -49,35 +50,20 @@ import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
+ * Displays basic information about a given review corresponding to top sections of Gerrit web interface.
+ * 
  * @author Steffen Pingel
+ * @author Miles Parker
  */
-public class ReviewSection extends AbstractGerritSection {
-
-	private Composite composite;
-
-	private FormToolkit toolkit;
+public class ReviewSection extends AbstractReviewSection {
 
 	public ReviewSection() {
 		setPartName("Review");
 	}
 
-	@Override
-	protected Control createContent(FormToolkit toolkit, Composite parent) {
-		this.toolkit = toolkit;
-
-		composite = toolkit.createComposite(parent);
-		GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).applyTo(composite);
-
-		GerritChange review = GerritUtil.getChange(getTaskData());
-		if (review != null) {
-			createReviewContent(toolkit, composite, review.getChangeDetail());
-		}
-		return composite;
-	}
-
-	private void createReviewContent(FormToolkit toolkit, Composite composite, ChangeDetail changeDetail) {
-		GerritConfig config = getConfig();
-
+	private void createReviewContent(ChangeDetail changeDetail) {
+		GerritConfigX config = GerritCorePlugin.getGerritClient(getTaskEditorPage().getTaskRepository())
+				.getGerritConfig();
 		createPeopleSubSection(composite, changeDetail, config);
 
 		if (changeDetail.getMissingApprovals() != null && changeDetail.getMissingApprovals().size() > 0) {
@@ -170,25 +156,8 @@ public class ReviewSection extends AbstractGerritSection {
 				addTextClient(toolkit, subSection, names.toString());
 			}
 		}
-
-		Composite buttonComposite = new Composite(composite, SWT.NONE);
-		GridDataFactory.fillDefaults().span(numColumns, 1).applyTo(buttonComposite);
-		RowLayout layout = new RowLayout();
-		layout.center = true;
-		layout.spacing = 10;
-		buttonComposite.setLayout(layout);
-		Button addReviewersButton = toolkit.createButton(buttonComposite, "Add Reviewers...", SWT.PUSH);
-		addReviewersButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				doAddReviewers();
-			}
-		});
-	}
-
-	private void doAddReviewers() {
-		AddReviewersDialog dialog = new AddReviewersDialog(getShell(), getTask());
-		openOperationDialog(dialog);
+		Composite actionComposite = getUiFactoryProvider().createButtons(this, composite, getToolkit(), getReview());
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 	}
 
 	private boolean canAddReviewers(ChangeDetail changeDetail) {
@@ -268,8 +237,21 @@ public class ReviewSection extends AbstractGerritSection {
 	}
 
 	@Override
+	public void createModelControls() {
+		GerritChange change = ((GerritRemoteFactoryProvider) getRemoteFactoryProvider()).getReviewFactory()
+				.getRemoteObject(getReview());
+		if (change != null) {
+			createReviewContent(change.getChangeDetail());
+		}
+	}
+
+	@Override
 	protected boolean shouldExpandOnCreate() {
 		return true;
 	}
 
+	@Override
+	protected ReviewUiFactoryProvider getUiFactoryProvider() {
+		return new ReviewUiFactoryProvider();
+	}
 }

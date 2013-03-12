@@ -20,7 +20,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer.IObserver;
 
 /**
@@ -57,13 +57,13 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	Map<RemoteEmfConsumer.IObserver<EObjectType>, AdapterImpl> adapterForListener = new HashMap<IObserver<EObjectType>, AdapterImpl>();
 
-	JobRemoteService service;
+	AbstractRemoteService service;
 
 	EReference parentReference;
 
 	EAttribute localAttribute;
 
-	public AbstractRemoteEmfFactory(JobRemoteService service, EReference parentReference, EAttribute localAttribute) {
+	public AbstractRemoteEmfFactory(AbstractRemoteService service, EReference parentReference, EAttribute localAttribute) {
 		this.service = service;
 		this.parentReference = parentReference;
 		this.localAttribute = localAttribute;
@@ -270,7 +270,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		return localAttribute;
 	}
 
-	public JobRemoteService getService() {
+	public AbstractRemoteService getService() {
 		return service;
 	}
 }

@@ -28,6 +28,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 
 /**
  * @author Steffen Pingel
+ * @author Miles Parker
  */
 public class AbandonDialog extends GerritOperationDialog {
 
@@ -50,7 +51,7 @@ public class AbandonDialog extends GerritOperationDialog {
 
 	@Override
 	protected Control createPageControls(Composite parent) {
-		setTitle("Abondon Change");
+		setTitle("Abandon Change");
 		setMessage("Enter an optional message.");
 
 		Composite composite = new Composite(parent, SWT.NONE);

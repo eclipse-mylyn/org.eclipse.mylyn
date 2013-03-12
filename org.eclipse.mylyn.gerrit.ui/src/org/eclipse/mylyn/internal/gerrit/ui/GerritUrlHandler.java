@@ -19,7 +19,7 @@ import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.AbstractUrlHandler;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.ui.editor.GerritTaskEditorPage;
-import org.eclipse.mylyn.internal.gerrit.ui.editor.PatchSetSection;
+import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -64,7 +64,7 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 			IFormPage activePage = taskEditor.setActivePage(GerritTaskEditorPage.class.getName());
 			if (activePage instanceof GerritTaskEditorPage) {
 				GerritTaskEditorPage gerritPage = (GerritTaskEditorPage) activePage;
-				PatchSetSection section = (PatchSetSection) gerritPage.getPart(PatchSetSection.class.getName());
+				ReviewSetSection section = (ReviewSetSection) gerritPage.getPart(ReviewSetSection.class.getName());
 				if (section != null) {
 					section.revealPatchSet(patchSetNumber);
 				}

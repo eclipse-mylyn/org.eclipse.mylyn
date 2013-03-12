@@ -15,15 +15,14 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
-import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
-import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiConstants;
-import org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer;
-import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.ReviewsRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
+import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
+import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
@@ -32,10 +31,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mikael Kober
@@ -43,8 +38,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Miles Parker
  */
 public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
-
-	IReview review;
 
 	public GerritTaskEditorPage(TaskEditor editor) {
 		super(editor, GerritTaskEditorPage.class.getName(), "Gerrit Page", GerritConnector.CONNECTOR_KIND);
@@ -99,7 +92,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 				return new ReviewSection();
 			}
 		});
-		descriptors.add(new TaskEditorPartDescriptor(PatchSetSection.class.getName()) {
+		descriptors.add(new TaskEditorPartDescriptor(ReviewSetSection.class.getName()) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new PatchSetSection();
@@ -115,42 +108,9 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
-		TaskData taskData = getModel().getTaskData();
-		if (taskData != null) {
-			GerritChange change = GerritUtil.getChange(taskData);
-			final ChangeDetailX detail = change.getChangeDetail();
-			review = GerritUtil.toReview(detail);
-		}
-	}
-
-	@Override
-	public void refresh() {
-		super.refresh();
-		TaskData taskData = getModel().getTaskData();
-		if (taskData != null) {
-			int oldSize = review.getTopics().size();
-			GerritUtil.updateMessages(review, GerritUtil.getChange(taskData).getChangeDetail());
-			if (review.getTopics().size() > oldSize) {
-				refreshExplorer();
-			}
-		}
-	}
-
-	void refreshExplorer() {
-		//TODO, we really shouldn't be updating the view directly, it should be listening for model change, but that needs to be implemented with care given EMF update and UI threading concerns, etc.
-		IViewPart view = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.findView(ReviewsUiConstants.REVIEW_EXPLORER_ID);
-		if (view instanceof ReviewExplorer) {
-			((ReviewExplorer) view).refreshView();
-		}
-	}
-
-	@Override
-	public IReview getReview() {
-		return review;
+	protected ReviewsRemoteFactoryProvider createRemoteFactory() {
+		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getConnectorKind());
+		GerritClient client = connector.getClient(getTaskRepository());
+		return new GerritRemoteFactoryProvider(new RemoteUiService(), client);
 	}
 }

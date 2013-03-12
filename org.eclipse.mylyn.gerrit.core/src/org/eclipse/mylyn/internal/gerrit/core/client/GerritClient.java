@@ -44,17 +44,10 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetai
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
-import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
-import org.eclipse.mylyn.reviews.core.model.ILineLocation;
-import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
-import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeInfo;
@@ -74,6 +67,7 @@ import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.PatchSet.Id;
 import com.google.gerrit.reviewdb.Project;
 import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -88,6 +82,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Steffen Pingel
  * @author Christian Trutz
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public class GerritClient {
 
@@ -303,19 +298,19 @@ public class GerritClient {
 		});
 	}
 
-	public GerritPatchSetContent getPatchSetContent(String reviewId, PatchSet base, PatchSetDetail target,
-			IProgressMonitor monitor) throws GerritException {
-		Map<Patch.Key, PatchScript> patchScriptByPatchKey = new HashMap<Patch.Key, PatchScript>();
-
-		for (Patch patch : target.getPatches()) {
-			PatchScript patchScript = getPatchScript(patch.getKey(), (base != null) ? base.getId() : null,
-					target.getPatchSet().getId(), monitor);
+	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
+		Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
+		Id targetId = patchSetContent.getTarget().getId();
+		if (patchSetContent.getTargetDetail() == null) {
+			PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
+			patchSetContent.setTargetDetail(targetDetail);
+		}
+		for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
+			PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
 			if (patchScript != null) {
-				patchScriptByPatchKey.put(patch.getKey(), patchScript);
+				patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
 			}
 		}
-
-		return new GerritPatchSetContent(base, target, patchScriptByPatchKey);
 	}
 
 	public GerritConfigX getGerritConfig() {
@@ -702,36 +697,6 @@ public class GerritClient {
 				getChangeManageService().submit(id, this);
 			}
 		});
-	}
-
-	private void addComments(IFileRevision revision, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
-		if (comments == null) {
-			return;
-		}
-		for (PatchLineComment comment : comments) {
-			ILineRange line = FACTORY.createLineRange();
-			line.setStart(comment.getLine());
-			line.setEnd(comment.getLine());
-			ILineLocation location = FACTORY.createLineLocation();
-			location.getRanges().add(line);
-
-			IUser author = GerritUtil.createUser(comment.getAuthor(), accountInfoCache);
-
-			IComment topicComment = FACTORY.createComment();
-			topicComment.setAuthor(author);
-			topicComment.setCreationDate(comment.getWrittenOn());
-			topicComment.setDescription(comment.getMessage());
-
-			ITopic topic = FACTORY.createTopic();
-			topic.setAuthor(author);
-			topic.setCreationDate(comment.getWrittenOn());
-			topic.getLocations().add(location);
-			topic.setItem(revision);
-			topic.setDescription(comment.getMessage());
-			topic.getComments().add(topicComment);
-
-			revision.getTopics().add(topic);
-		}
 	}
 
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)

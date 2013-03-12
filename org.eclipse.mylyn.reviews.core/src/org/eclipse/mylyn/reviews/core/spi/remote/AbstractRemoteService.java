@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * Specifies a contract for a service that supports managed execution against remote (or other asynchronous or
@@ -41,9 +40,8 @@ public abstract class AbstractRemoteService {
 	 * </ol>
 	 * 
 	 * @param process
-	 * @throws CoreException
 	 */
-	public abstract void execute(final AbstractRemoteConsumer process) throws CoreException;
+	public abstract void execute(final AbstractRemoteConsumer process);
 
 	/**
 	 * Supports apply and notification services executed against a specific thread. (For example, the Remote Ui Service

@@ -24,6 +24,7 @@ import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryTest;
 
 /**
  * @author Steffen Pingel
@@ -67,6 +68,7 @@ public class AllGerritTests {
 		fixture.add(GerritClientTest.class);
 		fixture.add(GerritConnectorTest.class);
 		fixture.add(GerritSynchronizationTest.class);
+		fixture.add(GerritRemoteFactoryTest.class);
 		fixture.done();
 	}
 

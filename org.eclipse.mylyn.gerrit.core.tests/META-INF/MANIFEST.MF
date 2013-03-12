@@ -14,7 +14,8 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.eclipse.mylyn.commons.net,
  org.apache.commons.logging,
  org.eclipse.core.net,
- javax.servlet
+ javax.servlet,
+ org.eclipse.mylyn.tests.util;bundle-version="3.8.0"
 Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.client;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.egit;x-internal:=true

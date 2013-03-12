@@ -61,6 +61,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public class GerritConnector extends AbstractRepositoryConnector {
 
@@ -370,15 +371,15 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	CoreException toCoreException(TaskRepository repository, GerritException e) {
+	public static CoreException toCoreException(TaskRepository repository, GerritException e) {
 		return new CoreException(toStatus(repository, e));
 	}
 
-	CoreException toCoreException(TaskRepository repository, UnsupportedClassVersionError e) {
+	public static CoreException toCoreException(TaskRepository repository, UnsupportedClassVersionError e) {
 		return new CoreException(toStatus(repository, e));
 	}
 
-	Status toStatus(TaskRepository repository, GerritException e) {
+	public static Status toStatus(TaskRepository repository, GerritException e) {
 		String message;
 		if (e instanceof GerritHttpException) {
 			int code = ((GerritHttpException) e).getResponseCode();
@@ -393,7 +394,7 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
 	}
 
-	Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {
+	public static Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {
 		String message = NLS.bind("The Gerrit Connector requires at Java 1.6 or higer (installed version: {0})",
 				System.getProperty("java.version"));
 		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);

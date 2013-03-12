@@ -23,6 +23,8 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
@@ -30,6 +32,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RefreshConfigRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
@@ -38,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksUiFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -57,6 +61,7 @@ import com.google.gerrit.common.data.GerritConfig;
  * @author Steffen Pingel
  * @author Benjamin Muskalla
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public abstract class GerritOperationDialog extends ProgressDialog {
 
@@ -211,4 +216,13 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 	protected void doRefresh(GerritConfig config) {
 	}
 
+	public int open(TaskEditor editor) {
+		int open = open();
+		if (open == Window.OK && editor != null) {
+			SynchronizeEditorAction action = new SynchronizeEditorAction();
+			action.selectionChanged(new StructuredSelection(editor));
+			action.run();
+		}
+		return open;
+	}
 }
