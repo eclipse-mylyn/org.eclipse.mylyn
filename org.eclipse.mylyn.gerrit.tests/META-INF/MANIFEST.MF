@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.5.0",
@@ -25,7 +25,7 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.tasks.core;bundle-version="3.8.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
- org.eclipse.mylyn.reviews.core;bundle-version="1.1.0"
+ org.eclipse.mylyn.reviews.core;bundle-version="2.0.0"
 Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
  com.google.gerrit.prettify.common;version="2.1.5",
