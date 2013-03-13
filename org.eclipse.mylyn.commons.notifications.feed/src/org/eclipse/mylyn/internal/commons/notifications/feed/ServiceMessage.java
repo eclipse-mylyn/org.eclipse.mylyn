@@ -148,4 +148,13 @@ public class ServiceMessage extends AbstractNotification {
 		return builder.toString();
 	}
 
+	/**
+	 * Called when the user clicks a link in the message.
+	 * 
+	 * @return whether the message should be closed when the link is clicked
+	 */
+	public boolean openLink(String link) {
+		return false;
+	}
+
 }
