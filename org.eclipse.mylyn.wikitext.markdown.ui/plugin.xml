@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="Markdown">
+
+         <!--
+         <template name="line break" description="%template.description.br" content="  \n"/>
+         -->
+
+         <template name="# " description="%template.description.h1" content="\n# ${text}\n\n" block="true"/>
+         <template name="## " description="%template.description.h2" content="\n## ${text}\n\n" block="true"/>
+         <template name="### " description="%template.description.h3" content="\n### ${text}\n\n" block="true"/>
+         <template name="#### " description="%template.description.h4" content="\n#### ${text}\n\n" block="true"/>
+         <template name="##### " description="%template.description.h5" content="\n##### ${text}\n\n" block="true"/>
+         <template name="###### " description="%template.description.h6" content="\n###### ${text}\n\n" block="true"/>
+
+      </templates>
+   </extension>
+</plugin>

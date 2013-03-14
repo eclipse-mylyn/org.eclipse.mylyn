@@ -85,6 +85,8 @@
     <module>org.eclipse.mylyn.wikitext.extras-feature</module>
     <module>org.eclipse.mylyn.wikitext.help.sdk</module>
     <module>org.eclipse.mylyn.wikitext.help.ui</module>
+    <module>org.eclipse.mylyn.wikitext.markdown.core</module>
+    <module>org.eclipse.mylyn.wikitext.markdown.ui</module>
     <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
     <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
@@ -98,6 +100,7 @@
     <module>org.eclipse.mylyn.wikitext.ui</module>
     <module>org.eclipse.mylyn.wikitext.tests</module>
     <module>org.eclipse.mylyn.wikitext.creole.tests</module>
+    <module>org.eclipse.mylyn.wikitext.markdown.tests</module>
     <module>org.eclipse.mylyn.wikitext-standalone</module>
 
     <module>org.eclipse.mylyn.docs.epub.core</module>
