@@ -101,6 +101,7 @@ public class PatchSetContentRemoteFactory extends
 			topicComment.setCreationDate(comment.getWrittenOn());
 			topicComment.setDescription(comment.getMessage());
 			topicComment.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
+			topicComment.setAuthor(author);
 
 			ITopic topic = IReviewsFactory.INSTANCE.createTopic();
 			topic.setId(comment.getKey().get());
