@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for Bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -34,4 +36,5 @@ public abstract class ReviewBehavior {
 
 	public abstract IStatus addTopic(IReviewItem fileItem, ITopic topic, IProgressMonitor monitor);
 
+	public abstract org.eclipse.team.core.history.IFileRevision getFileRevision(IFileRevision reviewFileRevision);
 }

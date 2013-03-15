@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Atlassian - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
@@ -30,7 +31,6 @@ import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.text.source.OverviewRuler;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -299,30 +299,33 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		}
 		if (newInput != null && sourceViewer != null) {
 			IAnnotationModel originalAnnotationModel = sourceViewer.getAnnotationModel();
-			if (originalAnnotationModel instanceof IAnnotationModelExtension) {
-				IAnnotationModelExtension annotationModelExtension = (IAnnotationModelExtension) originalAnnotationModel;
-				annotationModelExtension.addAnnotationModel(ReviewsUiPlugin.PLUGIN_ID, originalAnnotationModel);
-			} else {
-				try {
-					Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
-					Field declaredField2 = sourceViewerClazz.getDeclaredField("fVisualAnnotationModel");
-					declaredField2.setAccessible(true);
-					Method declaredMethod = sourceViewerClazz.getDeclaredMethod("createVisualAnnotationModel",
-							IAnnotationModel.class);
-					declaredMethod.setAccessible(true);
-					originalAnnotationModel = (IAnnotationModel) declaredMethod.invoke(sourceViewer, annotationModel);
-					declaredField2.set(sourceViewer, originalAnnotationModel);
-					originalAnnotationModel.connect(newInput);
-					sourceViewer.showAnnotations(true);
+			//TODO:  The following 3 lines must be disabled to avoid a stack overflow.  It is not possible to reuse an annotation model the way this is done
+			//		 here.  Eventually, the inline commenting code should consume the common inlining comment implementation that is currently
+			//		 located in Mylyn Reviews R4E project (in org.eclipse.mylyn.reviews.frame.ui plugin and the mylyn.reviews code here adapted accordingly.
+			//if (originalAnnotationModel instanceof IAnnotationModelExtension) {
+			//	IAnnotationModelExtension annotationModelExtension = (IAnnotationModelExtension) originalAnnotationModel;
+			//	annotationModelExtension.addAnnotationModel(ReviewsUiPlugin.PLUGIN_ID, originalAnnotationModel);
+			//} else {
+			try {
+				Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
+				Field declaredField2 = sourceViewerClazz.getDeclaredField("fVisualAnnotationModel");
+				declaredField2.setAccessible(true);
+				Method declaredMethod = sourceViewerClazz.getDeclaredMethod("createVisualAnnotationModel",
+						IAnnotationModel.class);
+				declaredMethod.setAccessible(true);
+				originalAnnotationModel = (IAnnotationModel) declaredMethod.invoke(sourceViewer, annotationModel);
+				declaredField2.set(sourceViewer, originalAnnotationModel);
+				originalAnnotationModel.connect(newInput);
+				sourceViewer.showAnnotations(true);
 
-					createVerticalRuler(newInput, sourceViewerClazz);
-					createOverviewRuler(newInput, sourceViewerClazz);
-					createHighlighting(sourceViewerClazz);
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error attaching annotation model", t));
-				}
+				createVerticalRuler(newInput, sourceViewerClazz);
+				createOverviewRuler(newInput, sourceViewerClazz);
+				createHighlighting(sourceViewerClazz);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+						"Error attaching annotation model", t));
 			}
+			//}
 		}
 	}
 

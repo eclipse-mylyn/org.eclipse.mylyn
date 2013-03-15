@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
@@ -50,6 +51,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 /**
  * @author Steffen Pingel
  * @author Miles Parker
+ * @author Sebastien Dubois
  */
 public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
@@ -135,7 +137,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 							public void responded(boolean modified) {
 								CompareConfiguration configuration = new CompareConfiguration();
 								CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration,
-										compareSet, null, new GerritReviewBehavior(getTask())));
+										compareSet, null, new GerritReviewBehavior(getTask(), resolveGitRepository())));
 							}
 
 							public void failed(IStatus status) {

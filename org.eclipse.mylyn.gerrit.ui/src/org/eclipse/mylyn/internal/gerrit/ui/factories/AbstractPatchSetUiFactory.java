@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
@@ -58,6 +59,21 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 
 	protected final String getGerritProject(ChangeDetail changeDetail) {
 		return changeDetail.getChange().getProject().get();
+	}
+
+	protected final Repository resolveGitRepository() {
+		//Here we try to resolve the Git repository in the workspace for this Patch Set.  
+		//If so, we will use the appropriate file revision to provide navigability in the Compare Editor.
+		GerritToGitMapping mapper = getGitRepository();
+		Repository gitRepository = null;
+		if (mapper != null) {
+			try {
+				gitRepository = mapper.find();
+			} catch (IOException e) {
+				//If we cannot resolve the git repository, we will detect it later on.  Can be safely ignored
+			}
+		}
+		return gitRepository;
 	}
 
 	protected final GerritToGitMapping getGitRepository() {

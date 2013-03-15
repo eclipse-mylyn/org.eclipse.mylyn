@@ -8,6 +8,7 @@
  * Contributors:
  *     Atlassian - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
@@ -26,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
+ * @author Sebastien Dubois
  */
 public class FileItemCompareEditorInput extends CompareEditorInput {
 
@@ -37,16 +39,15 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 		super(configuration);
 		this.file = file;
 		this.behavior = behavior;
-
-		configuration.setLeftLabel(NLS.bind("{0}: {1}", file.getTarget().getRevision(), file.getName()));
-		configuration.setRightLabel(NLS.bind("{0}: {1}", file.getBase().getRevision(), file.getName()));
 		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getTarget().getRevision(),
 				file.getBase().getRevision() }));
 	}
 
 	@Override
 	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		return new FileItemNode(file);
+		FileItemNode node = new FileItemNode(behavior, file, monitor);
+		getCompareConfiguration().setLabelProvider(node, node.getLabelProvider());
+		return node;
 	}
 
 	@Override
@@ -68,5 +69,4 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 		super.contentsCreated();
 		//getAnnotationModelToAttach().focusOnComment();
 	}
-
 }

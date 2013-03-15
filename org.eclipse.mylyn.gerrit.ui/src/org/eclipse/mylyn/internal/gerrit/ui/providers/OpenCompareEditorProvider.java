@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Miles Parker, Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.providers;
@@ -57,8 +58,18 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 						if (fileItem != null) {
 							IWorkbenchPart currentPart = explorer.getCurrentPart();
 							if (currentPart instanceof TaskEditor) {
+
+								//Here we try to resolve the Git repository in the workspace for this Patch Set.  
+								//If so, we will use the appropriate file revision to provide navigability in the Compare Editor.
+								//TODO:  Here we need to find a way to get a IUiContext and IReviewItemSet from the fileItem
+								//TODO:  Once this is done, we can get use the  OpenFileUiFactory#execute command here
+								//IUiContext context...;
+								//IReviewItemSet set...context;
+								//OpenFileUiFactory openFileFactory = new OpenFileUiFactory(context, set, fileItem);
+								//openFileFactory.execute();
+
 								TaskEditor part = (TaskEditor) currentPart;
-								TaskEditorInput input =  (TaskEditorInput) part.getEditorInput();
+								TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
 								GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
 								CompareConfiguration configuration = new CompareConfiguration();
 								CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, fileItem,

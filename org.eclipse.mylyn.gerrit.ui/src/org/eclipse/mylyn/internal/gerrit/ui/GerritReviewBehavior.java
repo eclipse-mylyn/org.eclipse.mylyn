@@ -7,15 +7,19 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
+import org.eclipse.mylyn.internal.gerrit.ui.egit.GitFileRevisionUtils;
+import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
@@ -31,8 +35,15 @@ import com.google.gerrit.reviewdb.PatchLineComment;
  */
 public class GerritReviewBehavior extends ReviewBehavior {
 
+	private Repository repository = null;
+
 	public GerritReviewBehavior(ITask task) {
 		super(task);
+	}
+
+	public GerritReviewBehavior(ITask task, Repository repository) {
+		super(task);
+		this.repository = repository;
 	}
 
 	public GerritOperationFactory getOperationFactory() {
@@ -62,6 +73,14 @@ public class GerritReviewBehavior extends ReviewBehavior {
 		}
 		//We'll only get here if there is something really broken in calling code or model. Gerrit has one and only one comment per location.
 		throw new RuntimeException("Internal Exception. No line location for comment. Topic: " + topic.getId());
+	}
+
+	@Override
+	public org.eclipse.team.core.history.IFileRevision getFileRevision(IFileRevision reviewFileRevision) {
+		if (repository != null) {
+			return GitFileRevisionUtils.getFileRevision(repository, reviewFileRevision);
+		}
+		return null;
 	}
 
 }

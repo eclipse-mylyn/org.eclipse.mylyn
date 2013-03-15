@@ -8,6 +8,7 @@
  * Contributors:
  *     Atlassian - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
@@ -49,7 +50,7 @@ public class CompareUtil {
 		return new DiffNode(new ByteArrayInput(targetContent, targetPath), new ByteArrayInput(baseContent, basePath));
 	}
 
-	static byte[] getContent(IFileRevision revision) {
+	public static byte[] getContent(IFileRevision revision) {
 		String content = revision.getContent();
 		return (content != null) ? content.getBytes() : new byte[0];
 	}

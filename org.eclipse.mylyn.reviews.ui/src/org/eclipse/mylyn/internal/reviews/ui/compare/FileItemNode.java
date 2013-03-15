@@ -7,20 +7,31 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
+import java.io.InputStream;
+
+import org.eclipse.compare.ICompareInputLabelProvider;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
+import org.eclipse.mylyn.internal.reviews.ui.providers.FileItemNodeLabelProvider;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Steffen Pingel
+ * @author Sebastien Dubois
  */
 public class FileItemNode extends DiffNode {
 
@@ -30,11 +41,11 @@ public class FileItemNode extends DiffNode {
 
 	private String name;
 
-	public FileItemNode(IFileItem fileItem) {
+	private ICompareInputLabelProvider labelProvider;
+
+	public FileItemNode(ReviewBehavior behavior, IFileItem fileItem, IProgressMonitor monitor) {
 		super(Differencer.NO_CHANGE);
 		this.fileItem = fileItem;
-		byte[] targetContent = CompareUtil.getContent(fileItem.getTarget());
-		byte[] baseContent = CompareUtil.getContent(fileItem.getBase());
 		String targetPath = fileItem.getTarget().getPath();
 		int kind = Differencer.CHANGE;
 		if (targetPath == null) {
@@ -49,12 +60,36 @@ public class FileItemNode extends DiffNode {
 		if (targetPath.equals("/COMMIT_MSG")) { //$NON-NLS-1$
 			kind = Differencer.NO_CHANGE;
 		}
-		setLeft(new ByteArrayInput(targetContent, targetPath));
-		setRight(new ByteArrayInput(baseContent, basePath));
+
+		setLeft(getElement(behavior, fileItem.getTarget(), targetPath, monitor));
+		setRight(getElement(behavior, fileItem.getBase(), basePath, monitor));
+		labelProvider = new FileItemNodeLabelProvider();
+
 		setKind(kind);
 		IPath path = Path.fromPortableString(targetPath);
 		setPath(path);
 		this.name = path.lastSegment();
+	}
+
+	//Check if we can match the reviewed file with the workspace history contents
+	private ITypedElement getElement(ReviewBehavior behavior, IFileRevision reviewFileRevision, String path,
+			IProgressMonitor monitor) {
+		org.eclipse.team.core.history.IFileRevision repoFileRevision = behavior.getFileRevision(reviewFileRevision);
+		if (repoFileRevision != null) {
+			InputStream repoFileContents = null;
+			try {
+				repoFileContents = repoFileRevision.getStorage(monitor).getContents();
+				if (repoFileContents != null) {
+					//First option:  The file under review is in sync with a version in history for a workspace file, 
+					//open the file Revision.  Best effort navigability.
+					return new FileRevisionTypedElement(repoFileRevision, monitor);
+				}
+			} catch (CoreException e) {
+				// This can be safely ignored.  We will use the fallback option below
+			}
+		}
+		//Fallback option: No match i.e the repository is not in workspace or does not contain this version of the file.  No navigability.
+		return new ByteArrayInput(CompareUtil.getContent(reviewFileRevision), path);
 	}
 
 	public FileItemNode(String name) {
@@ -99,4 +134,7 @@ public class FileItemNode extends DiffNode {
 		this.name = name;
 	}
 
+	public ICompareInputLabelProvider getLabelProvider() {
+		return labelProvider;
+	}
 }

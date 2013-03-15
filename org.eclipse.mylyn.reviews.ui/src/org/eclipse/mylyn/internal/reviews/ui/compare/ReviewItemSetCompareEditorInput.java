@@ -7,14 +7,18 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
@@ -26,11 +30,11 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Steffen Pingel
+ * @author Sebastien Dubois
  */
 public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 
@@ -38,15 +42,12 @@ public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 
 	private DiffNode root;
 
-	private final IFileItem selection;
-
 	private final ReviewBehavior behavior;
 
 	public ReviewItemSetCompareEditorInput(CompareConfiguration configuration, IReviewItemSet items,
 			IFileItem selection, ReviewBehavior behavior) {
 		super(configuration);
 		this.items = items;
-		this.selection = selection;
 		this.behavior = behavior;
 		setTitle(items.getName());
 	}
@@ -63,7 +64,7 @@ public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 				continue;
 			}
 
-			FileItemNode node = new FileItemNode((IFileItem) item);
+			FileItemNode node = new FileItemNode(behavior, (IFileItem) item, monitor);
 
 			DiffNode parent = findNode(root, node.getPath());
 			parent.add(node);
@@ -128,11 +129,31 @@ public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 		if (input instanceof FileItemNode && ((FileItemNode) input).getFileItem() != null) {
 			final ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
 			IFileItem item = ((FileItemNode) input).getFileItem();
-			getCompareConfiguration().setLeftLabel(NLS.bind("{0}: {1}", item.getTarget().getRevision(), item.getName()));
-			getCompareConfiguration().setRightLabel(NLS.bind("{0}: {1}", item.getBase().getRevision(), item.getName()));
 			support.setReviewItem(item, behavior);
+			getCompareConfiguration().setLabelProvider(input, ((FileItemNode) input).getLabelProvider());
+
+			//NOTE:  This solves the problem described in bug 402060, but causes a bad listener leak in AbstractTextEditor so we remove it for now
+			//updateViewerConfig(contentViewer, (FileItemNode) input);
 		}
 		return contentViewer;
 	}
 
+	//NOTE:  This is a temporary hack to work around the problem described in bug 402060.  It should be removed when the bug is fixed
+	protected void updateViewerConfig(Viewer aContentViewer, FileItemNode input) {
+		if (aContentViewer instanceof TextMergeViewer) {
+			final TextMergeViewer textMergeViewer = (TextMergeViewer) aContentViewer;
+			try {
+				final Class<TextMergeViewer> clazz = TextMergeViewer.class;
+				Field declaredField = clazz.getDeclaredField("isConfigured"); //$NON-NLS-1$
+				declaredField.setAccessible(true);
+				declaredField.setBoolean(textMergeViewer, false);
+				Method declaredMethod = clazz.getDeclaredMethod("updateContent", Object.class, Object.class,
+						Object.class);
+				declaredMethod.setAccessible(true);
+				declaredMethod.invoke(textMergeViewer, null, input.getLeft(), input.getRight());
+			} catch (Throwable t) {
+				//do nothing for now
+			}
+		}
+	}
 }

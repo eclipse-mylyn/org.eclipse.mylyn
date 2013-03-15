@@ -28,7 +28,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.egit.ui,
  org.eclipse.mylyn.commons.net;bundle-version="3.8.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
- org.eclipse.ui.navigator
+ org.eclipse.ui.navigator,
+ org.eclipse.team.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Eclipse Mylyn

@@ -4,7 +4,9 @@ Bundle-Name: Mylyn Reviews
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.ide,
  org.eclipse.core.runtime,
+ org.eclipse.core.resources,
  org.eclipse.core.expressions,
  org.eclipse.compare,
  org.eclipse.emf.ecore,
@@ -20,7 +22,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
  org.eclipse.mylyn.tasks.core;bundle-version="3.8.0",
  org.eclipse.mylyn.reviews.core;bundle-version="2.0.0",
- org.eclipse.emf.edit
+ org.eclipse.emf.edit,
+ org.eclipse.team.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Mylyn
