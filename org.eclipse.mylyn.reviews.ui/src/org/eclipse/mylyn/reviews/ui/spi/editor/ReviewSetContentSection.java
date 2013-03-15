@@ -75,6 +75,10 @@ public class ReviewSetContentSection {
 
 	private final RemoteEmfConsumer<IReviewItemSet, List<IReviewItem>, ?, ?, String> consumer;
 
+	private boolean createdContentSection;
+
+	private boolean retrievedModelContents;
+
 	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set) {
 		this.parentSection = parentSection;
 		this.set = set;
@@ -91,12 +95,8 @@ public class ReviewSetContentSection {
 				.consume("Managing Review Set", set, items, new RemoteEmfConsumer.IObserver<List<IReviewItem>>() {
 
 					public void responded(boolean modified) {
-						viewer.setInput(set);
-						if (getParentSection().getTaskEditorPage() instanceof AbstractReviewTaskEditorPage) {
-							((AbstractReviewTaskEditorPage) getParentSection().getTaskEditorPage()).refreshExplorer();
-						}
-						updateControls(false);
-						getParentSection().getTaskEditorPage().reflow();
+						retrievedModelContents = true;
+						checkCreateModelControls();
 					}
 
 					public void failed(IStatus status) {
@@ -118,12 +118,14 @@ public class ReviewSetContentSection {
 
 		if (section.isExpanded()) {
 			createContents();
+			checkCreateModelControls();
 		}
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				if (section.getClient() == null) {
 					createContents();
+					checkCreateModelControls();
 				}
 			}
 		});
@@ -270,8 +272,6 @@ public class ReviewSetContentSection {
 			}
 		});
 
-		viewer.setInput(set);
-
 		Composite actionComposite = getParentSection().getUiFactoryProvider().createButtons(getParentSection(),
 				composite, parentSection.getToolkit(), set);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
@@ -280,6 +280,26 @@ public class ReviewSetContentSection {
 		EditorUtil.addScrollListener(viewer.getTable());
 
 		parentSection.getTaskEditorPage().reflow();
+	}
+
+	/**
+	 * We don't know whether the model or the controls will be available first, so we handle both cases here.
+	 */
+	private void checkCreateModelControls() {
+		if (retrievedModelContents && !createdContentSection && viewer != null && !viewer.getControl().isDisposed()
+				&& section.isExpanded()) {
+			createdContentSection = true;
+			createModelControls();
+		}
+	}
+
+	private void createModelControls() {
+		viewer.setInput(set);
+		if (getParentSection().getTaskEditorPage() instanceof AbstractReviewTaskEditorPage) {
+			((AbstractReviewTaskEditorPage) getParentSection().getTaskEditorPage()).refreshExplorer();
+		}
+		updateControls(false);
+		getParentSection().getTaskEditorPage().reflow();
 	}
 
 	public Section getSection() {
