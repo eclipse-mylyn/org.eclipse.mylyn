@@ -50,7 +50,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		password(AuthenticationType.REPOSITORY);
 
 		// test old API
-		TaskRepository taskRepository = new TaskRepository("kind", "url");
+		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
 		assertEquals("user", taskRepository.getUserName());
 		assertEquals("pwd", taskRepository.getPassword());
