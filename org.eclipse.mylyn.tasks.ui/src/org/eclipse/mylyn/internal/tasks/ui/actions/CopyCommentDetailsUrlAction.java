@@ -16,9 +16,9 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
-public class CopyCommentDetailsURLAction extends BaseSelectionListenerAction {
+public class CopyCommentDetailsUrlAction extends BaseSelectionListenerAction {
 
-	public CopyCommentDetailsURLAction() {
+	public CopyCommentDetailsUrlAction() {
 		super(Messages.CopyCommentDetailsURL_Copy_Comment_URL);
 		setToolTipText(Messages.CopyCommentDetailsURL_Copy_Comment_URL_Tooltip);
 		setImageDescriptor(CommonImages.COPY);

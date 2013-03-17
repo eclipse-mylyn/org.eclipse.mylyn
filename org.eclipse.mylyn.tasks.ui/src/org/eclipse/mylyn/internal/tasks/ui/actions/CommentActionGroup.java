@@ -28,7 +28,7 @@ public class CommentActionGroup extends ActionGroup {
 
 	private CopyCommenterNameAction copyCommenterNameAction;
 
-	private CopyCommentDetailsURLAction copyCommentDetailsURL;
+	private CopyCommentDetailsUrlAction copyCommentDetailsURL;
 
 	private boolean initialized;
 
@@ -39,7 +39,7 @@ public class CommentActionGroup extends ActionGroup {
 		initialized = true;
 		copyDetailsAction = new CopyCommentDetailsAction();
 		copyCommenterNameAction = new CopyCommenterNameAction();
-		copyCommentDetailsURL = new CopyCommentDetailsURLAction();
+		copyCommentDetailsURL = new CopyCommentDetailsUrlAction();
 	}
 
 	@Override
