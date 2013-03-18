@@ -88,6 +88,17 @@
       </suppressIncoming>
    </extension>
    <extension
+         point="org.eclipse.mylyn.tasks.core.synchronizationParticipants">
+      <participant
+            class="org.eclipse.mylyn.tasks.tests.support.MockSynchronizationParticipant"
+            id="org.eclipse.mylyn.tasks.tests.participant">
+      </participant>
+      <suppressIncoming
+            attributeId="task.common.version"
+            connectorKind="mock">
+      </suppressIncoming>
+   </extension>
+   <extension
          point="org.eclipse.mylyn.tasks.core.taskActivationListeners">
       <listener
             id="org.eclipse.mylyn.tasks.tests.listenerTest"

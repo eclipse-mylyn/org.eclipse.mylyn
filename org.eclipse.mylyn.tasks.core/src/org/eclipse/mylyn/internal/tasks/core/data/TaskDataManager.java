@@ -485,6 +485,8 @@ public class TaskDataManager implements ITaskDataManager {
 							break;
 						}
 					} else {
+						// if an incoming was previously suppressed it need to show now
+						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, Boolean.toString(false));
 						switch (task.getSynchronizationState()) {
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);

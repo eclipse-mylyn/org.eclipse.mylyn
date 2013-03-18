@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskMigrationEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -160,7 +161,16 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		return false;
+		boolean result = false;
+		TaskAttribute summery = taskData.getRoot().getAttribute(TaskAttribute.SUMMARY);
+		result = summery != null ? !task.getSummary().equals(summery.getValue()) : false;
+		if (result) {
+			return result;
+		}
+		TaskAttribute version = taskData.getRoot().getAttribute(TaskAttribute.VERSION);
+
+		return version != null ? !version.getValue().equals(task.getAttribute(TaskAttribute.VERSION)) : false;
+
 	}
 
 	@Override
@@ -170,6 +180,14 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		TaskAttribute summery = taskData.getRoot().getAttribute(TaskAttribute.SUMMARY);
+		if (summery != null) {
+			task.setSummary(summery.getValue());
+		}
+		TaskAttribute version = taskData.getRoot().getAttribute(TaskAttribute.VERSION);
+		if (version != null) {
+			task.setAttribute(TaskAttribute.VERSION, version.getValue());
+		}
 	}
 
 //	@Override

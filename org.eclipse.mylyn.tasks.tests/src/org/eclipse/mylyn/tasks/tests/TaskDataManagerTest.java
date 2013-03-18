@@ -13,12 +13,20 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Rob Elves
@@ -28,18 +36,111 @@ public class TaskDataManagerTest extends TestCase {
 
 	private TaskDataManager taskDataManger;
 
+	TaskRepository taskRepository;
+
+	private TaskRepositoryManager taskRepositoryManager;
+
 	@Override
 	protected void setUp() throws Exception {
 		taskDataManger = TasksUiPlugin.getTaskDataManager();
+		taskRepository = TaskTestUtil.createMockRepository();
+		taskRepositoryManager = (TaskRepositoryManager) TasksUi.getRepositoryManager();
+		TasksUi.getRepositoryManager().addRepository(taskRepository);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		taskRepositoryManager.clearRepositories();
 	}
 
 	public void testPutUpdatedTaskData() throws Exception {
-		TaskRepository taskRepository = TaskTestUtil.createMockRepository();
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
 		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+	}
+
+	public void testIncomming() throws Exception {
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		TaskAttribute root = taskData.getRoot();
+		root.createAttribute(TaskAttribute.SUMMARY).setValue("my Task");
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
+	}
+
+	public void testIncommingSupressed() throws Exception {
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		TaskAttribute root = taskData.getRoot();
+		TaskAttribute version = root.createAttribute(TaskAttribute.VERSION);
+		version.getMetaData().defaults().setKind("default");
+		version.setValue("V1.0");
+
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
+		assertEquals("true", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
+	}
+
+	public void testIncommingSupressedWithSave() throws Exception {
+		TasksUi.getRepositoryManager().addRepository(taskRepository);
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		ITaskDataWorkingCopy taskDataState1 = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+		TaskDataModel model = new TaskDataModel(taskRepository, task, taskDataState1);
+		TaskAttribute root = model.getTaskData().getRoot();
+		TaskAttribute version = root.createAttribute(TaskAttribute.VERSION);
+		version.getMetaData().defaults().setKind("default");
+		version.setValue("V1.0");
+
+		model.attributeChanged(version);
+		model.save(new NullProgressMonitor());
+		assertEquals(SynchronizationState.OUTGOING, task.getSynchronizationState());
+		taskDataManger.putSubmittedTaskData(task, taskData, new DelegatingProgressMonitor());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		assertNull(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
+	}
+
+	public void testIncommingSupressedWithRead() throws Exception {
+		TasksUi.getRepositoryManager().addRepository(taskRepository);
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		ITaskDataWorkingCopy taskDataState1 = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+		TaskDataModel model = new TaskDataModel(taskRepository, task, taskDataState1);
+		taskData = model.getTaskData();
+		TaskAttribute root = taskData.getRoot();
+		TaskAttribute version = root.createAttribute(TaskAttribute.VERSION);
+		version.getMetaData().defaults().setKind("default");
+		version.setValue("V1.0");
+
+		model.attributeChanged(version);
+		model.save(new NullProgressMonitor());
+		assertEquals(SynchronizationState.OUTGOING, task.getSynchronizationState());
+		taskDataManger.putSubmittedTaskData(task, taskData, new DelegatingProgressMonitor());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
+		root = model.getTaskData().getRoot();
+		version = root.createAttribute(TaskAttribute.VERSION);
+		version.getMetaData().defaults().setKind("default");
+		version.setValue("V1.1");
+
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
+
+		assertEquals("true", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
+		TasksUiPlugin.getTaskDataManager().setTaskRead(task, false);
+		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
+		assertEquals("false", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
+
 	}
 
 //	public void testHasIncomingDateComparison() {
