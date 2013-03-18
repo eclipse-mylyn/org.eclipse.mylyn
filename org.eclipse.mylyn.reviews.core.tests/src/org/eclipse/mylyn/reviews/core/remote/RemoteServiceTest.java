@@ -120,7 +120,7 @@ public class RemoteServiceTest {
 		Consumer consumer = new BrokenConsumer();
 		remoteService.execute(consumer);
 		consumer.waitForDone();
-		assertThat(consumer.status.getSeverity(), is(IStatus.ERROR));
+		assertThat(consumer.status.getSeverity(), is(IStatus.WARNING));
 		assertThat(consumer.retrieve, is(false));
 		assertThat(consumer.apply, is(false));
 	}

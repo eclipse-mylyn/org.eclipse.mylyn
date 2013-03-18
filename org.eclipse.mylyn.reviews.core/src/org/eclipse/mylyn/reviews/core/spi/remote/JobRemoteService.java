@@ -59,7 +59,9 @@ public class JobRemoteService extends AbstractRemoteService {
 					try {
 						process.retrieve(monitor);
 					} catch (CoreException e) {
-						return e.getStatus();
+//						return e.getStatus();
+						return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core", "Couldn't update model.",
+								e);
 					} catch (OperationCanceledException e) {
 						return Status.CANCEL_STATUS;
 					}
