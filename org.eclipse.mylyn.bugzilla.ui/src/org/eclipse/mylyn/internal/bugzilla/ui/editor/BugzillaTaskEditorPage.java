@@ -475,7 +475,10 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						for (String option : optionValues) {
 							attributeTargetMilestone.putOption(option, option);
 						}
-						if (optionValues.size() == 1) {
+						String defaultMilestones = repositoryConfiguration.getDefaultMilestones(taskAttribute.getValue());
+						if (defaultMilestones != null) {
+							attributeTargetMilestone.setValue(defaultMilestones);
+						} else if (optionValues.size() == 1) {
 							attributeTargetMilestone.setValue(optionValues.get(0));
 						} else {
 							attributeTargetMilestone.setValue("---"); //$NON-NLS-1$
