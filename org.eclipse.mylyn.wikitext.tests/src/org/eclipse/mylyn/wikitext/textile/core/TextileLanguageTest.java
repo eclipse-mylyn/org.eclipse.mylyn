@@ -1343,6 +1343,14 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	public void testParagraphsWithLineBreak() {
+		String html = parser.parseToHtml("first\nsecond\n\np. third\nfourth\n\nfifth");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>first<br/>second</p>"));
+		assertTrue(html.contains("<p>third<br/>fourth</p>"));
+		assertTrue(html.contains("<p>fifth</p>"));
+	}
+
 	public void testParagraphsWithLineThatHasWhitespaceInDelimitingLine() {
 		// see issue 44
 		String html = parser.parseToHtml("first\n \nsecond");
