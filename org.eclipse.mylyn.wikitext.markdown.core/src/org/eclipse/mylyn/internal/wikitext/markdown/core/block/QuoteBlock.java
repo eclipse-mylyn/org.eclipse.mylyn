@@ -81,7 +81,7 @@ public class QuoteBlock extends Block {
 		}
 
 		// delegate content processing to nested block
-		int lineOffset = nestedBlock.processLine(content, 0);
+		nestedBlock.processLine(content, 0);
 		if (nestedBlock.isClosed()) {
 			nestedBlock = null;
 		}
