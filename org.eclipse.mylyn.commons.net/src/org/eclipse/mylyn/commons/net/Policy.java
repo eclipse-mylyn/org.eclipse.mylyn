@@ -65,7 +65,7 @@ public class Policy {
 	 */
 	public static IProgressMonitor backgroundMonitorFor(IProgressMonitor monitor) {
 		if (monitor == null) {
-			return new NullProgressMonitor();
+			monitor = new NullProgressMonitor();
 		}
 		return new BackgroundProgressMonitor(monitor);
 	}

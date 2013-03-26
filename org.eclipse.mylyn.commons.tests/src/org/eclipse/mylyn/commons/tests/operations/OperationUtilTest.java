@@ -32,8 +32,12 @@ public class OperationUtilTest extends TestCase {
 		assertFalse(OperationUtil.isBackgroundMonitor(new NullProgressMonitor()));
 	}
 
-	public void testIsBackgroundMonitorBackgroundMonitor() {
+	public void testIsBackgroundMonitorBackgroundMonitorForNullProgressMonitor() {
 		assertTrue(OperationUtil.isBackgroundMonitor(Policy.backgroundMonitorFor(new NullProgressMonitor())));
+	}
+
+	public void testIsBackgroundMonitorBackgroundMonitorForNull() {
+		assertTrue(OperationUtil.isBackgroundMonitor(Policy.backgroundMonitorFor(null)));
 	}
 
 	public void testIsBackgroundMonitorOperationMonitorNull() {
