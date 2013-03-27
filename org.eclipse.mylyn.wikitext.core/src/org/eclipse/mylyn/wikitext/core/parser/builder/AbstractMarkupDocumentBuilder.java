@@ -61,6 +61,12 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 			return blockType;
 		}
 
+		/**
+		 * @since 1.8
+		 */
+		protected boolean isImplicitBlock() {
+			return false;
+		}
 	}
 
 	/**
@@ -112,9 +118,28 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 			}
 			super.close();
 		}
+
+		/**
+		 * @since 1.8
+		 */
+		protected int normalizeWhitespace(int c) {
+			return AbstractMarkupDocumentBuilder.this.normalizeWhitespace(c);
+		}
+
+		/**
+		 * @since 1.8
+		 */
+		protected String normalizeWhitespace(String s) {
+			return AbstractMarkupDocumentBuilder.this.normalizeWhitespace(s);
+		}
+
+		@Override
+		protected boolean isImplicitBlock() {
+			return true;
+		}
 	}
 
-	protected Block currentBlock = new ImplicitParagraphBlock();
+	protected Block currentBlock = createImplicitParagraphBlock();
 
 	private Stack<MarkupWriter> writerState;
 
@@ -294,7 +319,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		try {
-			if (currentBlock instanceof ImplicitParagraphBlock) {
+			if (currentBlock != null && currentBlock.isImplicitBlock()) {
 				currentBlock.close();
 				currentBlock = null;
 			}
@@ -399,7 +424,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	protected void assertOpenBlock() {
 		if (currentBlock == null) {
-			currentBlock = new ImplicitParagraphBlock();
+			currentBlock = createImplicitParagraphBlock();
 		}
 	}
 
@@ -419,4 +444,15 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		s = s.replaceAll("(\r|\n)", " "); //$NON-NLS-1$//$NON-NLS-2$
 		return s;
 	}
+
+	/**
+	 * Creates paragraph blocks in cases where content is emitted but no block is currently open. Subclasses may
+	 * override to alter the default paragraph block implementation.
+	 * 
+	 * @since 1.8
+	 */
+	protected Block createImplicitParagraphBlock() {
+		return new ImplicitParagraphBlock();
+	}
+
 }

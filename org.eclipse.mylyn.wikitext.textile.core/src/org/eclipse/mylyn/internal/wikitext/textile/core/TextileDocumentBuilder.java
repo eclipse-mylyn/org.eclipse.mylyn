@@ -58,7 +58,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private boolean emitAttributes = true;
 
-	private class ContentBlock extends Block {
+	private interface TextileBlock {
+		void lineBreak() throws IOException;
+	}
+
+	private class ContentBlock extends Block implements TextileBlock {
 
 		protected final String prefix;
 
@@ -68,33 +72,42 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		protected final boolean emitWhenEmpty;
 
+		private final boolean normalizingWhitespace;
+
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
-				boolean emitWhenEmpty) {
+				boolean emitWhenEmpty, boolean normalizingWhitespace) {
 			super(blockType);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.requireAdjacentSeparator = requireAdjacentSeparator;
 			this.emitWhenEmpty = emitWhenEmpty;
+			this.normalizingWhitespace = normalizingWhitespace;
 		}
 
 		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
-			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty);
+			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, true);
+		}
+
+		public void lineBreak() throws IOException {
+			write('\n');
 		}
 
 		@Override
 		public void write(int c) throws IOException {
-			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
+			if (normalizingWhitespace) {
 				c = normalizeWhitespace(c);
+				if (c == ' ' && getLastChar() == ' ') {
+					return;
+				}
 			}
 			TextileDocumentBuilder.this.emitContent(c);
 		}
 
 		@Override
 		public void write(String s) throws IOException {
-			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
-				s = normalizeWhitespace(s);
+			for (int x = 0; x < s.length(); ++x) {
+				write(s.charAt(x));
 			}
-			TextileDocumentBuilder.this.emitContent(s);
 		}
 
 		@Override
@@ -151,12 +164,65 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return false;
 		}
 
+		protected int normalizeWhitespace(int c) {
+			return TextileDocumentBuilder.this.normalizeWhitespace(c);
+		}
+	}
+
+	private class ParagraphBlock extends ContentBlock {
+
+		ParagraphBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
+				boolean emitWhenEmpty, boolean normalizingWhitespace) {
+			super(blockType, prefix, suffix, requireAdjacentSeparator, emitWhenEmpty, normalizingWhitespace);
+		}
+
+		@Override
+		public void lineBreak() throws IOException {
+			final char lastChar = getLastChar();
+			if (consecutiveNewline(lastChar, '\n')) {
+				return;
+			}
+			TextileDocumentBuilder.this.emitContent('\n');
+		}
+
+	}
+
+	private final class TextileImplicitParagraphBlock extends ImplicitParagraphBlock implements TextileBlock {
+
+		public void lineBreak() throws IOException {
+			final char lastChar = getLastChar();
+			if (consecutiveNewline(lastChar, '\n')) {
+				return;
+			}
+			TextileDocumentBuilder.this.emitContent('\n');
+		}
+
+		@Override
+		public void write(int c) throws IOException {
+			c = normalizeWhitespace(c);
+			if (c == ' ' && getLastChar() == ' ') {
+				return;
+			}
+			super.write(c);
+		}
+
+		@Override
+		public void write(String s) throws IOException {
+			for (int x = 0; x < s.length(); ++x) {
+				write(s.charAt(x));
+			}
+		}
+
+		@Override
+		protected int normalizeWhitespace(int c) {
+			return TextileDocumentBuilder.this.normalizeWhitespace(c);
+		}
 	}
 
 	private class SpanBlock extends ContentBlock {
 
 		public SpanBlock(String spanAttributes, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
-			super(null, "%" + spanAttributes, "%", requireAdjacentWhitespace, emitWhenEmpty); //$NON-NLS-1$ //$NON-NLS-2$
+			super(null, "%" + spanAttributes, "%", requireAdjacentWhitespace, emitWhenEmpty, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override
@@ -193,7 +259,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		private LinkBlock(LinkAttributes attributes) {
-			super(null, "", "", true, true); //$NON-NLS-1$//$NON-NLS-2$
+			super(null, "", "", true, true, true); //$NON-NLS-1$//$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
@@ -213,7 +279,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class TableCellBlock extends ContentBlock {
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|_.", "", false, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|_.", "", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		@Override
@@ -237,20 +303,20 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case NUMERIC_LIST:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case CODE:
-			return new ContentBlock(type, "bc. ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "bc. ", "\n\n", false, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
 			if (currentBlock == null) {
-				return new ContentBlock(type, "", "\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ParagraphBlock(type, "", "\n", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$//$NON-NLS-2$
+				return new ParagraphBlock(type, "", "", false, false, true); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
-			return new ContentBlock(type, "fn1. ", "\n\n", false, false); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
+			return new ParagraphBlock(type, "fn1. ", "\n\n", false, false, true); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
 		case NOTE:
 		case PANEL:
@@ -260,13 +326,13 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ContentBlock(type, attributesMarkup.length() > 0 || previousWasExtended
+			return new ParagraphBlock(type, attributesMarkup.length() > 0 || previousWasExtended
 					? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
-					: attributesMarkup, "\n\n", false, false); //$NON-NLS-1$
+					: attributesMarkup, "\n\n", false, false, true); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "\n\n", false, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case QUOTE:
-			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -276,7 +342,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -477,7 +543,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	public void lineBreak() {
 		assertOpenBlock();
 		try {
-			currentBlock.write('\n');
+			if (currentBlock instanceof TextileBlock) {
+				((TextileBlock) currentBlock).lineBreak();
+			} else {
+				currentBlock.write('\n');
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -510,4 +580,12 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		this.emitAttributes = emitAttributes;
 	}
 
+	@Override
+	protected Block createImplicitParagraphBlock() {
+		return new TextileImplicitParagraphBlock();
+	}
+
+	private boolean consecutiveNewline(final char lastChar, final char nextChar) {
+		return ((nextChar == '\n' || nextChar == '\r') && lastChar == '\n') || (nextChar == '\r' && lastChar == '\r');
+	}
 }

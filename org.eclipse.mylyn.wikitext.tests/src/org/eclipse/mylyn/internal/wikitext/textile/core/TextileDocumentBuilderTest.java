@@ -17,9 +17,9 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -29,7 +29,13 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
  */
 public class TextileDocumentBuilderTest extends TestCase {
 
-	private DocumentBuilder builder;
+	private static final String[] PLATFORM_NEWLINES = new String[] {//
+	"\r\n", // Windows
+			"\r", // Mac
+			"\n", // Unix, Linux
+	};
+
+	private TextileDocumentBuilder builder;
 
 	private StringWriter out;
 
@@ -40,10 +46,45 @@ public class TextileDocumentBuilderTest extends TestCase {
 		super.setUp();
 	}
 
-	public void testParagraph() {
+	public void testParagraph_MultipleNewlinesInParagraph() throws Exception {
+		for (String newline : PLATFORM_NEWLINES) {
+			setUp();
+			builder.beginDocument();
+			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+			builder.characters("text" + newline + newline + "more text");
+			builder.endBlock();
+			builder.endDocument();
+
+			String markup = out.toString();
+
+			TestUtil.println(markup);
+
+			Assert.assertEquals("text more text\n\n", markup);
+		}
+	}
+
+	public void testParagraph_MultipleNewlinesInImplicitParagraph() throws Exception {
+		for (String newline : PLATFORM_NEWLINES) {
+			setUp();
+			builder.beginDocument();
+			builder.characters("a" + newline + newline + "b");
+			builder.endDocument();
+
+			String markup = out.toString();
+
+			TestUtil.println(markup);
+
+			Assert.assertEquals("a b\n\n", markup);
+		}
+	}
+
+	public void testParagraph_MultipleLineBreaksInParagraph() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
-		builder.characters("text\n\nmore text");
+		builder.characters("text");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("more text");
 		builder.endBlock();
 		builder.endDocument();
 
@@ -51,7 +92,40 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		Assert.assertEquals("text\nmore text\n\n", markup);
+	}
+
+	public void testParagraph_MultipleLineBreaksInImplicitParagraph() {
+		builder.beginDocument();
+		builder.characters("text");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("more text");
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("text\nmore text\n\n", markup);
+	}
+
+	public void testParagraph_NewlineFollowedBySpaceOrTabInParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text");
+		builder.lineBreak();
+		builder.characters(" more");
+		builder.lineBreak();
+		builder.characters("\tmore2 text");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("text\n more\n\tmore2 text\n\n", markup);
 	}
 
 	public void testMultipleParagraphs() {
@@ -105,7 +179,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(test). text  more text\n\n", markup);
+		Assert.assertEquals("p(test). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithCssStyle() {
@@ -119,7 +193,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p{x-test: foo;}. text  more text\n\n", markup);
+		Assert.assertEquals("p{x-test: foo;}. text more text\n\n", markup);
 	}
 
 	public void testParagraphWithId() {
@@ -133,7 +207,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(#123). text  more text\n\n", markup);
+		Assert.assertEquals("p(#123). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithIdAndClass() {
@@ -147,7 +221,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(test#123). text  more text\n\n", markup);
+		Assert.assertEquals("p(test#123). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithLink() {
@@ -167,7 +241,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
+		Assert.assertEquals("text more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
 	}
 
 	public void testBlockCode() {
@@ -218,7 +292,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("h1. text  more text\n\ntext\n\n", markup);
+		Assert.assertEquals("h1. text more text\n\ntext\n\n", markup);
 	}
 
 	public void testHeading1_WithNestedMarkup() {
@@ -450,7 +524,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix  suffix\n\n", markup);
+		Assert.assertEquals("prefix suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {
@@ -578,4 +652,194 @@ public class TextileDocumentBuilderTest extends TestCase {
 		Assert.assertEquals("%{color:blue;}first second%", markup);
 	}
 
+	public void testLineBreak() {
+		builder.beginDocument();
+		builder.characters("line");
+		builder.lineBreak();
+		builder.characters("break");
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("line\nbreak\n\n", markup);
+	}
+
+	public void testLineBreak_ExplicitBlockAfterExtendedBlock() {
+		builder.beginDocument();
+
+		// make sure paragraph is preceded by an extended block
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("one\n\n\ntwo"); // multiple newlines makes this an extended block
+		builder.endBlock();
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("line");
+		builder.lineBreak();
+		builder.characters("break");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("bc.. one\n\n\ntwo\n\n\np. line\nbreak\n\n", markup);
+	}
+
+	public void testLineBreakInFootnote() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.FOOTNOTE, new Attributes());
+		builder.characters("line");
+		builder.lineBreak();
+		builder.characters("break");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("fn1. line\nbreak\n\n", markup);
+	}
+
+	public void testLineBreakInPreformatted_Extended() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("line");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("break");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("pre.. line\n\nbreak\n\n\n", markup);
+	}
+
+	public void testLineBreakInPreformatted() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("line");
+		builder.lineBreak();
+		builder.characters("break");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("pre. line\nbreak\n\n", markup);
+	}
+
+	public void testLink() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.link(new LinkAttributes(), "#foo", "link to foo");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a \"link to foo\":#foo test\n\n", markup);
+	}
+
+	public void testImageLink() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.imageLink(new LinkAttributes(), new ImageAttributes(), "#foo", "fooImage.png");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a !fooImage.png!:#foo test\n\n", markup);
+	}
+
+	public void testImage() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.image(new ImageAttributes(), "fooImage.png");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a !fooImage.png! test\n\n", markup);
+	}
+
+	public void testEntityReference() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.entityReference("copy");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a (c) test\n\n", markup);
+	}
+
+	public void testEntityCopyright() {
+		builder.beginDocument();
+
+		builder.characters("a \u00A9 test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a (c) test\n\n", markup);
+	}
+
+	public void testEntityReg() {
+		builder.beginDocument();
+
+		builder.characters("a \u00AE test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a (r) test\n\n", markup);
+	}
+
+	public void testNonBreakingSpace() {
+		builder.beginDocument();
+
+		builder.characters("a \u00A0 test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		Assert.assertEquals("a test\n\n", markup);
+	}
 }
