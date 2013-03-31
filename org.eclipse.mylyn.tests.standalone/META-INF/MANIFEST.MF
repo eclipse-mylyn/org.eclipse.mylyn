@@ -24,4 +24,4 @@ Require-Bundle: org.junit4,
  org.eclipse.mylyn.wikitext.tests,
  org.eclipse.mylyn.hudson.tests,
  org.eclipse.mylyn.builds.tests
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
