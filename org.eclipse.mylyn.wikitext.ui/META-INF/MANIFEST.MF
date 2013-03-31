@@ -42,4 +42,4 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-friends:="org.eclipse.m
  org.eclipse.mylyn.wikitext.ui.viewer
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
