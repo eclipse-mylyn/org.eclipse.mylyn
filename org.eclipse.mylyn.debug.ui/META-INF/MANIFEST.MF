@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.debug.ui;x-internal:=true

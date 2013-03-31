@@ -25,4 +25,4 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tests.util
 Export-Package: org.eclipse.mylyn.context.tasks.tests;x-internal:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -19,4 +19,4 @@ Require-Bundle: org.junit,
  org.eclipse.mylyn.context.sdk.util
 Export-Package: org.eclipse.mylyn.cdt.tests;x-internal:=true,
  org.eclipse.mylyn.cdt.tests.support;x-internal:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
