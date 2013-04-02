@@ -76,6 +76,7 @@
     <module>org.eclipse.mylyn.tasks.activity.ui</module>
     <module>org.eclipse.mylyn.tasks.bugs</module>
     <module>org.eclipse.mylyn.tasks.core</module>
+    <module>org.eclipse.mylyn.tasks.core.tests</module>
     <module>org.eclipse.mylyn.tasks.ide-feature</module>
     <module>org.eclipse.mylyn.tasks.index.core</module>
     <module>org.eclipse.mylyn.tasks.index.tests</module>

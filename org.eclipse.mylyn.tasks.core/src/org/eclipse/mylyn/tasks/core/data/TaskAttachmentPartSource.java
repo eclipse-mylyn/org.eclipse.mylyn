@@ -16,10 +16,6 @@ import java.io.InputStream;
 
 import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 
 /**
  * @since 3.1
@@ -40,8 +36,9 @@ public class TaskAttachmentPartSource implements PartSource {
 		try {
 			return attachment.createInputStream(null);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error attaching file", e)); //$NON-NLS-1$
-			throw new IOException("Failed to create source stream"); //$NON-NLS-1$
+			IOException exception = new IOException("Failed to create source stream"); //$NON-NLS-1$
+			exception.initCause(e);
+			throw exception;
 		}
 	}
 
