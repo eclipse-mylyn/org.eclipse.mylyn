@@ -7,7 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net,
  org.eclipse.equinox.security,
- org.junit4;bundle-version="4.5.0",
+ org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.repositories.core,
  org.eclipse.mylyn.commons.repositories.ui,
@@ -16,5 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.navigator
 Export-Package: org.eclipse.mylyn.commons.repositories.tests.core;x-internal:=true,
- org.eclipse.mylyn.commons.repositories.tests.support
+ org.eclipse.mylyn.commons.repositories.tests.support;x-internal:=true,
+ org.eclipse.mylyn.commons.repositories.tests.ui;x-internal:=true
 Bundle-Vendor: Eclipse Mylyn
