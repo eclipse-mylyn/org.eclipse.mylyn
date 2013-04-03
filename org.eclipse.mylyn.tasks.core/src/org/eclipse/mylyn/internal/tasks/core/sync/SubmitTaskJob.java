@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -99,7 +98,7 @@ public class SubmitTaskJob extends SubmitJob {
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 				monitor.subTask(Messages.SubmitTaskJob_Sending_data);
 				response = taskDataHandler.postTaskData(taskRepository, taskData, oldAttributes,
-						Policy.subMonitorFor(monitor, 100));
+						subMonitorFor(monitor, 100));
 				if (response == null || response.getTaskId() == null) {
 					throw new CoreException(new RepositoryStatus(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL,
@@ -110,8 +109,7 @@ public class SubmitTaskJob extends SubmitJob {
 				// update task in task list
 				String taskId = response.getTaskId();
 				monitor.subTask(Messages.SubmitTaskJob_Receiving_data);
-				TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId,
-						Policy.subMonitorFor(monitor, 100));
+				TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId, subMonitorFor(monitor, 100));
 				task = createTask(monitor, updatedTaskData);
 				taskDataManager.putSubmittedTaskData(task, updatedTaskData, monitor);
 				fireTaskSynchronized(monitor);

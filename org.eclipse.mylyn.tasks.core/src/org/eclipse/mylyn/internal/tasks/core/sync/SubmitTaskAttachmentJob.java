@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
@@ -93,11 +92,10 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 					2 * (1 + getSubmitJobListeners().length) * 100);
 			monitor.subTask(Messages.SubmitTaskAttachmentJob_Sending_data);
 			attachmentHandler.postContent(taskRepository, task, source, comment, attachmentAttribute,
-					Policy.subMonitorFor(monitor, 100));
+					subMonitorFor(monitor, 100));
 			fireTaskSubmitted(monitor);
 			monitor.subTask(Messages.SubmitTaskAttachmentJob_Updating_task);
-			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(),
-					Policy.subMonitorFor(monitor, 100));
+			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(), subMonitorFor(monitor, 100));
 			taskDataManager.putUpdatedTaskData(task, taskData, true);
 			fireTaskSynchronized(monitor);
 		} catch (CoreException e) {
