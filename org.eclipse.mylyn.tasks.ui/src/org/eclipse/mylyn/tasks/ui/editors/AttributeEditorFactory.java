@@ -142,6 +142,8 @@ public class AttributeEditorFactory {
 			return new DoubleAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_INTEGER.equals(type)) {
 			return new DoubleAttributeEditor(model, taskAttribute);
+		} else if (TaskAttribute.TYPE_LONG.equals(type)) {
+			return new DoubleAttributeEditor(model, taskAttribute);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\""); //$NON-NLS-1$ //$NON-NLS-2$
