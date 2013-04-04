@@ -124,14 +124,4 @@ public abstract class SubmitJob extends TaskJob {
 	 */
 	public abstract RepositoryResponse getResponse();
 
-	/**
-	 * @since 3.9
-	 */
-	protected IProgressMonitor subMonitorFor(IProgressMonitor monitor, int ticks) {
-		if (!isUser()) {
-			return Policy.backgroundMonitorFor(monitor);
-		}
-		return Policy.subMonitorFor(monitor, ticks);
-	}
-
 }

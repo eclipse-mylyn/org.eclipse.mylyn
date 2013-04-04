@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
@@ -41,11 +40,10 @@ public class UpdateRepositoryConfigurationJob extends TaskJob {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		monitor = SubMonitor.convert(monitor);
-		monitor.beginTask(Messages.UpdateRepositoryConfigurationJob_Receiving_configuration, IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.UpdateRepositoryConfigurationJob_Receiving_configuration, 100);
 		try {
 			try {
-				connector.updateRepositoryConfiguration(repository, monitor);
+				connector.updateRepositoryConfiguration(repository, subMonitorFor(monitor, 100));
 			} catch (CoreException e) {
 				error = e.getStatus();
 			}

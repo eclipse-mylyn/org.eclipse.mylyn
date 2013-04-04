@@ -52,7 +52,8 @@ public class GetTaskHistoryJob extends TaskJob {
 			monitor.setCanceled(false);
 			monitor.attach(jobMonitor);
 			try {
-				history = connector.getTaskHistory(repository, task, monitor);
+				monitor.beginTask(Messages.GetTaskHistoryJob_Retrieving_Task_History, 100);
+				history = connector.getTaskHistory(repository, task, subMonitorFor(monitor, 100));
 			} catch (CoreException e) {
 				errorStatus = e.getStatus();
 			} catch (OperationCanceledException e) {

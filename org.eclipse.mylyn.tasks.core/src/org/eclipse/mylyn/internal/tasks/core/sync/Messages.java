@@ -25,7 +25,11 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String DeleteTasksJob_Deleting_tasks;
+
 	public static String GetTaskHistoryJob_Retrieving_History;
+
+	public static String GetTaskHistoryJob_Retrieving_Task_History;
 
 	public static String SubmitTaskAttachmentJob_Sending_data;
 

@@ -54,33 +54,41 @@ public class DeleteTasksJob extends TaskJob {
 	protected IStatus run(IProgressMonitor monitor) {
 		status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.OK,
 				"Problems occurred while deleting repository tasks", null); //$NON-NLS-1$
-		for (ITask task : tasksToDelete) {
-			// delete the task on the server using the repository connector
-			AbstractRepositoryConnector repositoryConnector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
-			TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
-			if (repositoryConnector.canDeleteTask(repository, task)) {
-				try {
-					repositoryConnector.deleteTask(repository, task, monitor);
-				} catch (OperationCanceledException e) {
-					return Status.CANCEL_STATUS;
-				} catch (Exception e) {
-					String taskId = task.getTaskKey();
-					if (taskId == null) {
-						taskId = task.getTaskId();
+		try {
+			monitor.beginTask(Messages.DeleteTasksJob_Deleting_tasks, tasksToDelete.size() * 100);
+			for (ITask task : tasksToDelete) {
+				// delete the task on the server using the repository connector
+				AbstractRepositoryConnector repositoryConnector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
+				TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+						task.getRepositoryUrl());
+				if (repositoryConnector.canDeleteTask(repository, task)) {
+					try {
+						repositoryConnector.deleteTask(repository, task, subMonitorFor(monitor, 100));
+					} catch (OperationCanceledException e) {
+						return Status.CANCEL_STATUS;
+					} catch (Exception e) {
+						String taskId = task.getTaskKey();
+						if (taskId == null) {
+							taskId = task.getTaskId();
+						}
+						status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+								"Problems occurred while deleting {0} from {1}.", taskId, task.getRepositoryUrl()), e)); //$NON-NLS-1$
+					} catch (LinkageError e) {
+						String taskId = task.getTaskKey();
+						if (taskId == null) {
+							taskId = task.getTaskId();
+						}
+						status.add(new Status(
+								IStatus.ERROR,
+								ITasksCoreConstants.ID_PLUGIN,
+								NLS.bind(
+										"Internal Error occurred while deleting {0} from {1}.", taskId, task.getRepositoryUrl()), e)); //$NON-NLS-1$
 					}
-					status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-							"Problems occurred while deleting {0} from {1}.", taskId, task.getRepositoryUrl()), e)); //$NON-NLS-1$
-				} catch (LinkageError e) {
-					String taskId = task.getTaskKey();
-					if (taskId == null) {
-						taskId = task.getTaskId();
-					}
-					status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-							"Internal Error occurred while deleting {0} from {1}.", taskId, task.getRepositoryUrl()), e)); //$NON-NLS-1$
-				}
 
+				}
 			}
+		} finally {
+			monitor.done();
 		}
 		return Status.OK_STATUS;
 	}

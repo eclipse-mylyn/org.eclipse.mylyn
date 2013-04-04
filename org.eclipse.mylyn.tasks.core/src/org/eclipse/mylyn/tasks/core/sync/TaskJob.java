@@ -11,10 +11,12 @@
 
 package org.eclipse.mylyn.tasks.core.sync;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
+import org.eclipse.mylyn.commons.net.Policy;
 
 /**
  * @author Steffen Pingel
@@ -47,4 +49,15 @@ public abstract class TaskJob extends Job {
 	public IDelegatingProgressMonitor getMonitor() {
 		return monitor;
 	}
+
+	/**
+	 * @since 3.9
+	 */
+	protected IProgressMonitor subMonitorFor(IProgressMonitor monitor, int ticks) {
+		if (!isUser()) {
+			return Policy.backgroundMonitorFor(monitor);
+		}
+		return Policy.subMonitorFor(monitor, ticks);
+	}
+
 }
