@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.tasks.ui;
+package org.eclipse.mylyn.internal.wikitext.context.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ class ActiveFoldingListener extends AbstractContextListener {
 
 	private org.eclipse.jface.util.IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED.equals(event.getProperty())) {
+			if (WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED.equals(event.getProperty())) {
 				Object newValue = event.getNewValue();
 				foldingEnabled = Boolean.TRUE.toString().equals(newValue.toString());
 				updateFolding(false);
@@ -60,9 +60,9 @@ class ActiveFoldingListener extends AbstractContextListener {
 		this.foldingStructure = foldingStructure;
 		bridge = ContextCore.getStructureBridge(WikiTextContextStructureBridge.CONTENT_TYPE);
 		ContextCore.getContextManager().addListener(this);
-		preferences = WikiTextTasksUiPlugin.getDefault().getPreferenceStore();
+		preferences = WikiTextContextUiPlugin.getDefault().getPreferenceStore();
 		preferences.addPropertyChangeListener(preferenceListener);
-		foldingEnabled = preferences.getBoolean(WikiTextTasksUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
+		foldingEnabled = preferences.getBoolean(WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED);
 		updateFolding(false);
 	}
 
@@ -129,6 +129,8 @@ class ActiveFoldingListener extends AbstractContextListener {
 			if (foldingStructure.isFoldingEnabled()) {
 				updateFolding(true);
 			}
+			break;
+		default:
 			break;
 		}
 	}

@@ -91,6 +91,7 @@
     <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
     <module>org.eclipse.mylyn.wikitext.tasks.ui</module>
+    <module>org.eclipse.mylyn.wikitext.context.ui</module>
     <module>org.eclipse.mylyn.wikitext.textile.core</module>
     <module>org.eclipse.mylyn.wikitext.textile.ui</module>
     <module>org.eclipse.mylyn.wikitext.tracwiki.core</module>
