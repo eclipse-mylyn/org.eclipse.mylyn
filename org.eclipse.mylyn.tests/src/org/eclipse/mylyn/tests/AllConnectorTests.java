@@ -14,14 +14,11 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
-import org.eclipse.mylyn.gerrit.tests.AllGerritTests;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.mylyn.trac.tests.AllTracTests;
 
 /**
  * @author Shawn Minto
@@ -40,10 +37,10 @@ public class AllConnectorTests {
 	}
 
 	static void addTests(TestSuite suite, TestConfiguration configuration) {
-		suite.addTest(AllBugzillaTests.suite(configuration));
-		suite.addTest(AllTracTests.suite(configuration));
+//		suite.addTest(AllBugzillaTests.suite(configuration));
+//		suite.addTest(AllTracTests.suite(configuration));
 		suite.addTest(AllHudsonTests.suite(configuration));
-		suite.addTest(AllGerritTests.suite(configuration));
+//		suite.addTest(AllGerritTests.suite(configuration));
 	}
 
 }
