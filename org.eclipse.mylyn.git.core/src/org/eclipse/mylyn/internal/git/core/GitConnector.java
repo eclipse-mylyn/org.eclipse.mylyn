@@ -8,6 +8,7 @@
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *     Alvaro Sanchez-Leon - Resolve IResource information in generated artifacts
+ *     Tasktop Technologies - Improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.git.core;
@@ -45,7 +46,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.mylyn.versions.core.Change;
 import org.eclipse.mylyn.versions.core.ChangeSet;
@@ -62,9 +62,8 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 /**
- * Git Connector implementation
- * 
- * @author mattk
+ * @author Kilian Matt
+ * @author Steffen Pingel
  */
 public class GitConnector extends ScmConnector {
 
@@ -77,12 +76,24 @@ public class GitConnector extends ScmConnector {
 
 	@Override
 	public ScmArtifact getArtifact(IResource resource) throws CoreException {
+		if (resource == null) {
+			return null;
+		}
+
+		Repository repository;
+		RepositoryMapping m = RepositoryMapping.getMapping(resource);
+		try {
+			repository = getRepositoryCache().lookupRepository(m.getGitDirAbsolutePath().toFile());
+		} catch (IOException e) {
+			// failed to resolve id
+			return null;
+		}
+
 		//resolve revision associated to head
-		FileRepository fileRepo = getFileRepository(resource);
-		String resRepoRelPath = resolveRepoRelativePath(fileRepo, resource);
+		String resRepoRelPath = resolveRepoRelativePath(repository, resource);
 		String revision = null;
 		try {
-			revision = resolveObject(fileRepo, resRepoRelPath);
+			revision = resolveObject(repository, resRepoRelPath);
 		} catch (Exception e) {
 			//Not able to resolve revision
 		}
@@ -312,47 +323,22 @@ public class GitConnector extends ScmConnector {
 		return org.eclipse.egit.core.Activator.getDefault().getRepositoryCache();
 	}
 
-	private FileRepository getFileRepository(IResource resource) {
-		if (resource == null) {
-			return null;
-		}
-		//Obtain repository path
-		RepositoryMapping m = RepositoryMapping.getMapping(resource);
-		try {
-			return new FileRepository(m.getGitDirAbsolutePath().toFile());
-		} catch (IOException e) {
-			//Can not resolve id
-		}
-
-		return null;
-	}
-
-	private String resolveRepoRelativePath(FileRepository repo, IResource resource) {
+	private String resolveRepoRelativePath(Repository repo, IResource resource) {
 		if (repo == null || resource == null) {
 			return null;
 		}
-		//Obtain repository path
-		IProject project = resource.getProject();
-		RepositoryMapping m = RepositoryMapping.getMapping(resource);
 
-		try {
-			repo = new FileRepository(m.getGitDirAbsolutePath().toFile());
-			File workTree = repo.getWorkTree();
-			IPath workTreePath = Path.fromOSString(workTree.getAbsolutePath());
-			if (workTreePath.isPrefixOf(project.getLocation())) {
-				IPath makeRelativeTo = resource.getLocation().makeRelativeTo(workTreePath);
-				String repoRelativePath = makeRelativeTo.toPortableString();
-				return repoRelativePath;
-			}
-		} catch (IOException e) {
-			//Can not resolve id
+		File workTree = repo.getWorkTree();
+		IPath workTreePath = Path.fromOSString(workTree.getAbsolutePath());
+		if (workTreePath.isPrefixOf(resource.getProject().getLocation())) {
+			IPath makeRelativeTo = resource.getLocation().makeRelativeTo(workTreePath);
+			String repoRelativePath = makeRelativeTo.toPortableString();
+			return repoRelativePath;
 		}
-
 		return null;
 	}
 
-	private String resolveObject(FileRepository repo, String repoRelativePath) throws AmbiguousObjectException,
-			IOException {
+	private String resolveObject(Repository repo, String repoRelativePath) throws AmbiguousObjectException, IOException {
 		//Validate
 		if (repo == null || repoRelativePath == null) {
 			return null;
