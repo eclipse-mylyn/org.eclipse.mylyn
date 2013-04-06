@@ -128,6 +128,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 						} else if (base.getPath() != null && target.getPath() == null) {
 							ImageDescriptor overlay = ReviewsImages.OVERLAY_REMOVED;
 							image = CommonImages.getImageWithOverlay(baseImage, overlay, false, false);
+						} else if (base.getPath() != null && target.getPath() != null) {
+							if (!base.getPath().equals(target.getPath())) {
+								ImageDescriptor overlay = ReviewsImages.OVERLAY_RENAMED;
+								image = CommonImages.getImageWithOverlay(baseImage, overlay, false, false);
+							}
 						}
 					}
 				}
@@ -250,7 +255,17 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IFileItem) {
 				IFileItem fileItem = (IFileItem) element;
-				return fileItem.getTarget().getPath() + " Revision: " + fileItem.getTarget().getDescription();
+				IFileVersion base = fileItem.getBase();
+				IFileVersion target = fileItem.getTarget();
+				if (target.getPath() != null && base.getPath() == null) {
+					return target.getPath() + " Revision: " + target.getDescription();
+				} else if (target.getPath() == null && base.getPath() != null) {
+					return base.getPath() + " Revision: " + target.getDescription();
+				} else if (!target.getPath().equals(base.getPath())) {
+					return target.getPath() + "\n renamed from: " + base.getPath() + " " + target.getDescription();
+				} else {
+					return target.getPath() + " Revision: " + target.getDescription();
+				}
 			}
 			if (element instanceof IUser) {
 				IUser user = (IUser) element;

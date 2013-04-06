@@ -33,6 +33,8 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor OVERLAY_REMOVED = create("ovr/removed.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor OVERLAY_RENAMED = create("ovr/renamed.gif"); //$NON-NLS-1$
+
 	public static final ImageDescriptor REFRESH = create("elcl16/refresh.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FLAT_LAYOUT = create("elcl16/flatLayout.gif"); //$NON-NLS-1$

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -27,6 +28,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -59,8 +61,6 @@ import org.eclipse.ui.forms.widgets.Section;
 public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSet, List<IFileItem>> {
 
 	private static final int MAXIMUM_ITEMS_SHOWN = 30;
-
-	protected ReviewsLabelProvider labelProvider;
 
 	private final ReviewSetSection parentSection;
 
@@ -236,8 +236,17 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 			public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
-		labelProvider = new ReviewsLabelProvider.Simple();
-		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));
+		ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
+
+		final DelegatingStyledCellLabelProvider styledLabelProvider = new DelegatingStyledCellLabelProvider(
+				new ReviewsLabelProvider.Simple()) {
+			@Override
+			public String getToolTipText(Object element) {
+				//For some reason tooltips are not delegated..
+				return ReviewsLabelProvider.ITEMS_COLUMN.getToolTipText(element);
+			};
+		};
+		viewer.setLabelProvider(styledLabelProvider);
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
