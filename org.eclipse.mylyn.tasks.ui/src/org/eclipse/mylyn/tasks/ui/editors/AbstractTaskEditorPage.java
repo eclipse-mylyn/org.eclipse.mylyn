@@ -1213,48 +1213,49 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	private void handleSubmitError(SubmitJob job) {
 		if (form != null && !form.isDisposed()) {
 			final IStatus status = job.getStatus();
+			String message = null;
 			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 				TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Comment_required, status);
 				AbstractTaskEditorPart newCommentPart = getPart(ID_PART_NEW_COMMENT);
 				if (newCommentPart != null) {
 					newCommentPart.setFocus();
 				}
+				return;
 			} else if (status.getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 				if (TasksUiUtil.openEditRepositoryWizard(getTaskRepository()) == Window.OK) {
 					submitEnabled = true;
 					doSubmit();
+					return;
 				} else {
-					String message;
-					if (status.getMessage().length() > 0) {
-						message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage();
-					} else {
-						message = Messages.AbstractTaskEditorPage_Submit_failed;
-					}
-					message = message.replaceAll("\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
-					getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Submit_failed, status);
-						}
-					});
+					message = getMessageFromStatus(status);
 				}
+			} else if (status.getCode() == RepositoryStatus.ERROR_IO) {
+				message = ERROR_NOCONNECTIVITY;
 			} else {
-				String message;
-				if (status.getCode() == RepositoryStatus.ERROR_IO) {
-					message = ERROR_NOCONNECTIVITY;
-				} else if (status.getMessage().length() > 0) {
-					message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage();
-				} else {
-					message = Messages.AbstractTaskEditorPage_Submit_failed;
-				}
-				getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Submit_failed, status);
-					}
-				});
+				message = getMessageFromStatus(status);
 			}
+			getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Submit_failed, status);
+				}
+			});
 		}
+	}
+
+	private String getMessageFromStatus(final IStatus status) {
+		String message;
+		if (status.getMessage().length() > 0) {
+			if (status.getMessage().length() < 256) {
+				message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage();
+			} else {
+				message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage().substring(0, 256)
+						+ "..."; //$NON-NLS-1$
+			}
+		} else {
+			message = Messages.AbstractTaskEditorPage_Submit_failed;
+		}
+		return message.replaceAll("\n", " ").replaceAll("\r", " "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	@Override

@@ -558,6 +558,9 @@ public class TasksUiInternal {
 			if (message == null || message.trim().length() == 0) {
 				message = Messages.TasksUiInternal_An_unknown_error_occurred;
 			}
+			if (message.length() > 256) {
+				message = message.substring(0, 256) + "..."; //$NON-NLS-1$
+			}
 			if (showLinkToErrorLog) {
 				message += "\n\n" + Messages.TasksUiInternal_See_error_log_for_details; //$NON-NLS-1$
 			}
