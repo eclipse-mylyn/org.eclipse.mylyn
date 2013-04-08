@@ -25,6 +25,8 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String TracAttachmentHandler_Downloading_attachment;
+
 	public static String TracAttachmentHandler_Uploading_attachment;
 
 	public static String TracAttribute_Assigned_to;

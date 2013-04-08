@@ -51,7 +51,9 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 							+ repository.getRepositoryUrl() + " failed, missing attachment filename.")); //$NON-NLS-1$
 		}
 
+		monitor = Policy.monitorFor(monitor);
 		try {
+			monitor.beginTask(Messages.TracAttachmentHandler_Downloading_attachment, IProgressMonitor.UNKNOWN);
 			ITracClient client = connector.getClientManager().getTracClient(repository);
 			int id = Integer.parseInt(task.getTaskId());
 			return client.getAttachmentData(id, filename, monitor);
@@ -59,6 +61,8 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 			throw e;
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		} finally {
+			monitor.done();
 		}
 	}
 
