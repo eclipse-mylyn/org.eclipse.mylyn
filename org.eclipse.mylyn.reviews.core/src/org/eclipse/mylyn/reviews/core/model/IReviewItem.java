@@ -78,8 +78,7 @@ public interface IReviewItem extends ITopicContainer {
 	void setCommittedBy(IUser value);
 
 	/**
-	 * Returns the value of the '<em><b>Review</b></em>' reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReview#getItems <em>Items</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Review</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description
 	 * here...
@@ -88,7 +87,6 @@ public interface IReviewItem extends ITopicContainer {
 	 * 
 	 * @return the value of the '<em>Review</em>' reference.
 	 * @see #setReview(IReview)
-	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getItems
 	 * @generated
 	 */
 	IReview getReview();

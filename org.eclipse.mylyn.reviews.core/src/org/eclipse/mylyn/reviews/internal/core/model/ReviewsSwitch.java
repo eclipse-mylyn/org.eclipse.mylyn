@@ -12,6 +12,7 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -90,15 +91,26 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ReviewsPackage.CHANGE: {
+			IChange change = (IChange) theEObject;
+			T result = caseChange(change);
+			if (result == null)
+				result = caseDated(change);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case ReviewsPackage.REVIEW: {
 			IReview review = (IReview) theEObject;
 			T result = caseReview(review);
 			if (result == null)
 				result = caseTopicContainer(review);
 			if (result == null)
-				result = caseDated(review);
+				result = caseChange(review);
 			if (result == null)
 				result = caseReviewComponent(review);
+			if (result == null)
+				result = caseDated(review);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -143,15 +155,6 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case ReviewsPackage.TASK_REFERENCE: {
-			ITaskReference taskReference = (ITaskReference) theEObject;
-			T result = caseTaskReference(taskReference);
-			if (result == null)
-				result = caseReviewComponent(taskReference);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
 		case ReviewsPackage.REVIEW_STATE: {
 			IReviewState reviewState = (IReviewState) theEObject;
 			T result = caseReviewState(reviewState);
@@ -166,6 +169,17 @@ public class ReviewsSwitch<T> {
 			T result = caseReviewGroup(reviewGroup);
 			if (result == null)
 				result = caseReviewComponent(reviewGroup);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.REPOSITORY: {
+			IRepository repository = (IRepository) theEObject;
+			T result = caseRepository(repository);
+			if (result == null)
+				result = caseReviewGroup(repository);
+			if (result == null)
+				result = caseReviewComponent(repository);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -279,6 +293,73 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ReviewsPackage.APPROVAL_TYPE: {
+			IApprovalType approvalType = (IApprovalType) theEObject;
+			T result = caseApprovalType(approvalType);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.USER_APPROVALS_MAP: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<IUser, IReviewerEntry> userApprovalsMap = (Map.Entry<IUser, IReviewerEntry>) theEObject;
+			T result = caseUserApprovalsMap(userApprovalsMap);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.REVIEWER_ENTRY: {
+			IReviewerEntry reviewerEntry = (IReviewerEntry) theEObject;
+			T result = caseReviewerEntry(reviewerEntry);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.APPROVAL_VALUE_MAP: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<IApprovalType, Integer> approvalValueMap = (Map.Entry<IApprovalType, Integer>) theEObject;
+			T result = caseApprovalValueMap(approvalValueMap);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.REQUIREMENT_ENTRY: {
+			IRequirementEntry requirementEntry = (IRequirementEntry) theEObject;
+			T result = caseRequirementEntry(requirementEntry);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<IApprovalType, IRequirementEntry> reviewRequirementsMap = (Map.Entry<IApprovalType, IRequirementEntry>) theEObject;
+			T result = caseReviewRequirementsMap(reviewRequirementsMap);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.REQUIREMENT_REVIEW_STATE: {
+			IRequirementReviewState requirementReviewState = (IRequirementReviewState) theEObject;
+			T result = caseRequirementReviewState(requirementReviewState);
+			if (result == null)
+				result = caseReviewState(requirementReviewState);
+			if (result == null)
+				result = caseReviewComponent(requirementReviewState);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ReviewsPackage.SIMPLE_REVIEW_STATE: {
+			ISimpleReviewState simpleReviewState = (ISimpleReviewState) theEObject;
+			T result = caseSimpleReviewState(simpleReviewState);
+			if (result == null)
+				result = caseReviewState(simpleReviewState);
+			if (result == null)
+				result = caseReviewComponent(simpleReviewState);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -370,21 +451,6 @@ public class ReviewsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Task Reference</em>'. <!-- begin-user-doc
-	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Task Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTaskReference(ITaskReference object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Review State</em>'. <!-- begin-user-doc -->
 	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
@@ -409,6 +475,20 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseReviewGroup(IReviewGroup object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Repository</em>'. <!-- begin-user-doc -->
+	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Repository</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRepository(IRepository object) {
 		return null;
 	}
 
@@ -566,6 +646,139 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseDated(IDated object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reviewer Entry</em>'. <!-- begin-user-doc
+	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reviewer Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReviewerEntry(IReviewerEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Approval Type</em>'. <!-- begin-user-doc -->
+	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Approval Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseApprovalType(IApprovalType object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Approval Value Map</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Approval Value Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseApprovalValueMap(Map.Entry<IApprovalType, Integer> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Requirement Entry</em>'. <!-- begin-user-doc
+	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Requirement Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRequirementEntry(IRequirementEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Review Requirements Map</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Review Requirements Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReviewRequirementsMap(Map.Entry<IApprovalType, IRequirementEntry> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Requirement Review State</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Requirement Review State</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRequirementReviewState(IRequirementReviewState object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Simple Review State</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Simple Review State</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSimpleReviewState(ISimpleReviewState object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>User Approvals Map</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>User Approvals Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUserApprovalsMap(Map.Entry<IUser, IReviewerEntry> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Change</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseChange(IChange object) {
 		return null;
 	}
 

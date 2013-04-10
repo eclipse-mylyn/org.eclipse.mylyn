@@ -13,9 +13,9 @@ package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
 import java.util.List;
 
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
@@ -39,7 +39,7 @@ public abstract class ReviewsRemoteFactoryProvider extends AbstractRemoteFactory
 
 	public abstract AbstractRemoteEmfFactory<IReview, IReviewItemSet, ?, ?, String> getReviewItemSetFactory();
 
-	public abstract AbstractRemoteEmfFactory<IReviewItemSet, List<IReviewItem>, ?, ?, String> getReviewItemSetContentFactory();
+	public abstract AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, ?, ?, String> getReviewItemSetContentFactory();
 
 	public IReviewGroup getGroup() {
 		return reviews;

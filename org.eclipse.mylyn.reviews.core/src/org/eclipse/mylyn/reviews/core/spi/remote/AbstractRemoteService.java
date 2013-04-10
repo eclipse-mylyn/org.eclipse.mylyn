@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
-
 /**
  * Specifies a contract for a service that supports managed execution against remote (or other asynchronous or
  * unpredictable) APIs and/or resources.

@@ -11,136 +11,125 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Review</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getItems <em>Items</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewTask <em>Review Task</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getState <em>State</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getId <em>Id</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getOwner <em>Owner</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getSets <em>Sets</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getGroup <em>Group</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getParents <em>Parents</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getChildren <em>Children</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewerApprovals <em>Reviewer Approvals</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getRequirements <em>Requirements</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IReview extends ITopicContainer, IDated {
+public interface IReview extends ITopicContainer, IChange {
 	/**
-	 * Returns the value of the '<em><b>Items</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview <em>Review</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Sets</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet}. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}'. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Items</em>' reference list isn't clear, there really should be more of a description
-	 * here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Items</em>' reference list.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getReview
-	 * @generated
-	 */
-	List<IReviewItem> getItems();
-
-	/**
-	 * Returns the value of the '<em><b>Review Task</b></em>' containment reference. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Review Task</em>' containment reference isn't clear, there really should be more of a
+	 * If the meaning of the '<em>Sets</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Review Task</em>' containment reference.
-	 * @see #setReviewTask(ITaskReference)
+	 * @return the value of the '<em>Sets</em>' containment reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview
 	 * @generated
 	 */
-	ITaskReference getReviewTask();
+	List<IReviewItemSet> getSets();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewTask <em>Review Task</em>}'
-	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Review Task</em>' containment reference.
-	 * @see #getReviewTask()
-	 * @generated
-	 */
-	void setReviewTask(ITaskReference value);
-
-	/**
-	 * Returns the value of the '<em><b>State</b></em>' containment reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group</b></em>' container reference. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviews <em>Reviews</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>State</em>' containment reference isn't clear, there really should be more of a
+	 * If the meaning of the '<em>Group</em>' container reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>State</em>' containment reference.
-	 * @see #setState(IReviewState)
+	 * @return the value of the '<em>Group</em>' container reference.
+	 * @see #setGroup(IReviewGroup)
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviews
 	 * @generated
 	 */
-	IReviewState getState();
+	IReviewGroup getGroup();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getState <em>State</em>}' containment
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getGroup <em>Group</em>}' container
 	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>State</em>' containment reference.
-	 * @see #getState()
+	 *            the new value of the '<em>Group</em>' container reference.
+	 * @see #getGroup()
 	 * @generated
 	 */
-	void setState(IReviewState value);
+	void setGroup(IReviewGroup value);
 
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Parents</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IChange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
+	 * If the meaning of the '<em>Parents</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Id</em>' attribute.
-	 * @see #setId(String)
+	 * @return the value of the '<em>Parents</em>' containment reference list.
 	 * @generated
 	 */
-	String getId();
+	List<IChange> getParents();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getId <em>Id</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Id</em>' attribute.
-	 * @see #getId()
-	 * @generated
-	 */
-	void setId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Owner</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Children</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IChange}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Owner</em>' reference isn't clear, there really should be more of a description
+	 * If the meaning of the '<em>Children</em>' containment reference list isn't clear, there really should be more of
+	 * a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Children</em>' containment reference list.
+	 * @generated
+	 */
+	List<IChange> getChildren();
+
+	/**
+	 * Returns the value of the '<em><b>Reviewer Approvals</b></em>' map. The key is of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IUser}, and the value is of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry}, <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Reviewer Approvals</em>' map isn't clear, there really should be more of a description
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Owner</em>' reference.
-	 * @see #setOwner(IUser)
+	 * @return the value of the '<em>Reviewer Approvals</em>' map.
 	 * @generated
 	 */
-	IUser getOwner();
+	Map<IUser, IReviewerEntry> getReviewerApprovals();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getOwner <em>Owner</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the value of the '<em><b>Requirements</b></em>' map. The key is of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}, and the value is of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry}, <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Requirements</em>' map isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * 
-	 * @param value
-	 *            the new value of the '<em>Owner</em>' reference.
-	 * @see #getOwner()
+	 * @return the value of the '<em>Requirements</em>' map.
 	 * @generated
 	 */
-	void setOwner(IUser value);
+	Map<IApprovalType, IRequirementEntry> getRequirements();
 
 } // IReview

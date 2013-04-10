@@ -71,7 +71,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 
 	@Override
 	public void createModelControls() {
-		for (IReviewItem item : getReview().getItems()) {
+		for (IReviewItem item : getReview().getSets()) {
 			if (item instanceof IReviewItemSet) {
 				IReviewItemSet set = (IReviewItemSet) item;
 				ReviewSetContentSection subSection = createContentSubSection(set);

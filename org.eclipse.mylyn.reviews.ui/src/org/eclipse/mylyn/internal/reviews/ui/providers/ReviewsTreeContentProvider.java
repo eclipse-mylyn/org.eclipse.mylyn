@@ -45,7 +45,7 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 			List<Object> children = new ArrayList<Object>();
 			if (element instanceof IReview) {
 				children.add(new GlobalCommentsNode((IReview) element));
-				children.addAll(((IReview) element).getItems());
+				children.addAll(((IReview) element).getSets());
 				return children.toArray();
 			}
 			if (element instanceof IReviewItemSet) {
@@ -77,13 +77,13 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof IReview) {
-			return ((IReview) element).getItems().size() > 0;
+			return ((IReview) element).getSets().size() > 0;
 		}
 		if (element instanceof GlobalCommentsNode) {
 			return ((GlobalCommentsNode) element).getReview().getTopics().size() > 0;
 		}
 		return ((element instanceof ITopicContainer) && ((ITopicContainer) element).getAllComments().size() > 0)
-				|| (element instanceof IReview && ((IReview) element).getItems().size() > 0)
+				|| (element instanceof IReview && ((IReview) element).getSets().size() > 0)
 				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview()) || (element instanceof IReviewItemSet && ((IReviewItemSet) element).getItems()
 						.size() > 0)) || hasCollectionChildren(element);
 	}

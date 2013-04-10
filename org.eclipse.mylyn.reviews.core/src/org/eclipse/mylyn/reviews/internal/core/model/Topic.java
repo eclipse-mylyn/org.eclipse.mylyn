@@ -15,25 +15,17 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 
@@ -42,7 +34,6 @@ import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getTask <em>Task</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getLocations <em>Locations</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getComments <em>Comments</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Topic#getReview <em>Review</em>}</li>
@@ -55,16 +46,6 @@ import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
  */
 public class Topic extends Comment implements ITopic {
 	/**
-	 * The cached value of the '{@link #getTask() <em>Task</em>}' containment reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getTask()
-	 * @generated
-	 * @ordered
-	 */
-	protected ITaskReference task;
-
-	/**
 	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -75,8 +56,8 @@ public class Topic extends Comment implements ITopic {
 	protected EList<ILocation> locations;
 
 	/**
-	 * The cached value of the '{@link #getComments() <em>Comments</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getComments()
 	 * @generated
@@ -115,16 +96,6 @@ public class Topic extends Comment implements ITopic {
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getItem() <em>Item</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @see #getItem()
-	 * @generated
-	 * @ordered
-	 */
-	protected ITopicContainer item;
-
-	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -148,80 +119,6 @@ public class Topic extends Comment implements ITopic {
 	 * 
 	 * @generated
 	 */
-	public ITaskReference getTask() {
-		if (task != null && task.eIsProxy()) {
-			InternalEObject oldTask = (InternalEObject) task;
-			task = (ITaskReference) eResolveProxy(oldTask);
-			if (task != oldTask) {
-				InternalEObject newTask = (InternalEObject) task;
-				NotificationChain msgs = oldTask.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.TOPIC__TASK, null, null);
-				if (newTask.eInternalContainer() == null) {
-					msgs = newTask.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.TOPIC__TASK, null, msgs);
-				}
-				if (msgs != null)
-					msgs.dispatch();
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__TASK, oldTask, task));
-			}
-		}
-		return task;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ITaskReference basicGetTask() {
-		return task;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetTask(ITaskReference newTask, NotificationChain msgs) {
-		ITaskReference oldTask = task;
-		task = newTask;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__TASK,
-					oldTask, newTask);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setTask(ITaskReference newTask) {
-		if (newTask != task) {
-			NotificationChain msgs = null;
-			if (task != null)
-				msgs = ((InternalEObject) task).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.TOPIC__TASK, null, msgs);
-			if (newTask != null)
-				msgs = ((InternalEObject) newTask).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.TOPIC__TASK, null, msgs);
-			msgs = basicSetTask(newTask, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__TASK, newTask, newTask));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public List<ILocation> getLocations() {
 		if (locations == null) {
 			locations = new EObjectContainmentEList.Resolving<ILocation>(ILocation.class, this,
@@ -237,7 +134,7 @@ public class Topic extends Comment implements ITopic {
 	 */
 	public List<IComment> getComments() {
 		if (comments == null) {
-			comments = new EObjectWithInverseResolvingEList<IComment>(IComment.class, this,
+			comments = new EObjectContainmentWithInverseEList.Resolving<IComment>(IComment.class, this,
 					ReviewsPackage.TOPIC__COMMENTS, ReviewsPackage.COMMENT__PARENT_TOPIC);
 		}
 		return comments;
@@ -253,9 +150,10 @@ public class Topic extends Comment implements ITopic {
 			InternalEObject oldReview = (InternalEObject) review;
 			review = (IReview) eResolveProxy(oldReview);
 			if (review != oldReview) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__REVIEW, oldReview,
 							review));
+				}
 			}
 		}
 		return review;
@@ -278,8 +176,9 @@ public class Topic extends Comment implements ITopic {
 	public void setReview(IReview newReview) {
 		IReview oldReview = review;
 		review = newReview;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__REVIEW, oldReview, review));
+		}
 	}
 
 	/**
@@ -299,8 +198,9 @@ public class Topic extends Comment implements ITopic {
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__TITLE, oldTitle, title));
+		}
 	}
 
 	/**
@@ -309,15 +209,10 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public ITopicContainer getItem() {
-		if (item != null && item.eIsProxy()) {
-			InternalEObject oldItem = (InternalEObject) item;
-			item = (ITopicContainer) eResolveProxy(oldItem);
-			if (item != oldItem) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__ITEM, oldItem, item));
-			}
+		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM) {
+			return null;
 		}
-		return item;
+		return (ITopicContainer) eContainer();
 	}
 
 	/**
@@ -326,7 +221,10 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public ITopicContainer basicGetItem() {
-		return item;
+		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM) {
+			return null;
+		}
+		return (ITopicContainer) eInternalContainer();
 	}
 
 	/**
@@ -335,16 +233,7 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public NotificationChain basicSetItem(ITopicContainer newItem, NotificationChain msgs) {
-		ITopicContainer oldItem = item;
-		item = newItem;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM,
-					oldItem, newItem);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
+		msgs = eBasicSetContainer((InternalEObject) newItem, ReviewsPackage.TOPIC__ITEM, msgs);
 		return msgs;
 	}
 
@@ -354,19 +243,25 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public void setItem(ITopicContainer newItem) {
-		if (newItem != item) {
+		if (newItem != eInternalContainer() || (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM && newItem != null)) {
+			if (EcoreUtil.isAncestor(this, newItem)) {
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (item != null)
-				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
-						ITopicContainer.class, msgs);
-			if (newItem != null)
+			if (eInternalContainer() != null) {
+				msgs = eBasicRemoveFromContainer(msgs);
+			}
+			if (newItem != null) {
 				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
 						ITopicContainer.class, msgs);
+			}
 			msgs = basicSetItem(newItem, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM, newItem, newItem));
+		}
 	}
 
 	/**
@@ -395,9 +290,9 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__ITEM:
-			if (item != null)
-				msgs = ((InternalEObject) item).eInverseRemove(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
-						ITopicContainer.class, msgs);
+			if (eInternalContainer() != null) {
+				msgs = eBasicRemoveFromContainer(msgs);
+			}
 			return basicSetItem((ITopicContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -411,8 +306,6 @@ public class Topic extends Comment implements ITopic {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC__TASK:
-			return basicSetTask(null, msgs);
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__COMMENTS:
@@ -429,25 +322,38 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case ReviewsPackage.TOPIC__ITEM:
+			return eInternalContainer().eInverseRemove(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
+					ITopicContainer.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC__TASK:
-			if (resolve)
-				return getTask();
-			return basicGetTask();
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			return getLocations();
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return getComments();
 		case ReviewsPackage.TOPIC__REVIEW:
-			if (resolve)
+			if (resolve) {
 				return getReview();
+			}
 			return basicGetReview();
 		case ReviewsPackage.TOPIC__TITLE:
 			return getTitle();
 		case ReviewsPackage.TOPIC__ITEM:
-			if (resolve)
+			if (resolve) {
 				return getItem();
+			}
 			return basicGetItem();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -462,9 +368,6 @@ public class Topic extends Comment implements ITopic {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC__TASK:
-			setTask((ITaskReference) newValue);
-			return;
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			getLocations().clear();
 			getLocations().addAll((Collection<? extends ILocation>) newValue);
@@ -494,9 +397,6 @@ public class Topic extends Comment implements ITopic {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC__TASK:
-			setTask((ITaskReference) null);
-			return;
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			getLocations().clear();
 			return;
@@ -524,8 +424,6 @@ public class Topic extends Comment implements ITopic {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC__TASK:
-			return task != null;
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			return locations != null && !locations.isEmpty();
 		case ReviewsPackage.TOPIC__COMMENTS:
@@ -535,7 +433,7 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__TITLE:
 			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 		case ReviewsPackage.TOPIC__ITEM:
-			return item != null;
+			return basicGetItem() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -547,8 +445,9 @@ public class Topic extends Comment implements ITopic {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (title: "); //$NON-NLS-1$

@@ -57,20 +57,20 @@ public interface IReviewsFactory {
 	IUser createUser();
 
 	/**
-	 * Returns a new object of class '<em>Task Reference</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Task Reference</em>'.
-	 * @generated
-	 */
-	ITaskReference createTaskReference();
-
-	/**
 	 * Returns a new object of class '<em>Review Group</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Review Group</em>'.
 	 * @generated
 	 */
 	IReviewGroup createReviewGroup();
+
+	/**
+	 * Returns a new object of class '<em>Repository</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Repository</em>'.
+	 * @generated
+	 */
+	IRepository createRepository();
 
 	/**
 	 * Returns a new object of class '<em>Topic</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -127,5 +127,53 @@ public interface IReviewsFactory {
 	 * @generated
 	 */
 	IFileRevision createFileRevision();
+
+	/**
+	 * Returns a new object of class '<em>Reviewer Entry</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Reviewer Entry</em>'.
+	 * @generated
+	 */
+	IReviewerEntry createReviewerEntry();
+
+	/**
+	 * Returns a new object of class '<em>Requirement Entry</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Requirement Entry</em>'.
+	 * @generated
+	 */
+	IRequirementEntry createRequirementEntry();
+
+	/**
+	 * Returns a new object of class '<em>Requirement Review State</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Requirement Review State</em>'.
+	 * @generated
+	 */
+	IRequirementReviewState createRequirementReviewState();
+
+	/**
+	 * Returns a new object of class '<em>Simple Review State</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Simple Review State</em>'.
+	 * @generated
+	 */
+	ISimpleReviewState createSimpleReviewState();
+
+	/**
+	 * Returns a new object of class '<em>Approval Type</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Approval Type</em>'.
+	 * @generated
+	 */
+	IApprovalType createApprovalType();
+
+	/**
+	 * Returns a new object of class '<em>Change</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Change</em>'.
+	 * @generated
+	 */
+	IChange createChange();
 
 } //IReviewsFactory

@@ -55,8 +55,8 @@ public interface ITopicContainer extends IReviewComponent {
 	List<ITopic> getTopics();
 
 	/**
-	 * Returns the value of the '<em><b>Direct Topics</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic}. It is bidirectional and its opposite is '
+	 * Returns the value of the '<em><b>Direct Topics</b></em>' containment reference list. The list contents are of
+	 * type {@link org.eclipse.mylyn.reviews.core.model.ITopic}. It is bidirectional and its opposite is '
 	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic#getItem <em>Item</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Direct Topics</em>' reference list isn't clear, there really should be more of a
@@ -64,7 +64,7 @@ public interface ITopicContainer extends IReviewComponent {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Direct Topics</em>' reference list.
+	 * @return the value of the '<em>Direct Topics</em>' containment reference list.
 	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getItem
 	 * @generated
 	 */

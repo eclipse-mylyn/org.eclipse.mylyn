@@ -134,7 +134,6 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ReviewsPackage.Literals.TOPIC__TASK);
 			childrenFeatures.add(ReviewsPackage.Literals.TOPIC__LOCATIONS);
 		}
 		return childrenFeatures;
@@ -190,7 +189,6 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 		case ReviewsPackage.TOPIC__TITLE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
-		case ReviewsPackage.TOPIC__TASK:
 		case ReviewsPackage.TOPIC__LOCATIONS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
@@ -207,9 +205,6 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.TOPIC__TASK,
-				IReviewsFactory.INSTANCE.createTaskReference()));
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.TOPIC__LOCATIONS,
 				IReviewsFactory.INSTANCE.createLineLocation()));

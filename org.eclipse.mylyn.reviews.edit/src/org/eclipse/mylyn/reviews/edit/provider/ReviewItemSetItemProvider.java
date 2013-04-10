@@ -200,16 +200,7 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
-				IReviewsFactory.INSTANCE.createReviewItem()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
 				IReviewsFactory.INSTANCE.createFileItem()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
-				IReviewsFactory.INSTANCE.createReviewItemSet()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
-				IReviewsFactory.INSTANCE.createFileRevision()));
 	}
 
 }

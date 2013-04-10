@@ -58,9 +58,11 @@ public class ReviewItemItemProvider extends TopicContainerItemProvider implement
 			super.getPropertyDescriptors(object);
 
 			addAddedByPropertyDescriptor(object);
+			addCommittedByPropertyDescriptor(object);
 			addReviewPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addIdPropertyDescriptor(object);
+			addReferencePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -77,6 +79,21 @@ public class ReviewItemItemProvider extends TopicContainerItemProvider implement
 				getString("_UI_ReviewItem_addedBy_feature"), //$NON-NLS-1$
 				getString("_UI_PropertyDescriptor_description", "_UI_ReviewItem_addedBy_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				ReviewsPackage.Literals.REVIEW_ITEM__ADDED_BY, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Committed By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addCommittedByPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_ReviewItem_committedBy_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReviewItem_committedBy_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REVIEW_ITEM__COMMITTED_BY, true, false, true, null, null, null));
 	}
 
 	/**
@@ -124,6 +141,22 @@ public class ReviewItemItemProvider extends TopicContainerItemProvider implement
 	}
 
 	/**
+	 * This adds a property descriptor for the Reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addReferencePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_ReviewItem_reference_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReviewItem_reference_feature", "_UI_ReviewItem_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REVIEW_ITEM__REFERENCE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This returns ReviewItem.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -159,6 +192,7 @@ public class ReviewItemItemProvider extends TopicContainerItemProvider implement
 		switch (notification.getFeatureID(IReviewItem.class)) {
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 		case ReviewsPackage.REVIEW_ITEM__ID:
+		case ReviewsPackage.REVIEW_ITEM__REFERENCE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

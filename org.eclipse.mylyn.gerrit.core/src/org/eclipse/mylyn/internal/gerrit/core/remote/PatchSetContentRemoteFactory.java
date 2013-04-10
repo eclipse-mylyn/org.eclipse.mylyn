@@ -28,13 +28,11 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileRevision;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 import org.eclipse.osgi.util.NLS;
 
@@ -53,7 +51,7 @@ import com.google.gerrit.reviewdb.PatchLineComment;
  * @author Steffen Pingel
  */
 public class PatchSetContentRemoteFactory extends
-		AbstractRemoteEmfFactory<IReviewItemSet, List<IReviewItem>, PatchSetContent, PatchSetContent, String> {
+		AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> {
 
 	private final ReviewItemCache cache;
 
@@ -78,7 +76,7 @@ public class PatchSetContentRemoteFactory extends
 	}
 
 	@Override
-	public PatchSetContent getRemoteKey(IReviewItemSet parentObject, List<IReviewItem> object) {
+	public PatchSetContent getRemoteKey(IReviewItemSet parentObject, List<IFileItem> items) {
 		PatchSetDetail patchDetail = gerritRemoteFactoryProvider.getReviewItemSetFactory()
 				.getRemoteObject(parentObject);
 		return new PatchSetContent(null, patchDetail.getPatchSet());
@@ -119,8 +117,8 @@ public class PatchSetContentRemoteFactory extends
 	}
 
 	@Override
-	public List<IReviewItem> create(IReviewItemSet set, PatchSetContent content) {
-		List<IReviewItem> items = ReviewsFactory.eINSTANCE.createReviewItemSet().getItems();
+	public List<IFileItem> create(IReviewItemSet set, PatchSetContent content) {
+		List<IFileItem> items = IReviewsFactory.INSTANCE.createReviewItemSet().getItems();
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			String targetId = patch.getKey().toString();
 			String sourceFileName = (patch.getSourceFileName() != null)
@@ -187,7 +185,7 @@ public class PatchSetContentRemoteFactory extends
 	 * Patch sets results never change.
 	 */
 	@Override
-	public boolean update(IReviewItemSet set, List<IReviewItem> items, PatchSetContent content) {
+	public boolean update(IReviewItemSet set, List<IFileItem> items, PatchSetContent content) {
 		return false;
 	}
 }

@@ -13,7 +13,6 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -53,24 +52,14 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	protected IUser addedBy;
 
 	/**
-	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' containment reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getCommittedBy()
 	 * @generated
 	 * @ordered
 	 */
 	protected IUser committedBy;
-
-	/**
-	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getReview()
-	 * @generated
-	 * @ordered
-	 */
-	protected IReview review;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -245,16 +234,8 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @generated
 	 */
 	public IReview getReview() {
-		if (review != null && review.eIsProxy()) {
-			InternalEObject oldReview = (InternalEObject) review;
-			review = (IReview) eResolveProxy(oldReview);
-			if (review != oldReview) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__REVIEW,
-							oldReview, review));
-			}
-		}
-		return review;
+		IReview review = basicGetReview();
+		return review != null && review.eIsProxy() ? (IReview) eResolveProxy((InternalEObject) review) : review;
 	}
 
 	/**
@@ -263,26 +244,10 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @generated
 	 */
 	public IReview basicGetReview() {
-		return review;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetReview(IReview newReview, NotificationChain msgs) {
-		IReview oldReview = review;
-		review = newReview;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.REVIEW_ITEM__REVIEW, oldReview, newReview);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
+		// TODO: implement this method to return the 'Review' reference
+		// -> do not perform proxy resolution
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -291,20 +256,9 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @generated
 	 */
 	public void setReview(IReview newReview) {
-		if (newReview != review) {
-			NotificationChain msgs = null;
-			if (review != null)
-				msgs = ((InternalEObject) review).eInverseRemove(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
-						msgs);
-			if (newReview != null)
-				msgs = ((InternalEObject) newReview).eInverseAdd(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
-						msgs);
-			msgs = basicSetReview(newReview, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REVIEW, newReview,
-					newReview));
+		// TODO: implement this method to set the 'Review' reference
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -369,37 +323,6 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REFERENCE, oldReference,
 					reference));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			if (review != null)
-				msgs = ((InternalEObject) review).eInverseRemove(this, ReviewsPackage.REVIEW__ITEMS, IReview.class,
-						msgs);
-			return basicSetReview((IReview) otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			return basicSetReview(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -526,7 +449,7 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
 			return committedBy != null;
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			return review != null;
+			return basicGetReview() != null;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case ReviewsPackage.REVIEW_ITEM__ID:

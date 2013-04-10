@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,19 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IDated;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
@@ -83,14 +89,14 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected Date modificationDate = MODIFICATION_DATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getItems() <em>Items</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getItems()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<IReviewItem> items;
+	protected EList<IFileItem> items;
 
 	/**
 	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -148,10 +154,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__CREATION_DATE,
 					oldCreationDate, creationDate));
-		}
 	}
 
 	/**
@@ -171,10 +176,22 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public List<IFileItem> getItems() {
+		if (items == null) {
+			items = new EObjectContainmentWithInverseEList.Resolving<IFileItem>(IFileItem.class, this,
+					ReviewsPackage.REVIEW_ITEM_SET__ITEMS, ReviewsPackage.FILE_ITEM__SET);
 		}
+		return items;
 	}
 
 	/**
@@ -187,19 +204,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return getModificationDate();
 		}
 		return getCreationDate();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public List<IReviewItem> getItems() {
-		if (items == null) {
-			items = new EObjectResolvingEList<IReviewItem>(IReviewItem.class, this,
-					ReviewsPackage.REVIEW_ITEM_SET__ITEMS);
-		}
-		return items;
 	}
 
 	/**
@@ -233,10 +237,115 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setRevision(String newRevision) {
 		String oldRevision = revision;
 		revision = newRevision;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION,
 					oldRevision, revision));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IReview getParentReview() {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
+			return null;
+		return (IReview) eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IReview basicGetParentReview() {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
+			return null;
+		return (IReview) eInternalContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetParentReview(IReview newParentReview, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newParentReview, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW,
+				msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setParentReview(IReview newParentReview) {
+		if (newParentReview != eInternalContainer()
+				|| (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW && newParentReview != null)) {
+			if (EcoreUtil.isAncestor(this, newParentReview))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newParentReview != null)
+				msgs = ((InternalEObject) newParentReview).eInverseAdd(this, ReviewsPackage.REVIEW__SETS,
+						IReview.class, msgs);
+			msgs = basicSetParentReview(newParentReview, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW,
+					newParentReview, newParentReview));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getItems()).basicAdd(otherEnd, msgs);
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			return basicSetParentReview((IReview) otherEnd, msgs);
 		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
+			return ((InternalEList<?>) getItems()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			return basicSetParentReview(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			return eInternalContainer().eInverseRemove(this, ReviewsPackage.REVIEW__SETS, IReview.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -255,6 +364,10 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return getItems();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			return getRevision();
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			if (resolve)
+				return getParentReview();
+			return basicGetParentReview();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -276,10 +389,13 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return;
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			getItems().clear();
-			getItems().addAll((Collection<? extends IReviewItem>) newValue);
+			getItems().addAll((Collection<? extends IFileItem>) newValue);
 			return;
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			setRevision((String) newValue);
+			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			setParentReview((IReview) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -305,6 +421,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			setRevision(REVISION_EDEFAULT);
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			setParentReview((IReview) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -327,6 +446,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return items != null && !items.isEmpty();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
+			return basicGetParentReview() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -378,9 +499,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
@@ -391,6 +511,14 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		result.append(revision);
 		result.append(')');
 		return result.toString();
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	@Override
+	public IReview getReview() {
+		return getParentReview();
 	}
 
 } //ReviewItemSet

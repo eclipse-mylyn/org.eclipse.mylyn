@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -24,26 +26,28 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
-import org.eclipse.mylyn.reviews.core.model.ITaskReference;
+import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.ITaskReference} object. <!--
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry} object. <!--
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
-public class TaskReferenceItemProvider extends ReviewComponentItemProvider implements IEditingDomainItemProvider,
+public class RequirementEntryItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public TaskReferenceItemProvider(AdapterFactory adapterFactory) {
+	public RequirementEntryItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -57,52 +61,51 @@ public class TaskReferenceItemProvider extends ReviewComponentItemProvider imple
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTaskIdPropertyDescriptor(object);
-			addRepositoryURLPropertyDescriptor(object);
+			addStatusPropertyDescriptor(object);
+			addByPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Task Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Status feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addTaskIdPropertyDescriptor(Object object) {
+	protected void addStatusPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_TaskReference_taskId_feature"), //$NON-NLS-1$
+				getString("_UI_RequirementEntry_status_feature"), //$NON-NLS-1$
 				getString(
-						"_UI_PropertyDescriptor_description", "_UI_TaskReference_taskId_feature", "_UI_TaskReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TASK_REFERENCE__TASK_ID, true, false, false,
+						"_UI_PropertyDescriptor_description", "_UI_RequirementEntry_status_feature", "_UI_RequirementEntry_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REQUIREMENT_ENTRY__STATUS, true, false, false,
 				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Repository URL feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addRepositoryURLPropertyDescriptor(Object object) {
+	protected void addByPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_TaskReference_repositoryURL_feature"), //$NON-NLS-1$
+				getString("_UI_RequirementEntry_by_feature"), //$NON-NLS-1$
 				getString(
-						"_UI_PropertyDescriptor_description", "_UI_TaskReference_repositoryURL_feature", "_UI_TaskReference_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TASK_REFERENCE__REPOSITORY_URL, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+						"_UI_PropertyDescriptor_description", "_UI_RequirementEntry_by_feature", "_UI_RequirementEntry_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REQUIREMENT_ENTRY__BY, true, false, true, null, null, null));
 	}
 
 	/**
-	 * This returns TaskReference.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RequirementEntry.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/TaskReference")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RequirementEntry")); //$NON-NLS-1$
 	}
 
 	/**
@@ -112,8 +115,10 @@ public class TaskReferenceItemProvider extends ReviewComponentItemProvider imple
 	 */
 	@Override
 	public String getText(Object object) {
-		ITaskReference taskReference = (ITaskReference) object;
-		return getString("_UI_TaskReference_type") + " " + taskReference.isEnabled(); //$NON-NLS-1$ //$NON-NLS-2$
+		RequirementStatus labelValue = ((IRequirementEntry) object).getStatus();
+		String label = labelValue == null ? null : labelValue.toString();
+		return label == null || label.length() == 0 ? getString("_UI_RequirementEntry_type") : //$NON-NLS-1$
+				getString("_UI_RequirementEntry_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -127,9 +132,8 @@ public class TaskReferenceItemProvider extends ReviewComponentItemProvider imple
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(ITaskReference.class)) {
-		case ReviewsPackage.TASK_REFERENCE__TASK_ID:
-		case ReviewsPackage.TASK_REFERENCE__REPOSITORY_URL:
+		switch (notification.getFeatureID(IRequirementEntry.class)) {
+		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}
@@ -145,6 +149,16 @@ public class TaskReferenceItemProvider extends ReviewComponentItemProvider imple
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return ReviewsEditPlugin.INSTANCE;
 	}
 
 }

@@ -17,7 +17,6 @@ import java.util.List;
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getTask <em>Task</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getLocations <em>Locations</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ITopic#getReview <em>Review</em>}</li>
@@ -29,31 +28,6 @@ import java.util.List;
  * @generated
  */
 public interface ITopic extends IComment {
-	/**
-	 * Returns the value of the '<em><b>Task</b></em>' containment reference. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Task</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Task</em>' containment reference.
-	 * @see #setTask(ITaskReference)
-	 * @generated
-	 */
-	ITaskReference getTask();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getTask <em>Task</em>}' containment
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Task</em>' containment reference.
-	 * @see #getTask()
-	 * @generated
-	 */
-	void setTask(ITaskReference value);
-
 	/**
 	 * Returns the value of the '<em><b>Locations</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.ILocation}. <!-- begin-user-doc -->
@@ -69,7 +43,7 @@ public interface ITopic extends IComment {
 	List<ILocation> getLocations();
 
 	/**
-	 * Returns the value of the '<em><b>Comments</b></em>' reference list. The list contents are of type
+	 * Returns the value of the '<em><b>Comments</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. It is bidirectional and its opposite is '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}'. <!-- begin-user-doc
 	 * -->
@@ -79,7 +53,7 @@ public interface ITopic extends IComment {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Comments</em>' reference list.
+	 * @return the value of the '<em>Comments</em>' containment reference list.
 	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic
 	 * @generated
 	 */

@@ -169,15 +169,15 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 	void setDraft(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Parent Topic</b></em>' reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Parent Topic</b></em>' container reference. It is bidirectional and its opposite
+	 * is '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parent Topic</em>' reference isn't clear, there really should be more of a description
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Parent Topic</em>' reference.
+	 * @return the value of the '<em>Parent Topic</em>' container reference.
 	 * @see #setParentTopic(ITopic)
 	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getComments
 	 * @generated
@@ -186,10 +186,10 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}
-	 * ' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * ' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Parent Topic</em>' reference.
+	 *            the new value of the '<em>Parent Topic</em>' container reference.
 	 * @see #getParentTopic()
 	 * @generated
 	 */

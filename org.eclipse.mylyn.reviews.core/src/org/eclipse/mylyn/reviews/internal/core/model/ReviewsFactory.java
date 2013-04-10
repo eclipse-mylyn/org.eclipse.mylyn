@@ -10,7 +10,10 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.List;
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -67,6 +70,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+		case ReviewsPackage.CHANGE:
+			return createChange();
 		case ReviewsPackage.REVIEW:
 			return createReview();
 		case ReviewsPackage.COMMENT:
@@ -75,10 +80,10 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createReviewItem();
 		case ReviewsPackage.USER:
 			return createUser();
-		case ReviewsPackage.TASK_REFERENCE:
-			return createTaskReference();
 		case ReviewsPackage.REVIEW_GROUP:
 			return createReviewGroup();
+		case ReviewsPackage.REPOSITORY:
+			return createRepository();
 		case ReviewsPackage.TOPIC:
 			return createTopic();
 		case ReviewsPackage.REVIEW_COMPONENT:
@@ -93,8 +98,54 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createLineRange();
 		case ReviewsPackage.FILE_REVISION:
 			return createFileRevision();
+		case ReviewsPackage.APPROVAL_TYPE:
+			return createApprovalType();
+		case ReviewsPackage.USER_APPROVALS_MAP:
+			return (EObject) createUserApprovalsMap();
+		case ReviewsPackage.REVIEWER_ENTRY:
+			return createReviewerEntry();
+		case ReviewsPackage.APPROVAL_VALUE_MAP:
+			return (EObject) createApprovalValueMap();
+		case ReviewsPackage.REQUIREMENT_ENTRY:
+			return createRequirementEntry();
+		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP:
+			return (EObject) createReviewRequirementsMap();
+		case ReviewsPackage.REQUIREMENT_REVIEW_STATE:
+			return createRequirementReviewState();
+		case ReviewsPackage.SIMPLE_REVIEW_STATE:
+			return createSimpleReviewState();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+		case ReviewsPackage.REQUIREMENT_STATUS:
+			return createRequirementStatusFromString(eDataType, initialValue);
+		default:
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+		case ReviewsPackage.REQUIREMENT_STATUS:
+			return convertRequirementStatusToString(eDataType, instanceValue);
+		default:
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -143,9 +194,9 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public ITaskReference createTaskReference() {
-		TaskReference taskReference = new TaskReference();
-		return taskReference;
+	public IReviewGroup createReviewGroup() {
+		ReviewGroup reviewGroup = new ReviewGroup();
+		return reviewGroup;
 	}
 
 	/**
@@ -153,9 +204,9 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public IReviewGroup createReviewGroup() {
-		ReviewGroup reviewGroup = new ReviewGroup();
-		return reviewGroup;
+	public IRepository createRepository() {
+		Repository repository = new Repository();
+		return repository;
 	}
 
 	/**
@@ -226,6 +277,118 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public IFileRevision createFileRevision() {
 		FileRevision fileRevision = new FileRevision();
 		return fileRevision;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IReviewerEntry createReviewerEntry() {
+		ReviewerEntry reviewerEntry = new ReviewerEntry();
+		return reviewerEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IApprovalType createApprovalType() {
+		ApprovalType approvalType = new ApprovalType();
+		return approvalType;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Map.Entry<IApprovalType, Integer> createApprovalValueMap() {
+		ApprovalValueMap approvalValueMap = new ApprovalValueMap();
+		return approvalValueMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IRequirementEntry createRequirementEntry() {
+		RequirementEntry requirementEntry = new RequirementEntry();
+		return requirementEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Map.Entry<IApprovalType, IRequirementEntry> createReviewRequirementsMap() {
+		ReviewRequirementsMap reviewRequirementsMap = new ReviewRequirementsMap();
+		return reviewRequirementsMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IRequirementReviewState createRequirementReviewState() {
+		RequirementReviewState requirementReviewState = new RequirementReviewState();
+		return requirementReviewState;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ISimpleReviewState createSimpleReviewState() {
+		SimpleReviewState simpleReviewState = new SimpleReviewState();
+		return simpleReviewState;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RequirementStatus createRequirementStatusFromString(EDataType eDataType, String initialValue) {
+		RequirementStatus result = RequirementStatus.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertRequirementStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Map.Entry<IUser, IReviewerEntry> createUserApprovalsMap() {
+		UserApprovalsMap userApprovalsMap = new UserApprovalsMap();
+		return userApprovalsMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IChange createChange() {
+		Change change = new Change();
+		return change;
 	}
 
 	/**

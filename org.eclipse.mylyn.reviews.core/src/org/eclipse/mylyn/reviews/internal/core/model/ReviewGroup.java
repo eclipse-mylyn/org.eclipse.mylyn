@@ -15,20 +15,16 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
-import org.eclipse.mylyn.reviews.core.model.ITaskReference;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review Group</b></em>'. <!-- end-user-doc -->
@@ -36,7 +32,7 @@ import org.eclipse.mylyn.reviews.core.model.ITaskReference;
  * The following features are implemented:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviews <em>Reviews</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getReviewGroupTask <em>Review Group Task</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getUsers <em>Users</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewGroup#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
@@ -55,14 +51,14 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	protected EList<IReview> reviews;
 
 	/**
-	 * The cached value of the '{@link #getReviewGroupTask() <em>Review Group Task</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getUsers() <em>Users</em>}' containment reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
-	 * @see #getReviewGroupTask()
+	 * @see #getUsers()
 	 * @generated
 	 * @ordered
 	 */
-	protected ITaskReference reviewGroupTask;
+	protected EList<IUser> users;
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -110,8 +106,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 */
 	public List<IReview> getReviews() {
 		if (reviews == null) {
-			reviews = new EObjectContainmentEList.Resolving<IReview>(IReview.class, this,
-					ReviewsPackage.REVIEW_GROUP__REVIEWS);
+			reviews = new EObjectContainmentWithInverseEList.Resolving<IReview>(IReview.class, this,
+					ReviewsPackage.REVIEW_GROUP__REVIEWS, ReviewsPackage.REVIEW__GROUP);
 		}
 		return reviews;
 	}
@@ -121,76 +117,11 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 * 
 	 * @generated
 	 */
-	public ITaskReference getReviewGroupTask() {
-		if (reviewGroupTask != null && reviewGroupTask.eIsProxy()) {
-			InternalEObject oldReviewGroupTask = (InternalEObject) reviewGroupTask;
-			reviewGroupTask = (ITaskReference) eResolveProxy(oldReviewGroupTask);
-			if (reviewGroupTask != oldReviewGroupTask) {
-				InternalEObject newReviewGroupTask = (InternalEObject) reviewGroupTask;
-				NotificationChain msgs = oldReviewGroupTask.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, null);
-				if (newReviewGroupTask.eInternalContainer() == null) {
-					msgs = newReviewGroupTask.eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-							- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, msgs);
-				}
-				if (msgs != null)
-					msgs.dispatch();
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, oldReviewGroupTask, reviewGroupTask));
-			}
+	public List<IUser> getUsers() {
+		if (users == null) {
+			users = new EObjectContainmentEList.Resolving<IUser>(IUser.class, this, ReviewsPackage.REVIEW_GROUP__USERS);
 		}
-		return reviewGroupTask;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ITaskReference basicGetReviewGroupTask() {
-		return reviewGroupTask;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetReviewGroupTask(ITaskReference newReviewGroupTask, NotificationChain msgs) {
-		ITaskReference oldReviewGroupTask = reviewGroupTask;
-		reviewGroupTask = newReviewGroupTask;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, oldReviewGroupTask, newReviewGroupTask);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setReviewGroupTask(ITaskReference newReviewGroupTask) {
-		if (newReviewGroupTask != reviewGroupTask) {
-			NotificationChain msgs = null;
-			if (reviewGroupTask != null)
-				msgs = ((InternalEObject) reviewGroupTask).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, msgs);
-			if (newReviewGroupTask != null)
-				msgs = ((InternalEObject) newReviewGroupTask).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK, null, msgs);
-			msgs = basicSetReviewGroupTask(newReviewGroupTask, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK,
-					newReviewGroupTask, newReviewGroupTask));
+		return users;
 	}
 
 	/**
@@ -210,9 +141,25 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_GROUP__DESCRIPTION,
 					oldDescription, description));
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getReviews()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -225,8 +172,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
 			return ((InternalEList<?>) getReviews()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			return basicSetReviewGroupTask(null, msgs);
+		case ReviewsPackage.REVIEW_GROUP__USERS:
+			return ((InternalEList<?>) getUsers()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -241,10 +188,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
 			return getReviews();
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			if (resolve)
-				return getReviewGroupTask();
-			return basicGetReviewGroupTask();
+		case ReviewsPackage.REVIEW_GROUP__USERS:
+			return getUsers();
 		case ReviewsPackage.REVIEW_GROUP__DESCRIPTION:
 			return getDescription();
 		}
@@ -264,8 +209,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 			getReviews().clear();
 			getReviews().addAll((Collection<? extends IReview>) newValue);
 			return;
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			setReviewGroupTask((ITaskReference) newValue);
+		case ReviewsPackage.REVIEW_GROUP__USERS:
+			getUsers().clear();
+			getUsers().addAll((Collection<? extends IUser>) newValue);
 			return;
 		case ReviewsPackage.REVIEW_GROUP__DESCRIPTION:
 			setDescription((String) newValue);
@@ -285,8 +231,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
 			getReviews().clear();
 			return;
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			setReviewGroupTask((ITaskReference) null);
+		case ReviewsPackage.REVIEW_GROUP__USERS:
+			getUsers().clear();
 			return;
 		case ReviewsPackage.REVIEW_GROUP__DESCRIPTION:
 			setDescription(DESCRIPTION_EDEFAULT);
@@ -305,8 +251,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
 			return reviews != null && !reviews.isEmpty();
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
-			return reviewGroupTask != null;
+		case ReviewsPackage.REVIEW_GROUP__USERS:
+			return users != null && !users.isEmpty();
 		case ReviewsPackage.REVIEW_GROUP__DESCRIPTION:
 			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 		}
@@ -320,8 +266,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (description: "); //$NON-NLS-1$

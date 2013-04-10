@@ -169,10 +169,10 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(comment.getAuthor().getDisplayName(), is("Mylyn Test User"));
 		assertThat(comment.getDescription(), is("Uploaded patch set 2."));
 
-		List<IReviewItem> items = review.getItems();
+		List<IReviewItemSet> items = review.getSets();
 		assertThat(items.size(), greaterThan(1));
 
-		IReviewItemSet patchSet1 = (IReviewItemSet) items.get(0);
+		IReviewItemSet patchSet1 = items.get(0);
 		assertThat(patchSet1.getAddedBy().getDisplayName(), is("Mylyn Test User"));
 		assertThat(patchSet1.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
 		Calendar patchCreated = Calendar.getInstance();
@@ -185,7 +185,7 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(patchSet1.getName(), is("Patch Set 1"));
 		assertThat(patchSet1.getReference(), is("refs/changes/02/2/1"));
 
-		IReviewItemSet patchSet2 = (IReviewItemSet) items.get(1);
+		IReviewItemSet patchSet2 = items.get(1);
 		Calendar patch2Created = Calendar.getInstance();
 		patch2Created.setTime(patchSet2.getModificationDate());
 		//TODO -- we need to get update time here, not creation time. Not clear where gerrit API provides this
@@ -205,21 +205,21 @@ public class GerritRemoteFactoryTest extends TestCase {
 		IReview review = group.getReviews().get(0);
 
 		PatchSetContentRemoteFactory patchFactory = service.getReviewItemSetContentFactory();
-		assertThat(review.getItems().size(), greaterThan(2));
-		IReviewItemSet patchSet4 = (IReviewItemSet) review.getItems().get(3);
+		assertThat(review.getSets().size(), greaterThan(2));
+		IReviewItemSet patchSet4 = review.getSets().get(3);
 		PatchSetDetail detail = service.getReviewItemSetFactory().getRemoteObject(patchSet4);
 		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
-		TestListener<List<IReviewItem>> reviewItemListener = new TestListener<List<IReviewItem>>();
-		RemoteEmfConsumer<IReviewItemSet, List<IReviewItem>, PatchSetContent, PatchSetContent, String> patchSetConsumer = patchFactory.consume(
+		TestListener<List<IFileItem>> reviewItemListener = new TestListener<List<IFileItem>>();
+		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> patchSetConsumer = patchFactory.consume(
 				"CompareItems", patchSet4, content, "", reviewItemListener);
 		patchSetConsumer.request();
 		reviewItemListener.waitForUpdate();
-		List<IReviewItem> fileItems = patchSet4.getItems();
+		List<IFileItem> fileItems = patchSet4.getItems();
 		assertThat(fileItems.size(), is(3));
 		for (IReviewItem fileItem : fileItems) {
 			assertThat(fileItem, instanceOf(IFileItem.class));
 		}
-		IFileItem fileItem = (IFileItem) fileItems.get(2);
+		IFileItem fileItem = fileItems.get(2);
 		assertThat(fileItem.getAddedBy().getDisplayName(), is("Mylyn Test User"));
 		assertThat(fileItem.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
 		//TODO Shouldn't name be last segment only?

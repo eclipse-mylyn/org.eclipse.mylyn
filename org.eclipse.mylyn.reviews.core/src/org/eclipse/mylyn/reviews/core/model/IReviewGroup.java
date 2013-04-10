@@ -18,7 +18,7 @@ import java.util.List;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviews <em>Reviews</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviewGroupTask <em>Review Group Task</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getUsers <em>Users</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
@@ -28,7 +28,8 @@ import java.util.List;
 public interface IReviewGroup extends IReviewComponent {
 	/**
 	 * Returns the value of the '<em><b>Reviews</b></em>' containment reference list. The list contents are of type
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReview}. <!-- begin-user-doc -->
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReview}. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReview#getGroup <em>Group</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Reviews</em>' containment reference list isn't clear, there really should be more of a
 	 * description here...
@@ -36,34 +37,24 @@ public interface IReviewGroup extends IReviewComponent {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Reviews</em>' containment reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getGroup
 	 * @generated
 	 */
 	List<IReview> getReviews();
 
 	/**
-	 * Returns the value of the '<em><b>Review Group Task</b></em>' containment reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Users</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IUser}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Review Group Task</em>' containment reference isn't clear, there really should be more
-	 * of a description here...
+	 * If the meaning of the '<em>Users</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Review Group Task</em>' containment reference.
-	 * @see #setReviewGroupTask(ITaskReference)
+	 * @return the value of the '<em>Users</em>' containment reference list.
 	 * @generated
 	 */
-	ITaskReference getReviewGroupTask();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviewGroupTask
-	 * <em>Review Group Task</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Review Group Task</em>' containment reference.
-	 * @see #getReviewGroupTask()
-	 * @generated
-	 */
-	void setReviewGroupTask(ITaskReference value);
+	List<IUser> getUsers();
 
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->

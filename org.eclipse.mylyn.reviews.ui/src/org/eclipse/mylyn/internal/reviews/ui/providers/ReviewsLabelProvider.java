@@ -39,7 +39,6 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.ITaskReference;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
@@ -162,16 +161,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return getText(collection.iterator().next());
 				}
 			}
-			if (element instanceof ITaskReference) {
-				ITaskReference ref = (ITaskReference) element;
-				return ref.getTaskId();
-			}
 			if (element instanceof IReview) {
 				IReview review = (IReview) element;
-				ITaskReference reviewTask = review.getReviewTask();
-				if (reviewTask != null) {
-					return getText(reviewTask);
-				}
 				return "Change " + review.getId();
 			}
 			if (element instanceof IFileRevision) {
@@ -398,16 +389,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return getText(collection.iterator().next());
 				}
 			}
-			if (element instanceof ITaskReference) {
-				ITaskReference ref = (ITaskReference) element;
-				return ref.getTaskId();
-			}
 			if (element instanceof IReview) {
 				IReview review = (IReview) element;
-				ITaskReference reviewTask = review.getReviewTask();
-				if (reviewTask != null) {
-					return getText(reviewTask);
-				}
 				return "Change " + review.getId();
 			}
 			if (element instanceof IFileItem) {

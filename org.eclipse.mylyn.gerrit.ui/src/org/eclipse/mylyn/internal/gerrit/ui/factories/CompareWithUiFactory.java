@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewItemSetCompareEditorInput;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
@@ -131,23 +131,22 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		String basePatchSetLabel = content.getBase() != null ? content.getBase().getPatchSetId() + "" : "Base";
 		compareSet.setName(NLS.bind("Compare Patch Set {0} and {1}", content.getTarget().getPatchSetId(),
 				basePatchSetLabel));
-		RemoteEmfConsumer<IReviewItemSet, List<IReviewItem>, PatchSetContent, PatchSetContent, String> consumer = getGerritFactoryProvider().getReviewItemSetContentFactory()
-				.consume("Compare Items", compareSet, content, "",
-						new RemoteEmfConsumer.IObserver<List<IReviewItem>>() {
-							public void responded(boolean modified) {
-								CompareConfiguration configuration = new CompareConfiguration();
-								CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration,
-										compareSet, null, new GerritReviewBehavior(getTask(), resolveGitRepository())));
-							}
+		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer = getGerritFactoryProvider().getReviewItemSetContentFactory()
+				.consume("Compare Items", compareSet, content, "", new RemoteEmfConsumer.IObserver<List<IFileItem>>() {
+					public void responded(boolean modified) {
+						CompareConfiguration configuration = new CompareConfiguration();
+						CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet,
+								null, new GerritReviewBehavior(getTask(), resolveGitRepository())));
+					}
 
-							public void failed(IStatus status) {
-								StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-										"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
-							}
+					public void failed(IStatus status) {
+						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+								"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
+					}
 
-							public void created(List<IReviewItem> object) {
-							}
-						});
+					public void created(List<IFileItem> object) {
+					}
+				});
 		consumer.request();
 	}
 

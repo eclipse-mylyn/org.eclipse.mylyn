@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class ReviewSetContentSection {
 
 	private TableViewer viewer;
 
-	private final RemoteEmfConsumer<IReviewItemSet, List<IReviewItem>, ?, ?, String> consumer;
+	private final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, ?, String> consumer;
 
 	private boolean createdContentSection;
 
@@ -85,29 +86,31 @@ public class ReviewSetContentSection {
 		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
 				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 		//We assume that the last item is also the "current" item
-		List<IReviewItem> items = set.getReview().getItems();
+		List<IReviewItem> items = new ArrayList<IReviewItem>(set.getReview().getSets());
 		if (items.get(items.size() - 1) == set) {
 			style |= ExpandableComposite.EXPANDED;
 		}
 		consumer = getParentSection().getReviewEditorPage()
 				.getRemoteFactory()
 				.getReviewItemSetContentFactory()
-				.consume("Managing Review Set", set, items, new RemoteEmfConsumer.IObserver<List<IReviewItem>>() {
+				.consume("Managing Review Set", set, set.getItems(),
+						new RemoteEmfConsumer.IObserver<List<IFileItem>>() {
 
-					public void responded(boolean modified) {
-						retrievedModelContents = true;
-						checkCreateModelControls();
-					}
+							public void responded(boolean modified) {
+								retrievedModelContents = true;
+								checkCreateModelControls();
+							}
 
-					public void failed(IStatus status) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Error loading patch set", status.getException())); //$NON-NLS-1$
-						AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
-					}
+							public void failed(IStatus status) {
+								StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+										"Error loading patch set", status.getException())); //$NON-NLS-1$
+								AbstractReviewSection.appendMessage(getParentSection().getSection(),
+										"Couldn't load patch set.");
+							}
 
-					public void created(List<IReviewItem> object) {
-					}
-				});
+							public void created(List<IFileItem> object) {
+							}
+						});
 		section = parentSection.getToolkit().createSection(parentSection.getComposite(), style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 		section.setText(set.getName());
@@ -224,7 +227,7 @@ public class ReviewSetContentSection {
 				return getReviewItems(inputElement).toArray();
 			}
 
-			private List<IReviewItem> getReviewItems(Object inputElement) {
+			private List<IFileItem> getReviewItems(Object inputElement) {
 				if (inputElement instanceof IReviewItemSet) {
 					return ((IReviewItemSet) inputElement).getItems();
 				}

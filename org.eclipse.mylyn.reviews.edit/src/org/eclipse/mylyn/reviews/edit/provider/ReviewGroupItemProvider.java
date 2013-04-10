@@ -94,7 +94,7 @@ public class ReviewGroupItemProvider extends ReviewComponentItemProvider impleme
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ReviewsPackage.Literals.REVIEW_GROUP__REVIEWS);
-			childrenFeatures.add(ReviewsPackage.Literals.REVIEW_GROUP__REVIEW_GROUP_TASK);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW_GROUP__USERS);
 		}
 		return childrenFeatures;
 	}
@@ -149,7 +149,7 @@ public class ReviewGroupItemProvider extends ReviewComponentItemProvider impleme
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ReviewsPackage.REVIEW_GROUP__REVIEWS:
-		case ReviewsPackage.REVIEW_GROUP__REVIEW_GROUP_TASK:
+		case ReviewsPackage.REVIEW_GROUP__USERS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -169,8 +169,8 @@ public class ReviewGroupItemProvider extends ReviewComponentItemProvider impleme
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_GROUP__REVIEWS,
 				IReviewsFactory.INSTANCE.createReview()));
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_GROUP__REVIEW_GROUP_TASK,
-				IReviewsFactory.INSTANCE.createTaskReference()));
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_GROUP__USERS,
+				IReviewsFactory.INSTANCE.createUser()));
 	}
 
 }

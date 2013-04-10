@@ -79,6 +79,29 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IChange} instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ChangeItemProvider changeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IChange}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createChangeAdapter() {
+		if (changeItemProvider == null) {
+			changeItemProvider = new ChangeItemProvider(this);
+		}
+
+		return changeItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReview} instances.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -171,29 +194,6 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.ITaskReference}
-	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected TaskReferenceItemProvider taskReferenceItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.ITaskReference}. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createTaskReferenceAdapter() {
-		if (taskReferenceItemProvider == null) {
-			taskReferenceItemProvider = new TaskReferenceItemProvider(this);
-		}
-
-		return taskReferenceItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReviewGroup}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -214,6 +214,29 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 		}
 
 		return reviewGroupItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IRepository}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected RepositoryItemProvider repositoryItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRepository}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createRepositoryAdapter() {
+		if (repositoryItemProvider == null) {
+			repositoryItemProvider = new RepositoryItemProvider(this);
+		}
+
+		return repositoryItemProvider;
 	}
 
 	/**
@@ -378,6 +401,188 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ApprovalTypeItemProvider approvalTypeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createApprovalTypeAdapter() {
+		if (approvalTypeItemProvider == null) {
+			approvalTypeItemProvider = new ApprovalTypeItemProvider(this);
+		}
+
+		return approvalTypeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link java.util.Map.Entry} instances. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected UserApprovalsMapItemProvider userApprovalsMapItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link java.util.Map.Entry}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createUserApprovalsMapAdapter() {
+		if (userApprovalsMapItemProvider == null) {
+			userApprovalsMapItemProvider = new UserApprovalsMapItemProvider(this);
+		}
+
+		return userApprovalsMapItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ReviewerEntryItemProvider reviewerEntryItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createReviewerEntryAdapter() {
+		if (reviewerEntryItemProvider == null) {
+			reviewerEntryItemProvider = new ReviewerEntryItemProvider(this);
+		}
+
+		return reviewerEntryItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link java.util.Map.Entry} instances. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ApprovalValueMapItemProvider approvalValueMapItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link java.util.Map.Entry}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createApprovalValueMapAdapter() {
+		if (approvalValueMapItemProvider == null) {
+			approvalValueMapItemProvider = new ApprovalValueMapItemProvider(this);
+		}
+
+		return approvalValueMapItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected RequirementEntryItemProvider requirementEntryItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createRequirementEntryAdapter() {
+		if (requirementEntryItemProvider == null) {
+			requirementEntryItemProvider = new RequirementEntryItemProvider(this);
+		}
+
+		return requirementEntryItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link java.util.Map.Entry} instances. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ReviewRequirementsMapItemProvider reviewRequirementsMapItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link java.util.Map.Entry}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createReviewRequirementsMapAdapter() {
+		if (reviewRequirementsMapItemProvider == null) {
+			reviewRequirementsMapItemProvider = new ReviewRequirementsMapItemProvider(this);
+		}
+
+		return reviewRequirementsMapItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState} instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected RequirementReviewStateItemProvider requirementReviewStateItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createRequirementReviewStateAdapter() {
+		if (requirementReviewStateItemProvider == null) {
+			requirementReviewStateItemProvider = new RequirementReviewStateItemProvider(this);
+		}
+
+		return requirementReviewStateItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected SimpleReviewStateItemProvider simpleReviewStateItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createSimpleReviewStateAdapter() {
+		if (simpleReviewStateItemProvider == null) {
+			simpleReviewStateItemProvider = new SimpleReviewStateItemProvider(this);
+		}
+
+		return simpleReviewStateItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -471,6 +676,8 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	 * @generated
 	 */
 	public void dispose() {
+		if (changeItemProvider != null)
+			changeItemProvider.dispose();
 		if (reviewItemProvider != null)
 			reviewItemProvider.dispose();
 		if (commentItemProvider != null)
@@ -479,10 +686,10 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 			reviewItemItemProvider.dispose();
 		if (userItemProvider != null)
 			userItemProvider.dispose();
-		if (taskReferenceItemProvider != null)
-			taskReferenceItemProvider.dispose();
 		if (reviewGroupItemProvider != null)
 			reviewGroupItemProvider.dispose();
+		if (repositoryItemProvider != null)
+			repositoryItemProvider.dispose();
 		if (topicItemProvider != null)
 			topicItemProvider.dispose();
 		if (reviewComponentItemProvider != null)
@@ -497,6 +704,22 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 			lineRangeItemProvider.dispose();
 		if (fileRevisionItemProvider != null)
 			fileRevisionItemProvider.dispose();
+		if (approvalTypeItemProvider != null)
+			approvalTypeItemProvider.dispose();
+		if (userApprovalsMapItemProvider != null)
+			userApprovalsMapItemProvider.dispose();
+		if (reviewerEntryItemProvider != null)
+			reviewerEntryItemProvider.dispose();
+		if (approvalValueMapItemProvider != null)
+			approvalValueMapItemProvider.dispose();
+		if (requirementEntryItemProvider != null)
+			requirementEntryItemProvider.dispose();
+		if (reviewRequirementsMapItemProvider != null)
+			reviewRequirementsMapItemProvider.dispose();
+		if (requirementReviewStateItemProvider != null)
+			requirementReviewStateItemProvider.dispose();
+		if (simpleReviewStateItemProvider != null)
+			simpleReviewStateItemProvider.dispose();
 	}
 
 }

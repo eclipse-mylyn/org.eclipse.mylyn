@@ -15,9 +15,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
+import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,10 +26,8 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
@@ -62,8 +59,10 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 
 			addCreationDatePropertyDescriptor(object);
 			addModificationDatePropertyDescriptor(object);
-			addItemsPropertyDescriptor(object);
 			addIdPropertyDescriptor(object);
+			addKeyPropertyDescriptor(object);
+			addSubjectPropertyDescriptor(object);
+			addMessagePropertyDescriptor(object);
 			addOwnerPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -100,19 +99,6 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 	}
 
 	/**
-	 * This adds a property descriptor for the Items feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addItemsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Review_items_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Review_items_feature", "_UI_Review_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW__ITEMS, true, false, true, null, null, null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -121,10 +107,55 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_Review_id_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Review_id_feature", "_UI_Review_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				getString("_UI_Change_id_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_id_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Key feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addKeyPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Change_key_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_key_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__KEY, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Subject feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addSubjectPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Change_subject_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_subject_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__SUBJECT, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Message feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addMessagePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Change_message_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_message_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__MESSAGE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -135,9 +166,9 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 	protected void addOwnerPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Review_owner_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Review_owner_feature", "_UI_Review_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.REVIEW__OWNER, true, false, true, null, null, null));
+				getString("_UI_Change_owner_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_owner_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__OWNER, true, false, true, null, null, null));
 	}
 
 	/**
@@ -152,8 +183,12 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__REVIEW_TASK);
-			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__STATE);
+			childrenFeatures.add(ReviewsPackage.Literals.CHANGE__STATE);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__SETS);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__PARENTS);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__CHILDREN);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__REVIEWER_APPROVALS);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW__REQUIREMENTS);
 		}
 		return childrenFeatures;
 	}
@@ -208,10 +243,17 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 		case ReviewsPackage.REVIEW__CREATION_DATE:
 		case ReviewsPackage.REVIEW__MODIFICATION_DATE:
 		case ReviewsPackage.REVIEW__ID:
+		case ReviewsPackage.REVIEW__KEY:
+		case ReviewsPackage.REVIEW__SUBJECT:
+		case ReviewsPackage.REVIEW__MESSAGE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
-		case ReviewsPackage.REVIEW__REVIEW_TASK:
 		case ReviewsPackage.REVIEW__STATE:
+		case ReviewsPackage.REVIEW__SETS:
+		case ReviewsPackage.REVIEW__PARENTS:
+		case ReviewsPackage.REVIEW__CHILDREN:
+		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
+		case ReviewsPackage.REVIEW__REQUIREMENTS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -228,8 +270,53 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__REVIEW_TASK,
-				IReviewsFactory.INSTANCE.createTaskReference()));
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.CHANGE__STATE,
+				IReviewsFactory.INSTANCE.createRequirementReviewState()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.CHANGE__STATE,
+				IReviewsFactory.INSTANCE.createSimpleReviewState()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__SETS,
+				IReviewsFactory.INSTANCE.createReviewItemSet()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__PARENTS,
+				IReviewsFactory.INSTANCE.createChange()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__PARENTS,
+				IReviewsFactory.INSTANCE.createReview()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__CHILDREN,
+				IReviewsFactory.INSTANCE.createChange()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__CHILDREN,
+				IReviewsFactory.INSTANCE.createReview()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__REVIEWER_APPROVALS,
+				((EFactory) IReviewsFactory.INSTANCE).create(ReviewsPackage.Literals.USER_APPROVALS_MAP)));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__REQUIREMENTS,
+				((EFactory) IReviewsFactory.INSTANCE).create(ReviewsPackage.Literals.REVIEW_REQUIREMENTS_MAP)));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify = childFeature == ReviewsPackage.Literals.REVIEW__PARENTS
+				|| childFeature == ReviewsPackage.Literals.REVIEW__CHILDREN;
+
+		if (qualify) {
+			return getString("_UI_CreateChild_text2", //$NON-NLS-1$
+					new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 }

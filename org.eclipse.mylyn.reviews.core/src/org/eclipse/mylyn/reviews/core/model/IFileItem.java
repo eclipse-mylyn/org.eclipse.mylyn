@@ -17,6 +17,7 @@ package org.eclipse.mylyn.reviews.core.model;
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}</li>
  * </ul>
  * </p>
  * 
@@ -71,5 +72,32 @@ public interface IFileItem extends IReviewItem {
 	 * @generated
 	 */
 	void setTarget(IFileRevision value);
+
+	/**
+	 * Returns the value of the '<em><b>Set</b></em>' container reference. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Set</em>' container reference isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Set</em>' container reference.
+	 * @see #setSet(IReviewItemSet)
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems
+	 * @generated
+	 */
+	IReviewItemSet getSet();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}' container
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Set</em>' container reference.
+	 * @see #getSet()
+	 * @generated
+	 */
+	void setSet(IReviewItemSet value);
 
 } // IFileItem

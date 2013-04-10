@@ -47,7 +47,7 @@ public class ReviewRemoteFactory extends AbstractRemoteEmfFactory<IReviewGroup, 
 
 	public ReviewRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
 		super(gerritRemoteFactoryProvider.getService(), ReviewsPackage.Literals.REVIEW_GROUP__REVIEWS,
-				ReviewsPackage.Literals.REVIEW__ID);
+				ReviewsPackage.Literals.CHANGE__ID);
 		this.gerritFactoryProvider = gerritRemoteFactoryProvider;
 	}
 
@@ -103,7 +103,7 @@ public class ReviewRemoteFactory extends AbstractRemoteEmfFactory<IReviewGroup, 
 			}
 		}
 
-		int oldPatchCount = review.getItems().size();
+		int oldPatchCount = review.getSets().size();
 		int patchIndex = 0;
 		for (PatchSetDetail patchSetDetail : gerritChange.getPatchSetDetails()) {
 			if (patchIndex++ < oldPatchCount) {
@@ -118,9 +118,9 @@ public class ReviewRemoteFactory extends AbstractRemoteEmfFactory<IReviewGroup, 
 			itemSet.setCommittedBy(gerritFactoryProvider.getUserFactory(detail.getAccounts()).get(itemSet,
 					committer.getAccount()));
 			itemSet.setModificationDate(author.getDate());
-			review.getItems().add(itemSet);
+			review.getSets().add(itemSet);
 		}
 
-		return review.getTopics().size() > oldTopicCount || review.getItems().size() > oldPatchCount;
+		return review.getTopics().size() > oldTopicCount || review.getSets().size() > oldPatchCount;
 	}
 }

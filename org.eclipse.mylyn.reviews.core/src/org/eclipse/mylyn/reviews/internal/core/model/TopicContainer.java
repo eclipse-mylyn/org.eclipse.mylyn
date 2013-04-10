@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -51,8 +52,8 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	protected EList<ITopic> topics;
 
 	/**
-	 * The cached value of the '{@link #getDirectTopics() <em>Direct Topics</em>}' reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDirectTopics() <em>Direct Topics</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDirectTopics()
 	 * @generated
@@ -108,7 +109,7 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	 */
 	public List<ITopic> getDirectTopics() {
 		if (directTopics == null) {
-			directTopics = new EObjectWithInverseResolvingEList<ITopic>(ITopic.class, this,
+			directTopics = new EObjectContainmentWithInverseEList.Resolving<ITopic>(ITopic.class, this,
 					ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS, ReviewsPackage.TOPIC__ITEM);
 		}
 		return directTopics;

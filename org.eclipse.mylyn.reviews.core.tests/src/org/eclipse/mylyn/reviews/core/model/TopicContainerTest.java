@@ -69,7 +69,7 @@ public class TopicContainerTest {
 	@Test
 	public void testGetAllCommentsReviewItemSet() {
 		IReviewItemSet itemSet = ReviewsFactory.eINSTANCE.createReviewItemSet();
-		IReviewItem i1 = ReviewsFactory.eINSTANCE.createReviewItem();
+		IFileItem i1 = IReviewsFactory.INSTANCE.createFileItem();
 		ITopic t0 = ReviewsFactory.eINSTANCE.createTopic();
 		i1.getTopics().add(t0);
 		ITopic t1 = ReviewsFactory.eINSTANCE.createTopic();
@@ -77,26 +77,13 @@ public class TopicContainerTest {
 		itemSet.getItems().add(i1);
 		assertThat(itemSet.getAllComments().size(), is(2));
 
-		IReviewItem i2 = ReviewsFactory.eINSTANCE.createReviewItem();
+		IFileItem i2 = IReviewsFactory.INSTANCE.createFileItem();
 		ITopic t2 = ReviewsFactory.eINSTANCE.createTopic();
 		i2.getTopics().add(t2);
 		ITopic t3 = ReviewsFactory.eINSTANCE.createTopic();
 		i2.getTopics().add(t3);
 		itemSet.getItems().add(i2);
 		assertThat(itemSet.getAllComments().size(), is(4));
-
-		IReviewItemSet subSet = ReviewsFactory.eINSTANCE.createReviewItemSet();
-		IReviewItem i3 = ReviewsFactory.eINSTANCE.createReviewItem();
-		ITopic t4 = ReviewsFactory.eINSTANCE.createTopic();
-		i3.getTopics().add(t4);
-		subSet.getItems().add(i3);
-		itemSet.getItems().add(subSet);
-		assertThat(itemSet.getAllComments().size(), is(5));
-		assertThat((ITopic) itemSet.getAllComments().get(0), is(t0));
-		assertThat((ITopic) itemSet.getAllComments().get(1), is(t1));
-		assertThat((ITopic) itemSet.getAllComments().get(2), is(t2));
-		assertThat((ITopic) itemSet.getAllComments().get(3), is(t3));
-		assertThat((ITopic) itemSet.getAllComments().get(4), is(t4));
 	}
 
 	@Test
@@ -107,8 +94,8 @@ public class TopicContainerTest {
 		assertThat(review.getAllComments().size(), is(1));
 
 		IReviewItemSet itemSet = ReviewsFactory.eINSTANCE.createReviewItemSet();
-		review.getItems().add(itemSet);
-		IReviewItem i1 = ReviewsFactory.eINSTANCE.createReviewItem();
+		review.getSets().add(itemSet);
+		IFileItem i1 = IReviewsFactory.INSTANCE.createFileItem();
 		ITopic t1 = ReviewsFactory.eINSTANCE.createTopic();
 		i1.getTopics().add(t1);
 		ITopic t2 = ReviewsFactory.eINSTANCE.createTopic();
@@ -116,7 +103,7 @@ public class TopicContainerTest {
 		itemSet.getItems().add(i1);
 		assertThat(review.getAllComments().size(), is(3));
 
-		IReviewItem i2 = ReviewsFactory.eINSTANCE.createReviewItem();
+		IFileItem i2 = IReviewsFactory.INSTANCE.createFileItem();
 		ITopic t3 = ReviewsFactory.eINSTANCE.createTopic();
 		i2.getTopics().add(t3);
 		ITopic t4 = ReviewsFactory.eINSTANCE.createTopic();
@@ -124,31 +111,21 @@ public class TopicContainerTest {
 		itemSet.getItems().add(i2);
 		assertThat(review.getAllComments().size(), is(5));
 
-		IReviewItemSet subSet = ReviewsFactory.eINSTANCE.createReviewItemSet();
-		IReviewItem i3 = ReviewsFactory.eINSTANCE.createReviewItem();
-		ITopic t5 = ReviewsFactory.eINSTANCE.createTopic();
-		i3.getTopics().add(t5);
-		t5.setId("5");
-		subSet.getItems().add(i3);
-		itemSet.getItems().add(subSet);
-		assertThat(review.getAllComments().size(), is(6));
-
 		IReviewItemSet reviewSubSet = ReviewsFactory.eINSTANCE.createReviewItemSet();
-		IReviewItem i4 = ReviewsFactory.eINSTANCE.createReviewItem();
-		ITopic t6 = ReviewsFactory.eINSTANCE.createTopic();
-		i4.getTopics().add(t6);
-		t6.setId("6");
+		IFileItem i4 = IReviewsFactory.INSTANCE.createFileItem();
+		ITopic t5 = ReviewsFactory.eINSTANCE.createTopic();
+		i4.getTopics().add(t5);
+		t5.setId("5");
 		reviewSubSet.getItems().add(i4);
-		review.getItems().add(reviewSubSet);
-		assertThat(review.getAllComments().size(), is(7));
-
+		review.getSets().add(reviewSubSet);
+		assertThat(review.getAllComments().size(), is(6));
 		assertThat((ITopic) review.getAllComments().get(0), is(t0));
 		assertThat((ITopic) review.getAllComments().get(1), is(t1));
 		assertThat((ITopic) review.getAllComments().get(2), is(t2));
 		assertThat((ITopic) review.getAllComments().get(3), is(t3));
 		assertThat((ITopic) review.getAllComments().get(4), is(t4));
 		assertThat((ITopic) review.getAllComments().get(5), is(t5));
-		assertThat((ITopic) review.getAllComments().get(6), is(t6));
+
 	}
 
 	@Test

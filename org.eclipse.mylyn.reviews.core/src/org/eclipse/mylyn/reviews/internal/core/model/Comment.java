@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentType;
@@ -189,16 +190,6 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @ordered
 	 */
 	protected boolean draft = DRAFT_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getParentTopic() <em>Parent Topic</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getParentTopic()
-	 * @generated
-	 * @ordered
-	 */
-	protected ITopic parentTopic;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -454,16 +445,9 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @generated
 	 */
 	public ITopic getParentTopic() {
-		if (parentTopic != null && parentTopic.eIsProxy()) {
-			InternalEObject oldParentTopic = (InternalEObject) parentTopic;
-			parentTopic = (ITopic) eResolveProxy(oldParentTopic);
-			if (parentTopic != oldParentTopic) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.COMMENT__PARENT_TOPIC,
-							oldParentTopic, parentTopic));
-			}
-		}
-		return parentTopic;
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC)
+			return null;
+		return (ITopic) eContainer();
 	}
 
 	/**
@@ -472,7 +456,9 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @generated
 	 */
 	public ITopic basicGetParentTopic() {
-		return parentTopic;
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC)
+			return null;
+		return (ITopic) eInternalContainer();
 	}
 
 	/**
@@ -481,16 +467,7 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @generated
 	 */
 	public NotificationChain basicSetParentTopic(ITopic newParentTopic, NotificationChain msgs) {
-		ITopic oldParentTopic = parentTopic;
-		parentTopic = newParentTopic;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.COMMENT__PARENT_TOPIC, oldParentTopic, newParentTopic);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
+		msgs = eBasicSetContainer((InternalEObject) newParentTopic, ReviewsPackage.COMMENT__PARENT_TOPIC, msgs);
 		return msgs;
 	}
 
@@ -500,11 +477,13 @@ public class Comment extends ReviewComponent implements IComment {
 	 * @generated
 	 */
 	public void setParentTopic(ITopic newParentTopic) {
-		if (newParentTopic != parentTopic) {
+		if (newParentTopic != eInternalContainer()
+				|| (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC && newParentTopic != null)) {
+			if (EcoreUtil.isAncestor(this, newParentTopic))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
-			if (parentTopic != null)
-				msgs = ((InternalEObject) parentTopic).eInverseRemove(this, ReviewsPackage.TOPIC__COMMENTS,
-						ITopic.class, msgs);
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
 			if (newParentTopic != null)
 				msgs = ((InternalEObject) newParentTopic).eInverseAdd(this, ReviewsPackage.TOPIC__COMMENTS,
 						ITopic.class, msgs);
@@ -525,9 +504,8 @@ public class Comment extends ReviewComponent implements IComment {
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			if (parentTopic != null)
-				msgs = ((InternalEObject) parentTopic).eInverseRemove(this, ReviewsPackage.TOPIC__COMMENTS,
-						ITopic.class, msgs);
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
 			return basicSetParentTopic((ITopic) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -549,6 +527,20 @@ public class Comment extends ReviewComponent implements IComment {
 			return basicSetParentTopic(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case ReviewsPackage.COMMENT__PARENT_TOPIC:
+			return eInternalContainer().eInverseRemove(this, ReviewsPackage.TOPIC__COMMENTS, ITopic.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -696,7 +688,7 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__DRAFT:
 			return draft != DRAFT_EDEFAULT;
 		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			return parentTopic != null;
+			return basicGetParentTopic() != null;
 		}
 		return super.eIsSet(featureID);
 	}

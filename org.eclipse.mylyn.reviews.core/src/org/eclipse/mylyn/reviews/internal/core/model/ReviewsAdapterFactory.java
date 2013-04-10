@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.List;
+import java.util.Map;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -76,6 +78,11 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseChange(IChange object) {
+			return createChangeAdapter();
+		}
+
+		@Override
 		public Adapter caseReview(IReview object) {
 			return createReviewAdapter();
 		}
@@ -101,11 +108,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseTaskReference(ITaskReference object) {
-			return createTaskReferenceAdapter();
-		}
-
-		@Override
 		public Adapter caseReviewState(IReviewState object) {
 			return createReviewStateAdapter();
 		}
@@ -113,6 +115,11 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseReviewGroup(IReviewGroup object) {
 			return createReviewGroupAdapter();
+		}
+
+		@Override
+		public Adapter caseRepository(IRepository object) {
+			return createRepositoryAdapter();
 		}
 
 		@Override
@@ -168,6 +175,46 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseDated(IDated object) {
 			return createDatedAdapter();
+		}
+
+		@Override
+		public Adapter caseApprovalType(IApprovalType object) {
+			return createApprovalTypeAdapter();
+		}
+
+		@Override
+		public Adapter caseUserApprovalsMap(Map.Entry<IUser, IReviewerEntry> object) {
+			return createUserApprovalsMapAdapter();
+		}
+
+		@Override
+		public Adapter caseReviewerEntry(IReviewerEntry object) {
+			return createReviewerEntryAdapter();
+		}
+
+		@Override
+		public Adapter caseApprovalValueMap(Map.Entry<IApprovalType, Integer> object) {
+			return createApprovalValueMapAdapter();
+		}
+
+		@Override
+		public Adapter caseRequirementEntry(IRequirementEntry object) {
+			return createRequirementEntryAdapter();
+		}
+
+		@Override
+		public Adapter caseReviewRequirementsMap(Map.Entry<IApprovalType, IRequirementEntry> object) {
+			return createReviewRequirementsMapAdapter();
+		}
+
+		@Override
+		public Adapter caseRequirementReviewState(IRequirementReviewState object) {
+			return createRequirementReviewStateAdapter();
+		}
+
+		@Override
+		public Adapter caseSimpleReviewState(ISimpleReviewState object) {
+			return createSimpleReviewStateAdapter();
 		}
 
 		@Override
@@ -271,20 +318,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ITaskReference
-	 * <em>Task Reference</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
-	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.ITaskReference
-	 * @generated
-	 */
-	public Adapter createTaskReferenceAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewState
 	 * <em>Review State</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
 	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
@@ -309,6 +342,20 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReviewGroupAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IRepository
+	 * <em>Repository</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository
+	 * @generated
+	 */
+	public Adapter createRepositoryAdapter() {
 		return null;
 	}
 
@@ -460,6 +507,128 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDatedAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry
+	 * <em>Reviewer Entry</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewerEntry
+	 * @generated
+	 */
+	public Adapter createReviewerEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IApprovalType
+	 * <em>Approval Type</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IApprovalType
+	 * @generated
+	 */
+	public Adapter createApprovalTypeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Approval Value Map</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createApprovalValueMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry
+	 * <em>Requirement Entry</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
+	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementEntry
+	 * @generated
+	 */
+	public Adapter createRequirementEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Review Requirements Map</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createReviewRequirementsMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState <em>Requirement Review State</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementReviewState
+	 * @generated
+	 */
+	public Adapter createRequirementReviewStateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
+	 * <em>Simple Review State</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
+	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
+	 * @generated
+	 */
+	public Adapter createSimpleReviewStateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>User Approvals Map</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createUserApprovalsMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IChange
+	 * <em>Change</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
+	 * cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.IChange
+	 * @generated
+	 */
+	public Adapter createChangeAdapter() {
 		return null;
 	}
 
