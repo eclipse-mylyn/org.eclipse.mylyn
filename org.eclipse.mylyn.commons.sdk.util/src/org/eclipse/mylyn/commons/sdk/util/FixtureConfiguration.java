@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,8 @@ public class FixtureConfiguration {
 	String info;
 
 	Map<String, String> properties;
+
+	List<String> tags;
 
 	public FixtureConfiguration() {
 	}
@@ -65,6 +68,10 @@ public class FixtureConfiguration {
 
 	public Map<String, String> getProperties() {
 		return properties;
+	}
+
+	public List<String> getTags() {
+		return tags;
 	}
 
 }

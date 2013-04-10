@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+
+import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -113,29 +116,36 @@ public class TestConfiguration {
 	}
 
 	public <T> List<T> discover(Class<T> clazz, String fixtureType) {
-		List<T> fixtures = discover(URL_SERVICES_LOCALHOST, clazz, fixtureType);
-		if (fixtures != null) {
-			return fixtures;
+		List<T> fixtures = Collections.emptyList();
+
+		try {
+			File file = CommonTestUtil.getFile(clazz, "local.json");
+			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType);
+		} catch (AssertionFailedError e) {
+			// ignore
+		} catch (IOException e) {
+			// ignore
 		}
 
-		fixtures = discover(URL_SERVICES_LOCALHOST, clazz, fixtureType);
-		if (fixtures != null) {
-			if (isDefaultOnly()) {
-				return Collections.singletonList(fixtures.get(0));
-			} else {
-				return fixtures;
-			}
+		if (fixtures.isEmpty()) {
+			fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
+					fixtureType);
 		}
+
+		if (fixtures.isEmpty()) {
+			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz, fixtureType);
+		}
+
 		return fixtures;
 	}
 
-	public static <T> List<T> discover(String url, Class<T> clazz, String fixtureType) {
+	public static <T> List<T> discover(String location, String baseUrl, Class<T> clazz, String fixtureType) {
 		Assert.isNotNull(fixtureType);
-		List<FixtureConfiguration> configurations = getConfigurations(url + "/cgi-bin/services");
+		List<FixtureConfiguration> configurations = getConfigurations(location);
 		if (configurations != null) {
 			for (FixtureConfiguration configuration : configurations) {
 				if (configuration != null) {
-					configuration.setUrl(url + configuration.getUrl());
+					configuration.setUrl(baseUrl + configuration.getUrl());
 				}
 			}
 			return loadFixtures(configurations, clazz, fixtureType);
