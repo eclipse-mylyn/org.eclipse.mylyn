@@ -357,8 +357,7 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	static {
-		List<BugzillaFixture> fixtureList = TestConfiguration.discover(BugzillaFixture.getServerUrl(),
-				BugzillaFixture.class, "bugzilla");
+		List<BugzillaFixture> fixtureList = TestConfiguration.getDefault().discover(BugzillaFixture.class, "bugzilla");
 		DEFAULT = getDefaultFixture(fixtureList);
 		ALL = getAll(fixtureList);
 	}
