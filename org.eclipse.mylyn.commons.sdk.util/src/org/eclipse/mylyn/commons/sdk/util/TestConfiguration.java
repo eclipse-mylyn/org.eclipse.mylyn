@@ -133,7 +133,7 @@ public class TestConfiguration {
 		}
 
 		if (fixtures.isEmpty()) {
-			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz, fixtureType);
+			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType);
 		}
 
 		return fixtures;
