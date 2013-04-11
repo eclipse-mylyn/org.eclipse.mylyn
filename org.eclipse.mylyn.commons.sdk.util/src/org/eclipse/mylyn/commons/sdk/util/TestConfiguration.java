@@ -120,7 +120,7 @@ public class TestConfiguration {
 
 		try {
 			File file = CommonTestUtil.getFile(clazz, "local.json");
-			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType);
+			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, isDefaultOnly());
 		} catch (AssertionFailedError e) {
 			// ignore
 		} catch (IOException e) {
@@ -129,17 +129,19 @@ public class TestConfiguration {
 
 		if (fixtures.isEmpty()) {
 			fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
-					fixtureType);
+					fixtureType, isDefaultOnly());
 		}
 
 		if (fixtures.isEmpty()) {
-			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType);
+			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType,
+					isDefaultOnly());
 		}
 
 		return fixtures;
 	}
 
-	public static <T> List<T> discover(String location, String baseUrl, Class<T> clazz, String fixtureType) {
+	private static <T> List<T> discover(String location, String baseUrl, Class<T> clazz, String fixtureType,
+			boolean defaultOnly) {
 		Assert.isNotNull(fixtureType);
 		List<FixtureConfiguration> configurations = getConfigurations(location);
 		if (configurations != null) {
@@ -148,16 +150,17 @@ public class TestConfiguration {
 					configuration.setUrl(baseUrl + configuration.getUrl());
 				}
 			}
-			return loadFixtures(configurations, clazz, fixtureType);
+			return loadFixtures(configurations, clazz, fixtureType, defaultOnly);
 		}
 		return Collections.emptyList();
 	}
 
 	private static <T> List<T> loadFixtures(List<FixtureConfiguration> configurations, Class<T> clazz,
-			String fixtureType) {
+			String fixtureType, boolean defaultOnly) {
 		List<T> result = new ArrayList<T>();
 		for (FixtureConfiguration configuration : configurations) {
-			if (configuration != null && fixtureType.equals(configuration.getType())) {
+			if (configuration != null && fixtureType.equals(configuration.getType())
+					&& (!defaultOnly || configuration.isDefault())) {
 				try {
 					Constructor<T> constructor = clazz.getConstructor(FixtureConfiguration.class);
 					result.add(constructor.newInstance(configuration));

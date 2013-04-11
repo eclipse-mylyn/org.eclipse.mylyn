@@ -74,4 +74,8 @@ public class FixtureConfiguration {
 		return tags;
 	}
 
+	public boolean isDefault() {
+		return properties != null && "1".equals(properties.get("default"));
+	}
+
 }
