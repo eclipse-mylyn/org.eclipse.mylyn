@@ -12,14 +12,15 @@
 package org.eclipse.mylyn.trac.tests.support;
 
 import java.io.ByteArrayInputStream;
+import java.util.Collections;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
+import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -31,7 +32,7 @@ public class TracHarness {
 
 	private final TracFixture fixture;
 
-	private ITracClient priviledgedClient;
+	private TracXmlRpcClient priviledgedClient;
 
 	private TaskRepository repository;
 
@@ -43,9 +44,9 @@ public class TracHarness {
 		return fixture;
 	}
 
-	private ITracClient priviledgedClient() throws Exception {
+	private TracXmlRpcClient priviledgedClient() throws Exception {
 		if (priviledgedClient == null) {
-			priviledgedClient = fixture.connectXmlRpc(PrivilegeLevel.USER);
+			priviledgedClient = (TracXmlRpcClient) fixture.connectXmlRpc(PrivilegeLevel.USER);
 		}
 		return priviledgedClient;
 	}
@@ -65,6 +66,10 @@ public class TracHarness {
 		ticket.putBuiltinValue(Key.SUMMARY, summary);
 		ticket.putBuiltinValue(Key.DESCRIPTION, "");
 		return ticket;
+	}
+
+	public void createMilestone(String milestone) throws Exception {
+		new XmlRpcServer(priviledgedClient()).ticketMilestone(milestone).deleteAndCreate();
 	}
 
 	public TracTicket createTicketWithMilestone(String summary, String milestone) throws Exception {
@@ -117,6 +122,10 @@ public class TracHarness {
 
 	public boolean isXmlRpc() {
 		return Version.XML_RPC.name().equals(repository().getVersion());
+	}
+
+	public void createWikiPage(String pageName, String content) throws Exception {
+		priviledgedClient().putWikipage(pageName, content, Collections.<String, Object> emptyMap(), null);
 	}
 
 }

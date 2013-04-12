@@ -47,7 +47,13 @@ public class TracTestCleanupUtil extends TestCase {
 		return data;
 	}
 
+	public TracTestCleanupUtil(String name) {
+		super(name);
+		this.fixture = TracFixture.current();
+	}
+
 	public TracTestCleanupUtil(TracFixture fixture, String name) {
+		super(name);
 		this.fixture = fixture;
 	}
 

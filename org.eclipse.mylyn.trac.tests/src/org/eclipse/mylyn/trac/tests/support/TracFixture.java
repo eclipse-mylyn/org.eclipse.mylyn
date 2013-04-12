@@ -23,6 +23,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -42,81 +43,9 @@ public class TracFixture extends TestFixture {
 
 	public static String TAG_MISC = "misc";
 
+	public static final String TAG_TEST = "test";
+
 	private static TracFixture current;
-
-	public static XmlRpcServer.TestData data010;
-
-	public static TracFixture TRAC_INVALID = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_INVALID_URL,
-			"0.11", "Invalid URL");
-
-//	public static TracFixture TRAC_0_9_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_096_URL,
-//			"0.9", "Web");
-
-	public static TracFixture TRAC_0_10_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_010_URL,
-			"0.10", "Web");
-
-	public static TracFixture TRAC_0_10_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_010_URL,
-			"0.10", "XML-RPC");
-
-	public static TracFixture TRAC_0_10_XML_RPC_DIGEST_AUTH = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL, "0.10", "XML-RPC/DigestAuth");
-
-	public static TracFixture TRAC_0_10_XML_RPC_FORM_AUTH = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL, "0.10", "XML-RPC/FormAuth");
-
-	public static TracFixture TRAC_0_10_XML_RPC_SSL = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_010_SSL_URL, "0.10", "XML-RPC/SSL");
-
-	public static TracFixture TRAC_0_11_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_011_URL,
-			"0.11", "Web");
-
-	public static TracFixture TRAC_0_11_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_011_URL,
-			"0.11", "XML-RPC");
-
-	public static TracFixture TRAC_0_12_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_012_URL,
-			"0.12", "Web");
-
-	public static TracFixture TRAC_0_12_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_012_URL,
-			"0.12", "XML-RPC");
-
-	public static TracFixture TRAC_1_0_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_10_URL,
-			"1.0", "Web");
-
-	public static TracFixture TRAC_1_0_XML_RPC = new TracFixture(Version.XML_RPC, TracTestConstants.TEST_TRAC_10_URL,
-			"1.0", "XML-RPC");
-
-	public static TracFixture TRAC_TRUNK_WEB = new TracFixture(Version.TRAC_0_9, TracTestConstants.TEST_TRAC_TRUNK_URL,
-			"0.12dev-r0", "Web");
-
-	public static TracFixture TRAC_TRUNK_XML_RPC = new TracFixture(Version.XML_RPC,
-			TracTestConstants.TEST_TRAC_TRUNK_URL, "0.13dev-r0", "XML-RPC");
-
-	public static TracFixture DEFAULT = TRAC_1_0_XML_RPC;
-
-	//public static TracFixture DEFAULT = TRAC_0_11_WEB;
-
-	/**
-	 * Standard configurations for running all test against.
-	 */
-	public static final TracFixture[] ALL = new TracFixture[] { TRAC_0_10_WEB, TRAC_0_11_WEB, TRAC_0_12_WEB,
-	/*TRAC_TRUNK_WEB, */TRAC_0_10_XML_RPC, TRAC_0_11_XML_RPC, TRAC_0_12_XML_RPC, TRAC_1_0_WEB, TRAC_1_0_XML_RPC, /*TRAC_TRUNK_XML_RPC, TRAC_0_10_XML_RPC_SSL, */};
-
-//	public static final TracFixture[] ALL = new TracFixture[] { TRAC_TRUNK_XML_RPC };
-
-	/**
-	 * Misc configurations for running a limited number of test against.
-	 */
-	public static final TracFixture[] MISC = new TracFixture[] { TRAC_0_10_XML_RPC_DIGEST_AUTH,
-			TRAC_0_10_XML_RPC_FORM_AUTH, };
-
-//	public static final TracFixture[] MISC = new TracFixture[] {};
-
-	public static void cleanup010() throws Exception {
-		if (data010 != null) {
-			// data010.cleanup();
-			data010 = null;
-		}
-	}
 
 	public static TracFixture current(TracFixture fixture) {
 		if (current == null) {
@@ -126,42 +55,7 @@ public class TracFixture extends TestFixture {
 	}
 
 	public static TracFixture current() {
-		return current(DEFAULT);
-	}
-
-	public static XmlRpcServer.TestData init010() throws Exception {
-		if (data010 == null) {
-			UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
-			XmlRpcServer server = new XmlRpcServer(TracTestConstants.TEST_TRAC_010_URL, credentials.getUserName(),
-					credentials.getPassword());
-
-			initializeTestData(server);
-			data010 = server.getData();
-		}
-		return data010;
-	}
-
-	/**
-	 * Adds the existing repository content to the test data of <code>server</code>.
-	 */
-	protected static void initializeTestData(XmlRpcServer server) throws Exception {
-		server.ticketMilestone("milestone1").itemCreated();
-		server.ticketMilestone("milestone2").itemCreated();
-		server.ticketMilestone("milestone3").itemCreated();
-		server.ticketMilestone("milestone4").itemCreated();
-		server.ticketMilestone("mile&stone").itemCreated();
-
-		server.ticketVersion("1.0").itemCreated();
-		server.ticketVersion("2.0").itemCreated();
-
-		server.ticket(1).itemCreated();
-		server.ticket(2).itemCreated();
-		server.ticket(3).itemCreated();
-		server.ticket(4).itemCreated();
-		server.ticket(5).itemCreated();
-		server.ticket(6).itemCreated();
-		server.ticket(7).itemCreated();
-		server.ticket(8).itemCreated();
+		return current(TestConfiguration.getDefault().discoverDefault(TracFixture.class, "trac"));
 	}
 
 	private final Version accessMode;
@@ -197,7 +91,7 @@ public class TracFixture extends TestFixture {
 
 	@Override
 	protected TestFixture getDefault() {
-		return DEFAULT;
+		return TestConfiguration.getDefault().discoverDefault(TracFixture.class, "trac");
 	}
 
 	public ITracClient connect() throws Exception {
@@ -294,29 +188,5 @@ public class TracFixture extends TestFixture {
 	public boolean hasTag(String tag) {
 		return tags.contains(tag);
 	}
-
-//	private static void initializeRepository(XmlRpcServer server) throws Exception {
-//	server.ticketVersion(null).deleteAll();
-//	server.ticketVersion("1.0").create(0, "");
-//	server.ticketVersion("2.0").create(0, "");
-//
-//	server.ticketMilestone(null).deleteAll();
-//	server.ticketMilestone("milestone1").create();
-//	server.ticketMilestone("milestone2").create();
-//	server.ticketMilestone("milestone3").create();
-//	server.ticketMilestone("milestone4").create();
-//
-//	server.ticket().deleteAll();
-//	Ticket ticket = server.ticket().create("summary1", "description1");
-//	ticket.update("comment", "milestone", "milestone1");
-//	ticket = server.ticket().create("summary2", "description2");
-//	ticket.update("comment", "milestone", "milestone2");
-//	ticket = server.ticket().create("summary3", "description3");
-//	ticket.update("comment", "milestone", "milestone2");
-//	ticket = server.ticket().create("summary4", "description4");
-//
-//    ticket = server.ticket().create("test html entities: ���", "���\n\nmulti\nline\n\n'''bold'''\n");
-//	    ticket = server.ticket().create("offline handler test", "");
-//}
 
 }

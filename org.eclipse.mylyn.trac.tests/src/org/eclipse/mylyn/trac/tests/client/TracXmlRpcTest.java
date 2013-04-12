@@ -30,7 +30,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracFixture;
 
 /**
  * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC Plugin</a> (revision 1188 or higher is
@@ -62,7 +62,7 @@ public class TracXmlRpcTest extends TestCase {
 		random = new Random();
 
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.ADMIN);
-		createConnection(new URL(TracTestConstants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.getUserName(),
+		createConnection(new URL(TracFixture.current().getRepositoryUrl() + XMLRPC_URL), credentials.getUserName(),
 				credentials.getPassword());
 
 		tickets = new ArrayList<Integer>();

@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.trac.tests.support.TestProxy;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel
@@ -60,22 +59,22 @@ public class TracClientProxyTest extends TestCase {
 
 	public void testConnectProxyWeb() throws Exception {
 		version = Version.TRAC_0_9;
-		connectProxy(TracTestConstants.TEST_TRAC_010_URL, "GET");
+		connectProxy("http://mylyn.org/trac", "GET");
 	}
 
 	public void testConnectProxyXmlRpc() throws Exception {
 		version = Version.XML_RPC;
-		connectProxy(TracTestConstants.TEST_TRAC_010_URL, "POST");
+		connectProxy("http://mylyn.org/trac", "POST");
 	}
 
 	public void testConnectProxySslWeb() throws Exception {
 		version = Version.TRAC_0_9;
-		connectProxy(TracTestConstants.TEST_TRAC_010_SSL_URL, "CONNECT");
+		connectProxy("https://mylyn.org/trac", "CONNECT");
 	}
 
 	public void testConnectProxySslXmlRpc() throws Exception {
 		version = Version.XML_RPC;
-		connectProxy(TracTestConstants.TEST_TRAC_010_SSL_URL, "CONNECT");
+		connectProxy("https://mylyn.org/trac", "CONNECT");
 	}
 
 	private void connectProxy(String url, String expectedMethod) throws Exception {

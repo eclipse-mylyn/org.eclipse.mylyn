@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -65,6 +66,8 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 	private WizardDialog dialog;
 
+	private TracFixture fixture;
+
 	public TracRepositorySettingsPageTest() {
 	}
 
@@ -86,6 +89,8 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		dialog.create();
 //		page.createControl(dialog.getShell());
 //		page.setVisible(true);
+
+		fixture = TracFixture.current();
 	}
 
 	@Override
@@ -107,32 +112,20 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		validator = page.new TracValidator(page.createTaskRepository(), fixture.getAccessMode());
 	}
 
-	public void testValidateXmlRpc() throws Exception {
-		initialize(TracFixture.TRAC_0_10_XML_RPC);
+	public void testValidate() throws Exception {
+		initialize(fixture);
 
 		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
 		assertNull(validator.getStatus());
 
 		page.applyValidatorResult(validator);
-		assertEquals(Version.XML_RPC, page.getTracVersion());
-		assertEquals("Authentication credentials are valid.", page.getMessage());
-	}
-
-	public void testValidateWeb() throws Exception {
-		initialize(TracFixture.TRAC_0_10_WEB);
-
-		validator.run(new NullProgressMonitor());
-		assertNull(validator.getResult());
-		assertNull(validator.getStatus());
-
-		page.applyValidatorResult(validator);
-		assertEquals(Version.TRAC_0_9, page.getTracVersion());
+		assertEquals(fixture.getAccessMode(), page.getTracVersion());
 		assertEquals("Authentication credentials are valid.", page.getMessage());
 	}
 
 	public void testValidateAutomaticUser() throws Exception {
-		initialize(TracFixture.TRAC_0_10_XML_RPC);
+		initialize(fixture);
 
 		page.setTracVersion(null);
 		validator = page.new TracValidator(page.createTaskRepository(), null);
@@ -147,7 +140,7 @@ public class TracRepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testValidateAutomaticAnonymous() throws Exception {
-		initialize(TracFixture.TRAC_0_10_XML_RPC);
+		initialize(fixture);
 
 		page.setUserId("");
 		page.setPassword("");
@@ -166,8 +159,9 @@ public class TracRepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testValidateInvalid() throws Exception {
-		initialize(TracFixture.TRAC_INVALID);
+		initialize(fixture);
 
+		page.setUrl("http://mylyn.org/doesnotexist");
 		page.setTracVersion(null);
 		validator = page.new TracValidator(page.createTaskRepository(), null);
 
@@ -197,10 +191,13 @@ public class TracRepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testClientManagerChangeTaskRepositorySettings() throws Exception {
-		TaskRepository repository = TracFixture.TRAC_0_10_WEB.singleRepository();
-		TracRepositoryConnector connector = (TracRepositoryConnector) TracFixture.TRAC_0_10_WEB.connector();
+		TracRepositoryConnector connector = fixture.connector();
+		TaskRepository repository = fixture.singleRepository();
+		repository.setVersion(Version.TRAC_0_9.name());
 		ITracClient client = connector.getClientManager().getTracClient(repository);
 		assertEquals(Version.TRAC_0_9, client.getAccessMode());
+
+		TasksUiExtensionReader.initWorkbenchUiExtensions();
 
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

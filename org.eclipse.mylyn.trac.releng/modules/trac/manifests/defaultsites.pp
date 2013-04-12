@@ -106,6 +106,7 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   }
 
   trac::site { "trac-test":
+    envinfo    => "Test",
   }
 
 }

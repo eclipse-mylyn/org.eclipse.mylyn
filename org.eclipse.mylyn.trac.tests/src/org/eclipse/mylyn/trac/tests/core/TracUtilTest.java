@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel
@@ -35,7 +34,7 @@ public class TracUtilTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, TracTestConstants.TEST_TRAC_010_URL);
+		taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, "http://mylyn.org/trac");
 	}
 
 	public void testToTracSearch() {

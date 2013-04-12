@@ -1196,6 +1196,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result.booleanValue();
 	}
 
+	public boolean deleteWikipage(String pageName, IProgressMonitor monitor) throws TracException {
+		Boolean result = (Boolean) call(monitor, "wiki.deletePage", pageName); //$NON-NLS-1$
+		return result.booleanValue();
+	}
+
 	public String[] listWikiPageAttachments(String pageName, IProgressMonitor monitor) throws TracException {
 		Object[] result = (Object[]) call(monitor, "wiki.listAttachments", pageName); //$NON-NLS-1$
 		String[] attachments = new String[result.length];

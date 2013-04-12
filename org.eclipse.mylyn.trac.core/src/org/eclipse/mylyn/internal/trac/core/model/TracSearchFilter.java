@@ -85,6 +85,12 @@ public class TracSearchFilter {
 		this.fieldName = fieldName;
 	}
 
+	public TracSearchFilter(String fieldName, CompareOperator operator, String value) {
+		this(fieldName);
+		setOperator(operator);
+		addValue(value);
+	}
+
 	public void addValue(String value) {
 		values.add(value);
 	}

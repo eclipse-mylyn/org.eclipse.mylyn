@@ -20,14 +20,16 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
 import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracAction;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
@@ -36,10 +38,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracHarness;
-import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
  * @author Steffen Pingel
@@ -47,11 +46,9 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
  */
 public class TracXmlRpcClientTest extends TestCase {
 
-	protected List<Ticket> tickets;
+	private static final int VERY_HIGH_REVISION = 100000;
 
-	private TestData data;
-
-	private ITracClient client;
+	private TracXmlRpcClient client;
 
 	private TracHarness harness;
 
@@ -59,9 +56,7 @@ public class TracXmlRpcClientTest extends TestCase {
 	protected void setUp() throws Exception {
 		TracFixture fixture = TracFixture.current();
 		harness = fixture.createHarness();
-		client = fixture.connect();
-		data = TracFixture.init010();
-		tickets = data.tickets;
+		client = (TracXmlRpcClient) fixture.connect();
 	}
 
 	@Override
@@ -70,17 +65,17 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testValidateFailNoAuth() throws Exception {
-		client = TracFixture.current().connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
+		client = (TracXmlRpcClient) TracFixture.current().connect(client.getUrl(), "", "");
 		try {
 			client.validate(new NullProgressMonitor());
-			fail("Expected TracPermissiongDeniedException");
+			fail("Expected TracPermissionDeniedException");
 		} catch (TracPermissionDeniedException e) {
 		}
 	}
 
 	public void testMulticallExceptions() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getTickets(new int[] { 1, Integer.MAX_VALUE }, null);
+			client.getTickets(new int[] { 1, Integer.MAX_VALUE }, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
@@ -88,7 +83,7 @@ public class TracXmlRpcClientTest extends TestCase {
 
 	public void testSingleCallExceptions() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getTicketLastChanged(Integer.MAX_VALUE, null);
+			client.getTicketLastChanged(Integer.MAX_VALUE, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
@@ -113,79 +108,67 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testSearchValidateTicket() throws Exception {
+		String uniqueTag = RandomStringUtils.randomAlphanumeric(6);
+		TracTicket ticket = harness.createTicket("searchValidateTicket " + uniqueTag);
+		ticket.putBuiltinValue(Key.COMPONENT, "component1");
+		ticket.putBuiltinValue(Key.DESCRIPTION, "description1");
+		ticket.putBuiltinValue(Key.MILESTONE, "milestone1");
+		ticket.putBuiltinValue(Key.REPORTER, "anonymous");
+		client.updateTicket(ticket, "", null);
+
 		TracSearch search = new TracSearch();
-		search.addFilter("summary", "summary1");
+		search.addFilter(new TracSearchFilter("summary", CompareOperator.CONTAINS, uniqueTag));
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		client.search(search, result, null);
 		assertEquals(1, result.size());
-		TracTestUtil.assertTicketEquals(tickets.get(0), result.get(0));
-		assertEquals("component1", result.get(0).getValue(Key.COMPONENT));
-		assertEquals("description1", result.get(0).getValue(Key.DESCRIPTION));
-		assertEquals("milestone1", result.get(0).getValue(Key.MILESTONE));
-		assertEquals("anonymous", result.get(0).getValue(Key.REPORTER));
-		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
-		// assertEquals("", result.get(0).getValue(Key.VERSION));
+		// work around missing value
+		ticket.putBuiltinValue(Key.OWNER, "somebody");
+		TracTestUtil.assertTicketEquals(ticket, result.get(0));
 	}
 
 	public void testGetTicketActions() throws Exception {
-		if (client.getUrl().equals(TracTestConstants.TEST_TRAC_010_URL)) {
-			TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
-			TracAction[] actions = ticket.getActions();
-			assertNotNull(actions);
-			assertEquals(4, actions.length);
-			assertEquals("leave", actions[0].getId());
-			assertNull(actions[0].getLabel());
-			assertEquals(0, actions[0].getFields().size());
-			assertEquals("resolve", actions[1].getId());
-			assertNull(actions[1].getLabel());
-			assertEquals(0, actions[1].getFields().size());
-			assertEquals("reassign", actions[2].getId());
-			assertNull(actions[2].getLabel());
-			assertEquals(0, actions[2].getFields().size());
-			assertEquals("accept", actions[3].getId());
-			assertNull(actions[3].getLabel());
-			assertEquals(0, actions[3].getFields().size());
+		TracTicket ticket = harness.createTicket("getTicketActions");
+		TracAction[] actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(4, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertEquals("resolve", actions[1].getId());
+		assertEquals("resolve", actions[1].getLabel());
+		assertNotNull(actions[1].getHint());
+		List<TracTicketField> fields = actions[1].getFields();
+		assertEquals(1, fields.size());
+		assertEquals(5, fields.get(0).getOptions().length);
+		assertEquals("fixed", fields.get(0).getOptions()[0]);
+		assertEquals("reassign", actions[2].getId());
+		fields = actions[2].getFields();
+		assertEquals(1, fields.size());
+		assertNull(fields.get(0).getOptions());
+		assertEquals("accept", actions[3].getId());
+	}
 
-			ticket = client.getTicket(tickets.get(1).getId(), null);
-			actions = ticket.getActions();
-			assertNotNull(actions);
-			assertEquals(2, actions.length);
-			assertEquals("leave", actions[0].getId());
-			assertEquals("reopen", actions[1].getId());
-		} else {
-			TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
-			TracAction[] actions = ticket.getActions();
-			assertNotNull(actions);
-			assertEquals(4, actions.length);
-			assertEquals("leave", actions[0].getId());
-			assertEquals("resolve", actions[1].getId());
-			assertEquals("resolve", actions[1].getLabel());
-			assertNotNull(actions[1].getHint());
-			List<TracTicketField> fields = actions[1].getFields();
-			assertEquals(1, fields.size());
-			assertEquals(5, fields.get(0).getOptions().length);
-			assertEquals("fixed", fields.get(0).getOptions()[0]);
-			assertEquals("reassign", actions[2].getId());
-			fields = actions[2].getFields();
-			assertEquals(1, fields.size());
-			assertNull(fields.get(0).getOptions());
-			assertEquals("accept", actions[3].getId());
+	public void testGetTicketActionsClosed() throws Exception {
+		TracTicket ticket = harness.createTicket("getTicketActionsClosed");
+		ticket.putBuiltinValue(Key.STATUS, "closed");
+		ticket.putBuiltinValue(Key.RESOLUTION, "fixed");
+		client.updateTicket(ticket, "", null);
 
-			ticket = client.getTicket(tickets.get(1).getId(), null);
-			actions = ticket.getActions();
-			assertNotNull(actions);
-			assertEquals(2, actions.length);
-			assertEquals("leave", actions[0].getId());
-			assertEquals("reopen", actions[1].getId());
-		}
+		ticket = client.getTicket(ticket.getId(), null);
+		TracAction[] actions = ticket.getActions();
+		assertNotNull(actions);
+		assertEquals(2, actions.length);
+		assertEquals("leave", actions[0].getId());
+		assertEquals("reopen", actions[1].getId());
 	}
 
 	public void testWikiToHtml() throws Exception {
 		String tracUrl = client.getUrl();
-		String html = ((TracXmlRpcClient) client).wikiToHtml("", null);
+		if (tracUrl.endsWith("/")) {
+			tracUrl = tracUrl.substring(0, tracUrl.length() - 1);
+		}
+		String html = client.wikiToHtml("", null);
 		assertEquals("", html);
 
-		html = ((TracXmlRpcClient) client).wikiToHtml("A simple line of text.", null);
+		html = client.wikiToHtml("A simple line of text.", null);
 		assertEquals("<p>\nA simple line of text.\n</p>\n", html);
 
 		String source = "= WikiFormattingTesting =\n" + " * '''bold''', '''!''' can be bold too''', and '''! '''\n"
@@ -204,23 +187,27 @@ public class TracXmlRpcClientTest extends TestCase {
 					+ tracUrl
 					+ "/wiki/WikiFormattingTesting\" rel=\"nofollow\">WikiFormattingTesting?</a></h1>\n<ul><li><strong>bold</strong>, <strong>\'\'\' can be bold too</strong>, and <strong>! </strong>\n</li><li><i>italic</i>\n</li><li><strong><i>bold italic</i></strong>\n</li><li><span class=\"underline\">underline</span>\n</li><li><tt>monospace</tt> or <tt>monospace</tt>\n</li><li><del>strike-through</del>\n</li><li><sup>superscript</sup> \n</li><li><sub>subscript</sub>\n</li></ul><h1 id=\"Heading\">Heading</h1>\n<h2 id=\"Subheading\">Subheading</h2>\n";
 		}
-		html = ((TracXmlRpcClient) client).wikiToHtml(source, null);
+		html = client.wikiToHtml(source, null);
 		assertEquals(expectedHtml, html);
 	}
 
 	public void testValidateWikiAPI() throws Exception {
-		((TracXmlRpcClient) client).validateWikiRpcApi(null);
+		client.validateWikiRpcApi(null);
 	}
 
 	public void testGetAllWikiPageNames() throws Exception {
-		String[] names = ((TracXmlRpcClient) client).getAllWikiPageNames(null);
+		String[] names = client.getAllWikiPageNames(null);
 		List<String> all = Arrays.asList(names);
 		assertTrue(all.contains("Test"));
 	}
 
 	public void testGetWikiPage() throws Exception {
-		TracWikiPage page = ((TracXmlRpcClient) client).getWikiPage("TestGetPage", null);
-		assertEquals("TestGetPage", page.getPageInfo().getPageName());
+		String pageName = "TestGetPage" + RandomStringUtils.randomAlphanumeric(6);
+		harness.createWikiPage(pageName, "Version 1");
+		harness.createWikiPage(pageName, "Version 2");
+
+		TracWikiPage page = client.getWikiPage(pageName, null);
+		assertEquals(pageName, page.getPageInfo().getPageName());
 		assertEquals("tests@mylyn.eclipse.org", page.getPageInfo().getAuthor());
 		assertEquals(2, page.getPageInfo().getVersion());
 		// XXX The Date returned from Wiki API seems to have a problem with the Time Zone
@@ -229,109 +216,121 @@ public class TracXmlRpcClientTest extends TestCase {
 		assertEquals("Version 2", page.getContent());
 		assertTrue(page.getPageHTML().startsWith("<html>"));
 
-		page = ((TracXmlRpcClient) client).getWikiPage("TestGetPage", 1, null);
-		assertEquals("TestGetPage", page.getPageInfo().getPageName());
-		assertEquals("anonymous", page.getPageInfo().getAuthor());
+		page = client.getWikiPage(pageName, 1, null);
+		assertEquals(pageName, page.getPageInfo().getPageName());
+		assertEquals("tests@mylyn.eclipse.org", page.getPageInfo().getAuthor());
 		assertEquals(1, page.getPageInfo().getVersion());
 		assertEquals("Version 1", page.getContent());
 		assertTrue(page.getPageHTML().startsWith("<html>"));
 	}
 
-	public void testGetWikiPageInvalid() throws Exception {
-		// get info -- non-existing version
+	public void testGetWikiPageInfoInvalidRevision() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageInfo("Test", 10, null);
+			client.getWikiPageInfo("Test", VERY_HIGH_REVISION, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get info -- non-existing page name
+	public void testGetWikiPageInfoInvalidPage() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageInfo("NoSuchPage", null);
+			client.getWikiPageInfo("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get info -- null parameter
+	public void testGetWikiPageInfoNull() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageInfo(null, null);
+			client.getWikiPageInfo(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
+	}
 
-		// get content -- non-existing version
+	public void testGetWikiPageContentInvalidRevision() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageContent("Test", 10, null);
+			client.getWikiPageContent("Test", VERY_HIGH_REVISION, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get content -- non-existing page name
+	public void testGetWikiPageContentInvalidPage() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageContent("NoSuchPage", null);
+			client.getWikiPageContent("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get content -- null parameter
+	public void testGetWikiPageContentContentNull() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageContent(null, null);
+			client.getWikiPageContent(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
+	}
 
-		// get HTML -- non-existing version
+	public void testGetWikiPageHtmlInvalidRevision() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageHtml("Test", 10, null);
+			client.getWikiPageHtml("Test", VERY_HIGH_REVISION, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get HTML -- non-existing page name
+	public void testGetWikiPageHtmlInvalidPage() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageHtml("NoSuchPage", null);
+			client.getWikiPageHtml("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get HTML -- null parameter
+	public void testGetWikiPageHtmlNull() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageHtml(null, null);
+			client.getWikiPageHtml(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
+	}
 
-		// get a page -- non-existing version
+	public void testGetWikiPageInvalidRevision() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPage("Test", 10, null);
+			client.getWikiPage("Test", VERY_HIGH_REVISION, null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get a page -- non-existing page name
+	public void testGetWikiPageInvalidPage() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPage("NoSuchPage", null);
+			client.getWikiPage("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get a page -- null parameter
+	public void testGetWikiPageNull() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPage(null, null);
+			client.getWikiPage(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
+	}
 
-		// get all versions of a page -- non-existing page name
+	public void testGetWikiInfoAllVersionsInvalidPage() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageInfoAllVersions("NoSuchPage", null);
+			client.getWikiPageInfoAllVersions("NoSuchPage", null);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
 
-		// get all versions of a page -- null parameter
+	public void testGetWikiInfoAllVersionsInvalidPageNull() throws Exception {
 		try {
-			((TracXmlRpcClient) client).getWikiPageInfoAllVersions(null, null);
+			client.getWikiPageInfoAllVersions(null, null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
@@ -339,8 +338,9 @@ public class TracXmlRpcClientTest extends TestCase {
 
 	public void testGetWikiPageInfoAllVersions() throws Exception {
 		String pageName = "Test";
+		harness.createWikiPage(pageName, "test content " + RandomStringUtils.randomAlphanumeric(6));
 
-		TracWikiPageInfo[] versions = ((TracXmlRpcClient) client).getWikiPageInfoAllVersions(pageName, null);
+		TracWikiPageInfo[] versions = client.getWikiPageInfoAllVersions(pageName, null);
 		assertTrue(versions.length >= 1);
 		int counter = 1;
 		for (TracWikiPageInfo version : versions) {
@@ -350,7 +350,8 @@ public class TracXmlRpcClientTest extends TestCase {
 	}
 
 	public void testGetRecentWikiChanges() throws Exception {
-		TracWikiPageInfo[] changes = ((TracXmlRpcClient) client).getRecentWikiChanges(new Date(0), null);
+		harness.createWikiPage("Test", "test content " + RandomStringUtils.randomAlphanumeric(6));
+		TracWikiPageInfo[] changes = client.getRecentWikiChanges(new Date(0), null);
 		TracWikiPageInfo testPage = null;
 		for (TracWikiPageInfo item : changes) {
 			assertTrue(item.getPageName() != null);
@@ -359,10 +360,6 @@ public class TracXmlRpcClientTest extends TestCase {
 			}
 		}
 		assertTrue(testPage != null);
-	}
-
-	public void testPutWikiPage() throws Exception {
-		// TODO testing wiki.putPage()
 	}
 
 	public void testInvalidCharacters() throws Exception {

@@ -21,6 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -33,6 +34,8 @@ import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
 import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
@@ -40,8 +43,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
-import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
  * Test cases for classes that implement {@link ITracClient}.
@@ -52,11 +53,7 @@ public class TracClientTest extends TestCase {
 
 	private ITracClient client;
 
-	private TestData data;
-
 	private TracFixture fixture;
-
-	protected List<Ticket> tickets;
 
 	private TracHarness harness;
 
@@ -68,8 +65,6 @@ public class TracClientTest extends TestCase {
 		fixture = TracFixture.current();
 		harness = fixture.createHarness();
 		client = fixture.connect();
-		data = TracFixture.init010();
-		tickets = data.tickets;
 	}
 
 	@Override
@@ -79,7 +74,7 @@ public class TracClientTest extends TestCase {
 
 	public void testGetTicket() throws Exception {
 		TracTicket expectedTicket = harness.createTicket("getTicket");
-		TracTicket ticket = client.getTicket(tickets.get(0).getId(), null);
+		TracTicket ticket = client.getTicket(expectedTicket.getId(), null);
 		TracTestUtil.assertTicketEquals(expectedTicket, ticket);
 	}
 
@@ -92,9 +87,12 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testGetTicketUmlaute() throws Exception {
-		TracTicket ticket = client.getTicket(data.htmlEntitiesTicketId, null);
+		TracTicket ticket = harness.createTicket("test html entities: \u00E4\u00F6\u00FC");
 		assertEquals("test html entities: \u00E4\u00F6\u00FC", ticket.getValue(Key.SUMMARY));
 		if (client.getAccessMode() == Version.XML_RPC) {
+			ticket.putBuiltinValue(Key.DESCRIPTION, "\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n");
+			client.updateTicket(ticket, "", null);
+			ticket = client.getTicket(ticket.getId(), null);
 			assertEquals("\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n", ticket.getValue(Key.DESCRIPTION));
 		} else {
 			assertEquals(null, ticket.getValue(Key.DESCRIPTION));
@@ -128,23 +126,28 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchExactMatch() throws Exception {
+		String uniqueTag = RandomStringUtils.randomAlphanumeric(6);
+		String summary = "searchExactMatch " + uniqueTag;
+		TracTicket ticket = harness.createTicketWithMilestone(summary, "milestone1");
+
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
-		search.addFilter("summary", "summary1");
+		search.addFilter("summary", summary);
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		client.search(search, result, null);
 		assertEquals(1, result.size());
-		TracTestUtil.assertTicketEquals(tickets.get(0), result.get(0));
+		TracTestUtil.assertTicketEquals(ticket, result.get(0));
 		assertEquals("milestone1", result.get(0).getValue(Key.MILESTONE));
-		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
+		assertEquals(summary, result.get(0).getValue(Key.SUMMARY));
 	}
 
 	public void testSearchMilestone1() throws Exception {
-		TracTicket ticket = harness.createTicketWithMilestone("searchMilestone1", "milestone1");
-		harness.createTicketWithMilestone("searchMilestone1", "milestone2");
+		String uniqueTag = RandomStringUtils.randomAlphanumeric(6);
+		TracTicket ticket = harness.createTicketWithMilestone("searchMilestone1" + uniqueTag, "milestone1");
+		harness.createTicketWithMilestone("searchMilestone1" + uniqueTag, "milestone2");
 
 		TracSearch search = new TracSearch();
-		search.addFilter("summary", "searchMilestone1");
+		search.addFilter(new TracSearchFilter("summary", CompareOperator.CONTAINS, uniqueTag));
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
@@ -154,11 +157,13 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchMilestone2() throws Exception {
-		TracTicket ticket1 = harness.createTicketWithMilestone("searchMilestone2", "milestone1");
-		TracTicket ticket2 = harness.createTicketWithMilestone("searchMilestone2", "milestone1");
-		TracTicket ticket3 = harness.createTicketWithMilestone("searchMilestone2", "milestone2");
+		String uniqueTag = RandomStringUtils.randomAlphanumeric(6);
+		TracTicket ticket1 = harness.createTicketWithMilestone("searchMilestone2 " + uniqueTag, "milestone1");
+		TracTicket ticket2 = harness.createTicketWithMilestone("searchMilestone2 " + uniqueTag, "milestone1");
+		TracTicket ticket3 = harness.createTicketWithMilestone("searchMilestone2 " + uniqueTag, "milestone2");
 
 		TracSearch search = new TracSearch();
+		search.addFilter(new TracSearchFilter("summary", CompareOperator.CONTAINS, uniqueTag));
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone2");
 		search.setOrderBy("id");
@@ -171,6 +176,9 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchMilestoneAmpersand() throws Exception {
+		harness.createMilestone("mile&stone");
+		TracTicket ticket = harness.createTicketWithMilestone("searchMilestoneAmpersand", "mile&stone");
+
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "mile&stone");
 		search.setOrderBy("id");
@@ -178,7 +186,7 @@ public class TracClientTest extends TestCase {
 		try {
 			client.search(search, result, null);
 			assertEquals(1, result.size());
-			TracTestUtil.assertTicketEquals(tickets.get(7), result.get(0));
+			TracTestUtil.assertTicketEquals(ticket, result.get(0));
 		} catch (TracRemoteException e) {
 			if ("'Query filter requires field and constraints separated by a \"=\"' while executing 'ticket.query()'".equals(e.getMessage())
 					&& (fixture.getVersion().equals("0.10") || fixture.getVersion().equals("0.11"))) {
@@ -190,7 +198,12 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testStatusClosed() throws Exception {
-		TracTicket ticket = client.getTicket(data.offlineHandlerTicketId, null);
+		TracTicket ticket = harness.createTicket("statusClosed");
+		ticket.putBuiltinValue(Key.STATUS, "closed");
+		ticket.putBuiltinValue(Key.RESOLUTION, "fixed");
+		client.updateTicket(ticket, "", null);
+
+		ticket = client.getTicket(ticket.getId(), null);
 		assertEquals("closed", ticket.getValue(Key.STATUS));
 		assertEquals("fixed", ticket.getValue(Key.RESOLUTION));
 	}

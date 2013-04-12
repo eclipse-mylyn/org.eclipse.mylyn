@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.trac.tests.support;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -22,8 +21,6 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
-import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 
 /**
@@ -128,12 +125,6 @@ public class XmlRpcServer {
 
 		// all created tickets
 		public List<Ticket> tickets = new ArrayList<Ticket>();
-
-		public int attachmentTicketId = 5;
-
-		public int htmlEntitiesTicketId = 6;
-
-		public int offlineHandlerTicketId = 7;
 
 		/**
 		 * Undo all changes.
@@ -276,23 +267,9 @@ public class XmlRpcServer {
 
 	private final TestData data;
 
-	private final String password;
-
-	private final TracXmlRpcClient repository;
-
-	private final String url;
-
-	private final String username;
-
-	public XmlRpcServer(String url, String username, String password) throws Exception {
-		this.url = url;
-		this.username = username;
-		this.password = password;
-
+	public XmlRpcServer(TracXmlRpcClient client) throws Exception {
+		this.client = client.getClient();
 		this.data = new TestData();
-
-		this.repository = new TracXmlRpcClient(new WebLocation(url, username, password), Version.XML_RPC);
-		this.client = repository.getClient();
 	}
 
 	private Object call(String method, Object... parameters) throws XmlRpcException, IOException {
@@ -310,22 +287,6 @@ public class XmlRpcServer {
 
 	public TestData getData() {
 		return data;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public TracXmlRpcClient getRepository() throws MalformedURLException {
-		return repository;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public String getUsername() {
-		return username;
 	}
 
 	public Ticket ticket() throws Exception {

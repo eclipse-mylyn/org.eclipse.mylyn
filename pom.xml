@@ -90,5 +90,6 @@
     <module>org.eclipse.mylyn.trac.core</module>
     <module>org.eclipse.mylyn.trac.tests</module>
     <module>org.eclipse.mylyn.trac.ui</module>
+    <module>org.eclipse.mylyn.trac.ui.tests</module>
   </modules>
 </project>

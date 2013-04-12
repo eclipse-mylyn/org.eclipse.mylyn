@@ -53,7 +53,7 @@ public class AllTracHeadlessStandaloneTests {
 					fixture.add(TracClientFactoryTest.class);
 					fixture.add(TracClientTest.class);
 					fixture.done();
-				} else {
+				} else if (!fixture.hasTag(TracFixture.TAG_TEST)) {
 					addTests(suite, fixture);
 				}
 			}
