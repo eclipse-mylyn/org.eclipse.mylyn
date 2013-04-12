@@ -25,6 +25,7 @@ import java.util.List;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -116,11 +117,23 @@ public class TestConfiguration {
 	}
 
 	public <T> List<T> discover(Class<T> clazz, String fixtureType) {
+		return discover(clazz, fixtureType, isDefaultOnly());
+	}
+
+	public <T> T discoverDefault(Class<T> clazz, String fixtureType) {
+		List<T> fixtures = discover(clazz, fixtureType, true);
+		if (fixtures.isEmpty()) {
+			throw new RuntimeException(NLS.bind("No default fixture available for {0}", fixtureType));
+		}
+		return fixtures.get(0);
+	}
+
+	public <T> List<T> discover(Class<T> clazz, String fixtureType, boolean defaultOnly) {
 		List<T> fixtures = Collections.emptyList();
 
 		try {
 			File file = CommonTestUtil.getFile(clazz, "local.json");
-			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, isDefaultOnly());
+			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, defaultOnly);
 		} catch (AssertionFailedError e) {
 			// ignore
 		} catch (IOException e) {
@@ -129,12 +142,12 @@ public class TestConfiguration {
 
 		if (fixtures.isEmpty()) {
 			fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
-					fixtureType, isDefaultOnly());
+					fixtureType, defaultOnly);
 		}
 
 		if (fixtures.isEmpty()) {
 			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType,
-					isDefaultOnly());
+					defaultOnly);
 		}
 
 		return fixtures;
