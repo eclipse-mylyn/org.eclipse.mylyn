@@ -32,28 +32,36 @@ import org.junit.runners.Parameterized.Parameters;
  * 
  * @author Steffen Pingel
  */
-@RunWith(Parameterized.class)
 public class TracTestCleanupUtil extends TestCase {
 
-	private final TracFixture fixture;
+	@RunWith(Parameterized.class)
+	public static class TracTestCleanupUtil4 extends TracTestCleanupUtil {
 
-	@Parameters(name = "{1}")
-	public static Iterable<Object[]> data() {
-		List<TracFixture> fixtures = TestConfiguration.getDefault().discover(TracFixture.class, "trac");
-		List<Object[]> data = new ArrayList<Object[]>(fixtures.size());
-		for (TracFixture fixture : fixtures) {
-			data.add(new Object[] { fixture, fixture.getInfo() });
+		public TracTestCleanupUtil4(TracFixture fixture, String name) {
+			super(name);
+			setFixture(fixture);
 		}
-		return data;
+
+		@Parameters(name = "{1}")
+		public static Iterable<Object[]> data() {
+			List<TracFixture> fixtures = TestConfiguration.getDefault().discover(TracFixture.class, "trac");
+			List<Object[]> data = new ArrayList<Object[]>(fixtures.size());
+			for (TracFixture fixture : fixtures) {
+				data.add(new Object[] { fixture, fixture.getInfo() });
+			}
+			return data;
+		}
+
 	}
+
+	private TracFixture fixture;
 
 	public TracTestCleanupUtil(String name) {
 		super(name);
 		this.fixture = TracFixture.current();
 	}
 
-	public TracTestCleanupUtil(TracFixture fixture, String name) {
-		super(name);
+	protected void setFixture(TracFixture fixture) {
 		this.fixture = fixture;
 	}
 
