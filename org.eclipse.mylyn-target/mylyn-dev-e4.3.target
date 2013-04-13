@@ -4,18 +4,17 @@
 <target name="mylyn-dev-e4.3" sequenceNumber="17">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
-<unit id="org.mockito" version="1.8.4.v201102171835"/>
-<unit id="org.objenesis" version="1.0.0.v201105211943"/>
-<unit id="com.google.guava" version="10.0.1.v201203051515"/>
+<unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.integration" version="1.1.0.v20090501071000"/>
+<unit id="org.hamcrest.integration" version="1.1.0.v201303031500"/>
 <unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
+<unit id="org.mockito" version="1.8.4.v201303031500"/>
+<unit id="org.objenesis" version="1.0.0.v201105211943"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130308121626/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
