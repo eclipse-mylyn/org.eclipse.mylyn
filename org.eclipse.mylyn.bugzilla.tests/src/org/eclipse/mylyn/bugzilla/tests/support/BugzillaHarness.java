@@ -18,6 +18,7 @@ import static org.junit.Assert.fail;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -594,6 +595,120 @@ public class BugzillaHarness {
 
 		workingCopy.save(changed, null);
 		response = BugzillaFixture.current().submitTask(taskData, abstractBugzillaTest.getClient());
+
+		return taskId;
+	}
+
+	public ArrayList<String> taskMissingHitsExists() {
+		ArrayList<String> taskIDs = new ArrayList<String>();
+
+		String queryUrlString = abstractBugzillaTest.getRepository().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20Missing%20Hits&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
+		RepositoryQuery query = new RepositoryQuery(abstractBugzillaTest.getRepository().getConnectorKind(),
+				"handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		abstractBugzillaTest.getConnector().performQuery(abstractBugzillaTest.getRepository(), query, collector, null,
+				new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			for (Integer integer : sks) {
+				taskIDs.add("" + integer);
+			}
+		}
+		return taskIDs;
+	}
+
+	public void createMissingHitsTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+		};
+		final TaskMapping taskMappingSelect1 = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "ManualC2";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test Missing Hits 1";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the test Missing Hits 1";
+			}
+		};
+		final TaskMapping taskMappingSelect2 = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "ManualC2";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test Missing Hits 2";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the test Missing Hits 2";
+			}
+		};
+		final TaskMapping taskMappingSelect3 = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "ManualC2";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test Missing Hits 3";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the test Missing Hits 3";
+			}
+		};
+		createTask(taskMappingInit, taskMappingSelect1);
+		createTask(taskMappingInit, taskMappingSelect2);
+		createTask(taskMappingInit, taskMappingSelect3);
+	}
+
+	private String createTask(TaskMapping taskMappingInit, TaskMapping taskMappingSelect) throws Exception {
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(abstractBugzillaTest.getRepository(), taskMappingInit,
+				taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0],
+				abstractBugzillaTest.getClient());
+
+		((AbstractTask) taskNew).setSubmitting(true);
+
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
 
 		return taskId;
 	}

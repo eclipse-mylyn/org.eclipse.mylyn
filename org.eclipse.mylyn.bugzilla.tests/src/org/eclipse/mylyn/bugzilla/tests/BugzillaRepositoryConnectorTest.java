@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -934,7 +935,14 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	}
 
 	public void testMissingHits() throws Exception {
-		String queryString = "http://mylyn.eclipse.org/bugs323/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		ArrayList<String> taskId = harness.taskMissingHitsExists();
+		if (taskId == null || taskId.isEmpty()) {
+			harness.createMissingHitsTask();
+		}
+
+		String queryString = BugzillaFixture.current().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20Missing%20Hits&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
 		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "test");
 		query.setRepositoryUrl(repository.getRepositoryUrl());
 		query.setUrl(queryString);
