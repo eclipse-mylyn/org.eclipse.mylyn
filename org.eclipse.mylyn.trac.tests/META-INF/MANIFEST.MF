@@ -20,7 +20,7 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.apache.ws.commons.util;bundle-version="1.0.0",
  org.apache.xmlrpc;bundle-version="3.0.0",
  org.eclipse.ui.forms,
- org.apache.commons.lang;bundle-version="2.6.0"
+ org.apache.commons.lang;bundle-version="2.4.0"
 Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.client;x-internal:=true,
  org.eclipse.mylyn.trac.tests.core;x-internal:=true,
