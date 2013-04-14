@@ -42,7 +42,8 @@ public class TracTestCleanupUtil extends TestCase {
 			setFixture(fixture);
 		}
 
-		@Parameters(name = "{1}")
+		// requires JUnit 4.11 @Parameters(name = "{1}")
+		@Parameters
 		public static Iterable<Object[]> data() {
 			List<TracFixture> fixtures = TestConfiguration.getDefault().discover(TracFixture.class, "trac");
 			List<Object[]> data = new ArrayList<Object[]>(fixtures.size());
