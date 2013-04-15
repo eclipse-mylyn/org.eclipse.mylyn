@@ -144,7 +144,7 @@ public class TracFixture extends TestFixture {
 	}
 
 	public boolean isXmlRpcEnabled() {
-		return true;
+		return Version.XML_RPC.name().equals(getAccessMode());
 	}
 
 	public TaskRepository singleRepository(TracRepositoryConnector connector) {
@@ -187,6 +187,10 @@ public class TracFixture extends TestFixture {
 	@Override
 	public boolean hasTag(String tag) {
 		return tags.contains(tag);
+	}
+
+	public boolean requiresAuthentication() {
+		return getInfo().contains("AllBasicAuth");
 	}
 
 }

@@ -98,9 +98,22 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	protected void authenticateAccountManager(HttpClient httpClient, HostConfiguration hostConfiguration,
 			AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException, TracLoginException {
+		String formToken = getFormToken(httpClient);
+		authenticateAccountManagerInternal(httpClient, hostConfiguration, credentials, monitor, formToken);
+
+		// form token is based on a cookie which may have changed due to the login post
+		// re-try with new token to ensure we are logging in with the right token, otherwise user won't be logged in
+		String newFormToken = getFormToken(httpClient);
+		if (formToken.length() == 0 && !formToken.equals(newFormToken)) {
+			authenticateAccountManagerInternal(httpClient, hostConfiguration, credentials, monitor, newFormToken);
+		}
+	}
+
+	public void authenticateAccountManagerInternal(HttpClient httpClient, HostConfiguration hostConfiguration,
+			AuthenticationCredentials credentials, IProgressMonitor monitor, String formToken) throws IOException,
+			TracLoginException {
 		PostMethod post = new PostMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
-		String formToken = getFormToken(httpClient);
 		NameValuePair[] data = { new NameValuePair("referer", ""), //$NON-NLS-1$ //$NON-NLS-2$
 				new NameValuePair("user", credentials.getUserName()), //$NON-NLS-1$
 				new NameValuePair("password", credentials.getPassword()), new NameValuePair("__FORM_TOKEN", formToken) }; //$NON-NLS-1$ //$NON-NLS-2$

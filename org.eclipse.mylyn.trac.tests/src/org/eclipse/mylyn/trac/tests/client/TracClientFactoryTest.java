@@ -61,25 +61,42 @@ public class TracClientFactoryTest extends TestCase {
 		WebLocation location = new WebLocation(url, credentials.getUserName(), credentials.getPassword());
 		Version version = TracClientFactory.probeClient(location);
 		if (fixture.isXmlRpcEnabled()) {
+			// assertion is only meaningful for XML-RPC since web fixtures will also probe XML-RPC if available
 			assertEquals(Version.XML_RPC, version);
-		} else {
-			assertEquals(Version.TRAC_0_9, version);
 		}
+	}
 
-		location = new WebLocation(url, "", "");
-		version = TracClientFactory.probeClient(location);
-		assertEquals(Version.TRAC_0_9, version);
-
+	public void testProbeClientNoCredentials() throws Exception {
+		String url = fixture.getRepositoryUrl();
+		WebLocation location = new WebLocation(url, "", "");
 		try {
-			location = new WebLocation(url, "invaliduser", "password");
-			version = TracClientFactory.probeClient(location);
+			Version version = TracClientFactory.probeClient(location);
+			if (fixture.requiresAuthentication()) {
+				fail("Expected TracLoginException");
+			}
+			assertEquals(Version.TRAC_0_9, version);
+		} catch (TracLoginException e) {
+			if (fixture.requiresAuthentication()) {
+				// the remainder of the 
+				return;
+			}
+			throw e;
+		}
+	}
+
+	public void testProbeClientInvalidCredentials() throws Exception {
+		try {
+			WebLocation location = new WebLocation(fixture.getRepositoryUrl(), "invaliduser", "password");
+			Version version = TracClientFactory.probeClient(location);
 			fail("Expected TracLoginException, got " + version);
 		} catch (TracLoginException e) {
 		}
+	}
 
+	public void testProbeClientInvalidLocation() throws Exception {
 		try {
-			location = new WebLocation(url + "/nonexistant", "", "");
-			version = TracClientFactory.probeClient(location);
+			WebLocation location = new WebLocation(fixture.getRepositoryUrl() + "/nonexistant", "", "");
+			Version version = TracClientFactory.probeClient(location);
 			fail("Expected TracException, got " + version);
 		} catch (TracException e) {
 		}

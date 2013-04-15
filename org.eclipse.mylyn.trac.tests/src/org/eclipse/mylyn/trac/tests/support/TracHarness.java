@@ -40,58 +40,17 @@ public class TracHarness {
 		this.fixture = fixture;
 	}
 
-	public TracFixture getFixture() {
-		return fixture;
+	public void attachFile(int ticketId, String name, String content) throws Exception {
+		priviledgedClient().putAttachmentData(ticketId, name, "", new ByteArrayInputStream(content.getBytes("UTF-8")),
+				null, true);
 	}
 
-	private TracXmlRpcClient priviledgedClient() throws Exception {
-		if (priviledgedClient == null) {
-			priviledgedClient = (TracXmlRpcClient) fixture.connectXmlRpc(PrivilegeLevel.USER);
-		}
-		return priviledgedClient;
-	}
-
-	public TracTicket createTicket(String summary) throws Exception {
-		TracTicket ticket = newTicket(summary);
-		return createTicket(ticket);
-	}
-
-	public TracTicket createTicket(TracTicket ticket) throws TracException, Exception {
-		int id = priviledgedClient().createTicket(ticket, null);
-		return priviledgedClient().getTicket(id, null);
-	}
-
-	public TracTicket newTicket(String summary) throws InvalidTicketException {
-		TracTicket ticket = new TracTicket();
-		ticket.putBuiltinValue(Key.SUMMARY, summary);
-		ticket.putBuiltinValue(Key.DESCRIPTION, "");
-		return ticket;
+	public TracRepositoryConnector connector() {
+		return fixture.connector();
 	}
 
 	public void createMilestone(String milestone) throws Exception {
 		new XmlRpcServer(priviledgedClient()).ticketMilestone(milestone).deleteAndCreate();
-	}
-
-	public TracTicket createTicketWithMilestone(String summary, String milestone) throws Exception {
-		TracTicket ticket = newTicket(summary);
-		ticket.putBuiltinValue(Key.MILESTONE, milestone);
-		return createTicket(ticket);
-	}
-
-	public ITask getTask(String taskId) throws Exception {
-		TaskRepository repository = repository();
-		TaskData taskData = fixture.connector().getTaskData(repository, taskId, null);
-		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
-		TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
-		return task;
-	}
-
-	public void dispose() {
-
-	}
-
-	public ITask getTask(TracTicket ticket) throws Exception {
-		return getTask(Integer.toString(ticket.getId()));
 	}
 
 	public ITask createTask(String summary) throws Exception {
@@ -104,6 +63,66 @@ public class TracHarness {
 		return fixture.connector().getTaskData(repository(), Integer.toString(ticket.getId()), null);
 	}
 
+	public TracTicket createTicket(String summary) throws Exception {
+		TracTicket ticket = newTicket(summary);
+		return createTicket(ticket);
+	}
+
+	public TracTicket createTicket(TracTicket ticket) throws TracException, Exception {
+		int id = priviledgedClient().createTicket(ticket, null);
+		return priviledgedClient().getTicket(id, null);
+	}
+
+	public TracTicket createTicketWithMilestone(String summary, String milestone) throws Exception {
+		TracTicket ticket = newTicket(summary);
+		ticket.putBuiltinValue(Key.MILESTONE, milestone);
+		return createTicket(ticket);
+	}
+
+	public void createWikiPage(String pageName, String content) throws Exception {
+		priviledgedClient().putWikipage(pageName, content, Collections.<String, Object> emptyMap(), null);
+	}
+
+	public void dispose() {
+		// TODO delete created tickets
+	}
+
+	public TracFixture getFixture() {
+		return fixture;
+	}
+
+	public ITask getTask(String taskId) throws Exception {
+		TaskRepository repository = repository();
+		TaskData taskData = fixture.connector().getTaskData(repository, taskId, null);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+		TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
+		return task;
+	}
+
+	public ITask getTask(TracTicket ticket) throws Exception {
+		return getTask(Integer.toString(ticket.getId()));
+	}
+
+	public boolean hasMilestone(String milestone) {
+		try {
+			new XmlRpcServer(priviledgedClient()).ticketMilestone(milestone).get();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean isXmlRpc() {
+		return Version.XML_RPC.name().equals(repository().getVersion());
+	}
+
+	public TracTicket newTicket(String summary) throws InvalidTicketException {
+		TracTicket ticket = new TracTicket();
+		ticket.putBuiltinValue(Key.SUMMARY, summary);
+		ticket.putBuiltinValue(Key.DESCRIPTION, "");
+		return ticket;
+	}
+
 	public TaskRepository repository() {
 		if (repository == null) {
 			repository = fixture.singleRepository();
@@ -111,21 +130,15 @@ public class TracHarness {
 		return repository;
 	}
 
-	public TracRepositoryConnector connector() {
-		return fixture.connector();
+	public void udpateTicket(TracTicket ticket) throws Exception {
+		priviledgedClient().updateTicket(ticket, "", null);
 	}
 
-	public void attachFile(int ticketId, String name, String content) throws Exception {
-		priviledgedClient().putAttachmentData(ticketId, name, "", new ByteArrayInputStream(content.getBytes("UTF-8")),
-				null, true);
-	}
-
-	public boolean isXmlRpc() {
-		return Version.XML_RPC.name().equals(repository().getVersion());
-	}
-
-	public void createWikiPage(String pageName, String content) throws Exception {
-		priviledgedClient().putWikipage(pageName, content, Collections.<String, Object> emptyMap(), null);
+	private TracXmlRpcClient priviledgedClient() throws Exception {
+		if (priviledgedClient == null) {
+			priviledgedClient = (TracXmlRpcClient) fixture.connectXmlRpc(PrivilegeLevel.USER);
+		}
+		return priviledgedClient;
 	}
 
 }

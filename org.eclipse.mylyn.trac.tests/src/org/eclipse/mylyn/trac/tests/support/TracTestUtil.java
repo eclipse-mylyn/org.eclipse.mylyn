@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -74,7 +75,8 @@ public class TracTestUtil {
 		}
 	}
 
-	public static void assertTicketEquals(TracTicket expectedTicket, TracTicket actualTicket) throws Exception {
+	public static void assertTicketEquals(Version accessMode, TracTicket expectedTicket, TracTicket actualTicket)
+			throws Exception {
 		assertTrue(actualTicket.isValid());
 
 		Map<?, ?> expectedValues = expectedTicket.getValues();
@@ -96,8 +98,16 @@ public class TracTestUtil {
 				// ignore internal values
 				continue;
 			}
+			if (accessMode == Version.TRAC_0_9 && expected == null && "".equals(actual)) {
+				// the web-client handles some values as the empty string that are represented as null in XML-RPC
+				continue;
+			}
 			assertEquals("Values for key '" + key + "' did not match", expected, actual);
 		}
+	}
+
+	public static void assertTicketEquals(TracTicket expectedTicket, TracTicket actualTicket) throws Exception {
+		assertTicketEquals(null, expectedTicket, actualTicket);
 	}
 
 }

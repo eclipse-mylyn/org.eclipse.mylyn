@@ -37,10 +37,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -51,7 +48,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.SslCertificateException;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
@@ -68,7 +64,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -480,58 +475,23 @@ public class TracWebClient extends AbstractTracClient {
 		}
 	}
 
-	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
+	public void search(TracSearch query, List<TracTicket> result, IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl(), monitor);
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
-				String line;
+
+				WebSearchResultParser parser = new WebSearchResultParser();
+				parser.parse(reader);
 
 				Map<String, String> constantValues = getExactMatchValues(query);
-
-				// first line contains names of returned ticket fields
-				line = reader.readLine();
-				if (line == null) {
-					throw new InvalidTicketException();
-				}
-				// the utf-8 output in Trac 1.0 starts with a byte-order mark which
-				// is passed to the tokenizer since it would otherwise end up in the first token
-				StringTokenizer t = new StringTokenizer(line, "\ufeff\t"); //$NON-NLS-1$
-				Key[] fields = new Key[t.countTokens()];
-				for (int i = 0; i < fields.length; i++) {
-					fields[i] = Key.fromKey(t.nextToken());
-				}
-
-				// create a ticket for each following line of output
-				while ((line = reader.readLine()) != null) {
-					t = new StringTokenizer(line, "\t"); //$NON-NLS-1$
-					TracTicket ticket = new TracTicket();
-					for (int i = 0; i < fields.length && t.hasMoreTokens(); i++) {
-						if (fields[i] != null) {
-							try {
-								if (fields[i] == Key.ID) {
-									ticket.setId(Integer.parseInt(t.nextToken()));
-								} else if (fields[i] == Key.TIME) {
-									ticket.setCreated(TracUtil.parseDate(Integer.parseInt(t.nextToken())));
-								} else if (fields[i] == Key.CHANGE_TIME) {
-									ticket.setLastChanged(TracUtil.parseDate(Integer.parseInt(t.nextToken())));
-								} else {
-									ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
-								}
-							} catch (NumberFormatException e) {
-								StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
-										"Error parsing response: '" + line + "'", e)); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-						}
-					}
-
+				for (TracTicket ticket : parser.getTickets()) {
 					if (ticket.isValid()) {
 						for (String key : constantValues.keySet()) {
-							ticket.putValue(key, parseTicketValue(constantValues.get(key)));
+							ticket.putValue(key, WebSearchResultParser.parseTicketValue(constantValues.get(key)));
 						}
-
-						tickets.add(ticket);
+						result.add(ticket);
 					}
 				}
 			} finally {
@@ -542,16 +502,6 @@ public class TracWebClient extends AbstractTracClient {
 		} finally {
 			WebUtil.releaseConnection(method, monitor);
 		}
-	}
-
-	/**
-	 * Trac has sepcial encoding rules for the returned output: None is represented by "--".
-	 */
-	private String parseTicketValue(String value) {
-		if ("--".equals(value)) { //$NON-NLS-1$
-			return ""; //$NON-NLS-1$
-		}
-		return value;
 	}
 
 	/**

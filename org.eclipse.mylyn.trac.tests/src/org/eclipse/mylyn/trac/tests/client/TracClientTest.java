@@ -75,7 +75,7 @@ public class TracClientTest extends TestCase {
 	public void testGetTicket() throws Exception {
 		TracTicket expectedTicket = harness.createTicket("getTicket");
 		TracTicket ticket = client.getTicket(expectedTicket.getId(), null);
-		TracTestUtil.assertTicketEquals(expectedTicket, ticket);
+		TracTestUtil.assertTicketEquals(client.getAccessMode(), expectedTicket, ticket);
 	}
 
 	public void testGetTicketInvalidId() throws Exception {
@@ -87,12 +87,13 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testGetTicketUmlaute() throws Exception {
-		TracTicket ticket = harness.createTicket("test html entities: \u00E4\u00F6\u00FC");
+		TracTicket ticket = harness.newTicket("test html entities: \u00E4\u00F6\u00FC");
+		ticket.putBuiltinValue(Key.DESCRIPTION, "\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n");
+		ticket = harness.createTicket(ticket);
+
+		ticket = client.getTicket(ticket.getId(), null);
 		assertEquals("test html entities: \u00E4\u00F6\u00FC", ticket.getValue(Key.SUMMARY));
 		if (client.getAccessMode() == Version.XML_RPC) {
-			ticket.putBuiltinValue(Key.DESCRIPTION, "\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n");
-			client.updateTicket(ticket, "", null);
-			ticket = client.getTicket(ticket.getId(), null);
 			assertEquals("\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n", ticket.getValue(Key.DESCRIPTION));
 		} else {
 			assertEquals(null, ticket.getValue(Key.DESCRIPTION));
@@ -176,7 +177,11 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testSearchMilestoneAmpersand() throws Exception {
-		harness.createMilestone("mile&stone");
+		if (!harness.hasMilestone("mile&stone")) {
+			// ignore test
+			return;
+		}
+
 		TracTicket ticket = harness.createTicketWithMilestone("searchMilestoneAmpersand", "mile&stone");
 
 		TracSearch search = new TracSearch();
@@ -201,7 +206,7 @@ public class TracClientTest extends TestCase {
 		TracTicket ticket = harness.createTicket("statusClosed");
 		ticket.putBuiltinValue(Key.STATUS, "closed");
 		ticket.putBuiltinValue(Key.RESOLUTION, "fixed");
-		client.updateTicket(ticket, "", null);
+		harness.udpateTicket(ticket);
 
 		ticket = client.getTicket(ticket.getId(), null);
 		assertEquals("closed", ticket.getValue(Key.STATUS));
@@ -209,6 +214,10 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testUpdateAttributesAnonymous() throws Exception {
+		if (fixture.requiresAuthentication()) {
+			return;
+		}
+
 		client = fixture.connect(fixture.getRepositoryUrl(), "", "");
 		assertNull(client.getMilestones());
 		try {
@@ -285,6 +294,10 @@ public class TracClientTest extends TestCase {
 	}
 
 	public void testValidateAnonymousLogin() throws Exception {
+		if (fixture.requiresAuthentication()) {
+			return;
+		}
+
 		client = fixture.connect(fixture.getRepositoryUrl(), "", "");
 		try {
 			client.validate(new NullProgressMonitor());
