@@ -19,14 +19,18 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -53,7 +57,6 @@ public class ReviewDetailSection extends AbstractReviewSection {
 	@Override
 	public void createModelContent() {
 		createReviewersSubSection(composite);
-		createRequirementsSubSection(toolkit, composite);
 		createDependenciesSubSection(toolkit, composite, "Depends On", getReview().getParents());
 		createDependenciesSubSection(toolkit, composite, "Needed By", getReview().getChildren());
 	}
@@ -76,19 +79,53 @@ public class ReviewDetailSection extends AbstractReviewSection {
 		GridLayoutFactory.fillDefaults()
 				.numColumns(numColumns)
 				.extendedMargins(0, 0, 0, 5)
-				.spacing(20, 5)
+				.equalWidth(true)
+				.spacing(4, 5)
 				.applyTo(composite);
 		subSection.setClient(composite);
 
-		if (!getReview().getReviewerApprovals().isEmpty()) {
+		if (!getModelRepository().getApprovalTypes().isEmpty()) {
 			StringBuilder names = new StringBuilder();
 
 			Label headerLabel = new Label(composite, SWT.NONE);
 			headerLabel.setText(" "); //$NON-NLS-1$
+			StringBuilder needs = new StringBuilder();
+
 			for (IApprovalType approvalType : getModelRepository().getApprovalTypes()) {
-				Label approvalHeaderLabel = new Label(composite, SWT.NONE);
+				IRequirementEntry requirementEntry = getReview().getRequirements().get(approvalType);
+				Composite headerContainer = new Composite(composite, SWT.NONE);
+				headerContainer.setForeground(toolkit.getColors().getColor(IFormColors.TB_BG));
+				GridLayoutFactory.fillDefaults().numColumns(2).applyTo(headerContainer);
+				GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).applyTo(headerContainer);
+				CLabel approvalHeaderLabel = new CLabel(headerContainer, SWT.NONE);
 				approvalHeaderLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				approvalHeaderLabel.setText(approvalType.getName());
+				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(approvalHeaderLabel);
+				RequirementStatus status = null;
+				if (requirementEntry != null) {
+					status = requirementEntry.getStatus();
+					switch (status) {
+					case SATISFIED:
+						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.APPROVED));
+						break;
+					case NOT_SATISFIED:
+						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.UNKNOWN));
+						break;
+					case REJECTED:
+						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.REJECTED));
+						break;
+					default:
+						//To ensure that label is aligned properly
+						approvalHeaderLabel.setImage(CommonImages.getImage(ReviewsImages.BLANK));
+						break;
+					}
+				}
+				if (status != null && (status == RequirementStatus.UNKNOWN || status == RequirementStatus.REJECTED)) {
+					if (needs.length() > 0) {
+						needs.append(", "); //$NON-NLS-1$
+					}
+					needs.append(approvalType.getName());
+				}
 			}
 
 			for (Entry<IUser, IReviewerEntry> entry : getReview().getReviewerApprovals().entrySet()) {
@@ -100,7 +137,7 @@ public class ReviewDetailSection extends AbstractReviewSection {
 				for (IApprovalType approvalType : getModelRepository().getApprovalTypes()) {
 					Integer value = entry.getValue().getApprovals().get(approvalType);
 					Label approvalValueLabel = new Label(composite, SWT.NONE);
-					GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(approvalValueLabel);
+					GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).applyTo(approvalValueLabel);
 					String rankingText = " ";
 					if (value != null && value != 0) {
 						if (value > 0) {
@@ -117,55 +154,21 @@ public class ReviewDetailSection extends AbstractReviewSection {
 				if (names.length() > 0) {
 					names.append(", "); //$NON-NLS-1$
 				}
-
-				if (names.length() > 0) {
-					names.append(", "); //$NON-NLS-1$
-				}
 				names.append(entry.getKey().getDisplayName());
 			}
 
-			if (names.length() > 0) {
-				addTextClient(toolkit, subSection, names.toString());
+			String headerText = names.toString();
+			if (needs.length() > 0) {
+				headerText += " (needs " + needs.toString() + ")";
+			}
+			if (headerText.length() > 0) {
+				addTextClient(toolkit, subSection, headerText);
 			}
 		}
 	}
 
 	protected boolean canAddReviewers() {
 		return true;
-	}
-
-	protected void createRequirementsSubSection(final FormToolkit toolkit, final Composite parent) {
-		if (getReview().getRequirements().isEmpty()) {
-			return;
-		}
-
-		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
-				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
-
-		final Section subSection = toolkit.createSection(parent, style);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
-		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		subSection.setText("Requirements");
-
-		Composite composite = toolkit.createComposite(subSection);
-		GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 5).extendedMargins(0, 0, 0, 5).applyTo(composite);
-		subSection.setClient(composite);
-
-		StringBuilder sb = new StringBuilder();
-
-		for (Entry<IApprovalType, IRequirementEntry> requirement : getReview().getRequirements().entrySet()) {
-			Label label1 = new Label(composite, SWT.NONE);
-			IApprovalType key = requirement.getKey();
-			label1.setText(key.getName());
-			label1.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-			if (sb.length() > 0) {
-				sb.append(", "); //$NON-NLS-1$
-			}
-			sb.append(key.getName());
-		}
-
-		addTextClient(toolkit, subSection, sb.toString());
 	}
 
 	protected void createDependenciesSubSection(final FormToolkit toolkit, final Composite parent, String title,

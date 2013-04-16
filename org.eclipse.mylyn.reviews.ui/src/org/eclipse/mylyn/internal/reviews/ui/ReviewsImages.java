@@ -51,6 +51,14 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor SERVER = create("obj16/server.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor APPROVED = create("obj12/approved.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor REJECTED = create("obj12/rejected.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor UNKNOWN = create("obj12/unknown.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor BLANK = create("obj12/blank.gif"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String path) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(path));
