@@ -1,2 +1,3 @@
 /testdata/*/bin
 /testdata/*/target
+/local.json

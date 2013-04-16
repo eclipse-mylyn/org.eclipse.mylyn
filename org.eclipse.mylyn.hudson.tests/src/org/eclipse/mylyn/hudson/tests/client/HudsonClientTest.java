@@ -101,7 +101,7 @@ public class HudsonClientTest extends TestCase {
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanWhitespace()), null);
 		assertEquals(1, jobs.size());
 		HudsonModelJob job = jobs.get(0);
-		assertEquals(HudsonModelBallColor.BLUE, job.getColor());
+		assertEquals(harness.getSuccessColor(), job.getColor());
 
 		HudsonModelBuild build = client.getBuild(job, job.getLastBuild(), null);
 		assertNotNull(build);
@@ -164,7 +164,7 @@ public class HudsonClientTest extends TestCase {
 		client.runBuild(harness.getJob(jobName), null, null);
 		HudsonTestUtil.poll(new Callable<Object>() {
 			public Object call() throws Exception {
-				assertEquals(HudsonModelBallColor.BLUE_ANIME, harness.getJob(jobName).getColor());
+				assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
 				return null;
 			}
 		});

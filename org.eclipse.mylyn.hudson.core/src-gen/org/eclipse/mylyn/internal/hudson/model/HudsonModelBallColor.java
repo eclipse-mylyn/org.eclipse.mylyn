@@ -73,7 +73,11 @@ public enum HudsonModelBallColor {
     @XmlEnumValue("aborted")
     ABORTED("aborted"),
     @XmlEnumValue("aborted_anime")
-    ABORTED_ANIME("aborted_anime");
+    ABORTED_ANIME("aborted_anime"),
+    @XmlEnumValue("green")
+    GREEN("green"),
+    @XmlEnumValue("green_anime")
+    GREEN_ANIME("green_anime");
     private final String value;
 
     HudsonModelBallColor(String v) {

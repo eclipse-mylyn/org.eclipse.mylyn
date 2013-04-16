@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
@@ -116,6 +117,22 @@ public class HudsonHarness {
 			});
 		}
 		return job;
+	}
+
+	public HudsonModelBallColor getSuccessColor() {
+		if (getFixture().getVersion().compareTo("3.0.1") >= 0) {
+			return HudsonModelBallColor.GREEN;
+		} else {
+			return HudsonModelBallColor.BLUE;
+		}
+	}
+
+	public HudsonModelBallColor getSuccessAnimeColor() {
+		if (getFixture().getVersion().compareTo("3.0.1") >= 0) {
+			return HudsonModelBallColor.GREEN_ANIME;
+		} else {
+			return HudsonModelBallColor.BLUE_ANIME;
+		}
 	}
 
 }

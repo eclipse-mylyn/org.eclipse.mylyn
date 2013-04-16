@@ -841,10 +841,11 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	protected void updateStateAndStatus(HudsonModelJob job, IBuildPlan plan) {
-		if (job.getColor().equals(HudsonModelBallColor.BLUE)) {
+		if (job.getColor().equals(HudsonModelBallColor.BLUE) || job.getColor().equals(HudsonModelBallColor.GREEN)) {
 			plan.setStatus(BuildStatus.SUCCESS);
 			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)) {
+		} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)
+				|| job.getColor().equals(HudsonModelBallColor.GREEN_ANIME)) {
 			plan.setStatus(BuildStatus.SUCCESS);
 			plan.setState(BuildState.RUNNING);
 		} else if (job.getColor().equals(HudsonModelBallColor.RED)) {
