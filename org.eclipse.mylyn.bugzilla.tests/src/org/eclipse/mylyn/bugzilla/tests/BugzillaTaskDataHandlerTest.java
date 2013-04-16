@@ -16,7 +16,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
@@ -38,12 +37,9 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	private BugzillaRepositoryConnector connector;
 
-	private BugzillaClient client;
-
 	@Override
 	public void setUp() throws Exception {
 		repository = BugzillaFixture.current().repository();
-		client = BugzillaFixture.current().client();
 		connector = BugzillaFixture.current().connector();
 	}
 

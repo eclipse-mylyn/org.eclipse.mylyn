@@ -423,20 +423,18 @@ sub install_before_final_checks {
 										WHERE old_status = ? AND new_status = ?');
     	my $sth_delnul = $dbh->prepare('DELETE FROM status_workflow
                                     WHERE old_status IS NULL AND new_status = ?');
-
-print "before insert";
 		foreach my $pair (STATUS_WORKFLOW) {
 			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
 			my $new_id = $status_ids{$pair->[1]};
-			$sth_insert->execute($old_id, $new_id);
+			if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status ='. $old_id . ' and new_status ='.$new_id)) {
+				$sth_insert->execute($old_id, $new_id);
+			}
 		}
-print "before delete";
 		foreach my $pair (STATUS_WORKFLOW_DELETE) {
 			my $old_id = $pair->[0] ? $status_ids{$pair->[0]} : undef;
 			my $new_id = $status_ids{$pair->[1]};
 			$sth_delete->execute($old_id, $new_id);
 		}
-print "before delete null";
 		my $new_id = $status_ids{'ASSIGNED'};
 		$sth_delnul->execute($new_id);
 	}

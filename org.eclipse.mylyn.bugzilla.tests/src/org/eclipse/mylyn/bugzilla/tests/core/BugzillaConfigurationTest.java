@@ -109,46 +109,50 @@ public class BugzillaConfigurationTest extends TestCase {
 	 * included (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
-		InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
-		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-
-		if (true) {
+		BufferedReader inCleaned = null;
+		try {
 			File tempFile = File.createTempFile("XmlCleaner-", "tmp");
 			tempFile.deleteOnExit();
-			in = XmlCleaner.clean(in, tempFile);
-			if (tempFile != null) {
-				tempFile.delete();
+
+			InputStream stream = BugzillaFixture.getResource("testdata/configuration/rdfconfig218.txt");
+			BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+			try {
+				inCleaned = XmlCleaner.clean(in, tempFile);
+				if (tempFile != null) {
+					tempFile.delete();
+				}
+			} finally {
+				in.close();
 			}
 
+			SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
+			final XMLReader reader = XMLReaderFactory.createXMLReader();
+			reader.setContentHandler(contentHandler);
+			reader.setErrorHandler(new ErrorHandler() {
+				public void error(SAXParseException exception) throws SAXException {
+					throw exception;
+				}
+
+				public void fatalError(SAXParseException exception) throws SAXException {
+					throw exception;
+				}
+
+				public void warning(SAXParseException exception) throws SAXException {
+					throw exception;
+				}
+			});
+			reader.parse(new InputSource(inCleaned));
+
+			RepositoryConfiguration config = contentHandler.getConfiguration();
+			assertNotNull(config);
+
+			assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT).contains(
+					"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+		} finally {
+			if (inCleaned != null) {
+				inCleaned.close();
+			}
 		}
-
-		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-		final XMLReader reader = XMLReaderFactory.createXMLReader();
-		reader.setContentHandler(contentHandler);
-		reader.setErrorHandler(new ErrorHandler() {
-
-			public void error(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			public void fatalError(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			public void warning(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-		});
-		reader.parse(new InputSource(in));
-
-		RepositoryConfiguration config = contentHandler.getConfiguration();
-		assertNotNull(config);
-
-		assertTrue(config.getOptionValues(BugzillaAttribute.PRODUCT).contains(
-				"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-
-		// Add your additional checking for valid data here if necessary
-
 	}
 
 }

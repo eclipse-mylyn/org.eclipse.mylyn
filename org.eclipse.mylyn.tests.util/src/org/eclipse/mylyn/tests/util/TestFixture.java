@@ -100,8 +100,6 @@ public abstract class TestFixture {
 		TasksUiPlugin.getExternalizationManager().saveNow();
 	}
 
-	protected AbstractRepositoryConnector connector;
-
 	private final String connectorKind;
 
 	private String repositoryName;
@@ -130,7 +128,7 @@ public abstract class TestFixture {
 	}
 
 	public AbstractRepositoryConnector connector() {
-		return connector;
+		return TasksUi.getRepositoryConnector(connectorKind);
 	}
 
 	public TestSuite createSuite(TestSuite parentSuite) {

@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -49,12 +51,9 @@ public class AllBugzillaHeadlessStandaloneTests {
 			// network tests
 			suite.addTestSuite(BugzillaTaskCompletionTest.class);
 			// tests that run against all repository versions
-			if (configuration.isDefaultOnly()) {
-				addTests(suite, BugzillaFixture.DEFAULT);
-			} else {
-				for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-					addTests(suite, fixture);
-				}
+			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
+			for (BugzillaFixture fixture : fixtures) {
+				addTests(suite, fixture);
 			}
 		}
 		return suite;

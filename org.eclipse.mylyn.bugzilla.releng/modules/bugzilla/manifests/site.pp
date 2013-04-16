@@ -28,12 +28,13 @@ define bugzilla::site (
   $userOwner            = $bugzilla::userOwner,
   $userGroup            = $bugzilla::userGroup,
   $envversion           = "${major}.${minor}",
-  $envdefault           = "0",
+  $envdefault           = false,
   $clearDB              = $bugzilla::clearDB,
+  $desciptorfile        = " ",
   ) {
 
   include "bugzilla"
-
+  $propertyanz = 0
   $confDir = "$base/conf.d"
  
   if $branch == "trunk" {
@@ -188,7 +189,7 @@ define bugzilla::site (
     command => "$base/$version/callchecksetup.pl",
     cwd     => "$base/$version",
     creates => "$base/$version/localconfig",
-    user => "$userOwner",
+#    user => "$userOwner",
     logoutput => true,
     require => [
       Exec["mysql-createdb-$version"],
@@ -201,7 +202,7 @@ define bugzilla::site (
     command   => "$base/$version/callchecksetup.pl",
     cwd       => "$base/$version",
     logoutput => true,
-    user => "$userOwner",
+#    user => "$userOwner",
     require   => [
       Exec["mysql-createdb-$version"],
       Exec["init bugzilla_checksetup $version"],

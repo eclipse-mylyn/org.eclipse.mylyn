@@ -30,7 +30,6 @@ import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
 /**
@@ -47,15 +46,12 @@ public class TracFixture extends TestFixture {
 
 	private static TracFixture current;
 
-	public static TracFixture current(TracFixture fixture) {
+	public static TracFixture current() {
 		if (current == null) {
-			fixture.activate();
+			current = TestConfiguration.getDefault().discoverDefault(TracFixture.class, "trac");
+			current.activate();
 		}
 		return current;
-	}
-
-	public static TracFixture current() {
-		return current(TestConfiguration.getDefault().discoverDefault(TracFixture.class, "trac"));
 	}
 
 	private final Version accessMode;
@@ -177,7 +173,7 @@ public class TracFixture extends TestFixture {
 
 	@Override
 	public TracRepositoryConnector connector() {
-		return (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
+		return (TracRepositoryConnector) super.connector();
 	}
 
 	public TracHarness createHarness() {

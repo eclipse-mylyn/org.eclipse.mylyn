@@ -28,21 +28,22 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor     => "6",
   }
 
-  bugzilla::site { "bugs36-custom-wf":
+  bugzilla::site { "bugzilla-3.6.12-custom-wf":
     major       => "3",
     minor       => "6",
     branchTag   => "bugzilla-3.6.12",
     custom_wf   => true,
   }
 
-  bugzilla::site { "bugs36-custom-wf-and-status":
+  bugzilla::site { "bugzilla-3.6.12-custom-wf-and-status":
     major                => "3",
     minor                => "6",
     branchTag            => "bugzilla-3.6.12",
     custom_wf_and_status => true,
+    desciptorfile        => "DescriptorFile-custom-wf-and-status.txt"
   }
 
-  bugzilla::site { "bugs36-xml-rpc-disabled":
+  bugzilla::site { "bugzilla-3.6.12-xml-rpc-disabled":
     major          => "3",
     minor          => "6",
     branchTag      => "bugzilla-3.6.12",
@@ -57,16 +58,16 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-4.2.5":
     major   => "4",
     minor   => "2",
-    envdefault => "1",
+    envdefault => true,
   }
 
-  bugzilla::site { "bugs44":
+  bugzilla::site { "bugzilla-4.4":
     major     => "4",
     minor     => "4",
     branchTag => "trunk",
   }
 
-  bugzilla::site { "bugshead":
+  bugzilla::site { "bugzilla-trunk":
     major       => "4",
     minor       => "5",
     branch      => "trunk",

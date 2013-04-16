@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -24,7 +26,6 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 
 /**
  * @author Mik Kersten
@@ -58,12 +59,9 @@ public class AllBugzillaTests {
 			suite.addTestSuite(BugzillaTaskEditorTest.class);
 			suite.addTestSuite(BugzillaSearchPageTest.class);
 			suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-			if (configuration.isDefaultOnly()) {
-				addTests(suite, BugzillaFixture.DEFAULT);
-			} else {
-				for (BugzillaFixture fixture : BugzillaFixture.ALL) {
-					addTests(suite, fixture);
-				}
+			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
+			for (BugzillaFixture fixture : fixtures) {
+				addTests(suite, fixture);
 			}
 		}
 	}
@@ -83,8 +81,7 @@ public class AllBugzillaTests {
 		fixture.add(BugzillaAttachmentHandlerTest.class);
 
 		// Only run this if we have custom status and Workflow
-		if (BugzillaVersion.BUGZILLA_3_6.compareTo(fixture.getBugzillaVersion()) == 0
-				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(fixture.getDescription())) {
+		if (fixture.isCustomWorkflowAndStatus()) {
 			fixture.add(BugzillaCustomRepositoryTest.class);
 		}
 

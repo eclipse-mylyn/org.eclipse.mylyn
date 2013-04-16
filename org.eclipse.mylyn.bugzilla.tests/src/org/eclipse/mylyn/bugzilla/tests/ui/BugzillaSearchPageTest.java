@@ -31,7 +31,7 @@ public class BugzillaSearchPageTest extends TestCase {
 
 	@Override
 	public void setUp() throws Exception {
-		repository = BugzillaFixture.DEFAULT.singleRepository();
+		repository = BugzillaFixture.current().singleRepository();
 	}
 
 	/**
