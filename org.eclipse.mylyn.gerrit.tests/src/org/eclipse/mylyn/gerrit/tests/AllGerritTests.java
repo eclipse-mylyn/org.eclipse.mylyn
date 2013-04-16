@@ -49,14 +49,8 @@ public class AllGerritTests {
 			suite.addTestSuite(GerritUrlHandlerTest.class);
 			suite.addTestSuite(OpenIdAuthenticationTest.class);
 			List<GerritFixture> fixtures = configuration.discover(GerritFixture.class, "gerrit"); //$NON-NLS-1$
-			if (!fixtures.isEmpty()) {
-				for (GerritFixture fixture : fixtures) {
-					addTests(suite, fixture);
-				}
-			} else if (configuration.isDefaultOnly()) {
-				addTests(suite, GerritFixture.DEFAULT);
-			} else {
-				for (GerritFixture fixture : GerritFixture.ALL) {
+			for (GerritFixture fixture : fixtures) {
+				if (!fixture.isExcluded()) {
 					addTests(suite, fixture);
 				}
 			}

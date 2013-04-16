@@ -1,61 +1,23 @@
-Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
-  
- user { "tools":
-        ensure => present,
-        membership => minimum,
-        shell => "/bin/bash",
-        managehome => 'true',
+Exec {
+  path => ["/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"] }
+
+include "gerrit"
+
+user { "tools":
+  ensure     => present,
+  membership => minimum,
+  shell      => "/bin/bash",
+  managehome => true,
 }
 
-include apache
-
-class apache {
-  
-	package { "apache2":
-		ensure => present,
-	}
-	
-	service { "apache2":
-		ensure => running,
-		require => Package["apache2"],
-	}
-
-	exec { "Enable auth_digest module":
-	    command => "a2enmod auth_digest",
-	    require => Package["apache2"],
-	    creates => "/etc/apache2/mods-enabled/auth_digest.load",
-	}
-	
-	exec { "Enable proxy mod":
-	    command => "a2enmod proxy",
-	    require => Package["apache2"],
-	    creates => "/etc/apache2/mods-enabled/proxy.load",
-	}
-	
-	exec { "Enable proxy_http mod":
-	    command => "a2enmod proxy_http",
-	    require => Package["apache2"],
-	    creates => "/etc/apache2/mods-enabled/proxy_http.load",
-	}
-	
-	exec { "Enable ssl module":
-	    command => "a2enmod ssl",
-	    require => Package["apache2"],
-	    creates => "/etc/apache2/mods-enabled/ssl.load",
-	}
-	
-	file { "/etc/apache2/sites-enabled/001-default-ssl":
-		ensure => link,
-		target => "/etc/apache2/sites-available/default-ssl",
-		require => Exec["Enable ssl module"],
-	}
-
+exec { "stop all":
+  command => "find $gerrit::base -name gerrit.sh | xargs -i /bin/sh -c '(cd $(dirname {}) && {} stop)'",
+  onlyif  => "test -e $gerrit::base",
 }
 
-file { "/etc/apache2/conf.d/gerrit.conf":
-  content => "Include /home/tools/gerrit/conf.d/[^.#]*\n",
-  require => [ Package["apache2"], Gerrit::Defaultsites["gerrit"], ],
-  notify  => Service["apache2"],
+exec { "disable all":
+  command => "find $gerrit::base -name \"service*.json\" | xargs -i mv {} {}.disabled",
+  onlyif  => "test -e $gerrit::base",
 }
 
 gerrit::defaultsites { "gerrit":
