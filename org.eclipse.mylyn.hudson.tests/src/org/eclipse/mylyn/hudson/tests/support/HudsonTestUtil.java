@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
@@ -47,12 +46,12 @@ public class HudsonTestUtil {
 	}
 
 	public static <T> T poll(Callable<T> callable) throws Exception {
-		AssertionFailedError lastException = null;
+		AssertionError lastException = null;
 		long startTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() - startTime < POLL_TIMEOUT) {
 			try {
 				return callable.call();
-			} catch (AssertionFailedError e) {
+			} catch (AssertionError e) {
 				lastException = e;
 			}
 			Thread.sleep(POLL_INTERVAL);

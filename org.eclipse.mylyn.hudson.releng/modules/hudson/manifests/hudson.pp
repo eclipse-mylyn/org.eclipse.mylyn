@@ -19,12 +19,14 @@ define hudson::hudson(
 	if $type == "hudson" {
 	  if $qualifier == "eclipse" {
 	    $url = "http://www.eclipse.org/downloads/download.php?r=1&file=/hudson/war/hudson-${version}.war"
-	  } else {
-	    $url = "http://java.net/projects/hudson/downloads/download/war/hudson-${version}.war"
+    } else {
+      $url = "http://java.net/downloads/hudson/war/hudson-${version}.war"
 	  }
 	} elsif $type == "jenkins" {
 	  if $qualifier == "stable" {
 	    $url = "http://mirrors.jenkins-ci.org/war-stable/${version}/jenkins.war"
+    } elsif $qualifier == "latest" {
+      $url = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
 	  } else {
 	    $url = "http://mirrors.jenkins-ci.org/war/${version}/jenkins.war"
 	  }

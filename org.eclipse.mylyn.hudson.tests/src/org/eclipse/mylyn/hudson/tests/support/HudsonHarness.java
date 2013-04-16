@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.util.concurrent.Callable;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
@@ -50,6 +54,10 @@ public class HudsonHarness {
 		return client;
 	}
 
+	public RestfulHudsonClient privilegedClient() throws Exception {
+		return HudsonFixture.connect(fixture.location(PrivilegeLevel.USER));
+	}
+
 	public void dispose() {
 	}
 
@@ -58,6 +66,10 @@ public class HudsonHarness {
 	}
 
 	public HudsonModelJob getJob(String name) throws HudsonException {
+		return getJob(client, name);
+	}
+
+	private HudsonModelJob getJob(RestfulHudsonClient client, String name) throws HudsonException {
 		for (HudsonModelJob job : client.getJobs(null, null)) {
 			if (job.getName().equals(name)) {
 				return job;
@@ -88,6 +100,22 @@ public class HudsonHarness {
 
 	public String getPlanGit() {
 		return PLAN_GIT;
+	}
+
+	public HudsonModelJob ensureHasRun(final String plan) throws Exception {
+		final RestfulHudsonClient privilegedClient = privilegedClient();
+		HudsonModelJob job = getJob(privilegedClient, plan);
+		if (job.getLastCompletedBuild() == null) {
+			privilegedClient.runBuild(job, null, null);
+			job = HudsonTestUtil.poll(new Callable<HudsonModelJob>() {
+				public HudsonModelJob call() throws Exception {
+					HudsonModelJob job = getJob(privilegedClient, plan);
+					assertNotNull(job.getLastCompletedBuild());
+					return job;
+				}
+			});
+		}
+		return job;
 	}
 
 }

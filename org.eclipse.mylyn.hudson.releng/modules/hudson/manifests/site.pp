@@ -4,11 +4,12 @@ define hudson::site(
 	$data,
 	$port,
 	$version,
-    $allbasicauth = false,
-    $certauth = false,
-    $digestauth = false,
+  $allbasicauth = false,
+  $certauth = false,
+  $digestauth = false,
 	$base = $hudson::base,
 	$envinfo = "",
+	$envdefault = false,
 	$userOwner = $hudson::userOwner,
 	$userGroup = $hudson::userGroup,
 ) { 
@@ -24,7 +25,7 @@ define hudson::site(
 
   file { "$envbase":
     source => "puppet:///modules/hudson/${data}",
-    recurse => true,
+    recurse => remote,
     owner   => "$userOwner",
     group   => "$userGroup",
     require => Exec["stop $envid"],

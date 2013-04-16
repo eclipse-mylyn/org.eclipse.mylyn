@@ -248,7 +248,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl.create(client.getLocation().getUrl())
+				String url = HudsonUrl.create(baseUrl())
 						.depth(1)
 						.include("/hudson/job")
 						.match("name", ids)
@@ -408,7 +408,7 @@ public class RestfulHudsonClient {
 			@Override
 			public HudsonServerInfo execute() throws IOException, HudsonException, JAXBException {
 				// XXX should use createHeadRequest() which is broken on Jenkins 1.459, see bug 376468
-				HttpRequestBase request = createGetRequest(client.getLocation().getUrl());
+				HttpRequestBase request = createGetRequest(baseUrl());
 				CommonHttpResponse response = execute(request, monitor);
 				return processAndRelease(response, monitor);
 			}
@@ -423,7 +423,7 @@ public class RestfulHudsonClient {
 					header = response.getResponse().getFirstHeader("X-Hudson"); //$NON-NLS-1$
 					if (header == null) {
 						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson or Jenkins instance",
-								client.getLocation().getUrl()));
+								baseUrl()));
 					}
 				} else {
 					type = Type.JENKINS;

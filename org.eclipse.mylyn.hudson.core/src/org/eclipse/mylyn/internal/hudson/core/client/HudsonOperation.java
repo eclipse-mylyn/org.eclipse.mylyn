@@ -59,6 +59,14 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		super(client);
 	}
 
+	protected String baseUrl() {
+		String url = getClient().getLocation().getUrl();
+		if (!url.endsWith("/")) { //$NON-NLS-1$
+			url += "/"; //$NON-NLS-1$
+		}
+		return url;
+	}
+
 	@Override
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
@@ -66,14 +74,14 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
 
-		HttpPost request = createPostRequest(getClient().getLocation().getUrl() + "/j_acegi_security_check"); //$NON-NLS-1$
+		HttpPost request = createPostRequest(baseUrl() + "j_acegi_security_check"); //$NON-NLS-1$
 		HttpResponse response = executeAuthenticationRequest(monitor, credentials, request);
 		try {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
 				HttpUtil.release(request, response, monitor);
 
 				// re-try at new location used by Hudson 3.0
-				request = createPostRequest(getClient().getLocation().getUrl() + "/j_spring_security_check"); //$NON-NLS-1$
+				request = createPostRequest(baseUrl() + "j_spring_security_check"); //$NON-NLS-1$
 				response = executeAuthenticationRequest(monitor, credentials, request);
 			}
 
@@ -119,7 +127,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 	}
 
 	private void updateCrumb(IOperationMonitor monitor) throws IOException {
-		HttpGet request = createGetRequest(getClient().getLocation().getUrl());
+		HttpGet request = createGetRequest(baseUrl());
 		HttpResponse response = getClient().execute(request, monitor);
 		try {
 			InputStream in = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor);

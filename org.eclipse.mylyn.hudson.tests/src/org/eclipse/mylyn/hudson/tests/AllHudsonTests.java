@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.hudson.tests;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -47,31 +49,20 @@ public class AllHudsonTests {
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(HudsonValidationTest.class);
-			if (configuration.isDefaultOnly()) {
-				if (configuration.isDefaultOnly()) {
-					addTests(suite, HudsonFixture.DEFAULT);
-				} else {
-					for (HudsonFixture fixture : HudsonFixture.ALL) {
-						addTests(suite, fixture);
-					}
-					for (HudsonFixture fixture : HudsonFixture.MISC) {
-						if (fixture == HudsonFixture.HUDSON_2_1_SECURE && CommonTestUtil.isCertificateAuthBroken()) {
-							return; // skip test 
-						}
-						fixture.createSuite(suite);
-						fixture.add(HudsonClientTest.class);
-						fixture.done();
-					}
+			List<HudsonFixture> fixtures = configuration.discover(HudsonFixture.class, "hudson");
+			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
+			for (HudsonFixture fixture : fixtures) {
+				if (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken()) {
+					continue;
 				}
+				fixture.createSuite(suite);
+				fixture.add(HudsonClientTest.class);
+				if (!fixture.isUseCertificateAuthentication()) {
+					fixture.add(HudsonIntegrationTest.class);
+				}
+				fixture.done();
 			}
 		}
-	}
-
-	private static void addTests(TestSuite suite, HudsonFixture fixture) {
-		fixture.createSuite(suite);
-		fixture.add(HudsonClientTest.class);
-		fixture.add(HudsonIntegrationTest.class);
-		fixture.done();
 	}
 
 }

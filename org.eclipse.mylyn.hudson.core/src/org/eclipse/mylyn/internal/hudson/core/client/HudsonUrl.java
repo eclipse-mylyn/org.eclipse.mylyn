@@ -78,7 +78,10 @@ public class HudsonUrl {
 	public String toUrl() throws UnsupportedEncodingException {
 		// wrap everything in "hudson" element to handle case of multiple matches
 		StringBuilder sb = new StringBuilder(base);
-		sb.append("/api/xml?wrapper=hudson&depth=");
+		if (!base.endsWith("/")) {
+			sb.append("/");
+		}
+		sb.append("api/xml?wrapper=hudson&depth=");
 		sb.append(depth);
 		if (include != null) {
 			sb.append("&xpath=");

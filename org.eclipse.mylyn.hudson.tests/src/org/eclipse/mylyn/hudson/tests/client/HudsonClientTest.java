@@ -56,7 +56,6 @@ public class HudsonClientTest extends TestCase {
 		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
-		assertEquals(harness.getFixture().getVersion(), info.getVersion());
 	}
 
 	public void testValidateValidUrlAuthenticate() throws Exception {
@@ -68,7 +67,6 @@ public class HudsonClientTest extends TestCase {
 		RestfulHudsonClient client = harness.connect();
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
-		assertEquals(harness.getFixture().getVersion(), info.getVersion());
 	}
 
 	public void testValidateExpiredCookie() throws Exception {
@@ -83,11 +81,13 @@ public class HudsonClientTest extends TestCase {
 		// TODO try an operation that requires authentication 
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
-		assertEquals(harness.getFixture().getVersion(), info.getVersion());
 	}
 
 	public void testGetJobs() throws Exception {
 		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		harness.ensureHasRun(harness.getPlanFailing());
+		harness.ensureHasRun(harness.getPlanSucceeding());
+
 		List<HudsonModelJob> jobs = client.getJobs(null, null);
 		HudsonTestUtil.assertContains(jobs, harness.getPlanFailing());
 		HudsonTestUtil.assertContains(jobs, harness.getPlanSucceeding());
@@ -95,10 +95,11 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testGetJobsWithWhitespaces() throws Exception {
-		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		harness.ensureHasRun(harness.getPlanWhitespace());
+
+		final RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanWhitespace()), null);
 		assertEquals(1, jobs.size());
-
 		HudsonModelJob job = jobs.get(0);
 		assertEquals(HudsonModelBallColor.BLUE, job.getColor());
 
@@ -124,6 +125,8 @@ public class HudsonClientTest extends TestCase {
 	}
 
 	public void testGetJobGit() throws Exception {
+		harness.ensureHasRun(harness.getPlanGit());
+
 		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanGit()), null);
 		assertEquals(1, jobs.size());

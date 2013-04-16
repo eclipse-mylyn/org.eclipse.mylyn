@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.hudson.tests.support;
 
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
@@ -22,51 +23,19 @@ import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 
 /**
- * Initializes Hudson repositories to a defined state. This is done once per test run, since cleaning and initializing
- * the repository for each test method would take too long.
- * 
  * @author Markus Knittig
  * @author Steffen Pingel
  */
 public class HudsonFixture extends RepositoryTestFixture {
 
+	public static final HudsonFixture DEFAULT = TestConfiguration.getDefault().discoverDefault(HudsonFixture.class,
+			"hudson");
+
 	private static HudsonFixture current;
 
-	private static final HudsonFixture HUDSON_2_1 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.1"),
-			"2.1.0", Type.HUDSON, "REST");
-
-	private static final HudsonFixture HUDSON_2_2 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-2.2"),
-			"2.2.1", Type.HUDSON, "REST");
-
-	private static final HudsonFixture HUDSON_3_0 = new HudsonFixture(TestConfiguration.getRepositoryUrl("hudson-3.0"),
-			"3.0.0", Type.HUDSON, "REST");
-
-	private static final HudsonFixture JENKINS_1_447 = new HudsonFixture(
-			TestConfiguration.getRepositoryUrl("jenkins-1.447"), "1.447.1", Type.JENKINS, "REST");
-
-	private static final HudsonFixture JENKINS_1_466 = new HudsonFixture(
-			TestConfiguration.getRepositoryUrl("jenkins-1.466"), "1.466.1", Type.JENKINS, "REST");
-
-	public static final HudsonFixture HUDSON_2_1_SECURE = new HudsonFixture(TestConfiguration.getRepositoryUrl(
-			"hudson-2.1", true), "2.1.0", Type.HUDSON, "REST/Certificate Authentication");
-
-	/**
-	 * Standard configurations for running all test against.
-	 */
-	public static final HudsonFixture[] ALL = new HudsonFixture[] { HUDSON_2_1, HUDSON_2_2, JENKINS_1_447,
-			JENKINS_1_466 };
-
-	public static final HudsonFixture[] MISC = new HudsonFixture[] { HUDSON_3_0, HUDSON_2_1_SECURE };
-
-	public static final HudsonFixture DEFAULT = HUDSON_3_0;
-
 	public static HudsonFixture current() {
-		return current(DEFAULT);
-	}
-
-	public static HudsonFixture current(HudsonFixture fixture) {
 		if (current == null) {
-			fixture.activate();
+			DEFAULT.activate();
 		}
 		return current;
 	}
@@ -82,6 +51,11 @@ public class HudsonFixture extends RepositoryTestFixture {
 		setInfo(type.toString(), version, info);
 		//setUseShortUserNames("2.1.0".compareTo(version) < 0);
 		setUseCertificateAuthentication(info.contains("Certificate Authentication"));
+	}
+
+	public HudsonFixture(FixtureConfiguration configuration) {
+		this(configuration.getUrl(), configuration.getVersion(), Type.valueOf(configuration.getType().toUpperCase()),
+				configuration.getInfo());
 	}
 
 	@Override
