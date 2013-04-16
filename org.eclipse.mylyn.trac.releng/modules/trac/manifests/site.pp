@@ -10,7 +10,7 @@ define trac::site (
   $base                 = $trac::base,
   $envtype              = "trac",
   $envinfo              = "",
-  $envdefault           = 0,
+  $envdefault           = false,
   $userOwner            = $trac::userOwner,
   $userGroup            = $trac::userGroup,) {
   $prefix = "$base/share/trac-$version"
@@ -168,7 +168,7 @@ define trac::site (
     envid      => "$title",
     version    => "$version",
     envinfo    => "$envinfo",
-    envdefault => 0,
+    envdefault => false,
     envmode    => "Web",
     accessmode => "TRAC_0_9",
   }

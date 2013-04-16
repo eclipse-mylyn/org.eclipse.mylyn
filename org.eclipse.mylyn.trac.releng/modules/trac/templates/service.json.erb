@@ -15,8 +15,8 @@
 <% end %>
   ],
   "properties":{
-<% if @envdefault != 0 %>
-    "default": "<%= envdefault %>",
+<% if @envdefault == true %>
+    "default": "1",
 <% end %>
     "version": "<%= accessmode %>"
   }

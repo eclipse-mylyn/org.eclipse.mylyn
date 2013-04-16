@@ -77,7 +77,7 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   trac::site { "trac-1.0.1":
     version => "1.0.1",
     require => Trac["1.0.1"],
-    envdefault => 1,
+    envdefault => true,
   }
 
   trac::site { "trac-1.0-allbasic":
