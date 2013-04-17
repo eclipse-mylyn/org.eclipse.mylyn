@@ -315,6 +315,36 @@ public class TextileDocumentBuilderTest extends TestCase {
 		Assert.assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
 	}
 
+	public void testHeading1_WithAttributes() {
+		String markup = doHeadingAttributesTest();
+
+		Assert.assertEquals("h1(classTest#idTest). text more text\n\n", markup);
+	}
+
+	public void testHeading1_WithoutAttributes() {
+		builder.setEmitAttributes(false);
+
+		String markup = doHeadingAttributesTest();
+
+		Assert.assertEquals("h1. text more text\n\n", markup);
+	}
+
+	private String doHeadingAttributesTest() {
+		builder.beginDocument();
+		Attributes headingAttributes = new Attributes();
+		headingAttributes.setCssClass("classTest");
+		headingAttributes.setId("idTest");
+		builder.beginHeading(1, headingAttributes);
+		builder.characters("text\n\nmore text");
+		builder.endHeading();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+		return markup;
+	}
+
 	public void testImplicitParagrah() {
 		builder.beginDocument();
 		builder.characters("text1");

@@ -442,7 +442,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected ContentBlock computeHeading(int level, Attributes attributes) {
-		return new ContentBlock("h" + level + ". ", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		return new ContentBlock("h" + level + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
