@@ -21,5 +21,10 @@ user { "tools":
 
 include "bugzilla"
 
+exec { "disable all":
+  command => "find $bugzilla::base -name \"service*.json\" | xargs -i mv {} {}.disabled",
+  onlyif  => "test -e $bugzilla::base",
+}
+
 bugzilla::defaultsites { "bugzilla":
 }

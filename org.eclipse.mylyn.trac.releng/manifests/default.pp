@@ -10,5 +10,10 @@ user { "tools":
 
 include "trac"
 
+exec { "disable all":
+  command => "find $trac::base -name \"service*.json\" | xargs -i mv {} {}.disabled",
+  onlyif  => "test -e $trac::base",
+}
+
 trac::defaultsites { "trac":
 }
