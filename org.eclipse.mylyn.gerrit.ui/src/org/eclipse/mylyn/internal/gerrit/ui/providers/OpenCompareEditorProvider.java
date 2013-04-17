@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
 import org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -92,8 +92,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 		if (element instanceof ITopic) {
 			return getFileFor(((ITopic) element).getItem());
 		}
-		if (element instanceof IFileRevision) {
-			return ((IFileRevision) element).getFile();
+		if (element instanceof IFileVersion) {
+			return ((IFileVersion) element).getFile();
 		}
 		if (element instanceof IFileItem) {
 			return (IFileItem) element;
@@ -105,8 +105,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 		if (element instanceof ITopic) {
 			return ((ITopic) element).getReview();
 		}
-		if (element instanceof IFileRevision) {
-			return ((IFileRevision) element).getReview();
+		if (element instanceof IFileVersion) {
+			return ((IFileVersion) element).getReview();
 		}
 		if (element instanceof IFileItem) {
 			return ((IFileItem) element).getReview();

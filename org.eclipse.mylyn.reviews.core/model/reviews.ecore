@@ -84,6 +84,10 @@
         eType="#//ApprovalType" containment="true" eKeys="#//ApprovalType/key"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviewStates" upperBound="-1"
         eType="#//ReviewState" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepositoryUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskConnectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepository" eType="#//TaskRepository"
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CommentType" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Topic" eSuperTypes="#//Comment">
@@ -108,8 +112,10 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FileItem" eSuperTypes="#//ReviewItem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="#//FileRevision"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FileRevision"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="#//FileVersion"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//FileVersion"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" eType="#//ReviewItemSet"
         eOpposite="#//ReviewItemSet/items"/>
   </eClassifiers>
@@ -135,11 +141,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="start" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="end" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FileRevision" eSuperTypes="#//ReviewItem">
+  <eClassifiers xsi:type="ecore:EClass" name="FileVersion" eSuperTypes="#//ReviewItem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="revision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="file" eType="#//FileItem"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileRevision" eType="#//IFileRevision"
+        transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelVersioning" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragmentVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -196,4 +204,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="SimpleReviewState" eSuperTypes="#//ReviewState">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="IFileRevision" instanceClassName="org.eclipse.team.core.history.IFileRevision"
+      serializable="false"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"
+      serializable="false"/>
 </ecore:EPackage>

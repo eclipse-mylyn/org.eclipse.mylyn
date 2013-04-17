@@ -141,10 +141,9 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_GROUP__DESCRIPTION,
 					oldDescription, description));
-		}
 	}
 
 	/**
@@ -266,9 +265,8 @@ public class ReviewGroup extends ReviewComponent implements IReviewGroup {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (description: "); //$NON-NLS-1$

@@ -45,8 +45,8 @@ public class TopicContainerTest {
 		f1.getTopics().add(topic0);
 		ITopic topic1 = ReviewsFactory.eINSTANCE.createTopic();
 		f1.getTopics().add(topic1);
-		f1.setBase(ReviewsFactory.eINSTANCE.createFileRevision());
-		f1.setTarget(ReviewsFactory.eINSTANCE.createFileRevision());
+		f1.setBase(ReviewsFactory.eINSTANCE.createFileVersion());
+		f1.setTarget(ReviewsFactory.eINSTANCE.createFileVersion());
 		ITopic topic2 = ReviewsFactory.eINSTANCE.createTopic();
 		f1.getBase().getTopics().add(topic2);
 		ITopic topic3 = ReviewsFactory.eINSTANCE.createTopic();

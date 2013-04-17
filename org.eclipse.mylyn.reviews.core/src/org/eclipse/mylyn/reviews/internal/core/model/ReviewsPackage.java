@@ -14,19 +14,22 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentType;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IIndexed;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
@@ -48,6 +51,10 @@ import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * <!-- begin-user-doc --> The <b>Package</b> for the model. It contains accessors for the meta objects to represent
@@ -915,13 +922,39 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REPOSITORY__REVIEW_STATES = REVIEW_GROUP_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Task Repository Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REPOSITORY__TASK_REPOSITORY_URL = REVIEW_GROUP_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Task Connector Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REPOSITORY__TASK_CONNECTOR_KIND = REVIEW_GROUP_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Task Repository</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REPOSITORY__TASK_REPOSITORY = REVIEW_GROUP_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Repository</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY_FEATURE_COUNT = REVIEW_GROUP_FEATURE_COUNT + 2;
+	public static final int REPOSITORY_FEATURE_COUNT = REVIEW_GROUP_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.CommentType
@@ -1187,7 +1220,8 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__REFERENCE = REVIEW_ITEM__REFERENCE;
 
 	/**
-	 * The feature id for the '<em><b>Base</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Base</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 * @ordered
@@ -1195,7 +1229,8 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_ITEM__BASE = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Target</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Target</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 * @ordered
@@ -1451,14 +1486,14 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int LINE_RANGE_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision
-	 * <em>File Revision</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion
+	 * <em>File Version</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.FileRevision
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileRevision()
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.FileVersion
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileVersion()
 	 * @generated
 	 */
-	public static final int FILE_REVISION = 17;
+	public static final int FILE_VERSION = 17;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1466,7 +1501,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__ENABLED = REVIEW_ITEM__ENABLED;
+	public static final int FILE_VERSION__ENABLED = REVIEW_ITEM__ENABLED;
 
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1475,7 +1510,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__ALL_COMMENTS = REVIEW_ITEM__ALL_COMMENTS;
+	public static final int FILE_VERSION__ALL_COMMENTS = REVIEW_ITEM__ALL_COMMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Topics</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1483,7 +1518,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__TOPICS = REVIEW_ITEM__TOPICS;
+	public static final int FILE_VERSION__TOPICS = REVIEW_ITEM__TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Direct Topics</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -1492,7 +1527,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__DIRECT_TOPICS = REVIEW_ITEM__DIRECT_TOPICS;
+	public static final int FILE_VERSION__DIRECT_TOPICS = REVIEW_ITEM__DIRECT_TOPICS;
 
 	/**
 	 * The feature id for the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1500,7 +1535,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__ADDED_BY = REVIEW_ITEM__ADDED_BY;
+	public static final int FILE_VERSION__ADDED_BY = REVIEW_ITEM__ADDED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Committed By</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1508,7 +1543,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__COMMITTED_BY = REVIEW_ITEM__COMMITTED_BY;
+	public static final int FILE_VERSION__COMMITTED_BY = REVIEW_ITEM__COMMITTED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Review</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1516,7 +1551,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__REVIEW = REVIEW_ITEM__REVIEW;
+	public static final int FILE_VERSION__REVIEW = REVIEW_ITEM__REVIEW;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1524,7 +1559,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__NAME = REVIEW_ITEM__NAME;
+	public static final int FILE_VERSION__NAME = REVIEW_ITEM__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1532,7 +1567,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__ID = REVIEW_ITEM__ID;
+	public static final int FILE_VERSION__ID = REVIEW_ITEM__ID;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1540,7 +1575,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__REFERENCE = REVIEW_ITEM__REFERENCE;
+	public static final int FILE_VERSION__REFERENCE = REVIEW_ITEM__REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1548,15 +1583,15 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__PATH = REVIEW_ITEM_FEATURE_COUNT + 0;
+	public static final int FILE_VERSION__PATH = REVIEW_ITEM_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__REVISION = REVIEW_ITEM_FEATURE_COUNT + 1;
+	public static final int FILE_VERSION__DESCRIPTION = REVIEW_ITEM_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Content</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1564,7 +1599,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__CONTENT = REVIEW_ITEM_FEATURE_COUNT + 2;
+	public static final int FILE_VERSION__CONTENT = REVIEW_ITEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>File</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1572,16 +1607,24 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION__FILE = REVIEW_ITEM_FEATURE_COUNT + 3;
+	public static final int FILE_VERSION__FILE = REVIEW_ITEM_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of structural features of the '<em>File Revision</em>' class. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>File Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_REVISION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 4;
+	public static final int FILE_VERSION__FILE_REVISION = REVIEW_ITEM_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>File Version</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_VERSION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
@@ -1910,6 +1953,24 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REQUIREMENT_STATUS = 29;
 
 	/**
+	 * The meta object id for the '<em>IFile Revision</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.team.core.history.IFileRevision
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIFileRevision()
+	 * @generated
+	 */
+	public static final int IFILE_REVISION = 30;
+
+	/**
+	 * The meta object id for the '<em>Task Repository</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTaskRepository()
+	 * @generated
+	 */
+	public static final int TASK_REPOSITORY = 31;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -2033,7 +2094,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
-	private EClass fileRevisionEClass = null;
+	private EClass fileVersionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2120,6 +2181,20 @@ public class ReviewsPackage extends EPackageImpl {
 	private EEnum requirementStatusEEnum = null;
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EDataType iFileRevisionEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EDataType taskRepositoryEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
 	 * EPackage.Registry} by the package package URI value.
 	 * <p>
@@ -2156,9 +2231,8 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public static ReviewsPackage init() {
-		if (isInited) {
+		if (isInited)
 			return (ReviewsPackage) EPackage.Registry.INSTANCE.getEPackage(ReviewsPackage.eNS_URI);
-		}
 
 		// Obtain or create and register package
 		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
@@ -2801,6 +2875,48 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Task Repository Url</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl()
+	 * @see #getRepository()
+	 * @generated
+	 */
+	public EAttribute getRepository_TaskRepositoryUrl() {
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Task Connector Kind</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind()
+	 * @see #getRepository()
+	 * @generated
+	 */
+	public EAttribute getRepository_TaskConnectorKind() {
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Task Repository</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository()
+	 * @see #getRepository()
+	 * @generated
+	 */
+	public EAttribute getRepository_TaskRepository() {
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ICommentType
 	 * <em>Comment Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2930,10 +3046,11 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase
-	 * <em>Base</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the containment reference '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Base</em>'.
+	 * @return the meta object for the containment reference '<em>Base</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getBase()
 	 * @see #getFileItem()
 	 * @generated
@@ -2943,10 +3060,11 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget
-	 * <em>Target</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the containment reference '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @return the meta object for the containment reference '<em>Target</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget()
 	 * @see #getFileItem()
 	 * @generated
@@ -3114,67 +3232,82 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision
-	 * <em>File Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion
+	 * <em>File Version</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for class '<em>File Revision</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision
+	 * @return the meta object for class '<em>File Version</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion
 	 * @generated
 	 */
-	public EClass getFileRevision() {
-		return fileRevisionEClass;
+	public EClass getFileVersion() {
+		return fileVersionEClass;
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getPath
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getPath
 	 * <em>Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision#getPath()
-	 * @see #getFileRevision()
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getPath()
+	 * @see #getFileVersion()
 	 * @generated
 	 */
-	public EAttribute getFileRevision_Path() {
-		return (EAttribute) fileRevisionEClass.getEStructuralFeatures().get(0);
+	public EAttribute getFileVersion_Path() {
+		return (EAttribute) fileVersionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getRevision
-	 * <em>Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getDescription <em>Description</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Revision</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision#getRevision()
-	 * @see #getFileRevision()
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getDescription()
+	 * @see #getFileVersion()
 	 * @generated
 	 */
-	public EAttribute getFileRevision_Revision() {
-		return (EAttribute) fileRevisionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getFileVersion_Description() {
+		return (EAttribute) fileVersionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getContent
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getContent
 	 * <em>Content</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Content</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision#getContent()
-	 * @see #getFileRevision()
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getContent()
+	 * @see #getFileVersion()
 	 * @generated
 	 */
-	public EAttribute getFileRevision_Content() {
-		return (EAttribute) fileRevisionEClass.getEStructuralFeatures().get(2);
+	public EAttribute getFileVersion_Content() {
+		return (EAttribute) fileVersionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFile
 	 * <em>File</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the reference '<em>File</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision#getFile()
-	 * @see #getFileRevision()
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getFile()
+	 * @see #getFileVersion()
 	 * @generated
 	 */
-	public EReference getFileRevision_File() {
-		return (EReference) fileRevisionEClass.getEStructuralFeatures().get(3);
+	public EReference getFileVersion_File() {
+		return (EReference) fileVersionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision <em>File Revision</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>File Revision</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision()
+	 * @see #getFileVersion()
+	 * @generated
+	 */
+	public EAttribute getFileVersion_FileRevision() {
+		return (EAttribute) fileVersionEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -3548,6 +3681,30 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for data type '{@link org.eclipse.team.core.history.IFileRevision
+	 * <em>IFile Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for data type '<em>IFile Revision</em>'.
+	 * @see org.eclipse.team.core.history.IFileRevision
+	 * @generated
+	 */
+	public EDataType getIFileRevision() {
+		return iFileRevisionEDataType;
+	}
+
+	/**
+	 * Returns the meta object for data type '{@link org.eclipse.mylyn.tasks.core.TaskRepository
+	 * <em>Task Repository</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for data type '<em>Task Repository</em>'.
+	 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+	 * @generated
+	 */
+	public EDataType getTaskRepository() {
+		return taskRepositoryEDataType;
+	}
+
+	/**
 	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the factory that creates the instances of the model.
@@ -3571,9 +3728,8 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated) {
+		if (isCreated)
 			return;
-		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -3633,6 +3789,9 @@ public class ReviewsPackage extends EPackageImpl {
 		repositoryEClass = createEClass(REPOSITORY);
 		createEReference(repositoryEClass, REPOSITORY__APPROVAL_TYPES);
 		createEReference(repositoryEClass, REPOSITORY__REVIEW_STATES);
+		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY_URL);
+		createEAttribute(repositoryEClass, REPOSITORY__TASK_CONNECTOR_KIND);
+		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY);
 
 		commentTypeEClass = createEClass(COMMENT_TYPE);
 
@@ -3665,11 +3824,12 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(lineRangeEClass, LINE_RANGE__START);
 		createEAttribute(lineRangeEClass, LINE_RANGE__END);
 
-		fileRevisionEClass = createEClass(FILE_REVISION);
-		createEAttribute(fileRevisionEClass, FILE_REVISION__PATH);
-		createEAttribute(fileRevisionEClass, FILE_REVISION__REVISION);
-		createEAttribute(fileRevisionEClass, FILE_REVISION__CONTENT);
-		createEReference(fileRevisionEClass, FILE_REVISION__FILE);
+		fileVersionEClass = createEClass(FILE_VERSION);
+		createEAttribute(fileVersionEClass, FILE_VERSION__PATH);
+		createEAttribute(fileVersionEClass, FILE_VERSION__DESCRIPTION);
+		createEAttribute(fileVersionEClass, FILE_VERSION__CONTENT);
+		createEReference(fileVersionEClass, FILE_VERSION__FILE);
+		createEAttribute(fileVersionEClass, FILE_VERSION__FILE_REVISION);
 
 		modelVersioningEClass = createEClass(MODEL_VERSIONING);
 		createEAttribute(modelVersioningEClass, MODEL_VERSIONING__FRAGMENT_VERSION);
@@ -3712,6 +3872,10 @@ public class ReviewsPackage extends EPackageImpl {
 
 		// Create enums
 		requirementStatusEEnum = createEEnum(REQUIREMENT_STATUS);
+
+		// Create data types
+		iFileRevisionEDataType = createEDataType(IFILE_REVISION);
+		taskRepositoryEDataType = createEDataType(TASK_REPOSITORY);
 	}
 
 	/**
@@ -3728,9 +3892,8 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized) {
+		if (isInitialized)
 			return;
-		}
 		isInitialized = true;
 
 		// Initialize package
@@ -3760,7 +3923,7 @@ public class ReviewsPackage extends EPackageImpl {
 		reviewItemSetEClass.getESuperTypes().add(this.getReviewItem());
 		reviewItemSetEClass.getESuperTypes().add(this.getDated());
 		lineLocationEClass.getESuperTypes().add(this.getLocation());
-		fileRevisionEClass.getESuperTypes().add(this.getReviewItem());
+		fileVersionEClass.getESuperTypes().add(this.getReviewItem());
 		requirementReviewStateEClass.getESuperTypes().add(this.getReviewState());
 		simpleReviewStateEClass.getESuperTypes().add(this.getReviewState());
 
@@ -3966,6 +4129,18 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getReviewState(),
 				null,
 				"reviewStates", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getRepository_TaskRepositoryUrl(),
+				ecorePackage.getEString(),
+				"taskRepositoryUrl", null, 0, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getRepository_TaskConnectorKind(),
+				ecorePackage.getEString(),
+				"taskConnectorKind", null, 0, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getRepository_TaskRepository(),
+				this.getTaskRepository(),
+				"taskRepository", null, 0, 1, IRepository.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(commentTypeEClass, ICommentType.class,
 				"CommentType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -4007,14 +4182,14 @@ public class ReviewsPackage extends EPackageImpl {
 				"FileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
 				getFileItem_Base(),
-				this.getFileRevision(),
+				this.getFileVersion(),
 				null,
-				"base", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"base", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getFileItem_Target(),
-				this.getFileRevision(),
+				this.getFileVersion(),
 				null,
-				"target", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"target", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getFileItem_Set(),
 				this.getReviewItemSet(),
@@ -4065,25 +4240,29 @@ public class ReviewsPackage extends EPackageImpl {
 				ecorePackage.getEInt(),
 				"end", null, 0, 1, ILineRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(fileRevisionEClass, IFileRevision.class,
-				"FileRevision", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(fileVersionEClass, IFileVersion.class,
+				"FileVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(
-				getFileRevision_Path(),
+				getFileVersion_Path(),
 				ecorePackage.getEString(),
-				"path", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"path", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
-				getFileRevision_Revision(),
+				getFileVersion_Description(),
 				ecorePackage.getEString(),
-				"revision", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"description", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
-				getFileRevision_Content(),
+				getFileVersion_Content(),
 				ecorePackage.getEString(),
-				"content", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"content", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
-				getFileRevision_File(),
+				getFileVersion_File(),
 				this.getFileItem(),
 				null,
-				"file", null, 0, 1, IFileRevision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"file", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getFileVersion_FileRevision(),
+				this.getIFileRevision(),
+				"fileRevision", null, 0, 1, IFileVersion.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(modelVersioningEClass, IModelVersioning.class,
 				"ModelVersioning", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -4200,6 +4379,12 @@ public class ReviewsPackage extends EPackageImpl {
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.NOT_SATISFIED);
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.REJECTED);
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.ERROR);
+
+		// Initialize data types
+		initEDataType(iFileRevisionEDataType, IFileRevision.class,
+				"IFileRevision", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(taskRepositoryEDataType, TaskRepository.class,
+				"TaskRepository", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -4633,6 +4818,30 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference REPOSITORY__REVIEW_STATES = eINSTANCE.getRepository_ReviewStates();
 
 		/**
+		 * The meta object literal for the '<em><b>Task Repository Url</b></em>' attribute feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute REPOSITORY__TASK_REPOSITORY_URL = eINSTANCE.getRepository_TaskRepositoryUrl();
+
+		/**
+		 * The meta object literal for the '<em><b>Task Connector Kind</b></em>' attribute feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute REPOSITORY__TASK_CONNECTOR_KIND = eINSTANCE.getRepository_TaskConnectorKind();
+
+		/**
+		 * The meta object literal for the '<em><b>Task Repository</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute REPOSITORY__TASK_REPOSITORY = eINSTANCE.getRepository_TaskRepository();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.CommentType
 		 * <em>Comment Type</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -4721,16 +4930,16 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EClass FILE_ITEM = eINSTANCE.getFileItem();
 
 		/**
-		 * The meta object literal for the '<em><b>Base</b></em>' reference feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
+		 * The meta object literal for the '<em><b>Base</b></em>' containment reference feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
 		public static final EReference FILE_ITEM__BASE = eINSTANCE.getFileItem_Base();
 
 		/**
-		 * The meta object literal for the '<em><b>Target</b></em>' reference feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
+		 * The meta object literal for the '<em><b>Target</b></em>' containment reference feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
@@ -4839,14 +5048,14 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EAttribute LINE_RANGE__END = eINSTANCE.getLineRange_End();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision
-		 * <em>File Revision</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion
+		 * <em>File Version</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.FileRevision
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileRevision()
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.FileVersion
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileVersion()
 		 * @generated
 		 */
-		public static final EClass FILE_REVISION = eINSTANCE.getFileRevision();
+		public static final EClass FILE_VERSION = eINSTANCE.getFileVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature. <!-- begin-user-doc --> <!--
@@ -4854,15 +5063,15 @@ public class ReviewsPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute FILE_REVISION__PATH = eINSTANCE.getFileRevision_Path();
+		public static final EAttribute FILE_VERSION__PATH = eINSTANCE.getFileVersion_Path();
 
 		/**
-		 * The meta object literal for the '<em><b>Revision</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute FILE_REVISION__REVISION = eINSTANCE.getFileRevision_Revision();
+		public static final EAttribute FILE_VERSION__DESCRIPTION = eINSTANCE.getFileVersion_Description();
 
 		/**
 		 * The meta object literal for the '<em><b>Content</b></em>' attribute feature. <!-- begin-user-doc --> <!--
@@ -4870,7 +5079,7 @@ public class ReviewsPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EAttribute FILE_REVISION__CONTENT = eINSTANCE.getFileRevision_Content();
+		public static final EAttribute FILE_VERSION__CONTENT = eINSTANCE.getFileVersion_Content();
 
 		/**
 		 * The meta object literal for the '<em><b>File</b></em>' reference feature. <!-- begin-user-doc --> <!--
@@ -4878,7 +5087,15 @@ public class ReviewsPackage extends EPackageImpl {
 		 * 
 		 * @generated
 		 */
-		public static final EReference FILE_REVISION__FILE = eINSTANCE.getFileRevision_File();
+		public static final EReference FILE_VERSION__FILE = eINSTANCE.getFileVersion_File();
+
+		/**
+		 * The meta object literal for the '<em><b>File Revision</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute FILE_VERSION__FILE_REVISION = eINSTANCE.getFileVersion_FileRevision();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
@@ -5135,6 +5352,26 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EEnum REQUIREMENT_STATUS = eINSTANCE.getRequirementStatus();
+
+		/**
+		 * The meta object literal for the '<em>IFile Revision</em>' data type. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see org.eclipse.team.core.history.IFileRevision
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIFileRevision()
+		 * @generated
+		 */
+		public static final EDataType IFILE_REVISION = eINSTANCE.getIFileRevision();
+
+		/**
+		 * The meta object literal for the '<em>Task Repository</em>' data type. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.tasks.core.TaskRepository
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTaskRepository()
+		 * @generated
+		 */
+		public static final EDataType TASK_REPOSITORY = eINSTANCE.getTaskRepository();
 
 	}
 

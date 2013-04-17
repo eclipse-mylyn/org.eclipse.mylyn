@@ -13,6 +13,7 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -20,12 +21,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReviewState;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Repository</b></em>'. <!-- end-user-doc -->
@@ -34,6 +37,11 @@ import org.eclipse.mylyn.reviews.core.model.IReviewState;
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getApprovalTypes <em>Approval Types</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getReviewStates <em>Review States</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskRepositoryUrl <em>Task Repository Url
+ * </em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskConnectorKind <em>Task Connector Kind
+ * </em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskRepository <em>Task Repository</em>}</li>
  * </ul>
  * </p>
  * 
@@ -59,6 +67,66 @@ public class Repository extends ReviewGroup implements IRepository {
 	 * @ordered
 	 */
 	protected EList<IReviewState> reviewStates;
+
+	/**
+	 * The default value of the '{@link #getTaskRepositoryUrl() <em>Task Repository Url</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskRepositoryUrl()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TASK_REPOSITORY_URL_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTaskRepositoryUrl() <em>Task Repository Url</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskRepositoryUrl()
+	 * @generated
+	 * @ordered
+	 */
+	protected String taskRepositoryUrl = TASK_REPOSITORY_URL_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTaskConnectorKind() <em>Task Connector Kind</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskConnectorKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TASK_CONNECTOR_KIND_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTaskConnectorKind() <em>Task Connector Kind</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskConnectorKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected String taskConnectorKind = TASK_CONNECTOR_KIND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTaskRepository() <em>Task Repository</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskRepository()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final TaskRepository TASK_REPOSITORY_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTaskRepository() <em>Task Repository</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see #getTaskRepository()
+	 * @generated
+	 * @ordered
+	 */
+	protected TaskRepository taskRepository = TASK_REPOSITORY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -110,6 +178,72 @@ public class Repository extends ReviewGroup implements IRepository {
 	 * 
 	 * @generated
 	 */
+	public String getTaskRepositoryUrl() {
+		return taskRepositoryUrl;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTaskRepositoryUrl(String newTaskRepositoryUrl) {
+		String oldTaskRepositoryUrl = taskRepositoryUrl;
+		taskRepositoryUrl = newTaskRepositoryUrl;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL,
+					oldTaskRepositoryUrl, taskRepositoryUrl));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String getTaskConnectorKind() {
+		return taskConnectorKind;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTaskConnectorKind(String newTaskConnectorKind) {
+		String oldTaskConnectorKind = taskConnectorKind;
+		taskConnectorKind = newTaskConnectorKind;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND,
+					oldTaskConnectorKind, taskConnectorKind));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTaskRepository(TaskRepository newTaskRepository) {
+		TaskRepository oldTaskRepository = taskRepository;
+		taskRepository = newTaskRepository;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_REPOSITORY,
+					oldTaskRepository, taskRepository));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -133,6 +267,12 @@ public class Repository extends ReviewGroup implements IRepository {
 			return getApprovalTypes();
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 			return getReviewStates();
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+			return getTaskRepositoryUrl();
+		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+			return getTaskConnectorKind();
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			return getTaskRepository();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -154,6 +294,15 @@ public class Repository extends ReviewGroup implements IRepository {
 			getReviewStates().clear();
 			getReviewStates().addAll((Collection<? extends IReviewState>) newValue);
 			return;
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+			setTaskRepositoryUrl((String) newValue);
+			return;
+		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+			setTaskConnectorKind((String) newValue);
+			return;
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			setTaskRepository((TaskRepository) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -172,6 +321,15 @@ public class Repository extends ReviewGroup implements IRepository {
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 			getReviewStates().clear();
 			return;
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+			setTaskRepositoryUrl(TASK_REPOSITORY_URL_EDEFAULT);
+			return;
+		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+			setTaskConnectorKind(TASK_CONNECTOR_KIND_EDEFAULT);
+			return;
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			setTaskRepository(TASK_REPOSITORY_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -188,8 +346,41 @@ public class Repository extends ReviewGroup implements IRepository {
 			return approvalTypes != null && !approvalTypes.isEmpty();
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 			return reviewStates != null && !reviewStates.isEmpty();
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+			return TASK_REPOSITORY_URL_EDEFAULT == null
+					? taskRepositoryUrl != null
+					: !TASK_REPOSITORY_URL_EDEFAULT.equals(taskRepositoryUrl);
+		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+			return TASK_CONNECTOR_KIND_EDEFAULT == null
+					? taskConnectorKind != null
+					: !TASK_CONNECTOR_KIND_EDEFAULT.equals(taskConnectorKind);
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			return TASK_REPOSITORY_EDEFAULT == null
+					? taskRepository != null
+					: !TASK_REPOSITORY_EDEFAULT.equals(taskRepository);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (taskRepositoryUrl: "); //$NON-NLS-1$
+		result.append(taskRepositoryUrl);
+		result.append(", taskConnectorKind: "); //$NON-NLS-1$
+		result.append(taskConnectorKind);
+		result.append(", taskRepository: "); //$NON-NLS-1$
+		result.append(taskRepository);
+		result.append(')');
+		return result.toString();
 	}
 
 } //Repository

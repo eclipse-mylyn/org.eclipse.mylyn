@@ -25,53 +25,53 @@ package org.eclipse.mylyn.reviews.core.model;
  */
 public interface IFileItem extends IReviewItem {
 	/**
-	 * Returns the value of the '<em><b>Base</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Base</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Base</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Base</em>' reference.
-	 * @see #setBase(IFileRevision)
+	 * @return the value of the '<em>Base</em>' containment reference.
+	 * @see #setBase(IFileVersion)
 	 * @generated
 	 */
-	IFileRevision getBase();
+	IFileVersion getBase();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}' containment
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Base</em>' reference.
+	 *            the new value of the '<em>Base</em>' containment reference.
 	 * @see #getBase()
 	 * @generated
 	 */
-	void setBase(IFileRevision value);
+	void setBase(IFileVersion value);
 
 	/**
-	 * Returns the value of the '<em><b>Target</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Target</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Target</em>' reference isn't clear, there really should be more of a description
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Target</em>' reference.
-	 * @see #setTarget(IFileRevision)
+	 * @return the value of the '<em>Target</em>' containment reference.
+	 * @see #setTarget(IFileVersion)
 	 * @generated
 	 */
-	IFileRevision getTarget();
+	IFileVersion getTarget();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Target</em>' reference.
+	 *            the new value of the '<em>Target</em>' containment reference.
 	 * @see #getTarget()
 	 * @generated
 	 */
-	void setTarget(IFileRevision value);
+	void setTarget(IFileVersion value);
 
 	/**
 	 * Returns the value of the '<em><b>Set</b></em>' container reference. It is bidirectional and its opposite is '

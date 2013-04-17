@@ -25,9 +25,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
 import org.eclipse.mylyn.internal.reviews.ui.providers.FileItemNodeLabelProvider;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * @author Steffen Pingel
@@ -72,9 +73,9 @@ public class FileItemNode extends DiffNode {
 	}
 
 	//Check if we can match the reviewed file with the workspace history contents
-	private ITypedElement getElement(ReviewBehavior behavior, IFileRevision reviewFileRevision, String path,
+	private ITypedElement getElement(ReviewBehavior behavior, IFileVersion reviewFileVersion, String path,
 			IProgressMonitor monitor) {
-		org.eclipse.team.core.history.IFileRevision repoFileRevision = behavior.getFileRevision(reviewFileRevision);
+		org.eclipse.team.core.history.IFileRevision repoFileRevision = behavior.getFileRevision(reviewFileVersion);
 		if (repoFileRevision != null) {
 			InputStream repoFileContents = null;
 			try {
@@ -89,7 +90,7 @@ public class FileItemNode extends DiffNode {
 			}
 		}
 		//Fallback option: No match i.e the repository is not in workspace or does not contain this version of the file.  No navigability.
-		return new ByteArrayInput(CompareUtil.getContent(reviewFileRevision), path);
+		return new ByteArrayInput(CompareUtil.getContent(reviewFileVersion), path);
 	}
 
 	public FileItemNode(String name) {

@@ -150,10 +150,9 @@ public class Topic extends Comment implements ITopic {
 			InternalEObject oldReview = (InternalEObject) review;
 			review = (IReview) eResolveProxy(oldReview);
 			if (review != oldReview) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.TOPIC__REVIEW, oldReview,
 							review));
-				}
 			}
 		}
 		return review;
@@ -176,9 +175,8 @@ public class Topic extends Comment implements ITopic {
 	public void setReview(IReview newReview) {
 		IReview oldReview = review;
 		review = newReview;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__REVIEW, oldReview, review));
-		}
 	}
 
 	/**
@@ -198,9 +196,8 @@ public class Topic extends Comment implements ITopic {
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__TITLE, oldTitle, title));
-		}
 	}
 
 	/**
@@ -209,9 +206,8 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public ITopicContainer getItem() {
-		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM) {
+		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM)
 			return null;
-		}
 		return (ITopicContainer) eContainer();
 	}
 
@@ -221,9 +217,8 @@ public class Topic extends Comment implements ITopic {
 	 * @generated
 	 */
 	public ITopicContainer basicGetItem() {
-		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM) {
+		if (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM)
 			return null;
-		}
 		return (ITopicContainer) eInternalContainer();
 	}
 
@@ -244,24 +239,19 @@ public class Topic extends Comment implements ITopic {
 	 */
 	public void setItem(ITopicContainer newItem) {
 		if (newItem != eInternalContainer() || (eContainerFeatureID() != ReviewsPackage.TOPIC__ITEM && newItem != null)) {
-			if (EcoreUtil.isAncestor(this, newItem)) {
+			if (EcoreUtil.isAncestor(this, newItem))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			if (newItem != null) {
+			if (newItem != null)
 				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS,
 						ITopicContainer.class, msgs);
-			}
 			msgs = basicSetItem(newItem, msgs);
-			if (msgs != null) {
+			if (msgs != null)
 				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.TOPIC__ITEM, newItem, newItem));
-		}
 	}
 
 	/**
@@ -290,9 +280,8 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		case ReviewsPackage.TOPIC__ITEM:
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
 			return basicSetItem((ITopicContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -344,16 +333,14 @@ public class Topic extends Comment implements ITopic {
 		case ReviewsPackage.TOPIC__COMMENTS:
 			return getComments();
 		case ReviewsPackage.TOPIC__REVIEW:
-			if (resolve) {
+			if (resolve)
 				return getReview();
-			}
 			return basicGetReview();
 		case ReviewsPackage.TOPIC__TITLE:
 			return getTitle();
 		case ReviewsPackage.TOPIC__ITEM:
-			if (resolve) {
+			if (resolve)
 				return getItem();
-			}
 			return basicGetItem();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -445,9 +432,8 @@ public class Topic extends Comment implements ITopic {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (title: "); //$NON-NLS-1$

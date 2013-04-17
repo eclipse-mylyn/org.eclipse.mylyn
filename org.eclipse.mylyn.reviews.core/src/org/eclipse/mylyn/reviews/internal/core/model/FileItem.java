@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
-import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Item</b></em>'. <!-- end-user-doc -->
@@ -47,17 +47,17 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 * @ordered
 	 */
-	protected IFileRevision base;
+	protected IFileVersion base;
 
 	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getTarget()
 	 * @generated
 	 * @ordered
 	 */
-	protected IFileRevision target;
+	protected IFileVersion target;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -81,26 +81,22 @@ public class FileItem extends ReviewItem implements IFileItem {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated NOT
-	 */
-	@Override
-	public IReview getReview() {
-		if (getSet() != null) {
-			return getSet().getParentReview();
-		}
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public IFileRevision getBase() {
+	public IFileVersion getBase() {
 		if (base != null && base.eIsProxy()) {
 			InternalEObject oldBase = (InternalEObject) base;
-			base = (IFileRevision) eResolveProxy(oldBase);
+			base = (IFileVersion) eResolveProxy(oldBase);
 			if (base != oldBase) {
+				InternalEObject newBase = (InternalEObject) base;
+				NotificationChain msgs = oldBase.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__BASE, null, null);
+				if (newBase.eInternalContainer() == null) {
+					msgs = newBase.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null,
+							msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__BASE, oldBase,
 							base));
@@ -114,8 +110,48 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
-	public IFileRevision basicGetBase() {
+	public IFileVersion basicGetBase() {
 		return base;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetBase(IFileVersion newBase, NotificationChain msgs) {
+		IFileVersion oldBase = base;
+		base = newBase;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.FILE_ITEM__BASE, oldBase, newBase);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setBase(IFileVersion newBase) {
+		if (newBase != base) {
+			NotificationChain msgs = null;
+			if (base != null)
+				msgs = ((InternalEObject) base).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+			if (newBase != null)
+				msgs = ((InternalEObject) newBase).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+			msgs = basicSetBase(newBase, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__BASE, newBase, newBase));
 	}
 
 	/**
@@ -140,23 +176,20 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
-	public void setBase(IFileRevision newBase) {
-		IFileRevision oldBase = base;
-		base = newBase;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__BASE, oldBase, base));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IFileRevision getTarget() {
+	public IFileVersion getTarget() {
 		if (target != null && target.eIsProxy()) {
 			InternalEObject oldTarget = (InternalEObject) target;
-			target = (IFileRevision) eResolveProxy(oldTarget);
+			target = (IFileVersion) eResolveProxy(oldTarget);
 			if (target != oldTarget) {
+				InternalEObject newTarget = (InternalEObject) target;
+				NotificationChain msgs = oldTarget.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__TARGET, null, null);
+				if (newTarget.eInternalContainer() == null) {
+					msgs = newTarget.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null,
+							msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__TARGET,
 							oldTarget, target));
@@ -170,7 +203,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
-	public IFileRevision basicGetTarget() {
+	public IFileVersion basicGetTarget() {
 		return target;
 	}
 
@@ -179,11 +212,40 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * 
 	 * @generated
 	 */
-	public void setTarget(IFileRevision newTarget) {
-		IFileRevision oldTarget = target;
+	public NotificationChain basicSetTarget(IFileVersion newTarget, NotificationChain msgs) {
+		IFileVersion oldTarget = target;
 		target = newTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__TARGET, oldTarget, target));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.FILE_ITEM__TARGET, oldTarget, newTarget);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTarget(IFileVersion newTarget) {
+		if (newTarget != target) {
+			NotificationChain msgs = null;
+			if (target != null)
+				msgs = ((InternalEObject) target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+			if (newTarget != null)
+				msgs = ((InternalEObject) newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+			msgs = basicSetTarget(newTarget, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__TARGET, newTarget,
+					newTarget));
 	}
 
 	/**
@@ -265,6 +327,10 @@ public class FileItem extends ReviewItem implements IFileItem {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case ReviewsPackage.FILE_ITEM__BASE:
+			return basicSetBase(null, msgs);
+		case ReviewsPackage.FILE_ITEM__TARGET:
+			return basicSetTarget(null, msgs);
 		case ReviewsPackage.FILE_ITEM__SET:
 			return basicSetSet(null, msgs);
 		}
@@ -319,10 +385,10 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 		case ReviewsPackage.FILE_ITEM__BASE:
-			setBase((IFileRevision) newValue);
+			setBase((IFileVersion) newValue);
 			return;
 		case ReviewsPackage.FILE_ITEM__TARGET:
-			setTarget((IFileRevision) newValue);
+			setTarget((IFileVersion) newValue);
 			return;
 		case ReviewsPackage.FILE_ITEM__SET:
 			setSet((IReviewItemSet) newValue);
@@ -340,10 +406,10 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 		case ReviewsPackage.FILE_ITEM__BASE:
-			setBase((IFileRevision) null);
+			setBase((IFileVersion) null);
 			return;
 		case ReviewsPackage.FILE_ITEM__TARGET:
-			setTarget((IFileRevision) null);
+			setTarget((IFileVersion) null);
 			return;
 		case ReviewsPackage.FILE_ITEM__SET:
 			setSet((IReviewItemSet) null);

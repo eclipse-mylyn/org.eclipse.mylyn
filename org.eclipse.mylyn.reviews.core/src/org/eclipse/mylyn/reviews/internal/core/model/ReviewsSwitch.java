@@ -259,15 +259,15 @@ public class ReviewsSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case ReviewsPackage.FILE_REVISION: {
-			IFileRevision fileRevision = (IFileRevision) theEObject;
-			T result = caseFileRevision(fileRevision);
+		case ReviewsPackage.FILE_VERSION: {
+			IFileVersion fileVersion = (IFileVersion) theEObject;
+			T result = caseFileVersion(fileVersion);
 			if (result == null)
-				result = caseReviewItem(fileRevision);
+				result = caseReviewItem(fileVersion);
 			if (result == null)
-				result = caseTopicContainer(fileRevision);
+				result = caseTopicContainer(fileVersion);
 			if (result == null)
-				result = caseReviewComponent(fileRevision);
+				result = caseReviewComponent(fileVersion);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -593,16 +593,16 @@ public class ReviewsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>File Revision</em>'. <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>File Version</em>'. <!-- begin-user-doc -->
 	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>File Revision</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>File Version</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFileRevision(IFileRevision object) {
+	public T caseFileVersion(IFileVersion object) {
 		return null;
 	}
 

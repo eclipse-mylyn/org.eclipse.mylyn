@@ -15,11 +15,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * @author Steffen Pingel
@@ -35,7 +36,7 @@ public class ReviewUiTest extends TestCase {
 			}
 
 			@Override
-			public org.eclipse.team.core.history.IFileRevision getFileRevision(IFileRevision reviewFileRevision) {
+			public IFileRevision getFileRevision(IFileVersion reviewFileVersion) {
 				// ignore
 				return null;
 			}

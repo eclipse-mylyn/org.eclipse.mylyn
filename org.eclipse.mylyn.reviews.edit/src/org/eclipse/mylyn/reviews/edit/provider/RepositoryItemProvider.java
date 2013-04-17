@@ -18,12 +18,14 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.eclipse.mylyn.reviews.core.model.IRepository;
@@ -58,8 +60,61 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addTaskRepositoryUrlPropertyDescriptor(object);
+			addTaskConnectorKindPropertyDescriptor(object);
+			addTaskRepositoryPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Task Repository Url feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addTaskRepositoryUrlPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Repository_taskRepositoryUrl_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_Repository_taskRepositoryUrl_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY_URL, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Task Connector Kind feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addTaskConnectorKindPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Repository_taskConnectorKind_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_Repository_taskConnectorKind_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REPOSITORY__TASK_CONNECTOR_KIND, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Task Repository feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addTaskRepositoryPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Repository_taskRepository_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_Repository_taskRepository_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -126,6 +181,11 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IRepository.class)) {
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
+		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
+		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			return;
 		case ReviewsPackage.REPOSITORY__APPROVAL_TYPES:
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));

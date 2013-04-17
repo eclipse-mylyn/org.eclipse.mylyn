@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,37 +10,31 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
-import java.util.Collection;
-import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Revision</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Version</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getPath <em>Path</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getRevision <em>Revision</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getContent <em>Content</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileRevision#getFile <em>File</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getPath <em>Path</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getDescription <em>Description</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getContent <em>Content</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getFile <em>File</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getFileRevision <em>File Revision</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class FileRevision extends ReviewItem implements IFileRevision {
+public class FileVersion extends ReviewItem implements IFileVersion {
 	/**
 	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -62,24 +56,24 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected String path = PATH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getRevision()
+	 * @see #getDescription()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String REVISION_EDEFAULT = null;
+	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getRevision()
+	 * @see #getDescription()
 	 * @generated
 	 * @ordered
 	 */
-	protected String revision = REVISION_EDEFAULT;
+	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -112,11 +106,31 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	protected IFileItem file;
 
 	/**
+	 * The default value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getFileRevision()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final IFileRevision FILE_REVISION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getFileRevision()
+	 * @generated
+	 * @ordered
+	 */
+	protected IFileRevision fileRevision = FILE_REVISION_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected FileRevision() {
+	protected FileVersion() {
 		super();
 	}
 
@@ -127,7 +141,7 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ReviewsPackage.Literals.FILE_REVISION;
+		return ReviewsPackage.Literals.FILE_VERSION;
 	}
 
 	/**
@@ -148,7 +162,7 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		String oldPath = path;
 		path = newPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_REVISION__PATH, oldPath, path));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__PATH, oldPath, path));
 	}
 
 	/**
@@ -156,8 +170,8 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 * 
 	 * @generated
 	 */
-	public String getRevision() {
-		return revision;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
@@ -165,12 +179,12 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 * 
 	 * @generated
 	 */
-	public void setRevision(String newRevision) {
-		String oldRevision = revision;
-		revision = newRevision;
+	public void setDescription(String newDescription) {
+		String oldDescription = description;
+		description = newDescription;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_REVISION__REVISION, oldRevision,
-					revision));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__DESCRIPTION,
+					oldDescription, description));
 	}
 
 	/**
@@ -191,7 +205,7 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		String oldContent = content;
 		content = newContent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_REVISION__CONTENT, oldContent,
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__CONTENT, oldContent,
 					content));
 	}
 
@@ -206,7 +220,7 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 			file = (IFileItem) eResolveProxy(oldFile);
 			if (file != oldFile) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_REVISION__FILE,
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_VERSION__FILE,
 							oldFile, file));
 			}
 		}
@@ -231,7 +245,29 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		IFileItem oldFile = file;
 		file = newFile;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_REVISION__FILE, oldFile, file));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__FILE, oldFile, file));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IFileRevision getFileRevision() {
+		return fileRevision;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setFileRevision(IFileRevision newFileRevision) {
+		IFileRevision oldFileRevision = fileRevision;
+		fileRevision = newFileRevision;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__FILE_REVISION,
+					oldFileRevision, fileRevision));
 	}
 
 	/**
@@ -242,16 +278,18 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_REVISION__PATH:
+		case ReviewsPackage.FILE_VERSION__PATH:
 			return getPath();
-		case ReviewsPackage.FILE_REVISION__REVISION:
-			return getRevision();
-		case ReviewsPackage.FILE_REVISION__CONTENT:
+		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+			return getDescription();
+		case ReviewsPackage.FILE_VERSION__CONTENT:
 			return getContent();
-		case ReviewsPackage.FILE_REVISION__FILE:
+		case ReviewsPackage.FILE_VERSION__FILE:
 			if (resolve)
 				return getFile();
 			return basicGetFile();
+		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+			return getFileRevision();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -261,21 +299,23 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_REVISION__PATH:
+		case ReviewsPackage.FILE_VERSION__PATH:
 			setPath((String) newValue);
 			return;
-		case ReviewsPackage.FILE_REVISION__REVISION:
-			setRevision((String) newValue);
+		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+			setDescription((String) newValue);
 			return;
-		case ReviewsPackage.FILE_REVISION__CONTENT:
+		case ReviewsPackage.FILE_VERSION__CONTENT:
 			setContent((String) newValue);
 			return;
-		case ReviewsPackage.FILE_REVISION__FILE:
+		case ReviewsPackage.FILE_VERSION__FILE:
 			setFile((IFileItem) newValue);
+			return;
+		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+			setFileRevision((IFileRevision) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -289,17 +329,20 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_REVISION__PATH:
+		case ReviewsPackage.FILE_VERSION__PATH:
 			setPath(PATH_EDEFAULT);
 			return;
-		case ReviewsPackage.FILE_REVISION__REVISION:
-			setRevision(REVISION_EDEFAULT);
+		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+			setDescription(DESCRIPTION_EDEFAULT);
 			return;
-		case ReviewsPackage.FILE_REVISION__CONTENT:
+		case ReviewsPackage.FILE_VERSION__CONTENT:
 			setContent(CONTENT_EDEFAULT);
 			return;
-		case ReviewsPackage.FILE_REVISION__FILE:
+		case ReviewsPackage.FILE_VERSION__FILE:
 			setFile((IFileItem) null);
+			return;
+		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+			setFileRevision(FILE_REVISION_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -313,14 +356,16 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.FILE_REVISION__PATH:
+		case ReviewsPackage.FILE_VERSION__PATH:
 			return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
-		case ReviewsPackage.FILE_REVISION__REVISION:
-			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
-		case ReviewsPackage.FILE_REVISION__CONTENT:
+		case ReviewsPackage.FILE_VERSION__DESCRIPTION:
+			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+		case ReviewsPackage.FILE_VERSION__CONTENT:
 			return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
-		case ReviewsPackage.FILE_REVISION__FILE:
+		case ReviewsPackage.FILE_VERSION__FILE:
 			return file != null;
+		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
+			return FILE_REVISION_EDEFAULT == null ? fileRevision != null : !FILE_REVISION_EDEFAULT.equals(fileRevision);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -338,12 +383,14 @@ public class FileRevision extends ReviewItem implements IFileRevision {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (path: "); //$NON-NLS-1$
 		result.append(path);
-		result.append(", revision: "); //$NON-NLS-1$
-		result.append(revision);
+		result.append(", description: "); //$NON-NLS-1$
+		result.append(description);
 		result.append(", content: "); //$NON-NLS-1$
 		result.append(content);
+		result.append(", fileRevision: "); //$NON-NLS-1$
+		result.append(fileRevision);
 		result.append(')');
 		return result.toString();
 	}
 
-} //FileRevision
+} //FileVersion

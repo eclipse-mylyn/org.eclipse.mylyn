@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -45,7 +45,7 @@ import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
- * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API.
+ * Manages retrieval of patch set contents, including file versions and associated comments, from Gerrit API.
  * 
  * @author Miles Parker
  * @author Steffen Pingel
@@ -82,7 +82,7 @@ public class PatchSetContentRemoteFactory extends
 		return new PatchSetContent(null, patchDetail.getPatchSet());
 	}
 
-	void addComments(IFileRevision revision, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
+	void addComments(IFileVersion version, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
 		if (comments == null || comments.isEmpty()) {
 			return;
 		}
@@ -106,13 +106,13 @@ public class PatchSetContentRemoteFactory extends
 			topic.setAuthor(author);
 			topic.setCreationDate(comment.getWrittenOn());
 			topic.getLocations().add(location);
-			topic.setItem(revision);
+			topic.setItem(version);
 			topic.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
 			topic.setDescription(comment.getMessage());
 			topic.setTitle(GerritUtil.shortenText(comment.getMessage(), 10, 20));
 			topic.getComments().add(topicComment);
 
-			revision.getTopics().add(topic);
+			version.getTopics().add(topic);
 		}
 	}
 
@@ -143,39 +143,39 @@ public class PatchSetContentRemoteFactory extends
 			if (patchScript != null) {
 				CommentDetail commentDetail = patchScript.getCommentDetail();
 
-				IFileRevision revisionA = (IFileRevision) cache.getItem(baseId);
-				if (revisionA == null) {
-					revisionA = IReviewsFactory.INSTANCE.createFileRevision();
-					revisionA.setId(baseId);
-					revisionA.setContent(patchScript.getA().asString());
-					revisionA.setPath(patchScript.getA().getPath());
-					revisionA.setRevision((content.getBase() != null) ? NLS.bind("Patch Set {0}", content.getBase()
+				IFileVersion versionA = (IFileVersion) cache.getItem(baseId);
+				if (versionA == null) {
+					versionA = IReviewsFactory.INSTANCE.createFileVersion();
+					versionA.setId(baseId);
+					versionA.setContent(patchScript.getA().asString());
+					versionA.setPath(patchScript.getA().getPath());
+					versionA.setDescription((content.getBase() != null) ? NLS.bind("Patch Set {0}", content.getBase()
 							.getPatchSetId()) : "Base");
-					revisionA.setFile(item);
-					revisionA.setName(item.getName());
-					addComments(revisionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
-					cache.put(revisionA);
+					versionA.setFile(item);
+					versionA.setName(item.getName());
+					addComments(versionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
+					cache.put(versionA);
 				}
-				item.setBase(revisionA);
+				item.setBase(versionA);
 
-				IFileRevision revisionB = (IFileRevision) cache.getItem(targetId);
-				if (revisionB == null) {
-					revisionB = IReviewsFactory.INSTANCE.createFileRevision();
-					revisionB.setId(targetId);
+				IFileVersion versionB = (IFileVersion) cache.getItem(targetId);
+				if (versionB == null) {
+					versionB = IReviewsFactory.INSTANCE.createFileVersion();
+					versionB.setId(targetId);
 					SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-					revisionB.setContent(target.asString());
-					revisionB.setPath(patchScript.getB().getPath());
-					revisionB.setRevision(NLS.bind("Patch Set {0}", content.getTargetDetail()
+					versionB.setContent(target.asString());
+					versionB.setPath(patchScript.getB().getPath());
+					versionB.setDescription(NLS.bind("Patch Set {0}", content.getTargetDetail()
 							.getPatchSet()
 							.getPatchSetId()));
-					revisionB.setFile(item);
-					revisionB.setAddedBy(item.getAddedBy());
-					revisionB.setCommittedBy(item.getCommittedBy());
-					revisionB.setName(item.getName());
-					addComments(revisionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
-					cache.put(revisionB);
+					versionB.setFile(item);
+					versionB.setAddedBy(item.getAddedBy());
+					versionB.setCommittedBy(item.getCommittedBy());
+					versionB.setName(item.getName());
+					addComments(versionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
+					cache.put(versionB);
 				}
-				item.setTarget(revisionB);
+				item.setTarget(versionB);
 			}
 		}
 		return items;

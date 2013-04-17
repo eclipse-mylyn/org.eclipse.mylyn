@@ -96,8 +96,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createLineLocation();
 		case ReviewsPackage.LINE_RANGE:
 			return createLineRange();
-		case ReviewsPackage.FILE_REVISION:
-			return createFileRevision();
+		case ReviewsPackage.FILE_VERSION:
+			return createFileVersion();
 		case ReviewsPackage.APPROVAL_TYPE:
 			return createApprovalType();
 		case ReviewsPackage.USER_APPROVALS_MAP:
@@ -274,9 +274,9 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public IFileRevision createFileRevision() {
-		FileRevision fileRevision = new FileRevision();
-		return fileRevision;
+	public IFileVersion createFileVersion() {
+		FileVersion fileVersion = new FileVersion();
+		return fileVersion;
 	}
 
 	/**

@@ -58,10 +58,10 @@ public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 
 	public String getLeftLabel(Object input) {
 		if (((FileItemNode) input).getLeft() instanceof FileRevisionTypedElement) {
-			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getTarget().getRevision(),
+			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getTarget().getDescription(),
 					((FileItemNode) input).getFileItem().getName());
 		}
-		return NLS.bind("[{0}: {1}]", ((FileItemNode) input).getFileItem().getTarget().getRevision(),
+		return NLS.bind("[{0}: {1}]", ((FileItemNode) input).getFileItem().getTarget().getDescription(),
 				((FileItemNode) input).getFileItem().getName());
 	}
 
@@ -75,10 +75,10 @@ public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {
 
 	public String getRightLabel(Object input) {
 		if (((FileItemNode) input).getRight() instanceof FileRevisionTypedElement) {
-			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getBase().getRevision(),
+			return NLS.bind("{0}: {1}", ((FileItemNode) input).getFileItem().getBase().getDescription(),
 					((FileItemNode) input).getFileItem().getName());
 		}
-		return NLS.bind("[{0}: {1}]", ((FileItemNode) input).getFileItem().getBase().getRevision(),
+		return NLS.bind("[{0}: {1}]", ((FileItemNode) input).getFileItem().getBase().getDescription(),
 				((FileItemNode) input).getFileItem().getName());
 	}
 

@@ -121,12 +121,12 @@ public interface IReviewsFactory {
 	ILineRange createLineRange();
 
 	/**
-	 * Returns a new object of class '<em>File Revision</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns a new object of class '<em>File Version</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return a new object of class '<em>File Revision</em>'.
+	 * @return a new object of class '<em>File Version</em>'.
 	 * @generated
 	 */
-	IFileRevision createFileRevision();
+	IFileVersion createFileVersion();
 
 	/**
 	 * Returns a new object of class '<em>Reviewer Entry</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->

@@ -29,7 +29,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 
 /**
  * @author Steffen Pingel
@@ -50,8 +50,8 @@ public class CompareUtil {
 		return new DiffNode(new ByteArrayInput(targetContent, targetPath), new ByteArrayInput(baseContent, basePath));
 	}
 
-	public static byte[] getContent(IFileRevision revision) {
-		String content = revision.getContent();
+	public static byte[] getContent(IFileVersion version) {
+		String content = version.getContent();
 		return (content != null) ? content.getBytes() : new byte[0];
 	}
 

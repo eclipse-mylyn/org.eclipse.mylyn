@@ -158,8 +158,8 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseFileRevision(IFileRevision object) {
-			return createFileRevisionAdapter();
+		public Adapter caseFileVersion(IFileVersion object) {
+			return createFileVersionAdapter();
 		}
 
 		@Override
@@ -457,16 +457,16 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IFileRevision
-	 * <em>File Revision</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion
+	 * <em>File Version</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
 	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
 	 * -->
 	 * 
 	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IFileRevision
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion
 	 * @generated
 	 */
-	public Adapter createFileRevisionAdapter() {
+	public Adapter createFileVersionAdapter() {
 		return null;
 	}
 

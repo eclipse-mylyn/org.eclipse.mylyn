@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Steffen Pingel
  * @author Sebastien Dubois
+ * @author Miles Parker
  */
 public class FileItemCompareEditorInput extends CompareEditorInput {
 
@@ -39,8 +40,8 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 		super(configuration);
 		this.file = file;
 		this.behavior = behavior;
-		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getTarget().getRevision(),
-				file.getBase().getRevision() }));
+		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getTarget().getDescription(),
+				file.getBase().getDescription() }));
 	}
 
 	@Override

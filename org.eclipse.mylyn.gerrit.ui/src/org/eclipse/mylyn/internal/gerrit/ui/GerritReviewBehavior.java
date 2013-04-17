@@ -19,13 +19,14 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.GitFileRevisionUtils;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.team.core.history.IFileRevision;
 
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
@@ -76,9 +77,9 @@ public class GerritReviewBehavior extends ReviewBehavior {
 	}
 
 	@Override
-	public org.eclipse.team.core.history.IFileRevision getFileRevision(IFileRevision reviewFileRevision) {
+	public IFileRevision getFileRevision(IFileVersion reviewFileVersion) {
 		if (repository != null) {
-			return GitFileRevisionUtils.getFileRevision(repository, reviewFileRevision);
+			return GitFileRevisionUtils.getFileRevision(repository, reviewFileVersion);
 		}
 		return null;
 	}

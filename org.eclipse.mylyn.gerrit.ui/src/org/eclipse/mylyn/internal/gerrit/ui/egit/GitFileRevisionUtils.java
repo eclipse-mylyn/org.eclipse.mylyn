@@ -25,7 +25,8 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectInserter;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.reviews.ui.compare.CompareUtil;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * A collection of common utility functions used to resolve the Git File Revisions
@@ -37,23 +38,21 @@ public class GitFileRevisionUtils {
 	//Needed to identify this plug-in, since there is no activator for it.
 	private static String PLUGIN_ID = "org.eclipse.mylyn.reviews.core"; //$NON-NLS-1$
 
-	public static org.eclipse.team.core.history.IFileRevision getFileRevision(final Repository repository,
-			final IFileRevision reviewFileRevision) {
-		org.eclipse.team.core.history.IFileRevision gitFileRevision = null;
+	public static IFileRevision getFileRevision(final Repository repository, final IFileVersion reviewFileVersion) {
+		IFileRevision gitFileRevision = null;
 
-		if (reviewFileRevision != null && reviewFileRevision.getPath() != null) {
+		if (reviewFileVersion != null && reviewFileVersion.getPath() != null) {
 			//Get SHA-1 for the file revision to look for the correct file revision in the Git repository
 			ObjectInserter inserter = repository.newObjectInserter();
-			String id = inserter.idFor(Constants.OBJ_BLOB, CompareUtil.getContent(reviewFileRevision)).getName();
+			String id = inserter.idFor(Constants.OBJ_BLOB, CompareUtil.getContent(reviewFileVersion)).getName();
 			inserter.release();
 			if (id != null) {
 				final ObjectId objId = ObjectId.fromString(id);
 				if (objId != null) {
-					final IPath path = Path.fromPortableString(reviewFileRevision.getPath());
+					final IPath path = Path.fromPortableString(reviewFileVersion.getPath());
 					gitFileRevision = new org.eclipse.team.core.history.provider.FileRevision() {
 
-						public org.eclipse.team.core.history.IFileRevision withAllProperties(IProgressMonitor monitor)
-								throws CoreException {
+						public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 							return this;
 						}
 

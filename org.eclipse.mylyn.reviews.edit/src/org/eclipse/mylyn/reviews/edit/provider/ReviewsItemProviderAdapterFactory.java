@@ -378,26 +378,26 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IFileRevision}
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IFileVersion}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected FileRevisionItemProvider fileRevisionItemProvider;
+	protected FileVersionItemProvider fileVersionItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IFileRevision}. <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IFileVersion}. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createFileRevisionAdapter() {
-		if (fileRevisionItemProvider == null) {
-			fileRevisionItemProvider = new FileRevisionItemProvider(this);
+	public Adapter createFileVersionAdapter() {
+		if (fileVersionItemProvider == null) {
+			fileVersionItemProvider = new FileVersionItemProvider(this);
 		}
 
-		return fileRevisionItemProvider;
+		return fileVersionItemProvider;
 	}
 
 	/**
@@ -702,8 +702,8 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 			lineLocationItemProvider.dispose();
 		if (lineRangeItemProvider != null)
 			lineRangeItemProvider.dispose();
-		if (fileRevisionItemProvider != null)
-			fileRevisionItemProvider.dispose();
+		if (fileVersionItemProvider != null)
+			fileVersionItemProvider.dispose();
 		if (approvalTypeItemProvider != null)
 			approvalTypeItemProvider.dispose();
 		if (userApprovalsMapItemProvider != null)

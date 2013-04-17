@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
@@ -225,7 +225,7 @@ public class GerritRemoteFactoryTest extends TestCase {
 		//TODO Shouldn't name be last segment only?
 		assertThat(fileItem.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
 
-		IFileRevision base = fileItem.getBase();
+		IFileVersion base = fileItem.getBase();
 		assertThat(base.getAddedBy(), nullValue());
 		assertThat(base.getCommittedBy(), nullValue());
 		assertThat(base.getContent(), is(""));
@@ -233,9 +233,9 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(base.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
 		assertThat(base.getPath(), nullValue());
 		assertThat(base.getReference(), nullValue());
-		assertThat(base.getRevision(), is("Base"));
+		assertThat(base.getDescription(), is("Base"));
 
-		IFileRevision target = fileItem.getTarget();
+		IFileVersion target = fileItem.getTarget();
 		assertThat(target.getAddedBy().getDisplayName(), is("Mylyn Test User"));
 		assertThat(target.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
 		assertThat(target.getContent(), is("(Added for comment test review. V2)"));
@@ -243,7 +243,7 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(target.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
 		assertThat(target.getPath(), is("mylyn.test.files/item_remote_test_2.txt"));
 		assertThat(target.getReference(), nullValue());
-		assertThat(target.getRevision(), is("Patch Set 4"));
+		assertThat(target.getDescription(), is("Patch Set 4"));
 
 		List<IComment> allComments = target.getAllComments();
 		assertThat(allComments.size(), is(1));

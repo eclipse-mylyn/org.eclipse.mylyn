@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IFileRevision;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -121,8 +121,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				if (element instanceof IFileItem) {
 					ImageDescriptor baseImage = ImageDescriptor.createFromImage(image);
 					IFileItem fileItem = (IFileItem) element;
-					IFileRevision base = fileItem.getBase();
-					IFileRevision target = fileItem.getTarget();
+					IFileVersion base = fileItem.getBase();
+					IFileVersion target = fileItem.getTarget();
 					if (base != null && target != null) {
 						if (base.getPath() == null && target.getPath() != null) {
 							ImageDescriptor overlay = ReviewsImages.OVERLAY_ADDED;
@@ -165,10 +165,10 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				IReview review = (IReview) element;
 				return "Change " + review.getId();
 			}
-			if (element instanceof IFileRevision) {
-				IFileRevision revision = (IFileRevision) element;
-				String text = getText(revision.getFile());
-				text += revision.getName();
+			if (element instanceof IFileVersion) {
+				IFileVersion version = (IFileVersion) element;
+				String text = getText(version.getFile());
+				text += version.getName();
 				return text;
 			}
 			if (element instanceof IFileItem) {
@@ -249,7 +249,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IFileItem) {
 				IFileItem fileItem = (IFileItem) element;
-				return fileItem.getTarget().getPath() + " Revision: " + fileItem.getTarget().getRevision();
+				return fileItem.getTarget().getPath() + " Revision: " + fileItem.getTarget().getDescription();
 			}
 			if (element instanceof IUser) {
 				IUser user = (IUser) element;
@@ -279,8 +279,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IFileItem) {
 				return element;
 			}
-			if (element instanceof IFileRevision) {
-				return ((IFileRevision) element).getFile();
+			if (element instanceof IFileVersion) {
+				return ((IFileVersion) element).getFile();
 			}
 			if (element instanceof ITopic) {
 				ITopic topic = (ITopic) element;
@@ -363,9 +363,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return item.getCreationDate();
 				}
 			}
-			if (element instanceof IFileRevision) {
-				IFileRevision item = (IFileRevision) element;
-				return item.getRevision();
+			if (element instanceof IFileVersion) {
+				IFileVersion item = (IFileVersion) element;
+				return item.getDescription();
 			}
 			return null;
 		};
