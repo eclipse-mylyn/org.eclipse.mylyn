@@ -48,6 +48,8 @@ public class GerritConnectorTest extends TestCase {
 		harness = GerritFixture.current().harness();
 		connector = new GerritConnector();
 		repository = GerritFixture.current().singleRepository();
+
+		harness.ensureOneReviewExists();
 	}
 
 	@Override

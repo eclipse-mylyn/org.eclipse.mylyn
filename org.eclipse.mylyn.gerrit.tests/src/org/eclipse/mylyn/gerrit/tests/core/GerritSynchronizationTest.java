@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
+import org.eclipse.mylyn.gerrit.tests.support.GerritProject;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -58,6 +59,8 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private TaskList taskList;
 
+	private GerritProject project;
+
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -66,9 +69,12 @@ public class GerritSynchronizationTest extends TestCase {
 				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 
 		harness = GerritFixture.current().harness();
+		project = harness.project();
 		repository = GerritFixture.current().singleRepository();
 		taskList = TasksUiPlugin.getTaskList();
 		taskDataManager = TasksUiPlugin.getTaskDataManager();
+
+		harness.ensureOneReviewExists();
 	}
 
 	@After
@@ -144,7 +150,7 @@ public class GerritSynchronizationTest extends TestCase {
 		return task;
 	}
 
-	private ITask createAndSynchronizeQuery(boolean user) throws InterruptedException, CoreException, GerritException {
+	private ITask createAndSynchronizeQuery(boolean user) throws Exception {
 		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
 		query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
 		taskList.addQuery((RepositoryQuery) query);

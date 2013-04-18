@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.gerrit.tests.support;
 
 import java.net.Proxy;
+import java.util.List;
 
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
@@ -21,6 +22,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 
 /**
  * @author Steffen Pingel
@@ -31,6 +33,8 @@ public class GerritHarness {
 	private final GerritFixture fixture;
 
 	private UserCredentials credentials;
+
+	private GerritProject project;
 
 	public GerritHarness(GerritFixture fixture) {
 		this.fixture = fixture;
@@ -66,6 +70,9 @@ public class GerritHarness {
 	}
 
 	public void dispose() {
+		if (project != null) {
+			project.dispose();
+		}
 	}
 
 	public UserCredentials readCredentials() {
@@ -73,6 +80,21 @@ public class GerritHarness {
 			credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 		}
 		return credentials;
+	}
+
+	public GerritProject project() throws Exception {
+		if (project == null) {
+			project = new GerritProject(fixture);
+		}
+		return project;
+	}
+
+	public void ensureOneReviewExists() throws Exception {
+		List<GerritQueryResult> reviews = client().executeQuery(null, "status:open"); //$NON-NLS-1$
+		if (reviews.isEmpty()) {
+			// populate repository with one initial commit
+			project().commitAndPushFile();
+		}
 	}
 
 }
